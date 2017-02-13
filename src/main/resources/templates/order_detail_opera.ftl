@@ -4,9 +4,9 @@
 <body class="no-skin">
 
 <div class="col-xs-12">
-    <div class="col-sm-6" style="float: right>
-        <div class="col-sm-6" style="float: right"><span hidden="true" id = "REPORT">${(REPORT)!}</span>
-        <button style="float:left;padding-left: 11px;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="facePrint()">
+    <div class="col-sm-12" style="float: right;">
+        <div class="col-sm-12" style="float: right"><span hidden="true" id = "REPORT">${(REPORT)!}</span>
+        <button style="float:left;padding-left: 11px;margin:0 0 20px -11px;" class="btn btn-white btn-info btn-bold filters" id="goBack" value="" onclick="facePrint()">
             打印面单
         </button>
     </div>
@@ -515,7 +515,7 @@
                     <td>
                     ${stroage.plannedSingleState!""}
                     </td class="center">
-                    <td>
+                    <td style="display:block;word-wrap:break-word;border:none;max-width:430px;">
                     ${stroage.departure!""}
                     </td>
                     <td class="center">
