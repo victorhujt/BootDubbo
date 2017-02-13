@@ -202,6 +202,15 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setDestinationDistrict(createOrderEntity.getConsigneeCounty());
             ofcDistributionBasicInfo.setDestinationTowns(createOrderEntity.getConsigneeTown());
             ofcDistributionBasicInfo.setDestination(createOrderEntity.getConsigneeAddress());
+            StringBuilder destinationCode = new StringBuilder(createOrderEntity.getConsigneeProvinceCode());
+            destinationCode.append(",").append(createOrderEntity.getConsigneeCityCode());
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCountyCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeCountyCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeTownCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeTownCode());
+            }
+            ofcDistributionBasicInfo.setDestinationCode(destinationCode.toString());
             //承运商
             ofcDistributionBasicInfo.setCarrierName(createOrderEntity.getSupportName());
 
