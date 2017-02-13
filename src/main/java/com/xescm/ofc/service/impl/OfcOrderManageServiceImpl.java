@@ -1832,7 +1832,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param orderStatus 订单状态
      * @param reviewTag 审核标志位
      * @param authResDtoByToken 当前登录用户
-     * @return
+     * @return  String
      */
     @Override
     public String orderAutoAudit(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList
