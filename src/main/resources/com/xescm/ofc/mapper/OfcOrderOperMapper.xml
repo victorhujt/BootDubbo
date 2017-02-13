@@ -308,9 +308,6 @@
       <when test="'transCode'.toString() == searchType">
         AND ofd.trans_code = #{code}
       </when>
-      <when test=" 'planCode'.toString() == searchType">
-        and ofi.order_code = (SELECT order_code from ofc_transplan_info where plan_code = #{code})
-      </when>
       <otherwise></otherwise>
     </choose>
 

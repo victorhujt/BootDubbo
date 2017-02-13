@@ -63,7 +63,6 @@ public class OfcOrderFollowOperRest extends BaseController {
             searchTypes.add("orderCode");
             searchTypes.add("custOrderCode");
             searchTypes.add("transCode");
-            searchTypes.add("planCode");
             if (!searchTypes.contains(searchType)) {
                 throw new Exception("搜索类型错误！");
             }

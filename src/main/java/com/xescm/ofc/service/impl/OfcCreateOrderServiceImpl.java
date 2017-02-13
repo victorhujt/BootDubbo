@@ -259,7 +259,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 //            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
+                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation,ofcOrderStatus, ofcGoodsDetailsInfoList);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
@@ -276,7 +276,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList);
+                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation,ofcOrderStatus,ofcGoodsDetailsInfoList);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
@@ -297,12 +297,17 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                            OfcDistributionBasicInfo ofcDistributionBasicInfo,
                            OfcFinanceInformation ofcFinanceInformation,
                            OfcWarehouseInformation ofcWarehouseInformation,
+                            OfcOrderStatus ofcOrderStatus,
                            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList) {
+        logger.info("创单api自动审核操作, 当前订单号:{}",ofcFundamentalInformation.getOrderCode());
         //自动审核通过 review:审核；rereview:反审核
-        AuthResDto authResDto = new AuthResDto();
-        authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
-        logger.info("自动审核操作：" + wrapper.getCode());
+        AuthResDto authResDtoByToken = new AuthResDto();
+        authResDtoByToken.setGroupRefName(CREATE_ORDER_BYAPI);
+        String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo,
+                ofcWarehouseInformation, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+        if(StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)){
+            throw new BusinessException("创单api自动审核操作失败!");
+        }
     }
 
     /**
