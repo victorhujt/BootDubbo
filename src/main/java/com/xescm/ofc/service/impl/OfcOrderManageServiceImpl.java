@@ -1903,7 +1903,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param ofcFinanceInformation 财务信息
      * @param ofcDistributionBasicInfo 运输信息
      * @param ofcGoodsDetailsInfos 货品信息
-     * @return
+     * @return  void
      */
     @Override
     public void pushOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
@@ -1917,7 +1917,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param goodsDetailsList 货品明细
      * @param ofcWarehouseInformation 仓库信息
      * @param ofcFinanceInformation 财务信息
-     * @return
+     * @return  void
      */
     @Override
     public void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
