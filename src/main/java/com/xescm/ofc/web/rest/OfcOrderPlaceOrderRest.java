@@ -7,17 +7,17 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.QueryWarehouseDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
+import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscGoodsTypeVo;
-import com.xescm.csc.provider.CscContactEdasService;
-import com.xescm.csc.provider.CscGoodsEdasService;
-import com.xescm.csc.provider.CscGoodsTypeEdasService;
-import com.xescm.csc.provider.CscSupplierEdasService;
+import com.xescm.csc.provider.*;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
@@ -29,6 +29,9 @@ import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +69,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private CscSupplierEdasService cscSupplierEdasService;
     @Autowired
     private CscContactEdasService cscContactEdasService;
+    @Autowired
+    private  CscWarehouseEdasService cscWarehouseEdasService;
+    @Autowired
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
 
     /**
      * 编辑
@@ -397,6 +404,52 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
         }
     }
+
+    /**
+     * 客户编码查询客户下的仓库信息
+     * @param customerCode
+     * @return
+     */
+    @RequestMapping(value = "/queryWarehouseByCustomerCode",method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryWarehouseByCustomerCode(String customerCode){
+        try {
+            if(PublicUtil.isEmpty(customerCode)){
+                throw new BusinessException("客户编码不可以为空！");
+            }
+            //客户编码查询出绑定的仓库编码
+            List<RmcWarehouseRespDto> warehouseRespDtoList=new ArrayList<>();
+            QueryWarehouseDto dto=new QueryWarehouseDto();
+            dto.setCustomerCode(customerCode);
+            Wrapper<List<CscWarehouseDto>>  warehouse=cscWarehouseEdasService.getCscWarehouseByCustomerId(dto);
+            if(warehouse.getCode()==warehouse.SUCCESS_CODE){
+                //通过查询出的仓库编码查询出仓库的信息
+                if(!PublicUtil.isEmpty(warehouse.getResult())){
+                    RmcWarehouseDto rmcWarehouseDto=new RmcWarehouseDto();
+                    for (CscWarehouseDto cscWarehouseDto : warehouse.getResult()){
+                        rmcWarehouseDto.setWarehouseCode(cscWarehouseDto.getWarehouseCode());
+                        Wrapper<RmcWarehouseRespDto> resp=rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouseDto);
+                                            if(resp.getCode()==Wrapper.SUCCESS_CODE){
+                            warehouseRespDtoList.add(resp.getResult());
+                        }else{
+                            logger.error("通过仓库编码查询仓库信息产生异常{},仓库编码为{}",resp.getMessage(),rmcWarehouseDto.getWarehouseCode());
+                        }
+                    }
+                }else{
+                    logger.info("客户没有开通仓库{}",warehouse.getMessage());
+                }
+            }else{
+                logger.error("通过客户编码查询客户绑定的仓库编码产生异常{}",warehouse.getMessage());
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,warehouse.getMessage());
+            }
+             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", warehouseRespDtoList);
+        }catch (Exception ex) {
+            logger.error("客户编码查询绑定的仓库信息出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+
+    }
+
 
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody

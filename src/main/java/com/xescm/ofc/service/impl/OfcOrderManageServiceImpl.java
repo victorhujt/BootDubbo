@@ -13,11 +13,14 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto;
 import com.xescm.epc.edas.dto.TransportNoDTO;
@@ -27,6 +30,7 @@ import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
 import com.xescm.ofc.model.dto.tfc.TransportDetailDTO;
 import com.xescm.ofc.model.dto.whc.WhcDelivery;
@@ -38,6 +42,7 @@ import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.utils.Response;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
@@ -53,6 +58,7 @@ import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +69,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -126,11 +133,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private DefaultMqProducer defaultMqProducer;
     @Autowired
     private CscContactEdasService cscContactEdasService;
-    @Resource
+    @Autowired
     private AcOrderEdasService acOrderEdasService;
 
-    @Resource
+    @Autowired
     private OfcOrderManageOperService ofcOrderManageOperService;
+    @Autowired
+    private OfcOrderPlaceService ofcOrderPlaceService;
+
+    @Autowired
+    private CscCustomerEdasService cscCustomerEdasService;
+    @Autowired
+    private OfcMerchandiserService ofcMerchandiserService;
+
+
+    private ModelMapper modelMapper = new ModelMapper();
 
 
 
@@ -296,7 +313,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 ofcPlannedDetail = new OfcPlannedDetail();
                 //保存计划单明细
-                ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
+               // ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
                 /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
@@ -314,7 +331,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 logger.debug("计划单明细保存成功");
             }
             if (ofcPlannedDetailList.size() > 0) {
-                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(), ofcPlannedDetailList);
+               // ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(), ofcPlannedDetailList);
             }
             RmcCompanyLineQO rmcCompanyLineQO = new RmcCompanyLineQO();
             if (!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
@@ -518,6 +535,33 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     }
 
     /**
+     * 保存货品详情
+     * @param ofcGoodsDetailsInfos 订单货品明细信息
+     * @param ofcFundamentalInformation 基本信息
+     */
+    private BigDecimal saveDetails(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,OfcFundamentalInformation ofcFundamentalInformation){
+        BigDecimal goodsAmountCount = new BigDecimal(0);
+        for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
+            if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                if((ofcGoodsDetails.getWeight() != null && ofcGoodsDetails.getWeight().compareTo(new BigDecimal(0)) != 0 ) || (ofcGoodsDetails.getCubage() != null && ofcGoodsDetails.getCubage().compareTo(new BigDecimal(0)) != 0 )){
+                }else{
+                    continue;
+                }
+            }
+            String orderCode = ofcFundamentalInformation.getOrderCode();
+            ofcGoodsDetails.setGoodsCode(ofcGoodsDetails.getGoodsCode().split("\\@")[0]);
+            ofcGoodsDetails.setOrderCode(orderCode);
+            ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+            ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+            ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+            ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity(), new MathContext(3));
+            ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+        }
+        return goodsAmountCount;
+    }
+
+    /**
      * 创建运输计划单-卡班
      * @param ofcTransplanInfo
      * @param ofcFundamentalInformation
@@ -549,7 +593,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             {
                 ofcPlannedDetail=new OfcPlannedDetail();
                 //保存计划单明细
-                ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
+                //ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
                 /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
@@ -567,7 +611,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 logger.debug("计划单明细保存成功");
             }
             if(ofcPlannedDetailList.size()>0){
-                ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
+                //ofcPlannedDetailMap.put(ofcPlannedDetail.getPlanCode(),ofcPlannedDetailList);
             }
             RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
             if(!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals("600")
@@ -804,7 +848,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             while(iter.hasNext())
             {
                 //保存计划单明细
-                ofcPlannedDetail.setPlanCode(ofcSiloprogramInfo.getPlanCode());
+                //ofcPlannedDetail.setPlanCode(ofcSiloprogramInfo.getPlanCode());
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo=iter.next();
                 /*if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
@@ -1157,7 +1201,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTraplanSourceStatus.setPlanCode(plan_code);
 
                     OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
-                    ofcPlannedDetail.setPlanCode(plan_code);
+                    //ofcPlannedDetail.setPlanCode(plan_code);
                     List<OfcPlannedDetail> ofcPlannedDetailList = ofcPlannedDetailService.select(ofcPlannedDetail);
                     ofcPlannedDetailMap.put(ofcTraplanSourceStatus.getPlanCode(),ofcPlannedDetailList);
                     ofcTraplanSourceStatus.setResourceAllocationStatus(planStatus);
@@ -1352,7 +1396,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         if (ofcPlannedDetail != null) {
             for (OfcPlannedDetail detail : ofcPlannedDetail) {
                 TransportDetailDTO transportDetailDTO = new TransportDetailDTO();
-                transportDetailDTO.setTransportNo(detail.getPlanCode());
+                //transportDetailDTO.setTransportNo(detail.getPlanCode());
                 transportDetailDTO.setItemCode(detail.getGoodsCode());
                 transportDetailDTO.setItemName(detail.getGoodsName());
                 if (null == detail.getQuantity()) {
@@ -2020,6 +2064,128 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     }
 
+    /**
+     * 生成仓储订单
+     * @param ofcOrderDTO 订单信息
+     * @param goodsDetailsList  货品信息
+     * @param reviewTag 操作标志位
+     * @param custId  客户Id
+     * @param cscContantAndCompanyDtoConsignor 发货方信息
+     * @param cscContantAndCompanyDtoConsignee  收货方信息
+     * @param cscSupplierInfoDto  供应商信息
+     * @param authResDtoByToken
+     * @return
+     */
+    @Override
+    public Wrapper<?> saveStorageOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> goodsDetailsList,String reviewTag,String custId,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor,CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto,
+                                       AuthResDto authResDtoByToken) {
+        logger.info("开始创建仓储订单");
+        OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
+        OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
+        if (ofcWarehouseInformation.getProvideTransport() == 1) {
+            ofcFundamentalInformation.setTransportType("整车");
+            if (ofcDistributionBasicInfo == null) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
+            }
+        }
+        OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
+
+        //订单的基本信息
+        ofcFundamentalInformation.setCreationTime(new Date());
+        ofcFundamentalInformation.setCreator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setCreatorName(authResDtoByToken.getUserName());
+        ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
+        ofcFundamentalInformation.setOrderType(WAREHOUSEDISTRIBUTIONORDER);
+
+        //校验当前登录用户的身份信息,并存放大区和基地信息
+        ofcFundamentalInformation = ofcOrderPlaceService.getAreaAndBaseMsg(authResDtoByToken, ofcFundamentalInformation);
+        ofcFundamentalInformation.setOperTime(new Date());
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
+        ofcFundamentalInformation.setOrderSource("手动");//订单来源
+        //仓储下单
+        if (PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")) {
+            StringBuffer notes = new StringBuffer();
+            int custOrderCode = 0;
+            if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
+                custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+            }
+
+            if (custOrderCode < 1){//根据客户订单编号查询唯一性
+                ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
+                ofcFundamentalInformation.setCustCode(custId);
+                if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
+                    QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                    queryCustomerCodeDto.setCustomerCode(custId);
+                    Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                    if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
+                        throw new BusinessException(cscCustomerVo.getMessage());
+                    }else if(null == cscCustomerVo.getResult()){
+                        throw new BusinessException("客户中心没有查到该客户!");
+                    }
+                    ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
+                }
+                ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+
+                BigDecimal goodsAmountCount = saveDetails(goodsDetailsList,ofcFundamentalInformation);
+
+                //配送基本信息
+                ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
+                if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){
+
+                    if(null == ofcWarehouseInformation.getProvideTransport()){
+                        ofcWarehouseInformation.setProvideTransport(WAREHOUSEORDERNOTPROVIDETRANS);
+                    }
+                    if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
+//                        Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+//                        if(Wrapper.ERROR_CODE == wrapper.getCode()){
+//                            throw new BusinessException(wrapper.getMessage());
+//                        }
+                        ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
+                        ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
+                        ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                        ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
+                        ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
+                        ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                    }
+
+                    //仓储信息
+                    ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                    ofcWarehouseInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
+                    ofcWarehouseInformation.setCreator(ofcFundamentalInformation.getCreator());
+                    ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOperTime());
+                    ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
+                    ofcWarehouseInformationService.save(ofcWarehouseInformation);
+                }
+                //保存订单日志
+                notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
+                notes.append(" 订单已创建");
+                notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+                notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+                ofcOrderStatus.setNotes(notes.toString());
+                ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
+                ofcOrderStatus.setStatusDesc("待审核");
+                ofcOrderStatus.setLastedOperTime(new Date());
+                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
+                ofcOrderStatusService.save(ofcOrderStatus);
+
+
+                //添加基本信息
+                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+                //添加开单员
+                if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
+                    ofcMerchandiserService.save(ofcMerchandiser);
+                }
+            }else{
+                throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
+            }
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+
     public RmcWarehouseRespDto getWareHouseByCodeToPlan(String wareHouseCode){
         OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
         RmcWarehouseDto rmcWarehouse=new RmcWarehouseDto();
@@ -2032,6 +2198,98 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("仓库编码传值为空");
         }
     }
+
+    /**
+     * 校验收发货方信息
+     * @param cscContantAndCompanyDtoConsignor
+     * @param cscContantAndCompanyDtoConsignee
+     * @return
+     */
+    private Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee){
+        if(null == cscContantAndCompanyDtoConsignor || null == cscContantAndCompanyDtoConsignee){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参为空");
+        }
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactCompanyDto() || null == cscContantAndCompanyDtoConsignee.getCscContactCompanyDto()){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方信息为空");
+        }
+        if(null == cscContantAndCompanyDtoConsignor.getCscContactDto() || null == cscContantAndCompanyDtoConsignee.getCscContactDto()){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验收货方信息入参收货方联系人信息为空");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactCompanyDto().getContactCompanyName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入发货方信息");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getContactName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getPhone())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人电话未填写");
+        }
+        //二级地址还需特殊处理
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getProvinceName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址未选择");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getCityName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
+        }
+        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
+        }*/
+
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompanyDto().getContactCompanyName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getContactName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getPhone())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人电话未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getProvinceName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
+        }
+        if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getCityName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
+        }
+        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
+        }*/
+
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+
+    /**
+     * 校验供应商联系人
+     */
+    public Wrapper<?> validateSupportContactMessage(CscSupplierInfoDto cscSupplierInfoDto){
+        if(null == cscSupplierInfoDto){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"校验供应商联系人入参为空");
+        }
+
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入供应商信息");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getContactName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人名称未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getContactPhone())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人电话未填写");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getProvinceName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址未选择");
+        }
+        if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getCityName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
+        }
+        /*if(PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getAreaName())){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"供应商联系人地址不完整");
+        }*/
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+
+    }
+
+
+
+
 
     public OfcTransplanInfo copyDarturePlace(OfcTransplanInfo ofcTransplanInfo,RmcWarehouseRespDto rmcWarehouse){
         if(!PubUtils.trimAndNullAsEmpty(rmcWarehouse.getWarehouseCode()).equals("")){

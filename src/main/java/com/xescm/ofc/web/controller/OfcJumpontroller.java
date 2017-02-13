@@ -13,9 +13,13 @@ import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.OfcDmsCallbackStatusService;
+import com.xescm.ofc.service.OfcMerchandiserService;
+import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -48,6 +52,8 @@ public class OfcJumpontroller extends BaseController{
     private OfcOrderManageOperService ofcOrderManageOperService;
     @Autowired
     private CscCustomerEdasService cscCustomerEdasService;
+    @Autowired
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
 
 
     @RequestMapping(value="/ofc/orderPlace")
@@ -334,5 +340,21 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/operDistiExcelAdditions")
     public String excelAdditions(){
         return "oper_distri_excel_additions";
+    }
+
+    /**
+     * 跳转运营中心→入库开单
+     * @return
+     */
+    @RequestMapping(value = "/ofc/orderStorageIn")
+    public ModelAndView orderStorageIn(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in");
+        logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
+        model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
+        setDefaultModel(model);
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        model.addAttribute("orderTime", DateUtils.Date2String(cal.getTime(), DateUtils.DateFormatType.TYPE2));
+        return modelAndView;
     }
 }
