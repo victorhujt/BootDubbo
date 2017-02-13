@@ -179,7 +179,30 @@ public class OfcFundamentalInformation {
     @Transient
     private String selfCustOrderCode;
 
-
+    /**
+     * 销售组织(众品SAP专用)
+     */
+    private String saleOrganization;
+    /**
+     * 产品组(众品SAP专用)
+     */
+    private String productGroup;
+    /**
+     * 销售部门(众品SAP专用)
+     */
+    private String saleDepartment;
+    /**
+     * 销售组(众品SAP专用)
+     */
+    private String saleGroup;
+    /**
+     * 销售部门描述(众品SAP专用)
+     */
+    private String saleDepartmentDesc;
+    /**
+     * 销售组描述(众品SAP专用)
+     */
+    private String saleGroupDesc;
 
     /**
      * 操作时间

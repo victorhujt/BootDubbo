@@ -416,8 +416,8 @@
       <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
         <div class="width-267">
           <div class="bk-1 position-relative">
-            <input class="col-xs-10 col-xs-12 bk-1 " name="expectedArrivedTime" id="expectedArrivedTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
-            <label class="btn btn-minier no-padding-right initBtn" id="" for="expectedArrivedTime">
+            <input class="col-xs-10 col-xs-12 bk-1 " name="pickupTime" id="pickupTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
+            <label class="btn btn-minier no-padding-right initBtn" id="" for="pickupTime">
               <i class="fa fa-calendar l-cor bigger-130"></i>
             </label>
           </div>
@@ -1643,8 +1643,8 @@
       orderInfo.insure = "0";//是否货物保险 默认否
       orderInfo.collectFlag = "0";//是否代收货款 默认否
       orderInfo.merchandiser = $("#merchandiser").val();
-      if("" != $("#expectedArrivedTime").val()){
-        orderInfo.expectedArrivedTime = $('#expectedArrivedTime').val()+ ":00";
+      if("" != $("#pickupTime").val()){
+        orderInfo.pickupTime = $('#pickupTime').val()+ ":00";
       }
 
       orderInfo.custName = $("#custName").val();//后端需特别处理
