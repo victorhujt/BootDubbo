@@ -12,6 +12,9 @@
       padding:6px 8px !important;
       line-height:19px!important;
     }
+    .blue{
+      margin-right:5px;
+    }
   </style>
   <link rel="stylesheet" type="text/css" href="../css/jquery.editable-select.min.css"/>
 </head>
