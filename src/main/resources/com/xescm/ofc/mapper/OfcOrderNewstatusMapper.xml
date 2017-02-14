@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcOrderNewstatusMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcOrderNewstatus" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_latest_status" property="orderLatestStatus" jdbcType="VARCHAR" />
+    <result column="status_update_time" property="statusUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="status_create_time" property="statusCreateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>
