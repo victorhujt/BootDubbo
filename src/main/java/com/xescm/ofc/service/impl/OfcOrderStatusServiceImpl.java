@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
-import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATION_IN;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
  * 订单状态
@@ -111,16 +110,41 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public void cancelOrderStateByOrderCode(String orderCode) {
+        OfcOrderNewstatus orderNewstatus=new OfcOrderNewstatus();
+        orderNewstatus.setOrderCode(orderCode);
+        orderNewstatus.setOrderLatestStatus(HASBEEN_CANCELED);
+        orderNewstatus.setStatusUpdateTime(new Date());
+        ofcOrderNewstatusService.update(orderNewstatus);
         ofcOrderStatusMapper.cancelOrderStateByOrderCode(orderCode);
     }
 
     @Override
     public OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode) {
-        return ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
+        OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(orderCode);
+        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        if(orderNewstatus==null
+                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+            ofcOrderStatus = ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
+        }else{
+            ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
+            ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
+        }
+        return ofcOrderStatus;
     }
 
     public OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode) {
-        return ofcOrderStatusMapper.queryLastTimeOrderByOrderCode(orderCode);
+        OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(orderCode);
+        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        if(orderNewstatus==null
+                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+            ofcOrderStatus = ofcOrderStatusMapper.queryLastTimeOrderByOrderCode(orderCode);
+        }else{
+            ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
+            ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
+        }
+        return ofcOrderStatus;
     }
 
     @Override
