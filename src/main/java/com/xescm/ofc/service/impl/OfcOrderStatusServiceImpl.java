@@ -1,12 +1,11 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.OfcOrderStatusService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
