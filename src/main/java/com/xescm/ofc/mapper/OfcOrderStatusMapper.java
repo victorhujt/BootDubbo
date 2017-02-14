@@ -1,5 +1,6 @@
 package com.xescm.ofc.mapper;
 
+import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
@@ -15,6 +16,8 @@ public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
     List<OfcOrderStatus> orderStatusScreen(Map<String, String> mapperMap);
 
     OfcOrderStatus orderStatusSelect(Map<String, String> mapperMap);
+
+    OfcOrderNewstatus orderStatusSelectNew(Map<String, String> mapperMap);
 
     OfcOrderStatus queryOrderStateByOrderCode(@Param(value = "orderCode") String orderCode);
 

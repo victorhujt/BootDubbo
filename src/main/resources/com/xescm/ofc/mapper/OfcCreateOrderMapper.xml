@@ -36,7 +36,7 @@
   <!--根据客户订单编号与货主编码查询是否存在订单-->
   <select id="queryCountByOrderStatus" resultType="int">
     SELECT
-      COUNT(*)
+      COUNT(ofi.order_code)
     FROM
       ofc_fundamental_information ofi
     WHERE 1=1

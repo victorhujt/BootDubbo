@@ -5,6 +5,7 @@ import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
+import com.xescm.ofc.service.OfcOrderNewstatusService;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEENCOMPLETED;
-import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATIONIN;
+import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
+import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATION_IN;
 
 /**
  * 订单状态
@@ -27,6 +28,8 @@ import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATIONIN;
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
     @Resource
     private OfcOrderStatusMapper ofcOrderStatusMapper;
+    @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -84,9 +87,15 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
-            OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
-            if (ofcOrderStatus == null) {
-                return new OfcOrderStatus();
+            OfcOrderNewstatus orderNewstatus=ofcOrderStatusMapper.orderStatusSelectNew(mapperMap);
+            OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+            if(orderNewstatus==null
+                    || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                    || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+                ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
+            }else{
+                ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
+                ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
             }
             return ofcOrderStatus;
         } else {
@@ -126,8 +135,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }else {
                     orderNewstatus=new OfcOrderNewstatus();
                 }
-                if(ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN)){
-                    if(!PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEENCOMPLETED)){
+                if(ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATION_IN)){
+                    if(!PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)){
                         updateOrderNewStatus(ofcOrderStatus,tag);
                     }
                 }else{

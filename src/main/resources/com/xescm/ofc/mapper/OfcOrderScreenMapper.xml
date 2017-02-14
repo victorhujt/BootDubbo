@@ -126,19 +126,27 @@
         FROM
         ofc_fundamental_information ofi
         LEFT JOIN (
-          SELECT
-            temp.order_code,
-            temp.order_status,
-            temp.status_desc,
-            temp.lasted_oper_time,
-            temp.notes,
-            temp.operator,
-            temp.creat_time
-          FROM ofc_order_status temp
-          WHERE temp.lasted_oper_time = (
-          SELECT MAX(lasted_oper_time) FROM ofc_order_status
-            WHERE temp.order_code = order_code
-        ) ORDER BY temp.lasted_oper_time DESC
+        SELECT
+        temp.order_code,
+        temp.order_status,
+        temp.status_desc,
+        temp.lasted_oper_time,
+        temp.notes,
+        temp.operator,
+        temp.creat_time
+        FROM
+        ofc_order_status temp
+        WHERE
+        temp.lasted_oper_time = (
+        SELECT
+        MAX(lasted_oper_time)
+        FROM
+        ofc_order_status
+        WHERE
+        temp.order_code = order_code
+        )
+        ORDER BY
+        temp.lasted_oper_time DESC
         ) oos ON ofi.order_code = oos.order_code
         LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
         LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
