@@ -26,7 +26,6 @@ import com.xescm.epc.edas.dto.TransportNoDTO;
 import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
-import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.OrderSourceEnum;
@@ -2014,6 +2013,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 //        tfcTransport.setMoney();// ??
         tfcTransport.setFromCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
         tfcTransport.setFromCustomerName(ofcDistributionBasicInfo.getConsignorContactName());
+        tfcTransport.setFromCustomerNameCode(ofcDistributionBasicInfo.getConsignorContactCode());
         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDepartureProvince())){
             // 拼3级
             StringBuilder fromCustomerAddress = new StringBuilder(ofcDistributionBasicInfo.getDepartureProvince());
@@ -2025,14 +2025,26 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
             tfcTransport.setFromCustomerAddress(fromCustomerAddress.toString());
         }
+
         tfcTransport.setFromCustomer(ofcDistributionBasicInfo.getConsignorName());// ??
         tfcTransport.setFromCustomerTle(ofcDistributionBasicInfo.getConsignorContactPhone());
         tfcTransport.setFromProvince(ofcDistributionBasicInfo.getDepartureProvince());
         tfcTransport.setFromCity(ofcDistributionBasicInfo.getDepartureCity());
         tfcTransport.setFromDistrict(ofcDistributionBasicInfo.getDepartureDistrict());
         tfcTransport.setFromTown(ofcDistributionBasicInfo.getDepartureTowns());
+        String[] departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
+        if(departurePlaceCode.length > 0) {
+            tfcTransport.setFromProvinceCode(departurePlaceCode[0]);
+            if(departurePlaceCode.length > 1){
+                tfcTransport.setFromCityCode(departurePlaceCode[1]);
+                if(departurePlaceCode.length > 2){
+                    tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
+                }
+            }
+        }
         tfcTransport.setToCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());// 收货方编码
         tfcTransport.setToCustomerName(ofcDistributionBasicInfo.getConsigneeContactName());// 收货方联系人
+        tfcTransport.setToCustomerNameCode(ofcDistributionBasicInfo.getConsigneeContactCode());//收货方联系人编码
         if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationProvince())){
             // 拼3级
             StringBuilder toCustomerAddress = new StringBuilder(ofcDistributionBasicInfo.getDestinationProvince());
@@ -2050,6 +2062,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         tfcTransport.setToCity(ofcDistributionBasicInfo.getDestinationCity());
         tfcTransport.setToDistrict(ofcDistributionBasicInfo.getDestinationDistrict());
         tfcTransport.setToTown(ofcDistributionBasicInfo.getDestinationTowns());
+        String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
+        if(destinationPlaceCode.length > 0) {
+            tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
+            if(destinationPlaceCode.length > 1){
+                tfcTransport.setToCityCode(destinationPlaceCode[1]);
+                if(destinationPlaceCode.length > 2){
+                    tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+                }
+            }
+        }
 //        tfcTransport.setToLon();// ??
 //        tfcTransport.setToLat();// ??
 //        tfcTransport.setWareHouesCode();// ??

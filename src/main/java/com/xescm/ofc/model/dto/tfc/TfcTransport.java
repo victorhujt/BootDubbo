@@ -12,12 +12,9 @@ public class TfcTransport implements Serializable {
 
     private Integer id;
 
-    private String tfcBillNo;//运输管理中心运输单
-
     private String fromSystem;//系统来源
 
     private String transportNo;//运输单号
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;//创建时间
@@ -35,11 +32,9 @@ public class TfcTransport implements Serializable {
     private String customerTel;//客户电话
 
     private String fromTransportName;//运输单产生机构
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date expectedShipmentTime;//预计发货时间
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date expectedArriveTime;//预计到达时间
@@ -54,7 +49,9 @@ public class TfcTransport implements Serializable {
 
     private String fromCustomerCode;//发货客户编码
 
-    private String fromCustomerName;//发货客户名称
+    private String fromCustomerName;//发货客户联系人
+
+    private String fromCustomerNameCode;//发货客户联系人编码
 
     private String fromCustomerAddress;//发货客户地址
 
@@ -73,6 +70,8 @@ public class TfcTransport implements Serializable {
     private String toCustomerCode;//收货客户编码
 
     private String toCustomerName;//收货客户名称
+
+    private String toCustomerNameCode;//收货客户编码
 
     private String toCustomerAddress;//收货客户地址
 
@@ -98,17 +97,17 @@ public class TfcTransport implements Serializable {
 
     private String notes;//备注
 
-    private String marketOrg;
+    private String marketOrg;//销售组织
 
-    private String productTeam;
+    private String productTeam;//产品组
 
-    private String marketDep;
+    private String marketDep;//销售部门
 
-    private String marketTeam;
+    private String marketTeam;//销售组
 
-    private String marketDepDes;
+    private String marketDepDes;//销售部门描述
 
-    private String marketTeamDes;
+    private String marketTeamDes;//销售组描述
 
     private String transportSource;//运单来源
 
@@ -129,7 +128,6 @@ public class TfcTransport implements Serializable {
     private String destinationCode;//目的地区域编码
 
     private BigDecimal serviceCharge;//服务费用
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderTime;//日期
@@ -137,7 +135,6 @@ public class TfcTransport implements Serializable {
     private String createPersonnel;//创建人员
 
     private String voidPersonnel;//作废人员
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date voidTime;//作废时间
@@ -157,6 +154,18 @@ public class TfcTransport implements Serializable {
     private String schedulingState;//调度状态
 
     private String transportPoolName;//运力池名称
+
+    private String fromProvinceCode;//出发省份编码
+
+    private String fromCityCode;//出发城市编码
+
+    private String fromDistrictCode;//出发县区编码
+
+    private String toProvinceCode;//到达省份编码
+
+    private String toCityCode;//到达城市编码
+
+    private String toDistrictCode;//到达县区编码
 
     public String getCustomerOrderCode() {
         return customerOrderCode;
@@ -246,14 +255,6 @@ public class TfcTransport implements Serializable {
         this.id = id;
     }
 
-    public String getTfcBillNo() {
-        return tfcBillNo;
-    }
-
-    public void setTfcBillNo(String tfcBillNo) {
-        this.tfcBillNo = tfcBillNo == null ? null : tfcBillNo.trim();
-    }
-
     public String getFromSystem() {
         return fromSystem;
     }
@@ -316,6 +317,22 @@ public class TfcTransport implements Serializable {
 
     public void setCustomerTel(String customerTel) {
         this.customerTel = customerTel == null ? null : customerTel.trim();
+    }
+
+    public String getFromCustomerNameCode() {
+        return fromCustomerNameCode;
+    }
+
+    public void setFromCustomerNameCode(String fromCustomerNameCode) {
+        this.fromCustomerNameCode = fromCustomerNameCode;
+    }
+
+    public String getToCustomerNameCode() {
+        return toCustomerNameCode;
+    }
+
+    public void setToCustomerNameCode(String toCustomerNameCode) {
+        this.toCustomerNameCode = toCustomerNameCode;
     }
 
     public String getFromTransportName() {
@@ -708,5 +725,53 @@ public class TfcTransport implements Serializable {
 
     public void setTransportPoolName(String transportPoolName) {
         this.transportPoolName = transportPoolName;
+    }
+
+    public String getFromProvinceCode() {
+        return fromProvinceCode;
+    }
+
+    public void setFromProvinceCode(String fromProvinceCode) {
+        this.fromProvinceCode = fromProvinceCode;
+    }
+
+    public String getFromCityCode() {
+        return fromCityCode;
+    }
+
+    public void setFromCityCode(String fromCityCode) {
+        this.fromCityCode = fromCityCode;
+    }
+
+    public String getFromDistrictCode() {
+        return fromDistrictCode;
+    }
+
+    public void setFromDistrictCode(String fromDistrictCode) {
+        this.fromDistrictCode = fromDistrictCode;
+    }
+
+    public String getToProvinceCode() {
+        return toProvinceCode;
+    }
+
+    public void setToProvinceCode(String toProvinceCode) {
+        this.toProvinceCode = toProvinceCode;
+    }
+
+    public String getToCityCode() {
+        return toCityCode;
+    }
+
+    public void setToCityCode(String toCityCode) {
+        this.toCityCode = toCityCode;
+    }
+
+    public String getToDistrictCode() {
+        return toDistrictCode;
+    }
+
+    public void setToDistrictCode(String toDistrictCode) {
+        this.toDistrictCode = toDistrictCode;
     }
 }
