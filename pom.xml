@@ -71,7 +71,11 @@
 			<artifactId>hsf.schema</artifactId>
 			<version>edas1.0.1</version>
 		</dependency>
-
+		<dependency>
+			<artifactId>xescm-tfc-api</artifactId>
+			<groupId>com.xescm.api</groupId>
+			<version>1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>

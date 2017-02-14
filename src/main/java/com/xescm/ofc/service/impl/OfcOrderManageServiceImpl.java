@@ -54,6 +54,8 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.tfc.edas.model.dto.CancelOrderDTO;
+import com.xescm.tfc.edas.service.CancelOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
@@ -144,10 +146,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private CscContactEdasService cscContactEdasService;
     @Resource
     private AcOrderEdasService acOrderEdasService;
-
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
-
+    @Resource
+    private CancelOrderEdasService cancelOrderEdasService;
 
 
     /**
@@ -829,7 +831,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @return
      */
     private void orderCancelToWhc(String orderCode) {
-        //调用仓储中心取消接口
+        logger.info("调用仓储中心取消接口, 订单号:{}",orderCode);
     }
 
     /**
@@ -838,7 +840,15 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @return
      */
     private void orderCancelToTfc(String orderCode) {
-        //调用运输中心取消接口
+        logger.info("调用运输中心取消接口, 订单号:{}",orderCode);
+        CancelOrderDTO cancelOrderDTO = new CancelOrderDTO();
+        cancelOrderDTO.setOrderNo(orderCode);
+        Wrapper wrapper = cancelOrderEdasService.cancelOrder(cancelOrderDTO);
+        if(wrapper == null || Wrapper.ERROR_CODE == wrapper.getCode()){
+            logger.error("调用运输中心取消接口取消订单失败,原因:{}",null == wrapper ? "wrapper为null" : wrapper.getMessage());
+            throw new BusinessException("取消订单失败,原因:" + (null == wrapper ? "接口异常!" : wrapper.getMessage()));
+        }
+        logger.info("调用运输中心取消接口, 订单号:{}, 取消成功!",orderCode);
     }
 
     /**
@@ -1894,6 +1904,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         ofcOrderStatus.setOrderStatus(orderStatus);
         logger.debug("订单进行自动审核,当前订单号:{}, 当前订单状态:{}",ofcFundamentalInformation.getOrderCode(),ofcOrderStatus.toString());
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals("review")) {
+            //创单接口订单和钉钉录单补充大区基地信息
+            if(StringUtils.equals(ofcFundamentalInformation.getOrderSource(),DING_DING)
+                    || StringUtils.equals(ofcFundamentalInformation.getCustCode(), CreateOrderApiConstant.XEBEST_CUST_CODE)
+                    || StringUtils.equals(ofcFundamentalInformation.getCustCode(), CreateOrderApiConstant.XEBEST_CUST_CODE_TEST)){
+                updateOrderAreaAndBase(ofcFundamentalInformation,ofcDistributionBasicInfo);
+            }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
             ofcOrderStatus.setStatusDesc("已审核");
@@ -1945,6 +1961,17 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
 
         return String.valueOf(Wrapper.SUCCESS_CODE);
+    }
+
+    /**
+     * 更新创单接口订单和钉钉录单大区基地信息
+     * @param ofcFundamentalInformation 订单基本信息
+     */
+    private void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
+        rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+        RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo,"Pickup");
+        updateOrderAreaAndBase(rmcPickup,ofcFundamentalInformation);
     }
 
 
@@ -2124,6 +2151,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             tfcTransportDetail.setProductionTime(ofcGoodsDetailsInfo.getProductionTime());
             tfcTransportDetail.setInvalidTime(ofcGoodsDetailsInfo.getInvalidTime());
             tfcTransportDetail.setTotalBox(ofcGoodsDetailsInfo.getTotalBox());
+            tfcTransportDetails.add(tfcTransportDetail);
         }
         tfcTransport.setProductDetail(tfcTransportDetails);
         return tfcTransport;
