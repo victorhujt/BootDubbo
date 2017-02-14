@@ -11,9 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.xescm.ofc.constant.OrderConstConstant.HASBEENCOMPLETED;
+import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATIONIN;
 
 /**
  * 订单状态
@@ -109,5 +113,45 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     public OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode) {
         return ofcOrderStatusMapper.queryLastTimeOrderByOrderCode(orderCode);
+    }
+
+    @Override
+    public int save(OfcOrderStatus ofcOrderStatus) {
+        if (ofcOrderStatus!=null
+                && !PubUtils.trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()).equals("")){
+            if(!PubUtils.trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()).equals("")){
+                OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(ofcOrderStatus.getOrderCode());
+                String tag="noStatus";
+                if(orderNewstatus!=null){
+                    tag="haveStatus";
+                }else {
+                    orderNewstatus=new OfcOrderNewstatus();
+                }
+                if(ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATIONIN)){
+                    if(!PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEENCOMPLETED)){
+                        updateOrderNewStatus(ofcOrderStatus,tag);
+                    }
+                }else{
+                    updateOrderNewStatus(ofcOrderStatus,tag);
+                }
+            }else {
+                throw new BusinessException("订单状态为空，保存订单状态失败");
+            }
+        }
+        return super.save(ofcOrderStatus);
+    }
+
+    public void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus,String tag){
+        OfcOrderNewstatus orderNewstatus=new OfcOrderNewstatus();
+        orderNewstatus.setOrderCode(ofcOrderStatus.getOrderCode());
+        orderNewstatus.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
+        if(tag.equals("haveStatus")){
+            orderNewstatus.setStatusUpdateTime(new Date());
+            ofcOrderNewstatusService.update(orderNewstatus);
+        }else if(tag.equals("noStatus")){
+            orderNewstatus.setStatusUpdateTime(new Date());
+            orderNewstatus.setStatusCreateTime(new Date());
+            ofcOrderNewstatusService.save(orderNewstatus);
+        }
     }
 }
