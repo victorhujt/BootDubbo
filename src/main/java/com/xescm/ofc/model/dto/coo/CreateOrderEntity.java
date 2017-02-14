@@ -480,6 +480,34 @@ public class CreateOrderEntity {
      */
     private List<CreateOrderGoodsInfo> createOrderGoodsInfos;
 
+    /**
+     * 是否进行二次配送
+     * "1"是, "0"否
+     */
+    private String twoDistribution;
+
+    /**
+     * 是否进行上门提货
+     * "1"是, "0"否
+     */
+    private String pickUpGoods;
+
+
+    public String getTwoDistribution() {
+        return twoDistribution;
+    }
+
+    public void setTwoDistribution(String twoDistribution) {
+        this.twoDistribution = twoDistribution;
+    }
+
+    public String getPickUpGoods() {
+        return pickUpGoods;
+    }
+
+    public void setPickUpGoods(String pickUpGoods) {
+        this.pickUpGoods = pickUpGoods;
+    }
 
     public String getConsignorProvinceCode() {
         return consignorProvinceCode;

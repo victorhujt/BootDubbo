@@ -196,7 +196,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         cannelOrderVo.setCustOrderCode(cancelOrderDto.getCustOrderCode());
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(cancelOrderDto.getCustOrderCode(), cancelOrderDto.getCustCode());
         if (ofcFundamentalInformation == null) {
-            cannelOrderVo.setReason("发货单号不存在");
+            cannelOrderVo.setReason("发货单号不存在或已经取消");
             cannelOrderVo.setResultCode("0");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         }

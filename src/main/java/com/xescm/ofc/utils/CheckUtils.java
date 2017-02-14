@@ -200,7 +200,7 @@ public class CheckUtils {
             }
             List<CscWarehouseDto> cscWarehouseList = listWrapper.getResult();
             for (CscWarehouseDto c : cscWarehouseList) {
-                if (StringUtils.equals(c.getCustomerCode(), warehouse)) {
+                if (StringUtils.equals(c.getWarehouseCode(), warehouse)) {
                     return new ResultModel(ResultModel.ResultEnum.CODE_0000);
                 }
             }
