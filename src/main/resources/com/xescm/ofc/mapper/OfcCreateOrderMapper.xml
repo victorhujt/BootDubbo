@@ -70,7 +70,7 @@
           temp.lasted_oper_time,
           temp.notes,
           temp.operator,
-          temp.creat_time
+          temp.creation_time
         FROM
         ofc_order_status temp
         WHERE temp.lasted_oper_time =

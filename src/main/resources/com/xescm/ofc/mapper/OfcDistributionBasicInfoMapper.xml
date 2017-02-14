@@ -270,7 +270,7 @@
     s.lasted_oper_time,
     s.notes,
     s.operator,
-    s.creat_time
+    s.creation_time
     FROM
     ofc_order_status s,
     (
