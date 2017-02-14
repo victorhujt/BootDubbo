@@ -76,6 +76,8 @@ import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.SILOPROGRAMINFO_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
+import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -189,14 +191,14 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
 
                 String orderType = ofcFundamentalInformation.getOrderType();
-                if (PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.TRANSPORT_ORDER)) {
+                if (PubUtils.trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo = new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
                     if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITH_THE_KABAN)) {
                         transPlanCreate(ofcTransplanInfo, ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcFundamentalInformation.getCustName(), ofcFinanceInformation);
                     }//客户平台暂时不支持卡班
-                } else if (PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.WAREHOUSE_DIST_ORDER)) {
+                } else if (PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {
                     //仓储订单
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                     OfcSiloprogramInfo ofcSiloprogramInfo = new OfcSiloprogramInfo();
@@ -699,7 +701,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         Wrapper<?> wrapper = epcOfc2DmsEdasService.addDistributionBasicInfo(ofcDistributionBasicInfoDtoEpc);
         if(ERROR_CODE == wrapper.getCode()){
-            logger.error("向分拣中心推送卡班订单失败");
+            logger.error("向分拣中心推送卡班订单失败,失败原因:{}",wrapper.getMessage());
             throw new BusinessException("向分拣中心推送卡班订单失败");
         }else if(Objects.equals("100101", String.format("%d", wrapper.getCode()))){
             logger.error("分拣中心已存在您所输入的运输单号,请重新输入!");
@@ -792,6 +794,52 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
         }
         return planCode;
+    }
+
+    /**
+     * 订单取消
+     * @param orderCode 订单号
+     *
+     */
+    private void orderCancel(String orderCode){
+        logger.info("发起订单取消!");
+        logger.info("==> orderCode={}",orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        if(null == ofcFundamentalInformation){
+            logger.error("订单取消失败,查不到该订单!");
+            throw new BusinessException("订单取消失败,查不到该订单!");
+        }
+        String orderType = ofcFundamentalInformation.getOrderType();
+        if(StringUtils.equals(orderType,TRANSPORT_ORDER)){
+            orderCancelToTfc(orderCode);
+        }else if(StringUtils.equals(orderType,WAREHOUSE_DIST_ORDER)){
+            orderCancelToWhc(orderCode);
+            OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
+            ofcWarehouse.setOrderCode(orderCode);
+            OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
+            if(ofcWarehouseInformation.getProvideTransport() == YES){
+                orderCancelToTfc(orderCode);
+            }
+        }
+        logger.info("订单取消成功!");
+    }
+
+    /**
+     * 调用仓储中心取消接口
+     * @param orderCode 订单编号
+     * @return
+     */
+    private void orderCancelToWhc(String orderCode) {
+        //调用仓储中心取消接口
+    }
+
+    /**
+     * 调用运输中心取消接口
+     * @param orderCode 订单编号
+     * @return
+     */
+    private void orderCancelToTfc(String orderCode) {
+        //调用运输中心取消接口
     }
 
     /**
@@ -948,7 +996,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEEN_COMPLETED))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEEN_CANCELED))){
             StringBuilder notes = new StringBuilder();
-            planCancle(orderCode,authResDtoByToken.getUserName());
+
+            //调用各中心请求直接取消订单
+            orderCancel(orderCode);
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             ofcOrderStatus.setOrderStatus(HASBEEN_CANCELED);
@@ -1359,7 +1409,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
                 ofcFundamentalInformation.setOperatorName(userName);
                 ofcFundamentalInformation.setOperTime(new Date());
-                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(OrderConstant.TRANSPORT_ORDER)){
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORT_ORDER)){
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     if(!ofcFundamentalInformation.getBusinessType().equals(WITH_THE_KABAN)){//非卡班类型直接创建运输计划单
@@ -1784,7 +1834,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
                 String orderType = ofcFundamentalInformation.getOrderType();
                 String businessType = ofcFundamentalInformation.getBusinessType();
-                if (PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.TRANSPORT_ORDER)){  // 运输订单
+                if (PubUtils.trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)){  // 运输订单
                     //运输订单
                     OfcTransplanInfo ofcTransplanInfo=new OfcTransplanInfo();
                     ofcTransplanInfo.setProgramSerialNumber("1");
@@ -1793,7 +1843,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     }else {
                         transPlanCreateKaBan(ofcTransplanInfo,ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,userName);
                     }
-                }else if(PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.WAREHOUSE_DIST_ORDER)
+                }else if(PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)
                         && PubUtils.trimAndNullAsEmpty(businessType).equals(SALES_OUT_OF_THE_LIBRARY)
                         && Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)){            // 仓配订单
                     //000创建仓储计划单
@@ -1862,9 +1912,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
             String orderType = ofcFundamentalInformation.getOrderType();
             String businessType = ofcFundamentalInformation.getBusinessType();
-            if (PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.TRANSPORT_ORDER)) {  // 运输订单
+            if (PubUtils.trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
-            }else if(PubUtils.trimAndNullAsEmpty(orderType).equals(OrderConstant.WAREHOUSE_DIST_ORDER)
+            }else if(PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)
                     && PubUtils.trimAndNullAsEmpty(businessType).equals(SALES_OUT_OF_THE_LIBRARY)
                     && Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)){//仓储订单
                 //仓储订单推仓储中心
