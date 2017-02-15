@@ -268,7 +268,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     throw new BusinessException("Excel导入异常");
                                 }
                                 goodsApiVoList.add(ofcGoodsApiVo); //
-                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsName());
+                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsCode());
                             }
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
