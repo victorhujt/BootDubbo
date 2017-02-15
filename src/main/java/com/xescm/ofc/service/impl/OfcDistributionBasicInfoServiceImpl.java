@@ -145,4 +145,9 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
     public int checkTransCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         return ofcDistributionBasicInfoMapper.checkTransCode(ofcDistributionBasicInfo);
     }
+
+    @Override
+    public OfcDistributionBasicInfo queryByOrderCode(String orderCode) {
+        return ofcDistributionBasicInfoMapper.queryByOrderCode(orderCode);
+    }
 }

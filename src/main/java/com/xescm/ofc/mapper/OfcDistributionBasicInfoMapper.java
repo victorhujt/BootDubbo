@@ -18,4 +18,5 @@ public interface OfcDistributionBasicInfoMapper extends MyMapper<OfcDistribution
     List<String> getOrderCodeByTransCode(Map<String,String> mapperMap);
     OfcBatchOrderVo queryByBatchNumber(@Param("orderBatchNumber") String orderBatchNumber);
     List<String> getKabanOrderCodeByTransCode(Map<String, String> mapperMap);
+    OfcDistributionBasicInfo queryByOrderCode(@Param("orderCode") String orderCode);
 }

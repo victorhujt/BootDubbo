@@ -11,6 +11,7 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);
     int checkTransCode(OfcDistributionBasicInfo ofcDistributionBasicInfo);
+    OfcDistributionBasicInfo queryByOrderCode(String orderCode);
     OfcDistributionBasicInfo distributionBasicInfoSelect(String code);
 
     String getOrderCodeByTransCode(String transCode);
