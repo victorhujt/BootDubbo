@@ -1378,7 +1378,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     throw new BusinessException(e.getMessage(),e);
                                 }
                                 goodsApiVoList.add(ofcGoodsApiVo); //
-                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsName());
+                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsCode());
                             }/*else{
                                 //如果校验失败,就标记该单元格
                                 checkPass = false;
@@ -1712,7 +1712,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     throw new BusinessException(e.getMessage(),e);
                                 }
                                 goodsApiVoList.add(ofcGoodsApiVo); //
-                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsName());
+                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsCode());
                             }/*else{
                                 //如果校验失败,就标记该单元格
                                 checkPass = false;
@@ -2047,7 +2047,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     throw new BusinessException(e.getMessage(),e);
                                 }
                                 goodsApiVoList.add(ofcGoodsApiVo); //
-                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsName());
+                                goodsCodeListForCheck.add(cscGoodsApiVo.getGoodsCode());
                             }/*else{
                                 //如果校验失败,就标记该单元格
                                 checkPass = false;

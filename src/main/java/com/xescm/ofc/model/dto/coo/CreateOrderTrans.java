@@ -181,8 +181,15 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setDepartureDistrict(createOrderEntity.getConsignorCounty());
             ofcDistributionBasicInfo.setDepartureTowns(createOrderEntity.getConsignorTown());
             ofcDistributionBasicInfo.setDeparturePlace(createOrderEntity.getConsignorAddress());
+            if(PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorProvinceCode())){
+                throw new BusinessException("发货地省编码为空!");
+            }
             StringBuilder departureCode = new StringBuilder(createOrderEntity.getConsignorProvinceCode());
-            departureCode.append(",").append(createOrderEntity.getConsignorCityCode());
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorCityCode())){
+                departureCode.append(",").append(createOrderEntity.getConsignorCityCode());
+            }else {
+                throw new BusinessException("发货地市编码为空!");
+            }
             if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorCountyCode())){
                 departureCode.append(",").append(createOrderEntity.getConsignorCountyCode());
             }
@@ -202,15 +209,20 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setDestinationDistrict(createOrderEntity.getConsigneeCounty());
             ofcDistributionBasicInfo.setDestinationTowns(createOrderEntity.getConsigneeTown());
             ofcDistributionBasicInfo.setDestination(createOrderEntity.getConsigneeAddress());
-            StringBuilder destinationCode = new StringBuilder(createOrderEntity.getConsigneeProvinceCode());
-            destinationCode.append(",").append(createOrderEntity.getConsigneeCityCode());
-            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCountyCode())){
-                destinationCode.append(",").append(createOrderEntity.getConsigneeCountyCode());
-            }
-            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeTownCode())){
-                destinationCode.append(",").append(createOrderEntity.getConsigneeTownCode());
-            }
-            ofcDistributionBasicInfo.setDestinationCode(destinationCode.toString());
+//            if(PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeProvinceCode())){
+//                throw new BusinessException("收货地省编码为空!");
+//            }
+//            StringBuilder destinationCode = new StringBuilder(createOrderEntity.getConsigneeProvinceCode());
+//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCityCode())){
+//                destinationCode.append(",").append(createOrderEntity.getConsigneeCityCode());
+//            }
+//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCountyCode())){
+//                destinationCode.append(",").append(createOrderEntity.getConsigneeCountyCode());
+//            }
+//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeTownCode())){
+//                destinationCode.append(",").append(createOrderEntity.getConsigneeTownCode());
+//            }
+//            ofcDistributionBasicInfo.setDestinationCode(destinationCode.toString());
             //承运商
             ofcDistributionBasicInfo.setCarrierName(createOrderEntity.getSupportName());
 
