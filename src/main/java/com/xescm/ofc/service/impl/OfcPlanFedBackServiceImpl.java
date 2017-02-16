@@ -487,7 +487,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedbackNew(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName) {
         for(int i=0;i<ofcSchedulingSingleFeedbackCondition.getTransportNo().size();i++){
-            //运输单号即是订单号,呵呵
+            //注意，运输单号即是订单号
             String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getTransportNo().get(i));
             if(transPortNo.equals("") || !PubUtils.trimAndNullAsEmpty(transPortNo).startsWith(ORDER_PRE)){
                 throw new BusinessException("运输订单号为空或者格式不正确");

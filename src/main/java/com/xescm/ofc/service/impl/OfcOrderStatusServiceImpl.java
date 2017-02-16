@@ -4,6 +4,7 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.OfcOrderNewstatusService;
 import com.xescm.ofc.service.OfcOrderStatusService;
@@ -27,6 +28,8 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
     @Resource
     private OfcOrderStatusMapper ofcOrderStatusMapper;
+    @Resource
+    private OfcOrderNewstatusMapper ofcOrderNewstatusMapper;
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
 
@@ -86,12 +89,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
-            OfcOrderNewstatus orderNewstatus=ofcOrderStatusMapper.orderStatusSelectNew(mapperMap);
-            OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+            OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusMapper.orderStatusSelectNew(mapperMap);
+            OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
             if(orderNewstatus==null
                     || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
                     || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
-                ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
+
             }else{
                 ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
                 ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
