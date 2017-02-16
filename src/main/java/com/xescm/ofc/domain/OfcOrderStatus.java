@@ -57,6 +57,14 @@ public class OfcOrderStatus {
      */
     private String operator;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     /**
      * 创建时间
      */
