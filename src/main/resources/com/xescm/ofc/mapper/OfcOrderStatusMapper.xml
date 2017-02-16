@@ -5,6 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
     <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />

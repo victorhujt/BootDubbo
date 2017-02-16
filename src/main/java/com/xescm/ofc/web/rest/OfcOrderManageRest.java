@@ -389,7 +389,6 @@ public class OfcOrderManageRest extends BaseController{
                 }
             }
             //供应商信息
-            //CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
             CscSupplierInfoDto cscSupplierInfoDto=null;
             //发货方信息
             logger.info(cscContantAndCompanyDtoConsignorStr);
@@ -398,7 +397,7 @@ public class OfcOrderManageRest extends BaseController{
             logger.info(cscContantAndCompanyDtoConsigneeStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken.getGroupRefCode(),cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto,authResDtoByToken);
+            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto,authResDtoByToken);
             if(result.getCode()!=Wrapper.SUCCESS_CODE){
                 throw new BusinessException(result.getMessage());
             }
@@ -409,7 +408,7 @@ public class OfcOrderManageRest extends BaseController{
                 logger.error("仓储订单下单或编辑出现未知异常:{}", ex.getMessage(), ex);
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
     }
 
 

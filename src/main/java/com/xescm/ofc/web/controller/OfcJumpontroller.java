@@ -352,9 +352,6 @@ public class OfcJumpontroller extends BaseController{
         logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
         model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
         setDefaultModel(model);
-        Calendar cal=Calendar.getInstance();
-        cal.setTime(new Date());
-        model.addAttribute("orderTime", DateUtils.Date2String(cal.getTime(), DateUtils.DateFormatType.TYPE2));
         return modelAndView;
     }
 }
