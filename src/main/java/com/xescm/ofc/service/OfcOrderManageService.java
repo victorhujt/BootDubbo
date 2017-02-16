@@ -1,5 +1,6 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ac.model.dto.ofc.AcPlanDto;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
@@ -37,4 +38,8 @@ public interface OfcOrderManageService {
     RmcServiceCoverageForOrderVo copyDestinationPlace(String departurePlaceCode, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo);
 
     RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String pickup);
+
+    void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus);
+
+    void pullOfcOrderPlanCode(AcPlanDto acPlanDto);
 }

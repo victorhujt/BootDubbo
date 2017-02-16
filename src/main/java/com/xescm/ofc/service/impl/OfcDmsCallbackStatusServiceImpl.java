@@ -36,6 +36,8 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
     private OfcFinanceInformationService ofcFinanceInformationService;
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
+    private OfcOrderManageService ofcOrderManageService;
 
     /**
      * 接收分拣中心回传的状态,并更新相应的运输计划单和订单的状态
@@ -153,6 +155,10 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
             }
             //无论哪种状态都更新订单状态的描述信息
             ofcOrderStatusService.save(ofcOrderStatus);
+            if(StringUtils.equals(ofcOrderStatus.getOrderStatus(),OrderConstConstant.HASBEENCOMPLETED)){
+                //订单中心--订单状态推结算中心(执行中和已完成)
+                ofcOrderManageService.pullOfcOrderStatus(ofcOrderStatus);
+            }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         }

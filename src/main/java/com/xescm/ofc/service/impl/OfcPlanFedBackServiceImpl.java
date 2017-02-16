@@ -2,10 +2,12 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.service.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
+    private OfcOrderManageService ofcOrderManageService;
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService ;
     @Autowired
@@ -260,6 +264,10 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         }
                         if(!orstatus.equals(orderStatus.getNotes())){
                             ofcOrderStatusService.save(orderStatus);
+                            if(StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEENCOMPLETED)){
+                                //订单中心--订单状态推结算中心(执行中和已完成)
+                                ofcOrderManageService.pullOfcOrderStatus(orderStatus);
+                            }
                         }
                         ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
                         ofcTransplanNewstatus.setTransportSingleUpdateTime(traceTime);
