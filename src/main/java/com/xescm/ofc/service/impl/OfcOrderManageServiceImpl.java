@@ -2177,8 +2177,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     @Override
     public void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         //暂时只推卡班订单
-        if(OrderConstConstant.TRANSPORTORDER.equals(ofcFundamentalInformation.getOrderType())
-                && OrderConstConstant.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
+//        if(OrderConstConstant.TRANSPORTORDER.equals(ofcFundamentalInformation.getOrderType())
+//                && OrderConstConstant.WITHTHEKABAN.equals(ofcFundamentalInformation.getBusinessType())){
             AcOrderDto acOrderDto = new AcOrderDto();
             try {
                 AcFundamentalInformation acFundamentalInformation =new AcFundamentalInformation();
@@ -2213,9 +2213,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             if(Wrapper.ERROR_CODE == wrapper.getCode()){
                 throw new BusinessException(wrapper.getMessage());
             }
-        }else{
-            throw new BusinessException("结算中心暂时不支持该类型的订单");
-        }
+//        }else{
+//            throw new BusinessException("结算中心暂时不支持该类型的订单");
+//        }
     }
 
     /**
