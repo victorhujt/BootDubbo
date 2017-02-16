@@ -1,6 +1,7 @@
 package com.xescm.ofc.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -52,6 +53,7 @@ public class OfcFinanceInformation {
     /**
      * 订单编号
      */
+    @Id
     @Column(name = "order_code")
     private String orderCode;
 

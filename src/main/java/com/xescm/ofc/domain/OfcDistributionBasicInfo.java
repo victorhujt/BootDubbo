@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
@@ -220,6 +221,7 @@ public class OfcDistributionBasicInfo {
     /**
      * 订单编号
      */
+    @Id
     @Column(name = "order_code")
     private String orderCode;
 

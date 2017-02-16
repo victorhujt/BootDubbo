@@ -4,12 +4,19 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Table(name = "ofc_goods_details_info")
 public class OfcGoodsDetailsInfo {
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    private String id;
+
     /**
      * 货品代码
      */
@@ -177,6 +184,14 @@ public class OfcGoodsDetailsInfo {
      */
     @Column(name = "charging_unit_price")
     private BigDecimal chargingUnitPrice;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * 获取货品代码
