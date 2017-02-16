@@ -374,7 +374,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName) {
         //根据订单号获取订单及状态
-        String transPortNo= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getTransportNo());
+        String transPortNo= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
         String status= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
         Date traceTime= ofcPlanFedBackCondition.getTraceTime();
         try{
@@ -488,7 +488,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedbackNew(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName) {
         for(int i=0;i<ofcSchedulingSingleFeedbackCondition.getTransportNo().size();i++){
             //注意，运输单号即是订单号
-            String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getTransportNo().get(i));
+            String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getOrderCode().get(i));
             if(transPortNo.equals("") || !PubUtils.trimAndNullAsEmpty(transPortNo).startsWith(ORDER_PRE)){
                 throw new BusinessException("运输订单号为空或者格式不正确");
             }
