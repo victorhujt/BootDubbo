@@ -5,6 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
     <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
     <result column="goods_spec" property="goodsSpec" jdbcType="VARCHAR" />
@@ -33,6 +34,7 @@
   <!--订单货品列表查询-->
   <select id="goodsDetailsScreen" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
+    oos.id,
     oos.goods_code,
     oos.goods_name,
     oos.goods_spec,
@@ -87,6 +89,7 @@
 
   <select id="queryByOrderCode" resultMap="BaseResultMap">
     SELECT
+      gdi.id,
       gdi.goods_code,
       gdi.goods_name,
       gdi.goods_spec,
@@ -122,4 +125,23 @@
     WHERE
      gdi.order_code = #{orderCode}
   </select>
+
+  <!-- 批量插入订单明细表主键id -->
+  <insert id="batchInsertGoodsDetail" parameterType="java.util.List">
+
+      INSERT INTO ofc_goods_details_info_copy (id, goods_code, goods_name, goods_spec, unit, quantity, unit_price, production_batch,
+      production_time, invalid_time, order_code, notes, creation_time, creator, operator, oper_time, weight, cubage, total_box,
+      goods_category, pack, quantity_unit_price, weight_unit_price, volume_unit_price, billing_weight, goods_type, charging_ways,
+      charging_quantity, charging_unit_price)
+      VALUES
+    <foreach collection="details" item="detail" index="index" open="" close="" separator=",">
+      (#{detail.id}, #{detail.goodsCode}, #{detail.goodsName}, #{detail.goodsSpec}, #{detail.unit}, #{detail.quantity},
+      #{detail.unitPrice}, #{detail.productionBatch}, #{detail.productionTime}, #{detail.invalidTime}, #{detail.orderCode},
+      #{detail.notes}, #{detail.creationTime}, #{detail.creator}, #{detail.operator}, #{detail.operTime}, #{detail.weight},
+      #{detail.cubage}, #{detail.totalBox}, #{detail.goodsCategory}, #{detail.pack}, #{detail.quantityUnitPrice}, #{detail.weightUnitPrice},
+      #{detail.volumeUnitPrice}, #{detail.billingWeight}, #{detail.goodsType}, #{detail.chargingWays}, #{detail.chargingQuantity},
+      #{detail.chargingUnitPrice})
+    </foreach>
+  </insert>
+
 </mapper>
