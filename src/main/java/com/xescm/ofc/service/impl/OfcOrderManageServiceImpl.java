@@ -5,6 +5,8 @@ import com.xescm.ac.domain.AcFinanceInformation;
 import com.xescm.ac.domain.AcFundamentalInformation;
 import com.xescm.ac.domain.AcGoodsDetailsInfo;
 import com.xescm.ac.model.dto.AcOrderDto;
+import com.xescm.ac.model.dto.ofc.AcOrderStatusDto;
+import com.xescm.ac.model.dto.ofc.AcPlanDto;
 import com.xescm.ac.model.dto.ofc.CancelAcOrderDto;
 import com.xescm.ac.provider.AcOrderEdasService;
 import com.xescm.base.model.dto.auth.AuthResDto;
@@ -248,6 +250,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
+
+                //订单中心--订单状态推结算中心(执行中和已完成)
+                pullOfcOrderStatus(ofcOrderStatus);
                 return String.valueOf(Wrapper.SUCCESS_CODE);
             } else {
                 throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
@@ -415,15 +420,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     OrderScreenCondition condition = new OrderScreenCondition();
                     condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
-                    OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-                    ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                    ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
-                    ofcOrderStatus.setStatusDesc("执行中");
-                    ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                        + " " + "订单开始执行");
-                    ofcOrderStatus.setOperator(userName);
-                    ofcOrderStatus.setLastedOperTime(new Date());
-                    ofcOrderStatusService.save(ofcOrderStatus);
+                    saveOrderStatusOfImplemente(userName, ofcTransplanInfo);
                 }
                 RmcServiceCoverageForOrderVo rmcPickup=null;
                 if (PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")) {
@@ -482,10 +479,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //ofcDistributionBasicInfo.setTransCode("kb"+System.currentTimeMillis());
                     pushKabanOrderToDms(ofcDistributionBasicInfo, ofcTransplanInfo);
                     //订单推送结算中心, 这期不上
-                    pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
+                    //pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
 
                 }
                 ofcTransplanInfoService.save(ofcTransplanInfo);
+                //审核后, 将计划单号推给ac
+                AcPlanDto acPlanDto = new AcPlanDto();
+                acPlanDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                List<String> planCodeList = new ArrayList<>();
+                planCodeList.add(ofcTransplanInfo.getPlanCode());
+                acPlanDto.setPlanCodeList(planCodeList);
+                pullOfcOrderPlanCode(acPlanDto);
+
                 logger.debug("计划单信息保存成功");
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
 
@@ -637,15 +642,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     //condition.setOrderCode(ofcTransplanInfo.getOrderCode());
                     //String status=ofcOrderStatusService.orderStatusSelect(condition.getOrderCode(),"orderCode").getOrderStatus();
                     if(PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getProgramSerialNumber()).equals("1")){
-                        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-                        ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                        ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
-                        ofcOrderStatus.setStatusDesc("执行中");
-                        ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                                +" "+"订单开始执行");
-                        ofcOrderStatus.setOperator(userName);
-                        ofcOrderStatus.setLastedOperTime(new Date());
-                        ofcOrderStatusService.save(ofcOrderStatus);
+                        saveOrderStatusOfImplemente(userName, ofcTransplanInfo);
                     }
                 }
                 if(!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getNotes()).equals("")){
@@ -672,10 +669,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     ofcTransplanStatusService.save(ofcTransplanStatus);
                     pushKabanOrderToDms(ofcDistributionBasicInfo,ofcTransplanInfo);
                     //订单推送结算中心,这期暂时不上
-                    pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
+                    //pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
+
                 }
                 try {
                     ofcTransplanInfoService.save(ofcTransplanInfo);
+                    //审核后, 将计划单号推给ac
+                    AcPlanDto acPlanDto = new AcPlanDto();
+                    acPlanDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                    List<String> planCodeList = new ArrayList<>();
+                    planCodeList.add(ofcTransplanInfo.getPlanCode());
+                    acPlanDto.setPlanCodeList(planCodeList);
+                    pullOfcOrderPlanCode(acPlanDto);
                     logger.debug("计划单信息保存成功");
                 } catch (Exception ex) {
                     if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
@@ -1186,15 +1191,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                                     && ofcSiloprogramInfoService.ofcSiloprogramInfoScreenList(ofcTransplanInfo.getOrderCode()).size()==0){
                                 throw new BusinessException("订单状态异常，无法变更为执行中");
                             }else {
-                                OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-                                ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
-                                ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
-                                ofcOrderStatus.setStatusDesc("执行中");
-                                ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
-                                        +" "+"订单开始执行");
-                                ofcOrderStatus.setOperator(userName);
-                                ofcOrderStatus.setLastedOperTime(new Date());
-                                ofcOrderStatusService.save(ofcOrderStatus);
+                                saveOrderStatusOfImplemente(userName, ofcTransplanInfo);
                             }
                         }
                         ofcTraplanSourceStatus.setResourceConfirmation(userName);
@@ -1222,6 +1219,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             throw new BusinessException("缺少计划单编号");
         }
         return null;
+    }
+
+    private void saveOrderStatusOfImplemente(String userName, OfcTransplanInfo ofcTransplanInfo) {
+        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(ofcTransplanInfo.getOrderCode());
+        ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
+        ofcOrderStatus.setStatusDesc("执行中");
+        ofcOrderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                +" "+"订单开始执行");
+        ofcOrderStatus.setOperator(userName);
+        ofcOrderStatus.setLastedOperTime(new Date());
+        ofcOrderStatusService.save(ofcOrderStatus);
+
+        //订单中心--订单状态推结算中心(执行中和已完成)
+        pullOfcOrderStatus(ofcOrderStatus);
     }
 
     @Override
@@ -2203,6 +2215,52 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }
         }else{
             throw new BusinessException("结算中心暂时不支持该类型的订单");
+        }
+    }
+
+    /**
+     * 订单中心--订单状态推结算中心(执行中和已完成)
+     * @param ofcOrderStatus
+     * @return void
+     */
+    @Override
+    public void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus){
+        if(PubUtils.isNull(ofcOrderStatus)){
+            throw new BusinessException("订单状态推结算中心异常");
+        }
+        AcOrderStatusDto acOrderStatusDto = new AcOrderStatusDto();
+        try {
+            BeanUtils.copyProperties(acOrderStatusDto,ofcOrderStatus);
+            Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
+            if(null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE ){
+                logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}",integerWrapper.getMessage());
+                throw new BusinessException("订单状态推结算中心异常");
+            }
+        } catch (Exception e) {
+            logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}",e,e.getMessage());
+            throw new BusinessException("订单状态推结算中心异常");
+        }
+    }
+
+    /**
+     * 订单中心--→计划单
+     * @param acPlanDto
+     * @return void
+     */
+    @Override
+    public void pullOfcOrderPlanCode(AcPlanDto acPlanDto){
+        if(PubUtils.isNull(acPlanDto)){
+            throw new BusinessException("订单计划单推结算中心异常");
+        }
+        try {
+            Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderPlanCode(acPlanDto);
+            if(null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE ){
+                logger.error("订单中心--订单计划单推结算中心异常(执行中和已完成) 异常, {}",integerWrapper.getMessage());
+                throw new BusinessException("订单计划单推结算中心异常");
+            }
+        } catch (Exception e) {
+            logger.error("订单中心--订单计划单推结算中心异常(执行中和已完成) 异常, {}",e,e.getMessage());
+            throw new BusinessException("订单计划单推结算中心异常");
         }
     }
 }
