@@ -2195,10 +2195,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                     //调用自动审核
-                    orderAutoAudit(ofcFundamentalInformation,goodsDetailsList,null,ofcWarehouseInformation
+                    orderAutoAudit(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcWarehouseInformation
                             ,null,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
                 }
-
             }else{
                 throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
             }

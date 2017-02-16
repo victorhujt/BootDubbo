@@ -213,8 +213,6 @@
                     v-model="customerName"
                     @click="chosenCus = true" maxlength="100">
             </el-input>
-            <div v-if="seenCustomerNameNotNull">客户名称不能为空</div>
-
         </div>
         <div class="block">
             <label class="label">仓库名称</label>
@@ -225,7 +223,6 @@
                         :value="item.value">
                 </el-option>
             </el-select>
-            <div v-if="seenWareHouseNotNull">仓库名称不能为空</div>
             <label class="label">业务类型</label>
             <el-select v-model="serviceType" placeholder="请选择">
                 <el-option
@@ -234,7 +231,6 @@
                         :value="item.value">
                 </el-option>
             </el-select>
-            <div v-if="seenServiceTypeNotNull">业务类型不能为空</div>
             <label class="label">客户订单号</label>
             <el-input v-model="customerOrderNum" placeholder="请输入内容" maxlength="30"></el-input>
         </div>
@@ -455,9 +451,6 @@
         data :function() {
             return {
                 seenOrderDateNotNull:false,
-                seenCustomerNameNotNull:false,
-                seenWareHouseNotNull:false,
-                seenServiceTypeNotNull:false,
                 consignorCode:'',
                 consignorContactCode:'',
                 goodsCode:'',
@@ -982,13 +975,10 @@
                                     customer.customerName=cscCustomerVo.customerName;
                                     customer.channel=channel;
                                     customer.productType=cscCustomerVo.productType;
-                                    //customer.groupId=cscCustomerVo.groupId;
-                                    //customer.customer=cscCustomerVo.customerCode;
                                     vueObj.customerData.push(customer);
                                 });
                                 debugger;
                                 vueObj.total=result.result.total;
-                               // vueObj.currentPage=pageNum;
                             } else if (result.code == 403) {
                                  alert("没有权限")
                              }
@@ -1000,21 +990,25 @@
                     this.seenOrderDateNotNull=true;
                     return;
                 }else{
-//                    if(this.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-//                        layer.msg("只能选择一周之内的日期");
-//                        return;
-//                    }
+                    if(this.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
+                        alert('只能选择一周之前的日期!');
+                        return;
+                    }
+                    if(this.orderTime.getTime()>new Date().getTime()){
+                        alert('只能选择一周之前的日期!');
+                        return;
+                    }
                 }
                 if(!this.customerName){
-                    this.seenCustomerNameNotNull=true;
+                    alert('客户名称不能为空!');
                     return;
                 }
                 if(!this.wareHouse){
-                    this.seenWareHouseNotNull=true;
+                    alert('仓库名称不能为空!');
                     return;
                 }
                 if(!this.serviceType){
-                    this.seenServiceTypeNotNull=true;
+                    alert('业务类型不能为空!');
                     return;
                 }
                 //订单基本信息
@@ -1044,16 +1038,13 @@
                 if(this.orderTime){
                     ofcOrderDTOStr.orderTime = this.formatDate(this.orderTime);
                 }
-
                 var obj=JSON.parse(this.wareHouse);
-
 
                 //订单基本信息
                 ofcOrderDTOStr.custName = this.customerName;
                 ofcOrderDTOStr.custCode =this.customerCode;
                 ofcOrderDTOStr.custOrderCode =this.customerOrderNum;
                 ofcOrderDTOStr.notes =this.notes;
-
                 //仓库信息
                 ofcOrderDTOStr.supportName=this.supplierName;//供应商名称
                 cscSupplierInfoDtoStr.supportName==this.supplierName;
@@ -1067,7 +1058,6 @@
                 ofcOrderDTOStr.plateNumber=this.plateNumber;
                 ofcOrderDTOStr.driverName=this.driverName;
                 ofcOrderDTOStr.contactNumber=this.driverContactNumber;
-
 
                 //发货方信息
                 ofcOrderDTOStr.consignorName=this.consignorName;
@@ -1109,49 +1099,49 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-                    if(good.unitPrice!=""){
-                        if(isNaN(good.unitPrice)){
-                            alert("货品单价必须为数字");
-                            return false;
-                        }
-                        if(good.unitPrice>99999.99||good.unitPrice<0){
-                            alert("货品单价不能大于99999.99或小于0");
-                            return false;
-                        }
-                        if(isNaN(good.quantity)){
-                            alert("货品数量必须为数字");
-                            return false;
-                        }
-                    }
 
+                    if(good.unitPrice!=""){
+                            if(isNaN(good.unitPrice)){
+                                alert("货品单价必须为数字");
+                                return;
+                            }
+                            if(good.unitPrice>99999.99||good.unitPrice<0){
+                                alert("货品单价不能大于99999.99或小于0");
+                                return;
+                            }
+                            if(isNaN(good.quantity)){
+                                alert("货品数量必须为数字");
+                                return;
+                            }
+                    }
                     if(good.quantity>99999.999||good.quantity<0||!good.quantity||good.quantity==0){
                         if(!good.quantity){
                             alert("货品数量不能为空");
-                            return false;
+                            return;
                         }
                         if(good.quantity>99999.999){
                             alert("货品数量不能大于99999.999");
-                            return false;
+                            return;
                         }
                         if(good.quantity<0){
                             alert("货品数量不能小于0");
-                            return false;
+                            return;
                         }
                         if(good.quantity==0){
                             alert("货品数量不能为0");
-                            return false;
+                            return;
                         }
                         return;
                     }
-                   // if( good.productionTime&& good.invalidTime){
-//                        if( good.productionTime.getTime()> good.invalidTime.getTime()){
-//                            alert("生产日期不能大于失效日期");
-//                            return fasle;
-//                        }
-//                        good.productionTime=this.formatDate(good.productionTime);
-//                        good.invalidTime=this.formatDate(good.invalidTime);
+                    if( good.productionTime&& good.invalidTime){
+                        if( good.productionTime.getTime()> good.invalidTime.getTime()){
+                            alert("生产日期不能大于失效日期");
+                            return;
+                        }
+                        //good.productionTime=this.formatDate(good.productionTime);
+                       // good.invalidTime=this.formatDate(good.invalidTime);
 
-                   // }
+                    }
                     goodDetail.push(good);
 
                 }
