@@ -205,11 +205,111 @@
     where order_code = #{orderCode,jdbcType=VARCHAR}
   </update>
 
+  <select id="queryByOrderCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+     ofd.trans_code,
+     ofd.urgent,
+     ofd.departure_place,
+     ofd.departure_province,
+     ofd.departure_city,
+     ofd.departure_district,
+     ofd.departure_towns,
+     ofd.departure_place_code,
+     ofd.destination,
+     ofd.destination_province,
+     ofd.destination_city,
+     ofd.destination_district,
+     ofd.destination_towns,
+     ofd.destination_code,
+     ofd.quantity,
+     ofd.weight,
+     ofd.cubage,
+     ofd.total_standard_box,
+     ofd.trans_require,
+     ofd.pickup_time,
+     ofd.expected_arrived_time,
+     ofd.consignor_code,
+     ofd.consignor_name,
+     ofd.consignee_code,
+     ofd.consignee_name,
+     ofd.carrier_code,
+     ofd.carrier_name,
+     ofd.order_code,
+     ofd.plate_number,
+     ofd.driver_name,
+     ofd.contact_number,
+     ofd.creation_time,
+     ofd.creator,
+     ofd.operator,
+     ofd.oper_time,
+     ofd.consignor_contact_name,
+     ofd.consignor_contact_code,
+     ofd.consignee_contact_name,
+     ofd.consignee_contact_code,
+     ofd.consignor_type,
+     ofd.consignee_type,
+     ofd.base_id,
+     ofd.consignor_contact_phone,
+     ofd.consignee_contact_phone,
+     ofd.goods_type,
+     ofd.goods_type_name
+    FROM ofc_distribution_basic_info ofd
+    WHERE ofd.order_code = #{orderCode,jdbcType=VARCHAR}
+    ORDER BY ofd.oper_time DESC limit 1
+  </select>
+
   <!--
       根据订单号进行查询对应数据
     -->
   <select id="ofcDistributionBasicInfoSelect" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT * FROM ofc_distribution_basic_info ofd
+    SELECT
+     ofd.trans_code,
+     ofd.urgent,
+     ofd.departure_place,
+     ofd.departure_province,
+     ofd.departure_city,
+     ofd.departure_district,
+     ofd.departure_towns,
+     ofd.departure_place_code,
+     ofd.destination,
+     ofd.destination_province,
+     ofd.destination_city,
+     ofd.destination_district,
+     ofd.destination_towns,
+     ofd.destination_code,
+     ofd.quantity,
+     ofd.weight,
+     ofd.cubage,
+     ofd.total_standard_box,
+     ofd.trans_require,
+     ofd.pickup_time,
+     ofd.expected_arrived_time,
+     ofd.consignor_code,
+     ofd.consignor_name,
+     ofd.consignee_code,
+     ofd.consignee_name,
+     ofd.carrier_code,
+     ofd.carrier_name,
+     ofd.order_code,
+     ofd.plate_number,
+     ofd.driver_name,
+     ofd.contact_number,
+     ofd.creation_time,
+     ofd.creator,
+     ofd.operator,
+     ofd.oper_time,
+     ofd.consignor_contact_name,
+     ofd.consignor_contact_code,
+     ofd.consignee_contact_name,
+     ofd.consignee_contact_code,
+     ofd.consignor_type,
+     ofd.consignee_type,
+     ofd.base_id,
+     ofd.consignor_contact_phone,
+     ofd.consignee_contact_phone,
+     ofd.goods_type,
+     ofd.goods_type_name
+    FROM ofc_distribution_basic_info ofd
         WHERE ofd.order_code =#{orderCode,jdbcType=VARCHAR}
     ORDER BY ofd.oper_time DESC limit 1
   </select>
@@ -312,7 +412,6 @@
     <result column="consignor_contact_phone" property="consignorContactPhone" jdbcType="VARCHAR" />
     <result column="departure" property="departure" jdbcType="VARCHAR" />
   </resultMap>
-
   <select id="queryByBatchNumber" resultType="com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo">
     SELECT
     ofi.order_code,

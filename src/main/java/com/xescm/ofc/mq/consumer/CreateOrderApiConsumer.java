@@ -116,7 +116,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                         ofcSchedulingSingleFeedbackConditions= JacksonUtil.parseJsonWithFormat(messageBody , ofcSchedulingTypeRef);
                         for(int i=0;i<ofcSchedulingSingleFeedbackConditions.size();i++){
                             // 保存到数
-                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.schedulingSingleFeedback(ofcSchedulingSingleFeedbackConditions.get(i),userName);
+                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.schedulingSingleFeedbackNew(ofcSchedulingSingleFeedbackConditions.get(i),userName);
                         }
                     } catch (Exception e) {
                         logger.error("运输单状态反馈出错:{}",e.getMessage(),e);
@@ -131,7 +131,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                         ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody,ofcPlanFedBackTypeRef);
                         for(int i=0;i<ofcPlanFedBackConditions.size();i++){
                             // 保存到数
-                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBack(ofcPlanFedBackConditions.get(i),userName);
+                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName);
                         }
                     } catch (Exception e) {
                         logger.error("运输单出错:{}",e.getMessage(),e);
