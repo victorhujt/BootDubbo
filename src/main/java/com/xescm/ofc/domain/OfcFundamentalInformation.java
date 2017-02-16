@@ -177,13 +177,30 @@ public class OfcFundamentalInformation {
     @Transient
     private String selfCustOrderCode;
 
-   /* private String saleOrganization;
+    /**
+     * 销售组织(众品SAP专用)
+     */
+    private String saleOrganization;
+    /**
+     * 产品组(众品SAP专用)
+     */
     private String productGroup;
+    /**
+     * 销售部门(众品SAP专用)
+     */
     private String saleDepartment;
+    /**
+     * 销售组(众品SAP专用)
+     */
     private String saleGroup;
-    private String saleDepartment_desc;
+    /**
+     * 销售部门描述(众品SAP专用)
+     */
+    private String saleDepartmentDesc;
+    /**
+     * 销售组描述(众品SAP专用)
+     */
     private String saleGroupDesc;
-*/
 
     /**
      * 操作时间
@@ -228,6 +245,54 @@ public class OfcFundamentalInformation {
     @Column(name = "area_name")
     private String areaName;
 
+
+    public String getSaleOrganization() {
+        return saleOrganization;
+    }
+
+    public void setSaleOrganization(String saleOrganization) {
+        this.saleOrganization = saleOrganization;
+    }
+
+    public String getProductGroup() {
+        return productGroup;
+    }
+
+    public void setProductGroup(String productGroup) {
+        this.productGroup = productGroup;
+    }
+
+    public String getSaleDepartment() {
+        return saleDepartment;
+    }
+
+    public void setSaleDepartment(String saleDepartment) {
+        this.saleDepartment = saleDepartment;
+    }
+
+    public String getSaleGroup() {
+        return saleGroup;
+    }
+
+    public void setSaleGroup(String saleGroup) {
+        this.saleGroup = saleGroup;
+    }
+
+    public String getSaleDepartmentDesc() {
+        return saleDepartmentDesc;
+    }
+
+    public void setSaleDepartmentDesc(String saleDepartmentDesc) {
+        this.saleDepartmentDesc = saleDepartmentDesc;
+    }
+
+    public String getSaleGroupDesc() {
+        return saleGroupDesc;
+    }
+
+    public void setSaleGroupDesc(String saleGroupDesc) {
+        this.saleGroupDesc = saleGroupDesc;
+    }
 
     public String getAreaCode() {
         return areaCode;
