@@ -13,7 +13,8 @@ import java.util.List;
 @Data
 public class OfcSchedulingSingleFeedbackCondition {
 
-    private List<String> transportNo;//运输计划单号
+    private List<String> transportNo;//运输单号
+    private List<String> orderCode;//订单号
     private String deliveryNo;//调度单号
     private String transportType;//运输类型
     private String vehical;//车牌号
