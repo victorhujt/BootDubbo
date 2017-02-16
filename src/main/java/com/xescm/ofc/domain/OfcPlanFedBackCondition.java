@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class OfcPlanFedBackCondition {
 
-    private String transportNo;//运输计划单号
+    private String transportNo;//运输单号
     private String orderCode;//订单号
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
