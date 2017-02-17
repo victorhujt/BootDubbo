@@ -239,13 +239,14 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
                         ofcMerchandiserService.save(ofcMerchandiser);
                     }
-                    //推结算
-                    ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
+
                     if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                         //进行自动审核
                         ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
                                 ofcWarehouseInformation,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
                     }
+                    //推结算
+                    ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
 
                 }else{
                     throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
@@ -444,10 +445,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 if(ofcMerchandiserService.select(ofcMerchandiser).size()==0){
                     ofcMerchandiserService.save(ofcMerchandiser);
                 }
-                //推结算
-                ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
+
                 ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
                         "review",authResDtoByToken);
+                //推结算
+                ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
             } else if(PubUtils.trimAndNullAsEmpty(tag).equals("distributionPlace")){
                 distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                         ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
