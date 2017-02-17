@@ -5,12 +5,14 @@
     <!--
       WARNING - @mbg.generated
     -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
     <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
     <result column="lasted_oper_time" property="lastedOperTime" jdbcType="TIMESTAMP" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <delete id="deleteByOrderCode" parameterType="java.lang.String" >
     <!--
@@ -129,7 +131,7 @@
   <!--获取最新状态-->
   <select id="queryLastUpdateOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
      SELECT
-        order_code,order_status,status_desc,lasted_oper_time,notes,operator
+        id,order_code,order_status,status_desc,lasted_oper_time,notes,operator
     FROM
         ofc_order_status
     WHERE
@@ -162,4 +164,13 @@
     )
     LIMIT 1
   </select>
+
+  <!-- 批量插入订单状态主键id -->
+  <insert id="batchInsertOrderStatusId" parameterType="java.util.List">
+    INSERT INTO ofc_order_status_copy (id, order_code, order_status, status_desc, lasted_oper_time, notes, operator, creation_time)
+    VALUES
+    <foreach collection="statusList" item="status" index="index" separator=",">
+      (#{status.id}, #{status.orderCode}, #{status.orderStatus}, #{status.statusDesc}, #{status.lastedOperTime}, #{status.notes}, #{status.operator}, #{status.creationTime})
+    </foreach>
+  </insert>
 </mapper>
