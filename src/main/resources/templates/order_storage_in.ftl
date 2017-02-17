@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style lang="css">
+    <style lang="css" scope>
         .list-mian-01 {
             padding:20px;
         }
@@ -594,7 +594,7 @@
                     desc: ''
                 },
                 formLabelWidth: '100px',
-                currentPage4: 4,
+                currentPage4: 1,
                 chosenSend: false,
                 consignorCurrentRow:null,
                 supplierCurrentRow:null,
