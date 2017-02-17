@@ -117,6 +117,23 @@ public class OfcJumpontroller extends BaseController{
         return "index";
     }
 
+    /**
+     * 进入主页
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/ofc/warehouse/in")
+    public String whOpen(Model model){
+
+        return "vue/whopen";
+    }
+    @RequestMapping(value = "/ofc/warehouse/in1")
+    public String whOpen1(Model model){
+
+        return "vue/whopen1";
+    }
+
+
     @RequestMapping(value = "/ofc/planAllocation")
     public String planAllocation(Model model,Map<String,Object> map){
         try{
