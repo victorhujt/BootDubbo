@@ -644,13 +644,11 @@
                 this.goodCurrentRow = val;
             },
             setCurrentCustInfo:function(val) {
-                debugger;
                 this.customerName = val.customerName;
                 this.customerCode=val.customerCode;
                 this.chosenCus = false;
                 var vueObj=this;
                 CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":this.customerCode}, function(result) {
-                    debugger;
                     var data=result.result;
                     if (data == undefined || data == null || data.length ==0) {
                         layer.msg("暂时未查询到该客户下的仓库信息！！");
@@ -670,7 +668,6 @@
                 },"json");
             },
             consignorHandleCurrentChange:function(val) {
-                debugger;
                 this.consignorCurrentRow=val;
             },
             receiveHandleCurrentChange:function(val) {
@@ -692,7 +689,6 @@
                 this.selectCustomer();
             },
             add:function() {
-                debugger;
                 if(!this.customerName){
                     alert("请选择客户!");
                     return;
@@ -729,7 +725,6 @@
                 rows.splice(index, 1);
             },
             getGoodsClass:function(val) {
-                debugger;
                 var vueObj=this;
                 val.goodsClass = null;
                 var typeId=val.goodsType;
@@ -752,15 +747,17 @@
                 console.log('弹窗');
             },
             selectSupplier:function(){
-                            debugger;
-                            if(!this.customerName){
+                            if(!this.customerName && !this.customerCode){
                                 alert("请选择客户");
                                 this.chosenSupplier=false;
                                 return;
                             }
                             this.supplierData=[];
                             var vueObj=this;
-                            CommonClient.post(sys.rootPath + "/ofc/supplierSelect",vueObj.supplierForm, function(result) {
+                            var param = {};
+                            param = vueObj.supplierForm;
+                            param.customerCode = this.customerCode;
+                            CommonClient.post(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                                 var data=eval(result);
                                 $.each(data,function (index,CscSupplierInfoDto) {
                                     var supplier={};
@@ -792,7 +789,6 @@
                 this.chosenSupplier=false;
             },
             setCurrentGoodsInfo:function(val){
-                debugger;
                 this.currentRowData.goodsCode=val.goodsCode;
                 this.currentRowData.goodsName=val.goodsName;
                 this.currentRowData.goodsSpec=val.goodsSpec;
@@ -814,7 +810,6 @@
                     this.chosenSend=false;
                     return;
                 }
-                debugger;
                 this.consignorData=[];
                 var vueObj=this;
                 var cscContactDto = {};
@@ -879,7 +874,6 @@
                 this.chosenSend=false;
             },
             setCurrentConsignorInfo:function(val){
-                debugger;
                 this.consignorName=val.consignorName;
                 this.consignorPhoneNumber=val.consignorPhoneNumber;
                 this.consignorContactName=val.consignorContactName;
@@ -893,7 +887,6 @@
 
 
             selectGoods:function(){
-                debugger;
                 this.goodsCodeData=[];
                 var vueObj=this;
                 var cscGoods = {};
@@ -944,7 +937,6 @@
                 this.chosenCus=false;
             },
             selectCustomer:function(){
-                debugger;
                 var param = {};
                 param.pageNum = this.currentCustomerPage;
                 param.pageSize=this.customerPageSize;
@@ -957,7 +949,6 @@
                                 layer.msg("暂时未查询到客户信息！！");
                             } else if (result.code == 200) {
                                 $.each(result.result.list,function (index,cscCustomerVo) {
-                                   // debugger;
                                     var channel = cscCustomerVo.channel;
                                     if(null == channel){
                                         channel = "";
@@ -977,7 +968,6 @@
                                     customer.productType=cscCustomerVo.productType;
                                     vueObj.customerData.push(customer);
                                 });
-                                debugger;
                                 vueObj.total=result.result.total;
                             } else if (result.code == 403) {
                                  alert("没有权限")
@@ -985,7 +975,6 @@
                         },"json");
             },
             saveStorage:function(){
-                debugger;
                 if(!this.orderTime){
                     this.seenOrderDateNotNull=true;
                     return;
@@ -1167,7 +1156,6 @@
                         });
             },
             getCscContantAndCompanyDtoConsignorStr:function(){
-                debugger;
                 var paramConsignor = {};
                 var cscContactDto = {};
                 var cscContactCompanyDto = {};
@@ -1198,7 +1186,6 @@
                 return cscContantAndCompanyDtoConsignorStr;
             },
             getCscContantAndCompanyDtoConsigneeStr:function(warehouse){
-                debugger;
                 var paramConsignee = {};
                 var cscContactDto = {};
                 var cscContactCompanyDto = {};

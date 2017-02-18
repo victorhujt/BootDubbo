@@ -493,14 +493,20 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         logger.debug("==>下单供应商筛选,cscSupplierInfoDto = {}",cscSupplierInfoDto);
         //调用外部接口,最低传CustomerCode
         try {
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            cscSupplierInfoDto.setCustomerCode(authResDtoByToken.getGroupRefCode());
-            cscSupplierInfoDto.setSupplierName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getSupplierName()));
-            cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
-            cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
+            if (cscSupplierInfoDto == null) {
+                AuthResDto authResDtoByToken = getAuthResDtoByToken();
+                cscSupplierInfoDto.setCustomerCode(authResDtoByToken.getGroupRefCode());
+                cscSupplierInfoDto.setSupplierName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getSupplierName()));
+                cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
+                cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
+            }
             Wrapper<List<CscSupplierInfoDto>> cscSupplierList = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JacksonUtil.toJsonWithFormat(cscSupplierList.getResult()));
+            if (cscSupplierList.getCode() == 200) {
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().print(JacksonUtil.toJsonWithFormat(cscSupplierList.getResult()));
+            } else {
+                logger.error("==>查询供应商结果:{}", cscSupplierList.getMessage());
+            }
         }catch (Exception ex) {
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
         }
