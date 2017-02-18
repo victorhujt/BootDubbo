@@ -297,6 +297,21 @@ public class OfcDistributionBasicInfo {
     @Transient
     private String selfTransCode;
 
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    /**
+
+     * 删除标志位 0或者空表示未删除  1:表示已经删除
+     */
+    @Column(name = "is_delete")
+    private String isDelete;
+
 
 
     public String getConsignorType() {

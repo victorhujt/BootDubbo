@@ -15,6 +15,7 @@ import com.xescm.ofc.service.OfcOrderDtoService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.web.controller.BaseController;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -151,5 +152,23 @@ public class OfcOrderFollowRest extends BaseController{
     }
 
 
+    @RequestMapping(value = "/orderStorageDetails", method = RequestMethod.POST)
+    @ResponseBody
+    public Object orderStorageDetails(String orderCode){
+        Map result=null;
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+             result=ofcOrderManageService.orderStorageDetails(orderCode);
+            if(result==null){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到订单详情");
+            }
+        }catch (Exception e){
+            logger.error("查询订单详情出现异常:{}",e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
+    }
+ }
 
-}

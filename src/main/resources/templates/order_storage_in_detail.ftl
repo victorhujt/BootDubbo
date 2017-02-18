@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style lang="css" scope>
+    <style lang="css">
         .list-mian-01 {
             padding:20px;
         }
@@ -168,28 +168,28 @@
 
 
 
-        <#--<el-dialog title="收货方联系人" v-model="chosenReceive" size="small">-->
-            <#--<el-form :model="receiveForm">-->
-                <#--<el-form-item label="名称" :label-width="formLabelWidth">-->
-                    <#--<el-input v-model="receiveForm.name" auto-complete="off"></el-input>-->
-                    <#--<el-button type="primary" @click="">查询</el-button>-->
-                <#--</el-form-item>-->
-            <#--</el-form>-->
+    <#--<el-dialog title="收货方联系人" v-model="chosenReceive" size="small">-->
+    <#--<el-form :model="receiveForm">-->
+    <#--<el-form-item label="名称" :label-width="formLabelWidth">-->
+    <#--<el-input v-model="receiveForm.name" auto-complete="off"></el-input>-->
+    <#--<el-button type="primary" @click="">查询</el-button>-->
+    <#--</el-form-item>-->
+    <#--</el-form>-->
 
-            <#--<el-table :data="receiveCusTableDate" highlight-current-row @current-change="receiveHandleCurrentChange" style="width: 100%">-->
-                <#--<el-table-column type="index"></el-table-column>-->
-                <#--<el-table-column property="receiveCusName" label="名称"></el-table-column>-->
-                <#--<el-table-column property="receiveContacts" label="联系人"></el-table-column>-->
-                <#--<el-table-column property="receiveNumPhone" label="联系电话"></el-table-column>-->
-                <#--<el-table-column property="receiveAddress" label="地址"></el-table-column>-->
-            <#--</el-table>-->
-            <#--<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">-->
-            <#--</el-pagination>-->
-            <#--<div slot="footer" class="dialog-footer">-->
-                <#--<el-button @click="chosenReceive = false">取 消</el-button>-->
-                <#--<el-button type="primary" @click="receiveSetCurrentCusInfo(receiveCurrentRow)">确 定</el-button>-->
-            <#--</div>-->
-        <#--</el-dialog>-->
+    <#--<el-table :data="receiveCusTableDate" highlight-current-row @current-change="receiveHandleCurrentChange" style="width: 100%">-->
+    <#--<el-table-column type="index"></el-table-column>-->
+    <#--<el-table-column property="receiveCusName" label="名称"></el-table-column>-->
+    <#--<el-table-column property="receiveContacts" label="联系人"></el-table-column>-->
+    <#--<el-table-column property="receiveNumPhone" label="联系电话"></el-table-column>-->
+    <#--<el-table-column property="receiveAddress" label="地址"></el-table-column>-->
+    <#--</el-table>-->
+    <#--<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">-->
+    <#--</el-pagination>-->
+    <#--<div slot="footer" class="dialog-footer">-->
+    <#--<el-button @click="chosenReceive = false">取 消</el-button>-->
+    <#--<el-button type="primary" @click="receiveSetCurrentCusInfo(receiveCurrentRow)">确 定</el-button>-->
+    <#--</div>-->
+    <#--</el-dialog>-->
         <div class="hr">
             基本信息
             <hr>
@@ -307,6 +307,30 @@
             </div>
         </div></el-col>
         <el-col :span="2" style="height:1px;"><div class="grid-content"></div></el-col>
+    <#--<el-col :span="11"><div class="grid-content">-->
+    <#--<div class="hr">-->
+    <#--收货方信息-->
+    <#--<hr>-->
+    <#--</div>-->
+    <#--<div class="block">-->
+    <#--<label class="label">名称</label>-->
+    <#--<el-input-->
+    <#--placeholder="请选择"-->
+    <#--icon="search"-->
+    <#--v-model="receiveName"-->
+    <#--v-bind:disabled = "isDisabled"-->
+    <#--@click="chosenReceive = true">-->
+    <#--</el-input>-->
+    <#--<label class="label">联系人</label>-->
+    <#--<el-input v-model="receiveContacts" placeholder="请输入内容"></el-input>-->
+    <#--</div>-->
+    <#--<div class="block">-->
+    <#--<label class="label">联系电话</label>-->
+    <#--<el-input v-model="receivePhone" placeholder="请输入内容"></el-input>-->
+    <#--<label class="label">地址选择</label>-->
+    <#--<el-input v-model="receiveAddress" placeholder="请输入内容"></el-input>-->
+    <#--</div>-->
+    <#--</div></el-col>-->
         <div class="hr">
             服务项目及费用
             <hr>
@@ -349,7 +373,7 @@
                     <el-input
                             placeholder="请选择"
                             icon="search"
-                            <#--v-model="scope.row.goodsCode"-->
+                    <#--v-model="scope.row.goodsCode"-->
                             v-model="scope.row.goodsCode"
                             v-bind:disabled = "isDisabled"
                             @click="openGoodsList(scope.row)">
@@ -560,10 +584,17 @@
                 chosenCus: false,
                 pageSizes:[10, 20, 30, 40,50],
                 chosenCusForm: {
-                    name: ''
+                    name: '',
+                    region: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
                 },
                 formLabelWidth: '100px',
-                currentPage4: 1,
+                currentPage4: 4,
                 chosenSend: false,
                 consignorCurrentRow:null,
                 supplierCurrentRow:null,
@@ -602,6 +633,77 @@
                 goodsCurrentRow: null
             };
         },
+
+        beforeMount:function(){
+            debugger;
+            var vueObj=this;
+            var url=window.location.href;
+            if(url.indexOf("?")!=-1){
+                var param=url.split("?")[1].split("=");
+                if(param[0]=="orderCode"){
+                    var orderCode=param[1];
+                    CommonClient.post(sys.rootPath + "/ofc/orderStorageDetails", {"orderCode":orderCode}, function(result) {
+                        if(result==undefined||result==null||result.result==null){
+                            layer.msg("订单详情查询失败");
+                            return;
+                        }else if(result.code == 200){
+                            var ofcFundamentalInformation=result.result.ofcFundamentalInformation;
+                            var ofcWarehouseInformation=result.result.ofcWarehouseInformation;
+                            var ofcGoodsDetailsInfo=result.result.ofcGoodsDetailsInfo;
+                            var ofcDistributionBasicInfo=result.result.ofcDistributionBasicInfo;
+                            debugger;
+                            if(ofcFundamentalInformation!=null){
+                                vueObj.orderTime=ofcFundamentalInformation.orderTime;
+                                vueObj.merchandiser=ofcFundamentalInformation.merchandiser;
+                                vueObj.customerName=ofcFundamentalInformation.custName;
+                                vueObj.customerCode=ofcFundamentalInformation.custCode;
+                                vueObj.customerOrderNum=ofcFundamentalInformation.custOrderCode;
+                                vueObj.serviceType=ofcFundamentalInformation.businessType;
+                                if(ofcWarehouseInformation!=null){
+                                    vueObj.wareHouse=ofcWarehouseInformation.warehouseName;
+                                    vueObj.supplierName=ofcWarehouseInformation.supportName;
+                                    if(ofcWarehouseInformation.provideTransport=="1"){
+                                        if(ofcDistributionBasicInfo!=null){
+                                            //发货方
+                                            vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
+                                            vueObj.consignorCode=ofcDistributionBasicInfo.consignorCode;
+                                            vueObj.consignorContactCode=ofcDistributionBasicInfo.consignorContactCode;
+                                            vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
+                                            vueObj.consignorContactPhone=ofcDistributionBasicInfo.consignorPhoneNumber;
+                                            vueObj.isNeedTransport=true;
+                                            vueObj.arriveTime=ofcWarehouseInformation.arriveTime;
+                                            vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
+                                            vueObj.driverName=ofcWarehouseInformation.driverName;
+                                            vueObj.driverContactNumber=ofcWarehouseInformation.contactNumber;
+                                        }
+                                    }
+
+                                    if(ofcGoodsDetailsInfo!=null&&ofcGoodsDetailsInfo.length>0){
+                                        for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
+                                            var goodDetail=ofcGoodsDetailsInfo[i];
+                                            var good={};
+                                            good.goodsType=goodDetail.goodsType;
+                                            good.goodsClass=goodDetail.goodsCategory;
+                                            good.goodsCode=goodDetail.goodsCode;
+                                            good.goodsName=goodDetail.goodsName;
+                                            good.goodsSpec=goodDetail.goodsSpec;
+                                            good.quantity=goodDetail.quantity;
+                                            good.unitPrice=goodDetail.unitPrice;
+                                            good.productionBatch=goodDetail.productionBatch;
+                                            good.productionTime=goodDetail.productionTime;
+                                            good.invalidTime=goodDetail.invalidTime;
+                                            vueObj.goodsData.push(good);
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                    });
+                }
+            }
+        },
         methods: {
             handleCurrentChange:function(val) {
                 this.currentRow = val;
@@ -613,11 +715,13 @@
                 this.goodCurrentRow = val;
             },
             setCurrentCustInfo:function(val) {
+                debugger;
                 this.customerName = val.customerName;
                 this.customerCode=val.customerCode;
                 this.chosenCus = false;
                 var vueObj=this;
                 CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":this.customerCode}, function(result) {
+                    debugger;
                     var data=result.result;
                     if (data == undefined || data == null || data.length ==0) {
                         layer.msg("暂时未查询到该客户下的仓库信息！！");
@@ -637,6 +741,7 @@
                 },"json");
             },
             consignorHandleCurrentChange:function(val) {
+                debugger;
                 this.consignorCurrentRow=val;
             },
             receiveHandleCurrentChange:function(val) {
@@ -658,6 +763,7 @@
                 this.selectCustomer();
             },
             add:function() {
+                debugger;
                 if(!this.customerName){
                     alert("请选择客户!");
                     return;
@@ -694,6 +800,7 @@
                 rows.splice(index, 1);
             },
             getGoodsClass:function(val) {
+                debugger;
                 var vueObj=this;
                 val.goodsClass = null;
                 var typeId=val.goodsType;
@@ -716,34 +823,32 @@
                 console.log('弹窗');
             },
             selectSupplier:function(){
-                            if(!this.customerName && !this.customerCode){
-                                alert("请选择客户");
-                                this.chosenSupplier=false;
-                                return;
-                            }
-                            this.supplierData=[];
-                            var vueObj=this;
-                            var param = {};
-                            param = vueObj.supplierForm;
-                            param.customerCode = this.customerCode;
-                            CommonClient.post(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
-                                var data=eval(result);
-                                $.each(data,function (index,CscSupplierInfoDto) {
-                                    var supplier={};
-                                    supplier.supplierName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
-                                    supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
-                                    supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
-                                    supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
-                                    supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
-                                    supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
-                                    supplier.supplierCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
-                                    supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
+                debugger;
+                if(!this.customerName){
+                    alert("请选择客户");
+                    this.chosenSupplier=false;
+                    return;
+                }
+                this.supplierData=[];
+                var vueObj=this;
+                CommonClient.post(sys.rootPath + "/ofc/supplierSelect",vueObj.supplierForm, function(result) {
+                    var data=eval(result);
+                    $.each(data,function (index,CscSupplierInfoDto) {
+                        var supplier={};
+                        supplier.supplierName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                        supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
+                        supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
+                        supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
+                        supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
+                        supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
+                        supplier.supplierCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                        supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
 
-                                    vueObj.supplierData.push(supplier);
+                        vueObj.supplierData.push(supplier);
 
-                                });
-                            },"json");
-                    this.totalSupplier=data.result.size;
+                    });
+                },"json");
+                this.totalSupplier=data.result.size;
             },
             handleSupplierSizeChange:function(){
 
@@ -758,6 +863,7 @@
                 this.chosenSupplier=false;
             },
             setCurrentGoodsInfo:function(val){
+                debugger;
                 this.currentRowData.goodsCode=val.goodsCode;
                 this.currentRowData.goodsName=val.goodsName;
                 this.currentRowData.goodsSpec=val.goodsSpec;
@@ -779,6 +885,7 @@
                     this.chosenSend=false;
                     return;
                 }
+                debugger;
                 this.consignorData=[];
                 var vueObj=this;
                 var cscContactDto = {};
@@ -843,6 +950,7 @@
                 this.chosenSend=false;
             },
             setCurrentConsignorInfo:function(val){
+                debugger;
                 this.consignorName=val.consignorName;
                 this.consignorPhoneNumber=val.consignorPhoneNumber;
                 this.consignorContactName=val.consignorContactName;
@@ -856,6 +964,7 @@
 
 
             selectGoods:function(){
+                debugger;
                 this.goodsCodeData=[];
                 var vueObj=this;
                 var cscGoods = {};
@@ -906,6 +1015,7 @@
                 this.chosenCus=false;
             },
             selectCustomer:function(){
+                debugger;
                 var param = {};
                 param.pageNum = this.currentCustomerPage;
                 param.pageSize=this.customerPageSize;
@@ -918,6 +1028,7 @@
                                 layer.msg("暂时未查询到客户信息！！");
                             } else if (result.code == 200) {
                                 $.each(result.result.list,function (index,cscCustomerVo) {
+                                    // debugger;
                                     var channel = cscCustomerVo.channel;
                                     if(null == channel){
                                         channel = "";
@@ -937,13 +1048,15 @@
                                     customer.productType=cscCustomerVo.productType;
                                     vueObj.customerData.push(customer);
                                 });
+                                debugger;
                                 vueObj.total=result.result.total;
                             } else if (result.code == 403) {
-                                 alert("没有权限")
-                             }
+                                alert("没有权限")
+                            }
                         },"json");
             },
             saveStorage:function(){
+                debugger;
                 if(!this.orderTime){
                     this.seenOrderDateNotNull=true;
                     return;
@@ -1011,7 +1124,7 @@
                 ofcOrderDTOStr.warehouseName=obj.warehouseName;//仓库名称
                 ofcOrderDTOStr.warehouseCode=obj.warehouseCode;//仓库编码
                 if(this.arriveTime){
-                ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
+                    ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
                 }
                 ofcOrderDTOStr.plateNumber=this.plateNumber;
                 ofcOrderDTOStr.driverName=this.driverName;
@@ -1059,18 +1172,18 @@
                     var good=goodsTable[i];
 
                     if(good.unitPrice!=""){
-                            if(isNaN(good.unitPrice)){
-                                alert("货品单价必须为数字");
-                                return;
-                            }
-                            if(good.unitPrice>99999.99||good.unitPrice<0){
-                                alert("货品单价不能大于99999.99或小于0");
-                                return;
-                            }
-                            if(isNaN(good.quantity)){
-                                alert("货品数量必须为数字");
-                                return;
-                            }
+                        if(isNaN(good.unitPrice)){
+                            alert("货品单价必须为数字");
+                            return;
+                        }
+                        if(good.unitPrice>99999.99||good.unitPrice<0){
+                            alert("货品单价不能大于99999.99或小于0");
+                            return;
+                        }
+                        if(isNaN(good.quantity)){
+                            alert("货品数量必须为数字");
+                            return;
+                        }
                     }
                     if(good.quantity>99999.999||good.quantity<0||!good.quantity||good.quantity==0){
                         if(!good.quantity){
@@ -1097,7 +1210,7 @@
                             return;
                         }
                         //good.productionTime=this.formatDate(good.productionTime);
-                       // good.invalidTime=this.formatDate(good.invalidTime);
+                        // good.invalidTime=this.formatDate(good.invalidTime);
 
                     }
                     goodDetail.push(good);
@@ -1136,6 +1249,7 @@
                         });
             },
             getCscContantAndCompanyDtoConsignorStr:function(){
+                debugger;
                 var paramConsignor = {};
                 var cscContactDto = {};
                 var cscContactCompanyDto = {};
@@ -1166,6 +1280,7 @@
                 return cscContantAndCompanyDtoConsignorStr;
             },
             getCscContantAndCompanyDtoConsigneeStr:function(warehouse){
+                debugger;
                 var paramConsignee = {};
                 var cscContactDto = {};
                 var cscContactCompanyDto = {};

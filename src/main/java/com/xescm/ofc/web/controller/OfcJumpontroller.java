@@ -341,6 +341,14 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
+
+
+
+
+
+
+
+
     @RequestMapping(value = "ofc/mobileOrderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView mobileOrderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
@@ -371,4 +379,19 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    @RequestMapping(value = "/ofc/orderStorageInManager")
+    public ModelAndView orderStorageInManager(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in_manager");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageInDetail")
+    public ModelAndView orderStorageInDetail(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in_Detail");
+        return modelAndView;
+    }
+
+
+
 }

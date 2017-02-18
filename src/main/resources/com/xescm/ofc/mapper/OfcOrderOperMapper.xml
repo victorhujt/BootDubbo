@@ -178,6 +178,9 @@
       <if test="form.custName!=null and form.custName!=''">
         AND ofi.cust_name = #{form.custName}
       </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
       <if test="form.orderState!=null and form.orderState!=''">
         AND (SELECT DISTINCT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code ) = #{form.orderState}
       </if>
@@ -190,9 +193,10 @@
       <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
         AND ofi.base_code = #{form.baseSerialNo}
       </if>
-        <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
-            AND ofi.area_code = #{form.areaSerialNo}
-        </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+
     </where>
     ORDER BY ofi.order_code DESC
   </select>

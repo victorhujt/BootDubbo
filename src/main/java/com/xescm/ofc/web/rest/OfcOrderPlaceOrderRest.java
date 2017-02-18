@@ -25,11 +25,14 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
+import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
+import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import io.swagger.annotations.ApiImplicitParams;
@@ -47,6 +50,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lyh on 2016/10/8.
@@ -73,6 +77,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     private  CscWarehouseEdasService cscWarehouseEdasService;
     @Autowired
     private RmcWarehouseEdasService rmcWarehouseEdasService;
+
+    @Autowired
+    private OfcOrderManageOperService ofcOrderManageOperService;
+
+
 
     /**
      * 编辑
@@ -450,6 +459,51 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     }
 
+    /**
+     * 加载当前用户下的仓库信息
+     * @return
+     */
+    @RequestMapping(value = "/loadWarehouseByUser",method = RequestMethod.POST)
+    @ResponseBody
+    public Object loadWarehouseByUser(){
+        try {
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            RmcWareHouseQO rmcWareHouseQO=new RmcWareHouseQO();
+            rmcWareHouseQO.setUserId(authResDtoByToken.getUserId());
+            Wrapper<List<RmcWarehouseRespDto>>  warehouseResult=rmcWarehouseEdasService.queryWarehouseList(rmcWareHouseQO);
+            if(warehouseResult.getCode()!=warehouseResult.SUCCESS_CODE){
+                logger.error("查询用户下的仓库产生异常{}",warehouseResult.getMessage());
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,warehouseResult.getMessage());
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", warehouseResult.getResult());
+        }catch (Exception ex) {
+            logger.error("查询用户下的仓库产生异常{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+    }
+
+
+    @RequestMapping(value = "/loadAreaAndBaseByUser",method = RequestMethod.POST)
+    @ResponseBody
+    public Object loadAreaAndBaseByUser() {
+        AuthResDto authResDto = getAuthResDtoByToken();
+        Map<String, List<OfcGroupVo>> groupMap = null;
+        try {
+                groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
+                if (groupMap==null) {
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到大区和基地信息");
+                }
+        } catch (Exception ex) {
+            logger.error("查询用户下的大区和基地信息异常{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+           return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",groupMap);
+    }
+
+
+
+
+
 
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody
@@ -482,6 +536,29 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
 
+
+    @RequestMapping(value ="/loadAreaAndabase",method = RequestMethod.POST)
+    @ResponseBody
+    public Object loadAreaAndabase(){
+        AuthResDto authResDto = getAuthResDtoByToken();
+        Map<String,List<OfcGroupVo>> groupMap = null;
+        try {
+            groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
+        } catch (Exception e) {
+            logger.error("查询当前登录用户所属组织失败:{},原因:{}",e,e.getMessage());
+        }
+
+        if(null == groupMap){
+            logger.error("查询当前登录用户所属组织失败或您的权限太低");
+            return null;
+        }
+        return groupMap;
+    }
+
+
+
+
+
     /**
      * 供应商筛选(调用客户中心API)
      */
@@ -511,6 +588,17 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
         /*
         校验客户订单编号
          */
