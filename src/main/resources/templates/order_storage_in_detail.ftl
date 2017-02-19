@@ -2,34 +2,8 @@
 <html>
 <head>
     <style lang="css">
-        .list-mian-01 {
-            padding:20px;
-        }
         .block {
             margin: 20px 0;
-        }
-        .el-select {
-            width: 150px;
-        }
-        .el-input{
-            width:150px!important;
-        }
-        .hr{
-            margin:10px 0;
-        }
-        .label{
-            display:inline-block;
-            width:100px;
-            font-size:14px;
-            margin-right:10px;
-            text-align:right;
-        }
-        .el-date-editor{
-            width:150px!important;
-        }
-        .el-pagination{
-            float:right;
-            margin-top:5px;
         }
     </style>
 </head>
@@ -40,8 +14,10 @@
             <el-form :model="chosenCusForm">
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
-                    <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
+                  <el-form-item label="" :label-width="formLabelWidth">
+                    <el-button type="primary" @click="selectCustomer">查询</el-button>
+                  </el-form-item>
             </el-form>
 
             <el-table :data="customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
@@ -64,7 +40,6 @@
             <el-form :model="consignorForm">
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="consignorForm.consignorName" auto-complete="off"></el-input>
-
                 </el-form-item>
 
                 <el-form-item label="联系人" :label-width="formLabelWidth">
@@ -73,7 +48,7 @@
                 <el-form-item label="联系电话" :label-width="formLabelWidth">
                     <el-input v-model="consignorForm.consignorPhoneNumber" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item>
+              <el-form-item label="" :label-width="formLabelWidth">
                     <el-button type="primary" @click="selectConsignor">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -109,7 +84,7 @@
                 <el-form-item label="联系电话" :label-width="formLabelWidth">
                     <el-input v-model="supplierForm.contactPhone" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item>
+              <el-form-item label="" :label-width="formLabelWidth">
                     <el-button type="primary" @click="selectSupplier">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -142,7 +117,7 @@
                 <el-form-item label="货品名称" :label-width="formLabelWidth">
                     <el-input v-model="goodsForm.goodsName" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item>
+              <el-form-item label="" :label-width="formLabelWidth">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -163,229 +138,233 @@
                 <el-button type="primary" @click="setCurrentGoodsInfo(goodCurrentRow)">确 定</el-button>
             </div>
         </el-dialog>
-        <div class="hr">
+          <div class="xe-pageHeader">
             基本信息
-            <hr>
-        </div>
-        <div class="block">
-            <label class="label">订单日期</label>
-            <el-date-picker
-                    v-model="orderTime"
-                    align="right"
-                    type="date"
-                    placeholder="选择日期"
-                    :picker-options="pickerOptions">
-            </el-date-picker>
-            <label class="label">开单员</label>
-            <el-input v-model="merchandiser" placeholder="请输入内容"  maxlength="50"  value="${(merchandiser)!""}"></el-input>
-            <label class="label">客户名称</label>
-            <el-input
-                    placeholder="请选择"
-                    icon="search"
-                    v-model="customerName"
-                    @click="chosenCus = true" maxlength="100">
-            </el-input>
-        </div>
-        <div class="block">
-            <label class="label">仓库名称</label>
-            <el-select v-model="wareHouseName" placeholder="请选择">
+          </div>
+        <el-form  label-width="100px">
+          <div class="xe-block">
+            <el-form-item label="订单日期" class="xe-col-3">
+              <el-date-picker
+                      v-model="orderTime"
+                      align="right"
+                      type="date"
+                      placeholder="选择日期"
+                      :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="开单员" class="xe-col-3">
+              <el-input v-model="merchandiser" placeholder="请输入内容"  value="${(merchandiser)!""}"></el-input>
+            </el-form-item>
+            <el-form-item label="客户名称" class="xe-col-3">
+              <el-input
+                      placeholder="请选择"
+                      icon="search"
+                      v-model="customerName"
+                      @click="chosenCus = true">
+              </el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-block">
+            <el-form-item label="仓库名称" class="xe-col-3">
+              <el-select v-model="wareHouseName" placeholder="请选择">
                 <el-option
                         v-for="item in wareHouseOptions"
                         :label="item.label"
                         :value="item.value">
                 </el-option>
-            </el-select>
-            <label class="label">业务类型</label>
-            <el-select v-model="serviceType" placeholder="请选择">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="业务名称" class="xe-col-3">
+              <el-select v-model="serviceType" placeholder="请选择">
                 <el-option
                         v-for="item in serviceTypeOptions"
                         :label="item.label"
                         :value="item.value">
                 </el-option>
-            </el-select>
-            <label class="label">客户订单号</label>
-            <el-input v-model="customerOrderNum" placeholder="请输入内容" maxlength="30"></el-input>
-        </div>
-        <div  class="block">
-            <label class="label">备注</label>
-            <el-input type="textarea" placeholder="请输入内容" v-model="notes" maxlength="200">
-            </el-input>
-        </div>
-        <div class="block">
-        </div>
-        <el-col :span="11"><div class="grid-content">
-            <div class="hr">
-                供应商信息
-                <hr>
-            </div>
-            <div class="block">
-                <label class="label">供应商名称</label>
-                <el-input
-                        placeholder="请选择"
-                        icon="search"
-                        v-model="supplierName"
-                        v-bind:disabled = "isDisabled"
-                        @click="chosenSupplier = true">
-                </el-input>
-            </div>
-        </div></el-col>
-
-        <div class="hr">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="客户订单号" class="xe-col-3">
+              <el-input v-model="customerOrderNum" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-block">
+            <el-form-item label="备注" class="xe-col-3">
+              <el-input type="textarea" placeholder="请输入内容" v-model="notes">
+            </el-form-item>
+          </div>
+          <div class="xe-pageHeader">
+            供应商信息
+          </div>
+          <div class="xe-block">
+            <el-form-item label="供应商名称" class="xe-col-3">
+              <el-input
+                      placeholder="请选择"
+                      icon="search"
+                      v-model="supplierName"
+                      v-bind:disabled = "isDisabled"
+                      @click="chosenSupplier = true">
+              </el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-pageHeader">
             运输信息
-            <hr>
-        </div>
-        <div class="block">
-            <label class="label">预计入库时间</label>
-            <el-date-picker
+          </div>
+          <div class="xe-block">
+            <el-form-item label="预计入库时间" class="xe-col-3">
+              <el-date-picker
                     v-model="arriveTime"
                     align="right"
                     type="date"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1">
             </el-date-picker>
-            <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true">是否提供运输服务</el-checkbox>
-            <label class="label">车牌号</label>
-            <el-input v-model="plateNumber" maxlength="30" placeholder="请输入内容"></el-input>
-            <label class="label">司机姓名</label>
-            <el-input v-model="driverName" maxlength="30" placeholder="请输入内容"></el-input>
-            <label class="label">联系电话</label>
-            <el-input v-model="driverContactNumber" maxlength="30" placeholder="请输入内容"></el-input>
-        </div>
-        <el-col :span="11"><div class="grid-content">
-            <div class="hr">
-                发货方信息
-                <hr>
-            </div>
-            <div class="block">
-                <label class="label">名称</label>
+            </el-form-item>
+            <el-form-item label="是否提供运输" class="xe-col-3">
+              <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+            </el-form-item>
+            <el-form-item label="车牌号" class="xe-col-3">
+              <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-block">
+            <el-form-item label="司机姓名" class="xe-col-3">
+              <el-input v-model="driverName" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="联系电话" class="xe-col-3">
+              <el-input v-model="driverContactNumber" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-pageHeader">
+            发货方信息
+          </div>
+          <div class="xe-block">
+            <el-form-item label="名称" class="xe-col-3">
+              <el-input
+                      placeholder="请选择"
+                      icon="search"
+                      v-model="consignorName"
+                      v-bind:disabled = "isDisabled"
+                      @click="chosenSend = true">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="联系人" class="xe-col-3">
+              <el-input v-model="consignorContactName" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="联系电话" class="xe-col-3">
+              <el-input v-model="consignorPhoneNumber" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-block">
+            <el-form-item label="地址选择" class="xe-col-3">
+              <el-input v-model="consignorAddress" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-pageHeader">
+            货品信息
+          </div>
+          <div class="block" style="float:right;">
+            <el-button type="primary" @click="add">添加货品</el-button>
+          </div>
+          <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
+            <el-table-column type="index"></el-table-column>
+            <el-table-column property="goodsType" label="货品种类">
+              <template scope="scope">
+                <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsCategory(scope.row)">
+                  <el-option
+                          v-for="item in goodsMsgOptions"
+                          :label="item.label"
+                          :value="item.value"
+                          style="width:100px;">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column property="goodsCategory" label="货品类别">
+              <template scope="scope">
+                <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择">
+                  <el-option
+                          v-for="subitem in goodsCategoryOptions"
+                          :label="subitem.label"
+                          :value="subitem.value"
+                          style="width:100px;">
+                  </el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column property="goodsCode" label="货品编码">
+              <template scope="scope">
                 <el-input
                         placeholder="请选择"
                         icon="search"
-                        v-model="consignorName"
+                        v-model="scope.row.goodsCode"
                         v-bind:disabled = "isDisabled"
-                        @click="chosenSend = true">
+                        @click="openGoodsList(scope.row)">
                 </el-input>
-                <label class="label">联系人</label>
-                <el-input v-model="consignorContactName" placeholder="请输入内容"></el-input>
-            </div>
-            <div class="block">
-                <label class="label">联系电话</label>
-                <el-input v-model="consignorPhoneNumber" placeholder="请输入内容"></el-input>
-                <label class="label">地址选择</label>
-                <el-input v-model="consignorAddress" placeholder="请输入内容"></el-input>
-            </div>
-        </div></el-col>
-        <el-col :span="2" style="height:1px;"><div class="grid-content"></div></el-col>
-        <div class="hr">
-            服务项目及费用
-            <hr>
-        </div>
-        <div class="hr">
-            货品信息
-            <hr>
-        </div>
-        <div class="block" style="float:right;">
-            <el-button type="primary" @click="add">添加货品</el-button>
-        </div>
-        <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
-            <el-table-column type="index"></el-table-column>
-            <el-table-column property="goodsType" label="货品种类">
-                <template scope="scope">
-                    <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsCategory(scope.row)">
-                        <el-option
-                                v-for="item in goodsMsgOptions"
-                                :label="item.label"
-                                :value="item.value"
-                                style="width:100px;">
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column property="goodsCategory" label="货品类别">
-                <template scope="scope">
-                    <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择">
-                        <el-option
-                                v-for="subitem in goodsCategoryOptions"
-                                :label="subitem.label"
-                                :value="subitem.value"
-                                style="width:100px;">
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column property="goodsCode" label="货品编码">
-                <template scope="scope">
-                    <el-input
-                            placeholder="请选择"
-                            icon="search"
-                            v-model="scope.row.goodsCode"
-                            v-bind:disabled = "isDisabled"
-                            @click="openGoodsList(scope.row)">
-                    </el-input>
-                </template>
+              </template>
             </el-table-column>
             <el-table-column property="goodsName" label="货品名称">
-                <template scope="scope">
-                    <el-input v-model="scope.row.goodsName" placeholder="请输入内容"></el-input>
-                </template>
+              <template scope="scope">
+                <el-input v-model="scope.row.goodsName" placeholder="请输入内容"></el-input>
+              </template>
             </el-table-column>
             <el-table-column property="goodsSpec" label="规格">
-                <template scope="scope">
-                    <el-input v-model="scope.row.goodsSpec" placeholder="请输入内容"></el-input>
-                </template>
+              <template scope="scope">
+                <el-input v-model="scope.row.goodsSpec" placeholder="请输入内容"></el-input>
+              </template>
             </el-table-column>
             <el-table-column property="unit" label="单位">
-                <template scope="scope">
-                    <el-input v-model="scope.row.unit" placeholder="请输入内容"></el-input>
-                </template>
+              <template scope="scope">
+                <el-input v-model="scope.row.unit" placeholder="请输入内容"></el-input>
+              </template>
             </el-table-column>
             <el-table-column property="quantity" label="入库数量">
-                <template scope="scope">
-                    <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
-                </template>
+              <template scope="scope">
+                <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
+              </template>
             </el-table-column>
             <el-table-column property="unitPrice" label="单价">
-                <template scope="scope">
-                    <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
-                </template>
+              <template scope="scope">
+                <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
+              </template>
             </el-table-column>
             <el-table-column property="productionBatch" label="批次号">
-                <template scope="scope">
-                    <el-input v-model="scope.row.productionBatch" maxlength="50" placeholder="请输入内容"></el-input>
-                </template>
+              <template scope="scope">
+                <el-input v-model="scope.row.productionBatch" placeholder="请输入内容"></el-input>
+              </template>
             </el-table-column>
             <el-table-column property="productionTime" label="生产日期">
-                <template scope="scope">
-                    <el-date-picker
-                            v-model="scope.row.productionTime"
-                            align="right"
-                            type="date"
-                            placeholder="选择日期" maxlength="50"
-                            :picker-options="pickerOptions1">
-                    </el-date-picker>
-                </template>
+              <template scope="scope">
+                <el-date-picker
+                        v-model="scope.row.productionTime"
+                        align="right"
+                        type="date"
+                        placeholder="选择日期"
+                        :picker-options="pickerOptions1">
+                </el-date-picker>
+              </template>
             </el-table-column>
             <el-table-column property="invalidTime" label="失效日期">
-                <template scope="scope">
-                    <el-date-picker
-                            v-model="scope.row.invalidTime"
-                            align="right"
-                            type="date"
-                            placeholder="选择日期"
-                            maxlength="50"
-                            :picker-options="pickerOptions1">
-                    </el-date-picker>
-                </template>
+              <template scope="scope">
+                <el-date-picker
+                        v-model="scope.row.invalidTime"
+                        align="right"
+                        type="date"
+                        placeholder="选择日期"
+                        :picker-options="pickerOptions1">
+                </el-date-picker>
+              </template>
             </el-table-column>
             <el-table-column property="goodsOperation" label="操作">
-                <template scope="scope">
-                    <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
-                </template>
+              <template scope="scope">
+                <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
+              </template>
             </el-table-column>
-        </el-table>
+          </el-table>
         <div class="block" style="float:right;">
-            <el-button type="primary" @click="saveStorage">下单</el-button>
+          <el-button type="primary" @click="saveStorage">下单</el-button>
         </div>
+
+        </el-form>
     </div>
 </div>
 </body>
