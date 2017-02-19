@@ -150,7 +150,7 @@
             <el-table :data="goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column property="goodsType" label="货品类别"></el-table-column>
-                <el-table-column property="goodsClass" label="货品小类"></el-table-column>
+                <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码"></el-table-column>
                 <el-table-column property="goodsName" label="货品名称"></el-table-column>
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
@@ -188,7 +188,7 @@
         </div>
         <div class="block">
             <label class="label">仓库名称</label>
-            <el-select v-model="wareHouse" placeholder="请选择">
+            <el-select v-model="wareHouseName" placeholder="请选择">
                 <el-option
                         v-for="item in wareHouseOptions"
                         :label="item.label"
@@ -291,7 +291,7 @@
             <el-table-column type="index"></el-table-column>
             <el-table-column property="goodsType" label="货品种类">
                 <template scope="scope">
-                    <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsClass(scope.row)">
+                    <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsCategory(scope.row)">
                         <el-option
                                 v-for="item in goodsMsgOptions"
                                 :label="item.label"
@@ -301,11 +301,11 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column property="goodsClass" label="货品类别">
+            <el-table-column property="goodsCategory" label="货品类别">
                 <template scope="scope">
-                    <el-select  size="small" v-model="scope.row.goodsClass"  placeholder="请选择">
+                    <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择">
                         <el-option
-                                v-for="subitem in goodsClassOptions"
+                                v-for="subitem in goodsCategoryOptions"
                                 :label="subitem.label"
                                 :value="subitem.value"
                                 style="width:100px;">
@@ -399,6 +399,7 @@
                 consignorCode:'',
                 orderCode:'',
                 consignorContactCode:'',
+                wareHouseName:'',
                 goodsCode:'',
                 consignorType:'',
                 goodsName:'',
@@ -418,9 +419,9 @@
                 currentConsignorPage:1,
                 chosenClassOptions: [],
                 currentCust: [],
-                goodsClassOptions:[],
+                goodsCategoryOptions:[],
                 goodsType:'',
-                goodsClass:'',
+                goodsCategory:'',
                 invalidTime:'',
                 productionTime:'',
                 notes:'',
@@ -581,8 +582,19 @@
         },
 
         beforeMount:function(){
+            debugger;
             var vueObj=this;
             var url=window.location.href;
+            CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
+                var data=eval(result);
+                vueObj.goodsMsgOptions=[];
+                $.each(data,function (index,CscGoodsTypeVo) {
+                    var good={};
+                    good.label=CscGoodsTypeVo.goodsTypeName;
+                    good.value=CscGoodsTypeVo.id;
+                    vueObj.goodsMsgOptions.push(good);
+                });
+            });
             if(url.indexOf("?")!=-1){
                 var param=url.split("?")[1].split("=");
                 if(param[0]=="orderCode"){
@@ -592,13 +604,14 @@
                             layer.msg("订单详情查询失败");
                             return;
                         }else if(result.code == 200){
+                            debugger;
                             var ofcFundamentalInformation=result.result.ofcFundamentalInformation;
                             var ofcWarehouseInformation=result.result.ofcWarehouseInformation;
                             var ofcGoodsDetailsInfo=result.result.ofcGoodsDetailsInfo;
                             var ofcDistributionBasicInfo=result.result.ofcDistributionBasicInfo;
                             if(ofcFundamentalInformation!=null){
                                 vueObj.orderCode=ofcFundamentalInformation.orderCode;
-                                vueObj.orderTime=ofcFundamentalInformation.orderTime;
+                                vueObj.orderTime=DateUtil.parse(ofcFundamentalInformation.orderTime);
                                 vueObj.merchandiser=ofcFundamentalInformation.merchandiser;
                                 vueObj.customerName=ofcFundamentalInformation.custName;
                                 vueObj.customerCode=ofcFundamentalInformation.custCode;
@@ -606,11 +619,14 @@
                                 vueObj.serviceType=ofcFundamentalInformation.businessType;
                                 vueObj.notes=ofcFundamentalInformation.notes;
                                 if(ofcWarehouseInformation!=null){
-                                    vueObj.wareHouse=ofcWarehouseInformation.warehouseName;
+                                    vueObj.wareHouseName=ofcWarehouseInformation.warehouseCode;
+                                    var w={};
+                                    w.label=ofcWarehouseInformation.warehouseName;
+                                    w.value=ofcWarehouseInformation.warehouseCode;
+                                    vueObj.wareHouseOptions.push(w);
                                     vueObj.supplierName=ofcWarehouseInformation.supportName;
                                     vueObj.supplierCode=ofcWarehouseInformation.supportCode;
-                                    vueObj.wareHouse.warehouseName=ofcWarehouseInformation.warehouseName;
-                                    vueObj.wareHouse.warehouseCode=ofcWarehouseInformation.warehouseCode;
+
                                     if(ofcWarehouseInformation.provideTransport=="1"){
                                         if(ofcDistributionBasicInfo!=null){
                                             //发货方
@@ -620,45 +636,49 @@
                                             vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
                                             vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
                                             vueObj.isNeedTransport=true;
-                                            vueObj.arriveTime=ofcWarehouseInformation.arriveTime;
+                                            debugger;
+                                            vueObj.arriveTime=DateUtil.parse(ofcWarehouseInformation.arriveTime);
                                             vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
                                             vueObj.driverName=ofcWarehouseInformation.driverName;
                                             vueObj.driverContactNumber=ofcDistributionBasicInfo.contactNumber;
                                             vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
                                             vueObj.consignorAddressCode=ofcDistributionBasicInfo.departurePlaceCode;
                                             var addressCode=ofcDistributionBasicInfo.destinationCode.split(",");
-                                            vueObj.wareHouse.provinceCode=addressCode[0];
-                                            vueObj.wareHouse.cityCode=addressCode[1];
-                                            vueObj.wareHouse.areaCode=addressCode[2];
+                                            var wareHouse={};
+                                            wareHouse.warehouseName=ofcWarehouseInformation.warehouseName;
+                                            wareHouse.warehouseCode=ofcWarehouseInformation.warehouseCode;
+                                            wareHouse.provinceCode=addressCode[0];
+                                            wareHouse.cityCode=addressCode[1];
+                                            wareHouse.areaCode=addressCode[2];
                                             if(addressCode.length==4){
                                                 vueObj.wareHouse.streetCode=addressCode[3];
                                             }
-                                            vueObj.wareHouse.detailAddress=ofcDistributionBasicInfo.destination;
-                                            vueObj.wareHouse.province=ofcDistributionBasicInfo.destinationProvince;
-                                            vueObj.wareHouse.city=ofcDistributionBasicInfo.destinationCity;
-                                            vueObj.wareHouse.area=ofcDistributionBasicInfo.destinationDistrict;
-                                            vueObj.wareHouse.contactName=ofcDistributionBasicInfo.consigneeContactName;
-                                            vueObj.wareHouse.phone=ofcDistributionBasicInfo.consigneeContactPhone;
+                                            wareHouse.detailAddress=ofcDistributionBasicInfo.destination;
+                                            wareHouse.province=ofcDistributionBasicInfo.destinationProvince;
+                                            wareHouse.city=ofcDistributionBasicInfo.destinationCity;
+                                            wareHouse.area=ofcDistributionBasicInfo.destinationDistrict;
+                                            wareHouse.contactName=ofcDistributionBasicInfo.consigneeContactName;
+                                            wareHouse.phone=ofcDistributionBasicInfo.consigneeContactPhone;
                                             if(ofcDistributionBasicInfo.destinationTowns){
-                                                vueObj.wareHouse.street=ofcDistributionBasicInfo.destinationTowns;
+                                                wareHouse.street=ofcDistributionBasicInfo.destinationTowns;
                                             }
                                         }
+                                        vueObj.wareHouse=wareHouse;
                                     }
-
                                     if(ofcGoodsDetailsInfo!=null&&ofcGoodsDetailsInfo.length>0){
                                         for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
                                             var goodDetail=ofcGoodsDetailsInfo[i];
                                             var good={};
                                             good.goodsType=goodDetail.goodsType;
-                                            good.goodsClass=goodDetail.goodsCategory;
+                                            good.goodsCategory=goodDetail.goodsCategory;
                                             good.goodsCode=goodDetail.goodsCode;
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
                                             good.unitPrice=goodDetail.unitPrice;
                                             good.productionBatch=goodDetail.productionBatch;
-                                            good.productionTime=goodDetail.productionTime;
-                                            good.invalidTime=goodDetail.invalidTime;
+                                            good.productionTime=DateUtil.parse(goodDetail.productionTime);
+                                            good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -734,7 +754,7 @@
                 var vueObj=this;
                 var newData = {
                     goodsType: '',
-                    goodsClass: '',
+                    goodsCategory: '',
                     goodsCode: '',
                     goodsName: '',
                     goodsSpec: '',
@@ -745,7 +765,7 @@
                     productionTime:'',
                     invalidTime:'',
                     goodsOperation: '',
-                    goodsClassOptions: []
+                    goodsCategoryOptions: []
                 };
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                     var data=eval(result);
@@ -762,19 +782,19 @@
             deleteRow:function(index, rows) {
                 rows.splice(index, 1);
             },
-            getGoodsClass:function(val) {
+            getGoodsCategory:function(val) {
                 var vueObj=this;
-                val.goodsClass = null;
+                val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
                     data=eval(data);
-                    vueObj.goodsClassOptions=[];
+                    vueObj.goodsCategoryOptions=[];
                     $.each(data,function (index,CscGoodsTypeVo) {
                         var goodClass={};
                         goodClass.label=CscGoodsTypeVo.goodsTypeName;
                         goodClass.value=CscGoodsTypeVo.goodsTypeName;
-                        vueObj.goodsClassOptions.push(goodClass);
+                        vueObj.goodsCategoryOptions.push(goodClass);
                     });
                 });
             },
@@ -938,7 +958,7 @@
                         $.each(data.result.list,function (index,cscGoodsVo) {
                             var goodCode={};
                             goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
-                            goodCode.goodsClass=cscGoodsVo.goodsTypeName;
+                            goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
                             goodCode.goodsCode=cscGoodsVo.goodsCode;
                             goodCode.goodsName=cscGoodsVo.goodsName;
                             goodCode.goodsSpec=cscGoodsVo.specification;
@@ -1010,6 +1030,7 @@
                         },"json");
             },
             saveStorage:function(){
+                debugger;
                 if(!this.orderTime){
                     this.seenOrderDateNotNull=true;
                     return;
@@ -1027,7 +1048,7 @@
                     alert('客户名称不能为空!');
                     return;
                 }
-                if(!this.wareHouse){
+                if(!this.wareHouseName){
                     alert('仓库名称不能为空!');
                     return;
                 }
@@ -1049,6 +1070,14 @@
                 //是否提供运输
                 if(this.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
+
+
+
+
+
+
+
+
                     if(!this.consignorName){
                         alert("提供运输时,发货方不能为空，请选择发货方");
                         return;
@@ -1062,9 +1091,10 @@
                 if(this.orderTime){
                     ofcOrderDTOStr.orderTime = this.formatDate(this.orderTime);
                 }
-                this.wareHouseObj=JSON.parse(this.wareHouse);
+                this.wareHouseObj=this.wareHouse;
 
                 //订单基本信息
+                ofcOrderDTOStr.orderCode=this.orderCode;
                 ofcOrderDTOStr.custName = this.customerName;
                 ofcOrderDTOStr.custCode =this.customerCode;
                 ofcOrderDTOStr.custOrderCode =this.customerOrderNum;
@@ -1074,8 +1104,8 @@
                 cscSupplierInfoDtoStr.supportName==this.supplierName;
                 ofcOrderDTOStr.supportCode=this.supplierCode;//供应商编码
                 cscSupplierInfoDtoStr.supportCode==this.supplierCode;
-                ofcOrderDTOStr.warehouseName=obj.warehouseName;//仓库名称
-                ofcOrderDTOStr.warehouseCode=obj.warehouseCode;//仓库编码
+                ofcOrderDTOStr.warehouseName= this.wareHouseObj.warehouseName;//仓库名称
+                ofcOrderDTOStr.warehouseCode= this.wareHouseObj.warehouseCode;//仓库编码
                 if(this.arriveTime){
                     ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
                 }
@@ -1182,7 +1212,7 @@
                 }
                 var ofcOrderDto = JSON.stringify(ofcOrderDTOStr);
                 var orderGoodsListStr = JSON.stringify(goodDetail);
-                var tag="save";
+                var tag="edit";
                 xescm.common.submit("/ofc/saveStorage"
                         ,{"ofcOrderDTOStr":ofcOrderDto
                             ,"orderGoodsListStr":orderGoodsListStr

@@ -2226,102 +2226,145 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
-        //仓储下单
-        if (PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")) {
-            StringBuffer notes = new StringBuffer();
-            int custOrderCode = 0;
-            if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
-                custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+
+        int custOrderCode = 0;
+        if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
+            custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+        }
+
+         StringBuffer notes = new StringBuffer();
+         if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
+             //仓储下单//根据客户订单编号查询唯一性
+             if (custOrderCode < 1) {
+                 if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())) {
+                     QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                     queryCustomerCodeDto.setCustomerCode(ofcFundamentalInformation.getCustCode());
+                     Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                     if (Wrapper.ERROR_CODE == cscCustomerVo.getCode()) {
+                         throw new BusinessException(cscCustomerVo.getMessage());
+                     } else if (null == cscCustomerVo.getResult()) {
+                         throw new BusinessException("客户中心没有查到该客户!");
+                     }
+                     ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
+                 }
+             }else{
+                 throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
+             }
+             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO", 6));
+         }
+        ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+        //货品数量
+        BigDecimal goodsAmountCount = new BigDecimal(0);
+        //保存货品明细
+        for(OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList){
+            if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                    continue;
             }
-            if (custOrderCode < 1){//根据客户订单编号查询唯一性
-                ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO",6));
-                if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())){
-                    QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
-                    queryCustomerCodeDto.setCustomerCode(ofcFundamentalInformation.getCustCode());
-                    Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
-                    if(Wrapper.ERROR_CODE == cscCustomerVo.getCode()){
-                        throw new BusinessException(cscCustomerVo.getMessage());
-                    }else if(null == cscCustomerVo.getResult()){
-                        throw new BusinessException("客户中心没有查到该客户!");
-                    }
-                    ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
-                }
-                ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
-                //货品数量
-                BigDecimal goodsAmountCount = new BigDecimal(0);
-                //保存货品明细
-                for(OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList){
-                    if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                            continue;
-                    }
-                    String orderCode = ofcFundamentalInformation.getOrderCode();
-                    ofcGoodsDetails.setOrderCode(orderCode);
-                    ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
-                    ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
-                    ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
-                    ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-                    goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity(), new MathContext(3));
-                    ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
-                }
+            String orderCode = ofcFundamentalInformation.getOrderCode();
+            ofcGoodsDetails.setOrderCode(orderCode);
+            ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+            ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+            ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+            ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity(), new MathContext(3));
+            if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
+                ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+            }else{
+                ofcGoodsDetailsInfoService.updateByOrderCode(ofcGoodsDetails);
+            }
+        }
 
-                //添加基本信息
-                ofcFundamentalInformationService.save(ofcFundamentalInformation);
+        if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
+            //添加基本信息
+            ofcFundamentalInformationService.save(ofcFundamentalInformation);
+        }else if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("edit")){
+            ofcFundamentalInformationService.update(ofcFundamentalInformation);
+        }
 
+
+        if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){
+            if(null == ofcWarehouseInformation.getProvideTransport()){
+                ofcWarehouseInformation.setProvideTransport(WAREHOUSEORDERNOTPROVIDETRANS);
+            }
+
+            if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERNOTPROVIDETRANS){
+                if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("edit")){//编辑时把之前提供运输修改不需要提供运输
+                    OfcWarehouseInformation condition=new OfcWarehouseInformation();
+                    condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                    ofcWarehouseInformationService.delete(condition);
+                }
+            }
+
+            if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
+                Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                    throw new BusinessException(wrapper.getMessage());
+                }
                 //配送基本信息
                 ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
-                if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSEDISTRIBUTIONORDER)){
-                    if(null == ofcWarehouseInformation.getProvideTransport()){
-                        ofcWarehouseInformation.setProvideTransport(WAREHOUSEORDERNOTPROVIDETRANS);
-                    }
-                    if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSEORDERPROVIDETRANS){
-                        Wrapper<?> wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-                        if(Wrapper.ERROR_CODE == wrapper.getCode()){
-                            throw new BusinessException(wrapper.getMessage());
-                        }
-                        ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
-                        ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
-                        ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                        ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
-                        ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
-                        ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
-                    }
-
-                    //仓储信息
-                    ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                    ofcWarehouseInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
-                    ofcWarehouseInformation.setCreator(ofcFundamentalInformation.getCreator());
-                    ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOperTime());
-                    ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
-                    ofcWarehouseInformationService.save(ofcWarehouseInformation);
+                ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
+                ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
+                ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
+                ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
+                if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
+                    ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                }else if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("edit")){
+                    ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
                 }
 
-                //添加开单员
-                if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
-                    ofcMerchandiserService.save(ofcMerchandiser);
-                }
-
-                //保存订单日志
-                notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
-                notes.append(" 订单已创建");
-                notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
-                notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
-                ofcOrderStatus.setNotes(notes.toString());
-                ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
-                ofcOrderStatus.setStatusDesc("待审核");
-                ofcOrderStatus.setLastedOperTime(new Date());
-                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
-                ofcOrderStatusService.save(ofcOrderStatus);
-
-                //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
-                if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
-                    //调用自动审核
-                    orderAutoAudit(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcWarehouseInformation
-                            ,new OfcFinanceInformation() ,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
-                }
-            }else{
-                throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
             }
+            //仓储信息
+            ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            ofcWarehouseInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
+            ofcWarehouseInformation.setCreator(ofcFundamentalInformation.getCreator());
+            ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOperTime());
+            ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
+            if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
+                ofcWarehouseInformationService.save(ofcWarehouseInformation);
+            }else if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("edit")){
+                ofcWarehouseInformationService.update(ofcWarehouseInformation);
+            }
+        }
+
+        //添加开单员
+        if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
+            ofcMerchandiserService.save(ofcMerchandiser);
+        }
+        if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
+            //保存订单日志
+            notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
+            notes.append(" 订单已创建");
+            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+            ofcOrderStatus.setNotes(notes.toString());
+            ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
+            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setLastedOperTime(new Date());
+            ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
+            ofcOrderStatusService.save(ofcOrderStatus);
+        }else if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("edit")){
+            notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
+            notes.append(" 订单已更新");
+            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
+            ofcOrderStatus.setNotes(notes.toString());
+            ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
+            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setLastedOperTime(new Date());
+            ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
+            ofcOrderStatusService.save(ofcOrderStatus);
+        }
+
+
+
+        //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
+        if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
+            //调用自动审核
+            orderAutoAudit(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcWarehouseInformation
+                    ,new OfcFinanceInformation() ,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }

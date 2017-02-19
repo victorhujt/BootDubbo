@@ -15,4 +15,6 @@ public interface OfcGoodsDetailsInfoService extends IService<OfcGoodsDetailsInfo
     void deleteAllByOrderCode(String orderCode);
 
     List<OfcGoodsDetailsInfo> queryByOrderCode(String orderCode);
+
+    int updateByOrderCode(Object key);
 }

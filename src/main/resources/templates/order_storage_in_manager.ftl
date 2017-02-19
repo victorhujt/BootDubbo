@@ -269,9 +269,12 @@
                     if(areaArray.length>0){
                         $.each(areaArray,function (index,OfcGroupVo) {
                             var area={};
-                            area.label=OfcGroupVo.groupName;
-                            area.value= OfcGroupVo.serialNo;
-                            vueObj.areaNameOptions.push(area);
+                            if(OfcGroupVo.groupName&&OfcGroupVo.serialNo){
+                                area.label=OfcGroupVo.groupName;
+                                area.value= OfcGroupVo.serialNo;
+                                vueObj.areaNameOptions.push(area);
+                            }
+
                         });
                     }else{
                         layer.msg("当前用户下没有大区信息！");
@@ -375,6 +378,10 @@
             editOrder:function(){
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
+                    if(order.orderStatusName!="待审核"){
+                        alert("只有处于待审核状态才可以进行编辑");
+                        return;
+                    }
                     var url = "/ofc/orderStorageInDetail/"+"?orderCode="+order.orderCode;
                     var html = window.location.href;
                     var index = html.indexOf("/index#");
