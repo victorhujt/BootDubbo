@@ -642,8 +642,6 @@
                                             if(ofcDistributionBasicInfo.destinationTowns){
                                                 vueObj.wareHouse.street=ofcDistributionBasicInfo.destinationTowns;
                                             }
-
-
                                         }
                                     }
 
@@ -1092,6 +1090,12 @@
                 ofcOrderDTOStr.consignorContactCode=this.consignorContactCode;
                 ofcOrderDTOStr.consignorContactName=this.consignorContactName;
                 ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
+
+                //收货方信息(仓库的信息)
+                ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
+                ofcOrderDTOStr.consigneeCode=this.wareHouseObj.warehouseCode;
+                ofcOrderDTOStr.consigneeContactname=this.wareHouseObj.contactName;
+                ofcOrderDTOStr.consigneeContactPhone=this.wareHouseObj.phone;
 
                 cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStr();
                 cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(this.wareHouseObj);
