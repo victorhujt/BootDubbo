@@ -120,7 +120,7 @@
             <el-table :data="goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column property="goodsType" label="货品类别"></el-table-column>
-                <el-table-column property="goodsClass" label="货品小类"></el-table-column>
+                <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码"></el-table-column>
                 <el-table-column property="goodsName" label="货品名称"></el-table-column>
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
@@ -261,26 +261,26 @@
               <el-table-column type="index"></el-table-column>
               <el-table-column property="goodsType" label="货品种类">
                 <template scope="scope">
-                  <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsClass(scope.row)">
-                    <el-option
-                            v-for="item in goodsMsgOptions"
-                            :label="item.label"
-                            :value="item.value"
-                            style="width:100px;">
-                    </el-option>
-                  </el-select>
+                    <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsCategory(scope.row)">
+                        <el-option
+                                v-for="item in goodsMsgOptions"
+                                :label="item.label"
+                                :value="item.value"
+                                style="width:100px;">
+                        </el-option>
+                    </el-select>
                 </template>
-              </el-table-column>
-              <el-table-column property="goodsClass" label="货品类别">
+            </el-table-column>
+            <el-table-column property="goodsCategory" label="货品类别">
                 <template scope="scope">
-                  <el-select  size="small" v-model="scope.row.goodsClass"  placeholder="请选择">
-                    <el-option
-                            v-for="subitem in goodsClassOptions"
-                            :label="subitem.label"
-                            :value="subitem.value"
-                            style="width:100px;">
-                    </el-option>
-                  </el-select>
+                    <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择">
+                        <el-option
+                                v-for="subitem in goodsCategoryOptions"
+                                :label="subitem.label"
+                                :value="subitem.value"
+                                style="width:100px;">
+                        </el-option>
+                    </el-select>
                 </template>
               </el-table-column>
               <el-table-column property="goodsCode" label="货品编码">
@@ -385,9 +385,9 @@
                 currentConsignorPage:1,
                 chosenClassOptions: [],
                 currentCust: [],
-                goodsClassOptions:[],
+                goodsCategoryOptions:[],
                 goodsType:'',
-                goodsClass:'',
+                goodsCategory:'',
                 invalidTime:'',
                 productionTime:'',
                 notes:'',
@@ -602,7 +602,7 @@
                 var vueObj=this;
                 var newData = {
                     goodsType: '',
-                    goodsClass: '',
+                    goodsCategory: '',
                     goodsCode: '',
                     goodsName: '',
                     goodsSpec: '',
@@ -613,7 +613,7 @@
                     productionTime:'',
                     invalidTime:'',
                     goodsOperation: '',
-                    goodsClassOptions: []
+                    goodsCategoryOptions: []
                 };
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                     var data=eval(result);
@@ -630,19 +630,19 @@
             deleteRow:function(index, rows) {
                 rows.splice(index, 1);
             },
-            getGoodsClass:function(val) {
+            getGoodsCategory:function(val) {
                 var vueObj=this;
-                val.goodsClass = null;
+                val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
                     data=eval(data);
-                    vueObj.goodsClassOptions=[];
+                    vueObj.goodsCategoryOptions=[];
                     $.each(data,function (index,CscGoodsTypeVo) {
                         var goodClass={};
                         goodClass.label=CscGoodsTypeVo.goodsTypeName;
                         goodClass.value=CscGoodsTypeVo.goodsTypeName;
-                        vueObj.goodsClassOptions.push(goodClass);
+                        vueObj.goodsCategoryOptions.push(goodClass);
                     });
                 });
             },
@@ -809,7 +809,7 @@
                         $.each(data.result.list,function (index,cscGoodsVo) {
                             var goodCode={};
                             goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
-                            goodCode.goodsClass=cscGoodsVo.goodsTypeName;
+                            goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
                             goodCode.goodsCode=cscGoodsVo.goodsCode;
                             goodCode.goodsName=cscGoodsVo.goodsName;
                             goodCode.goodsSpec=cscGoodsVo.specification;
@@ -965,10 +965,8 @@
                 //收货方信息(仓库的信息)
                 ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
                 ofcOrderDTOStr.consigneeCode=this.wareHouseObj.warehouseCode;
-                ofcOrderDTOStr.consigneeContactname=this.wareHouseObj.contactName;
+                ofcOrderDTOStr.consigneeContactName=this.wareHouseObj.contactName;
                 ofcOrderDTOStr.consigneeContactPhone=this.wareHouseObj.phone;
-
-
 
                 cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStr();
                 cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(this.wareHouseObj);
@@ -983,7 +981,7 @@
                 }
                 ofcOrderDTOStr.departurePlaceCode=this.consignorAddressCode;
                 ofcOrderDTOStr.destinationCode=this.wareHouseObj.provinceCode+","+this.wareHouseObj.cityCode+","+this.wareHouseObj.areaCode;
-                if(obj.streetCode){
+                if(this.wareHouseObj.streetCode){
                     ofcOrderDTOStr.destinationCode= ofcOrderDTOStr.destinationCode+","+this.wareHouseObj.streetCode;
                 }
 
