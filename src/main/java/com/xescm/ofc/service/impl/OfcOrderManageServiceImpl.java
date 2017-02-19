@@ -1105,21 +1105,21 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }
         OfcFundamentalInformation ofcFundamentalInformation=new OfcFundamentalInformation();
         ofcFundamentalInformation.setOrderCode(orderCode);
-        ofcFundamentalInformation.setIsDelete("1");//1:删除 0或空:未删除
+       // ofcFundamentalInformation.setIsDelete("1");//1:删除 0或空:未删除
         ofcFundamentalInformationService.update(ofcFundamentalInformation);
 
         OfcDistributionBasicInfo ofcDistributionBasicInfo=new OfcDistributionBasicInfo();
         ofcDistributionBasicInfo.setOrderCode(orderCode);
-        ofcDistributionBasicInfo.setIsDelete("1");
+        //ofcDistributionBasicInfo.setIsDelete("1");
         ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
         //ofcOrderStatusService.deleteByOrderCode(orderCode);
         OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
         ofcWarehouseInformation.setOrderCode(orderCode);
-        ofcWarehouseInformation.setIsDelete("1");
+      //  ofcWarehouseInformation.setIsDelete("1");
         ofcWarehouseInformationService.update(ofcWarehouseInformation);
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
         ofcGoodsDetailsInfo.setOrderCode(orderCode);
-        ofcGoodsDetailsInfo.setIsDelete("1");
+       // ofcGoodsDetailsInfo.setIsDelete("1");
         ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
         return String.valueOf(Wrapper.SUCCESS_CODE);
     }
@@ -2317,7 +2317,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                     //调用自动审核
                     orderAutoAudit(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcWarehouseInformation
-                            ,null,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
+                            ,new OfcFinanceInformation() ,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
                 }
             }else{
                 throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
@@ -2755,7 +2755,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         tfcTransport.setOrderBatchNumber(ofcFundamentalInformation.getOrderBatchNumber());
 //        tfcTransport.setProgramSerialNumber();
         tfcTransport.setDestinationCode(ofcDistributionBasicInfo.getDestinationCode());
-        tfcTransport.setServiceCharge(ofcFinanceInformation.getServiceCharge());
+        tfcTransport.setServiceCharge(ofcFinanceInformation.getServiceCharge()==null?null:ofcFinanceInformation.getServiceCharge());
         tfcTransport.setOrderTime(ofcFundamentalInformation.getOrderTime());
         tfcTransport.setCreatePersonnel(ofcFundamentalInformation.getCreatorName());
         tfcTransport.setVoidPersonnel(ofcFundamentalInformation.getAbolisherName());
@@ -2763,7 +2763,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         tfcTransport.setMerchandiser(ofcFundamentalInformation.getMerchandiser());
         tfcTransport.setBusinessType(ofcFundamentalInformation.getBusinessType());
         tfcTransport.setGoodsTypeName(ofcDistributionBasicInfo.getGoodsTypeName());
-        tfcTransport.setTwoDistribution(ofcFinanceInformation.getTwoDistribution());
+        tfcTransport.setTwoDistribution(ofcFinanceInformation.getTwoDistribution()==null?null:ofcFinanceInformation.getTwoDistribution());
 //        tfcTransport.setTransportPool();//
 //        tfcTransport.setMatchingMode();//
 //        tfcTransport.setSchedulingState();//

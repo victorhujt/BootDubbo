@@ -364,6 +364,7 @@
             return {
                 seenOrderDateNotNull:false,
                 consignorCode:'',
+                wareHouseObj:'',
                 consignorContactCode:'',
                 goodsCode:'',
                 consignorType:'',
@@ -932,7 +933,7 @@
                 if(this.orderTime){
                     ofcOrderDTOStr.orderTime = this.formatDate(this.orderTime);
                 }
-                var obj=JSON.parse(this.wareHouse);
+                this.wareHouseObj=JSON.parse(this.wareHouse);
 
                 //订单基本信息
                 ofcOrderDTOStr.custName = this.customerName;
@@ -944,8 +945,8 @@
                 cscSupplierInfoDtoStr.supportName==this.supplierName;
                 ofcOrderDTOStr.supportCode=this.supplierCode;//供应商编码
                 cscSupplierInfoDtoStr.supportCode==this.supplierCode;
-                ofcOrderDTOStr.warehouseName=obj.warehouseName;//仓库名称
-                ofcOrderDTOStr.warehouseCode=obj.warehouseCode;//仓库编码
+                ofcOrderDTOStr.warehouseName=this.wareHouseObj.warehouseName;//仓库名称
+                ofcOrderDTOStr.warehouseCode=this.wareHouseObj.warehouseCode;//仓库编码
                 if(this.arriveTime){
                 ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
                 }
@@ -961,8 +962,16 @@
                 ofcOrderDTOStr.consignorContactName=this.consignorContactName;
                 ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
 
+                //收货方信息(仓库的信息)
+                ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
+                ofcOrderDTOStr.consigneeCode=this.wareHouseObj.warehouseCode;
+                ofcOrderDTOStr.consigneeContactname=this.wareHouseObj.contactName;
+                ofcOrderDTOStr.consigneeContactPhone=this.wareHouseObj.phone;
+
+
+
                 cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStr();
-                cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(obj);
+                cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(this.wareHouseObj);
                 //出发地
                 ofcOrderDTOStr.departurePlace=this.consignorAddress;
                 var consignorAddressNameMessage =this.consignorAddress.split(',');
@@ -973,14 +982,18 @@
                     ofcOrderDTOStr.departureTowns=consignorAddressNameMessage[3];
                 }
                 ofcOrderDTOStr.departurePlaceCode=this.consignorAddressCode;
+                ofcOrderDTOStr.destinationCode=this.wareHouseObj.provinceCode+","+this.wareHouseObj.cityCode+","+this.wareHouseObj.areaCode;
+                if(obj.streetCode){
+                    ofcOrderDTOStr.destinationCode= ofcOrderDTOStr.destinationCode+","+this.wareHouseObj.streetCode;
+                }
 
                 //目的地
-                ofcOrderDTOStr.destination=obj.detailAddress;
-                ofcOrderDTOStr.destinationProvince=obj.province;
-                ofcOrderDTOStr.destinationCity=obj.city;
-                ofcOrderDTOStr.destinationDistrict=obj.area;
-                if(!StringUtil.isEmpty(obj.street)){
-                    ofcOrderDTOStr.destinationTowns=obj.street;
+                ofcOrderDTOStr.destination=this.wareHouseObj.detailAddress;
+                ofcOrderDTOStr.destinationProvince=this.wareHouseObj.province;
+                ofcOrderDTOStr.destinationCity=this.wareHouseObj.city;
+                ofcOrderDTOStr.destinationDistrict=this.wareHouseObj.area;
+                if(!StringUtil.isEmpty(this.wareHouseObj.street)){
+                    ofcOrderDTOStr.destinationTowns=this.wareHouseObj.street;
                 }
 
                 var goodsTable =this.goodsData;
@@ -1057,7 +1070,6 @@
                         }
                         ,"您确认提交订单吗?"
                         ,function () {
-                            debugger;
                             location.reload();
                             var url=window.location.href;
                             if(url.indexOf("?")!=-1){
