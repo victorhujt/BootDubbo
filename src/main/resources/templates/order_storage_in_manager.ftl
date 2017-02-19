@@ -1,33 +1,7 @@
 <head>
     <style lang="css">
-        .list-mian-01 {
-            padding:20px;
-        }
         .block {
             margin: 20px 0;
-        }
-        .el-select {
-            width: 150px;
-        }
-        .el-input{
-            width:150px!important;
-        }
-        .hr{
-            margin:10px 0;
-        }
-        .label{
-            display:inline-block;
-            width:100px;
-            font-size:14px;
-            margin-right:10px;
-            text-align:right;
-        }
-        .el-date-editor{
-            width:150px!important;
-        }
-        .el-pagination{
-            float:right;
-            margin-top:5px;
         }
     </style>
 </head>
@@ -38,7 +12,9 @@
             <el-form :model="chosenCusForm">
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
-                    <el-button type="primary" @click="selectCustomer">查询</el-button>
+                </el-form-item>
+                <el-form-item label="" :label-width="formLabelWidth">
+                  <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
 
@@ -57,86 +33,98 @@
                 <el-button type="primary" @click="setCurrentCustInfo(currentCustomerRow)">确 定</el-button>
             </div>
         </el-dialog>
-        <div class="block">
-            <span class="demonstration">订单日期</span>
-            <el-date-picker
-                    v-model="beginDate"
-                    type="date"
-                    placeholder="选择起始日期">
-            </el-date-picker>
-            <span class="demonstration">至</span>
-            <el-date-picker
-                    v-model="endDate"
-                    type="date"
-                    placeholder="选择结束日期">
-            </el-date-picker>
-            <label class="demonstration">订单编号</label>
-            <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
-            <label class="demonstration">客户订单号</label>
-            <el-input
-                    placeholder="请选择"
-                    v-model="customerOrderCode">
-            </el-input>
-        </div>
-        <div class="block">
-            <label class="demonstration">客户名称</label>
-            <el-input
-                    placeholder="请选择"
-                    icon="search"
-                    v-model="customerName"
-                    @click="chosenCus = true">
-            </el-input>
-            <label class="demonstration">仓库名称</label>
-            <el-select v-model="wareHouseName" placeholder="请选择">
+      <div class="xe-pageHeader">
+        入库单管理
+      </div>
+        <el-form label-width="100px">
+          <div class="xe-block">
+            <el-form-item label="订单日期"  class="xe-col-3">
+              <el-date-picker
+                     style="width:114px;"
+                      v-model="beginDate"
+                      type="date"
+                      placeholder="选择起始日期">
+              </el-date-picker>
+              <label for="" style="width:15px;">至</label>
+              <el-date-picker
+                      style="width:114px;"
+                      v-model="endDate"
+                      type="date"
+                      placeholder="选择结束日期">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="订单编号" class="xe-col-3">
+              <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="客户订单编号" class="xe-col-3">
+              <el-input v-model="customerOrderCode" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-block">
+            <el-form-item label="客户名称" class="xe-col-3">
+              <el-input
+                      placeholder="请选择"
+                      icon="search"
+                      v-model="customerName"
+                      @click="chosenCus = true">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="仓库名称" class="xe-col-3">
+              <el-select v-model="wareHouseName" placeholder="请选择">
                 <el-option
                         v-for="item in wareHouseOptions"
                         :label="item.label"
                         :value="item.value">
                 </el-option>
-            </el-select>
-            <label class="demonstration">业务类型</label>
-            <el-select v-model="businessType" placeholder="请选择">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="业务名称" class="xe-col-3">
+              <el-select v-model="businessType" placeholder="请选择">
                 <el-option
                         v-for="item in businessTypeOptions"
                         :label="item.label"
                         :value="item.value">
                 </el-option>
-            </el-select>
-
-
-        </div>
-        <div class="block">
-
-            <label class="demonstration">大区名称</label>
-            <el-select v-model="areaName" placeholder="请选择">
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="xe-block">
+            <el-form-item label="大区名称" class="xe-col-3">
+              <el-select v-model="areaName" placeholder="请选择">
                 <el-option
                         v-for="item in areaNameOptions"
                         :label="item.label"
                         :value="item.value">
                 </el-option>
-            </el-select>
-
-            <label class="demonstration">基地名称</label>
-            <el-select v-model="baseName" placeholder="请选择">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="基地名称" class="xe-col-3">
+              <el-select v-model="baseName" placeholder="请选择">
                 <el-option
                         v-for="item in baseNameOptions"
                         :label="item.label"
                         :value="item.value">
                 </el-option>
-            </el-select>
-            <label class="demonstration">订单状态</label>
-            <el-select v-model="orderStatus" placeholder="请选择">
+              </el-select>
+            </el-form-item>
+            <el-form-item label="订单状态" class="xe-col-3">
+              <el-select v-model="orderStatus" placeholder="请选择">
                 <el-option
                         v-for="item in orderStatusOptions"
                         :label="item.label"
                         :value="item.value">
                 </el-option>
-            </el-select>
-        </div>
-        <div class="block">
+              </el-select>
+            </el-form-item>
+          </div>
+          <div style="margin:15px 0;">
             <el-button type="primary" @click="selectOrder">筛选</el-button>
             <el-button type="primary" @click="resetCondition">重置</el-button>
-        </div>
+          </div>
+
+        </el-form>
+
+
         <div>
             <el-button type="primary" @click="addOrder">添加</el-button>
             <el-button type="primary" @click="editOrder">编辑</el-button>
