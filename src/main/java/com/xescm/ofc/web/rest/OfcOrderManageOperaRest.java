@@ -88,14 +88,6 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
-
-
-
-
-
-
-
-
     /**
      * 审核与反审核订单
      *
@@ -201,32 +193,23 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param orderCode
      * @return
      */
-    @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> orderDeleteOper(String orderCode) {
-        try {
-            if (StringUtils.isBlank(orderCode)) {
-                throw new Exception("订单编号不能为空！");
-            }
-            String result = ofcOrderManageService.orderDelete(orderCode);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
-        } catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-        }
-    }
-
-
-
-
-
-
-
-
-
+//    @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Wrapper<?> orderDeleteOper(String orderCode) {
+//        try {
+//            if (StringUtils.isBlank(orderCode)) {
+//                throw new Exception("订单编号不能为空！");
+//            }
+//            String result = ofcOrderManageService.orderDelete(orderCode);
+//            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+//        } catch (BusinessException ex) {
+//            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+//            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+//        } catch (Exception ex) {
+//            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+//            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+//        }
+//    }
 
     /**
      * 订单取消
@@ -279,6 +262,12 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
+    /**
+     * 订单的复制
+     * @param orderCode
+     * @param orderStatus
+     * @return
+     */
     @RequestMapping(value ="/copyOrderOper", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> copyOrder(String orderCode,String orderStatus){
@@ -298,11 +287,6 @@ public class OfcOrderManageOperaRest extends BaseController {
     }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,result);
     }
-
-
-
-
-
 
     /**
      * 订单详情
@@ -513,7 +497,4 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选基地反查大区查询成功", ofcGroupVo);
     }
-
-
-
 }

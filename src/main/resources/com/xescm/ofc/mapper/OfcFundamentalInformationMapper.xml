@@ -43,6 +43,7 @@
 
 
 
+
     <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
     <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
     <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />

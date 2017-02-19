@@ -237,7 +237,6 @@
 
         },
         beforeMount:function(){
-            debugger;
             this.wareHouseOptions=[];
             this.areaNameOptions=[];
             this.baseNameOptions=[];
@@ -262,12 +261,9 @@
 
             //大区和基地信息
             CommonClient.post(sys.rootPath + "/ofc/loadAreaAndBaseByUser",{},function (result) {
-                debugger;
                 if (result == undefined || result == null) {
                     layer.msg("当前用户下没有大区和基地信息！");
                 } else if (result.code == 200) {
-
-                    debugger;
                     var areaArray=result.result.area;
                     var baseArray=result.result.base;
                     if(areaArray.length>0){
@@ -310,7 +306,6 @@
                 this.selectCustomer();
             },
             setCurrentCustInfo:function(val) {
-                debugger;
                 this.customerName = val.customerName;
                 this.customerCode=val.customerCode;
                 this.chosenCus = false;
@@ -326,7 +321,6 @@
                 this.selectCustomer();
             },
             selectCustomer:function(){
-                debugger;
                 var param = {};
                 param.pageNum = this.currentCustomerPage;
                 param.pageSize=this.customerPageSize;
@@ -339,7 +333,6 @@
                                 layer.msg("暂时未查询到客户信息！！");
                             } else if (result.code == 200) {
                                 $.each(result.result.list,function (index,cscCustomerVo) {
-                                    // debugger;
                                     var channel = cscCustomerVo.channel;
                                     if(null == channel){
                                         channel = "";
@@ -359,7 +352,6 @@
                                     customer.productType=cscCustomerVo.productType;
                                     vueObj.customerData.push(customer);
                                 });
-                                debugger;
                                 vueObj.total=result.result.total;
                             } else if (result.code == 403) {
                                 alert("没有权限")
@@ -371,7 +363,6 @@
                 this.selectOrder();
             },
             handleSelectionChange:function(val){
-                debugger;
                 this.multipleSelection = val;
 
             },
@@ -382,7 +373,6 @@
                 window.open(html.substring(0,index) + "/index#" + url);
             },
             editOrder:function(){
-                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     var url = "/ofc/orderStorageInDetail/"+"?orderCode="+order.orderCode;
@@ -392,18 +382,18 @@
                 }
             },
             deleteOrder:function(){
-                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     if(order.orderStatusName!="待审核"){
                         alert("只有处于待审核状态才可以删除");
                         return;
                     }
-                    CommonClient.post(sys.rootPath + "/ofc/orderDeleteOper", {"orderCode":order.orderCode}, function(result) {
+                    CommonClient.post(sys.rootPath + "/ofc/orderDeleteOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
                         if(result==undefined||result==null){
                             alert("订单删除失败！");
                         }else if(result.code==200){
                             alert("订单删除成功！");
+                            this.selectOrder();
                         }else{
                             alert(result.message);
                         }
@@ -411,7 +401,6 @@
                 }
             },
             copyOrder:function(){
-                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     CommonClient.post(sys.rootPath + "/ofc/copyOrderOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
@@ -443,7 +432,6 @@
             },
 
             auditOrder:function(){
-                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
 
@@ -455,14 +443,12 @@
                 }
             },
             repeatAuditOrder:function(){
-                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     this.auditOrderOrNotAuditOper(order.orderCode,this.getOrderStatusName(order.orderStatusName),"rereview");
                 }
             },
             cancelOrder:function(){
-                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
@@ -500,7 +486,6 @@
                 });
             },
             valiateSelectOrder:function(){
-                debugger;
                 if(this.multipleSelection.length<1){
                     alert("请至少选中一行");
                     return false;
@@ -541,7 +526,6 @@
                 }
             },
             selectOrder:function(){
-                debugger;
                 var param={};
                 var vueObj=this;
                 vueObj.orderData=[];
@@ -570,9 +554,7 @@
                 param.baseSerialNo = this.baseName;
                 param.custOrderCode=this.customerOrderCode;
                 param.warehouseCode=this.wareHouseName;
-                debugger;
                 CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
-                    debugger;
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
                         layer.msg("暂时未查询到相关订单信息！");
                     } else if (result.code == 200) {

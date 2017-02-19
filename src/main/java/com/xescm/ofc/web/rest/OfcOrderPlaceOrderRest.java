@@ -416,7 +416,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     /**
      * 客户编码查询客户下的仓库信息
-     * @param customerCode
+     * @param customerCode 客户编码
      * @return
      */
     @RequestMapping(value = "/queryWarehouseByCustomerCode",method = RequestMethod.POST)
@@ -500,11 +500,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",groupMap);
     }
 
-
-
-
-
-
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody
     public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode){
@@ -535,30 +530,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return result;
     }
 
-
-
-    @RequestMapping(value ="/loadAreaAndabase",method = RequestMethod.POST)
-    @ResponseBody
-    public Object loadAreaAndabase(){
-        AuthResDto authResDto = getAuthResDtoByToken();
-        Map<String,List<OfcGroupVo>> groupMap = null;
-        try {
-            groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
-        } catch (Exception e) {
-            logger.error("查询当前登录用户所属组织失败:{},原因:{}",e,e.getMessage());
-        }
-
-        if(null == groupMap){
-            logger.error("查询当前登录用户所属组织失败或您的权限太低");
-            return null;
-        }
-        return groupMap;
-    }
-
-
-
-
-
     /**
      * 供应商筛选(调用客户中心API)
      */
@@ -588,16 +559,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
         }
     }
-
-
-
-
-
-
-
-
-
-
 
         /*
         校验客户订单编号

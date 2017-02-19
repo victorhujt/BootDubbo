@@ -163,39 +163,12 @@
                 <el-button type="primary" @click="setCurrentGoodsInfo(goodCurrentRow)">确 定</el-button>
             </div>
         </el-dialog>
-
-
-
-
-
-        <#--<el-dialog title="收货方联系人" v-model="chosenReceive" size="small">-->
-            <#--<el-form :model="receiveForm">-->
-                <#--<el-form-item label="名称" :label-width="formLabelWidth">-->
-                    <#--<el-input v-model="receiveForm.name" auto-complete="off"></el-input>-->
-                    <#--<el-button type="primary" @click="">查询</el-button>-->
-                <#--</el-form-item>-->
-            <#--</el-form>-->
-
-            <#--<el-table :data="receiveCusTableDate" highlight-current-row @current-change="receiveHandleCurrentChange" style="width: 100%">-->
-                <#--<el-table-column type="index"></el-table-column>-->
-                <#--<el-table-column property="receiveCusName" label="名称"></el-table-column>-->
-                <#--<el-table-column property="receiveContacts" label="联系人"></el-table-column>-->
-                <#--<el-table-column property="receiveNumPhone" label="联系电话"></el-table-column>-->
-                <#--<el-table-column property="receiveAddress" label="地址"></el-table-column>-->
-            <#--</el-table>-->
-            <#--<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">-->
-            <#--</el-pagination>-->
-            <#--<div slot="footer" class="dialog-footer">-->
-                <#--<el-button @click="chosenReceive = false">取 消</el-button>-->
-                <#--<el-button type="primary" @click="receiveSetCurrentCusInfo(receiveCurrentRow)">确 定</el-button>-->
-            <#--</div>-->
-        <#--</el-dialog>-->
         <div class="hr">
             基本信息
             <hr>
         </div>
         <div class="block">
-            <label class="label">订单日期</label>
+            <label class="demonstration">订单日期</label>
             <el-date-picker
                     v-model="orderTime"
                     align="right"
@@ -204,9 +177,9 @@
                     :picker-options="pickerOptions">
             </el-date-picker>
             <div  v-if="seenOrderDateNotNull">订单日期不能为空</div>
-            <label class="label">开单员</label>
+            <label class="demonstration">开单员</label>
             <el-input v-model="merchandiser" placeholder="请输入内容"  maxlength="50"  value="${(merchandiser)!""}"></el-input>
-            <label class="label">客户名称</label>
+            <label class="demonstration">客户名称</label>
             <el-input
                     placeholder="请选择"
                     icon="search"
@@ -215,7 +188,7 @@
             </el-input>
         </div>
         <div class="block">
-            <label class="label">仓库名称</label>
+            <label class="demonstration">仓库名称</label>
             <el-select v-model="wareHouse" placeholder="请选择">
                 <el-option
                         v-for="item in wareHouseOptions"
@@ -223,7 +196,7 @@
                         :value="item.value">
                 </el-option>
             </el-select>
-            <label class="label">业务类型</label>
+            <label class="demonstration">业务类型</label>
             <el-select v-model="serviceType" placeholder="请选择">
                 <el-option
                         v-for="item in serviceTypeOptions"
@@ -231,11 +204,11 @@
                         :value="item.value">
                 </el-option>
             </el-select>
-            <label class="label">客户订单号</label>
+            <label class="demonstration">客户订单号</label>
             <el-input v-model="customerOrderNum" placeholder="请输入内容" maxlength="30"></el-input>
         </div>
         <div  class="block">
-            <label class="label">备注</label>
+            <label class="demonstration">备注</label>
             <el-input type="textarea" placeholder="请输入内容" v-model="notes" maxlength="200">
             </el-input>
         </div>
@@ -247,7 +220,7 @@
                 <hr>
             </div>
             <div class="block">
-                <label class="label">供应商名称</label>
+                <label class="demonstration">供应商名称</label>
                 <el-input
                         placeholder="请选择"
                         icon="search"
@@ -263,7 +236,7 @@
             <hr>
         </div>
         <div class="block">
-            <label class="label">预计入库时间</label>
+            <label class="demonstration">预计入库时间</label>
             <el-date-picker
                     v-model="arriveTime"
                     align="right"
@@ -272,11 +245,11 @@
                     :picker-options="pickerOptions1">
             </el-date-picker>
             <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true">是否提供运输服务</el-checkbox>
-            <label class="label">车牌号</label>
+            <label class="demonstration">车牌号</label>
             <el-input v-model="plateNumber" maxlength="30" placeholder="请输入内容"></el-input>
-            <label class="label">司机姓名</label>
+            <label class="demonstration">司机姓名</label>
             <el-input v-model="driverName" maxlength="30" placeholder="请输入内容"></el-input>
-            <label class="label">联系电话</label>
+            <label class="demonstration">联系电话</label>
             <el-input v-model="driverContactNumber" maxlength="30" placeholder="请输入内容"></el-input>
 
 
@@ -288,7 +261,7 @@
                 <hr>
             </div>
             <div class="block">
-                <label class="label">名称</label>
+                <label class="demonstration">名称</label>
                 <el-input
                         placeholder="请选择"
                         icon="search"
@@ -296,13 +269,13 @@
                         v-bind:disabled = "isDisabled"
                         @click="chosenSend = true">
                 </el-input>
-                <label class="label">联系人</label>
+                <label class="demonstration">联系人</label>
                 <el-input v-model="consignorContactName" placeholder="请输入内容"></el-input>
             </div>
             <div class="block">
-                <label class="label">联系电话</label>
+                <label class="demonstration">联系电话</label>
                 <el-input v-model="consignorPhoneNumber" placeholder="请输入内容"></el-input>
-                <label class="label">地址选择</label>
+                <label class="demonstration">地址选择</label>
                 <el-input v-model="consignorAddress" placeholder="请输入内容"></el-input>
             </div>
         </div></el-col>
@@ -428,6 +401,7 @@
             return {
                 seenOrderDateNotNull:false,
                 consignorCode:'',
+                wareHouseObj:'',
                 consignorContactCode:'',
                 goodsCode:'',
                 consignorType:'',
@@ -996,7 +970,7 @@
                 if(this.orderTime){
                     ofcOrderDTOStr.orderTime = this.formatDate(this.orderTime);
                 }
-                var obj=JSON.parse(this.wareHouse);
+                this.wareHouseObj=JSON.parse(this.wareHouse);
 
                 //订单基本信息
                 ofcOrderDTOStr.custName = this.customerName;
@@ -1008,8 +982,8 @@
                 cscSupplierInfoDtoStr.supportName==this.supplierName;
                 ofcOrderDTOStr.supportCode=this.supplierCode;//供应商编码
                 cscSupplierInfoDtoStr.supportCode==this.supplierCode;
-                ofcOrderDTOStr.warehouseName=obj.warehouseName;//仓库名称
-                ofcOrderDTOStr.warehouseCode=obj.warehouseCode;//仓库编码
+                ofcOrderDTOStr.warehouseName=this.wareHouseObj.warehouseName;//仓库名称
+                ofcOrderDTOStr.warehouseCode=this.wareHouseObj.warehouseCode;//仓库编码
                 if(this.arriveTime){
                 ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
                 }
@@ -1026,7 +1000,7 @@
                 ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
 
                 cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStr();
-                cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(obj);
+                cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(this.wareHouseObj);
                 //出发地
                 ofcOrderDTOStr.departurePlace=this.consignorAddress;
                 var consignorAddressNameMessage =this.consignorAddress.split(',');
@@ -1037,14 +1011,18 @@
                     ofcOrderDTOStr.departureTowns=consignorAddressNameMessage[3];
                 }
                 ofcOrderDTOStr.departurePlaceCode=this.consignorAddressCode;
+                ofcOrderDTOStr.destinationCode=this.wareHouseObj.provinceCode+","+this.wareHouseObj.cityCode+","+this.wareHouseObj.areaCode;
+                if(obj.streetCode){
+                    ofcOrderDTOStr.destinationCode= ofcOrderDTOStr.destinationCode+","+this.wareHouseObj.streetCode;
+                }
 
                 //目的地
-                ofcOrderDTOStr.destination=obj.detailAddress;
-                ofcOrderDTOStr.destinationProvince=obj.province;
-                ofcOrderDTOStr.destinationCity=obj.city;
-                ofcOrderDTOStr.destinationDistrict=obj.area;
-                if(!StringUtil.isEmpty(obj.street)){
-                    ofcOrderDTOStr.destinationTowns=obj.street;
+                ofcOrderDTOStr.destination=this.wareHouseObj.detailAddress;
+                ofcOrderDTOStr.destinationProvince=this.wareHouseObj.province;
+                ofcOrderDTOStr.destinationCity=this.wareHouseObj.city;
+                ofcOrderDTOStr.destinationDistrict=this.wareHouseObj.area;
+                if(!StringUtil.isEmpty(this.wareHouseObj.street)){
+                    ofcOrderDTOStr.destinationTowns=this.wareHouseObj.street;
                 }
 
                 var goodsTable =this.goodsData;
@@ -1121,7 +1099,6 @@
                         }
                         ,"您确认提交订单吗?"
                         ,function () {
-                            debugger;
                             location.reload();
                             var url=window.location.href;
                             if(url.indexOf("?")!=-1){
