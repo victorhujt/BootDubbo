@@ -5,6 +5,7 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcStorageTemplateMapper;
+import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ *
  * Created by lyh on 2017/2/18.
  */
 @Service
@@ -44,8 +46,8 @@ public class OfcStorageTemplateServiceImpl implements OfcStorageTemplateService{
         //校验模板必填项
         checkTemplateRequiedItem(ofcStorageTemplateForCheck);
         //校验模板名称是否重复
-        int repeat = ofcStorageTemplateMapper.checkTemplateNameUnique(ofcStorageTemplateForCheck.getTemplateName());
-        if(repeat > 0) {
+        Integer repeat = ofcStorageTemplateMapper.checkTemplateNameUnique(ofcStorageTemplateForCheck.getTemplateName());
+        if(null != repeat && repeat > 0) {
             logger.error("校验模板名称重复!");
             throw new BusinessException("校验模板名称重复!");
         }
@@ -67,6 +69,43 @@ public class OfcStorageTemplateServiceImpl implements OfcStorageTemplateService{
             ofcStorageTemplate.setOperTime(now);
             ofcStorageTemplateMapper.insert(ofcStorageTemplate);
         }
+    }
+
+    /**
+     * 模板配置筛选
+     * @param templateCondition
+     * @return
+     */
+    @Override
+    public List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition) {
+        if(null == templateCondition){
+            logger.error("模板配置筛选条件为空!");
+            throw new BusinessException("模板配置筛选条件为空!");
+        }
+        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateMapper.selectTemplateByCondition(templateCondition);
+        if(null == ofcStorageTemplateList || ofcStorageTemplateList.size() < 1){
+            logger.error("模板配置筛选结果为空!");
+            throw new BusinessException("模板配置筛选结果为空!");
+        }
+        return ofcStorageTemplateList;
+    }
+
+    /**
+     * 模板配置删除
+     * @param temlpateName
+     * @param authResDto
+     */
+    @Override
+    public void delTemplateByName(String temlpateName, AuthResDto authResDto) {
+        logger.info("模板配置删除service , ==> temlpateName:{}",temlpateName);
+        logger.info("模板配置删除service , ==> authResDto:{}",authResDto);
+        if(PubUtils.isSEmptyOrNull(temlpateName) || null == authResDto){
+            logger.error("模板配置删除失败! 入参有误!");
+            throw new BusinessException("模板配置删除失败! 入参有误!");
+        }
+        OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
+        ofcStorageTemplate.setTemplateName(temlpateName);
+        ofcStorageTemplateMapper.delete(ofcStorageTemplate);
     }
 
     /**

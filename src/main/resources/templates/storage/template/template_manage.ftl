@@ -39,9 +39,9 @@
                 <el-button type="primary" v-on:click="templateAddBtn" >添加</el-button>
             </div>
             <el-table
-                    <#--:data="tableData"-->
+                    :data="tableData"
                     highlight-current-row
-                    <#--@current-change="handleCurrentChange"-->
+                    <#--@current-change="handleSelectionChange"-->
                     border
                     style="width: 100%">
                 <el-table-column
@@ -49,26 +49,32 @@
                         label="序号">
                 </el-table-column>
                 <el-table-column
-                        property="value"
+                        property="operat"
                         label="操作列">
+                    <template scope="scope">
+                        <el-button type="primary" @click="templateEdit(scope.row.templateName)" icon="edit">编辑</el-button>
+                        <el-button type="primary" @click="templateDel(scope.row.templateName)" icon="delete">删除</el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
-                        property="address"
+                        property="templateName"
                         label="模板名称">
                 </el-table-column>
                 <el-table-column
-                        property="address"
+                        property="templateType"
                         label="模板类型">
                 </el-table-column>
                 <el-table-column
-                        property="address"
+                        property="custCode"
                         label="客户编码">
                 </el-table-column>
                 <el-table-column
-                        property="address"
+                        property="custName"
                         label="客户名称">
                 </el-table-column>
             </el-table>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            </el-pagination>
         </template>
         <#--<el-pagination-->
                 <#--@size-change="handleSizeChange"-->
@@ -112,7 +118,7 @@
     var dialog = new Vue({
         el:'#dialog',
         data:{}
-    })
+    });
     var vm = new Vue({
         el:'#vm',
         data :function() {
@@ -126,20 +132,89 @@
                 templatesTypeList:[
                     {value:'storageIn',label:'入库单'},
                     {value:'storageOut',label:'出库单'}
-                ]
+                ],
+                currentPage:1,
+                pageSizes:[10, 20, 30, 40,50],
+                pageSize:10,
+                total:0,
+                tableData:[]
             }
+
 
         },
         methods:{
             templateSearchBtn:function (val) {
+                var vm = this;
+                vm.tableData = [];
+                vm.total=0;
+                var param = {};
+                param.templateType = StringUtil.trim(this.templateForm.templateType);
+                param.templateName = StringUtil.trim(this.templateForm.templateName);
+                param.custName = StringUtil.trim(this.templateForm.custName);
+                param.pageNum = vm.currentPage;
+                param.pageSize = vm.pageSize;
+                CommonClient.post("/ofc/storage_template/select", param, function (result) {
+                    if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                        layer.msg("查询结果为空！");
+                    } else if (result.code == 200) {// 1:normal
+                        // 刷新页面数据
+                        $.each(result.result.list, function (index, item) {
+                            var rowData = {};
+                            rowData.templateName = item.templateName;
+                            rowData.templateType = item.templateType
+                            rowData.custCode = item.custCode;;
+                            rowData.custName = item.custName;
+                            vm.tableData.push(rowData);
+                        })
+                        vm.total=result.result.total;
 
+                    } else if (result.code == 500) {
+                        layer.msg(result.message);
+                    } else if (result.code == 403){
+                        layer.msg("没有权限")
+                    } else {
+                        layer.msg("操作失败")
+                    }
+                })
             },
             templateAddBtn:function (val) {
                 var url = "/ofc/storage/template_add";
                 xescm.common.loadPage(url)
+            },
+            handleSizeChange:function(val){
+                this.pageSize=val;
+//                this.selectOrder();
+            },
+            handleCurrentPage:function(val){
+                this.currentPage=val;
+//                this.selectOrder();
+            },
+            /*handleSelectionChange:function(val){
+                this.multipleSelection = val;
+            },*/
+            templateEdit:function(val){
+                var vm = this;
+//                var order = vm.multipleSelection;
+//                console.log(order)
+//                console.log(JSON.stringify(order))
+            },
+            templateDel:function(val){
+                var orderTemplateName = val;
+                if(undefined == orderTemplateName || StringUtil.isEmpty(orderTemplateName)){
+                    layer.msg("模板名称为空!");
+                    return;
+                }
+                var param = {};
+                param.templateName = orderTemplateName;
+                xescm.common.submit("/ofc/storage_template/delete",param,"确认删除该模板?",function () {
+                    xescm.common.loadPage("/ofc/storage_template/select");
+                })
+
             }
+
         }
     })
+
 
 
 

@@ -2,6 +2,7 @@ package com.xescm.ofc.service;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.ofc.domain.OfcStorageTemplate;
+import com.xescm.ofc.model.dto.form.TemplateCondition;
 
 import java.util.List;
 
@@ -11,4 +12,8 @@ import java.util.List;
  */
 public interface OfcStorageTemplateService {
     void saveTemplate(List<OfcStorageTemplate> templateList, AuthResDto authResDto);
+
+    List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition);
+
+    void  delTemplateByName(String temlpateName,AuthResDto authResDto);
 }
