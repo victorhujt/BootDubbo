@@ -5,7 +5,8 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
     <result column="template_type" property="templateType" jdbcType="VARCHAR" />
     <result column="template_name" property="templateName" jdbcType="VARCHAR" />
     <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
@@ -21,4 +22,16 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
   </resultMap>
+
+  <select id="checkTemplateNameUnique" parameterType="java.lang.String" resultType="int">
+    SELECT
+    COUNT (ost.template_name)
+    FROM
+    ofc_storage_template ost
+    WHERE
+    ost.template_name = #{templateName,jdbcType=VARCHAR}
+    GROUP BY
+    ost.template_name
+
+</select>
 </mapper>

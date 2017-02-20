@@ -33,9 +33,10 @@
         <el-form :model="templateForm"  label-width="100px" class="demo-ruleForm">
             <div class="xe-block">
                 <el-form-item label="模板类型"  class="xe-col-2">
-                    <el-select placeholder="请选择" v-model="templateForm.templateType">
+                    <el-select placeholder="请选择" v-model="templateForm.templateType" >
                         <el-option  v-for="item in templatesTypeList" :label="item.label" :value="item.value"></el-option>
                     </el-select>
+                    <div  v-if="templateTypeNotNull"><p style="color: red">模板类型不能为空</p></div>
                 </el-form-item>
                 <el-form-item label="模板名称"  class="xe-col-2">
                     <el-input v-model="templateForm.templateName"  placeholder="请输入配置名称"></el-input>
@@ -95,6 +96,7 @@
         el:'#vm',
         data:function () {
             return{
+                templateTypeNotNull:false,
                 templateNameNotNull:false,
                 custNameNotNull:false,
                 custCodeNotNull:false,
@@ -155,13 +157,17 @@
         },
         methods:{
             templateSaveBtn:function () {
+                debugger
                 var templateList = [];
                 var designData = this.tableData;
                 var templateType = this.templateForm.templateType;
                 var templateName = this.templateForm.templateName;
                 var custName = this.templateForm.custName;
                 var custCode = this.templateForm.custCode;
-                if(StringUtil.isEmpty(templateName)){
+                if(StringUtil.isEmpty(templateType)){
+                    this.templateTypeNotNull = true;
+                    return;
+                }else if(StringUtil.isEmpty(templateName)){
                     this.templateNameNotNull = true;
                     return;
                 }else if(StringUtil.isEmpty(custName)){
@@ -184,16 +190,16 @@
                         alert('客户订单号模板列名为空!');
                         return;
                     } else if(index == 2 && StringUtil.isEmpty(reflectColName)){
-                        alert('开单员模板列名为空!')
+                        alert('开单员模板列名为空!');
                         return;
                     } else if(index == 3 && StringUtil.isEmpty(reflectColName)){
-                        alert('仓库名称模板列名为空!')
+                        alert('仓库名称模板列名为空!');
                         return;
                     } else if(index == 4 && StringUtil.isEmpty(reflectColName)){
-                        alert('业务类型模板列名为空!')
+                        alert('业务类型模板列名为空!');
                         return;
                     } else if(index == 6 && StringUtil.isEmpty(reflectColName)){
-                        alert('货品编码模板列名为空!')
+                        alert('货品编码模板列名为空!');
                         return;
                     } else if(index == 11 && StringUtil.isEmpty(reflectColName)){
                         designData.length == 21 ? alert('入库数量模板列名为空!') : alert('出库数量模板列名为空!');
@@ -208,7 +214,7 @@
                     template.colDefaultVal = StringUtil.trim(design.colDefaultVal);
                     templateList.push(template);
                 }
-                CommonClient.post("/ofc/storage_template/save", {"templateList":JSON.stringify(templateList)}, function () {
+                xescm.common.submit("/ofc/storage_template/save", {"templateList":JSON.stringify(templateList)}, "确认保存该模板配置?", function () {
 
                 });
             },

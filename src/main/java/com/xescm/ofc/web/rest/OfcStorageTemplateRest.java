@@ -1,5 +1,6 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
@@ -48,10 +49,13 @@ public class OfcStorageTemplateRest extends BaseController{
             return new Wrapper(Wrapper.ERROR_CODE,"模板配置保存失败!数据转换异常!");
         }
         try {
-            ofcStorageTemplateService.saveTemplate(ofcStorageTemplates);
+            AuthResDto authResDto = getAuthResDtoByToken();
+            ofcStorageTemplateService.saveTemplate(ofcStorageTemplates,authResDto);
         }catch (BusinessException e) {
+            logger.error("模板配置保存失败!{},{}",e,e.getMessage());
             return new Wrapper(Wrapper.ERROR_CODE,e.getMessage());
         }catch (Exception e) {
+            logger.error("模板配置保存失败!{},{}",e,e.getMessage());
             return new Wrapper(Wrapper.ERROR_CODE,"模板配置保存失败!未知异常!");
         }
         return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
