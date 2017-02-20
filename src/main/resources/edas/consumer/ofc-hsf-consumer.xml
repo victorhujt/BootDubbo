@@ -37,5 +37,6 @@
     <hsf:consumer id="epcOfc2DmsEdasService" interface="com.xescm.epc.edas.service.EpcOfc2DmsEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
     <hsf:consumer id="whcOrderCancelEdasService" interface="com.xescm.whc.edas.service.WhcOrderCancelEdasService" group="xescm-whc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-
+    <!--运输中心-->
+    <hsf:consumer id="cancelOrderEdasService" interface="com.xescm.tfc.edas.service.CancelOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 </beans>

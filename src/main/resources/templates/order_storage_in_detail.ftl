@@ -561,7 +561,6 @@
         },
 
         beforeMount:function(){
-            debugger;
             var vueObj=this;
             var url=window.location.href;
             CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
@@ -583,7 +582,6 @@
                             layer.msg("订单详情查询失败");
                             return;
                         }else if(result.code == 200){
-                            debugger;
                             var ofcFundamentalInformation=result.result.ofcFundamentalInformation;
                             var ofcWarehouseInformation=result.result.ofcWarehouseInformation;
                             var ofcGoodsDetailsInfo=result.result.ofcGoodsDetailsInfo;
@@ -615,7 +613,6 @@
                                             vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
                                             vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
                                             vueObj.isNeedTransport=true;
-                                            debugger;
                                             vueObj.arriveTime=DateUtil.parse(ofcWarehouseInformation.arriveTime);
                                             vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
                                             vueObj.driverName=ofcWarehouseInformation.driverName;
@@ -1009,7 +1006,6 @@
                         },"json");
             },
             saveStorage:function(){
-                debugger;
                 if(!this.orderTime){
                     this.seenOrderDateNotNull=true;
                     return;

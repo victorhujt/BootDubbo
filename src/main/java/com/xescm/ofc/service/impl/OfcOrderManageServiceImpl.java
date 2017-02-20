@@ -54,6 +54,8 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.tfc.edas.model.dto.CancelOrderDTO;
+import com.xescm.tfc.edas.service.CancelOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
@@ -147,6 +149,8 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     private CscCustomerEdasService cscCustomerEdasService;
     @Autowired
     private OfcMerchandiserService ofcMerchandiserService;
+    @Autowired
+    private CancelOrderEdasService cancelOrderEdasService;
 
 
 
@@ -327,7 +331,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else{
                 ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
                 ofcOrderStatus.setOperator("");
-                ofcOrderStatus.setLastedOperTime(null);
+                ofcOrderStatus.setLastedOperTime(new Date());
             }
         }else if(reviewTag.equals("review")){
             if(ofcOrderStatus.getOrderStatus().equals(PENDINGAUDIT)){
@@ -1161,7 +1165,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEENCOMPLETED))
                 && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEENCANCELED))){
             StringBuilder notes = new StringBuilder();
-            planCancle(orderCode,authResDtoByToken.getUserName());
+
+//            planCancle(orderCode,authResDtoByToken.getUserName());
+
+            //调用各中心请求直接取消订单
+            orderCancel(orderCode);
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
             ofcOrderStatus.setOrderStatus(HASBEENCANCELED);
@@ -1203,6 +1211,60 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         }else {
             throw new BusinessException("计划单状态不在可取消范围内");
         }
+    }
+
+    /**
+     * 订单取消
+     * @param orderCode 订单号
+     *
+     */
+    private void orderCancel(String orderCode){
+        logger.info("发起订单取消!");
+        logger.info("==> orderCode={}",orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        if(null == ofcFundamentalInformation){
+            logger.error("订单取消失败,查不到该订单!");
+            throw new BusinessException("订单取消失败,查不到该订单!");
+        }
+        String orderType = ofcFundamentalInformation.getOrderType();
+        if(StringUtils.equals(orderType,TRANSPORTORDER)){
+            orderCancelToTfc(orderCode);
+        }else if(StringUtils.equals(orderType,WAREHOUSEDISTRIBUTIONORDER)){
+            orderCancelToWhc(orderCode);
+            OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
+            ofcWarehouse.setOrderCode(orderCode);
+            OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
+            if(ofcWarehouseInformation.getProvideTransport() == 1){
+                orderCancelToTfc(orderCode);
+            }
+        }
+        logger.info("订单取消成功!");
+    }
+
+    /**
+     * 调用仓储中心取消接口
+     * @param orderCode 订单编号
+     * @return
+     */
+    private void orderCancelToWhc(String orderCode) {
+        logger.info("调用仓储中心取消接口, 订单号:{}",orderCode);
+    }
+
+    /**
+     * 调用运输中心取消接口
+     * @param orderCode 订单编号
+     * @return
+     */
+    private void orderCancelToTfc(String orderCode) {
+        logger.info("调用运输中心取消接口, 订单号:{}",orderCode);
+        CancelOrderDTO cancelOrderDTO = new CancelOrderDTO();
+        cancelOrderDTO.setOrderNo(orderCode);
+        Wrapper wrapper = cancelOrderEdasService.cancelOrder(cancelOrderDTO);
+        if(wrapper == null || Wrapper.ERROR_CODE == wrapper.getCode()){
+            logger.error("调用运输中心取消接口取消订单失败,原因:{}",null == wrapper ? "wrapper为null" : wrapper.getMessage());
+            throw new BusinessException("取消订单失败,原因:" + (null == wrapper ? "接口异常!" : wrapper.getMessage()));
+        }
+        logger.info("调用运输中心取消接口, 订单号:{}, 取消成功!",orderCode);
     }
 
     @Override

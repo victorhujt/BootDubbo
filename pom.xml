@@ -62,6 +62,11 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-tfc-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.xescm.common</groupId>
 			<artifactId>xescm-core</artifactId>
 			<version>1.0</version>

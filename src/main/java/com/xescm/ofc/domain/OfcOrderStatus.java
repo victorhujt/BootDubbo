@@ -52,6 +52,14 @@ public class OfcOrderStatus {
      */
     private String operator;
 
+    /**
+     * 创建时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS",timezone = "GMT+8")
+    @Column(name = "creation_time")
+    private String creationTime;
+
     public String getId() {
         return id;
     }
@@ -166,5 +174,13 @@ public class OfcOrderStatus {
      */
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
     }
 }

@@ -10,5 +10,4 @@
     <hsf:provider id="ofcMobileOrderEdasService" interface="com.xescm.ofc.edas.service.OfcMobileOrderEdasService" ref="ofcMobileOrderEdasServiceImpl" group="xescm-ofc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:provider id="ofcOrderCancelEdasServie" interface="com.xescm.ofc.edas.service.OfcOrderCancelEdasServie" ref="ofcOrderCancelEdasServieImpl" group="xescm-ofc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:provider id="ofcOrderStatusEdasService" interface="com.xescm.ofc.edas.service.OfcOrderStatusEdasService" ref="ofcOrderStatusEdasServiceImpl" group="xescm-ofc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-    <hsf:provider id="ofcTranPlanDpcEdasServie" interface="com.xescm.ofc.edas.service.OfcTranPlanDpcEdasServie" ref="ofcTranPlanDpcEdasServieImpl" group="xescm-ofc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 </beans>
