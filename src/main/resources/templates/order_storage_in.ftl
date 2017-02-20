@@ -12,7 +12,7 @@
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth">
-                  <el-button type="primary" @click="selectCustomer">查询</el-button>
+                  <el-button type="primary" @click="selectCustomer">筛选</el-button>
                 </el-form-item>
             </el-form>
 
@@ -653,34 +653,34 @@
                 console.log('弹窗');
             },
             selectSupplier:function(){
-                            if(!this.customerName && !this.customerCode){
-                                alert("请选择客户");
-                                this.chosenSupplier=false;
-                                return;
-                            }
-                            this.supplierData=[];
-                            var vueObj=this;
-                            var param = {};
-                            param = vueObj.supplierForm;
-                            param.customerCode = this.customerCode;
-                            CommonClient.post(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
-                                var data=eval(result);
-                                $.each(data,function (index,CscSupplierInfoDto) {
-                                    var supplier={};
-                                    supplier.supplierName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
-                                    supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
-                                    supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
-                                    supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
-                                    supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
-                                    supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
-                                    supplier.supplierCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
-                                    supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
+                if(!this.customerName && !this.customerCode){
+                    alert("请选择客户");
+                    this.chosenSupplier=false;
+                    return;
+                }
+                this.supplierData=[];
+                var vueObj=this;
+                var param = {};
+                param = vueObj.supplierForm;
+                param.customerCode = this.customerCode;
+                CommonClient.post(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
+                    var data=eval(result);
+                    $.each(data,function (index,CscSupplierInfoDto) {
+                        var supplier={};
+                        supplier.supplierName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                        supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
+                        supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
+                        supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
+                        supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
+                        supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
+                        supplier.supplierCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                        supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
 
-                                    vueObj.supplierData.push(supplier);
+                        vueObj.supplierData.push(supplier);
 
-                                });
-                            },"json");
-                    this.totalSupplier=data.result.size;
+                    });
+                    vueObj.totalSupplier=data.length;
+                },"json");
             },
             handleSupplierSizeChange:function(){
 
@@ -690,9 +690,13 @@
             },
 
             setCurrentSupplierInfo:function(val){
-                this.supplierName=val.supplierName;
-                this.supplierCode=val.supplierCode;
-                this.chosenSupplier=false;
+                if (val != null) {
+                    this.supplierName=val.supplierName;
+                    this.supplierCode=val.supplierCode;
+                    this.chosenSupplier=false;
+                } else {
+                    alert("请选择供应商！");
+                }
             },
             setCurrentGoodsInfo:function(val){
                 this.currentRowData.goodsCode=val.goodsCode;
