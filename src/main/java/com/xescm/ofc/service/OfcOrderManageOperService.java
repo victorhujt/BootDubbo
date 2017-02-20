@@ -8,8 +8,6 @@ import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.uam.model.dto.group.UamGroupDto;
-import org.springframework.stereotype.Service;
-import com.xescm.ofc.model.dto.form.OrderOperForm;
 
 import java.util.List;
 import java.util.Map;
@@ -63,6 +61,5 @@ public interface OfcOrderManageOperService {
     OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto);
 
     void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType);
-
 
 }

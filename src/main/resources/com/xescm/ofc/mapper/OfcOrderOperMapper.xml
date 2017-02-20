@@ -154,7 +154,7 @@
       ofi.order_type,
       ofi.business_type,
       ofi.base_name,
-      (SELECT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code AND notes NOT LIKE '%已回单' LIMIT 1)order_status,
+      ns.order_latest_status as order_status,
       odbi.consignee_type,
       odbi.consignee_name,
       odbi.consignee_contact_name,
@@ -165,6 +165,7 @@
     ofc_fundamental_information ofi
       LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
     <where>
       <if test="form.startDate!=null and form.startDate!=''">
         AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
@@ -182,7 +183,7 @@
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
       <if test="form.orderState!=null and form.orderState!=''">
-        AND (SELECT DISTINCT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code ) = #{form.orderState}
+        AND  ns.order_latest_status = #{form.orderState}
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}

@@ -153,7 +153,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="开单员" class="xe-col-3">
-              <el-input v-model="merchandiser" placeholder="请输入内容"  value="${(merchandiser)!""}"></el-input>
+              <el-input v-model="merchandiser" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="客户名称" class="xe-col-3">
               <el-input
@@ -373,12 +373,12 @@
         el: '#app',
         data :function() {
             return {
-                seenOrderDateNotNull:false,
                 wareHouseObj:'',
                 consignorCode:'',
                 orderCode:'',
                 consignorContactCode:'',
                 wareHouseName:'',
+                wareHouseCode:'',
                 goodsCode:'',
                 consignorType:'',
                 goodsName:'',
@@ -596,14 +596,14 @@
                                 vueObj.serviceType=ofcFundamentalInformation.businessType;
                                 vueObj.notes=ofcFundamentalInformation.notes;
                                 if(ofcWarehouseInformation!=null){
-                                    vueObj.wareHouseName=ofcWarehouseInformation.warehouseCode;
-                                    var w={};
-                                    w.label=ofcWarehouseInformation.warehouseName;
-                                    w.value=ofcWarehouseInformation.warehouseCode;
-                                    vueObj.wareHouseOptions.push(w);
+                                    vueObj.wareHouseName=ofcWarehouseInformation.warehouseName;
+                                    vueObj.wareHouseCode=ofcWarehouseInformation.warehouseCode;
                                     vueObj.supplierName=ofcWarehouseInformation.supportName;
                                     vueObj.supplierCode=ofcWarehouseInformation.supportCode;
-
+                                    vueObj.arriveTime=DateUtil.parse(ofcWarehouseInformation.arriveTime);
+                                    vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
+                                    vueObj.driverName=ofcWarehouseInformation.driverName;
+                                    vueObj.driverContactNumber=ofcWarehouseInformation.contactNumber;
                                     if(ofcWarehouseInformation.provideTransport=="1"){
                                         if(ofcDistributionBasicInfo!=null){
                                             //发货方
@@ -613,10 +613,6 @@
                                             vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
                                             vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
                                             vueObj.isNeedTransport=true;
-                                            vueObj.arriveTime=DateUtil.parse(ofcWarehouseInformation.arriveTime);
-                                            vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
-                                            vueObj.driverName=ofcWarehouseInformation.driverName;
-                                            vueObj.driverContactNumber=ofcDistributionBasicInfo.contactNumber;
                                             vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
                                             vueObj.consignorAddressCode=ofcDistributionBasicInfo.departurePlaceCode;
                                             var addressCode=ofcDistributionBasicInfo.destinationCode.split(",");
@@ -681,8 +677,12 @@
                 this.customerName = val.customerName;
                 this.customerCode=val.customerCode;
                 this.chosenCus = false;
+                this.loadWareHouseByCustomerCode();
+
+            },
+            loadWareHouseByCustomerCode:function(){
                 var vueObj=this;
-                CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":this.customerCode}, function(result) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":vueObj.customerCode}, function(result) {
                     var data=result.result;
                     if (data == undefined || data == null || data.length ==0) {
                         layer.msg("暂时未查询到该客户下的仓库信息！！");
@@ -1007,7 +1007,7 @@
             },
             saveStorage:function(){
                 if(!this.orderTime){
-                    this.seenOrderDateNotNull=true;
+                    alert("订单日期不能为空");
                     return;
                 }else{
                     if(this.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
@@ -1045,14 +1045,6 @@
                 //是否提供运输
                 if(this.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
-
-
-
-
-
-
-
-
                     if(!this.consignorName){
                         alert("提供运输时,发货方不能为空，请选择发货方");
                         return;
@@ -1065,6 +1057,7 @@
                 ofcOrderDTOStr.merchandiser = this.merchandiser;
                 if(this.orderTime){
                     ofcOrderDTOStr.orderTime = this.formatDate(this.orderTime);
+                    //ofcOrderDTOStr.orderTime = this.orderTime;
                 }
                 this.wareHouseObj=this.wareHouse;
 
@@ -1081,6 +1074,9 @@
                 cscSupplierInfoDtoStr.supportCode==this.supplierCode;
                 ofcOrderDTOStr.warehouseName= this.wareHouseObj.warehouseName;//仓库名称
                 ofcOrderDTOStr.warehouseCode= this.wareHouseObj.warehouseCode;//仓库编码
+                if(!ofcOrderDTOStr.warehouseCode){
+                    ofcOrderDTOStr.warehouseCode=this.wareHouseCode;
+                }
                 if(this.arriveTime){
                     ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
                 }
@@ -1114,7 +1110,10 @@
                     ofcOrderDTOStr.departureTowns=consignorAddressNameMessage[3];
                 }
                 ofcOrderDTOStr.departurePlaceCode=this.consignorAddressCode;
-
+                ofcOrderDTOStr.destinationCode=this.wareHouseObj.provinceCode+","+this.wareHouseObj.cityCode+","+this.wareHouseObj.areaCode;
+                if(this.wareHouseObj.streetCode){
+                    ofcOrderDTOStr.destinationCode= ofcOrderDTOStr.destinationCode+","+this.wareHouseObj.streetCode;
+                }
                 //目的地
                 ofcOrderDTOStr.destination=this.wareHouseObj.detailAddress;
                 ofcOrderDTOStr.destinationProvince=this.wareHouseObj.province;
@@ -1272,7 +1271,7 @@
                 return cscContantAndCompanyDtoConsigneeStr;
             },
             formatDate:function(date){
-                return date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate()+" 00:00:00";
+                return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" 00:00:00";
             },
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;

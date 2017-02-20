@@ -283,6 +283,7 @@
                     }
                 }
             });
+            vueObj.selectOrder();
         },
 
 
@@ -379,24 +380,40 @@
                 }
             },
             deleteOrder:function(){
-                if(this.valiateSelectOrder()){
-                    var order=this.multipleSelection[0];
-                    var vueObj=this;
-                    if(order.orderStatusName!="待审核"){
-                        alert("只有处于待审核状态才可以删除");
-                        return;
+                    if(this.multipleSelection.length<1){
+                        alert("请至少选中一行");
+                        return false;
                     }
-                    CommonClient.post(sys.rootPath + "/ofc/orderDeleteOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
-                        if(result==undefined||result==null){
-                            alert("订单删除失败！");
-                        }else if(result.code==200){
-                            alert("订单删除成功！");
-                            vueObj.selectOrder();
-                        }else{
-                            alert(result.message);
+                    var flag=true;
+                    for(var i=0;i<this.multipleSelection.length;i++){
+                        var order=this.multipleSelection[i];
+                        var vueObj=this;
+                        if(order.orderStatusName!="待审核"){
+                            alert("只有处于待审核状态才可以删除");
+                            return;
                         }
-                    });
-                }
+                        CommonClient.syncpost(sys.rootPath + "/ofc/orderDeleteOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
+                            if(result==undefined||result==null){
+                                alert("订单删除失败！");
+                                flag=false;
+                                return;
+                            }else if(result.code==200){
+                                vueObj.selectOrder();
+                            }else{
+                                flag=false;
+                                alert(result.message);
+                                return;
+                            }
+                        });
+                    }
+                    if(flag){
+                        alert("订单删除成功！");
+                    }
+
+
+
+
+
             },
             copyOrder:function(){
                 if(this.valiateSelectOrder()){
@@ -452,7 +469,7 @@
                     var order=this.multipleSelection[0];
                     var vueObj=this;
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
-                        CommonClient.syncpost(sys.rootPath + "/ofc/orderStorageCancelOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
+                        CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
                             if (result == undefined || result == null ) {
                                 alert("取消订单出现异常");
                                 return;

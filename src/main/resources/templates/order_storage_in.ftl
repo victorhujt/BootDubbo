@@ -145,7 +145,7 @@
               </el-form-item>
               <div  v-if="seenOrderDateNotNull">订单日期不能为空</div>
               <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
-                <el-input v-model="merchandiser" placeholder="请输入内容"   value="${(merchandiser)!""}"></el-input>
+                <el-input v-model="merchandiser" placeholder="请输入内容"></el-input>
               </el-form-item>
               <el-form-item label="客户名称" class="xe-col-3">
                 <el-input
@@ -481,7 +481,7 @@
                 },
                 serviceType: '',
                 wareHouse:'',
-                merchandiser: '',
+                merchandiser:'${merchandiser!}',
                 orderTime: new Date(),
                 arriveTime: '',
                 isNeedTransport:false,
@@ -642,8 +642,8 @@
                 val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
-                CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
-                    data=eval(data);
+                CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(result) {
+                    var data=eval(result);
                     vueObj.goodsCategoryOptions=[];
                     $.each(data,function (index,CscGoodsTypeVo) {
                         var goodClass={};
@@ -1098,7 +1098,7 @@
                                 var param=url.split("?")[1].split("=");
                             }
                             if(param[1]=="manager"){
-                                var newurl = "/ofc/orderStorageInManager/";
+                                var newurl = "/ofc/orderStorageInManager";
                                 var html = window.location.href;
                                 var index = html.indexOf("/index#");
                                 window.open(html.substring(0,index) + "/index#" + newurl);

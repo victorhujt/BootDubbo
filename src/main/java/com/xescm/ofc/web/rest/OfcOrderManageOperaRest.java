@@ -186,40 +186,6 @@ public class OfcOrderManageOperaRest extends BaseController {
     }
 
 
-
-    /**
-     * 订单删除
-     *
-     * @param orderCode
-     * @return
-     */
-//    @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
-//    @ResponseBody
-//    public Wrapper<?> orderDeleteOper(String orderCode) {
-//        try {
-//            if (StringUtils.isBlank(orderCode)) {
-//                throw new Exception("订单编号不能为空！");
-//            }
-//            String result = ofcOrderManageService.orderDelete(orderCode);
-//            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
-//        } catch (BusinessException ex) {
-//            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
-//            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-//        } catch (Exception ex) {
-//            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
-//            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-//        }
-//    }
-
-
-
-
-
-
-
-
-
-
     /**
      * 订单取消
      *
@@ -248,28 +214,6 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
-
-    @RequestMapping(value ="/orderStorageCancelOper", method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> orderStorageCancelOper(String orderCode, String orderStatus) {
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        try {
-            if (StringUtils.isBlank(orderCode)) {
-                throw new Exception("订单编号不能为空！");
-            }
-            if (StringUtils.isBlank(orderStatus)) {
-                throw new Exception("订单状态不能为空！");
-            }
-            String result = ofcOrderManageService.orderStorageCancel(orderCode, orderStatus, authResDtoByToken);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
-        } catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        }
-    }
 
     /**
      * 订单的复制
