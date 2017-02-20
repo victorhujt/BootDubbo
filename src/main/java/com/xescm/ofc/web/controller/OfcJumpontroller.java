@@ -341,14 +341,6 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
-
-
-
-
-
-
-
-
     @RequestMapping(value = "ofc/mobileOrderManageOpera", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView mobileOrderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("mobile_order_manager_opera");
@@ -392,6 +384,22 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
+    /**
+     * 运营中心--跳转导入模板配置
+     */
+    @RequestMapping(value = "/ofc/storage/template")
+    public String storageTemplate(Model model){
+        setDefaultModel(model);
+        return "storage/template/template_manage";
+    }
 
+    /**
+     * 仓储模板配置跳转添加页面
+     */
+    @RequestMapping(value = "/ofc/storage/template_add")
+    public String storageTemplateAdd(Model model){
+        setDefaultModel(model);
+        return "/storage/template/template_design";
+    }
 
 }
