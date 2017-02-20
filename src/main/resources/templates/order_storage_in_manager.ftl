@@ -379,6 +379,7 @@
             deleteOrder:function(){
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
+                    var vueObj=this;
                     if(order.orderStatusName!="待审核"){
                         alert("只有处于待审核状态才可以删除");
                         return;
@@ -388,7 +389,7 @@
                             alert("订单删除失败！");
                         }else if(result.code==200){
                             alert("订单删除成功！");
-                            this.selectOrder();
+                            vueObj.selectOrder();
                         }else{
                             alert(result.message);
                         }
@@ -398,13 +399,14 @@
             copyOrder:function(){
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
+                    var vueObj=this;
                     CommonClient.post(sys.rootPath + "/ofc/copyOrderOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
                         if (result == undefined || result == null ) {
                             alert("复制订单出现异常");
                             return;
                         }else if(result.code==200&&result.result!=null){
                             alert("订单复制成功！订单编号:"+result.result);
-                            this.selectOrder();
+                            vueObj.selectOrder();
                         }else{
                             alert(result.message);
                         }
@@ -446,6 +448,7 @@
             cancelOrder:function(){
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
+                    var vueObj=this;
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderStorageCancelOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
                             if (result == undefined || result == null ) {
@@ -453,7 +456,7 @@
                                 return;
                             }else if(result.code==200){
                                 alert(result.message);
-                                this.selectOrder();
+                                vueObj.selectOrder();
                             }else{
                                 alert(result.message);
                             }
@@ -468,13 +471,14 @@
 
             },
             auditOrderOrNotAuditOper:function (orderCode,orderStatus,tag) {
-                CommonClient.post(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"orderStatus":orderStatus,"reviewTag":tag}, function(result) {
+                var vueObj=this;
+                CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"orderStatus":orderStatus,"reviewTag":tag}, function(result) {
                     if (result == undefined || result == null ) {
                         alert("审核或者反审核出现异常");
                         return;
                     }else if(result.code==200){
                         alert(result.message);
-                        this.selectOrder();
+                        vueObj.selectOrder();
                     }else{
                         alert(result.message);
                     }
@@ -531,6 +535,14 @@
                         alert("订单的起始日期不能大于结束日期");
                         return;
                     }
+                    if(this.baseName){
+                        if(!this.areaName){
+                            alert("选择基地时，必须选择大区");
+                            return;
+                        }
+                    }
+
+
                 }
                 if(this.beginDate){
                     param.startDate = this.beginDate.getFullYear()+"-"+this.beginDate.getMonth()+"-"+this.beginDate.getDate()+" 00:00:00";
@@ -541,14 +553,14 @@
                 param.pageNum = this.currentPage;
                 param.pageSize=this.pageSize;
                 param.custName =this.customerName;
-                param.orderCode =this.orderCode;
-                param.orderState= this.orderStatus;
+                param.orderCode =StringUtil.trim(this.orderCode);
+                param.orderState= StringUtil.trim(this.orderStatus);
                 param.orderType ="61";//仓储订单
-                param.businessType =this.businessType;
-                param.areaSerialNo = this.areaName;
-                param.baseSerialNo = this.baseName;
-                param.custOrderCode=this.customerOrderCode;
-                param.warehouseCode=this.wareHouseName;
+                param.businessType =StringUtil.trim(this.businessType);
+                param.areaSerialNo = StringUtil.trim(this.areaName);
+                param.baseSerialNo = StringUtil.trim(this.baseName);
+                param.custOrderCode=StringUtil.trim(this.customerOrderCode);
+                param.warehouseCode=StringUtil.trim(this.wareHouseName);
                 CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
                         layer.msg("暂时未查询到相关订单信息！");

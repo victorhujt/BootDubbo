@@ -327,7 +327,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             }else{
                 ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
                 ofcOrderStatus.setOperator("");
-                ofcOrderStatus.setLastedOperTime(null);
+                ofcOrderStatus.setLastedOperTime(new Date());
             }
         }else if(reviewTag.equals("review")){
             if(ofcOrderStatus.getOrderStatus().equals(PENDINGAUDIT)){
