@@ -537,8 +537,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
-    public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
+    @ResponseBody
+    public Object supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         logger.debug("==>下单供应商筛选,cscSupplierInfoDto = {}",cscSupplierInfoDto);
+        Wrapper<PageInfo<CscSupplierInfoDto>> result;
         //调用外部接口,最低传CustomerCode
         try {
             if (cscSupplierInfoDto == null) {
@@ -548,16 +550,18 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
                 cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
             }
-            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
-            if (cscSupplierList.getCode() == 200) {
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JacksonUtil.toJsonWithFormat(cscSupplierList.getResult()));
-            } else {
-                logger.error("==>查询供应商结果:{}", cscSupplierList.getMessage());
+            result = cscSupplierEdasService.querySupplierByAttributePageList(cscSupplierInfoDto);
+            if (Wrapper.ERROR_CODE == result.getCode()) {
+                logger.error("查询供应商列表失败,查询结果有误!");
             }
-        }catch (Exception ex) {
+        } catch (BusinessException ex) {
+            logger.error("==>订单中心筛选供应商出现异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询供应商发生未知异常！");
         }
+        return result;
     }
 
         /*

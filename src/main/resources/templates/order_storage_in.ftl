@@ -365,7 +365,6 @@
                 seenOrderDateNotNull:false,
                 consignorCode:'',
                 wareHouseObj:'',
-                consignorContactCode:'',
                 goodsCode:'',
                 consignorType:'',
                 goodsName:'',
@@ -376,11 +375,11 @@
                 totalConsignor:0,
                 totalGoods:0,
                 customerPageSize:10,
-                goodPageSize:10,
-                currentGoodPage:1,
-                currentCustomerPage:1,
                 supplierPageSize:10,
                 consignorPageSize:10,
+                goodPageSize:10,
+                currentCustomerPage:1,
+                currentGoodPage:1,
                 currentSupplierPage:1,
                 currentConsignorPage:1,
                 chosenClassOptions: [],
@@ -550,28 +549,36 @@
                 this.goodCurrentRow = val;
             },
             setCurrentCustInfo:function(val) {
-                this.customerName = val.customerName;
-                this.customerCode=val.customerCode;
-                this.chosenCus = false;
-                var vueObj=this;
-                CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":this.customerCode}, function(result) {
-                    var data=result.result;
-                    if (data == undefined || data == null || data.length ==0) {
-                        layer.msg("暂时未查询到该客户下的仓库信息！！");
-                    } else if (result.code == 200) {
-                        $.each(data,function (index,rmcWarehouseRespDto) {
-                            var rmcWarehouse = JSON.stringify(rmcWarehouseRespDto);
-                            var warehouse={};
-                            warehouse.label=rmcWarehouseRespDto.warehouseName;
-                            warehouse.value= rmcWarehouse;
-                            vueObj.wareHouseOptions.push(warehouse);
-                        });
-                    } else if (result.code == 403) {
-                        alert("没有权限")
-                    } else {
-                        alert(result.message);
-                    }
-                },"json");
+                if (val != null) {
+                    this.customerName = val.customerName;
+                    this.customerCode=val.customerCode;
+                    this.chosenCus = false;
+                    var vueObj=this;
+                    CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":this.customerCode}, function(result) {
+                        vueObj.wareHouseOptions = [];// 仓库下拉列表清空
+                        vueObj.wareHouse = '';       // 清空仓库
+                        vueObj.supplierData = [];    // 供应商列表清空
+                        vueObj.supplierName = '';    // 清空供应商
+                        var data=result.result;
+                        if (data == undefined || data == null || data.length ==0) {
+                            layer.msg("暂时未查询到该客户下的仓库信息！！");
+                        } else if (result.code == 200) {
+                            $.each(data,function (index,rmcWarehouseRespDto) {
+                                var rmcWarehouse = JSON.stringify(rmcWarehouseRespDto);
+                                var warehouse={};
+                                warehouse.label=rmcWarehouseRespDto.warehouseName;
+                                warehouse.value= rmcWarehouse;
+                                vueObj.wareHouseOptions.push(warehouse);
+                            });
+                        } else if (result.code == 403) {
+                            alert("没有权限")
+                        } else {
+                            alert(result.message);
+                        }
+                    },"json");
+                } else {
+                    alert("请选择客户信息！");
+                }
             },
             consignorHandleCurrentChange:function(val) {
                 this.consignorCurrentRow=val;
@@ -663,30 +670,43 @@
                 var param = {};
                 param = vueObj.supplierForm;
                 param.customerCode = this.customerCode;
+                param.pNum = this.currentSupplierPage;
+                param.pSize=this.supplierPageSize;
                 CommonClient.post(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
-                    var data=eval(result);
-                    $.each(data,function (index,CscSupplierInfoDto) {
-                        var supplier={};
-                        supplier.supplierName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
-                        supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
-                        supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
-                        supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
-                        supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
-                        supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
-                        supplier.supplierCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
-                        supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
+                    vueObj.supplierData = [];
+                    vueObj.supplierName = '';
+                    var data = eval(result);
+                    if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
+                        layer.msg("暂时未查询到供应商信息！！");
+                    } else if (data.code == 200) {
+                        $.each(data.result.list,function (index,CscSupplierInfoDto) {
+                            var supplier={};
+                            supplier.supplierName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
+                            supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
+                            supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
+                            supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
+                            supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
+                            supplier.supplierCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
 
-                        vueObj.supplierData.push(supplier);
+                            vueObj.supplierData.push(supplier);
 
-                    });
-                    vueObj.totalSupplier=data.length;
+                        });
+                        vueObj.totalSupplier=data.result.total;
+                    } else if (result.code == 403) {
+                        alert("没有权限")
+                    }
                 },"json");
-            },
-            handleSupplierSizeChange:function(){
 
             },
-            handleSupplierCurrentPage:function(){
-
+            handleSupplierSizeChange:function(val){
+                this.supplierPageSize = val;
+                this.selectSupplier();
+            },
+            handleSupplierCurrentPage:function(val){
+                this.currentSupplierPage = val;
+                this.selectSupplier();
             },
 
             setCurrentSupplierInfo:function(val){
