@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcStorageTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcStorageTemplate" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
+    <result column="template_type" property="templateType" jdbcType="VARCHAR" />
+    <result column="template_name" property="templateName" jdbcType="VARCHAR" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="standard_col_code" property="standardColCode" jdbcType="VARCHAR" />
+    <result column="standard_col_name" property="standardColName" jdbcType="VARCHAR" />
+    <result column="reflect_col_name" property="reflectColName" jdbcType="VARCHAR" />
+    <result column="col_default_val" property="colDefaultVal" jdbcType="VARCHAR" />
+    <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="checkTemplateNameUnique" parameterType="java.lang.String" resultType="int">
+    SELECT
+    COUNT (ost.template_name)
+    FROM
+    ofc_storage_template ost
+    WHERE
+    ost.template_name = #{templateName,jdbcType=VARCHAR}
+    GROUP BY
+    ost.template_name
+
+</select>
+</mapper>

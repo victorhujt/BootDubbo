@@ -117,23 +117,25 @@
               </el-select>
             </el-form-item>
           </div>
-          <div style="margin:15px 0;">
-            <el-button type="primary" @click="selectOrder">筛选</el-button>
-            <el-button type="primary" @click="resetCondition">重置</el-button>
+          <div class="xe-block">
+            <el-form-item label="" class="xe-col-3">
+              <el-button type="primary" @click="selectOrder">筛选</el-button>
+              <el-button type="primary" @click="resetCondition">重置</el-button>
+            </el-form-item>
           </div>
 
         </el-form>
 
 
         <div>
-            <el-button type="primary" @click="addOrder">添加</el-button>
-            <el-button type="primary" @click="editOrder">编辑</el-button>
-            <el-button type="primary" @click="deleteOrder">删除</el-button>
-            <el-button type="primary" @click="copyOrder">复制</el-button>
-            <el-button type="primary" @click="auditOrder">审核</el-button>
-            <el-button type="primary" @click="repeatAuditOrder">反审核</el-button>
-            <el-button type="primary" @click="cancelOrder">取消</el-button>
-            <el-button type="primary" @click="batchImport">批量导入</el-button>
+            <el-button type="primary" size="small" @click="addOrder">添加</el-button>
+            <el-button type="primary" size="small" @click="editOrder">编辑</el-button>
+            <el-button type="primary" size="small" @click="deleteOrder">删除</el-button>
+            <el-button type="primary" size="small" @click="copyOrder">复制</el-button>
+            <el-button type="primary" size="small" @click="auditOrder">审核</el-button>
+            <el-button type="primary" size="small" @click="repeatAuditOrder">反审核</el-button>
+            <el-button type="primary" size="small" @click="cancelOrder">取消</el-button>
+            <el-button type="primary" size="small" @click="batchImport">批量导入</el-button>
         </div>
         <div class="block">
             <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
