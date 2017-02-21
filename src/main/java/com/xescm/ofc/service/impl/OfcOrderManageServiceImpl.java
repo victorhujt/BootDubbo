@@ -26,7 +26,6 @@ import com.xescm.epc.edas.dto.TransportNoDTO;
 import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.tfc.TransportDTO;
@@ -235,6 +234,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                         } else {
                             throw new BusinessException("无法确定是否需要运输");
                         }
+                        ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                         ofcOrderStatusService.save(ofcOrderStatus);
                         ofcOrderStatus.setOrderStatus(IMPLEMENTATIONIN);
                         ofcOrderStatus.setStatusDesc("执行中");
@@ -249,6 +249,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 }
                 ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
+                ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                 ofcOrderStatusService.save(ofcOrderStatus);
 
                 //订单中心--订单状态推结算中心(执行中和已完成)

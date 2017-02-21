@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by lyh on 2016/12/9.
@@ -129,7 +130,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
                 //再查询该运输计划单是否是该该订单下最后一个待完成的运输计划单, 如果是就把订单的状态改为已完成
                 int queryResult = ofcTransplanInfoService.queryNotInvalidAndNotCompleteTransOrder(orderCode);
                 if(queryResult == 0){
-
+                    ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                     ofcOrderStatusService.save(ofcOrderStatus);
                     ofcOrderStatus.setOrderStatus(OrderConstConstant.HASBEENCOMPLETED);
                     ofcOrderStatus.setStatusDesc("已完成");
@@ -154,6 +155,7 @@ public class OfcDmsCallbackStatusServiceImpl implements OfcDmsCallbackStatusServ
 
             }
             //无论哪种状态都更新订单状态的描述信息
+            ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
             ofcOrderStatusService.save(ofcOrderStatus);
             if(StringUtils.equals(ofcOrderStatus.getOrderStatus(),OrderConstConstant.HASBEENCOMPLETED)){
                 //订单中心--订单状态推结算中心(执行中和已完成)

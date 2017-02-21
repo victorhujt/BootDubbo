@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
@@ -143,6 +140,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
                                 ofcTransplanStatus.setTaskCompletionTime(traceTime);
 
+                                orderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                                 orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"客户已签收");
@@ -263,6 +261,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             throw new BusinessException("所给运输计划单状态有误:" + status);
                         }
                         if(!orstatus.equals(orderStatus.getNotes())){
+                            orderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                             ofcOrderStatusService.save(orderStatus);
                             if(StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEENCOMPLETED)){
                                 //订单中心--订单状态推结算中心(执行中和已完成)
@@ -390,6 +389,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             +" 订单"+tag+"调度完成");
                     if (!flag) {
                         OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
+                        orderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                         orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
                                 +" "+info);

@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
@@ -508,6 +509,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * @param authResDtoByToken 登录的授权DTO
      */
     private void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){
+        ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
