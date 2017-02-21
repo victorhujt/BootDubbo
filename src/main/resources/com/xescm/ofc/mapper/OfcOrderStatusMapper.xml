@@ -103,7 +103,7 @@
 
   <select id="queryOrderStatus" resultMap="BaseResultMap">
     SELECT
-    oos.notes
+    oos.*
     FROM
     ofc_order_status oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -125,7 +125,7 @@
         <otherwise></otherwise>
       </choose>
     </where>
-    ORDER BY oos.lasted_oper_time ASC
+    ORDER BY oos.creation_time asc, oos.lasted_oper_time ASC
   </select>
 
   <!--获取最新状态-->
