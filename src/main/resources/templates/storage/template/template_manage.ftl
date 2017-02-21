@@ -52,8 +52,8 @@
                         property="operat"
                         label="操作列">
                     <template scope="scope">
-                        <el-button type="primary" @click="templateEdit(scope.row.templateName)" icon="edit">编辑</el-button>
-                        <el-button type="primary" @click="templateDel(scope.row.templateName)" icon="delete">删除</el-button>
+                        <el-button type="text" @click="templateEdit(scope.row.templateCode)"><p style="color: blue">编辑</p></el-button>
+                        <el-button type="text" @click="templateDel(scope.row.templateCode)"><p style="color: blue">删除</p></el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -72,19 +72,15 @@
                         property="custName"
                         label="客户名称">
                 </el-table-column>
+                <el-table-column
+                        property="templateCode"
+                        label="模板编码"
+                        v-if="templateCodeShow">
+                </el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
             </el-pagination>
         </template>
-        <#--<el-pagination-->
-                <#--@size-change="handleSizeChange"-->
-                <#--@current-change="handleCurrentChange"-->
-                <#--:current-page="currentPage4"-->
-                <#--:page-sizes="[100, 200, 300, 400]"-->
-                <#--:page-size="100"-->
-                <#--layout="total, sizes, prev, pager, next, jumper"-->
-                <#--:total="400">-->
-        <#--</el-pagination>-->
     </div>
 </div>
 
@@ -123,6 +119,7 @@
         el:'#vm',
         data :function() {
             return{
+                templateCodeShow:false,
                 formLabelWidth:'100px',
                 templateForm:{
                     custName:'',
@@ -161,8 +158,9 @@
                         $.each(result.result.list, function (index, item) {
                             var rowData = {};
                             rowData.templateName = item.templateName;
-                            rowData.templateType = item.templateType
-                            rowData.custCode = item.custCode;;
+                            rowData.templateType = item.templateType;
+                            rowData.templateCode = item.templateCode;
+                            rowData.custCode = item.custCode;
                             rowData.custName = item.custName;
                             vm.tableData.push(rowData);
                         })
@@ -189,14 +187,15 @@
                 this.currentPage=val;
 //                this.selectOrder();
             },
-            /*handleSelectionChange:function(val){
-                this.multipleSelection = val;
-            },*/
             templateEdit:function(val){
                 var vm = this;
-//                var order = vm.multipleSelection;
-//                console.log(order)
-//                console.log(JSON.stringify(order))
+                var orderTemplateCode = val;
+                if(undefined == orderTemplateCode || StringUtil.isEmpty(orderTemplateCode)){
+                    layer.msg("模板名称为空!");
+                    return;
+                }
+                var url = "/ofc/storage_template/edit/" + orderTemplateCode;
+                xescm.common.loadPage(url)
             },
             templateDel:function(val){
                 var orderTemplateName = val;
@@ -207,11 +206,9 @@
                 var param = {};
                 param.templateName = orderTemplateName;
                 xescm.common.submit("/ofc/storage_template/delete",param,"确认删除该模板?",function () {
-                    xescm.common.loadPage("/ofc/storage_template/select");
+                    vm.templateSearchBtn();
                 })
-
             }
-
         }
     })
 

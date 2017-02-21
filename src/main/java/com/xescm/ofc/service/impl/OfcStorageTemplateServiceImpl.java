@@ -1,6 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
@@ -8,9 +9,11 @@ import com.xescm.ofc.mapper.OfcStorageTemplateMapper;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.utils.CodeGenUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -37,6 +40,7 @@ public class OfcStorageTemplateServiceImpl implements OfcStorageTemplateService{
      * @param authResDto
      */
     @Override
+    @Transactional
     public void saveTemplate(List<OfcStorageTemplate> templateList, AuthResDto authResDto) {
         if(null == templateList || templateList.size() < 1){
             logger.error("模板配置保存失败,入参为空");
@@ -93,19 +97,45 @@ public class OfcStorageTemplateServiceImpl implements OfcStorageTemplateService{
     /**
      * 模板配置删除
      * @param temlpateName
-     * @param authResDto
+     *
      */
+    @Transactional
     @Override
-    public void delTemplateByName(String temlpateName, AuthResDto authResDto) {
+    public void delTemplateByName(String temlpateName) {
         logger.info("模板配置删除service , ==> temlpateName:{}",temlpateName);
-        logger.info("模板配置删除service , ==> authResDto:{}",authResDto);
-        if(PubUtils.isSEmptyOrNull(temlpateName) || null == authResDto){
+        if(PubUtils.isSEmptyOrNull(temlpateName)){
             logger.error("模板配置删除失败! 入参有误!");
             throw new BusinessException("模板配置删除失败! 入参有误!");
         }
         OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
         ofcStorageTemplate.setTemplateName(temlpateName);
         ofcStorageTemplateMapper.delete(ofcStorageTemplate);
+    }
+
+    /**
+     * 模板配置编辑
+     * @param templateList
+     * @param authResDto
+     */
+    @Transactional
+    @Override
+    public void templateEditConfirm(String templateList, AuthResDto authResDto) throws Exception {
+        TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
+        };
+        List<OfcStorageTemplate> ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
+        String userId = authResDto.getUserId();
+        String userName = authResDto.getUserName();
+        Date now = new Date();
+        for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplates) {
+            ofcStorageTemplate.setOperator(userId);
+            ofcStorageTemplate.setOperatorName(userName);
+            ofcStorageTemplate.setOperTime(now);
+            int update = ofcStorageTemplateMapper.updateByPrimaryKey(ofcStorageTemplate);
+            if(update < 1){
+                logger.error("模板配置编辑更新失败:{}",ofcStorageTemplate);
+                throw new BusinessException("模板配置编辑更新失败");
+            }
+        }
     }
 
     /**

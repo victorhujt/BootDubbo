@@ -82,7 +82,7 @@
                         <#--</div>-->
                     <#--</template>-->
                 </el-table-column>
-                <el-table-column property="standardColCode"  label="平台列名编码">
+                <el-table-column property="standardColCode"  label="平台列名编码" v-if="standardColCodeShow">
                 </el-table-column>
             </el-table>
             <div class="xe-block">
@@ -100,6 +100,7 @@
                 templateNameNotNull:false,
                 custNameNotNull:false,
                 custCodeNotNull:false,
+                standardColCodeShow:false,
                 templateForm:{
                     templateType:'',
                     templateName:'',
