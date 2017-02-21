@@ -61,7 +61,7 @@ public class OfcOrderStatus {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS",timezone = "GMT+8")
     @Column(name = "creation_time")
-    private String creationTime;
+    private Date creationTime = new Date();
 
     public String getId() {
         return id;
@@ -179,11 +179,11 @@ public class OfcOrderStatus {
         this.operator = operator;
     }
 
-    public String getCreationTime() {
+    public Date getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(String creationTime) {
+    public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
 }
