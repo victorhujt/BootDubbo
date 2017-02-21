@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <p>Title:      InitUUIDTask. </p>
@@ -37,6 +38,8 @@ public class InitUUIDTask implements CommandLineRunner {
     private OfcOrderStatusService orderStatusService;
     @Autowired
     private OfcOrderStatusMapper ofcOrderStatusMapper;
+
+    private static AtomicBoolean isStarted = new AtomicBoolean(false);
 
     /**
      * <p>Title:      initUUID. </p>
@@ -90,8 +93,13 @@ public class InitUUIDTask implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-//        initTableGoodsDetailInfoUUID();
+        if (!isStarted.get()) {
+            LOGGER.info("==========================================> Initializing starting ...");
+            isStarted.getAndSet(true);
+//            initTableGoodsDetailInfoUUID();
 
-//        initTableOrderStatusUUID();
+//            initTableOrderStatusUUID();
+            LOGGER.info("==========================================> Initializing finished.");
+        }
     }
 }
