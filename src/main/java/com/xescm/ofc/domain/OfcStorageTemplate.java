@@ -15,6 +15,12 @@ public class OfcStorageTemplate {
     private String id;
 
     /**
+     * 模板序号
+     */
+    @Column(name = "index_num")
+    private int indexNum;
+
+    /**
      * 模板编码
      */
     @Column(name = "template_code")

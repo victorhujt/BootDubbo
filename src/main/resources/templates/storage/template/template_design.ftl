@@ -67,7 +67,7 @@
                     :model="tableData.colDefaultVal"
                     border
                     style="width: 100%">
-                <el-table-column type="index" label="序号">
+                <el-table-column property="indexNum" label="序号">
                 </el-table-column>
                 <el-table-column property="standardColName"  label="平台列名">
                 </el-table-column>
@@ -132,27 +132,27 @@
                     {value:'其他入库',label:'其他入库'}
                 ],
                 tableData:[
-                    {standardColName:'客户订单号',reflectColName:'',colDefaultVal:'',standardColCode:'custOrderCode'},
-                    {standardColName:'订单日期',reflectColName:'',colDefaultVal:'',standardColCode:'orderTime'},
-                    {standardColName:'开单员',reflectColName:'',colDefaultVal:'',standardColCode:'merchandiser'},
-                    {standardColName:'仓库名称',reflectColName:'',colDefaultVal:'',standardColCode:'warehouseName'},
-                    {standardColName:'业务类型',reflectColName:'',colDefaultVal:'',standardColCode:'businessType'},
-                    {standardColName:'备注',reflectColName:'',colDefaultVal:'',standardColCode:'notes'},
-                    {standardColName:'货品编码',reflectColName:'',colDefaultVal:'',standardColCode:'goodsCode'},
-                    {standardColName:'货品名称',reflectColName:'',colDefaultVal:'',standardColCode:'goodsName'},
-                    {standardColName:'规格',reflectColName:'',colDefaultVal:'',standardColCode:'goodsSpec'},
-                    {standardColName:'单位',reflectColName:'',colDefaultVal:'',standardColCode:'unit'},
-                    {standardColName:'单价',reflectColName:'',colDefaultVal:'',standardColCode:'unitPrice'},
-                    {standardColName:'入库数量',reflectColName:'',colDefaultVal:'',standardColCode:'inStorageNum'},
-                    {standardColName:'批次号',reflectColName:'',colDefaultVal:'',standardColCode:'productionBatch'},
-                    {standardColName:'生产日期',reflectColName:'',colDefaultVal:'',standardColCode:'productionTime'},
-                    {standardColName:'失效日期',reflectColName:'',colDefaultVal:'',standardColCode:'invalidTime'},
-                    {standardColName:'供应商名称',reflectColName:'',colDefaultVal:'',standardColCode:'supportName'},
-                    {standardColName:'预计入库时间',reflectColName:'',colDefaultVal:'',standardColCode:'arriveTime'},
-                    {standardColName:'是否提供运输服务',reflectColName:'',colDefaultVal:'',standardColCode:'provideTransport'},
-                    {standardColName:'车牌号',reflectColName:'',colDefaultVal:'',standardColCode:'plate_number'},
-                    {standardColName:'司机姓名',reflectColName:'',colDefaultVal:'',standardColCode:'driverName'},
-                    {standardColName:'联系电话',reflectColName:'',colDefaultVal:'',standardColCode:'contactNumber'}
+                    {indexNum:'1',standardColName:'客户订单号',reflectColName:'',colDefaultVal:'',standardColCode:'custOrderCode'},
+                    {indexNum:'2',standardColName:'订单日期',reflectColName:'',colDefaultVal:'',standardColCode:'orderTime'},
+                    {indexNum:'3',standardColName:'开单员',reflectColName:'',colDefaultVal:'',standardColCode:'merchandiser'},
+                    {indexNum:'4',standardColName:'仓库名称',reflectColName:'',colDefaultVal:'',standardColCode:'warehouseName'},
+                    {indexNum:'5',standardColName:'业务类型',reflectColName:'',colDefaultVal:'',standardColCode:'businessType'},
+                    {indexNum:'6',standardColName:'备注',reflectColName:'',colDefaultVal:'',standardColCode:'notes'},
+                    {indexNum:'7',standardColName:'货品编码',reflectColName:'',colDefaultVal:'',standardColCode:'goodsCode'},
+                    {indexNum:'8',standardColName:'货品名称',reflectColName:'',colDefaultVal:'',standardColCode:'goodsName'},
+                    {indexNum:'9',standardColName:'规格',reflectColName:'',colDefaultVal:'',standardColCode:'goodsSpec'},
+                    {indexNum:'10',standardColName:'单位',reflectColName:'',colDefaultVal:'',standardColCode:'unit'},
+                    {indexNum:'11',standardColName:'单价',reflectColName:'',colDefaultVal:'',standardColCode:'unitPrice'},
+                    {indexNum:'12',standardColName:'入库数量',reflectColName:'',colDefaultVal:'',standardColCode:'inStorageNum'},
+                    {indexNum:'13',standardColName:'批次号',reflectColName:'',colDefaultVal:'',standardColCode:'productionBatch'},
+                    {indexNum:'14',standardColName:'生产日期',reflectColName:'',colDefaultVal:'',standardColCode:'productionTime'},
+                    {indexNum:'15',standardColName:'失效日期',reflectColName:'',colDefaultVal:'',standardColCode:'invalidTime'},
+                    {indexNum:'16',standardColName:'供应商名称',reflectColName:'',colDefaultVal:'',standardColCode:'supportName'},
+                    {indexNum:'17',standardColName:'预计入库时间',reflectColName:'',colDefaultVal:'',standardColCode:'arriveTime'},
+                    {indexNum:'18',standardColName:'是否提供运输服务',reflectColName:'',colDefaultVal:'',standardColCode:'provideTransport'},
+                    {indexNum:'19',standardColName:'车牌号',reflectColName:'',colDefaultVal:'',standardColCode:'plate_number'},
+                    {indexNum:'20',standardColName:'司机姓名',reflectColName:'',colDefaultVal:'',standardColCode:'driverName'},
+                    {indexNum:'21',standardColName:'联系电话',reflectColName:'',colDefaultVal:'',standardColCode:'contactNumber'}
                 ]
             }
         },
@@ -186,7 +186,7 @@
                     template.custName = custName;
                     template.custCode = custCode;
                     var reflectColName = StringUtil.trim(design.reflectColName);
-                    var index = design.index;
+                    var index = design.indexNum;
                     if(index == 0 && StringUtil.isEmpty(reflectColName)){
                         alert('客户订单号模板列名为空!');
                         return;
@@ -209,6 +209,7 @@
                         alert('收货方名称模板列名为空!');
                         return;
                     }
+                    template.indexNum = design.indexNum;
                     template.standardColCode = design.standardColCode;
                     template.standardColName = design.standardColName;
                     template.reflectColName = reflectColName;

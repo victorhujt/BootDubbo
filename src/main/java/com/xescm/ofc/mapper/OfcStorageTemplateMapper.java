@@ -12,4 +12,6 @@ public interface OfcStorageTemplateMapper extends Mapper<OfcStorageTemplate> {
     Integer checkTemplateNameUnique(@Param(value = "templateName") String templateName);
 
     List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition);
+
+    List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
 }

@@ -82,8 +82,7 @@ public class OfcStorageTemplateRest extends BaseController{
         List<OfcStorageTemplate> ofcStorageTemplateList;
         PageInfo<OfcStorageTemplate> pageInfo;
         try {
-            PageHelper pageHelper = new PageHelper();
-            pageHelper.startPage(templateCondition.getPageNum(),templateCondition.getPageSize());
+            new PageHelper().startPage(templateCondition.getPageNum(),templateCondition.getPageSize());
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
             pageInfo = new PageInfo<>(ofcStorageTemplateList);
         }catch (BusinessException e) {
@@ -164,18 +163,18 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置详情跳转
-     * @param templateName
+     * @param templateCode
      */
-    @RequestMapping(value = "/detail")
-    public ModelAndView storageTemplateDetail(String templateName){
-        logger.info("模板配置详情跳转 ==> templateName:{}",templateName);
-        ModelAndView modelAndView = new ModelAndView("");
+    @RequestMapping(value = "/detail/{templateCode}")
+    public ModelAndView storageTemplateDetail(@PathVariable String templateCode){
+        logger.info("模板配置详情跳转 ==> templateCode:{}",templateCode);
+        ModelAndView modelAndView = new ModelAndView("/storage/template/template_detail");
         try {
-            if(PubUtils.isSEmptyOrNull(templateName)){
-                logger.error("模板配置详情跳转错误, 入参为空, templateName:null or '' ");
+            if(PubUtils.isSEmptyOrNull(templateCode)){
+                logger.error("模板配置详情跳转错误, 入参为空, templateCode:null or '' ");
                 return new ModelAndView("/error/error-500");
             }
-            modelAndView.addObject("templateName",templateName);
+            modelAndView.addObject("templateCode",templateCode);
         } catch (Exception e) {
             logger.error("模板配置详情跳转错误, {}",e);
             return new ModelAndView("/error/error-500");
@@ -185,21 +184,21 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置详情数据
-     * @param templateName
+     * @param templateCode
      */
-    @RequestMapping(value = "/detail_data")
+    @RequestMapping(value = "/detail_data/{templateCode}")
     @ResponseBody
-    public Wrapper storageTemplateDetailData(String templateName){
-        logger.info("模板配置详情数据 ==> templateName:{}",templateName);
-        if(PubUtils.isSEmptyOrNull(templateName)){
+    public Wrapper storageTemplateDetailData(@PathVariable String templateCode){
+        logger.info("模板配置详情数据 ==> templateName:{}",templateCode);
+        if(PubUtils.isSEmptyOrNull(templateCode)){
             logger.error("模板配置详情数据错误, 入参为空, templateList:null or '' ");
             return new Wrapper(Wrapper.ERROR_CODE,"模板配置详情数据错误");
         }
         List<OfcStorageTemplate> ofcStorageTemplateList;
         try {
             TemplateCondition templateCondition = new TemplateCondition();
-            templateCondition.setTemplateName(templateName);
-            ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
+            templateCondition.setTemplateCode(templateCode);
+            ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateDetail(templateCondition);
         } catch (BusinessException e) {
             logger.error("模板配置详情数据错误, {}",e);
             return new Wrapper(Wrapper.ERROR_CODE,e.getMessage());

@@ -18,4 +18,6 @@ public interface OfcStorageTemplateService {
     void  delTemplateByName(String temlpateName);
 
     void templateEditConfirm(String templateName, AuthResDto authResDto) throws Exception;
+
+    List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
 }

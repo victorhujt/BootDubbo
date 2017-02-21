@@ -59,6 +59,9 @@
                 <el-table-column
                         property="templateName"
                         label="模板名称">
+                    <template scope="scope">
+                        <el-button type="text" @click="templateDetail(scope.row.templateCode)"><p style="color: blue">{{scope.row.templateName}}</p></el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         property="templateType"
@@ -191,7 +194,7 @@
                 var vm = this;
                 var orderTemplateCode = val;
                 if(undefined == orderTemplateCode || StringUtil.isEmpty(orderTemplateCode)){
-                    layer.msg("模板名称为空!");
+                    layer.msg("模板编码为空!");
                     return;
                 }
                 var url = "/ofc/storage_template/edit/" + orderTemplateCode;
@@ -208,6 +211,17 @@
                 xescm.common.submit("/ofc/storage_template/delete",param,"确认删除该模板?",function () {
                     vm.templateSearchBtn();
                 })
+            },
+            templateDetail:function (val) {
+                var vm = this;
+                var orderTemplateCode = val;
+                if(undefined == orderTemplateCode || StringUtil.isEmpty(orderTemplateCode)){
+                    layer.msg("模板编码为空!");
+                    return;
+                }
+                var url = "/ofc/storage_template/detail/" + orderTemplateCode;
+                xescm.common.loadPage(url)
+
             }
         }
     })

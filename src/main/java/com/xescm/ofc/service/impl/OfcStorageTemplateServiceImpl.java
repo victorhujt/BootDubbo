@@ -139,6 +139,25 @@ public class OfcStorageTemplateServiceImpl implements OfcStorageTemplateService{
     }
 
     /**
+     * 模板明细查询
+     * @param templateCondition
+     * @return
+     */
+    @Override
+    public List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition) {
+        if(null == templateCondition){
+            logger.error("模板明细查询入参有误");
+            throw new BusinessException("模板明细查询入参有误!");
+        }
+        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateMapper.selectTemplateDetail(templateCondition);
+        if(ofcStorageTemplateList.size() < 1){
+            logger.error("模板明细查询结果有误");
+            throw new BusinessException("模板明细查询结果有误!");
+        }
+        return ofcStorageTemplateList;
+    }
+
+    /**
      * 校验模板必填项
      * @param ofcStorageTemplate
      */

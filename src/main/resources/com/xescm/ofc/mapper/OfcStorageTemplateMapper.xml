@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="index_num" property="indexNum" jdbcType="VARCHAR" />
     <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
     <result column="template_type" property="templateType" jdbcType="VARCHAR" />
     <result column="template_name" property="templateName" jdbcType="VARCHAR" />
@@ -42,6 +43,7 @@
 
   <select id="selectTemplateByCondition" parameterType="com.xescm.ofc.model.dto.form.TemplateCondition" resultMap="BaseResultMap">
     SELECT
+      ost.index_num,
       ost.template_code,
       ost.template_type,
       ost.template_name,
@@ -66,6 +68,9 @@
       <if test="templateType != null and templateType != ''">
         AND ost.template_type = #{templateType, jdbcType=VARCHAR}
       </if>
+      <if test="templateCode != null and templateCode != ''">
+        AND ost.template_code = #{templateCode, jdbcType=VARCHAR}
+      </if>
       <if test="templateName != null and templateName != ''">
         AND ost.template_name LIKE concat(concat('%',#{templateName, jdbcType=VARCHAR}),'%')
       </if>
@@ -73,5 +78,42 @@
     GROUP BY
       ost.template_code
 
+  </select>
+  <select id="selectTemplateDetail" resultType="com.xescm.ofc.domain.OfcStorageTemplate">
+    SELECT
+    ost.index_num,
+    ost.template_code,
+    ost.template_type,
+    ost.template_name,
+    ost.cust_code,
+    ost.cust_name,
+    ost.standard_col_code,
+    ost.standard_col_name,
+    ost.reflect_col_name,
+    ost.col_default_val,
+    ost.creat_time,
+    ost.creator,
+    ost.creator_name,
+    ost.oper_time,
+    ost.operator,
+    ost.operator_name
+    FROM
+    ofc_storage_template ost
+    <where>
+      <if test="custName != null and custName != ''">
+        AND ost.cust_name = #{custName, jdbcType=VARCHAR}
+      </if>
+      <if test="templateType != null and templateType != ''">
+        AND ost.template_type = #{templateType, jdbcType=VARCHAR}
+      </if>
+      <if test="templateCode != null and templateCode != ''">
+        AND ost.template_code = #{templateCode, jdbcType=VARCHAR}
+      </if>
+      <if test="templateName != null and templateName != ''">
+        AND ost.template_name LIKE concat(concat('%',#{templateName, jdbcType=VARCHAR}),'%')
+      </if>
+    </where>
+    ORDER BY
+     ost.index_num
   </select>
 </mapper>

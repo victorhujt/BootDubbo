@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class TemplateCondition {
     private String custName;
+    private String templateCode;
     private String templateType;
     private String templateName;
     private Integer pageNum;
