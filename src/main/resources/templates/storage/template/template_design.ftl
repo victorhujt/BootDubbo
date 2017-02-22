@@ -101,7 +101,7 @@
                 standardColCodeShow:false,
                 merchandiserList:[],
                 templateForm:{
-                    templateType:'',
+                    templateType:'storageIn',
                     templateName:'',
                     custName:'',
                     custCode:''

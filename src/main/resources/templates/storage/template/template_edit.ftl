@@ -180,14 +180,12 @@
                     tableItem.colDefaultVal = colDefaultVal;
                     vm.tableData.push(tableItem);
                 });
-                var templateType = itemOut.templateType;
-                var templateTypeName = itemOut.templateType == 'storageIn' ? '入库单' : '出库单';
-                vm.templatesTypeList = [
-                    {label:templateType,value:templateTypeName}
-                ];
-                vm.templateForm.templateName = itemOut.templateName;
-                vm.templateForm.custName = itemOut.custName;
-                vm.templateForm.custCode = itemOut.custCode;
+                vm.templateForm={
+                    templateType:itemOut.templateType,
+                    templateName:itemOut.templateName,
+                    custName:itemOut.custName,
+                    custCode:itemOut.custCode
+                };
             })
         },
         methods:{

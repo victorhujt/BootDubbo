@@ -236,4 +236,34 @@ public class OfcStorageTemplateRest extends BaseController{
         return null;
     }
 
+
+    /**
+     * 跳转入库开单批量导单
+     */
+    @RequestMapping(value = "batch_in")
+    public ModelAndView batchIn(){
+        ModelAndView modelAndView = new ModelAndView("/storage/in/batch_import_in");
+        AuthResDto authResDto = getAuthResDtoByToken();
+        String auth;
+        try {
+            auth = JacksonUtil.toJson(authResDto);
+        } catch (Exception e) {
+            logger.error("JSON转换异常");
+            return new ModelAndView("/error/error-500");
+        }
+        modelAndView.addObject("authResDto",auth);
+        return modelAndView;
+    }
+
+
+    /**
+     * 跳转入库开单批量导单
+     */
+    @RequestMapping(value = "batch_out")
+    public ModelAndView batchOut(){
+        ModelAndView modelAndView = new ModelAndView("/storage/out/batch_import_out");
+        return modelAndView;
+    }
+
+
 }
