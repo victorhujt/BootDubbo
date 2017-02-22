@@ -515,7 +515,7 @@
                     <td>
                     ${stroage.plannedSingleState!""}
                     </td class="center">
-                    <td style="display:block;word-wrap:break-word;border:none;max-width:430px;">
+                    <td style="word-wrap:break-word;max-width:430px;">
                     ${stroage.departure!""}
                     </td>
                     <td class="center">

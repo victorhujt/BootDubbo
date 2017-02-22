@@ -35,16 +35,17 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
     
     @Autowired
     private OfcSiloproNewstatusService ofcSiloproNewstatusService;
-
     @Autowired
     private OfcOrderStatusService ofcOrderStatusService;
-
 	@Autowired
 	private OfcPlannedDetailService ofcPlannedDetailService;
 	@Autowired
 	private OfcTransplanInfoService ofcTransplanInfoService;
 	@Autowired
 	private OfcTransplanStatusService ofcTransplanStatusService;
+	@Autowired
+	private OfcOrderManageService ofcOrderManageService;
+
 
     public int updateByPlanCode(Object key){
 
@@ -216,6 +217,10 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 						status.setLastedOperTime(new Date());
 						status.setOperator("");
 						ofcOrderStatusService.save(status);
+						if(StringUtils.equals(status.getOrderStatus(), OrderConstConstant.HASBEENCOMPLETED)){
+							//订单中心--订单状态推结算中心(执行中和已完成)
+							ofcOrderManageService.pullOfcOrderStatus(status);
+						}
 					}
 				}
 			}
@@ -228,6 +233,8 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 					status.setLastedOperTime(new Date());
 					status.setOperator("");
 					ofcOrderStatusService.save(status);
+					//订单中心--订单状态推结算中心(执行中和已完成)
+					ofcOrderManageService.pullOfcOrderStatus(status);
 				}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,10 +2,12 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.service.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
@@ -41,6 +40,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
     private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Autowired
+    private OfcOrderManageService ofcOrderManageService;
     @Autowired
     private OfcSiloproStatusService ofcSiloproStatusService ;
     @Autowired
@@ -139,9 +140,11 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 ofcTransplanStatus.setPlannedSingleState(RENWUWANCH);
                                 ofcTransplanStatus.setTaskCompletionTime(traceTime);
 
+                                orderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                                 orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"客户已签收");
+                                orderStatus.setCreationTime(new Date());
                                 logger.info("跟踪状态已签收");
                                 ofcOrderStatusService.save(orderStatus);
 
@@ -259,7 +262,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             throw new BusinessException("所给运输计划单状态有误:" + status);
                         }
                         if(!orstatus.equals(orderStatus.getNotes())){
+                            orderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
+                            orderStatus.setCreationTime(new Date());
                             ofcOrderStatusService.save(orderStatus);
+                            if(StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEENCOMPLETED)){
+                                //订单中心--订单状态推结算中心(执行中和已完成)
+                                ofcOrderManageService.pullOfcOrderStatus(orderStatus);
+                            }
                         }
                         ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
                         ofcTransplanNewstatus.setTransportSingleUpdateTime(traceTime);
@@ -382,6 +391,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             +" 订单"+tag+"调度完成");
                     if (!flag) {
                         OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
+                        orderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                         orderStatus.setLastedOperTime(ofcSchedulingSingleFeedbackCondition.getCreateTime());
                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ofcSchedulingSingleFeedbackCondition.getCreateTime())
                                 +" "+info);

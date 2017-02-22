@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
@@ -239,11 +240,14 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                     if(ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")){
                         ofcMerchandiserService.save(ofcMerchandiser);
                     }
+
                     if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                         //进行自动审核
                         ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
                                 ofcWarehouseInformation,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
                     }
+                    //推结算
+                    ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
 
                 }else{
                     throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
@@ -442,8 +446,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 if(ofcMerchandiserService.select(ofcMerchandiser).size()==0){
                     ofcMerchandiserService.save(ofcMerchandiser);
                 }
+
                 ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),
                         "review",authResDtoByToken);
+                //推结算
+                ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
             } else if(PubUtils.trimAndNullAsEmpty(tag).equals("distributionPlace")){
                 distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                         ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
@@ -540,6 +547,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param authResDtoByToken 登录的授权DTO
      */
     private void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken){
+        ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(PENDINGAUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
@@ -862,6 +870,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo,
                         ofcWarehouseInformation,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
             }
+            //城配开单订单推结算中心
+            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
 
         }else{
             throw new BusinessException("客户订单编号" + ofcFundamentalInformation.getCustOrderCode() + "已经存在!您不能重复下单!");

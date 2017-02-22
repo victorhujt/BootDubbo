@@ -4,11 +4,21 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Table(name = "ofc_order_status")
 public class OfcOrderStatus {
+
+    /**
+     * ID 主键
+     */
+    @Id
+    @GeneratedValue(generator = "UUID")
+    private String id;
+
     /**
      * 订单编号
      */
@@ -44,6 +54,22 @@ public class OfcOrderStatus {
      * 操作人员
      */
     private String operator;
+
+    /**
+     * 创建时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS",timezone = "GMT+8")
+    @Column(name = "creation_time")
+    private Date creationTime = new Date();
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * 获取订单编号
@@ -151,5 +177,13 @@ public class OfcOrderStatus {
      */
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(Date creationTime) {
+        this.creationTime = creationTime;
     }
 }

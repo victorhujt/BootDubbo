@@ -332,6 +332,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             try {
                 //自动审核通过 review:审核；rereview:反审核
                 orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList,ofcOrderStatus);
+                //推结算
+                ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
@@ -349,6 +351,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             try {
                 //自动审核通过 review:审核；rereview:反审核
                 orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                //推结算
+                ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
