@@ -116,7 +116,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"车辆已发运，发往目的地："+destination);
-                                orderStatus.setCreationTime(new Date());
                                 logger.info("跟踪状态已发运");
                             }
                         }else if(status.equals("已到达")){
@@ -128,7 +127,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"车辆已到达目的地："+destination);
-                                orderStatus.setCreationTime(new Date());
                                 logger.info("跟踪状态已到达");
                             }
                         }else if(status.equals("已签收")
@@ -200,7 +198,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                         orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                                 +" "+"订单已完成");
                                         orderStatus.setOperator(userName);
-                                        orderStatus.setCreationTime(new Date());
                                         if(null == ofcFundamentalInformation.getFinishedTime()){
                                             ofcFundamentalInformation.setFinishedTime(now);
                                         }
@@ -227,7 +224,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
-                                    orderStatus.setCreationTime(new Date());
                                     if(null == ofcFundamentalInformation.getFinishedTime()){
                                         ofcFundamentalInformation.setFinishedTime(now);
                                     }
@@ -244,7 +240,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(now)
                                             +" "+"订单已完成");
                                     orderStatus.setOperator(userName);
-                                    orderStatus.setCreationTime(new Date());
                                     if(null == ofcFundamentalInformation.getFinishedTime()){
                                         ofcFundamentalInformation.setFinishedTime(now);
                                     }
@@ -261,7 +256,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 orderStatus.setLastedOperTime(traceTime);
                                 orderStatus.setNotes(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(traceTime)
                                         +" "+"客户已回单");
-                                orderStatus.setCreationTime(new Date());
                                 logger.info("跟踪状态已回单");
                             }
                         }else {
@@ -269,6 +263,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         }
                         if(!orstatus.equals(orderStatus.getNotes())){
                             orderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
+                            orderStatus.setCreationTime(new Date());
                             ofcOrderStatusService.save(orderStatus);
                             if(StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEENCOMPLETED)){
                                 //订单中心--订单状态推结算中心(执行中和已完成)
