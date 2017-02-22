@@ -113,11 +113,7 @@
                 ],
                 colDefaultValDia:false,
                 colDefaultValModel:{
-                    orderTime:'',
-                    merchandiser:'',
-                    warehouseName:'',
-                    businessType:'',
-                    provideTransport:''
+
                 },
                 warehouseNameList:[
                     //加载所有仓库
@@ -163,15 +159,27 @@
                     var tableItem = {};
                     var indexNum = item.indexNum;
                     var colDefaultVal = item.colDefaultVal;
+                    debugger
                     if(!StringUtil.isEmpty(colDefaultVal)){
+                        var orderTime;
+                        var merchandiser;
+                        var warehouseName;
+                        var businessType;
                         if(indexNum == 3){
-
+                            merchandiser = colDefaultVal;
                         }else if(indexNum == 4){
-
+                            warehouseName = colDefaultVal;
                         }else if(indexNum == 5){
-
+                            businessType = colDefaultVal;
                         }else if(indexNum == 18){
 
+                        }
+                        vm.colDefaultValModel={
+                            orderTime:'',
+                            merchandiser:merchandiser,
+                            warehouseName:warehouseName,
+                            businessType:businessType,
+                            provideTransport:''
                         }
                     }
                     tableItem.indexNum = indexNum;
