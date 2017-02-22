@@ -69,20 +69,19 @@
   </select>
 
   <!-- 批量插入订单明细表主键id -->
-  <insert id="batchInsertGoodsDetail" parameterType="java.util.List">
+  <insert id="batchInsertGoodsDetail" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo">
 
     INSERT INTO ofc_goods_details_info_copy (id, goods_code, goods_name, goods_spec, unit, quantity, unit_price, production_batch,
     production_time, invalid_time, order_code, notes, creation_time, creator, operator, oper_time, weight, cubage, total_box,
     goods_category, pack, quantity_unit_price, weight_unit_price, volume_unit_price, billing_weight, goods_type, charging_ways,
     charging_quantity, charging_unit_price)
     VALUES
-    <foreach collection="details" item="detail" index="index" open="" close="" separator=",">
       (#{detail.id}, #{detail.goodsCode}, #{detail.goodsName}, #{detail.goodsSpec}, #{detail.unit}, #{detail.quantity},
       #{detail.unitPrice}, #{detail.productionBatch}, #{detail.productionTime}, #{detail.invalidTime}, #{detail.orderCode},
       #{detail.notes}, #{detail.creationTime}, #{detail.creator}, #{detail.operator}, #{detail.operTime}, #{detail.weight},
       #{detail.cubage}, #{detail.totalBox}, #{detail.goodsCategory}, #{detail.pack}, #{detail.quantityUnitPrice}, #{detail.weightUnitPrice},
       #{detail.volumeUnitPrice}, #{detail.billingWeight}, #{detail.goodsType}, #{detail.chargingWays}, #{detail.chargingQuantity},
       #{detail.chargingUnitPrice})
-    </foreach>
+
   </insert>
 </mapper>

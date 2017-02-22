@@ -24,5 +24,5 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
      * @CreateDate    2017/2/10 11:27
      * @return
      */
-    void batchInsertGoodsDetail(@Param("details") List<OfcGoodsDetailsInfo> goodsDetailInfos);
+    void batchInsertGoodsDetail(@Param("detail") OfcGoodsDetailsInfo goodsDetailInfos);
 }

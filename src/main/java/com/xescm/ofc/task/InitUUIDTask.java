@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -55,13 +54,16 @@ public class InitUUIDTask implements CommandLineRunner {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Begin initializing table [ofc_goods_details_info] ID...");
         // 初始化订单商品明细表ID
         List<OfcGoodsDetailsInfo> goodsDetails = goodsDetailsInfoService.selectAll();
-        List<OfcGoodsDetailsInfo> result = new ArrayList<>();
+//        List<OfcGoodsDetailsInfo> result = new ArrayList<>();
+        int i = 1;
         for (OfcGoodsDetailsInfo detail: goodsDetails) {
             String id = UUID.randomUUID().toString().replace("-", "");
             detail.setId(id);
-            result.add(detail);
+//            result.add(detail);
+            goodsDetailsInfoMapper.batchInsertGoodsDetail(detail);
+            LOGGER.info(i+"");
+            i++;
         }
-        goodsDetailsInfoMapper.batchInsertGoodsDetail(result);
         long stop = System.currentTimeMillis();
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Initializing table [ofc_goods_details_info] ID finished. Elapsed time ("+(stop - start)+")");
 
@@ -80,26 +82,30 @@ public class InitUUIDTask implements CommandLineRunner {
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Begin initializing table [ofc_order_status] ID...");
         long start = System.currentTimeMillis();
         List<OfcOrderStatus> orderStatus = orderStatusService.selectAll();
-        List<OfcOrderStatus> result = new ArrayList<>();
+//        List<OfcOrderStatus> result = new ArrayList<>();
+        int i = 1;
         for (OfcOrderStatus status : orderStatus) {
             String id = UUID.randomUUID().toString().replace("-", "");
             status.setId(id);
-            result.add(status);
+//            result.add(status);
+            status.setCreationTime(status.getLastedOperTime());
+            ofcOrderStatusMapper.batchInsertOrderStatusId(status);
+            LOGGER.info(i+"");
+            i++;
         }
-        ofcOrderStatusMapper.batchInsertOrderStatusId(result);
         long stop = System.currentTimeMillis();
         LOGGER.info(">>>>>>>>>>>>>>>>>>> Initializing table [ofc_order_status] ID finished. Elapsed time ("+(stop - start)+")");
     }
 
     @Override
     public void run(String... strings) throws Exception {
-        if (!isStarted.get()) {
-            LOGGER.info("==========================================> Initializing starting ...");
-            isStarted.getAndSet(true);
+//        if (!isStarted.get()) {
+//            LOGGER.info("==========================================> Initializing starting ...");
+//            isStarted.getAndSet(true);
 //            initTableGoodsDetailInfoUUID();
 
 //            initTableOrderStatusUUID();
-            LOGGER.info("==========================================> Initializing finished.");
-        }
+//            LOGGER.info("==========================================> Initializing finished.");
+//        }
     }
 }

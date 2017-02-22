@@ -44,5 +44,5 @@ public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
      * @CreateDate    2017/2/10 12:07
      * @return
      */
-    void batchInsertOrderStatusId(@Param(value = "statusList") List<OfcOrderStatus> statusList);
+    void batchInsertOrderStatusId(@Param(value = "status") OfcOrderStatus statusList);
 }

@@ -166,11 +166,9 @@
   </select>
 
   <!-- 批量插入订单状态主键id -->
-  <insert id="batchInsertOrderStatusId" parameterType="java.util.List">
+  <insert id="batchInsertOrderStatusId" parameterType="com.xescm.ofc.domain.OfcOrderStatus">
     INSERT INTO ofc_order_status_copy (id, order_code, order_status, status_desc, lasted_oper_time, notes, operator, creation_time)
     VALUES
-    <foreach collection="statusList" item="status" index="index" separator=",">
       (#{status.id}, #{status.orderCode}, #{status.orderStatus}, #{status.statusDesc}, #{status.lastedOperTime}, #{status.notes}, #{status.operator}, #{status.creationTime})
-    </foreach>
   </insert>
 </mapper>
