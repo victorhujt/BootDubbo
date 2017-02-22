@@ -363,14 +363,33 @@ public class OfcJumpontroller extends BaseController{
      * 跳转运营中心→入库开单
      * @return
      */
-    @RequestMapping(value = "/ofc/orderStorageIn")
-    public ModelAndView orderStorageIn(Model model) {
-        ModelAndView modelAndView = new ModelAndView("order_storage_in");
+    @RequestMapping(value = "/ofc/orderStorageOut")
+    public ModelAndView orderStorageOut(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out");
         logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
         model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
         setDefaultModel(model);
         return modelAndView;
     }
+
+    @RequestMapping(value = "/ofc/orderStorageOutManager")
+    public ModelAndView orderStorageOutManager(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out_manager");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageOutEdit")
+    public ModelAndView orderStorageOutEdit(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out_edit");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageOutDetails")
+    public ModelAndView orderStorageOutDetails(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out_details");
+        return modelAndView;
+    }
+
 
     @RequestMapping(value = "/ofc/orderStorageInManager")
     public ModelAndView orderStorageInManager(Model model) {
@@ -378,11 +397,23 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
-    @RequestMapping(value = "/ofc/orderStorageInDetail")
-    public ModelAndView orderStorageInDetail(Model model) {
-        ModelAndView modelAndView = new ModelAndView("order_storage_in_Detail");
+    @RequestMapping(value = "/ofc/orderStorageInEdit")
+    public ModelAndView orderStorageInEdit(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in_edit");
         return modelAndView;
     }
+
+    @RequestMapping(value = "/ofc/orderStorageInDetails")
+    public ModelAndView orderStorageInDetail(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in_details");
+        return modelAndView;
+    }
+
+
+
+
+
+
 
     /**
      * 运营中心--跳转导入模板配置

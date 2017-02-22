@@ -1,4 +1,3 @@
-<!--suppress ALL -->
 <head>
     <style lang="css">
         .block {
@@ -7,7 +6,7 @@
     </style>
 </head>
 <body>
-    <div id="app">
+<div id="app">
     <div class="list-mian-01">
         <el-dialog title="选择客户" v-model="chosenCus" size="small">
             <el-form :model="chosenCusForm">
@@ -15,7 +14,7 @@
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth">
-                  <el-button type="primary" @click="selectCustomer">查询</el-button>
+                    <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
 
@@ -34,96 +33,96 @@
                 <el-button type="primary" @click="setCurrentCustInfo(currentCustomerRow)">确 定</el-button>
             </div>
         </el-dialog>
-      <div class="xe-pageHeader">
-        入库单管理
-      </div>
+        <div class="xe-pageHeader">
+            入库单管理
+        </div>
         <el-form label-width="100px">
-          <div class="xe-block">
-            <el-form-item label="订单日期"  class="xe-col-3">
-              <el-date-picker
-                     style="width:114px;"
-                      v-model="beginDate"
-                      type="date"
-                      placeholder="选择起始日期">
-              </el-date-picker>
-              <label for="" style="width:15px;">至</label>
-              <el-date-picker
-                      style="width:114px;"
-                      v-model="endDate"
-                      type="date"
-                      placeholder="选择结束日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="订单编号" class="xe-col-3">
-              <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item label="客户订单编号" class="xe-col-3">
-              <el-input v-model="customerOrderCode" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="客户名称" class="xe-col-3">
-              <el-input
-                      placeholder="请选择"
-                      icon="search"
-                      v-model="customerName"
-                      @click="chosenCus = true">
-              </el-input>
-            </el-form-item>
-            <el-form-item label="仓库名称" class="xe-col-3">
-              <el-select v-model="wareHouseName" placeholder="请选择">
-                <el-option
-                        v-for="item in wareHouseOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="业务名称" class="xe-col-3">
-              <el-select v-model="businessType" placeholder="请选择">
-                <el-option
-                        v-for="item in businessTypeOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="大区名称" class="xe-col-3">
-              <el-select v-model="areaName" placeholder="请选择">
-                <el-option
-                        v-for="item in areaNameOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="基地名称" class="xe-col-3">
-              <el-select v-model="baseName" placeholder="请选择">
-                <el-option
-                        v-for="item in baseNameOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="订单状态" class="xe-col-3">
-              <el-select v-model="orderStatus" placeholder="请选择">
-                <el-option
-                        v-for="item in orderStatusOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="" class="xe-col-3">
-              <el-button type="primary" @click="selectOrder">筛选</el-button>
-              <el-button type="primary" @click="resetCondition">重置</el-button>
-            </el-form-item>
-          </div>
+            <div class="xe-block">
+                <el-form-item label="订单日期"  class="xe-col-3">
+                    <el-date-picker
+                            style="width:114px;"
+                            v-model="beginDate"
+                            type="date"
+                            placeholder="选择起始日期">
+                    </el-date-picker>
+                    <label for="" style="width:15px;">至</label>
+                    <el-date-picker
+                            style="width:114px;"
+                            v-model="endDate"
+                            type="date"
+                            placeholder="选择结束日期">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="订单编号" class="xe-col-3">
+                    <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="客户订单编号" class="xe-col-3">
+                    <el-input v-model="customerOrderCode" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="客户名称" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="customerName"
+                            @click="chosenCus = true">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="仓库名称" class="xe-col-3">
+                    <el-select v-model="wareHouseName" placeholder="请选择">
+                        <el-option
+                                v-for="item in wareHouseOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="业务名称" class="xe-col-3">
+                    <el-select v-model="businessType" placeholder="请选择">
+                        <el-option
+                                v-for="item in businessTypeOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="大区名称" class="xe-col-3">
+                    <el-select v-model="areaName" placeholder="请选择">
+                        <el-option
+                                v-for="item in areaNameOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="基地名称" class="xe-col-3">
+                    <el-select v-model="baseName" placeholder="请选择">
+                        <el-option
+                                v-for="item in baseNameOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="订单状态" class="xe-col-3">
+                    <el-select v-model="orderStatus" placeholder="请选择">
+                        <el-option
+                                v-for="item in orderStatusOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="" class="xe-col-3">
+                    <el-button type="primary" @click="selectOrder">筛选</el-button>
+                    <el-button type="primary" @click="resetCondition">重置</el-button>
+                </el-form-item>
+            </div>
 
         </el-form>
 
@@ -198,28 +197,21 @@
             chosenCusForm: {
                 name: ''
             },
-            businessTypeOptions: [
-                {
-            value: '620',
-            label: '采购入库'
+            businessTypeOptions: [{
+                value: '610',
+                label: '销售出库'
             }, {
-            value: '621',
-            label: '调拨入库'
+                value: '611',
+                label: '调拨出库'
             }, {
-            value: '622',
-            label: '退货入库'
+                value: '612',
+                label: '报损出库'
             }, {
-            value: '623',
-            label: '加工入库'
-         }, {
-            value: '624',
-            label: '盘盈入库'
+                value: '613',
+                label: '其它出库'
             }, {
-            value: '625',
-            label: '流通入库'
-            }, {
-            value: '626',
-            label: '其他入库'
+                value: '614',
+                label: '分拨出库'
             }],
             areaNameOptions:[],
             multipleSelection: [],
@@ -307,7 +299,7 @@
             orderDetails:function () {
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
-                    var url = "/ofc/orderStorageInDetails/"+"?orderCode="+order.orderCode;
+                    var url = "/ofc/orderStorageOutDetails/"+"?orderCode="+order.orderCode;
                     var html = window.location.href;
                     var index = html.indexOf("/index#");
                     window.open(html.substring(0,index) + "/index#" + url);
@@ -391,42 +383,42 @@
                         alert("只有处于待审核状态才可以进行编辑");
                         return;
                     }
-                    var url = "/ofc/orderStorageInEdit/"+"?orderCode="+order.orderCode;
+                    var url = "/ofc/orderStorageOutEdit/"+"?orderCode="+order.orderCode;
                     var html = window.location.href;
                     var index = html.indexOf("/index#");
                     window.open(html.substring(0,index) + "/index#" + url);
                 }
             },
             deleteOrder:function(){
-                    if(this.multipleSelection.length<1){
-                        alert("请至少选中一行");
-                        return false;
+                if(this.multipleSelection.length<1){
+                    alert("请至少选中一行");
+                    return false;
+                }
+                var flag=true;
+                for(var i=0;i<this.multipleSelection.length;i++){
+                    var order=this.multipleSelection[i];
+                    var vueObj=this;
+                    if(order.orderStatusName!="待审核"){
+                        alert("只有处于待审核状态才可以删除");
+                        return;
                     }
-                    var flag=true;
-                    for(var i=0;i<this.multipleSelection.length;i++){
-                        var order=this.multipleSelection[i];
-                        var vueObj=this;
-                        if(order.orderStatusName!="待审核"){
-                            alert("只有处于待审核状态才可以删除");
+                    CommonClient.syncpost(sys.rootPath + "/ofc/orderDeleteOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
+                        if(result==undefined||result==null){
+                            alert("订单删除失败！");
+                            flag=false;
+                            return;
+                        }else if(result.code==200){
+                            vueObj.selectOrder();
+                        }else{
+                            flag=false;
+                            alert(result.message);
                             return;
                         }
-                        CommonClient.syncpost(sys.rootPath + "/ofc/orderDeleteOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
-                            if(result==undefined||result==null){
-                                alert("订单删除失败！");
-                                flag=false;
-                                return;
-                            }else if(result.code==200){
-                                vueObj.selectOrder();
-                            }else{
-                                flag=false;
-                                alert(result.message);
-                                return;
-                            }
-                        });
-                    }
-                    if(flag){
-                        alert("订单删除成功！");
-                    }
+                    });
+                }
+                if(flag){
+                    alert("订单删除成功！");
+                }
 
 
 
@@ -451,17 +443,17 @@
                 }
             },
             resetCondition:function(){
-                    this.beginDate=new Date()- 3600 * 1000 * 24 * 2;
-                    this.endDate=new Date();
-                    this.orderCode="";
-                    this.customerOrderCode="";
-                    this.customerName="";
-                    this.customerCode="";
-                    this.orderStatus="";
-                    this.businessType="";
-                    this.areaName="";
-                    this.baseName="";
-                    this.wareHouseName="";
+                this.beginDate=new Date()- 3600 * 1000 * 24 * 2;
+                this.endDate=new Date();
+                this.orderCode="";
+                this.customerOrderCode="";
+                this.customerName="";
+                this.customerCode="";
+                this.orderStatus="";
+                this.businessType="";
+                this.areaName="";
+                this.baseName="";
+                this.wareHouseName="";
 
             },
 
@@ -562,7 +554,6 @@
                 }
             },
             selectOrder:function(){
-                debugger;
                 var param={};
                 var vueObj=this;
                 vueObj.orderData=[];
@@ -599,11 +590,12 @@
                 param.baseSerialNo = StringUtil.trim(this.baseName);
                 param.custOrderCode=StringUtil.trim(this.customerOrderCode);
                 param.warehouseCode=StringUtil.trim(this.wareHouseName);
-               // param.tag="in";
-                CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param,function (result) {
+                var tag="out";
+                CommonClient.post(sys.rootPath + "/ofc/queryOrderStorageDataOper", {"tag":tag},function (result) {
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
                         layer.msg("暂时未查询到相关订单信息！");
                     } else if (result.code == 200) {
+                        var i=0;
                         $.each(result.result.list, function (index, item) {
                             var order={};
                             order.customerName=item.custName;

@@ -5,6 +5,7 @@ import com.xescm.ofc.edas.model.dto.dpc.req.TranPlanOfcReqDto;
 import com.xescm.ofc.edas.service.OfcMobileOrderEdasService;
 import com.xescm.ofc.edas.service.OfcTranPlanDpcEdasServie;
 import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,8 @@ public class CreateOrderApiTest {
 
     @Autowired
     private OfcTranPlanDpcEdasServie ofcTranPlanDpcEdasServie;
+    @Autowired
+   private  OfcOrderManageService ofcOrderManageService;
 
 
     @Test
@@ -160,4 +163,14 @@ public class CreateOrderApiTest {
         TranPlanOfcReqDto TranPlanOfcReqDto=new TranPlanOfcReqDto();
         ofcTranPlanDpcEdasServie.tranPlanSel(TranPlanOfcReqDto);
     }
+
+//    @Test
+//    public void audit(){
+//
+//        ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation,goodsDetailsList,ofcDistributionBasicInfo,ofcWarehouseInformation
+//                ,null,ofcOrderStatus.getOrderStatus(),"review",authResDtoByToken);
+//    }
+
+
+
 }

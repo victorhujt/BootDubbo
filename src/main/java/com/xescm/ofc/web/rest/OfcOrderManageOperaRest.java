@@ -13,6 +13,7 @@ import com.xescm.ofc.enums.PlanEnum;
 import com.xescm.ofc.enums.ResourceEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
@@ -70,6 +71,24 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @param form
      * @return Object
      */
+    @RequestMapping(value = "/queryOrderStorageDataOper", method = {RequestMethod.POST})
+    @ResponseBody
+    public Object queryOrderStorageDataOper(Page<OrderOperForm> page, OrderStorageOperForm form, String tag) {
+        try {
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            AuthResDto authResDto = getAuthResDtoByToken();
+            List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderStorageDataOper(authResDto, form,tag);
+            PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
+        } catch (BusinessException ex) {
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
     @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
@@ -87,6 +106,14 @@ public class OfcOrderManageOperaRest extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
+
+
+
+
+
+
+
+
 
     /**
      * 审核与反审核订单

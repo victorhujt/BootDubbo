@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>入库开单</title>
+    <title>出库开单</title>
 </head>
 <body>
 <div id="app">
@@ -12,7 +12,7 @@
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth">
-                  <el-button type="primary" @click="selectCustomer">筛选</el-button>
+                    <el-button type="primary" @click="selectCustomer">筛选</el-button>
                 </el-form-item>
             </el-form>
 
@@ -32,7 +32,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="发货方联系人" v-model="chosenSend" size="small">
+        <el-dialog title="收货方联系人" v-model="chosenSend" size="small">
             <el-form :model="consignorForm">
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="consignorForm.consignorName" auto-complete="off"></el-input>
@@ -54,10 +54,10 @@
                 <el-table-column property="consignorContactName" label="联系人"></el-table-column>
                 <el-table-column property="consignorPhoneNumber" label="联系电话"></el-table-column>
                 <el-table-column property="consignorAddress" label="地址"></el-table-column>
-                <el-table-column property="consignorCode" label="发货方编码"></el-table-column>
-                <el-table-column property="consignorType" label="发货方类型"></el-table-column>
-                <el-table-column property="consignorContactCode" label="发货方联系人编码"></el-table-column>
-                <el-table-column property="consignorAddressCode" label="发货方地址编码"></el-table-column>
+                <el-table-column property="consignorCode" label="收货方编码"></el-table-column>
+                <el-table-column property="consignorType" label="收货方类型"></el-table-column>
+                <el-table-column property="consignorContactCode" label="收货方联系人编码"></el-table-column>
+                <el-table-column property="consignorAddressCode" label="收货方地址编码"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleConsignorSizeChange" @current-change="handleConsignorCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="consignorPageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalConsignor">
             </el-pagination>
@@ -133,228 +133,227 @@
                 <el-button type="primary" @click="setCurrentGoodsInfo(goodCurrentRow)">确 定</el-button>
             </div>
         </el-dialog>
-      <div class="xe-pageHeader">
-        基本信息
-      </div>
-      <el-form label-width="100px">
+        <div class="xe-pageHeader">
+            基本信息
+        </div>
+        <el-form label-width="100px">
             <div class="xe-block">
-              <el-form-item label="订单日期" required class="xe-col-3">
-                <el-form-item>
-                  <el-date-picker type="date" v-model="orderTime" :picker-options="pickerOptions"></el-date-picker>
+                <el-form-item label="订单日期" required class="xe-col-3">
+                    <el-form-item>
+                        <el-date-picker type="date" v-model="orderTime" :picker-options="pickerOptions"></el-date-picker>
+                    </el-form-item>
                 </el-form-item>
-              </el-form-item>
-              <div  v-if="seenOrderDateNotNull">订单日期不能为空</div>
-              <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
-                <el-input v-model="merchandiser" placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="客户名称" class="xe-col-3">
-                <el-input
-                        placeholder="请选择"
-                        icon="search"
-                        v-model="customerName"
-                        @click="chosenCus = true" >
-                </el-input>
-              </el-form-item>
+                <div  v-if="seenOrderDateNotNull">订单日期不能为空</div>
+                <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
+                    <el-input v-model="merchandiser" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="客户名称" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="customerName"
+                            @click="chosenCus = true" >
+                    </el-input>
+                </el-form-item>
             </div>
             <div class="xe-block">
-              <el-form-item label="仓库名称" prop="wareHouse" class="xe-col-3">
-                <el-select v-model="wareHouse" placeholder="请选择">
-                  <el-option
-                          v-for="item in wareHouseOptions"
-                          :label="item.label"
-                          :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="业务类型" prop="serviceType" class="xe-col-3">
-                <el-select v-model="serviceType" placeholder="请选择">
-                  <el-option
-                          v-for="item in serviceTypeOptions"
-                          :label="item.label"
-                          :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="客户订单号" prop="customerOrderNum" class="xe-col-3">
-                <el-input v-model="customerOrderNum" placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-block">
-              <el-form-item label="备注" prop="notes" class="xe-col-3">
-                <el-input type="textarea" placeholder="请输入内容" v-model="notes" ></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-              供应商信息
-            </div>
-            <div class="xe-block">
-              <el-form-item label="供应商名称" class="xe-col-3">
-                <el-input
-                        placeholder="请选择"
-                        icon="search"
-                        v-model="supplierName"
-                        v-bind:disabled = "isDisabled"
-                        @click="chosenSupplier = true">
-                </el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-              运输信息
-            </div>
-            <div class="xe-block">
-              <el-form-item label="预计入库时间" required class="xe-col-3">
-                <el-date-picker
-                        v-model="arriveTime"
-                        align="right"
-                        type="date"
-                        placeholder="选择日期"
-                        :picker-options="pickerOptions1">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item label="是否提供运输">
-                <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
-              </el-form-item>
-            </div>
-            <div class="xe-block">
-              <el-form-item label="车牌号" class="xe-col-3">
-                <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="司机姓名" class="xe-col-3">
-                <el-input v-model="driverName"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="联系电话" class="xe-col-3">
-                <el-input v-model="driverContactNumber"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-              发货方信息
-            </div>
-            <div class="xe-block">
-              <el-form-item label="名称" class="xe-col-3">
-                <el-input
-                        placeholder="请选择"
-                        icon="search"
-                        v-model="consignorName"
-                        v-bind:disabled = "isDisabled"
-                        @click="chosenSend = true">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="联系人" class="xe-col-3">
-                <el-input v-model="consignorContactName" placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="联系电话" class="xe-col-3">
-                <el-input v-model="consignorPhoneNumber" placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-block">
-              <el-form-item label="地址选择" class="xe-col-3">
-                <el-input v-model="consignorAddress" placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-              货品信息
-            </div>
-          <div style="float:right;margin-bottom:15px;">
-            <el-button type="primary" @click="add">添加货品</el-button>
-          </div>
-            <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
-              <el-table-column property="goodsType" label="货品种类">
-                <template scope="scope">
-                    <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsCategory(scope.row)">
+                <el-form-item label="仓库名称" prop="wareHouse" class="xe-col-3">
+                    <el-select v-model="wareHouse" placeholder="请选择">
                         <el-option
-                                v-for="item in goodsMsgOptions"
+                                v-for="item in wareHouseOptions"
                                 :label="item.label"
-                                :value="item.value"
-                                style="width:100px;">
+                                :value="item.value">
                         </el-option>
                     </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column property="goodsCategory" label="货品类别">
-                <template scope="scope">
-                    <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择">
+                </el-form-item>
+                <el-form-item label="业务类型" prop="serviceType" class="xe-col-3">
+                    <el-select v-model="serviceType" placeholder="请选择">
                         <el-option
-                                v-for="subitem in goodsCategoryOptions"
-                                :label="subitem.label"
-                                :value="subitem.value"
-                                style="width:100px;">
+                                v-for="item in serviceTypeOptions"
+                                :label="item.label"
+                                :value="item.value">
                         </el-option>
                     </el-select>
-                </template>
-              </el-table-column>
-              <el-table-column property="goodsCode" label="货品编码">
-                <template scope="scope">
-                  <el-input
-                          placeholder="请选择"
-                          icon="search"
-                  <#--v-model="scope.row.goodsCode"-->
-                          v-model="scope.row.goodsCode"
-                          v-bind:disabled = "isDisabled"
-                          @click="openGoodsList(scope.row)">
-                  </el-input>
-                </template>
-              </el-table-column>
-              <el-table-column property="goodsName" label="货品名称">
-                <template scope="scope">
-                  <el-input v-model="scope.row.goodsName" placeholder="请输入内容"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column property="goodsSpec" label="规格">
-                <template scope="scope">
-                  <el-input v-model="scope.row.goodsSpec" placeholder="请输入内容"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column property="unit" label="单位">
-                <template scope="scope">
-                  <el-input v-model="scope.row.unit" placeholder="请输入内容"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column property="quantity" label="入库数量">
-                <template scope="scope">
-                  <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column property="unitPrice" label="单价">
-                <template scope="scope">
-                  <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column property="productionBatch" label="批次号">
-                <template scope="scope">
-                  <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column property="productionTime" label="生产日期">
-                <template scope="scope">
-                  <el-date-picker
-                          v-model="scope.row.productionTime"
-                          align="right"
-                          type="date"
-                          placeholder="选择日期"
-                          :picker-options="pickerOptions1">
-                  </el-date-picker>
-                </template>
-              </el-table-column>
-              <el-table-column property="invalidTime" label="失效日期">
-                <template scope="scope">
-                  <el-date-picker
-                          v-model="scope.row.invalidTime"
-                          align="right"
-                          type="date"
-                          placeholder="选择日期"
-                          :picker-options="pickerOptions1">
-                  </el-date-picker>
-                </template>
-              </el-table-column>
-              <el-table-column property="goodsOperation" label="操作">
-                <template scope="scope">
-                  <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
-                </template>
-              </el-table-column>
+                </el-form-item>
+                <el-form-item label="客户订单号" prop="customerOrderNum" class="xe-col-3">
+                    <el-input v-model="customerOrderNum" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="备注" prop="notes" class="xe-col-3">
+                    <el-input type="textarea" placeholder="请输入内容" v-model="notes" ></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-pageHeader">
+                供应商信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="供应商名称" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="supplierName"
+                            v-bind:disabled = "isDisabled"
+                            @click="chosenSupplier = true">
+                    </el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-pageHeader">
+                运输信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="预计出库时间" required class="xe-col-3">
+                    <el-date-picker
+                            v-model="shipmentTime"
+                            align="right"
+                            type="date"
+                            placeholder="选择日期"
+                            :picker-options="pickerOptions1">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="是否提供运输">
+                    <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="车牌号" class="xe-col-3">
+                    <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="司机姓名" class="xe-col-3">
+                    <el-input v-model="driverName"  placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" class="xe-col-3">
+                    <el-input v-model="driverContactNumber"  placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-pageHeader">
+                收货方信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="名称" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="consignorName"
+                            v-bind:disabled = "isDisabled"
+                            @click="chosenSend = true">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="联系人" class="xe-col-3">
+                    <el-input v-model="consignorContactName" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" class="xe-col-3">
+                    <el-input v-model="consignorPhoneNumber" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="地址选择" class="xe-col-3">
+                    <el-input v-model="consignorAddress" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-pageHeader">
+                货品信息
+            </div>
+            <div style="float:right;margin-bottom:15px;">
+                <el-button type="primary" @click="add">添加货品</el-button>
+            </div>
+            <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
+                <el-table-column property="goodsType" label="货品种类">
+                    <template scope="scope">
+                        <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsCategory(scope.row)">
+                            <el-option
+                                    v-for="item in goodsMsgOptions"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    style="width:100px;">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsCategory" label="货品类别">
+                    <template scope="scope">
+                        <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择">
+                            <el-option
+                                    v-for="subitem in goodsCategoryOptions"
+                                    :label="subitem.label"
+                                    :value="subitem.value"
+                                    style="width:100px;">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsCode" label="货品编码">
+                    <template scope="scope">
+                        <el-input
+                                placeholder="请选择"
+                                icon="search"
+                                v-model="scope.row.goodsCode"
+                                v-bind:disabled = "isDisabled"
+                                @click="openGoodsList(scope.row)">
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsName" label="货品名称">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsName" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsSpec" label="规格">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsSpec" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unit" label="单位">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unit" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="quantity" label="出库数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unitPrice" label="单价">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionBatch" label="批次号">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionTime" label="生产日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.productionTime"
+                                align="right"
+                                type="date"
+                                placeholder="选择日期"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="invalidTime" label="失效日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.invalidTime"
+                                align="right"
+                                type="date"
+                                placeholder="选择日期"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsOperation" label="操作">
+                    <template scope="scope">
+                        <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
-          <el-button type="primary" @click="saveStorage" style="float:right">下单</el-button>
-      </el-form>
-</div>
+            <el-button type="primary" @click="saveStorage" style="float:right">下单</el-button>
+        </el-form>
+    </div>
 </body>
 <script>
     new Vue({
@@ -412,26 +411,20 @@
                 currentRowData : '',
                 wareHouseOptions:[],
                 serviceTypeOptions: [{
-                    value: '620',
-                    label: '采购入库'
+                    value: '610',
+                    label: '销售出库'
                 }, {
-                    value: '621',
-                    label: '调拨入库'
+                    value: '611',
+                    label: '调拨出库'
                 }, {
-                    value: '622',
-                    label: '退货入库'
+                    value: '612',
+                    label: '报损出库'
                 }, {
-                    value: '623',
-                    label: '加工入库'
+                    value: '613',
+                    label: '其它出库'
                 }, {
-                    value: '624',
-                    label: '盘盈入库'
-                }, {
-                    value: '625',
-                    label: '流通入库'
-                }, {
-                    value: '626',
-                    label: '其他入库'
+                    value: '614',
+                    label: '分拨出库'
                 }],
                 goodsMsgOptions: [],
                 pickerOptions1: {
@@ -482,7 +475,7 @@
                 wareHouse:'',
                 merchandiser:'${merchandiser!}',
                 orderTime: new Date(),
-                arriveTime: '',
+                shipmentTime: '',
                 isNeedTransport:false,
                 plateNumber:'',
                 driverName:'',
@@ -756,7 +749,7 @@
                 cscContantAndCompanyDto = JSON.stringify(cscContantAndCompanyDto);
                 CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":cscContantAndCompanyDto,"customerCode":customerCode}, function(result) {
                     if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
-                        layer.msg("暂时未查询到发货方信息！！");
+                        layer.msg("暂时未查询到收货方信息！！");
                     } else if (result.code == 200) {
                         $.each(result.result.list,function (index,CscContantAndCompanyDto) {
                             var consignor={};
@@ -899,11 +892,12 @@
                                 });
                                 vueObj.total=result.result.total;
                             } else if (result.code == 403) {
-                                 alert("没有权限")
-                             }
+                                alert("没有权限")
+                            }
                         },"json");
             },
             saveStorage:function(){
+                debugger;
                 if(!this.orderTime){
                     this.seenOrderDateNotNull=true;
                     return;
@@ -929,6 +923,14 @@
                     alert('业务类型不能为空!');
                     return;
                 }
+
+                if(this.serviceType=="614"){
+                    if(!this.supplierName){
+                        alert('业务类型为分拨出库时，供应商必须选择!');
+                        return;
+                    }
+                }
+
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -944,7 +946,7 @@
                 if(this.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
                     if(!this.consignorName){
-                        alert("提供运输时,发货方不能为空，请选择发货方");
+                        alert("提供运输时,收货方不能为空，请选择收货方");
                         return;
                     }
                 }else{
@@ -970,51 +972,67 @@
                 cscSupplierInfoDtoStr.supportCode==this.supplierCode;
                 ofcOrderDTOStr.warehouseName=this.wareHouseObj.warehouseName;//仓库名称
                 ofcOrderDTOStr.warehouseCode=this.wareHouseObj.warehouseCode;//仓库编码
-                if(this.arriveTime){
-                ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
+                if(this.shipmentTime){
+                    ofcOrderDTOStr.shipmentTime=this.formatDate(this.shipmentTime);
                 }
                 ofcOrderDTOStr.plateNumber=this.plateNumber;
                 ofcOrderDTOStr.driverName=this.driverName;
                 ofcOrderDTOStr.contactNumber=this.driverContactNumber;
 
                 //发货方信息
-                ofcOrderDTOStr.consignorName=this.consignorName;
-                ofcOrderDTOStr.consignorCode=this.consignorCode;
-                ofcOrderDTOStr.consignorType=this.consignorType;
-                ofcOrderDTOStr.consignorContactCode=this.consignorContactCode;
-                ofcOrderDTOStr.consignorContactName=this.consignorContactName;
-                ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
+               // ofcOrderDTOStr.consignorName=this.consignorName;
+                ofcOrderDTOStr.consignorName=this.wareHouseObj.warehouseName;
+                //ofcOrderDTOStr.consignorCode=this.consignorCode;
+                ofcOrderDTOStr.consignorCode=this.wareHouseObj.warehouseCode;
+                //ofcOrderDTOStr.consignorType=this.consignorType;
+                //ofcOrderDTOStr.consignorContactCode=this.consignorContactCode;
+                //ofcOrderDTOStr.consignorContactName=this.consignorContactName;
+                ofcOrderDTOStr.consignorContactName=this.wareHouseObj.contactName;
+                //ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
+                ofcOrderDTOStr.consignorContactPhone=this.wareHouseObj.phone;
 
                 //收货方信息(仓库的信息)
-                ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
-                ofcOrderDTOStr.consigneeCode=this.wareHouseObj.warehouseCode;
-                ofcOrderDTOStr.consigneeContactName=this.wareHouseObj.contactName;
-                ofcOrderDTOStr.consigneeContactPhone=this.wareHouseObj.phone;
+                //ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
+               // ofcOrderDTOStr.consigneeCode=this.wareHouseObj.warehouseCode;
+               // ofcOrderDTOStr.consigneeContactName=this.wareHouseObj.contactName;
+               // ofcOrderDTOStr.consigneeContactPhone=this.wareHouseObj.phone;
+                ofcOrderDTOStr.consigneeName=this.consignorName;
+                ofcOrderDTOStr.consigneeCode=this.consignorCode;
+                ofcOrderDTOStr.consigneeContactName=this.consignorContactName;
+                ofcOrderDTOStr.consigneeContactPhone=this.consignorPhoneNumber;
+                ofcOrderDTOStr.consigneeType=this.consignorType;
+                ofcOrderDTOStr.consigneeContactCode=this.consigneeContactCode;
 
-                cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStr();
-                cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(this.wareHouseObj);
+                cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsignorStr();
+                cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsigneeStr(this.wareHouseObj);
+
                 //出发地
-                ofcOrderDTOStr.departurePlace=this.consignorAddress;
-                var consignorAddressNameMessage =this.consignorAddress.split(',');
-                ofcOrderDTOStr.departureProvince=consignorAddressNameMessage[0];
-                ofcOrderDTOStr.departureCity=consignorAddressNameMessage[1];
-                ofcOrderDTOStr.departureDistrict=consignorAddressNameMessage[2];
-                if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
-                    ofcOrderDTOStr.departureTowns=consignorAddressNameMessage[3];
-                }
-                ofcOrderDTOStr.departurePlaceCode=this.consignorAddressCode;
-                ofcOrderDTOStr.destinationCode=this.wareHouseObj.provinceCode+","+this.wareHouseObj.cityCode+","+this.wareHouseObj.areaCode;
-                if(this.wareHouseObj.streetCode){
-                    ofcOrderDTOStr.destinationCode= ofcOrderDTOStr.destinationCode+","+this.wareHouseObj.streetCode;
-                }
+               // ofcOrderDTOStr.departurePlace=this.consignorAddress;
+                ofcOrderDTOStr.departurePlace=this.wareHouseObj.detailAddress;
 
-                //目的地
-                ofcOrderDTOStr.destination=this.wareHouseObj.detailAddress;
-                ofcOrderDTOStr.destinationProvince=this.wareHouseObj.province;
-                ofcOrderDTOStr.destinationCity=this.wareHouseObj.city;
-                ofcOrderDTOStr.destinationDistrict=this.wareHouseObj.area;
+                var consignorAddressNameMessage =this.consignorAddress.split(',');
+                //ofcOrderDTOStr.departureProvince=consignorAddressNameMessage[0];
+                ofcOrderDTOStr.departureProvince=this.wareHouseObj.province;
+                //ofcOrderDTOStr.departureCity=consignorAddressNameMessage[1];
+                ofcOrderDTOStr.departureCity=this.wareHouseObj.city;
+               // ofcOrderDTOStr.departureDistrict=consignorAddressNameMessage[2];
+                ofcOrderDTOStr.departureDistrict=this.wareHouseObj.area;
                 if(!StringUtil.isEmpty(this.wareHouseObj.street)){
-                    ofcOrderDTOStr.destinationTowns=this.wareHouseObj.street;
+                    ofcOrderDTOStr.departureTowns=this.wareHouseObj.street;
+
+                }
+                ofcOrderDTOStr.destinationCode=this.consignorAddressCode;
+                ofcOrderDTOStr.departurePlaceCode=this.wareHouseObj.provinceCode+","+this.wareHouseObj.cityCode+","+this.wareHouseObj.areaCode;
+                if(this.wareHouseObj.streetCode){
+                    ofcOrderDTOStr.departurePlaceCode= ofcOrderDTOStr.departurePlaceCode+","+this.wareHouseObj.streetCode;
+                }
+                //目的地
+                ofcOrderDTOStr.destination=this.consignorAddress;
+                ofcOrderDTOStr.destinationProvince=consignorAddressNameMessage[0];
+                ofcOrderDTOStr.destinationCity=consignorAddressNameMessage[1];
+                ofcOrderDTOStr.destinationDistrict=consignorAddressNameMessage[2];
+                if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
+                    ofcOrderDTOStr.destinationTowns=consignorAddressNameMessage[3];
                 }
 
                 var goodsTable =this.goodsData;
@@ -1029,18 +1047,18 @@
                     var good=goodsTable[i];
 
                     if(good.unitPrice!=""){
-                            if(isNaN(good.unitPrice)){
-                                alert("货品单价必须为数字");
-                                return;
-                            }
-                            if(good.unitPrice>99999.99||good.unitPrice<0){
-                                alert("货品单价不能大于99999.99或小于0");
-                                return;
-                            }
-                            if(isNaN(good.quantity)){
-                                alert("货品数量必须为数字");
-                                return;
-                            }
+                        if(isNaN(good.unitPrice)){
+                            alert("货品单价必须为数字");
+                            return;
+                        }
+                        if(good.unitPrice>99999.99||good.unitPrice<0){
+                            alert("货品单价不能大于99999.99或小于0");
+                            return;
+                        }
+                        if(isNaN(good.quantity)){
+                            alert("货品数量必须为数字");
+                            return;
+                        }
                     }
                     if(good.quantity>99999.999||good.quantity<0||!good.quantity||good.quantity==0){
                         if(!good.quantity){
@@ -1067,7 +1085,7 @@
                             return;
                         }
                         //good.productionTime=this.formatDate(good.productionTime);
-                       // good.invalidTime=this.formatDate(good.invalidTime);
+                        // good.invalidTime=this.formatDate(good.invalidTime);
 
                     }
                     goodDetail.push(good);

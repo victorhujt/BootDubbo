@@ -3,9 +3,11 @@ package com.xescm.ofc.edas.service.impl;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
+import com.xescm.ofc.edas.model.dto.whc.FeedBackInventoryDto;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.OfcOrderNewstatusService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -25,6 +27,9 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
 
     @Autowired
     private CreateOrderService createOrderService;
+
+    @Autowired
+    private OfcOrderNewstatusService OfcOrderNewstatusService;
 
     @Override
     public Wrapper<List<QueryOrderStatusDto>> queryOrderStatus(QueryOrderStatusDto queryOrderStatusDto) {
@@ -50,4 +55,30 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
+
+    /**
+     * 仓储中心反馈异常
+     * @param feedBackInventoryDto
+     * @return
+     */
+    @Override
+    public Wrapper<?> FeedBackInventory(FeedBackInventoryDto feedBackInventoryDto) {
+        try{
+            if(feedBackInventoryDto==null){
+                throw new IllegalArgumentException("反馈库存异常Dto不能为空");
+            }
+            if(StringUtils.isEmpty(feedBackInventoryDto.getOrderCode())){
+                throw new IllegalArgumentException("订单号不能为空");
+            }
+            if(StringUtils.isEmpty(feedBackInventoryDto.getReason())){
+                throw new IllegalArgumentException("异常原因不能为空");
+            }
+            OfcOrderNewstatusService.FeedBackInventory(feedBackInventoryDto);
+
+        }catch (Exception e){
+            WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage() );
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
 }

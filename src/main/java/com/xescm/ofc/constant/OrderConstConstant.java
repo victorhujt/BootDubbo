@@ -30,6 +30,7 @@ public final class OrderConstConstant {
     public static final String IMPLEMENTATIONIN="30";       //执行中
     public static final String HASBEENCOMPLETED="40";       //已完成
     public static final String HASBEENCANCELED="50";       //已取消
+    public static final String ISEXCEPTION="60";       //异常
 
     public static final Integer WAREHOUSEORDERPROVIDETRANS=1;       //仓储订单提供运输
     public static final Integer WAREHOUSEORDERNOTPROVIDETRANS=0;       //仓储订单不提供运输

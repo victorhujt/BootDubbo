@@ -202,6 +202,86 @@
     ORDER BY ofi.order_code DESC
   </select>
 
+
+
+  <!-- 运营-订单管理查询 -->
+  <select id="queryStorageOrderList" resultMap="Order_Search_Oper_Map">
+    SELECT DISTINCT
+    ofi.cust_name,
+    ofi.order_code,
+    ofi.cust_order_code,
+    ofi.order_batch_number,
+    ofi.order_time,
+    ofi.order_type,
+    ofi.business_type,
+    ofi.base_name,
+    ns.order_latest_status as order_status,
+    odbi.consignee_type,
+    odbi.consignee_name,
+    odbi.consignee_contact_name,
+    owi.warehouse_name,
+    ofi.notes,
+    ofi.store_name
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
+    <where>
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND ofi.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND ofi.cust_name = #{form.custName}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND  ns.order_latest_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND ofi.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND ofi.business_type = #{form.businessType}
+      </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+
+    //   AND  ofi.business_type in
+
+    </where>
+    ORDER BY ofi.order_code DESC
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <select id="queryOrderByOrderBatchNumber" resultMap="Order_Search_Oper_Map">
     SELECT DISTINCT
       ofi.order_code,

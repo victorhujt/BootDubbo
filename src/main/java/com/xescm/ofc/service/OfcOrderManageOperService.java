@@ -19,7 +19,10 @@ import java.util.Map;
 
 public interface OfcOrderManageOperService {
 
+
     List<OrderScreenResult> queryOrderOper(OrderOperForm form);
+
+    List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OrderOperForm form, String tag);
 
     /**
      * 查询订单列表

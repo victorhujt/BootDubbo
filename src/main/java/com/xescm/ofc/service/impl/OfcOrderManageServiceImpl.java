@@ -57,6 +57,7 @@ import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.tfc.edas.model.dto.CancelOrderDTO;
 import com.xescm.tfc.edas.service.CancelOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.whc.edas.dto.InventoryDTO;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
@@ -312,10 +313,18 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 throw new BusinessException("该订单需要提供运输,但是不存在配送基本信息");
             }
         }
+        OfcOrderStatus status=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
+        if(status==null){
+            throw new BusinessException("订单号不存在任何状态");
+        }
+
+        List<OfcOrderStatus> statusLog=ofcOrderStatusService.orderStatusScreen(orderCode,"orderCode");
         result.put("ofcFundamentalInformation",ofcFundamentalInformation);
         result.put("ofcGoodsDetailsInfo",goodsDetailsList);
         result.put("ofcWarehouseInformation",ofcWarehouseInformation);
         result.put("ofcDistributionBasicInfo",ofcDistributionBasicInfo);
+        result.put("status",status);
+        result.put("statusLog",statusLog);
         return result;
 
     }
@@ -2834,6 +2843,23 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                 //出库
                 ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
+                //校验出库商品的库存
+                List<InventoryDTO> inventoryGoods=new ArrayList<>();
+                for(OfcGoodsDetailsInfo ofcGoodsDetailsInfo:goodsDetailsList){
+                    InventoryDTO  inventoryDTO=new InventoryDTO();
+                    inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
+                    inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+                    inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
+                    inventoryDTO.setLotatt03(ofcGoodsDetailsInfo.getProductionBatch());
+                    inventoryDTO.setLotatt01(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE1));
+                    inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(),DateUtils.DateFormatType.TYPE1));
+                    inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
+                    inventoryGoods.add(inventoryDTO);
+                }
+                    Wrapper wrapper= whcOrderCancelEdasService.validateStockCount(inventoryGoods);
+                    if(wrapper.getCode()!=Wrapper.SUCCESS_CODE){
+                        throw new BusinessException(wrapper.getMessage());
+                    }
             }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
                 //入库
                 ofOrderDto.setArriveTime(ofcWarehouseInformation.getArriveTime());
