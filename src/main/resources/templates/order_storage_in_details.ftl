@@ -2,9 +2,7 @@
 <html>
 <head>
     <style lang="css">
-        .block {
-            margin: 20px 0;
-        }
+        .borderNone .el-input__inner{border:none;}
     </style>
 </head>
 <body>
@@ -232,13 +230,13 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="xe-pageHeader">
+         <#--   <div class="xe-pageHeader">
                 跟踪信息
-            </div>
+            </div>-->
             <el-table :data="orderStatusData" border highlight-current-row >
-                    <el-table-column property="notes">
+                    <el-table-column property="notes" label="跟踪信息">
                         <template scope="scope">
-                            <el-input v-model="scope.row.notes"></el-input>
+                            <el-input v-model="scope.row.notes" class="borderNone"></el-input>
                         </template>
                     </el-table-column>
             </el-table>

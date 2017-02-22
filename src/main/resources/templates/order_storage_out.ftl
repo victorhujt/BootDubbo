@@ -1115,7 +1115,7 @@
                                 var param=url.split("?")[1].split("=");
                             }
                             if(param[1]=="manager"){
-                                var newurl = "/ofc/orderStorageInManager";
+                                var newurl = "/ofc/orderStorageOutManager";
                                 var html = window.location.href;
                                 var index = html.indexOf("/index#");
                                 window.open(html.substring(0,index) + "/index#" + newurl);
@@ -1183,7 +1183,7 @@
                 return cscContantAndCompanyDtoConsigneeStr;
             },
             formatDate:function(date){
-                return date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate()+" 00:00:00";
+                return date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" 00:00:00";
             },
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;

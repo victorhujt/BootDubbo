@@ -151,6 +151,7 @@
                 <el-table-column property="orderStatusName" label="订单状态"></el-table-column>
                 <el-table-column property="wareHouseName" label="仓库名称"></el-table-column>
                 <el-table-column property="baseName" label="基地名称"></el-table-column>
+                <el-table-column property="exceptionReason" label="异常原因"></el-table-column>
                 <el-table-column
                         fixed="right"
                         label="操作"
@@ -371,7 +372,7 @@
 
             },
             addOrder:function(){
-                var url = "/ofc/orderStorageIn/"+"?tag=manager";
+                var url = "/ofc/orderStorageOut/"+"?tag=manager";
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0,index) + "/index#" + url);
@@ -408,7 +409,6 @@
                             flag=false;
                             return;
                         }else if(result.code==200){
-                            vueObj.selectOrder();
                         }else{
                             flag=false;
                             alert(result.message);
@@ -418,6 +418,7 @@
                 }
                 if(flag){
                     alert("订单删除成功！");
+                    vueObj.selectOrder();
                 }
 
 
@@ -475,11 +476,13 @@
                 }
             },
             cancelOrder:function(){
+                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     var vueObj=this;
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
+                            debugger;
                             if (result == undefined || result == null ) {
                                 alert("取消订单出现异常");
                                 return;
@@ -487,7 +490,12 @@
                                 alert(result.message);
                                 vueObj.selectOrder();
                             }else{
-                                alert(result.message);
+                                if(result.message==null){
+                                    alert("订单取消失败");
+                                }else{
+                                    alert(result.message);
+                                }
+
                             }
                         });
                     }else{
@@ -607,6 +615,7 @@
                             order.orderStatusName=vueObj.getOrderStatusName(item.orderStatus);
                             order.wareHouseName=item.warehouseName;
                             order.baseName=item.baseName;
+                            order.exceptionReason=item.exceptionReason;
                             vueObj.orderData.push(order);
                         })
                         vueObj.total=result.result.total;

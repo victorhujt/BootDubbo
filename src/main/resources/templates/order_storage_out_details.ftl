@@ -2,9 +2,7 @@
 <html>
 <head>
     <style lang="css">
-        .block {
-            margin: 20px 0;
-        }
+        .borderNone .el-input__inner{border:none;}
     </style>
 </head>
 <body>
@@ -59,7 +57,7 @@
                 </el-form-item>
                 <el-form-item label="预计到仓时间" class="xe-col-3">
                     <el-date-picker
-                            v-model="arriveTime"
+                            v-model="shipmentTime"
                             align="right"
                             type="date"
                             placeholder="选择日期">
@@ -232,13 +230,13 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="xe-pageHeader">
+           <#-- <div class="xe-pageHeader">
                 跟踪信息
-            </div>
+            </div>-->
             <el-table :data="orderStatusData" border highlight-current-row >
-                <el-table-column property="notes">
+                <el-table-column property="notes" label="跟踪信息">
                     <template scope="scope">
-                        <el-input v-model="scope.row.notes"></el-input>
+                        <el-input v-model="scope.row.notes" class="borderNone"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -287,26 +285,20 @@
                 supplierName:'',
                 wareHouseOptions:[],
                 serviceTypeOptions: [{
-                    value: '620',
-                    label: '采购入库'
+                    value: '610',
+                    label: '销售出库'
                 }, {
-                    value: '621',
-                    label: '调拨入库'
+                    value: '611',
+                    label: '调拨出库'
                 }, {
-                    value: '622',
-                    label: '退货入库'
+                    value: '612',
+                    label: '报损出库'
                 }, {
-                    value: '623',
-                    label: '加工入库'
+                    value: '613',
+                    label: '其它出库'
                 }, {
-                    value: '624',
-                    label: '盘盈入库'
-                }, {
-                    value: '625',
-                    label: '流通入库'
-                }, {
-                    value: '626',
-                    label: '其他入库'
+                    value: '614',
+                    label: '分拨出库'
                 }],
                 orderStatusOptions:[
                     {
@@ -329,7 +321,7 @@
                 serviceType: '',
                 merchandiser: '',
                 orderTime: new Date(),
-                arriveTime: '',
+                shipmentTime: '',
                 isNeedTransport:false,
                 needTransport:'',
                 plateNumber:'',
@@ -390,7 +382,7 @@
                                 if(ofcWarehouseInformation!=null){
                                     vueObj.wareHouseName=ofcWarehouseInformation.warehouseName;
                                     vueObj.supplierName=ofcWarehouseInformation.supportName;
-                                    vueObj.arriveTime=DateUtil.parse(ofcWarehouseInformation.arriveTime);
+                                    vueObj.shipmentTime=DateUtil.parse(ofcWarehouseInformation.shipmentTime);
                                     vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
                                     vueObj.driverName=ofcWarehouseInformation.driverName;
                                     vueObj.driverContactNumber=ofcWarehouseInformation.contactNumber;
