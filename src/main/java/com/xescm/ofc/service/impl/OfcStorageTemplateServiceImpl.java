@@ -24,7 +24,7 @@ import java.util.List;
  * Created by lyh on 2017/2/18.
  */
 @Service
-public class OfcStorageTemplateServiceImpl implements OfcStorageTemplateService{
+public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplate> implements OfcStorageTemplateService{
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -130,11 +130,7 @@ public class OfcStorageTemplateServiceImpl implements OfcStorageTemplateService{
             ofcStorageTemplate.setOperator(userId);
             ofcStorageTemplate.setOperatorName(userName);
             ofcStorageTemplate.setOperTime(now);
-            int update = ofcStorageTemplateMapper.updateByPrimaryKey(ofcStorageTemplate);
-            if(update < 1){
-                logger.error("模板配置编辑更新失败:{}",ofcStorageTemplate);
-                throw new BusinessException("模板配置编辑更新失败");
-            }
+            int update = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemplate);
         }
     }
 

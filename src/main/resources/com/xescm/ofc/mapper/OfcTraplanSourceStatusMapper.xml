@@ -63,7 +63,7 @@
         trans_code = #{transCode,jdbcType=INTEGER},
       </if>
       <if test="contactNumber != null" >
-        contact_number = #{contactNumber,jdbcType=INTEGER},
+        contact_number = #{contactNumber,jdbcType=INTEGER}
       </if>
     </set>
     where plan_code = #{planCode,jdbcType=VARCHAR}

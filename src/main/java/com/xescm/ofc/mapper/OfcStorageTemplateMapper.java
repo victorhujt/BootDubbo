@@ -14,4 +14,6 @@ public interface OfcStorageTemplateMapper extends Mapper<OfcStorageTemplate> {
     List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition);
 
     List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
+
+    int updateByTemplateCode(OfcStorageTemplate ofcStorageTemplate);
 }

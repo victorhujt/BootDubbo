@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -6,9 +6,11 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
+import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.codehaus.jackson.type.TypeReference;
@@ -31,6 +33,8 @@ public class OfcStorageTemplateRest extends BaseController{
 
     @Resource
     private OfcStorageTemplateService ofcStorageTemplateService;
+    @Resource
+    private OfcMerchandiserService ofcMerchandiserService;
 
     /**
      * 模板配置保存
@@ -209,6 +213,27 @@ public class OfcStorageTemplateRest extends BaseController{
         return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,ofcStorageTemplateList);
     }
 
+    /**
+     * 加载开单员
+     */
+    @RequestMapping(value = "merchandiser")
+    @ResponseBody
+    public List<OfcMerchandiser> loadMerchandiser(){
+        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
+        return merchandiserList;
+    }
 
+
+    /**
+     * 加载所有仓库
+     */
+    @RequestMapping(value = "warehouse")
+    @ResponseBody
+    public Wrapper loadWarehouse(){
+
+//        List<> merchandiserList = ofcMerchandiserService.selectAll();
+//        return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,merchandiserList);
+        return null;
+    }
 
 }

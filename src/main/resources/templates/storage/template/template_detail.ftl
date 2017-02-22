@@ -13,7 +13,6 @@
                 <el-form-item label="模板名称"  class="xe-col-2">
                     <el-input v-model="templateForm.templateName" :disabled="true"  placeholder="请输入配置名称"></el-input>
                 </el-form-item >
-
             </div>
             <div class="xe-block">
                 <el-form-item label="客户名称"  class="xe-col-2">
@@ -91,10 +90,8 @@
                 layer.msg("错误!模板编码为空!");
                 return;
             }
-            var param = {};
-            param.tempalteCode = templateCode;
             var url = "/ofc/storage_template/detail_data/" + templateCode;
-            CommonClient.post(url, param, function (result) {
+            CommonClient.post(url, {}, function (result) {
                 var itemOut = {};
                 $.each(result.result,function (index, item) {
                     if(index == 0) {
@@ -107,7 +104,6 @@
                     vm.tableData.push(tableItem);
                 });
                 var templateType = itemOut.templateType;
-                debugger
                 var templateTypeName = itemOut.templateType == 'storageIn' ? '入库单' : '出库单';
                 vm.templatesTypeList = [
                     {label:templateType,value:templateTypeName}

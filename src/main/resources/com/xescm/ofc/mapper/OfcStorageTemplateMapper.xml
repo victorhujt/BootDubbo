@@ -6,7 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="index_num" property="indexNum" jdbcType="VARCHAR" />
+    <result column="index_num" property="indexNum" jdbcType="INTEGER" />
     <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
     <result column="template_type" property="templateType" jdbcType="VARCHAR" />
     <result column="template_name" property="templateName" jdbcType="VARCHAR" />
@@ -23,6 +23,7 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
   </resultMap>
+
 
   <select id="checkTemplateNameUnique" parameterType="java.lang.String" resultType="java.lang.Integer">
       SELECT
@@ -116,4 +117,59 @@
     ORDER BY
      ost.index_num
   </select>
+  <update id="updateByTemplateCode" parameterType="com.xescm.ofc.domain.OfcStorageTemplate">
+    UPDATE
+    ofc_storage_template
+    <set>
+      <if test="templateCode != null and templateCode != ''">
+        template_code = #{templateCode},
+      </if>
+      <if test="templateType != null and templateType != ''">
+        template_type = #{templateType},
+      </if>
+      <if test="templateName != null and templateName != ''">
+        template_name = #{templateName},
+      </if>
+      <if test="custCode != null and custCode != ''">
+        cust_code = #{custCode},
+      </if>
+      <if test="custName != null and custName != ''">
+        cust_name = #{custName},
+      </if>
+      <if test="standardColCode != null and standardColCode != ''">
+        standard_col_code = #{standardColCode},
+      </if>
+      <if test="standardColName != null and standardColName != ''">
+        standard_col_name = #{standardColName},
+      </if>
+      <if test="reflectColName != null and reflectColName != ''">
+        reflect_col_name = #{reflectColName},
+      </if>
+      <if test="colDefaultVal != null and colDefaultVal != ''">
+        col_default_val = #{colDefaultVal},
+      </if>
+      <if test="creatTime != null and creatTime != ''">
+        creat_time = #{creatTime},
+      </if>
+      <if test="creator != null and creator != ''">
+        creator = #{creator},
+      </if>
+      <if test="creatorName != null and creatorName != ''">
+        creator_name = #{creatorName},
+      </if>
+      <if test="operTime != null and operTime != ''">
+        oper_time = #{operTime},
+      </if>
+      <if test="operator != null and operator != ''">
+        operator = #{operator},
+      </if>
+      <if test="operatorName != null and operatorName != ''">
+        operator_name = #{operatorName}
+      </if>
+      where
+        template_code = #{templateCode}
+        and
+        index_num = #{indexNum,jdbcType=INTEGER}
+    </set>
+  </update>
 </mapper>

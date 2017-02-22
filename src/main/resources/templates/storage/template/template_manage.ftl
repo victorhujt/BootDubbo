@@ -89,7 +89,6 @@
 
 <script type="text/javascript" >
     var scripts = [null,
-        "/js/common/tools/trim.space.js?" + Date.parse(new Date()),
         "/components/select2.v3/select2.min.js",
         "/components/select2.v3/select2_locale_zh-CN.js",
         null];
@@ -99,19 +98,15 @@
     });
 
     function main() {
-        initPageData()
-    }
-
-
-    function initPageData() {
         initCustomerName();
     }
+
 
     function initCustomerName() {
         var ofc_web_url = $("#ofc_web_url").html();
         var url = ofc_web_url + "/ofc/distributing/queryCustomerSelect2";
         var notice = "没有找到相关客户";
-        //Select2Util.singleSelectInit("#custName",url,notice,"#custCode")
+        //Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
     }
 
     var dialog = new Vue({
@@ -198,7 +193,9 @@
                     return;
                 }
                 var url = "/ofc/storage_template/edit/" + orderTemplateCode;
-                xescm.common.loadPage(url)
+                var html = window.location.href;
+                var index = html.indexOf("/index#");
+                window.open(html.substring(0,index) + "/index#" + url);
             },
             templateDel:function(val){
                 var orderTemplateName = val;
@@ -219,9 +216,11 @@
                     layer.msg("模板编码为空!");
                     return;
                 }
-                var url = "/ofc/storage_template/detail/" + orderTemplateCode;
-                xescm.common.loadPage(url)
 
+                var url = "/ofc/storage_template/detail/" + orderTemplateCode;
+                var html = window.location.href;
+                var index = html.indexOf("/index#");
+                window.open(html.substring(0,index) + "/index#" + url);
             }
         }
     })
