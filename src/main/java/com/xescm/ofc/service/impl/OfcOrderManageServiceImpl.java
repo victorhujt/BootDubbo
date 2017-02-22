@@ -2235,11 +2235,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
             if(null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE ){
                 logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}",integerWrapper.getMessage());
-                throw new BusinessException("订单状态推结算中心异常");
+//                throw new BusinessException("订单状态推结算中心异常");
             }
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}",e,e.getMessage());
-            throw new BusinessException("订单状态推结算中心异常");
+//            throw new BusinessException("订单状态推结算中心异常");
         }
     }
 
