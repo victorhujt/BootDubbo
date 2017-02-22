@@ -363,6 +363,19 @@ public class OfcJumpontroller extends BaseController{
      * 跳转运营中心→入库开单
      * @return
      */
+    @RequestMapping(value = "/ofc/orderStorageIn")
+    public ModelAndView orderStorageIn(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in");
+        logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
+        model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
+    /**
+     * 跳转运营中心→出库开单
+     * @return
+     */
     @RequestMapping(value = "/ofc/orderStorageOut")
     public ModelAndView orderStorageOut(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_out");

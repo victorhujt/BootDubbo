@@ -228,6 +228,7 @@
     LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
     <where>
+        1=1
       <if test="form.startDate!=null and form.startDate!=''">
         AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
       </if>
@@ -258,9 +259,11 @@
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>
-
-    //   AND  ofi.business_type in
-
+         AND  ofi.business_type in
+      <foreach item="item" index="index" collection="form.businessTypes"
+               open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </where>
     ORDER BY ofi.order_code DESC
   </select>

@@ -599,8 +599,8 @@
                 param.baseSerialNo = StringUtil.trim(this.baseName);
                 param.custOrderCode=StringUtil.trim(this.customerOrderCode);
                 param.warehouseCode=StringUtil.trim(this.wareHouseName);
-               // param.tag="in";
-                CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param,function (result) {
+                param.tag="in";
+                CommonClient.post(sys.rootPath + "/ofc/queryOrderStorageDataOper", param,function (result) {
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
                         layer.msg("暂时未查询到相关订单信息！");
                     } else if (result.code == 200) {
