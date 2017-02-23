@@ -8,6 +8,7 @@ import lombok.Data;
  */
 @Data
 public class TemplateCondition {
+    private String custCode;
     private String custName;
     private String templateCode;
     private String templateType;

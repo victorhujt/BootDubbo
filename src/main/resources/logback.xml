@@ -6,7 +6,6 @@
         <Target>System.out</Target>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%class:%line] - %m%n</pattern>
-            <charset>utf-8</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>

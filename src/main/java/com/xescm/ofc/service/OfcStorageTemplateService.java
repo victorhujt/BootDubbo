@@ -1,8 +1,10 @@
 package com.xescm.ofc.service;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,4 +22,6 @@ public interface OfcStorageTemplateService {
     void templateEditConfirm(String templateName, AuthResDto authResDto) throws Exception;
 
     List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
+
+    Wrapper<?> checkStorageTemplate(MultipartFile file, AuthResDto authResDto,String templateType, String custCode, String templateCode, Integer sheetNum);
 }

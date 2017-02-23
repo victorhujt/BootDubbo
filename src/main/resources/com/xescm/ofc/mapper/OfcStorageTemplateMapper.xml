@@ -63,6 +63,9 @@
     FROM
     ofc_storage_template ost
     <where>
+      <if test="custCode != null and custCode != ''">
+        AND ost.cust_code = #{custCode, jdbcType=VARCHAR}
+      </if>
       <if test="custName != null and custName != ''">
         AND ost.cust_name = #{custName, jdbcType=VARCHAR}
       </if>

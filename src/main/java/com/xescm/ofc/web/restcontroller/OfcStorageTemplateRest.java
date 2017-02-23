@@ -1,8 +1,10 @@
 package com.xescm.ofc.web.restcontroller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
@@ -11,17 +13,22 @@ import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.service.OfcMerchandiserService;
+import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.codehaus.jackson.type.TypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -35,6 +42,8 @@ public class OfcStorageTemplateRest extends BaseController{
     private OfcStorageTemplateService ofcStorageTemplateService;
     @Resource
     private OfcMerchandiserService ofcMerchandiserService;
+    @Resource
+    private OfcOperationDistributingService ofcOperationDistributingService;
 
     /**
      * 模板配置保存
@@ -241,18 +250,108 @@ public class OfcStorageTemplateRest extends BaseController{
      * 跳转入库开单批量导单
      */
     @RequestMapping(value = "batch_in")
-    public ModelAndView batchIn(){
+    public ModelAndView batchIn(Model model){
         ModelAndView modelAndView = new ModelAndView("/storage/in/batch_import_in");
-        AuthResDto authResDto = getAuthResDtoByToken();
-        String auth;
-        try {
-            auth = JacksonUtil.toJson(authResDto);
-        } catch (Exception e) {
-            logger.error("JSON转换异常");
-            return new ModelAndView("/error/error-500");
-        }
-        modelAndView.addObject("authResDto",auth);
+        setDefaultModel(model);
         return modelAndView;
+    }
+
+    /**
+     * 根据客户编码查询配置模板列表
+     */
+    @RequestMapping(value = "templist")
+    @ResponseBody
+    public List<OfcStorageTemplate> templateListByCustCode(String custCode){
+        TemplateCondition templateCondition = new TemplateCondition();
+        templateCondition.setCustCode(custCode);
+        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
+        return ofcStorageTemplateList;
+    }
+
+
+    /**
+     * 跳转入库开单批量导单
+     */
+    @RequestMapping(value = "/batch_in_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest httpServletRequest){
+        List<String> excelSheet;
+        try {
+            String fileName = file.getOriginalFilename();
+            int potIndex = fileName.lastIndexOf(".") + 1;
+            if(-1 == potIndex){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
+            }
+            String suffix = fileName.substring(potIndex, fileName.length());
+            excelSheet = ofcOperationDistributingService.getExcelSheet(file,suffix);
+
+
+//            //Excel导入功能部分代码
+//            AuthResDto authResDto = getAuthResDtoByToken();
+//            String custCode = "";
+//            String templateCode = "";
+//            Integer sheetNum = 0;
+//            Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file,authResDto,custCode,templateCode,sheetNum);
+
+
+
+
+        }catch (BusinessException e) {
+            e.printStackTrace();
+            logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+        }catch (Exception e) {
+             logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "文件上传成功!", excelSheet);
+    }
+
+    /**
+     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
+     * @param paramHttpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/batch_in_load",method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest){
+        Wrapper<?> result = null;
+        try {
+            AuthResDto authResDto = getAuthResDtoByToken();
+            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
+            MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
+            String fileName = multipartHttpServletRequest.getParameter("fileName");
+            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
+            String modelType = multipartHttpServletRequest.getParameter("templatesType");
+            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
+            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
+            int potIndex = fileName.lastIndexOf(".") + 1;
+            if(-1 == potIndex){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
+            }
+            String suffix = fileName.substring(potIndex, fileName.length());
+            String customerCode = multipartHttpServletRequest.getParameter("customerCode");
+            String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
+            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,suffix,sheetNum,authResDto,customerCode,modelType,modelMappingCode);
+
+            //如果校验失败
+            if(checkResult.getCode() == Wrapper.ERROR_CODE){
+
+            }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
+                Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
+                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
+                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJSON);
+            }
+        } catch (BusinessException e) {
+            e.printStackTrace();
+            logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+        }
+        return result;
     }
 
 
