@@ -1082,7 +1082,14 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.plateNumber;
                 ofcOrderDTOStr.driverName=this.driverName;
+                if(this.driverContactNumber){
+                    if(!this.checkPhoneOrMobile(this.driverContactNumber)){
+                        alert("输入运输信息时输入正确的联系方式");
+                        return;
+                    }
+                }
                 ofcOrderDTOStr.contactNumber=this.driverContactNumber;
+
 
                 //发货方信息
                 ofcOrderDTOStr.consignorName=this.consignorName;
@@ -1090,6 +1097,12 @@
                 ofcOrderDTOStr.consignorType=this.consignorType;
                 ofcOrderDTOStr.consignorContactCode=this.consignorContactCode;
                 ofcOrderDTOStr.consignorContactName=this.consignorContactName;
+                if(this.consignorPhoneNumber){
+                    if(!this.checkPhoneOrMobile(this.consignorPhoneNumber)){
+                        alert("请输入正确的发货方联系方式");
+                        return;
+                    }
+                }
                 ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
 
                 //收货方信息(仓库的信息)
@@ -1276,6 +1289,16 @@
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;
                 this.currentRowData = currentRowData;
+            },
+            checkPhoneOrMobile:function(phone){
+                debugger;
+                var mp=/^1\d{10}$/;
+                var pp=/^0\d{2,3}-?\d{7,8}$/;
+                if(mp.test(phone)||pp.test(phone)){
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     });

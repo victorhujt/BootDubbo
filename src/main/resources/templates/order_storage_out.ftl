@@ -977,6 +977,12 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.plateNumber;
                 ofcOrderDTOStr.driverName=this.driverName;
+                if(this.driverContactNumber){
+                    if(!this.checkPhoneOrMobile(this.driverContactNumber)){
+                        alert("输入运输信息时输入正确的联系方式");
+                        return;
+                    }
+                }
                 ofcOrderDTOStr.contactNumber=this.driverContactNumber;
 
                 //发货方信息
@@ -991,6 +997,7 @@
                 //ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
                 ofcOrderDTOStr.consignorContactPhone=this.wareHouseObj.phone;
 
+
                 //收货方信息(仓库的信息)
                 //ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
                // ofcOrderDTOStr.consigneeCode=this.wareHouseObj.warehouseCode;
@@ -999,6 +1006,12 @@
                 ofcOrderDTOStr.consigneeName=this.consignorName;
                 ofcOrderDTOStr.consigneeCode=this.consignorCode;
                 ofcOrderDTOStr.consigneeContactName=this.consignorContactName;
+                if(this.consignorPhoneNumber){
+                    if(!this.checkPhoneOrMobile(this.consignorPhoneNumber)){
+                        alert("请输入正确的收货方联系方式");
+                        return;
+                    }
+                }
                 ofcOrderDTOStr.consigneeContactPhone=this.consignorPhoneNumber;
                 ofcOrderDTOStr.consigneeType=this.consignorType;
                 ofcOrderDTOStr.consigneeContactCode=this.consigneeContactCode;
@@ -1188,6 +1201,16 @@
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;
                 this.currentRowData = currentRowData;
+            },
+            checkPhoneOrMobile:function(phone){
+                debugger;
+                var mp=/^1\d{10}$/;
+                var pp=/^0\d{2,3}-?\d{7,8}$/;
+                if(mp.test(phone)||pp.test(phone)){
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     });

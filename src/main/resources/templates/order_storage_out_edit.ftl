@@ -592,12 +592,12 @@
                                 vueObj.notes=ofcFundamentalInformation.notes;
                                 if(ofcWarehouseInformation!=null){
                                     vueObj.wareHouseName=ofcWarehouseInformation.warehouseName;
+                                    var wareHouse={};
+                                    wareHouse.label= vueObj.wareHouseName;
+                                    wareHouse.value= vueObj.wareHouseCode;
                                     vueObj.wareHouseCode=ofcWarehouseInformation.warehouseCode;
-//                                    var wareHouse={};
-//                                    wareHouse.label= vueObj.wareHouseName;
-//                                    wareHouse.value= vueObj.wareHouseCode;
-//                                    vueObj.wareHouseCode=ofcWarehouseInformation.warehouseCode;
-                                    //vueObj.wareHouseOptions.push(wareHouse);
+                                    vueObj.wareHouseOptions.push(wareHouse);
+                                    vueObj.wareHouseName=ofcWarehouseInformation.warehouseCode;
                                     vueObj.supplierName=ofcWarehouseInformation.supportName;
                                     vueObj.supplierCode=ofcWarehouseInformation.supportCode;
                                     vueObj.shipmentTime=DateUtil.parse(ofcWarehouseInformation.shipmentTime);
@@ -691,10 +691,10 @@
                         layer.msg("暂时未查询到该客户下的仓库信息！！");
                     } else if (result.code == 200) {
                         $.each(data,function (index,rmcWarehouseRespDto) {
-                            var rmcWarehouse = JSON.stringify(rmcWarehouseRespDto);
+                           // var rmcWarehouse = JSON.stringify(rmcWarehouseRespDto);
                             var warehouse={};
                             warehouse.label=rmcWarehouseRespDto.warehouseName;
-                            warehouse.value= rmcWarehouseRespDto.rmcWarehouse;
+                            warehouse.value= rmcWarehouseRespDto.warehouseCode;
                             vueObj.wareHouseOptions.push(warehouse);
                         });
                     } else if (result.code == 403) {
@@ -1094,6 +1094,12 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.plateNumber;
                 ofcOrderDTOStr.driverName=this.driverName;
+                if(this.driverContactNumber){
+                    if(!this.checkPhoneOrMobile(this.driverContactNumber)){
+                        alert("输入运输信息时输入正确的联系方式");
+                        return;
+                    }
+                }
                 ofcOrderDTOStr.contactNumber=this.driverContactNumber;
 
                 //发货方信息
@@ -1116,6 +1122,12 @@
                 ofcOrderDTOStr.consigneeName=this.consignorName;
                 ofcOrderDTOStr.consigneeCode=this.consignorCode;
                 ofcOrderDTOStr.consigneeContactName=this.consignorContactName;
+                if(this.consignorPhoneNumber){
+                    if(!this.checkPhoneOrMobile(this.consignorPhoneNumber)){
+                        alert("请输入正确的收货方联系方式");
+                        return;
+                    }
+                }
                 ofcOrderDTOStr.consigneeContactPhone=this.consignorPhoneNumber;
                 ofcOrderDTOStr.consigneeType=this.consignorType;
                 ofcOrderDTOStr.consigneeContactCode=this.consigneeContactCode;
@@ -1305,6 +1317,16 @@
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;
                 this.currentRowData = currentRowData;
+            },
+            checkPhoneOrMobile:function(phone){
+                debugger;
+                var mp=/^1\d{10}$/;
+                var pp=/^0\d{2,3}-?\d{7,8}$/;
+                if(mp.test(phone)||pp.test(phone)){
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     });
