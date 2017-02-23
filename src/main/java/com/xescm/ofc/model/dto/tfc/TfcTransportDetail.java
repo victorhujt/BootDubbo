@@ -117,6 +117,21 @@ public class TfcTransportDetail implements Serializable {
     //以下为新加属性
     private String productionBatch;//生产批次
 
+    private String goodsCategory;
+
+    private String goodsType;
+
+    /**
+     * 包装
+     */
+    private String pack;
+
+    /**
+     * 计费方式
+     */
+    @Column(name = "charging_ways")
+    private String chargingWays;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date productionTime;//生产日期
@@ -489,5 +504,37 @@ public class TfcTransportDetail implements Serializable {
 
     public void setTotalBox(Integer totalBox) {
         this.totalBox = totalBox;
+    }
+
+    public String getGoodsCategory() {
+        return goodsCategory;
+    }
+
+    public void setGoodsCategory(String goodsCategory) {
+        this.goodsCategory = goodsCategory;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    public String getPack() {
+        return pack;
+    }
+
+    public void setPack(String pack) {
+        this.pack = pack;
+    }
+
+    public String getChargingWays() {
+        return chargingWays;
+    }
+
+    public void setChargingWays(String chargingWays) {
+        this.chargingWays = chargingWays;
     }
 }

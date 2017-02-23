@@ -486,7 +486,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      */
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedbackNew(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName) {
-        for(int i=0;i<ofcSchedulingSingleFeedbackCondition.getTransportNo().size();i++){
+        for(int i=0;i<ofcSchedulingSingleFeedbackCondition.getOrderCode().size();i++){
             //注意，运输单号即是订单号
             String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getOrderCode().get(i));
             if(transPortNo.equals("") || !PubUtils.trimAndNullAsEmpty(transPortNo).startsWith(ORDER_PRE)){

@@ -2151,6 +2151,10 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             tfcTransportDetail.setProductionTime(ofcGoodsDetailsInfo.getProductionTime());
             tfcTransportDetail.setInvalidTime(ofcGoodsDetailsInfo.getInvalidTime());
             tfcTransportDetail.setTotalBox(ofcGoodsDetailsInfo.getTotalBox());
+            tfcTransportDetail.setGoodsType(ofcGoodsDetailsInfo.getGoodsType());
+            tfcTransportDetail.setGoodsCategory(ofcGoodsDetailsInfo.getGoodsCategory());
+            tfcTransportDetail.setPack(ofcGoodsDetailsInfo.getPack());
+            tfcTransportDetail.setChargingWays(ofcGoodsDetailsInfo.getChargingWays());
             tfcTransportDetails.add(tfcTransportDetail);
         }
         tfcTransport.setProductDetail(tfcTransportDetails);
@@ -2568,11 +2572,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         } catch (Exception e) {
             logger.error("订单信息推送结算中心 转换异常, {}", e);
         }
-        Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
+        /*Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
         if(ERROR_CODE == wrapper.getCode()){
             logger.error(wrapper.getMessage());
             throw new BusinessException(wrapper.getMessage());
-        }
+        }*/
     }
 
     /**

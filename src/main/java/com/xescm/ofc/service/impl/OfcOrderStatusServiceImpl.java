@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
@@ -40,7 +41,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public List<OfcOrderStatus> orderStatusScreen(String code, String followTag) {
-        if (!PubUtils.trimAndNullAsEmpty(code).equals("")) {
+        if (!trimAndNullAsEmpty(code).equals("")) {
             String orderCode = null;
             String custOrderCode = null;
             String transCode = null;
@@ -68,7 +69,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public OfcOrderStatus orderStatusSelect(String code, String followTag) {
-        if (!PubUtils.trimAndNullAsEmpty(code).equals("")) {
+        if (!trimAndNullAsEmpty(code).equals("")) {
             String orderCode = null;
             String custOrderCode = null;
             String transCode = null;
@@ -92,8 +93,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusMapper.orderStatusSelectNew(mapperMap);
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
             if(orderNewstatus==null
-                    || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                    || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+                    || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                    || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
 
             }else{
                 ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
@@ -126,8 +127,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(orderCode);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         if(orderNewstatus==null
-                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+                || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
             ofcOrderStatus = ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
         }else{
             ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
@@ -140,8 +141,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(orderCode);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         if(orderNewstatus==null
-                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                || PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+                || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
             ofcOrderStatus = ofcOrderStatusMapper.queryLastTimeOrderByOrderCode(orderCode);
         }else{
             ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
@@ -153,8 +154,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     @Override
     public int save(OfcOrderStatus ofcOrderStatus) {
         if (ofcOrderStatus!=null
-                && !PubUtils.trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()).equals("")){
-            if(!PubUtils.trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()).equals("")){
+                && !trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()).equals("")){
+            if(!trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()).equals("")){
                 OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(ofcOrderStatus.getOrderCode());
                 String tag="noStatus";
                 if(orderNewstatus!=null){
@@ -163,7 +164,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     orderNewstatus=new OfcOrderNewstatus();
                 }
                 if(ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATION_IN)){
-                    if(!PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)){
+                    if(!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)){
                         updateOrderNewStatus(ofcOrderStatus,tag);
                     }
                 }else{
