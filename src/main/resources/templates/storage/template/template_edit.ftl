@@ -159,7 +159,6 @@
                     var tableItem = {};
                     var indexNum = item.indexNum;
                     var colDefaultVal = item.colDefaultVal;
-                    debugger
                     if(!StringUtil.isEmpty(colDefaultVal)){
                         var orderTime;
                         var merchandiser;

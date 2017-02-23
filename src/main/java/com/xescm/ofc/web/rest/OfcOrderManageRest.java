@@ -122,7 +122,7 @@ public class OfcOrderManageRest extends BaseController{
         String result = null;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
-            result = ofcOrderManageService.orderCancel(orderCode,orderStatus,authResDtoByToken);
+            result = ofcOrderManageService.orderCancel(orderCode,authResDtoByToken);
         } catch (BusinessException ex){
             logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());

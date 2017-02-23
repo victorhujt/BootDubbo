@@ -640,7 +640,7 @@
               + "<a id=\"delete\" " + index + " onclick=\"deleteOrder('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"red\">删除</a>";
 
       var unApproveStatus = "<a id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">反审核</a>";
-      var cancelStatus = "<a id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">取消</a>";
+      var cancelStatus = "<a id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "')\"  class=\"blue\">取消</a>";
 
       if (order.orderStatus == "10") {
         value = newStatus;
@@ -701,10 +701,9 @@
       });
     }
     //订单取消
-    function cancelOrderOper(ordercode, orderStatus) {
+    function cancelOrderOper(ordercode) {
       xescm.common.submit("/ofc/orderCancelOper", {
-        "orderCode": ordercode,
-        "orderStatus": orderStatus
+        "orderCode": ordercode
       }, "您确定要取消此订单?", function () {
         xescm.common.loadPage("/ofc/orderManageOpera");
       });

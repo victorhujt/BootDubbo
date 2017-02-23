@@ -438,7 +438,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                     for (CscWarehouseDto cscWarehouseDto : warehouse.getResult()){
                         rmcWarehouseDto.setWarehouseCode(cscWarehouseDto.getWarehouseCode());
                         Wrapper<RmcWarehouseRespDto> resp=rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouseDto);
-                                            if(resp.getCode()==Wrapper.SUCCESS_CODE){
+                        if(resp.getCode()==Wrapper.SUCCESS_CODE){
                             warehouseRespDtoList.add(resp.getResult());
                         }else{
                             logger.error("通过仓库编码查询仓库信息产生异常{},仓库编码为{}",resp.getMessage(),rmcWarehouseDto.getWarehouseCode());
@@ -489,20 +489,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         AuthResDto authResDto = getAuthResDtoByToken();
         Map<String, List<OfcGroupVo>> groupMap = null;
         try {
-                groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
-                if (groupMap==null) {
-                    return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到大区和基地信息");
-                }
+            groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
+            if (groupMap==null) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到大区和基地信息");
+            }
         } catch (Exception ex) {
             logger.error("查询用户下的大区和基地信息异常{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",groupMap);
     }
-
-
-
-
 
 
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)

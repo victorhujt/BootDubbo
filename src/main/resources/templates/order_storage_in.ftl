@@ -759,7 +759,6 @@
                 },"json");
 
             },
-
             handleConsignorSizeChange:function(val){
                 this.consignorPageSize=val;
                 this.selectConsignor();

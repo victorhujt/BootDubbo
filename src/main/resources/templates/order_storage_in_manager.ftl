@@ -434,7 +434,7 @@
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     var vueObj=this;
-                    CommonClient.post(sys.rootPath + "/ofc/copyOrderOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
+                    CommonClient.post(sys.rootPath + "/ofc/copyOrderOper", {"orderCode":order.orderCode}, function(result) {
                         if (result == undefined || result == null ) {
                             alert("复制订单出现异常");
                             return;
@@ -468,13 +468,13 @@
                         alert("只有待审核的可以审核");
                         return;
                     }
-                    this.auditOrderOrNotAuditOper(order.orderCode,this.getOrderStatusName(order.orderStatusName),"review");
+                    this.auditOrderOrNotAuditOper(order.orderCode,"review");
                 }
             },
             repeatAuditOrder:function(){
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
-                    this.auditOrderOrNotAuditOper(order.orderCode,this.getOrderStatusName(order.orderStatusName),"rereview");
+                    this.auditOrderOrNotAuditOper(order.orderCode,"rereview");
                 }
             },
             cancelOrder:function(){
@@ -482,7 +482,7 @@
                     var order=this.multipleSelection[0];
                     var vueObj=this;
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
-                        CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
+                        CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
                             if (result == undefined || result == null ) {
                                 alert("取消订单出现异常");
                                 return;
@@ -509,9 +509,9 @@
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0,index) + "/index#" + url);
             },
-            auditOrderOrNotAuditOper:function (orderCode,orderStatus,tag) {
+            auditOrderOrNotAuditOper:function (orderCode,tag) {
                 var vueObj=this;
-                CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"orderStatus":orderStatus,"reviewTag":tag}, function(result) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
                     if (result == undefined || result == null ) {
                         alert("审核或者反审核出现异常");
                         return;
