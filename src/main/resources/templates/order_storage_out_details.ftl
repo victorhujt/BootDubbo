@@ -230,9 +230,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-           <#-- <div class="xe-pageHeader">
-                跟踪信息
-            </div>-->
             <el-table :data="orderStatusData" border highlight-current-row >
                 <el-table-column property="notes" label="跟踪信息">
                     <template scope="scope">
@@ -392,7 +389,6 @@
                                             vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
                                             vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
                                             vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
-                                            debugger;
                                             vueObj.isNeedTransport=true;
                                             if(vueObj.isNeedTransport){
                                                 vueObj.needTransport="是";

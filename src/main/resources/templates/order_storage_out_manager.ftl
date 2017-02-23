@@ -34,7 +34,7 @@
             </div>
         </el-dialog>
         <div class="xe-pageHeader">
-            入库单管理
+            出库单管理
         </div>
         <el-form label-width="100px">
             <div class="xe-block">
@@ -179,7 +179,6 @@
             currentPage:1,
             formLabelWidth: '100px',
             pageSize:10,
-            total:0,
             wareHouseOptions:[],
             pageSizes:[10, 20, 30, 40,50],
             customerData:[],
@@ -217,16 +216,27 @@
             areaNameOptions:[],
             multipleSelection: [],
             baseNameOptions:[],
-            orderStatusOptions:[{ value: '10',
-                label: '待审核'
-
-            },{value: '20',
-                label: '已审核'},{value: '30',
-                label: '执行中'},{value: '40',
-                label: '已完成'},{value: '50',
-                label: '已取消'}],
+            orderStatusOptions:[
+                { value: '10',
+                  label: '待审核'
+                },
+                {
+                value: '20',
+                label: '已审核'
+                },
+                {
+                value: '30',
+                label: '执行中'
+                },
+                {
+                value: '40',
+                label: '已完成'
+                },
+                {
+                value: '50',
+                label: '已取消'
+                }],
             orderData:[]
-
         },
         beforeMount:function(){
             this.wareHouseOptions=[];
@@ -247,7 +257,6 @@
                     }else{
                         layer.msg("当前用户下没有仓库信息！");
                     }
-
                 }
             });
 
@@ -266,7 +275,6 @@
                                 area.value= OfcGroupVo.serialNo;
                                 vueObj.areaNameOptions.push(area);
                             }
-
                         });
                     }else{
                         layer.msg("当前用户下没有大区信息！");
@@ -279,7 +287,6 @@
                             base.value= OfcGroupVo.serialNo;
                             vueObj.baseNameOptions.push(base);
                         });
-
                     }else{
                         layer.msg("当前用户下没有基地信息！");
                     }
@@ -369,7 +376,6 @@
             },
             handleSelectionChange:function(val){
                 this.multipleSelection = val;
-
             },
             addOrder:function(){
                 var url = "/ofc/orderStorageOut/"+"?tag=manager";
@@ -420,11 +426,6 @@
                     alert("订单删除成功！");
                     vueObj.selectOrder();
                 }
-
-
-
-
-
             },
             copyOrder:function(){
                 if(this.valiateSelectOrder()){
@@ -457,11 +458,9 @@
                 this.wareHouseName="";
 
             },
-
             auditOrder:function(){
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
-
                     if(order.orderStatusName!="待审核"){
                         alert("只有待审核的可以审核");
                         return;
@@ -476,13 +475,11 @@
                 }
             },
             cancelOrder:function(){
-                debugger;
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     var vueObj=this;
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
-                            debugger;
                             if (result == undefined || result == null ) {
                                 alert("取消订单出现异常");
                                 return;
@@ -495,7 +492,6 @@
                                 }else{
                                     alert(result.message);
                                 }
-
                             }
                         });
                     }else{
@@ -532,7 +528,6 @@
                 }
                 return true;
             },
-
             handleCurrentPage:function(val){
                 this.currentPage=val;
                 this.selectOrder();
@@ -578,11 +573,9 @@
                             return;
                         }
                     }
-
-
                 }
                 if(this.beginDate){
-                    param.startDate = this.beginDate.getFullYear()+"-"+this.beginDate.getMonth()+"-"+this.beginDate.getDate()+" 00:00:00";
+                    param.startDate=DateUtil.format(this.beginDate, "yyyy-MM-dd HH:mm:ss");
                 }
                 if(this.endDate){
                     param.endDate = this.endDate.getFullYear()+"-"+this.endDate.getMonth()+"-"+this.endDate.getDate()+" 23:59:59";

@@ -2376,6 +2376,9 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         //货品数量
         BigDecimal goodsAmountCount = new BigDecimal(0);
         //保存货品明细
+        if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("edit")){
+            ofcGoodsDetailsInfoService.deleteAllByOrderCode(ofcFundamentalInformation.getOrderCode());
+        }
         for(OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList){
             if(ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
                     continue;
@@ -2387,11 +2390,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity(), new MathContext(3));
-            if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
-            }else{
-                ofcGoodsDetailsInfoService.updateByOrderCode(ofcGoodsDetails);
-            }
         }
 
         if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){

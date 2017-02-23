@@ -143,7 +143,6 @@
                   <el-date-picker type="date" v-model="orderTime" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
               </el-form-item>
-              <div  v-if="seenOrderDateNotNull">订单日期不能为空</div>
               <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
                 <el-input v-model="merchandiser" placeholder="请输入内容"></el-input>
               </el-form-item>
@@ -287,7 +286,6 @@
                   <el-input
                           placeholder="请选择"
                           icon="search"
-                  <#--v-model="scope.row.goodsCode"-->
                           v-model="scope.row.goodsCode"
                           v-bind:disabled = "isDisabled"
                           @click="openGoodsList(scope.row)">
@@ -361,7 +359,6 @@
         el: '#app',
         data :function() {
             return {
-                seenOrderDateNotNull:false,
                 consignorCode:'',
                 wareHouseObj:'',
                 goodsCode:'',
@@ -520,16 +517,6 @@
                     consignorContactName: '',
                     consignorPhoneNumber:''
                 },
-                receiveForm: {
-                    name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-                },
                 isDisabled: false,
                 isDisabled11: false,
                 goodsData: [],
@@ -581,16 +568,6 @@
             },
             consignorHandleCurrentChange:function(val) {
                 this.consignorCurrentRow=val;
-            },
-            receiveHandleCurrentChange:function(val) {
-                this.receiveCurrentRow = val;
-            },
-            receiveSetCurrentCusInfo:function(val) {
-                this.receiveName = val.receiveCusName;
-                this.receiveContacts = val.receiveContacts;
-                this.receivePhone = val.receiveNumPhone;
-                this.receiveAddress = val.receiveAddress;
-                this.chosenReceive = false;
             },
             handleCustomerSizeChange:function(val) {
                 this.customerPageSize=val;
@@ -728,11 +705,6 @@
                 this.supplierData=[];
                 this.chosenSupplier=false;
             },
-            deleteGood:function(){
-
-
-            },
-
             selectConsignor:function(){
                 if(!this.customerName){
                     alert("请选择客户");
@@ -813,8 +785,6 @@
                 this.consignorAddressCode=val.consignorAddressCode;
                 this.chosenSend = false;
             },
-
-
             selectGoods:function(){
                 this.goodsCodeData=[];
                 var vueObj=this;
@@ -905,7 +875,7 @@
             },
             saveStorage:function(){
                 if(!this.orderTime){
-                    this.seenOrderDateNotNull=true;
+                    alert("订单日期不能为空");
                     return;
                 }else{
                     if(this.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
@@ -939,7 +909,6 @@
                 var cscContactDto={};
                 //供应商信息
                 var cscSupplierInfoDtoStr={};
-
                 //是否提供运输
                 if(this.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
@@ -954,7 +923,7 @@
                 ofcOrderDTOStr.businessType =this.serviceType;
                 ofcOrderDTOStr.merchandiser = this.merchandiser;
                 if(this.orderTime){
-                    ofcOrderDTOStr.orderTime = this.formatDate(this.orderTime);
+                    ofcOrderDTOStr.orderTime=DateUtil.format(this.orderTime, "yyyy-MM-dd HH:mm:ss");
                 }
                 this.wareHouseObj=JSON.parse(this.wareHouse);
 
@@ -971,7 +940,7 @@
                 ofcOrderDTOStr.warehouseName=this.wareHouseObj.warehouseName;//仓库名称
                 ofcOrderDTOStr.warehouseCode=this.wareHouseObj.warehouseCode;//仓库编码
                 if(this.arriveTime){
-                ofcOrderDTOStr.arriveTime=this.formatDate(this.arriveTime);
+                    ofcOrderDTOStr.arriveTime=DateUtil.format(this.arriveTime, "yyyy-MM-dd HH:mm:ss");
                 }
                 ofcOrderDTOStr.plateNumber=this.plateNumber;
                 ofcOrderDTOStr.driverName=this.driverName;
@@ -995,9 +964,9 @@
                         return;
                     }
                 }
-                ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
 
                 //收货方信息(仓库的信息)
+                ofcOrderDTOStr.consignorContactPhone=this.consignorPhoneNumber;
                 ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
                 ofcOrderDTOStr.consigneeCode=this.wareHouseObj.warehouseCode;
                 ofcOrderDTOStr.consigneeContactName=this.wareHouseObj.contactName;
@@ -1031,7 +1000,6 @@
 
                 var goodsTable =this.goodsData;
                 var goodDetail=[];
-
                 if(goodsTable.length <1){
                     alert('请添加至少一条货品!');
                     return;
@@ -1078,12 +1046,8 @@
                             alert("生产日期不能大于失效日期");
                             return;
                         }
-                        //good.productionTime=this.formatDate(good.productionTime);
-                       // good.invalidTime=this.formatDate(good.invalidTime);
-
                     }
                     goodDetail.push(good);
-
                 }
 
                 if(goodDetail.length <1){
@@ -1154,16 +1118,13 @@
                 cscContactDto.contactName = warehouse.contactName;
                 cscContactDto.purpose = "1";
                 cscContactDto.phone =warehouse.phone;
-
                 cscContactDto.contactCompanyName =warehouse.warehouseName;
-
                 cscContactDto.province = warehouse.provinceCode;
                 cscContactDto.city = warehouse.cityCode;
                 cscContactDto.area = warehouse.areaCode;
                 if(!StringUtil.isEmpty(warehouse.streetCode)){
                     cscContactDto.street = warehouse.streetCode;
                 }
-
                 cscContactDto.provinceName =warehouse.province;
                 cscContactDto.cityName = warehouse.city;
                 cscContactDto.areaName = warehouse.area;
@@ -1176,15 +1137,11 @@
                 var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
                 return cscContantAndCompanyDtoConsigneeStr;
             },
-            formatDate:function(date){
-                return date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate()+" 00:00:00";
-            },
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;
                 this.currentRowData = currentRowData;
             },
             checkPhoneOrMobile:function(phone){
-                debugger;
                 var mp=/^1\d{10}$/;
                 var pp=/^0\d{2,3}-?\d{7,8}$/;
                 if(mp.test(phone)||pp.test(phone)){

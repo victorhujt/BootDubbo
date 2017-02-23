@@ -224,16 +224,23 @@
             areaNameOptions:[],
             multipleSelection: [],
             baseNameOptions:[],
-            orderStatusOptions:[{ value: '10',
+            orderStatusOptions:[{
+                value: '10',
                 label: '待审核'
-
-            },{value: '20',
-                label: '已审核'},{value: '30',
-                label: '执行中'},{value: '40',
-                label: '已完成'},{value: '50',
-                label: '已取消'}],
+                },{
+                 value: '20',
+                 label: '已审核'
+                },{
+                value: '30',
+                label: '执行中'
+                },{
+                value: '40',
+                label: '已完成'
+                },{
+                value: '50',
+                label: '已取消'
+            }],
             orderData:[]
-
         },
         beforeMount:function(){
             this.wareHouseOptions=[];
@@ -254,7 +261,6 @@
                     }else{
                         layer.msg("当前用户下没有仓库信息！");
                     }
-
                 }
             });
 
@@ -273,7 +279,6 @@
                                 area.value= OfcGroupVo.serialNo;
                                 vueObj.areaNameOptions.push(area);
                             }
-
                         });
                     }else{
                         layer.msg("当前用户下没有大区信息！");
@@ -286,7 +291,6 @@
                             base.value= OfcGroupVo.serialNo;
                             vueObj.baseNameOptions.push(base);
                         });
-
                     }else{
                         layer.msg("当前用户下没有基地信息！");
                     }
@@ -294,8 +298,6 @@
             });
             vueObj.selectOrder();
         },
-
-
         methods: {
             handleCustomerCurrentChange:function(val) {
                 this.currentCustomerRow = val;
@@ -427,11 +429,6 @@
                     if(flag){
                         alert("订单删除成功！");
                     }
-
-
-
-
-
             },
             copyOrder:function(){
                 if(this.valiateSelectOrder()){
@@ -464,11 +461,9 @@
                     this.wareHouseName="";
 
             },
-
             auditOrder:function(){
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
-
                     if(order.orderStatusName!="待审核"){
                         alert("只有待审核的可以审核");
                         return;
@@ -495,7 +490,11 @@
                                 alert(result.message);
                                 vueObj.selectOrder();
                             }else{
-                                alert(result.message);
+                                if(result.message==null){
+                                    alert("取消订单出现异常");
+                                }else{
+                                    alert(result.message);
+                                }
                             }
                         });
                     }else{
@@ -565,7 +564,6 @@
                 }
             },
             selectOrder:function(){
-                debugger;
                 var param={};
                 var vueObj=this;
                 vueObj.orderData=[];
@@ -582,11 +580,9 @@
                             return;
                         }
                     }
-
-
                 }
                 if(this.beginDate){
-                    param.startDate = this.beginDate.getFullYear()+"-"+this.beginDate.getMonth()+"-"+this.beginDate.getDate()+" 00:00:00";
+                    param.startDate=DateUtil.format(this.beginDate, "yyyy-MM-dd HH:mm:ss");
                 }
                 if(this.endDate){
                     param.endDate = this.endDate.getFullYear()+"-"+this.endDate.getMonth()+"-"+this.endDate.getDate()+" 23:59:59";
