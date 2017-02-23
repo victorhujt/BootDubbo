@@ -1,6 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
@@ -12,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -170,11 +166,13 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }else{
                     updateOrderNewStatus(ofcOrderStatus,tag);
                 }
+                ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
+                return super.save(ofcOrderStatus);
             }else {
                 throw new BusinessException("订单状态为空，保存订单状态失败");
             }
         }
-        return super.save(ofcOrderStatus);
+        return 0;
     }
 
     public void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus,String tag){
