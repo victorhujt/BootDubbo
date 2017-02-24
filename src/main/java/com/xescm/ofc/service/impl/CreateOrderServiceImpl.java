@@ -229,7 +229,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             authResDto.setUserId(CREATE_ORDER_BYAPI);
             authResDto.setUserName(CREATE_ORDER_BYAPI);
             authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-            String result = ofcOrderManageService.orderCancel(orderCode, authResDto);
+//            String result = ofcOrderManageService.orderCancel(orderCode, orderState, authResDto);
+            String result = ofcOrderManageService.orderCancel(orderCode,  authResDto);
             if (StringUtils.equals("200", result)) {
                 cannelOrderVo.setReason("操作成功");
                 cannelOrderVo.setResultCode("1");

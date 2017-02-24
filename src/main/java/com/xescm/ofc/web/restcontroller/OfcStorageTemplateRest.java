@@ -297,11 +297,11 @@ public class OfcStorageTemplateRest extends BaseController{
             }
         } catch (BusinessException e) {
             e.printStackTrace();
-            logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
+            logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
+            logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return result;
