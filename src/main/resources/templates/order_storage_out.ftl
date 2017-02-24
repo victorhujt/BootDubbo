@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html>
 <head>
     <title>出库开单</title>
 </head>
@@ -146,7 +144,7 @@
                 <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
                     <el-input v-model="merchandiser" placeholder="请输入内容"></el-input>
                 </el-form-item>
-                <el-form-item label="客户名称" class="xe-col-3">
+                <el-form-item label="客户名称" required class="xe-col-3">
                     <el-input
                             placeholder="请选择"
                             icon="search"
@@ -156,7 +154,7 @@
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-form-item label="仓库名称" prop="wareHouse" class="xe-col-3">
+                <el-form-item label="仓库名称" required prop="wareHouse" class="xe-col-3">
                     <el-select v-model="wareHouse" placeholder="请选择">
                         <el-option
                                 v-for="item in wareHouseOptions"
@@ -165,7 +163,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="业务类型" prop="serviceType" class="xe-col-3">
+                <el-form-item label="业务类型" required prop="serviceType" class="xe-col-3">
                     <el-select v-model="serviceType" placeholder="请选择">
                         <el-option
                                 v-for="item in serviceTypeOptions"
@@ -179,29 +177,27 @@
                 </el-form-item>
             </div>
             <div class="xe-block">
+              <el-form-item label="供应商名称" class="xe-col-3">
+                <el-input
+                        placeholder="请选择"
+                        icon="search"
+                        v-model="supplierName"
+                        v-bind:disabled = "isDisabled"
+                        @click="chosenSupplier = true">
+                </el-input>
+              </el-form-item>
                 <el-form-item label="备注" prop="notes" class="xe-col-3">
-                    <el-input type="textarea" placeholder="请输入内容" v-model="notes" ></el-input>
+                    <el-input type="textarea"  v-model="notes" ></el-input>
                 </el-form-item>
             </div>
-            <div class="xe-pageHeader">
-                供应商信息
-            </div>
-            <div class="xe-block">
-                <el-form-item label="供应商名称" class="xe-col-3">
-                    <el-input
-                            placeholder="请选择"
-                            icon="search"
-                            v-model="supplierName"
-                            v-bind:disabled = "isDisabled"
-                            @click="chosenSupplier = true">
-                    </el-input>
-                </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-                运输信息
-            </div>
-            <div class="xe-block">
-                <el-form-item label="预计出库时间" required class="xe-col-3">
+        </el-form>
+
+
+          <el-collapse v-model="activeNames" accordion>
+            <el-collapse-item title="运输信息" name="1">
+              <el-form label-width="100px">
+                <div class="xe-block">
+                  <el-form-item label="预计出库时间" class="xe-col-3">
                     <el-date-picker
                             v-model="shipmentTime"
                             align="right"
@@ -209,27 +205,27 @@
                             placeholder="选择日期"
                             :picker-options="pickerOptions1">
                     </el-date-picker>
-                </el-form-item>
-                <el-form-item label="是否提供运输">
+                  </el-form-item>
+                  <el-form-item label="是否提供运输">
                     <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
-                </el-form-item>
-            </div>
-            <div class="xe-block">
-                <el-form-item label="车牌号" class="xe-col-3">
+                  </el-form-item>
+                </div>
+                <div class="xe-block">
+                  <el-form-item label="车牌号" class="xe-col-3">
                     <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
-                </el-form-item>
-                <el-form-item label="司机姓名" class="xe-col-3">
+                  </el-form-item>
+                  <el-form-item label="司机姓名" class="xe-col-3">
                     <el-input v-model="driverName"  placeholder="请输入内容"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" class="xe-col-3">
+                  </el-form-item>
+                  <el-form-item label="联系电话" class="xe-col-3">
                     <el-input v-model="driverContactNumber"  placeholder="请输入内容"></el-input>
-                </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-                收货方信息
-            </div>
-            <div class="xe-block">
-                <el-form-item label="名称" class="xe-col-3">
+                  </el-form-item>
+                </div>
+                <div class="xe-pageHeader">
+                  &nbsp;&nbsp;收货方信息
+                </div>
+                <div class="xe-block">
+                  <el-form-item label="名称" class="xe-col-3">
                     <el-input
                             placeholder="请选择"
                             icon="search"
@@ -237,19 +233,77 @@
                             v-bind:disabled = "isDisabled"
                             @click="chosenSend = true">
                     </el-input>
-                </el-form-item>
-                <el-form-item label="联系人" class="xe-col-3">
+                  </el-form-item>
+                  <el-form-item label="联系人" class="xe-col-3">
                     <el-input v-model="consigneeContactName" placeholder="请输入内容"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" class="xe-col-3">
+                  </el-form-item>
+                  <el-form-item label="联系电话" class="xe-col-3">
                     <el-input v-model="consigneePhoneNumber" placeholder="请输入内容"></el-input>
-                </el-form-item>
-            </div>
-            <div class="xe-block">
-                <el-form-item label="地址选择" class="xe-col-3">
+                  </el-form-item>
+                </div>
+                <div class="xe-block">
+                  <el-form-item label="地址选择" class="xe-col-3">
                     <el-input v-model="consigneeAddress" placeholder="请输入内容"></el-input>
-                </el-form-item>
-            </div>
+                  </el-form-item>
+                </div>
+              </el-form>
+            </el-collapse-item>
+          </el-collapse>
+
+
+    <#-- <div class="xe-pageHeader">
+         运输信息
+     </div>
+     <div class="xe-b">
+         <el-form-item label="预计出库时间" class="xe-col-3">
+             <el-date-picker
+                     v-model="shipmentTime"
+                     align="right"
+                     type="date"
+                     placeholder="选择日期"
+                     :picker-options="pickerOptions1">
+             </el-date-picker>
+         </el-form-item>
+         <el-form-item label="是否提供运输">
+             <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+         </el-form-item>
+     </div>
+     <div class="xe-block">
+         <el-form-item label="车牌号" class="xe-col-3">
+             <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
+         </el-form-item>
+         <el-form-item label="司机姓名" class="xe-col-3">
+             <el-input v-model="driverName"  placeholder="请输入内容"></el-input>
+         </el-form-item>
+         <el-form-item label="联系电话" class="xe-col-3">
+             <el-input v-model="driverContactNumber"  placeholder="请输入内容"></el-input>
+         </el-form-item>
+     </div>
+     <div class="xe-pageHeader">
+         收货方信息
+     </div>
+     <div class="xe-block">
+         <el-form-item label="名称" class="xe-col-3">
+             <el-input
+                     placeholder="请选择"
+                     icon="search"
+                     v-model="consignorName"
+                     v-bind:disabled = "isDisabled"
+                     @click="chosenSend = true">
+             </el-input>
+         </el-form-item>
+         <el-form-item label="联系人" class="xe-col-3">
+             <el-input v-model="consignorContactName" placeholder="请输入内容"></el-input>
+         </el-form-item>
+         <el-form-item label="联系电话" class="xe-col-3">
+             <el-input v-model="consignorPhoneNumber" placeholder="请输入内容"></el-input>
+         </el-form-item>
+     </div>
+     <div class="xe-block">
+         <el-form-item label="地址选择" class="xe-col-3">
+             <el-input v-model="consignorAddress" placeholder="请输入内容"></el-input>
+         </el-form-item>
+     </div>-->
             <div class="xe-pageHeader">
                 货品信息
             </div>
@@ -350,8 +404,8 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-button type="primary" @click="saveStorage" style="float:right">下单</el-button>
-        </el-form>
+            <el-button type="primary" @click="saveStorage">确认下单</el-button>
+
     </div>
 </body>
 <script>
@@ -360,6 +414,7 @@
         data :function() {
             return {
                 consigneeCode:'',
+                activeNames:'1',
                 wareHouseObj:'',
                 goodsCode:'',
                 consigneeType:'',
@@ -1172,6 +1227,3 @@
         }
     });
 </script>
-
-
-</html>
