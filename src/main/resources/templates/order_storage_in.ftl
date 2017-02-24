@@ -4,7 +4,7 @@
 <body>
 <div id="app">
     <div class="list-mian-01">
-      <el-form label-width="100px">
+
             <el-dialog title="选择客户" v-model="chosenCus" size="small">
                 <el-form :model="chosenCusForm">
                     <el-form-item label="名称" :label-width="formLabelWidth">
@@ -132,20 +132,19 @@
                     <el-button type="primary" @click="setCurrentGoodsInfo(goodCurrentRow)">确 定</el-button>
                 </div>
             </el-dialog>
+      <el-form :model="orderForm" :rules="rules" ref="orderForm" label-width="100px" class="demo-ruleForm">
           <div class="xe-pageHeader">
             基本信息
           </div>
 
             <div class="xe-block">
-              <el-form-item label="订单日期" required class="xe-col-3" prop="date">
-                <el-form-item>
+              <el-form-item label="订单日期" required class="xe-col-3" prop="orderTime">
                   <el-date-picker type="date" v-model="orderForm.orderTime" :picker-options="pickerOptions"></el-date-picker>
-                </el-form-item>
               </el-form-item>
               <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
                 <el-input v-model="orderForm.merchandiser" placeholder="请输入内容"></el-input>
               </el-form-item>
-              <el-form-item label="客户名称" required class="xe-col-3" prop="customer">
+              <el-form-item label="客户名称" required class="xe-col-3" prop="customerName">
                 <el-input
                         placeholder="请选择"
                         icon="search"
@@ -155,7 +154,7 @@
               </el-form-item>
             </div>
             <div class="xe-block">
-              <el-form-item label="仓库名称" prop="wareHouse" class="xe-col-3">
+              <el-form-item label="仓库名称" required prop="wareHouse" class="xe-col-3">
                 <el-select v-model="orderForm.wareHouse" placeholder="请选择">
                   <el-option
                           v-for="item in wareHouseOptions"
@@ -164,7 +163,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="业务类型" prop="serviceType" class="xe-col-3">
+              <el-form-item label="业务类型" required  prop="serviceType" class="xe-col-3">
                 <el-select v-model="orderForm.serviceType" placeholder="请选择">
                   <el-option
                           v-for="item in serviceTypeOptions"
@@ -178,14 +177,6 @@
               </el-form-item>
             </div>
             <div class="xe-block">
-              <el-form-item label="备注" prop="notes" class="xe-col-3">
-                <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes" ></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-              供应商信息
-            </div>
-            <div class="xe-block">
               <el-form-item label="供应商名称" class="xe-col-3">
                 <el-input
                         placeholder="请选择"
@@ -196,7 +187,7 @@
                 </el-input>
               </el-form-item>
               <el-form-item label="备注" prop="notes" class="xe-col-3">
-                <el-input type="textarea" v-model="orderForm.notes" ></el-input>
+                <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes" ></el-input>
               </el-form-item>
             </div>
             <div class="xe-block">
@@ -528,11 +519,22 @@
                     consignorAddressCode:''
                 },
                 rules: {
-                    orderTime:[],
+                    orderTime:[ { type: 'date', required: true, message: '请选择日期', trigger: 'blur' }],
                     merchandiser:[
                         { required: true, message: '请输入开单员', trigger: 'blur' },
-                        { min: 0, max: 50, message: '长度在 0 到 50 个字符', trigger: 'blur' }
+                        { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
+                    ],
+                    customerName:[
+                      { required: true, message: '请输入客户名称', trigger: 'change' },
+                      { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'change' }
+                    ],
+                    wareHouse:[
+                      { required: true, message: '请选择仓库名称', trigger: 'change' }
+                    ],
+                    serviceType:[
+                        { required: true, message: '请选择业务类型', trigger: 'change' }
                     ]
+
                 }
             };
         },
