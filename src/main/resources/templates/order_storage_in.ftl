@@ -134,7 +134,7 @@
       <div class="xe-pageHeader">
         基本信息
       </div>
-      <el-form  label-width="100px">
+      <el-form label-width="100px">
             <div class="xe-block">
               <el-form-item label="订单日期" required class="xe-col-3" prop="date">
                 <el-form-item>
@@ -526,6 +526,7 @@
                 goodsData: [],
                 goodsCodeData: [],
                 goodsCurrentRow: null
+
             };
         },
         methods: {
