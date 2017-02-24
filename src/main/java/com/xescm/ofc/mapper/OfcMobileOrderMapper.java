@@ -8,13 +8,16 @@ import com.xescm.ofc.domain.OfcMobileOrder;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
 /**
+ *
  * Created by hujintao on 2016/12/17.
  */
+@Repository
 public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {
 
     OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder);

@@ -7,21 +7,22 @@ import com.xescm.ofc.mapper.OfcSiloprogramInfoMapper;
 import com.xescm.ofc.model.vo.ofc.OfcSiloprogramInfoVo;
 import com.xescm.ofc.service.OfcSiloprogramInfoService;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcSiloprogramInfoServiceImpl extends BaseService<OfcSiloprogramInfo> implements OfcSiloprogramInfoService {
-    @Autowired
+    @Resource
     private OfcSiloprogramInfoMapper ofcSiloprogramInfoMapper;
     @Override
     public List<OfcSiloprogramInfo> ofcSiloprogramInfoScreenList(String orderCode) {

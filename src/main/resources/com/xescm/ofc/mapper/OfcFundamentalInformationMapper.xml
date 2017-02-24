@@ -131,7 +131,15 @@
     FROM
     ofc_fundamental_information ofi,
     ofc_distribution_basic_info ofd,
-    (SELECT temp.* FROM ofc_order_status temp
+    (SELECT
+    temp.order_code,
+    temp.order_status,
+    temp.status_desc,
+    temp.lasted_oper_time,
+    temp.notes,
+    temp.operator,
+    temp.creation_time
+    FROM ofc_order_status temp
     WHERE temp.lasted_oper_time = (
     SELECT MAX(lasted_oper_time) FROM ofc_order_status
     WHERE temp.order_code = order_code
@@ -154,8 +162,57 @@
   </select>
   
   <select id="queryOrderByOrderBatchNumber" resultMap="BaseResultMap">
-    SELECT ofi.*,odb.consignee_name,owi.warehouse_name,oos.order_status FROM ofc_fundamental_information ofi
-      LEFT JOIN (SELECT temp.* FROM ofc_order_status temp
+    SELECT
+      ofi.order_code,
+      ofi.order_batch_number,
+      ofi.order_time,
+      ofi.cust_code,
+      ofi.cust_name,
+      ofi.sec_cust_code,
+      ofi.sec_cust_name,
+      ofi.order_type,
+      ofi.business_type,
+      ofi.cust_order_code,
+      ofi.notes,
+      ofi.store_code,
+      ofi.store_name,
+      ofi.platform_type,
+      ofi.order_source,
+      ofi.product_type,
+      ofi.product_name,
+      ofi.finished_time,
+      ofi.abolish_mark,
+      ofi.abolish_time,
+      ofi.abolisher,
+      ofi.creation_time,
+      ofi.creator,
+      ofi.operator,
+      ofi.oper_time,
+      ofi.sale_organization,
+      ofi.product_group,
+      ofi.sale_department,
+      ofi.sale_group,
+      ofi.sale_department_desc,
+      ofi.sale_group_desc,
+      ofi.creator_name,
+      ofi.operator_name,
+      ofi.abolisher_name,
+      ofi.merchandiser,
+      ofi.transport_type,
+      ofi.base_code,
+      ofi.base_name,
+      ofi.area_code,
+      ofi.area_name,
+    odb.consignee_name,owi.warehouse_name,oos.order_status FROM ofc_fundamental_information ofi
+      LEFT JOIN (SELECT
+        temp.order_code,
+        temp.order_status,
+        temp.status_desc,
+        temp.lasted_oper_time,
+        temp.notes,
+        temp.operator,
+        temp.creation_time
+       FROM ofc_order_status temp
           WHERE temp.lasted_oper_time = (
           SELECT MAX(lasted_oper_time) FROM ofc_order_status
           WHERE temp.order_code = order_code

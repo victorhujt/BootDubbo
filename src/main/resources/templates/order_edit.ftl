@@ -2284,11 +2284,6 @@
         var tag = "manage";
         var ofcOrderDTOJson = JSON.stringify(jsonStr);
         var orderGoodsListStr = JSON.stringify(orderGoodsList);
-        /*xescm.common.loadPage("/ofc/orderEdit/" + tag + "/" + ofcOrderDTOJson
-                + "/" + orderGoodsListStr+"~`"
-                + "/" + cscContantAndCompanyDtoConsignorStr
-                + "/" + cscContantAndCompanyDtoConsigneeStr
-                + "/" + cscSupplierInfoDtoStr);*/
 
         xescm.common.submit("/ofc/orderEdit"
                 ,{"ofcOrderDTOStr":ofcOrderDTOJson
@@ -2304,21 +2299,7 @@
                 })
     }
 
-    function deleteGoods(ordercode,goodsCode) {
-        var result  = confirm("您确定要删除此货品?");
-        if(result == true) {
-            $.get("/ofc/goodsDelete",{"orderCode":ordercode,"goodsCode":goodsCode},function (data) {
-                $("#confirmBox").modal('hide');
-                if(data == 200){
-                    window.location.href="/orderScreenByCondition?tag=manage";
-                } else {
-                    alert("删除货品失败,请联系管理员!");
-                }
-            });
-        }
 
-
-    }
     function deleteGood(obj) {
         $(obj).parent().parent().remove();
     }

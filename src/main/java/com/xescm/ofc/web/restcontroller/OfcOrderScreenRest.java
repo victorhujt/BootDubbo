@@ -1,54 +1,58 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.ofc.domain.OfcPlanScreenCondition;
-import com.xescm.ofc.domain.OfcPlanScreenResult;
 import com.xescm.ofc.domain.OrderScreenCondition;
+import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.service.OfcPlanScreenService;
+import com.xescm.ofc.service.OfcOrderScreenService;
 import com.xescm.ofc.web.controller.BaseController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
 import java.util.List;
 
-//import org.apache.commons.lang.StringUtils;
 
 /**
+ * 订单查询
  * Created by lyh on 2016/10/10.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
-public class OfcPlanScreenRest extends BaseController {
+public class OfcOrderScreenRest extends BaseController {
 
-    @Autowired
-    private OfcPlanScreenService ofcPlanScreenService;
+    @Resource
+    private OfcOrderScreenService ofcOrderScreenService;
 
-    @RequestMapping(value = "/queryPlanPageByCondition", method=RequestMethod.POST)
+    /**
+     * 订单条件查询
+     * @param page
+     * @param orderScreenCondition
+     * @return
+     */
+    @RequestMapping(value = "/queryOrderPageByCondition", method=RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> queryPlanPageByCondition(Page<OrderScreenCondition> page, HttpServletRequest request, OfcPlanScreenCondition ofcPlanScreenCondition) {
-        logger.debug("==>订单中心订单查询条件 queryPlanPageByCondition={}", ofcPlanScreenCondition);
+    public Wrapper<?> queryOrderPageByCondition(Page<OrderScreenCondition> page,  OrderScreenCondition orderScreenCondition) {
+        logger.debug("==>订单中心订单查询条件 queryOrderPageByCondition={}", orderScreenCondition);
 //        logger.debug("==>订单中心订单查询标志位 tag={}", tag);
-        PageInfo<OfcPlanScreenResult> pageInfo = null;
+        PageInfo<OrderScreenResult> pageInfo;
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
-            List<OfcPlanScreenResult> orderScreenResults = ofcPlanScreenService.planScreen(ofcPlanScreenCondition);
-           // pageInfo = new PageInfo<OfcPlanScreenResult>(orderScreenResults);
+            List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
+           // pageInfo = new PageInfo<OrderScreenResult>(orderScreenResults);
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (BusinessException ex){
-            logger.error("分页查询供应商集合出现异常:{}", ex.getMessage(), ex);
+            logger.error("分页查询订单列表出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }catch (Exception ex){
-            logger.error("分页查询供应商集合出现异常:{}", ex.getMessage(), ex);
+            logger.error("分页查询订单列表出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);

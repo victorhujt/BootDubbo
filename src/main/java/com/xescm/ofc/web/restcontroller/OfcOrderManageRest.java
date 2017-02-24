@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
@@ -11,6 +11,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
@@ -23,7 +24,6 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,45 +31,54 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * Created by ydx on 2016/10/11.
+ * <p>Title:    .客户中心 订单管理 </p>
+ * <p>Description TODO </p>
+ * <p>Company:    http://www.hnxianyi.com </p>
+ *
+ * @author        杨东旭
+ * @CreateDate    2016/10/11
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderManageRest extends BaseController{
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private OfcOrderDtoService ofcOrderDtoService;
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private CscStoreEdasService cscStoreEdasService;
-    @Autowired
+    @Resource
     private OfcTransplanInfoService ofcTransplanInfoService;
 
     /**
      * 订单审核/反审核
-     * @param
-     * @return
+     * @param orderCode  订单编号
+     * @param orderStatus   订单状态
+     * @param reviewTag     审核标记
+     * @return      Wrapper
      */
     @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderAudit(Model model, String orderCode, String orderStatus, String reviewTag, HttpServletResponse response){
+    public Wrapper<?> orderAudit(String orderCode, String orderStatus, String reviewTag){
         logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
         logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
@@ -77,7 +86,7 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单审核反审核出现未知异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
@@ -85,15 +94,15 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 订单删除
-     * @param orderCode
+     * @param orderCode     订单编号
      * @return com.xescm.uam.utils.wrap.Wrapper;
      */
     @RequestMapping(value = "/orderDelete", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderDelete(Model model, String orderCode, String orderStatus){
+    public Wrapper<?> orderDelete( String orderCode, String orderStatus){
         logger.debug("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单删除订单状态code orderStatus={}", orderStatus);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderDelete(orderCode,orderStatus,authResDtoByToken);
@@ -109,15 +118,15 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 订单取消
-     * @param orderCode
-     * @return
+     * @param orderCode     订单编号
+     * @return      Wrapper
      */
     @RequestMapping(value = "/orderCancel", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderCancel(Model model, String orderCode, String orderStatus, HttpServletResponse response){
+    public Wrapper<?> orderCancel( String orderCode, String orderStatus){
         logger.debug("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);
         logger.debug("==>订单中心订单管理订单取消订单状态code orderStatus={}", orderStatus);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
             result = ofcOrderManageService.orderCancel(orderCode,orderStatus,authResDtoByToken);
@@ -125,18 +134,18 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常:{}", ex.getMessage(),ex);
+            logger.error("订单中心订单管理订单取消出现未知异常:{}", ex.getMessage(),ex);
             //
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
 
     /**
      * 进入订单编辑
-     * @param orderCode
-     * @param dtotag
-     * @return
+     * @param orderCode    订单编号
+     * @param dtotag    标记
+     * @return  String
      */
     @RequestMapping(value = "/getOrderDetailByCode/{orderCode}/{dtotag}")
     public String getOrderDetailByCode(Model model, @PathVariable String orderCode, @PathVariable String dtotag, Map<String,Object> map){
@@ -157,24 +166,24 @@ public class OfcOrderManageRest extends BaseController{
         CscSupplierInfoDto supportMessage = null;
         List<RmcWarehouseRespDto> rmcWarehouseByCustCode = null;
         List<CscStorevo> cscStoreListResult = null;
-        Wrapper<List<CscStorevo>> storeByCustomerId = null;
+        Wrapper<List<CscStorevo>> storeByCustomerId;
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(orderCode,dtotag);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
             //如果是运输订单,就去找收发货方联系人的信息
-            if(OrderConstConstant.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
-                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,customerCode,authResDtoByToken);
-                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,customerCode,authResDtoByToken);
+            if(OrderConstant.TRANSPORT_ORDER.equals(ofcOrderDTO.getOrderType())){
+                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNOR,customerCode,authResDtoByToken);
+                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
             }
             //仓配订单
-            if(OrderConstConstant.WAREHOUSEDISTRIBUTIONORDER.equals(ofcOrderDTO.getOrderType())){
+            if(OrderConstant.WAREHOUSE_DIST_ORDER.equals(ofcOrderDTO.getOrderType())){
 
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
-                if(OrderConstConstant.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
-                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNOR,customerCode,authResDtoByToken);
-                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACTPURPOSECONSIGNEE,customerCode,authResDtoByToken);
+                if(Objects.equals(OrderConstConstant.WEARHOUSE_WITH_TRANS, ofcOrderDTO.getProvideTransport())){
+                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNOR,customerCode,authResDtoByToken);
+                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
                 }
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息
                 if("62".equals(businessTypeHead)){
@@ -183,11 +192,9 @@ public class OfcOrderManageRest extends BaseController{
             }
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             queryStoreDto.setCustomerCode(customerCode);
-            storeByCustomerId = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
+            storeByCustomerId = (Wrapper<List<CscStorevo>>) cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
-        }catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
         }
         if (ofcOrderDTO!=null){
@@ -207,11 +214,11 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 订单删除货品
-     * @param ofcGoodsDetailsInfo
-     * @return
+     * @param ofcGoodsDetailsInfo   货品明细
+     * @return  void
      */
     @RequestMapping("/goodsDelete")
-    public void goodsDelete(Model model, OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
+    public void goodsDelete( OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
         logger.debug("==>订单中心订单管理订单删除实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
         try {
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
@@ -230,10 +237,9 @@ public class OfcOrderManageRest extends BaseController{
             //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/companySelect",method = RequestMethod.POST)
-    public void companySelByApi(Model model, RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
+    public void companySelByApi(RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
         try{
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
             if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
                     && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
                     && rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/").length>=2){
@@ -272,16 +278,21 @@ public class OfcOrderManageRest extends BaseController{
 
     /**
      * 计划单修改
-     * @param
-     * @return
+     * @param planCode  计划单编号
+     * @param planStatus    计划单状态
+     * @param serviceProviderName   服务商
+     * @param serviceProviderContact    服务商联系人
+     * @param serviceProviderContactPhone   服务商联系电话
+     * @return  Wrapper
      */
     @RequestMapping(value = "/planUpdate", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> planUpdate(Model model, String planCode, String planStatus, String serviceProviderName,String serviceProviderContact,String serviceProviderContactPhone,HttpServletResponse response){
+    public Wrapper<?> planUpdate(String planCode, String planStatus, String serviceProviderName
+            ,String serviceProviderContact,String serviceProviderContactPhone){
         logger.debug("==>计划单编号", planCode);
         logger.debug("==>计划单资源分配状态", planStatus);
         logger.debug("==>服务商名称", serviceProviderName);
-        String result = null;
+        String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         String userName=authResDtoByToken.getUserName();
 
@@ -298,15 +309,19 @@ public class OfcOrderManageRest extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
 
+    /**
+     * 服务商筛选
+     * @param planCode 计划单编号
+     * @param response ServletResponse
+     */
     @ApiOperation(value="服务商筛选", notes="根据查询条件筛选服务商")
     @ApiImplicitParams({
             //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/planSeleForTime", method = RequestMethod.POST)
     @ResponseBody
-    public void planSeleForTime(Model model, String planCode,ServletResponse response){
+    public void planSeleForTime( String planCode,ServletResponse response){
         logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", planCode);
-        String result = null;
         OfcTransplanInfo ofcTransplanInfo= ofcTransplanInfoService.selectByKey(planCode);
         RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
         if(ofcTransplanInfo.getExpectedArrivedTime()!=null){

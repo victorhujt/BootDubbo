@@ -4,33 +4,30 @@ import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.annotation.Resource;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundamentalInformation> implements OfcFundamentalInformationService{
 
-    @Autowired
+    @Resource
     private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
 
     @Override
     public String getOrderCodeByCustOrderCode(String custOrderCode) {
-        String orderCode = ofcFundamentalInformationMapper.getOrderCodeByCustOrderCode(custOrderCode);
-        return orderCode;
+        return ofcFundamentalInformationMapper.getOrderCodeByCustOrderCode(custOrderCode);
     }
 
     @Override
     public int checkCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation) {
-        int result =  ofcFundamentalInformationMapper.checkCustOrderCode(ofcFundamentalInformation);
-        return result;
+        return ofcFundamentalInformationMapper.checkCustOrderCode(ofcFundamentalInformation);
     }
 
     @Override
@@ -55,9 +52,9 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
 
     /**
      * 根据客户订单编号与客户编号查询不是已经取消的订单
-     * @param custOrderCode
-     * @param custCode
-     * @return
+     * @param custOrderCode     客户订单编号
+     * @param custCode      客户编号
+     * @return  OfcFundamentalInformation
      */
     public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode){
         OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();

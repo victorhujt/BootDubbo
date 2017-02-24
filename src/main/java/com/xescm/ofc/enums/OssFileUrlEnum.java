@@ -1,6 +1,7 @@
 package com.xescm.ofc.enums;
 
 /**
+ *
  * Created by hujintao on 2016/12/14.
  */
 public enum OssFileUrlEnum {

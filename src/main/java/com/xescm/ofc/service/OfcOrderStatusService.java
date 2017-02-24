@@ -27,4 +27,7 @@ public interface OfcOrderStatusService extends IService<OfcOrderStatus> {
     OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode);
 
     OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode);
+
+    @Override
+    int save(OfcOrderStatus record);
 }

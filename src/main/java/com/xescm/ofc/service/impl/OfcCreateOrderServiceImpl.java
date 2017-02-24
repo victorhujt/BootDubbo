@@ -11,7 +11,10 @@ import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
-import com.xescm.csc.provider.*;
+import com.xescm.csc.provider.CscCustomerEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
+import com.xescm.csc.provider.CscStoreEdasService;
+import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -30,10 +33,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,33 +48,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private CscCustomerEdasService cscCustomerEdasService;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private CscWarehouseEdasService cscWarehouseEdasService;
-    @Autowired
+    @Resource
     private CscStoreEdasService cscStoreEdasService;
-    @Autowired
-    private CscSupplierEdasService cscSupplierEdasService;
-    @Autowired
+//    @Resource
+//    private CscSupplierEdasService cscSupplierEdasService;
+    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
-    @Autowired
+    @Resource
     private RmcAddressEdasService rmcAddressEdasService;
-    @Autowired
+    @Resource
     private OfcCreateOrderMapper createOrdersMapper;
 
     @Override
@@ -81,7 +84,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     @Transactional
     public ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException {
-        ResultModel resultModel = null;
+        ResultModel resultModel;
         //校验数据：货主编码 对应客户中心的custId
         String custCode = createOrderEntity.getCustCode();
         String custName = createOrderEntity.getCustName();
@@ -121,12 +124,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             logger.error("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
             return resultModel;
         }
-        //校验卡班类型订单是否有上门提货和二次配送两个字段
-//        if(StringUtils.equals(TRANSPORTORDER,orderType) && StringUtils.equals(WITHTHEKABAN,businessType)
-//                && (PubUtils.isSEmptyOrNull(createOrderEntity.getTwoDistribution()) || PubUtils.isSEmptyOrNull(createOrderEntity.getPickUpGoods()))){
-//            logger.error("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
-//            return new ResultModel(ResultModel.ResultEnum.CODE_0010);
-//        }
 
         //check 数量、重量、体积 三选一不能为空
         resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
@@ -135,12 +132,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             return resultModel;
         }
         //校验：店铺编码，获取该客户下的店铺编码
-        String storeCode = createOrderEntity.getStoreCode();
+        String storeCode;
         //店铺名称
-        String storeName = null;
+        String storeName;
         QueryStoreDto storeDto = new QueryStoreDto();
         storeDto.setCustomerCode(custCode);
-        Wrapper<List<CscStorevo>> cscStoreVoList = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(storeDto);
+        Wrapper<List<CscStorevo>> cscStoreVoList = cscStoreEdasService.getStoreByCustomerId(storeDto);
         if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
             logger.info("获取该客户下的店铺编码接口返回成功，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
@@ -207,76 +204,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     }
 
 
-    /**
-     * 保存收货信息
-     * （收发货信息不维护到客户中心 date:2016-11-20）
-     *
-     * @param purpose
-     * @param custId
-     * @param createOrderEntity
-     */
-    /*public void addCscContantAndCompanyDto(String purpose, String custId, CreateOrderEntity createOrderEntity, String groupId) {
-        CscContantAndCompanyDto cscContantAndCompanyVo = new CscContantAndCompanyDto();
-        cscContantAndCompanyVo.setGroupId(groupId);
-        cscContantAndCompanyVo.setCustomerId(custId);
-        cscContantAndCompanyVo.setUserId(CreateOrderApiConstant.USER_ID);
-        cscContantAndCompanyVo.setUserName(CreateOrderApiConstant.USER_NAME);
-        if (StringUtils.equals("1", purpose)) {
-            AddressDto addressDto = new AddressDto();
-            addressDto.setProvinceName(createOrderEntity.getConsignorProvince());
-            addressDto.setCityName(createOrderEntity.getConsignorCity());
-            addressDto.setDistrictName(createOrderEntity.getConsignorCounty());
-            Map<String, String> addressMap = getAddressCode(addressDto);
-            String provinceCode = addressMap.get("provinceCode");
-            String cityCode = addressMap.get("cityCode");
-            String districtCode = addressMap.get("districtCode");
-            CscContact cscContactDto = new CscContact();
-            cscContactDto.setPurpose("1");
-            cscContactDto.setContactCode(createOrderEntity.getConsignorName());
-            cscContactDto.setContactName(createOrderEntity.getConsignorContact());
-            cscContactDto.setPhone(createOrderEntity.getConsignorPhone());
-            cscContactDto.setProvinceName(createOrderEntity.getConsignorProvince());
-            cscContactDto.setProvince(provinceCode);
-            cscContactDto.setCityName(createOrderEntity.getConsignorCity());
-            cscContactDto.setCity(cityCode);
-            cscContactDto.setAreaName(createOrderEntity.getConsignorCounty());
-            cscContactDto.setArea(districtCode);
-            cscContactDto.setStreetName(createOrderEntity.getConsignorTown());
-            cscContactDto.setDetailAddress(createOrderEntity.getConsignorAddress());
-            cscContantAndCompanyVo.setCscContact(cscContactDto);
-            CscContactCompany cscContactCompanyDto = new CscContactCompany();
-            cscContactCompanyDto.setContactCompanyName(createOrderEntity.getConsignorName());
-            cscContantAndCompanyVo.setCscContactCompany(cscContactCompanyDto);
-        } else if (StringUtils.equals("2", purpose)) {
-            AddressDto addressDto = new AddressDto();
-            addressDto.setProvinceName(createOrderEntity.getConsignorProvince());
-            addressDto.setCityName(createOrderEntity.getConsignorCity());
-            addressDto.setDistrictName(createOrderEntity.getConsignorCounty());
-            Map<String, String> addressMap = getAddressCode(addressDto);
-            String provinceCode = addressMap.get("provinceCode");
-            String cityCode = addressMap.get("cityCode");
-            String districtCode = addressMap.get("districtCode");
-            CscContact cscContactDto = new CscContact();
-            cscContactDto.setPurpose("2");
-            cscContactDto.setContactCode(createOrderEntity.getConsigneeName());
-            cscContactDto.setContactName(createOrderEntity.getConsigneeContact());
-            cscContactDto.setPhone(createOrderEntity.getConsigneePhone());
-            cscContactDto.setProvinceName(createOrderEntity.getConsigneeProvince());
-            cscContactDto.setProvince(provinceCode);
-            cscContactDto.setCityName(createOrderEntity.getConsigneeCity());
-            cscContactDto.setCity(cityCode);
-            cscContactDto.setAreaName(createOrderEntity.getConsigneeCounty());
-            cscContactDto.setArea(districtCode);
-            cscContactDto.setStreetName(createOrderEntity.getConsigneeTown());
-            cscContactDto.setDetailAddress(createOrderEntity.getConsigneeAddress());
-            cscContantAndCompanyVo.setCscContact(cscContactDto);
-            CscContactCompany cscContactCompanyDto = new CscContactCompany();
-            cscContactCompanyDto.setContactCompanyName(createOrderEntity.getConsigneeName());
-            cscContantAndCompanyVo.setCscContactCompany(cscContactCompanyDto);
-        }
-        Wrapper<?> wrapper = feignCscCustomerAPIClient.addCscContantAndCompany(cscContantAndCompanyVo);
-        logger.info("创建收发货方信息：{}", wrapper.getMessage());
-    }*/
+
 
 
 
@@ -287,17 +215,17 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * 否则不进行操作
      * 保存或更新订单后调用自动审核的方法
      *
-     * @param ofcFundamentalInformation
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcWarehouseInformation
-     * @param ofcGoodsDetailsInfoList
-     * @param ofcOrderStatus
-     * @return
-     * @throws BusinessException
+     * @param ofcFundamentalInformation     订单基本信息
+     * @param ofcDistributionBasicInfo      运输单基本信息
+     * @param ofcFinanceInformation         费用明细
+     * @param ofcWarehouseInformation       仓储信息
+     * @param ofcGoodsDetailsInfoList       货品明细
+     * @param ofcOrderStatus        订单状态
+     * @return      ResultModel
+     * @throws BusinessException    异常
      */
     @Transactional
-    public ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
+    private ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
                                     OfcDistributionBasicInfo ofcDistributionBasicInfo,
                                     OfcFinanceInformation ofcFinanceInformation,
                                     OfcWarehouseInformation ofcWarehouseInformation,
@@ -312,7 +240,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             String orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
             //订单已存在,获取订单的最新状态,只有待审核的才能更新
-            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDINGAUDIT)) {
+            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                 logger.error("订单已经审核custOrderCode:{},custCode:{}", custOrderCode, custCode);
                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
             }
@@ -363,14 +291,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     /**
      * 自动审核
-     * @param ofcFundamentalInformation
-     * @param ofcDistributionBasicInfo
-     * @param ofcFinanceInformation
-     * @param ofcWarehouseInformation
-     * @param ofcGoodsDetailsInfoList
-     * @param ofcOrderStatus
+     * @param ofcFundamentalInformation     订单基本
+     * @param ofcDistributionBasicInfo      运输
+     * @param ofcFinanceInformation         费用明细
+     * @param ofcWarehouseInformation       仓储信息
+     * @param ofcGoodsDetailsInfoList       货品明细
      */
-    public void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
+    private void orderApply(OfcFundamentalInformation ofcFundamentalInformation,
                            OfcDistributionBasicInfo ofcDistributionBasicInfo,
                            OfcFinanceInformation ofcFinanceInformation,
                            OfcWarehouseInformation ofcWarehouseInformation,
@@ -378,8 +305,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-//        String wrapper = ofcOrderManageService.orderAuditByTrans(ofcFundamentalInformation,ofcGoodsDetailsInfoList,ofcDistributionBasicInfo,ofcFinanceInformation,ofcOrderStatus.getOrderStatus(),"review",authResDto);
-//        logger.info("自动审核操作：{}",wrapper);
         Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
         logger.info("自动审核操作：" + wrapper.getCode());
     }
@@ -387,8 +312,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     /**
      * 根据省市区名称获取编码
      *
-     * @param addressDto
-     * @return
+     * @param addressDto    地址实体
+     * @return  Map
      */
     public Map<String, String> getAddressCode(RmcAddressNameVo addressDto) {
         if (StringUtils.isBlank(addressDto.getProvinceName())
@@ -414,8 +339,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     /**
      * 根据省市区名称获取编码
      * 补历史订单临时使用
-     * @param addressDto
-     * @return
+     * @param addressDto    地址实体
+     * @return      Map
      */
     public Map<String, String> getAddressCodeTemp(RmcAddressNameVo addressDto) {
         if (StringUtils.isBlank(addressDto.getProvinceName())

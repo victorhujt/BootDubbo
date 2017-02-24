@@ -37,9 +37,23 @@ public interface OfcOrderManageService {
 
     RmcServiceCoverageForOrderVo copyDestinationPlace(String departurePlaceCode, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo);
 
+    void pushOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
+            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
+
+    void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
+            , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
+            , OfcFinanceInformation ofcFinanceInformation);
+
     RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String pickup);
 
     void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus);
 
     void pullOfcOrderPlanCode(AcPlanDto acPlanDto);
+
+    String orderAutoAudit(OfcFundamentalInformation ofcFundamentalInformation,
+                          List<OfcGoodsDetailsInfo> goodsDetailsList,
+                          OfcDistributionBasicInfo ofcDistributionBasicInfo,
+                          OfcWarehouseInformation ofcWarehouseInformation,
+                          OfcFinanceInformation ofcFinanceInformation,
+                          String orderStatus, String reviewTag, AuthResDto authResDtoByToken);
 }

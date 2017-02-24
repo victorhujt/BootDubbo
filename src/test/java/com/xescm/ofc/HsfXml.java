@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by lyh on 2016/12/29.
  */
 public class HsfXml {
-    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("C:\\taobao-tomcat-7.0.59-ofc\\deploy");
+    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("H:\\ofcTomcat\\taobao-tomcat-7.0.59\\deploy");
 
     static public void loadConsumer() {
         final String path = "edas\\consumer\\ofc-hsf-consumer.xml";

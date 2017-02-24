@@ -2,34 +2,32 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.ofc.domain.OfcAttachment;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.mapper.OfcAttachmentMapper;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcOssManagerService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
+import javax.annotation.Resource;
+
+import static com.xescm.ofc.constant.GenCodePreffixConstant.ATTACHMENT_PRE;
 
 /**
+ *
  * Created by hujintao on 2016/12/17.
  */
 @Service
 public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implements OfcAttachmentService {
 
-    @Autowired
-    private OfcAttachmentMapper ofcAttachmentMapper;
-
-    @Autowired
+    @Resource
     private CodeGenUtils codeGenUtils;
 
-    @Autowired
+    @Resource
     private OfcOssManagerService ofcOssManagerService;
 
     @Override
     public OfcAttachment saveAttachment(OfcAttachment attachment) {
-        attachment.setSerialNo(codeGenUtils.getNewWaterCode("AT",6));
+        attachment.setSerialNo(codeGenUtils.getNewWaterCode(ATTACHMENT_PRE,6));
         save(attachment);
         return attachment;
     }
@@ -47,14 +45,5 @@ public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implem
         }else{
             throw new BusinessException("附件不存在");
         }
-    }
-
-    public void updatePicParamByserialNo(OfcAttachment attachment){
-        ofcAttachmentMapper.updatePicParamByserialNo(attachment);
-    }
-
-    @Override
-    public String operateAttachMent(String style,String serialNo) throws UnsupportedEncodingException {
-       return  ofcOssManagerService.operateImage(style,serialNo);
     }
 }

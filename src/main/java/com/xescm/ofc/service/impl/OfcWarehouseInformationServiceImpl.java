@@ -11,24 +11,25 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouseInformation> implements OfcWarehouseInformationService{
-    @Autowired
+    @Resource
     private OfcWarehouseInformationMapper ofcWarehouseInformationMapper;
-    @Autowired
+    @Resource
     private CscWarehouseEdasService cscWarehouseEdasService;
-    @Autowired
+    @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
 
     @Override
@@ -72,7 +73,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             for(CscWarehouseDto cscWH : result){
                 RmcWarehouseDto rmcWarehouse = new RmcWarehouseDto();
                 rmcWarehouse.setWarehouseCode(cscWH.getWarehouseCode());
-                RmcWarehouseRespDto rmcWarehouseResult = new RmcWarehouseRespDto();
+                RmcWarehouseRespDto rmcWarehouseResult;
                 Wrapper<RmcWarehouseRespDto> rmcWarehouseByid =  rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
                     //throw new BusinessException(rmcWarehouseByid.getMessage());

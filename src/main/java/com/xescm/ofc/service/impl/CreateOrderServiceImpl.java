@@ -4,6 +4,8 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
@@ -24,10 +26,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,19 +44,19 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-    @Autowired
+    @Resource
     private CodeGenUtils codeGenUtils;
-    @Autowired
+    @Resource
     private OfcCreateOrderErrorLogService ofcCreateOrderErrorLogService;
-    @Autowired
+    @Resource
     private OfcCreateOrderService ofcCreateOrderService;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private OfcCreateOrderMapper ofcCreateOrderMapper;
 
 
@@ -67,7 +69,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * 创单api  custOrderCode与typeId是相同的
      *
      * @param data 传入的json格式的字符串
-     * @throws Exception
+     * @throws Exception    异常
      */
     public String createOrder(String data) throws Exception {
         logger.info("订单中心创建订单接口开始");
@@ -92,13 +94,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                 String orderCode = information.getOrderCode();
                                 OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
                                 //订单已存在,获取订单的最新状态,只有待审核的才能更新
-                                if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDINGAUDIT)) {
+                                if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                     logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
                                     addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
                                     return "";
                                 }
                             }
-                            String orderCode = codeGenUtils.getNewWaterCode("SO", 6);
+                            String orderCode = codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE, 6);
                             resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                             if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                                 addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
@@ -123,11 +125,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             //转换返回结果
             if (!CollectionUtils.isEmpty(createOrderResultList)) {
                 String code = "200";
-                StringBuffer reason = new StringBuffer();
+                StringBuilder reason = new StringBuilder();
                 List<MessageDto> typeIdList = new ArrayList<>();
                 for (int index = 0; index < createOrderResultList.size(); index++) {
                     CreateOrderResult orderResult = createOrderResultList.get(index);
-                    if (orderResult.getResult() == false) {
+                    if (!orderResult.getResult()) {
                         code = "500";
                     }
                     String typeIdAndReason = "typeId:" + orderResult.getTypeId() + "||reason:" + orderResult.getReason();
@@ -168,7 +170,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                           String custOrderCode, String orderCode,
                                           ResultModel resultModel,
                                           List<CreateOrderResult> createOrderResultList) {
-        reason = resultModel.getDesc();
+        if(PubUtils.trimAndNullAsEmpty(reason).equals("")) reason = resultModel.getDesc();
         CreateOrderResult createOrderResult = new CreateOrderResult(result, reason, custOrderCode, orderCode);
         createOrderResultList.add(createOrderResult);
     }
@@ -186,8 +188,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * 状态已经已完成：订单已完成，无法取消
      * 状态是待审核，直接删除订单
      *
-     * @param cancelOrderDto
-     * @return
+     * @param cancelOrderDto    取消实体
+     * @return     CannelOrderVo
      */
     @Transactional
     @Override
@@ -216,11 +218,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
         }
         String orderState = ofcOrderStatus.getOrderStatus();
-        if (StringUtils.equals(orderState, HASBEENCOMPLETED)) {
+        if (StringUtils.equals(orderState, HASBEEN_COMPLETED)) {
             cannelOrderVo.setReason("已完成的订单");
             cannelOrderVo.setResultCode("0");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
-        } else if (StringUtils.equals(orderState, HASBEENCANCELED)) {
+        } else if (StringUtils.equals(orderState, HASBEEN_CANCELED)) {
             cannelOrderVo.setReason("已取消的订单");
             cannelOrderVo.setResultCode("0");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ILLEGAL_ARGUMENT_MESSAGE, cannelOrderVo);
@@ -247,7 +249,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * @param orderTime
      * @param ex
      */
-    public void saveErroeLog(String cCustOrderCode, String custCode, String orderTime, Exception ex) {
+    private void saveErroeLog(String cCustOrderCode, String custCode, String orderTime, Exception ex) {
         OfcCreateOrderErrorLog ofcCreateOrderErrorLog = new OfcCreateOrderErrorLog();
         ofcCreateOrderErrorLog.setCustOrderCode(cCustOrderCode);
         ofcCreateOrderErrorLog.setCustCode(custCode);

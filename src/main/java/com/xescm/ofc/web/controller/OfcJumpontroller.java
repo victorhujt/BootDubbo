@@ -13,13 +13,14 @@ import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.OfcMerchandiserService;
+import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,32 +28,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
+ * 页面跳转
  * Created by lyh on 2016/10/18.
  */
 @Controller
 @RequestMapping(produces = {"application/json;charset=UTF-8"})
 public class OfcJumpontroller extends BaseController{
 
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private CscStoreEdasService cscStoreEdasService;
-    @Autowired
+    @Resource
     private OfcMerchandiserService ofcMerchandiserService;
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
-    @Autowired
+    @Resource
     private CscCustomerEdasService cscCustomerEdasService;
 
 
     @RequestMapping(value="/ofc/orderPlace")
-    public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
-        List<RmcWarehouseRespDto> rmcWarehouseByCustCode = null;
+    public ModelAndView index(Model model,Map<String,Object> map){
+        List<RmcWarehouseRespDto> rmcWarehouseByCustCode;
         List<CscStorevo> cscStoreListResult = null;
         setDefaultModel(model);
         try{
@@ -60,7 +61,7 @@ public class OfcJumpontroller extends BaseController{
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             String customerCode = authResDtoByToken.getGroupRefCode();
             queryStoreDto.setCustomerCode(customerCode);
-            Wrapper<List<CscStorevo>> storeByCustomerId = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
+            Wrapper<List<CscStorevo>> storeByCustomerId = cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 
@@ -69,7 +70,6 @@ public class OfcJumpontroller extends BaseController{
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
             logger.error("订单中心跳转下单页面出现异常:{}", ex.getMessage(), ex);
-            //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
         map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
@@ -78,12 +78,12 @@ public class OfcJumpontroller extends BaseController{
 
     }
      @RequestMapping(value = "/ofc/orderManage")
-    public String orderManage(Model model){
+    public String orderManage(){
         return "order_manage";
     }
 
     @RequestMapping(value = "/ofc/orderScreen")
-    public String orderScreen(Model model){
+    public String orderScreen(){
         return "order_screen";
     }
 
@@ -94,7 +94,7 @@ public class OfcJumpontroller extends BaseController{
     })
 
     @RequestMapping(value="/ofc/orderFollow",method = RequestMethod.GET)
-    public String orderFollow(Model model, String code, String followTag, Map<String,Object> map){
+    public String orderFollow(String code, String followTag){
         logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
         logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
         return "order_follow";
@@ -102,17 +102,16 @@ public class OfcJumpontroller extends BaseController{
 
     /**
      * 进入主页
-     * @param model
      * @return
      */
     @RequestMapping(value = "/index")
-    public String toIndex(Model model){
+    public String toIndex(){
 
         return "index";
     }
 
     @RequestMapping(value = "/ofc/planAllocation")
-    public String planAllocation(Model model,Map<String,Object> map){
+    public String planAllocation(Model model){
         try{
             Date now = new Date();
             Calendar c = Calendar.getInstance();
@@ -126,8 +125,6 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
-    @Autowired
-    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
     /**
      * 城配开单
      * @param model

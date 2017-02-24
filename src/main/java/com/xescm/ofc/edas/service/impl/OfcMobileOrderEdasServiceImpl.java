@@ -17,23 +17,24 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by wangsongtao on 2016/12/25.
  */
 @Service
 public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
+    @Resource
     private OfcMobileOrderService ofcMobileOrderService;
 
-    @Autowired
+    @Resource
     private OfcAttachmentService ofcAttachmentService;
 
     @Override
@@ -121,7 +122,6 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
             logger.debug("保存附件信息={}", e.getMessage(), e);
-            e.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resultVo);
@@ -144,7 +144,6 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
             logger.debug("删除附件信息={}", e.getMessage(), e);
-            e.printStackTrace();
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);

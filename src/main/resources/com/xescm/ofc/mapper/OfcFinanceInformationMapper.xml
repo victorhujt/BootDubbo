@@ -5,6 +5,7 @@
         <!--
           WARNING - @mbg.generated
         -->
+        <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
         <result column="service_charge" property="serviceCharge" jdbcType="DECIMAL" />
         <result column="order_amount" property="orderAmount" jdbcType="DECIMAL" />
         <result column="payment_amount" property="paymentAmount" jdbcType="DECIMAL" />
@@ -12,7 +13,6 @@
         <result column="collect_service_charge" property="collectServiceCharge" jdbcType="DECIMAL" />
         <result column="collect_flag" property="collectFlag" jdbcType="VARCHAR" />
         <result column="count_flag" property="countFlag" jdbcType="VARCHAR" />
-        <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
         <result column="notes" property="notes" jdbcType="VARCHAR" />
         <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
         <result column="creator" property="creator" jdbcType="VARCHAR" />

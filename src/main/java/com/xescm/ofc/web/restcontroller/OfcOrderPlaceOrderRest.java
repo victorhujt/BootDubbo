@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
@@ -32,54 +32,59 @@ import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
+ * 我要下单
  * Created by lyh on 2016/10/8.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderPlaceOrderRest extends BaseController{
 
-    @Autowired
+    @Resource
     private OfcOrderPlaceService ofcOrderPlaceService;
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
-    @Autowired
+    @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
-    @Autowired
+    @Resource
     private CscSupplierEdasService cscSupplierEdasService;
-    @Autowired
+    @Resource
     private CscContactEdasService cscContactEdasService;
 
     /**
      * 编辑
-     * @param
-     * @param response
-     * @return
+     * @param ofcOrderDTOStr      orderDto的json
+     * @param orderGoodsListStr     货品列表json
+     * @param cscContantAndCompanyDtoConsignorStr       发货方json
+     * @param cscContantAndCompanyDtoConsigneeStr       收货方json
+     * @param cscSupplierInfoDtoStr     供应商json
+     * @param tag   各种下单方式标记
+     * @return      Wrapper
      */
     @RequestMapping("/orderEdit")
     @ResponseBody
-    public Wrapper<?> orderEdit(Model model, String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
-            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
+    public Wrapper<?> orderEdit(String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
+            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOJson={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        String result = null;
+        String result;
         if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
             logger.debug("订单中心编辑入参实体出现异常ofcOrderDTOJson={}", ofcOrderDTOStr);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心编辑入参实体出现异常ofcOrderDTOJson");
@@ -114,10 +119,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 ofcOrderDTO.setOrderTime(new Date());
             }
             if (null == ofcOrderDTO.getProvideTransport()){
-                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
+                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
             }
             if (null == ofcOrderDTO.getUrgent()){
-                ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
+                ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
             }
 
             result =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
@@ -133,24 +138,22 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     *
-     * @param model
+     * 订单中心下单
      * @param ofcOrderDTOStr        订单基本信息、收发货方信息
      * @param orderGoodsListStr     货品信息
      * @param cscContantAndCompanyDtoConsignorStr   发货人信息
      * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
      * @param cscSupplierInfoDtoStr                 供应商信息
      * @param tag           标识下单、编辑、运输开单
-     * @param response
-     * @return
+     * @return      Wrapper
      */
     @RequestMapping("/orderPlaceCon")
     @ResponseBody
-    public Wrapper<?> orderPlace(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
-            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
+    public Wrapper<?> orderPlace(String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
+            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag){
         logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
         logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        String resultMessage = null;
+        String resultMessage;
         try {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -192,16 +195,18 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                     throw new Exception("业务类型是卡班，运输单号是必填项");
                 }
             }
-            if(null !=ofcOrderDTO){
-                if (null == ofcOrderDTO.getProvideTransport()){
-                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
-                }
-                if (null == ofcOrderDTO.getUrgent()){
-                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
-                }
-            }else{
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
+
+            if (null == ofcOrderDTO.getProvideTransport()){
+                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
             }
+            if (null == ofcOrderDTO.getUrgent()){
+                ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
+            }
+
+            if(null == ofcOrderDTO.getOrderTime()){
+                throw new BusinessException("请选择订单日期");
+            }
+
             resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
                     ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
         } catch (BusinessException ex){
@@ -218,108 +223,19 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
     }
-
-
-
-
-    /**
-     *
-     * @param model
-     * @param ofcOrderDTOStr        订单基本信息、收发货方信息
-     * @param orderGoodsListStr     货品信息
-     * @param cscContantAndCompanyDtoConsignorStr   发货人信息
-     * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
-     * @param cscSupplierInfoDtoStr                 供应商信息
-     * @param tag           标识下单、编辑、运输开单
-     * @param response
-     * @return
-     */
-    @RequestMapping("/MobileorderPlaceCon")
-    @ResponseBody
-    public Wrapper<?> mobileOrderPlace(Model model, String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
-            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag, HttpServletResponse response){
-        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
-        logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
-        String resultMessage = null;
-        try {
-            orderGoodsListStr = orderGoodsListStr.replace("~`","");
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
-                ofcOrderDTOStr = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
-            }
-            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
-                cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
-            }
-            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
-                cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
-            }
-            if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
-                cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
-            }
-            // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
-            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
-                ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
-            }
-            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
-            logger.info(cscContantAndCompanyDtoConsignorStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
-            logger.info(cscContantAndCompanyDtoConsigneeStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-            if(cscContantAndCompanyDtoConsignor==null){
-                throw new BusinessException("发货人信息不允许为空！");
-            }
-            if(cscContantAndCompanyDtoConsignee==null){
-                throw new BusinessException("收货人信息不允许为空！");
-            }
-            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
-            //校验业务类型，如果是卡班，必须要有运输单号
-            if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
-                if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
-                    throw new Exception("业务类型是卡班，运输单号是必填项");
-                }
-            }
-            if(null !=ofcOrderDTO){
-                if (null == ofcOrderDTO.getProvideTransport()){
-                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
-                }
-                if (null == ofcOrderDTO.getUrgent()){
-                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
-                }
-            }else{
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
-            }
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
-                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
-        } catch (BusinessException ex){
-            logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        } catch (Exception ex) {
-            if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
-                logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
-            } else {
-                logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-            }
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
-    }
-
-
-
 
 
     /**
      * 货品筛选(调用客户中心API)
+     * @param cscGoods 货品筛选条件
+     * @param response HttpServletResponse
      */
     @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
     @ApiImplicitParams({
             //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
-    public void goodsSelectByCscApi(Model model, CscGoodsApiDto cscGoods, HttpServletResponse response){
+    public void goodsSelectByCscApi(CscGoodsApiDto cscGoods, HttpServletResponse response){
         logger.debug("==>下单货品筛选,cscGoods = {}",cscGoods);
         //调用外部接口,最低传CustomerCode
         try{
@@ -337,10 +253,13 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     /**
      * 运营中心货品筛选(调用客户中心API)
+     * @param cscGoods 货品筛选条件
+     * @param customerCode 客户编码
+     * @return
      */
     @RequestMapping(value = "/goodsSelects",method = RequestMethod.POST)
     @ResponseBody
-    public Object goodsSelectByCsc(String  cscGoods,String customerCode, HttpServletResponse response){
+    public Object goodsSelectByCsc(String  cscGoods,String customerCode){
         //调用外部接口,最低传CustomerCode
         logger.debug("==>下单货品筛选,cscGoods = {}",cscGoods);
         logger.debug("==>下单货品筛选,customerCode = {}",customerCode);
@@ -351,9 +270,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
                 cscGood= JSONObject.parseObject(cscGoods, CscGoodsApiDto.class);
             }
-            /*if(cscGood!=null){
-                PageHelper.startPage(cscGood.getPNum(), cscGood.getPSize());
-            }*/
+
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
@@ -366,11 +283,17 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
 
+    /**
+     * 下单收发货方筛选
+     * @param cscContantAndCompanyDto 收发货方筛选条件
+     * @param customerCode 客户编码
+     * @param response HttpServletResponse
+     */
     @ApiOperation(value="下单收发货方筛选", notes="根据查询条件筛选收发货方")
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/contactSelect",method = RequestMethod.POST)
-    public void contactSelectByCscApi(Model model,  String cscContantAndCompanyDto, String customerCode, HttpServletResponse response){
+    public void contactSelectByCscApi(  String cscContantAndCompanyDto, String customerCode, HttpServletResponse response){
         logger.debug("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
         logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
         //调用外部接口,最低传CustomerCode和purpose
@@ -387,10 +310,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             Wrapper<List<CscContantAndCompanyResponseDto>> cscReceivingInfoList = cscContactEdasService.queryCscReceivingInfoList(csc);
             List<CscContantAndCompanyResponseDto> result = cscReceivingInfoList.getResult();
 
-            /*csc.getCscContact().setPurpose("3");
-            Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
-            List<CscContantAndCompanyVo> resultOfBoth = cscReceivingInfoListOfBoth.getResult();
-            result.addAll(resultOfBoth);*/
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(result));
         } catch (Exception ex) {
@@ -398,13 +317,19 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
     }
 
+    /**
+     * 下单收发货方筛选
+     * @param cscContantAndCompanyDto 收发货方筛选条件
+     * @param customerCode 客户编码
+     * @return
+     */
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody
     public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode){
         logger.debug("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
         logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
         //调用外部接口,最低传CustomerCode和purpose
-        Wrapper<PageInfo<CscContantAndCompanyResponseDto>> result=null;
+        AtomicReference<Wrapper<PageInfo<CscContantAndCompanyResponseDto>>> result= new AtomicReference<>(null);
         try {
             CscContantAndCompanyDto csc = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -415,8 +340,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             csc.getCscContactCompanyDto().setContactCompanyName(PubUtils.trimAndNullAsEmpty(csc.getCscContactCompanyDto().getContactCompanyName()));
             csc.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getContactName()));
             csc.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(csc.getCscContactDto().getPhone()));
-            Wrapper<PageInfo<CscContantAndCompanyResponseDto>> cscReceivingInfoList = cscContactEdasService.queryCscReceivingInfoListWithPage(csc);
-            result = cscReceivingInfoList;
+            result.set(cscContactEdasService.queryCscReceivingInfoListWithPage(csc));
             /*
             csc.getCscContact().setPurpose("3");
             Wrapper<List<CscContantAndCompanyVo>> cscReceivingInfoListOfBoth = feignCscCustomerAPIClient.queryCscReceivingInfoList(csc);
@@ -425,18 +349,21 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         } catch (Exception ex) {
             logger.error("订单中心筛选收发货方出现异常:{}", ex.getMessage(), ex);
         }
-        return result;
+        return result.get();
     }
 
 
     /**
      * 供应商筛选(调用客户中心API)
+     * @param cscSupplierInfoDto 供应商筛选条件
+     * @param response HttpServletResponse
+     * @throws InvocationTargetException
      */
     @ApiOperation(value="下单供应商筛选", notes="根据查询条件筛选供应商")
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
-    public void supplierSelectByCscApi(Model model, CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
+    public void supplierSelectByCscApi( CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         logger.debug("==>下单供应商筛选,cscSupplierInfoDto = {}",cscSupplierInfoDto);
         //调用外部接口,最低传CustomerCode
         try {
@@ -452,12 +379,16 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
         }
     }
-        /*
-        校验客户订单编号
-         */
+
+    /**
+     * 校验客户订单编号
+     * @param custOrderCode 客户订单编号
+     * @param selfCustOrderCode 校验用客户订单编号
+     * @return
+     */
     @RequestMapping(value = "/checkCustOrderCode",method = RequestMethod.POST)
     @ResponseBody
-    public boolean checkCustOrderCode(Model model, String custOrderCode, String selfCustOrderCode){
+    public boolean checkCustOrderCode(String custOrderCode, String selfCustOrderCode){
         logger.info("校验客户订单编号==> custOrderCode={}", custOrderCode);
         logger.info("校验客户订单编号==> selfCustOrderCode={}", selfCustOrderCode);
 
@@ -477,12 +408,15 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return flag;
     }
 
-        /*
-    校验运输单号
+    /**
+     * 校验运输单号
+     * @param transCode 运输单号
+     * @param selfTransCode 校验用运输单号
+     * @return
      */
     @RequestMapping(value = "/checkTransCode",method = RequestMethod.POST)
     @ResponseBody
-    public boolean checkTransCode(Model model, String transCode, String selfTransCode){
+    public boolean checkTransCode(String transCode, String selfTransCode){
         logger.info("校验运输单号==> custOrderCode={}", transCode);
         logger.info("校验运输单号==> selfCustOrderCode={}", selfTransCode);
 
@@ -503,14 +437,14 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     * 货品筛选(调用客户中心API)
+     * 货品类别(调用客户中心API)
      */
     @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
     @ApiImplicitParams({
             //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/getCscGoodsTypeList",method = RequestMethod.POST)
-    public void getCscGoodsTypeList(Model model,String cscGoodsType, HttpServletResponse response){
+    public void getCscGoodsTypeList(String cscGoodsType, HttpServletResponse response){
         logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
         //调用外部接口,最低传CustomerCode
         try{
@@ -522,7 +456,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
             logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
-            CscGoodsTypeVo cscGoodsTypeVo=new CscGoodsTypeVo();
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }

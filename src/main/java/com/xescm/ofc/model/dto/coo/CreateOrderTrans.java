@@ -71,7 +71,7 @@ public class CreateOrderTrans {
     public OfcOrderStatus getOfcOrderStatus() throws BusinessException {
         if (createOrderEntity != null) {
             ofcOrderStatus = new OfcOrderStatus();
-            ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDINGAUDIT);
+            ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDING_AUDIT);
             ofcOrderStatus.setOrderCode(orderCode);
             StringBuilder notes = new StringBuilder();
             notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));

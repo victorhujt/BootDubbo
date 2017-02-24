@@ -1,5 +1,7 @@
 package com.xescm.ofc.service;
 
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 
 /**
@@ -9,6 +11,7 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     int deleteByOrderCode(Object key);
     int updateByOrderCode(Object key);
     int checkTransCode(OfcDistributionBasicInfo ofcDistributionBasicInfo);
+    OfcDistributionBasicInfo queryByOrderCode(String orderCode);
     OfcDistributionBasicInfo distributionBasicInfoSelect(String code);
 
     String getOrderCodeByTransCode(String transCode);
@@ -16,4 +19,7 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     String getKabanOrderCodeByTransCode(String transCode);
 
     String getLastedKabanOrderCodeByTransCode(String transCode);
-}
+
+
+     Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee);
+    }

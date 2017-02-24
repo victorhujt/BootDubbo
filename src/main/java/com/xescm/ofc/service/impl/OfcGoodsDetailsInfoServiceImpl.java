@@ -6,21 +6,22 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsInfo> implements OfcGoodsDetailsInfoService {
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoMapper ofcGoodsDetailsInfoMapper;
     @Override
     public List<OfcGoodsDetailsInfo> goodsDetailsScreenList(String code, String followTag) {
@@ -29,7 +30,7 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
             if(followTag.equals("orderCode")){
                 orderCode = code;
             }
-            Map<String,String> mapperMap = new HashMap<String,String>();
+            Map<String,String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode",orderCode);
             return ofcGoodsDetailsInfoMapper.goodsDetailsScreen(mapperMap);
         }else {

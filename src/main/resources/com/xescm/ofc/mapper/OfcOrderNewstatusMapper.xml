@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcOrderNewstatusMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcOrderNewstatus" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_latest_status" property="orderLatestStatus" jdbcType="VARCHAR" />
+    <result column="status_update_time" property="statusUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="status_create_time" property="statusCreateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <!--订单最新状态-->
+  <select id="orderStatusSelectNew" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+    oons.order_code,
+    oons.order_latest_status,
+    oons.status_update_time,
+    oons.status_create_time
+    FROM
+    ofc_order_newstatus oons
+    LEFT JOIN ofc_fundamental_information ofi ON oons.order_code = ofi.order_code
+    LEFT JOIN ofc_distribution_basic_info odbi ON oons.order_code = odbi.order_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
+      </if>
+      <if test="custOrderCode!=null and custOrderCode!=''">
+        OR ofi.cust_order_code =#{custOrderCode}
+      </if>
+      <if test="transCode!=null and transCode!=''">
+        OR odbi.trans_code =#{transCode}
+      </if>
+    </where>
+  </select>
+
+</mapper>

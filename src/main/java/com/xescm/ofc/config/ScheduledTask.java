@@ -5,13 +5,16 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.domain.OfcFinanceInformation;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.xescm.ofc.constant.OrderConstConstant.DING_DING;
+import static com.xescm.ofc.constant.OrderConstConstant.WITH_THE_KABAN;
+import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 
 /**
  * Created by lyh on 2017/1/11.
@@ -40,6 +45,10 @@ public class ScheduledTask{
     @Autowired
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Autowired
+    private OfcFinanceInformationService ofcFinanceInformationService;
+    @Autowired
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    @Autowired
     private OfcOrderManageOperService ofcOrderManageOperService;
     @Autowired
     private OfcOrderManageService ofcOrderManageService;
@@ -50,6 +59,45 @@ public class ScheduledTask{
     @Autowired
     private UamGroupEdasService uamGroupEdasService;
 
+    //推送历史卡班订单到运输中心
+//    @Scheduled(cron = "0 */1 * * * ?")
+//    @Scheduled(cron = "")
+    public void pushHistoryKabanOrderToTfc(){
+        logger.info("推送历史卡班订单到运输中心");
+        //查询历史卡班订单,出现重复的怎么办? 这些单子运输中心不用再推给DMS
+        OfcFundamentalInformation ofcFun = new OfcFundamentalInformation();
+        ofcFun.setOrderType(TRANSPORT_ORDER);
+        ofcFun.setBusinessType(WITH_THE_KABAN);
+        List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.select(ofcFun);
+        logger.info("历史卡班订单总量:{}",ofcFundamentalInformationList.size());
+        Integer num = 1;
+        for (OfcFundamentalInformation fundamentalInformation : ofcFundamentalInformationList) {
+            if(null == fundamentalInformation || PubUtils.isSEmptyOrNull(fundamentalInformation.getOrderCode())){
+                logger.error("当前订单数据有误");
+                continue;
+            }
+            logger.info("开始推送第{}条订单,订单编号为:{}",num,fundamentalInformation.getOrderCode());
+            String orderCode = fundamentalInformation.getOrderCode();
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.queryByOrderCode(orderCode);
+            OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+            if(null == ofcDistributionBasicInfo || null == ofcFinanceInformation || CollectionUtils.isEmpty(ofcGoodsDetailsInfoList)){
+                logger.error("当前订单数据有误,订单号:{}",fundamentalInformation.getOrderCode());
+                continue;
+            }
+            String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
+            String destinationCode = ofcDistributionBasicInfo.getDestinationCode();
+            if(PubUtils.isSEmptyOrNull(departurePlaceCode) || PubUtils.isSEmptyOrNull(destinationCode)
+                    || departurePlaceCode.split(",").length < 2 || destinationCode.split(",").length < 2){
+                logger.error("当前订单数据有误");
+                continue;
+            }
+            ofcOrderManageService.pushOrderToTfc(fundamentalInformation
+                    ,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
+            num ++;
+        }
+
+    }
 
     //将历史订单的基地和大区字段补齐
 //    @Scheduled(cron = "0 */1 * * * ?")

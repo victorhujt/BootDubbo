@@ -10,10 +10,10 @@ import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -21,31 +21,33 @@ import java.util.List;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
+ *
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> implements OfcSiloproStatusService {
-	protected Logger logger = LoggerFactory.getLogger(OfcSiloproStatusServiceImpl.class);
-    @Autowired
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Resource
     private OfcSiloproStatusMapper ofcSiloproStatusMapper;
     
-    @Autowired
+    @Resource
     private OfcSiloprogramInfoService ofcSiloprogramInfoService;
     
-    @Autowired
+    @Resource
     private OfcSiloproNewstatusService ofcSiloproNewstatusService;
-    @Autowired
-    private OfcOrderStatusService ofcOrderStatusService;
-	@Autowired
-	private OfcPlannedDetailService ofcPlannedDetailService;
-	@Autowired
-	private OfcTransplanInfoService ofcTransplanInfoService;
-	@Autowired
-	private OfcTransplanStatusService ofcTransplanStatusService;
-	@Autowired
-	private OfcOrderManageService ofcOrderManageService;
 
+    @Resource
+    private OfcOrderStatusService ofcOrderStatusService;
+
+	@Resource
+	private OfcPlannedDetailService ofcPlannedDetailService;
+	@Resource
+	private OfcTransplanInfoService ofcTransplanInfoService;
+	@Resource
+	private OfcTransplanStatusService ofcTransplanStatusService;
+	@Resource
+	private OfcOrderManageService ofcOrderManageService;
 
     public int updateByPlanCode(Object key){
 
@@ -77,15 +79,15 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			statusCondition.setPlanCode(planCode);
 			OfcSiloproStatus infostatus=ofcSiloproStatusMapper.selectOne(statusCondition);
 			if(infostatus!=null){
-				if(ZIYUANFENPEIZ.equals(infostatus.getPlannedSingleState())){
+				if(RESOURCE_ALLOCATION.equals(infostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划处于单资源分配中");
 				}
 
-				if(RENWUWANCH.equals(infostatus.getPlannedSingleState())){
+				if(TASK_ACCOMPLISHED.equals(infostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经完成");
 				}
 
-				if(YIZUOFEI.equals(infostatus.getPlannedSingleState())){
+				if(ALREADY_CANCELLED.equals(infostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经作废");
 				}
 			}
@@ -93,11 +95,11 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
 			OfcOrderStatus status=new OfcOrderStatus();
 			if(orderStatus!=null){
-				if(HASBEENCOMPLETED.equals(orderStatus.getOrderStatus())){
+				if(HASBEEN_COMPLETED.equals(orderStatus.getOrderStatus())){
 					throw new BusinessException("该仓储计划单对应的订单已经完成");
 				}
 
-				if(HASBEENCANCELED.equals(orderStatus.getOrderStatus())){
+				if(HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())){
 					throw new BusinessException("该仓储计划单对应的订单已经取消");
 				}
 
@@ -105,16 +107,16 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 				ofcSiloproNewstatus.setPlanCode(planCode);
 				//仓储计划单状态任务开始
 				if(TRACE_STATUS_1.equals(traceStatus)){
-					statusCondition.setPlannedSingleState(RENWUZHONG);
+					statusCondition.setPlannedSingleState(TASK);
 					statusCondition.setPlannedStartTime(condition.getTraceTime());
-					ofcSiloproNewstatus.setJobNewStatus((RENWUZHONG));//仓储计划单最新状态
+					ofcSiloproNewstatus.setJobNewStatus((TASK));//仓储计划单最新状态
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String dateStr =format.format(condition.getTraceTime());
 					Date dateFor=format.parse(dateStr);
 					ofcSiloproNewstatus.setJobStatusUpdateTime(dateFor);//作业状态更新时间
 					ofcSiloproNewstatus.setOrderCode(infostatus.getOrderCode());
 					status.setLastedOperTime(traceTime);
-					status.setOrderStatus(IMPLEMENTATIONIN);
+					status.setOrderStatus(IMPLEMENTATION_IN);
 					status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
 							+" "+traceStatus);
 					status.setOperator("");
@@ -158,13 +160,13 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			statusCondition.setPlanCode(planCode);
 			OfcSiloproStatus sinfostatus=ofcSiloproStatusMapper.selectOne(statusCondition);
 			if(sinfostatus!=null){
-				if(ZIYUANFENPEIZ.equals(sinfostatus.getPlannedSingleState())){
+				if(RESOURCE_ALLOCATION.equals(sinfostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划处于单资源分配中");
 				}
-				if(RENWUWANCH.equals(sinfostatus.getPlannedSingleState())){
+				if(TASK_ACCOMPLISHED.equals(sinfostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经完成");
 				}
-				if(YIZUOFEI.equals(sinfostatus.getPlannedSingleState())){
+				if(ALREADY_CANCELLED.equals(sinfostatus.getPlannedSingleState())){
 					throw new BusinessException("该仓储计划单已经作废");
 				}
 			}
@@ -190,61 +192,59 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}else{
 				throw new BusinessException("该仓储计划单不存在计划单详情");
 			}
-			statusCondition.setPlannedSingleState(RENWUWANCH);
+			statusCondition.setPlannedSingleState(TASK_ACCOMPLISHED);
 			updateByPlanCode(statusCondition);//仓储计划单状态的更新
-				List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
+			List<OfcTransplanInfoVo> transInfos=ofcTransplanInfoService.ofcTransplanInfoVoList(planCode);
 			if(OrderConstConstant.OFC_WHC_IN_TYPE.equals(condition.getBuniessType())){
 				if(transInfos!=null&&transInfos.size()>0){
 					OfcTransplanInfoVo vo=transInfos.get(0);
-					if(OrderConstConstant.RENWUWANCH.equals(vo.getPlannedSingleState())){
-						OfcOrderStatus status=new OfcOrderStatus();
-						status.setOrderStatus(HASBEENCOMPLETED);
+					OfcOrderStatus status=new OfcOrderStatus();
+					if(OrderConstConstant.TASK_ACCOMPLISHED.equals(vo.getPlannedSingleState())){
+						status.setOrderStatus(HASBEEN_COMPLETED);
 						status.setOrderCode(info.getOrderCode());
 						status.setStatusDesc("已完成");
 						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
 						status.setLastedOperTime(new Date());
 						status.setOperator("");
-						ofcOrderStatusService.save(status);
 					}else{
 						OfcTransplanStatus ofcTransplanStatus=new OfcTransplanStatus();
-						ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.RENWUWANCH);
+						ofcTransplanStatus.setPlannedSingleState(OrderConstConstant.TASK_ACCOMPLISHED);
 						ofcTransplanStatusService.updateByPlanCode(ofcTransplanStatus);
-						OfcOrderStatus status=new OfcOrderStatus();
-						status.setOrderStatus(HASBEENCOMPLETED);
+						status.setOrderStatus(HASBEEN_COMPLETED);
 						status.setOrderCode(info.getOrderCode());
 						status.setStatusDesc("已完成");
 						status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
 						status.setLastedOperTime(new Date());
 						status.setOperator("");
-						ofcOrderStatusService.save(status);
-						if(StringUtils.equals(status.getOrderStatus(), OrderConstConstant.HASBEENCOMPLETED)){
-							//订单中心--订单状态推结算中心(执行中和已完成)
-							ofcOrderManageService.pullOfcOrderStatus(status);
-						}
+					}
+					ofcOrderStatusService.save(status);
+					if(StringUtils.equals(status.getOrderStatus(), OrderConstConstant.HASBEEN_COMPLETED)){
+						//订单中心--订单状态推结算中心(执行中和已完成)
+						ofcOrderManageService.pullOfcOrderStatus(status);
 					}
 				}
 			}
-				if(transInfos==null||transInfos.size()==0){
-					OfcOrderStatus status=new OfcOrderStatus();
-					status.setOrderStatus(HASBEENCOMPLETED);
-					status.setOrderCode(info.getOrderCode());
-					status.setStatusDesc("已完成");
-					status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
-					status.setLastedOperTime(new Date());
-					status.setOperator("");
-					ofcOrderStatusService.save(status);
-					//订单中心--订单状态推结算中心(执行中和已完成)
-					ofcOrderManageService.pullOfcOrderStatus(status);
-				}
+			if(transInfos==null||transInfos.size()==0){
+				OfcOrderStatus status=new OfcOrderStatus();
+				status.setOrderStatus(HASBEEN_COMPLETED);
+				status.setOrderCode(info.getOrderCode());
+				status.setStatusDesc("已完成");
+				status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)+"订单已完成");
+				status.setLastedOperTime(new Date());
+				status.setOperator("");
+				ofcOrderStatusService.save(status);
+				//订单中心--订单状态推结算中心(执行中和已完成)
+				ofcOrderManageService.pullOfcOrderStatus(status);
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("ofcWarehouseFeedBackFromWhc, {}",e);
 		}
 
 	}
 
 
 
-	public String translateStatusToDesc(String statusCode,String businessType){
+	private String translateStatusToDesc(String statusCode,String businessType){
 		String statusDesc="";
 		if(statusCode.equals(TRACE_STATUS_1)){
 			if(OFC_WHC_IN_TYPE.equals(businessType)){
@@ -253,7 +253,7 @@ public class OfcSiloproStatusServiceImpl extends BaseService<OfcSiloproStatus> i
 			}else if(OFC_WHC_OUT_TYPE.equals(businessType)){
 				statusDesc="出库单已创建";
 			}
-	}else if(statusCode.equals(TRACE_STATUS_2)){
+		}else if(statusCode.equals(TRACE_STATUS_2)){
 			if(OFC_WHC_IN_TYPE.equals(businessType)){
 				statusDesc="部分收货";
 

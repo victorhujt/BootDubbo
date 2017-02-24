@@ -26,12 +26,9 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,39 +38,50 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/*
-*
- * Created by lyh on 2016/11/19.
- */
+import static com.xescm.ofc.constant.ExcelCheckConstant.BATCH_CONSIGNEE;
+import static com.xescm.ofc.constant.ExcelCheckConstant.BATCH_GOODS;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 
+/**
+* <p>Title: .城配开单 </p>
+* <p>Description TODO </p>
+* <p>Company: http://www.hnxianyi.com </p>
+*
+* @Author <a href="lyhluo@163.com"/>罗迎豪</a>
+* @CreateDate 2016/11/19
+*/
 @RequestMapping(value = "/ofc/distributing",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOperationDistributing extends BaseController{
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private OfcOperationDistributingService ofcOperationDistributingService;
-    @Autowired
+    @Resource
     private CscCustomerEdasService cscCustomerEdasService;
-    @Autowired
+    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
-    @Autowired
+    @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
-    @Autowired
+    @Resource
     private StringRedisTemplate rt;
     @Resource
     private CodeGenUtils codeGenUtils;
 
+    /**
+     * 城配开单确认下单
+     * @param orderLists 下单数据
+     * @return 根据不同结果返回不同泛型
+     */
     @RequestMapping(value = "/placeOrdersListCon",method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> placeOrdersListCon(String orderLists, Model model){
+    public Wrapper<?> placeOrdersListCon(String orderLists){
         logger.info("城配开单确认下单==> orderLists={}", orderLists);
-        String resultMessage = null;
+        String resultMessage;
         try{
             if(PubUtils.isSEmptyOrNull(orderLists)){
 
@@ -81,7 +89,7 @@ public class OfcOperationDistributing extends BaseController{
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"您没有添加任何信息,请检查!");
             }
             JSONArray jsonArray = JSON.parseArray(orderLists);
-            String batchNumber = codeGenUtils.getNewWaterCode("BN",4);//生成订单批次号,保证一批单子属于一个批次
+            String batchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);//生成订单批次号,保证一批单子属于一个批次
 
             Wrapper<?> validateCustOrderCodeResult =  ofcOperationDistributingService.validateCustOrderCode(jsonArray);
             if(Wrapper.ERROR_CODE == validateCustOrderCodeResult.getCode()){
@@ -105,13 +113,12 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 根据选择的客户查询仓库
-     * @param customerCode
-     * @param model
-     * @param response
+     * @param customerCode 客户编码
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryWarehouseByCustId",method = RequestMethod.POST)
     @ResponseBody
-    public void queryCustomerByName(String customerCode,Model model,HttpServletResponse response){
+    public void queryCustomerByName(String customerCode,HttpServletResponse response){
         logger.info("城配开单根据选择的客户查询仓库==> customerCode={}", customerCode);
         try{
             List<RmcWarehouseRespDto> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
@@ -124,13 +131,11 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 查询货品一级种类
-     * @param customerCode
-     * @param model
-     * @param response
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryGoodsTypeByCustId",method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsTypeByCustId(String customerCode,Model model,HttpServletResponse response){
+    public void queryGoodsTypeByCustId(HttpServletResponse response){
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
             CscGoodsTypeDto cscGoodsType = new CscGoodsTypeDto();
@@ -140,20 +145,19 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
+            logger.error("城配下单查询货品种类失败!异常信息为{},接口返回状态信息{},{}"
+                    ,ex.getMessage(),wrapper == null ? "城配下单查询货品种类失败的结果为null": wrapper.getMessage(),ex);
         }
     }
 
     /**
      * 根据货品一级种类查询货品二级小类
-     * @param customerCode
-     * @param goodsType
-     * @param model
-     * @param response
+     * @param goodsType 货品一级类别
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryGoodsSecTypeByCAndT",method = RequestMethod.POST)
     @ResponseBody
-    public void queryGoodsSecTypeByCAndT(String customerCode, String goodsType,Model model,HttpServletResponse response){
+    public void queryGoodsSecTypeByCAndT(String goodsType,HttpServletResponse response){
         logger.info("城配开单根据选择的客户和货品一级种类查询货品二级小类==> goodsType={}", goodsType);
         Wrapper<List<CscGoodsTypeVo>> wrapper = null;
         try{
@@ -165,15 +169,15 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}",ex.getMessage(),wrapper.getMessage(),ex);
+            logger.error("城配下单查询货品小类失败!异常信息为{},接口返回状态信息{}"
+                    ,ex.getMessage(),wrapper == null ? "城配下单查询货品小类失败的结果为null": wrapper.getMessage(),ex);
         }
     }
 
     /**
      * 查询货品列表
-     * @param cscGoodsApiDto
-     * @param response
-     * 2.0:前端还需再根据未修改的接口再把customerId改了!
+     * @param cscGoodsApiDto 前端查询条件
+     * @param response HttpServletResponse
      */
     @RequestMapping(value = "/queryGoodsListInDistrbuting", method = RequestMethod.POST)
     @ResponseBody
@@ -187,7 +191,8 @@ public class OfcOperationDistributing extends BaseController{
                 response.getWriter().print(JacksonUtil.toJsonWithFormat(wrapper.getResult()));
             }
         }catch (Exception ex){
-            logger.error("城配下单查询货品列表失败!{}{}",ex.getMessage(),wrapper.getMessage(),ex);
+            logger.error("城配下单查询货品列表失败!{}{}{}"
+                    ,ex.getMessage(),wrapper == null ? "城配开单查询货品列表查到的结果为null": wrapper.getMessage(),ex);
         }
     }
 
@@ -228,13 +233,13 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * Excel导入,上传,展示Sheet页
-     * @param paramHttpServletRequest
+     * @param paramHttpServletRequest HttpServletRequest
      * @return
      */
     @RequestMapping(value = "/fileUploadAndCheck",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> fileUploadAndCheck(HttpServletRequest paramHttpServletRequest){
-        List<String> excelSheet = null;
+        List<String> excelSheet;
         try {
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
             MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
@@ -246,7 +251,6 @@ public class OfcOperationDistributing extends BaseController{
             String suffix = fileName.substring(potIndex, fileName.length());
             excelSheet = ofcOperationDistributingService.getExcelSheet(uploadFile,suffix);
         }catch (BusinessException e) {
-            e.printStackTrace();
             logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }catch (Exception e) {
@@ -258,8 +262,8 @@ public class OfcOperationDistributing extends BaseController{
 
     /**
      * 根据用户选择的Sheet页进行校验并加载正确或错误信息
-     * @param paramHttpServletRequest
-     * @return
+     * @param paramHttpServletRequest HttpServletRequest
+     * @return 根据不同结果返回不同泛型
      */
     @RequestMapping(value = "/excelCheckBySheet",method = RequestMethod.POST)
     @ResponseBody
@@ -285,24 +289,27 @@ public class OfcOperationDistributing extends BaseController{
 
             //如果校验失败
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
+                int tenThousand = 100000;
                 OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
                 List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
                 List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
                 if(cscGoodsImportDtoList.size() > 0){
-                    String batchgoodsKey = "ofc:batchgoods:" + System.nanoTime() + (int)Math.random()*100000;
+                    StringBuilder batchgoodsKey = new StringBuilder(BATCH_GOODS);
+                    batchgoodsKey.append(System.nanoTime());
+                    batchgoodsKey.append((int)(Math.random()*tenThousand));
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchgoodsKey, JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
-                    rt.expire(batchgoodsKey, 5L, TimeUnit.MINUTES);
-                    String s = ops.get(batchgoodsKey);
-                    String s1 = ops.get(batchgoodsKey);
-                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey);
+                    ops.set(batchgoodsKey.toString(), JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
+                    rt.expire(batchgoodsKey.toString(), 5L, TimeUnit.MINUTES);
+                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey.toString());
                 }
                 if(cscContantAndCompanyInportDtoList.size() > 0){
-                    String batchconsingeeKey = "ofc:batchconsingee:" + System.nanoTime() + (int)Math.random()*100000;
+                    StringBuilder batchconsingeeKey = new StringBuilder(BATCH_CONSIGNEE);
+                    batchconsingeeKey.append(System.nanoTime());
+                    batchconsingeeKey.append((int)(Math.random()*tenThousand));
                     ValueOperations<String,String> ops  = rt.opsForValue();
-                    ops.set(batchconsingeeKey, JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
-                    rt.expire(batchconsingeeKey, 5L, TimeUnit.MINUTES);
-                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey);
+                    ops.set(batchconsingeeKey.toString(), JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
+                    rt.expire(batchconsingeeKey.toString(), 5L, TimeUnit.MINUTES);
+                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey.toString());
                 }
                 result = WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),ofcCheckExcelErrorVo);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
@@ -311,41 +318,13 @@ public class OfcOperationDistributing extends BaseController{
                 result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJSON);
             }
         } catch (BusinessException e) {
-            e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("城配开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return result;
-    }
-    /**
-     * 城配开单下载模板
-     * @param response
-     */
-    @RequestMapping(value = "/downloadTemplate",method = RequestMethod.GET)
-    @Deprecated
-    public void downloadTemplate( HttpServletResponse response){
-        try {
-            File f = ResourceUtils.getFile("classpath:templates/xlsx/template_for_cp.xlsx");
-            response.reset();
-            response.setHeader("Content-Disposition", "attachment; filename=template_for_cp.xlsx");
-            response.addHeader("Content-Length", "" + f.length());
-            response.setContentType("application/octet-stream;charset=UTF-8");
-            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
-            int b;
-            while((b = bis.read()) != -1) {
-                outputStream.write(b);
-            }
-            bis.close();
-            outputStream.close();
-        } catch (Exception e){
-            logger.error("城配开单下载模板出错{}",e.getMessage(),e);
-        }
-
     }
 
 

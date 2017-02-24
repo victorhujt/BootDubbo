@@ -1,3 +1,4 @@
+<#include "dialog/customer.ftl">
 <title>运输开单</title>
 <style type="text/css">
   .col-width-376{
@@ -282,62 +283,7 @@
 
 </div>
 
-<!--custListDiv-->
-<div class="adoptModal" id="custListDiv" style="display: none;">
-<#--<div class="modal-header"><span id="custListDivNoneTop" style="cursor:pointer">
- <button type="button" id="" style="cursor:pointer" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button></span>
-  <h4 class="modal-title" style="font-size: 14px;font-family:'微软雅黑'">选择客户</h4></div>-->
-  <div class="modal-body">
-    <div class="bootbox-body">
-      <form id="consignorSelConditionForm" class="form-horizontal" role="form">
-      <#--<input id="purpose2" name="cscContactDto.purpose" type="hidden" value="2">-->
-        <div class="form-group">
-          <label class="control-label col-xs-1 no-padding-right" for="name" style="margin-top:0;">名称</label>
-          <div class="col-width-220 padding-15 y-float">
-            <div class="clearfix">
-              <input  id = "custNameDiv" name="cscContactCompanyDto.contactCompanyName" type="text" style="color: black" class="form-control input-sm" placeholder="" aria-controls="dynamic-table">
-            </div>
-          </div>
 
-          <div class="col-xs-3 y-float">
-            <div class="clearfix">
-              <span id="custSelectFormBtn" class="btn btn-white btn-info btn-bold btn-inatervl">筛选</span>
-            </div>
-          </div>
-        <#--  <div class="modal-footer" style="float:right;">
-            <button style="float: left;display: none;" id="createCustBtn" data-bb-handler="confirm" type="button" class="btn btn-primary">创建新客户</button>
-            <button id="custEnter" data-bb-handler="confirm" type="button" class="btn btn-primary">选中</button>
-            <span id="custListDivNoneBottom" style="cursor:pointer"><button  data-bb-handler="cancel" type="button" class="btn btn-default">关闭</button></span>
-          </div>-->
-
-        </div>
-      </form>
-      <form class="bootbox-form">
-        <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="dynamic-table_info">
-          <thead>
-          <tr role="row"><th class="center sorting_disabled" rowspan="1" colspan="1" aria-label="">
-            <label class="pos-rel">
-              选择
-              <span class="lbl"></span>
-            </label>
-          </th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Domain: activate to sort column ascending">客户编码</th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Price: activate to sort column ascending">类型</th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">公司名称</th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">渠道</th>
-            <th class="" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1" aria-label="Clicks: activate to sort column ascending">产品类别</th>
-          </thead>
-          <tbody id="custListDivTbody"></tbody>
-        </table>
-        <div class="row">
-          <div id="pageBarDiv" style="float: right;padding-top: 0px;margin-top: 20px;">
-          </div>
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
 <div class="row">
 
   <!-- /section:basics/content.breadcrumbs -->
@@ -1302,7 +1248,7 @@
   function seleGoods(obj) {
     $("#goodsSelectListTbody").html("");
     $("#pageBarDivGoods").hide();
-    $(obj).attr("id","yangdongxushinanshen");
+    $(obj).attr("id","temporaryVariable");
     $(obj).parent().parent().find("td").eq(1).find("select").attr("id","typeSel");
 //    $("#goodsListDiv").fadeIn(0);//淡入淡出效果 显示div
     confirmGood()
@@ -2025,75 +1971,6 @@
     }
   }
 
-  // 分页查询客户列表
-  function queryCustomerData(pageNum) {
-    $("#custListDivTbody").html("");
-    var custName = $("#custNameDiv").val();
-    var param = {};
-    param.pageNum = pageNum;
-    param.pageSize = 10;
-    param.custName = custName;
-    CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param, function(result) {
-      if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
-        $("#pageBarDiv").hide();
-        layer.msg("暂时未查询到客户信息！！");
-      } else if (result.code == 200) {
-        $("#pageBarDiv").show();
-        loadCustomer(result);
-        laypage({
-          cont: $("#pageBarDiv"), // 容器。值支持id名、原生dom对象，jquery对象,
-          pages: result.result.pages, // 总页数
-          skip: true, // 是否开启跳页
-          skin: "molv",
-          groups: 3, // 连续显示分页数
-          curr: result.result.pageNum, // 当前页
-          jump: function (obj, first) { // 触发分页后的回调
-            if (!first) { // 点击跳页触发函数自身，并传递当前页：obj.curr
-              queryCustomerData(obj.curr);
-            }
-          }
-        });
-        $(".total").html(result.result.total+'&nbsp;条&nbsp;');
-      } else if (result.code == 403) {
-        alert("没有权限")
-      } else {
-        $("#custListDivTbody").html("");
-      }
-    },"json");
-  }
-
-  function loadCustomer(data) {
-    if ((data == null || data == '' || data == undefined) || (data.result.list.length < 1)) {
-      $("#custListDivTbody").html("");
-      return;
-    }
-    var custList = "";
-    $.each(data.result.list,function (index,cscCustomerVo) {
-      var channel = cscCustomerVo.channel;
-      if(null == channel){
-        channel = "";
-      }
-      custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)' >";
-      custList =custList + "<td class='center'> "+"<label class='pos-rel'>"+"<input name='cust' type='radio' class='ace'>"+"<span class='lbl'></span>"+"</label>"+"</td>";
-      custList =custList + "<td>"+cscCustomerVo.customerCode+"</td>";
-      var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
-      if(custType == '1'){
-        custList =custList + "<td>公司</td>";
-      }else if (custType == '2'){
-        custList =custList + "<td>个人</td>";
-      }else{
-        custList =custList + "<td>"+custType+"</td>";
-      }
-      custList =custList + "<td>"+cscCustomerVo.customerName+"</td>";
-      custList =custList + "<td>"+channel+"</td>";
-      custList =custList + "<td>"+cscCustomerVo.productType+"</td>";
-      custList =custList + "<td style='display: none'>"+cscCustomerVo.groupId+"</td>";
-      custList =custList + "<td style='display: none'>"+cscCustomerVo.customerCode+"</td>";
-      custList =custList + "</tr>";
-      $("#custListDivTbody").html(custList);
-    });
-  }
-
   // 分页查询收货方或发货方列表
   function queryContactData(param,customerCode,contactType,pageNum) {
     param.pageNum = pageNum;
@@ -2466,12 +2343,6 @@
 
     });
 
-
-    // 分页查询客户
-    $("#custSelectFormBtn").click(function() {
-      queryCustomerData(1);
-    });
-
     /* $("#custEnter").click(function () {
          var custEnterTag = "";
          $("#custListDivTbody").find("tr").each(function(index){
@@ -2830,7 +2701,7 @@
     $("#goodsListDivNoneTop").click(function(){
 
       $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-      $("#yangdongxushinanshen").attr("id","goodCodeSel");
+      $("#temporaryVariable").attr("id","goodCodeSel");
       $("#typeSel").attr("id","");
 
     });
@@ -2838,7 +2709,7 @@
     $("#goodsListDivNoneBottom").click(function(){
 
       $("#goodsListDiv").fadeOut(0);//淡入淡出效果 隐藏div
-      $("#yangdongxushinanshen").attr("id","goodCodeSel");
+      $("#temporaryVariable").attr("id","goodCodeSel");
       $("#typeSel").attr("id","");
 
     });
@@ -2858,14 +2729,14 @@
           $("#typeSel").val(typeID);
           $("#typeSel").trigger("chosen:updated");
           goodsTypeParentChange($("#typeSel"));
-          //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
-          $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
-          $("#yangdongxushinanshen").attr("id","goodCodeSel");
+          //$("#temporaryVariable").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
+          $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+          $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
+          $("#temporaryVariable").parent().parent().find("td").eq(3).find("input").val(goodsCode);
+          $("#temporaryVariable").parent().parent().find("td").eq(4).find("input").val(goodsName);
+          $("#temporaryVariable").parent().parent().find("td").eq(5).find("input").val(specification);
+          $("#temporaryVariable").parent().parent().find("td").eq(6).find("input").val(unit);
+          $("#temporaryVariable").attr("id","goodCodeSel");
           goodsInfoListDiv="true";
         }
       });
@@ -2873,7 +2744,7 @@
         alert("请至少选择一行");
       }else{
         $("#goodsListDiv").fadeOut(0);
-        $("#yangdongxushinanshen").attr("id","goodCodeSel");
+        $("#temporaryVariable").attr("id","goodCodeSel");
         $("#typeSel").attr("id","");
       }
     });*/
@@ -3037,55 +2908,27 @@
     $(e).children().first().find("input").prop("checked","checked");
   }
 
+  // 选择客户
   //layer风格弹窗
-  $("#custListDivBlock").click(function() {confirm();});
-  function confirm() {
-    layer.open({
-      btn:['选中','关闭'],
-      scrollbar:false,
-      yes:function (adoptModalIndex) {
-        var custEnterTag = "";
-        $("#custListDivTbody").find("tr").each(function(index){
-          var tdArr = $(this).children();
-          if(tdArr.eq(0).find("input").prop("checked")){
-            custEnterTag = "1";
-            if($("#customerCode").val()!=tdArr.eq(7).text()){
-              var type = tdArr.eq(2).text();//类型
-              var customerName = tdArr.eq(3).text();//公司名称
-              var channel = tdArr.eq(4).text();//    渠道
-              var productType = tdArr.eq(5).text();//    产品类别
-              var groupId = tdArr.eq(6).text();//    产品类别
-              var customerCode = tdArr.eq(7).text();//    产品类别
-              $("#custName").val(customerName);
-              $("#custGroupId").val(groupId);
-              $("#customerCode").val(customerCode);
+  $("#custListDivBlock").click(function() {
+      // 选择客户
+      showCustomer();
+  });
+  
+  function selectCustCallback() {
+      var customerCode = $("#customerCode").val();
+      if (customerCode != null && customerCode != '') {
+          // 如果发货方只有一个则自动带出
+          var cscContactDto = {};
+          var cscContactCompanyDto = {};
+          cscContactDto.purpose = "2";
+          outConsignor(cscContactDto,cscContactCompanyDto,"",customerCode);
+          $("#goodsInfoListDiv").html("");
 
-              var cscContactDto = {};
-              var cscContactCompanyDto = {};
-              cscContactDto.purpose = "2";
-              outConsignor(cscContactDto,cscContactCompanyDto,groupId,customerCode);
-              $("#goodsInfoListDiv").html("");
-              countQuantityOrWeightOrCubageCheck();
-            }
-          }
-        });
-        if(custEnterTag==""){
-          alert("请至少选择一行");
-        }else{
-          layer.close(adoptModalIndex);
-          return false;
-        }
-      },
-      type: 1,
-      area: ['946px', '575px'],
-      content: $('#custListDiv'), //这里content是一个DOM
-      title: '选择客户',
-      cancel: function (adoptModalIndex) {
-        layer.close(adoptModalIndex);
-        return false;
+          countQuantityOrWeightOrCubageCheck();
       }
-    });
   }
+
   //发货方联系人
  /* $("#consignorListDivBlock").click(function() {confirmSend();});*/
   function confirmSend() {
@@ -3221,21 +3064,21 @@
             $("#typeSel").val(typeID);
             $("#typeSel").trigger("chosen:updated");
             goodsTypeParentChange($("#typeSel"));
-            //$("#yangdongxushinanshen").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").val(goodsGate);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(3).find("input").val(goodsCode);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(4).find("input").val(goodsName);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(5).find("input").val(specification);
-            $("#yangdongxushinanshen").parent().parent().find("td").eq(6).find("input").val(unit);
-            $("#yangdongxushinanshen").attr("id","goodCodeSel");
+            //$("#temporaryVariable").parent().parent().find("td").eq(1).find("select").find("option[text='"+goodsType+"']").attr("selected", true);
+            $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").val(goodsGate);
+            $("#temporaryVariable").parent().parent().find("td").eq(2).find("select").trigger("chosen:updated");
+            $("#temporaryVariable").parent().parent().find("td").eq(3).find("input").val(goodsCode);
+            $("#temporaryVariable").parent().parent().find("td").eq(4).find("input").val(goodsName);
+            $("#temporaryVariable").parent().parent().find("td").eq(5).find("input").val(specification);
+            $("#temporaryVariable").parent().parent().find("td").eq(6).find("input").val(unit);
+            $("#temporaryVariable").attr("id","goodCodeSel");
             goodsInfoListDiv="true";
           }
         });
     if(goodsInfoListDiv==""){
       alert("请至少选择一行");
     }else{
-      $("#yangdongxushinanshen").attr("id","goodCodeSel");
+      $("#temporaryVariable").attr("id","goodCodeSel");
       $("#typeSel").attr("id","");
       layer.close(adoptModalIndex);
       return false;
