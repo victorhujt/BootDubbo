@@ -15,21 +15,7 @@
                     </el-select>
                 </el-form-item>
             </div>
-            <div class="xe-block">
-                <el-form-item label="上传文件"  class="xe-col-3">
-                    <el-input v-model="templateBatchIn.uploadFile"  placeholder="请输入内容"    value=""></el-input>
-                    <#--<el-button type="primary" v-on:click="fileUpload">保存</el-button>-->
-                    <#--<el-button @click="fileUpload">上传</el-button>-->
-                </el-form-item>
-            </div>
-            <div class="xe-block">
-                <el-form-item label="Sheet页"  class="xe-col-3">
-                    <el-select placeholder="请选择" v-model="templateBatchIn.pageSheet">
-                        <el-option  v-for="item in pageSheetList" :label="item.label" :value="item.value"></el-option>
-                    </el-select>
-                    <el-button @click="excelLoad">加载</el-button>
-                </el-form-item>
-            </div>
+
 
         </el-form>
     </div>
@@ -53,9 +39,7 @@
                 authResDto:'',
                 templateBatchIn:{
                     custName:'',
-                    templateName:'',
-                    uploadFile:'',
-                    pageSheet:''
+                    templateName:''
                 },
                 pageSheetList:[],
                 templateNameList:[]
@@ -63,36 +47,17 @@
         },
         methods: {
             handleRemove(file, fileList) {
-                var vm = this;
-                vm.templateBatchIn = {
-                    pageSheet:''
-                }
+                fileList = [];
             },
             handlePreview(file) {
                 console.log(file);
             },
             handleSuccess(response, file, fileList) {
-                debugger
                 var vm = this;
                 if(response.code == 500) {
-                    layer.msg("文件格式不正确或服务器出错!请稍后重试!");
-                    fileList = [];
+
                 }else if(response.code == 200) {
-                    vm.excel = file;
-                    //加载所有sheet页
-                    var pageSheetList = vm.pageSheetList;
-                    $.each(response.result,function (index,item) {
-                        var pageSheet = {};
-                        var sh = item.split("@");
-                        pageSheet.label = sh[0];
-                        pageSheet.value = index;
-                        if("active" == sh[1]){
-                            vm.templateBatchIn = {
-                                pageSheet:index
-                            }
-                        }
-                        pageSheetList.push(pageSheet);
-                    });
+
 
                 }
             },
@@ -112,56 +77,6 @@
                 var fileSize = file.size;
 
 
-            },
-            fileUpload() {
-            },
-            excelLoad() {
-                var vm = this;
-                if(vm.pageSheetList.length == 0){
-                    layer.msg("请先上传文件!");
-                    return;
-                }
-                debugger
-                var sheetNum = vm.templateBatchIn.pageSheet;
-                var formData = new FormData();
-                var customerCode = vm.templateBatchIn.custName;
-                var templatesMapping = vm.templateBatchIn.templateName;
-                vm.excel.status = 'ready';
-                formData.append('file',vm.excel.url);
-                formData.append('customerCode',customerCode);
-                formData.append('sheetNum',sheetNum);
-                formData.append('templatesMapping',templatesMapping);
-                var url = '${OFC_WEB_URL!}/ofc/storage_template/batch_in_load';
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formData,
-                    async: false,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (result) {
-
-                        if (result == undefined || result == null) {
-                            layer.msg("HTTP请求无数据返回", {
-                                icon: 1
-                            });
-                        } else if (result.code == "200") {
-
-                        } else if (result.code == "500") {
-
-                        } else {
-                            layer.msg(result.message, {
-                                skin: 'layui-layer-molv',
-                                icon: 5,
-                                time:500
-                            });
-                        }
-                    },
-                    error: function (data) {
-                        alert("操作失败");
-                    }
-                });
             }
         }
     }

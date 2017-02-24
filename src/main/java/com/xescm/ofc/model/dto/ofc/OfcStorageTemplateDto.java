@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * Created by lyh on 2017/2/23.
  */
 @Data
-public class OfcStorageTemplate {
+public class OfcStorageTemplateDto {
     private String custOrderCode;
     private String orderTime;
     private String merchandiser;

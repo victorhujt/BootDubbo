@@ -8,10 +8,13 @@ import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcStorageTemplateMapper;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
-import com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise;
+import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.utils.CodeGenUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -36,6 +40,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private OfcStorageTemplateMapper ofcStorageTemplateMapper;
     @Resource
     private CodeGenUtils codeGenUtils;
+
+
 
 
     /**
@@ -185,17 +191,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @param authResDto
      * @param custCode
      * @param templateCode
-     * @param sheetNumChosen
+     * @param activeSheetNum
      * @return
      */
     @Override
-    public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto, String templateType, String custCode, String templateCode, Integer sheetNumChosen) {
+    public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto, String templateType, String custCode, String templateCode, Integer activeSheetNum) {
         //拿到所用模板的明细Map
         Map<String,OfcStorageTemplate> templateDetilMap = getTemplateReflect(templateCode);
-
         //将模板映射成标准格式, 如果不是标准格式的就跳过不校验, 且不展示
-
-
         InputStream inputStream ;
         Workbook workbook;
         try {
@@ -209,7 +212,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         List<String> xlsErrorMsg = new ArrayList<>();
         Map<Integer,String> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
-        List<OfcStorageTemplate> ofcStorageTemplateList = new ArrayList<>();
+        List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = new ArrayList<>();
         boolean requiredField = true;
         try {
             clazz = Class.forName("com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise");
@@ -220,11 +223,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
         //遍历sheet
         for (int sheetNum = 0; sheetNum < numberOfSheets; sheetNum ++) {
-            if (sheetNum != sheetNumChosen) {
+            if (sheetNum != activeSheetNum) {
                 continue;
             }
             Sheet sheet = workbook.getSheetAt(sheetNum);
-
             //遍历row
             if (sheet.getLastRowNum() == 0) {
                 throw new BusinessException("请先上传Excel导入数据，再加载后执行导入！");
@@ -232,11 +234,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             //遍历行
             for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++) {
                 Row commonRow = sheet.getRow(rowNum);
-                OfcStorageTemplate ofcStorageTemplate = null;
+                OfcStorageTemplateDto ofcStorageTemplateDto = null;
                 try {
-                    ofcStorageTemplate = (OfcStorageTemplate) clazz.newInstance();
+                    ofcStorageTemplateDto = (OfcStorageTemplateDto) clazz.newInstance();
                 } catch (Exception e) {
                     logger.error("校验明细类型Excel:{}", e);
+                }
+                //校验第一行,包括固定内容和收货人列表
+                if(rowNum == 0){
+                    checkExcelRequiedItem(commonRow,templateType,templateDetilMap);
                 }
                 if (null == commonRow) {
                     //标记当前行出错,并跳出当前循环
@@ -248,41 +254,106 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     continue;
                 }
 
+
+
                 //遍历列
                 for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
                     Cell commonCell = commonRow.getCell(cellNum);
                     //空列
-                    if (null == commonCell && cellNum > 11) {
+//                    if (null == commonCell && cellNum > 11) {
+                    if (null == commonCell) {
                         //标记当前列出错, 并跳过当前循环
                         break;
                     }
                     //校验第一行,包括固定内容和收货人列表
                     String cellValue = null;
-                    if (commonCell != null && Cell.CELL_TYPE_STRING == commonCell.getCellType()) {
+                    if (Cell.CELL_TYPE_STRING == commonCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(commonCell.getStringCellValue());
-                    } else if (commonCell != null && Cell.CELL_TYPE_NUMERIC == commonCell.getCellType()) {
+                    } else if (Cell.CELL_TYPE_NUMERIC == commonCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
-
                     }
+
                     //至此, 已经能拿到每一列的值
                     if(rowNum == 0){//第一行, 将所有表格中固定的字段名称和位置固定
                         if(PubUtils.isSEmptyOrNull(cellValue)){
                             break;
                         }
-                        String refCellValue = cellReflectToDomain(cellValue,templateDetilMap); //标准表字段映射成对应实体的字段的值
+                        String refCellValue = cellReflectToDomain(cellValue,templateDetilMap).getStandardColCode(); //标准表字段映射成对应实体的字段的值
+                        if(PubUtils.isSEmptyOrNull(refCellValue)){
+                            break;
+                        }
                         modelNameStr.put(cellNum,refCellValue);
                     }else if(rowNum > 0) { // 表格的数据体
-
+                        System.out.println();
                     }
                 }
 
                 if(rowNum > 0){
-                    ofcStorageTemplateList.add(ofcStorageTemplate);
+                    ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
             }
 
         }
         return null;
+    }
+
+    /**
+     * 校验表格是否有所有的必填列
+     * @param commonRow
+     * @param templateType
+     * @param templateDetilMap
+     */
+    private void checkExcelRequiedItem(Row commonRow, String templateType, Map<String, OfcStorageTemplate> templateDetilMap) {
+        String[] inRquiredItem = {"custOrderCode","merchandiser","warehouseName","businessType","goodsCode","quantity"};
+        String[] outRquiredItem = {"custOrderCode","merchandiser","warehouseName","businessType","goodsCode","quantity","consigneeName"};
+        if(null == commonRow){
+            logger.error("当前表格没有表头!请添加后重新上传!");
+            throw new BusinessException("当前表格没有表头!请添加后重新上传!");
+        }
+        Map<String,OfcStorageTemplate> ofcStorageTemplateMap = new HashMap<>();
+        for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
+            Cell commonCell = commonRow.getCell(cellNum);
+            //空列
+            if (null == commonCell || Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
+                //标记当前列出错, 并跳过当前循环
+                continue;
+            }
+            OfcStorageTemplate ofcStorageTemplate = cellReflectToDomain(commonCell.getStringCellValue(), templateDetilMap);
+            ofcStorageTemplateMap.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);
+        }
+        String[] item = StringUtils.equals(templateType,"storageIn") ? inRquiredItem : outRquiredItem;
+        for (String requiredItem : item) {
+            if(!ofcStorageTemplateMap.containsKey(requiredItem)){
+                OfcStorageTemplate ofcStorageTemplate = ofcStorageTemplateMap.get(requiredItem);
+                logger.error("当前表格缺少列:{}",ofcStorageTemplate);
+                throw new BusinessException("当前表格缺少列:" + ofcStorageTemplate.getReflectColName());
+            }
+        }
+    }
+
+    /**
+     * 校验仓储模板文件格式是否正确,并返回当前激活的Sheet页
+     * @param file
+     */
+    @Override
+    public Integer checkStorageTemplate(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        int potIndex = fileName.lastIndexOf(".") + 1;
+        if(-1 == potIndex){
+            throw new BusinessException("该文件没有扩展名!");
+        }
+        String suffix = fileName.substring(potIndex, fileName.length());
+        if(!StringUtils.equals(suffix,"xls") && !StringUtils.equals(suffix,"xlsx")){
+            throw new BusinessException("文件格式不正确!");
+        }
+        Workbook workbook;
+        try {
+            workbook = suffix.equals("xls")? new HSSFWorkbook(file.getInputStream()) : new XSSFWorkbook(file.getInputStream());
+        } catch (IOException e) {
+            logger.error("获取Sheet页内部异常:{}",e);
+            throw new BusinessException("获取Sheet页内部异常");
+        }
+        return workbook.getActiveSheetIndex();
     }
 
     /**
@@ -308,9 +379,16 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @param templateDetilMap
      * @return
      */
-    private String cellReflectToDomain(String cellValue, Map<String, OfcStorageTemplate> templateDetilMap) {
+    private OfcStorageTemplate cellReflectToDomain(String cellValue, Map<String, OfcStorageTemplate> templateDetilMap) {
         OfcStorageTemplate ofcStorageTemplate = templateDetilMap.get(cellValue);
-        return ofcStorageTemplate.getStandardColCode();
+        if(null == ofcStorageTemplate){
+            return null;
+        }
+        if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getStandardColCode())){
+            logger.error("当前模板映射缺少标准列编码");
+            throw new BusinessException("当前模板映射缺少标准列编码");
+        }
+        return ofcStorageTemplate;
     }
 
 
