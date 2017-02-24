@@ -462,6 +462,29 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         logger.info("跟踪状态已回单");
                     }
                     break;
+                case "中转入":
+                    flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
+                            + " " + "客户已中转入");
+                    if (!flag) {
+                        orderStatus.setLastedOperTime(traceTime);
+                        orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
+                                + " " + "客户已中转入");
+                        logger.info("跟踪状态中转入");
+                    }
+                    break;
+                case "中转出":
+                    flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
+                            + " " + "客户已中转出");
+                    if (!flag) {
+                        orderStatus.setLastedOperTime(traceTime);
+                        orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
+                                + " " + "客户已中转出");
+                        logger.info("跟踪状态中转出");
+                    }
+                    break;
+                case "异常":
+                    logger.info("跟踪状态返回‘异常’");
+                    break;
                 default:
                     throw new BusinessException("所给运输计划单状态有误:" + status);
             }
