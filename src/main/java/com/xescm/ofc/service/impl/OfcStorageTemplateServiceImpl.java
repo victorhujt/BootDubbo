@@ -239,6 +239,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     ofcStorageTemplateDto = (OfcStorageTemplateDto) clazz.newInstance();
                 } catch (Exception e) {
                     logger.error("校验明细类型Excel:{}", e);
+                    throw new BusinessException("校验Excel错误");
                 }
                 //校验第一行,包括固定内容和收货人列表
                 if(rowNum == 0){
@@ -253,8 +254,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 if (null == cell || Cell.CELL_TYPE_BLANK == cell.getCellType()) {
                     continue;
                 }
-
-
 
                 //遍历列
                 for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
@@ -285,6 +284,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         modelNameStr.put(cellNum,refCellValue);
                     }else if(rowNum > 0) { // 表格的数据体
                         System.out.println();
+
                     }
                 }
 
@@ -292,6 +292,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
             }
+
 
         }
         return null;
