@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
+<link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
 <title>导入模板配置</title>
 <div id="dialog">
     <div class="list-mian-01">
@@ -13,7 +15,10 @@
         <el-form :model="templateForm"  label-width="100px" class="demo-ruleForm">
             <div class="xe-block">
                 <el-form-item label="客户名称"  class="xe-col-3">
-                    <el-input v-model="templateForm.custName" id="custName" placeholder="请输入客户名称"></el-input>
+                    <#--<el-input v-model="templateForm.custName" name="custName" id="custName" placeholder="请输入客户名称"></el-input>-->
+                    <input class="form-control select2-single" name="custName" id="custName" />
+                    <input class="form-control select2-single" type="text" name="custCode" id="custCode" readonly="readonly">
+                    <#--<input id="custCode" hidden/>-->
                     <#--<el-input  id="custCode" ></el-input>-->
                 </el-form-item>
                 <el-form-item label="模板类型"  class="xe-col-3">
@@ -106,7 +111,7 @@
         var ofc_web_url = $("#ofc_web_url").html();
         var url = ofc_web_url + "/ofc/distributing/queryCustomerSelect2";
         var notice = "没有找到相关客户";
-        //Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
+        Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
     }
 
     var dialog = new Vue({
