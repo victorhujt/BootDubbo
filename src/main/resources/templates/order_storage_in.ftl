@@ -4,137 +4,138 @@
 <body>
 <div id="app">
     <div class="list-mian-01">
-        <el-dialog title="选择客户" v-model="chosenCus" size="small">
-            <el-form :model="chosenCusForm">
-                <el-form-item label="名称" :label-width="formLabelWidth">
-                    <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
-                  <el-button type="primary" @click="selectCustomer">筛选</el-button>
-                </el-form-item>
-            </el-form>
-
-            <el-table :data="customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
-                <el-table-column property="customerCode" label="客户编码"></el-table-column>
-                <el-table-column property="type" label="类型"></el-table-column>
-                <el-table-column property="customerName" label="公司名称"></el-table-column>
-                <el-table-column property="channel" label="渠道"></el-table-column>
-                <el-table-column property="productType" label="产品类别"></el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleCustomerSizeChange" @current-change="handleCustomerCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="customerPageSize" :total="total" layout="total, sizes, prev, pager, next, jumper">
-            </el-pagination>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectCustomer">取 消</el-button>
-                <el-button type="primary" @click="setCurrentCustInfo(currentRow)">确 定</el-button>
-            </div>
-        </el-dialog>
-
-        <el-dialog title="发货方联系人" v-model="chosenSend" size="small">
-            <el-form :model="consignorForm">
-                <el-form-item label="名称" :label-width="formLabelWidth">
-                    <el-input v-model="consignorForm.consignorName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人" :label-width="formLabelWidth">
-                    <el-input v-model="consignorForm.consignorContactName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" :label-width="formLabelWidth">
-                    <el-input v-model="consignorForm.consignorPhoneNumber" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
-                    <el-button type="primary" @click="selectConsignor">筛选</el-button>
-                </el-form-item>
-            </el-form>
-
-            <el-table :data="consignorData" highlight-current-row @current-change="consignorHandleCurrentChange" border style="width: 100%">
-                <el-table-column type="index"></el-table-column>
-                <el-table-column property="consignorName" label="名称"></el-table-column>
-                <el-table-column property="consignorContactName" label="联系人"></el-table-column>
-                <el-table-column property="consignorPhoneNumber" label="联系电话"></el-table-column>
-                <el-table-column property="consignorAddress" label="地址"></el-table-column>
-                <el-table-column property="consignorCode" label="发货方编码"></el-table-column>
-                <el-table-column property="consignorType" label="发货方类型"></el-table-column>
-                <el-table-column property="consignorContactCode" label="发货方联系人编码"></el-table-column>
-                <el-table-column property="consignorAddressCode" label="发货方地址编码"></el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleConsignorSizeChange" @current-change="handleConsignorCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="consignorPageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalConsignor">
-            </el-pagination>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectConsignor">取 消</el-button>
-                <el-button type="primary" @click="setCurrentConsignorInfo(consignorCurrentRow)">确 定</el-button>
-            </div>
-        </el-dialog>
-
-
-        <el-dialog title="供应商信息" v-model="chosenSupplier" size="small">
-            <el-form :model="supplierForm">
-                <el-form-item label="名称" :label-width="formLabelWidth">
-                    <el-input v-model="supplierForm.supplierName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人" :label-width="formLabelWidth">
-                    <el-input v-model="supplierForm.contactName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" :label-width="formLabelWidth">
-                    <el-input v-model="supplierForm.contactPhone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item  label="" :label-width="formLabelWidth">
-                    <el-button type="primary" @click="selectSupplier">筛选</el-button>
-                </el-form-item>
-            </el-form>
-
-            <el-table :data="supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
-                <el-table-column property="supplierName" label="名称"></el-table-column>
-                <el-table-column property="contactName" label="联系人"></el-table-column>
-                <el-table-column property="contactPhone" label="联系电话"></el-table-column>
-                <el-table-column property="fax" label="传真"></el-table-column>
-                <el-table-column property="email" label="邮箱"></el-table-column>
-                <el-table-column property="postCode" label="邮编"></el-table-column>
-                <el-table-column property="supplierCode" label="供应商编码"></el-table-column>
-                <el-table-column property="completeAddress" label="地址"></el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleSupplierSizeChange" @current-change="handleSupplierCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="supplierPageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSupplier">
-            </el-pagination>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectSupplier">取 消</el-button>
-                <el-button type="primary" @click="setCurrentSupplierInfo(supplierCurrentRow)">确 定</el-button>
-            </div>
-        </el-dialog>
-
-
-        <el-dialog title="货品列表" v-model="chosenGoodCode" size="small">
-            <el-form :model="goodsForm">
-                <el-form-item label="货品编码" :label-width="formLabelWidth">
-                    <el-input v-model="goodsForm.goodsCode" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="货品名称" :label-width="formLabelWidth">
-                    <el-input v-model="goodsForm.goodsName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
-                    <el-button type="primary" @click="selectGoods">筛选</el-button>
-                </el-form-item>
-            </el-form>
-
-            <el-table :data="goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
-                <el-table-column property="goodsType" label="货品类别"></el-table-column>
-                <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
-                <el-table-column property="goodsCode" label="货品编码"></el-table-column>
-                <el-table-column property="goodsName" label="货品名称"></el-table-column>
-                <el-table-column property="goodsSpec" label="规格"></el-table-column>
-                <el-table-column property="unit" label="单位"></el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleGoodSizeChange" @current-change="handleGoodCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="goodPageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalGoods">
-            </el-pagination>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectGood">取 消</el-button>
-                <el-button type="primary" @click="setCurrentGoodsInfo(goodCurrentRow)">确 定</el-button>
-            </div>
-        </el-dialog>
-      <div class="xe-pageHeader">
-        基本信息
-      </div>
       <el-form label-width="100px">
+            <el-dialog title="选择客户" v-model="chosenCus" size="small">
+                <el-form :model="chosenCusForm">
+                    <el-form-item label="名称" :label-width="formLabelWidth">
+                        <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="" :label-width="formLabelWidth">
+                      <el-button type="primary" @click="selectCustomer">筛选</el-button>
+                    </el-form-item>
+                </el-form>
+
+                <el-table :data="customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column property="customerCode" label="客户编码"></el-table-column>
+                    <el-table-column property="type" label="类型"></el-table-column>
+                    <el-table-column property="customerName" label="公司名称"></el-table-column>
+                    <el-table-column property="channel" label="渠道"></el-table-column>
+                    <el-table-column property="productType" label="产品类别"></el-table-column>
+                </el-table>
+                <el-pagination @size-change="handleCustomerSizeChange" @current-change="handleCustomerCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="customerPageSize" :total="total" layout="total, sizes, prev, pager, next, jumper">
+                </el-pagination>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="cancelSelectCustomer">取 消</el-button>
+                    <el-button type="primary" @click="setCurrentCustInfo(currentRow)">确 定</el-button>
+                </div>
+            </el-dialog>
+
+            <el-dialog title="发货方联系人" v-model="chosenSend" size="small">
+                <el-form :model="consignorForm">
+                    <el-form-item label="名称" :label-width="formLabelWidth">
+                        <el-input v-model="consignorForm.consignorName" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系人" :label-width="formLabelWidth">
+                        <el-input v-model="consignorForm.consignorContactName" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系电话" :label-width="formLabelWidth">
+                        <el-input v-model="consignorForm.consignorPhoneNumber" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="" :label-width="formLabelWidth">
+                        <el-button type="primary" @click="selectConsignor">筛选</el-button>
+                    </el-form-item>
+                </el-form>
+
+                <el-table :data="consignorData" highlight-current-row @current-change="consignorHandleCurrentChange" border style="width: 100%">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column property="consignorName" label="名称"></el-table-column>
+                    <el-table-column property="consignorContactName" label="联系人"></el-table-column>
+                    <el-table-column property="consignorPhoneNumber" label="联系电话"></el-table-column>
+                    <el-table-column property="consignorAddress" label="地址"></el-table-column>
+                    <el-table-column property="consignorCode" label="发货方编码"></el-table-column>
+                    <el-table-column property="consignorType" label="发货方类型"></el-table-column>
+                    <el-table-column property="consignorContactCode" label="发货方联系人编码"></el-table-column>
+                    <el-table-column property="consignorAddressCode" label="发货方地址编码"></el-table-column>
+                </el-table>
+                <el-pagination @size-change="handleConsignorSizeChange" @current-change="handleConsignorCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="consignorPageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalConsignor">
+                </el-pagination>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="cancelSelectConsignor">取 消</el-button>
+                    <el-button type="primary" @click="setCurrentConsignorInfo(consignorCurrentRow)">确 定</el-button>
+                </div>
+            </el-dialog>
+
+
+            <el-dialog title="供应商信息" v-model="chosenSupplier" size="small">
+                <el-form :model="supplierForm">
+                    <el-form-item label="名称" :label-width="formLabelWidth">
+                        <el-input v-model="supplierForm.supplierName" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系人" :label-width="formLabelWidth">
+                        <el-input v-model="supplierForm.contactName" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系电话" :label-width="formLabelWidth">
+                        <el-input v-model="supplierForm.contactPhone" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item  label="" :label-width="formLabelWidth">
+                        <el-button type="primary" @click="selectSupplier">筛选</el-button>
+                    </el-form-item>
+                </el-form>
+
+                <el-table :data="supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange" style="width: 100%">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column property="supplierName" label="名称"></el-table-column>
+                    <el-table-column property="contactName" label="联系人"></el-table-column>
+                    <el-table-column property="contactPhone" label="联系电话"></el-table-column>
+                    <el-table-column property="fax" label="传真"></el-table-column>
+                    <el-table-column property="email" label="邮箱"></el-table-column>
+                    <el-table-column property="postCode" label="邮编"></el-table-column>
+                    <el-table-column property="supplierCode" label="供应商编码"></el-table-column>
+                    <el-table-column property="completeAddress" label="地址"></el-table-column>
+                </el-table>
+                <el-pagination @size-change="handleSupplierSizeChange" @current-change="handleSupplierCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="supplierPageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSupplier">
+                </el-pagination>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="cancelSelectSupplier">取 消</el-button>
+                    <el-button type="primary" @click="setCurrentSupplierInfo(supplierCurrentRow)">确 定</el-button>
+                </div>
+            </el-dialog>
+
+
+            <el-dialog title="货品列表" v-model="chosenGoodCode" size="small">
+                <el-form :model="goodsForm">
+                    <el-form-item label="货品编码" :label-width="formLabelWidth">
+                        <el-input v-model="goodsForm.goodsCode" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="货品名称" :label-width="formLabelWidth">
+                        <el-input v-model="goodsForm.goodsName" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="" :label-width="formLabelWidth">
+                        <el-button type="primary" @click="selectGoods">筛选</el-button>
+                    </el-form-item>
+                </el-form>
+
+                <el-table :data="goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column property="goodsType" label="货品类别"></el-table-column>
+                    <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
+                    <el-table-column property="goodsCode" label="货品编码"></el-table-column>
+                    <el-table-column property="goodsName" label="货品名称"></el-table-column>
+                    <el-table-column property="goodsSpec" label="规格"></el-table-column>
+                    <el-table-column property="unit" label="单位"></el-table-column>
+                </el-table>
+                <el-pagination @size-change="handleGoodSizeChange" @current-change="handleGoodCurrentPage" :current-page="currentPage4" :page-sizes="pageSizes" :page-size="goodPageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalGoods">
+                </el-pagination>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="cancelSelectGood">取 消</el-button>
+                    <el-button type="primary" @click="setCurrentGoodsInfo(goodCurrentRow)">确 定</el-button>
+                </div>
+            </el-dialog>
+          <div class="xe-pageHeader">
+            基本信息
+          </div>
+
             <div class="xe-block">
               <el-form-item label="订单日期" required class="xe-col-3" prop="date">
                 <el-form-item>
@@ -190,68 +191,61 @@
                 <el-input type="textarea" v-model="notes" ></el-input>
               </el-form-item>
             </div>
-      </el-form>
-
-
-
-       <el-collapse v-model="activeNames" accordion>
-          <el-collapse-item title="运输信息" name="1">
-            <el-form label-width="100px">
             <div class="xe-block">
-              <el-form-item label="预计入库时间" class="xe-col-3">
-                <el-date-picker
-                        v-model="arriveTime"
-                        align="right"
-                        type="date"
-                        placeholder="选择日期"
-                        :picker-options="pickerOptions1">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item label="是否提供运输">
-                <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
-              </el-form-item>
+                <el-collapse v-model="activeNames" accordion>
+                  <el-collapse-item title="运输信息" name="1">
+                    <div class="xe-block">
+                      <el-form-item label="预计入库时间" class="xe-col-3">
+                        <el-date-picker
+                                v-model="arriveTime"
+                                type="date"
+                                placeholder="选择日期"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                      </el-form-item>
+                      <el-form-item label="是否提供运输">
+                        <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+                      </el-form-item>
+                    </div>
+                    <div class="xe-block">
+                      <el-form-item label="车牌号" class="xe-col-3">
+                        <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
+                      </el-form-item>
+                      <el-form-item label="司机姓名" class="xe-col-3">
+                        <el-input v-model="driverName"  placeholder="请输入内容"></el-input>
+                      </el-form-item>
+                      <el-form-item label="联系电话" class="xe-col-3">
+                        <el-input v-model="driverContactNumber"  placeholder="请输入内容"></el-input>
+                      </el-form-item>
+                    </div>
+                    <div class="xe-pageHeader">
+                      &nbsp;&nbsp;&nbsp;发货方信息
+                    </div>
+                    <div class="xe-block">
+                      <el-form-item label="名称" class="xe-col-3">
+                        <el-input
+                                placeholder="请选择"
+                                icon="search"
+                                v-model="consignorName"
+                                v-bind:disabled = "isDisabled"
+                                @click="chosenSend = true">
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="联系人" class="xe-col-3">
+                        <el-input v-model="consignorContactName" :readOnly="true"></el-input>
+                      </el-form-item>
+                      <el-form-item label="联系电话" class="xe-col-3">
+                        <el-input v-model="consignorPhoneNumber" :readOnly="true"></el-input>
+                      </el-form-item>
+                    </div>
+                    <div class="xe-block">
+                      <el-form-item label="地址选择" class="xe-col-3">
+                        <el-input v-model="consignorAddress" :readOnly="true"></el-input>
+                      </el-form-item>
+                    </div>
+                  </el-collapse-item>
+                </el-collapse>
             </div>
-            <div class="xe-block">
-              <el-form-item label="车牌号" class="xe-col-3">
-                <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="司机姓名" class="xe-col-3">
-                <el-input v-model="driverName"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="联系电话" class="xe-col-3">
-                <el-input v-model="driverContactNumber"  placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-              &nbsp;&nbsp;&nbsp;发货方信息
-            </div>
-            <div class="xe-block">
-              <el-form-item label="名称" class="xe-col-3">
-                <el-input
-                        placeholder="请选择"
-                        icon="search"
-                        v-model="consignorName"
-                        v-bind:disabled = "isDisabled"
-                        @click="chosenSend = true">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="联系人" class="xe-col-3">
-                <el-input v-model="consignorContactName" :readOnly="true"></el-input>
-              </el-form-item>
-              <el-form-item label="联系电话" class="xe-col-3">
-                <el-input v-model="consignorPhoneNumber" :readOnly="true"></el-input>
-              </el-form-item>
-            </div>
-            <div class="xe-block">
-              <el-form-item label="地址选择" class="xe-col-3">
-                <el-input v-model="consignorAddress" :readOnly="true"></el-input>
-              </el-form-item>
-            </div>
-            </el-form>
-          </el-collapse-item>
-        </el-collapse>
-
-
 
             <div class="xe-pageHeader">
               货品信息
@@ -354,8 +348,8 @@
               </el-table-column>
             </el-table>
           <el-button type="primary" @click="saveStorage">确认下单</el-button>
-
-</div>
+      </el-form>
+    </div>
 </body>
 <script>
     new Vue({
