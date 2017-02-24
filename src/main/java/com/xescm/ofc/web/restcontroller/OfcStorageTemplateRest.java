@@ -27,6 +27,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
@@ -274,67 +279,15 @@ public class OfcStorageTemplateRest extends BaseController{
      */
     @RequestMapping(value = "/batch_in_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest httpServletRequest){
-        List<String> excelSheet;
-        try {
-            String fileName = file.getOriginalFilename();
-            int potIndex = fileName.lastIndexOf(".") + 1;
-            if(-1 == potIndex){
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
-            }
-            String suffix = fileName.substring(potIndex, fileName.length());
-            excelSheet = ofcOperationDistributingService.getExcelSheet(file,suffix);
-
-
-//            //Excel导入功能部分代码
-//            AuthResDto authResDto = getAuthResDtoByToken();
-//            String custCode = "";
-//            String templateCode = "";
-//            Integer sheetNum = 0;
-//            Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file,authResDto,custCode,templateCode,sheetNum);
-
-
-
-
-        }catch (BusinessException e) {
-            e.printStackTrace();
-            logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
-        }catch (Exception e) {
-             logger.error("城配开单Excel导入展示Sheet页出错:{}",e.getMessage(),e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "文件上传成功!", excelSheet);
-    }
-
-    /**
-     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
-     * @param paramHttpServletRequest
-     * @return
-     */
-    @RequestMapping(value = "/batch_in_load",method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest){
+    public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest httpServletRequest, OfcStorageTemplate ofcStorageTemplate){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
-            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
-            MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
-            String fileName = multipartHttpServletRequest.getParameter("fileName");
-            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
-            String modelType = multipartHttpServletRequest.getParameter("templatesType");
-            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
-            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
-            int potIndex = fileName.lastIndexOf(".") + 1;
-            if(-1 == potIndex){
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,"该文件没有扩展名!");
-            }
-            String suffix = fileName.substring(potIndex, fileName.length());
-            String customerCode = multipartHttpServletRequest.getParameter("customerCode");
-            String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile,suffix,sheetNum,authResDto,customerCode,modelType,modelMappingCode);
-
-            //如果校验失败
+            String templateType = "";
+            String custCode = "";
+            String templateCode = "";
+            Integer activeSheetNum = ofcStorageTemplateService.checkStorageTemplate(file);
+            Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file,authResDto,templateType,custCode,templateCode,activeSheetNum);
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
 
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
@@ -353,6 +306,7 @@ public class OfcStorageTemplateRest extends BaseController{
         }
         return result;
     }
+
 
 
     /**
