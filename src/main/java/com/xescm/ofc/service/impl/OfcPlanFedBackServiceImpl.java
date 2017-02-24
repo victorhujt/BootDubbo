@@ -146,7 +146,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 ofcOrderStatusService.save(orderStatus);
 
                                 //当前订单下的未完成未作废的仓储计划单的订单状态
-                                List<OfcSiloproStatus> ofcSiloproStatusList = ofcSiloproStatusService.queryUncompletedPlanCodesByOrderCode(orderCode);
+                                List<OfcSiloproStatus> ofcSiloproStatusList=null;
+                                //  List<OfcSiloproStatus> ofcSiloproStatusList = ofcSiloproStatusService.queryUncompletedPlanCodesByOrderCode(orderCode);
                                 OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
                                 if(null == ofcFundamentalInformation){
                                     throw new BusinessException("无法查到该订单相应基本信息");
@@ -211,7 +212,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                     //改其状态为已完成,
                                     ofcSiloproStatus.setPlannedSingleState(RENWUWANCH);
                                     ofcSiloproStatus.setTaskCompletionTime(traceTime);
-                                    ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+                                   // ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
                                     //改订单状态为已完成.
                                     orderStatus=new OfcOrderStatus();
                                     orderStatus.setOrderCode(orderCode);

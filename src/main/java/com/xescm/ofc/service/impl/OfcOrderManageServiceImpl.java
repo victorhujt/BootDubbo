@@ -1103,7 +1103,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcSiloproStatus.setPlannedSingleState(YIZUOFEI);
                 //ofcTransplanNewstatus.setTransportSingleLatestStatus("50");
                 //ofcTransplanNewstatusService.updateByPlanCode(ofcTransplanNewstatus);
-                ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
+               // ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);
                 ofcSiloprogramInfoService.update(ofcSiloprogramInfo);
             }
         }
@@ -2220,7 +2220,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofcSiloproStatus.setPlannedSingleState(YITUISONG);
                 ofcSiloproNewStatus.setJobStatusUpdateTime(new Date());
                 ofcSiloproStatus.setPlanCode(info.getPlanCode());
-                ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);//更新仓储计划单的状态
+               // ofcSiloproStatusService.updateByPlanCode(ofcSiloproStatus);//更新仓储计划单的状态
                 ofcSiloproNewstatusService.updateByPlanCode(ofcSiloproNewStatus);//更新仓储计划单最新的状态
             }
         } catch (Exception e) {

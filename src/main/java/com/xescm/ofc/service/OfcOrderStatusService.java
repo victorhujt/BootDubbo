@@ -1,6 +1,8 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
+import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 
 import java.util.List;
 
@@ -30,4 +32,10 @@ public interface OfcOrderStatusService extends IService<OfcOrderStatus> {
 
     @Override
     int save(OfcOrderStatus record);
+
+     void feedBackStatusFromWhc(FeedBackOrderStatusDto feedBackOrderStatusDto);
+     void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto);
+
+
+
 }
