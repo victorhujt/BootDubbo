@@ -39,4 +39,15 @@ public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
     OfcOrderStatus queryLastUpdateOrderByOrderCode(@Param(value = "orderCode") String orderCode);
 
     OfcOrderStatus queryLastTimeOrderByOrderCode(@Param(value = "orderCode") String orderCode);
+
+    /**
+     * <p>Title:      batchInsertOrderStatusId. </p>
+     * <p>Description 批量插入订单状态主键id</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/2/10 12:07
+     * @return
+     */
+    void batchInsertOrderStatusId(@Param(value = "statusList") List<OfcOrderStatus> statusList);
 }

@@ -8,9 +8,6 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.enums.BusinessTypeEnum;
-import com.xescm.ofc.enums.PlanEnum;
-import com.xescm.ofc.enums.ResourceEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
@@ -52,11 +49,9 @@ public class OfcOrderManageOperaRest extends BaseController {
     @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Resource
-    private PlanAndStorageService planAndStorageService;
-    @Resource
     private OfcBatchOrderVoService ofcBatchOrderVoService;
-//    @Resource
-//    private OrderFollowOperService orderFollowOperService;
+    @Resource
+    private OrderFollowOperService orderFollowOperService;
 
     /**
      * 查询订单

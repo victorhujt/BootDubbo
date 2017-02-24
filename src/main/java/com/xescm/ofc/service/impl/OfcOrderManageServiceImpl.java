@@ -315,7 +315,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             Map<String, List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             //保存计划单明细
-            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter, ofcPlannedDetail.get(),ofcTransplanInfo);
+            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter,ofcTransplanInfo);
             if (ofcPlannedDetailList.size() > 0) {
                 ofcPlannedDetailMap.put(ofcPlannedDetailList.get(0).getPlanCode(), ofcPlannedDetailList);
             }
@@ -540,7 +540,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             Iterator<OfcGoodsDetailsInfo> iter = goodsDetailsList.iterator();
             Map<String,List<OfcPlannedDetail>> ofcPlannedDetailMap = new HashMap<>();
             //保存计划单明细
-            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter, ofcPlannedDetail.get(),ofcTransplanInfo);
+            List<OfcPlannedDetail> ofcPlannedDetailList = savePlannedDetail(iter,ofcTransplanInfo);
             if(PubUtils.isNotNullAndBiggerSize(ofcPlannedDetailList,0)){
                 ofcPlannedDetailMap.put(ofcPlannedDetailList.get(0).getPlanCode(),ofcPlannedDetailList);
             }
@@ -827,7 +827,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
             ofcWarehouse.setOrderCode(orderCode);
             OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
-            if(ofcWarehouseInformation.getProvideTransport() == YES){
+            if(Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)){
                 orderCancelToTfc(orderCode);
             }
         }
@@ -837,7 +837,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     /**
      * 调用仓储中心取消接口
      * @param orderCode 订单编号
-     * @return
+     * @return  void
      */
     private void orderCancelToWhc(String orderCode) {
         logger.info("调用仓储中心取消接口, 订单号:{}",orderCode);
@@ -846,7 +846,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
     /**
      * 调用运输中心取消接口
      * @param orderCode 订单编号
-     * @return
+     * @return  void
      */
     private void orderCancelToTfc(String orderCode) {
         logger.info("调用运输中心取消接口, 订单号:{}",orderCode);
@@ -1944,7 +1944,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 //仓储订单推仓储中心
                 pushOrderToWhc(ofcFundamentalInformation,goodsDetailsList,ofcWarehouseInformation,ofcFinanceInformation);
                 //仓储带运输订单推仓储中心和运输中心
-                if(ofcWarehouseInformation.getProvideTransport() == YES){
+                if(Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)){
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
                 }
             }else {
@@ -2582,11 +2582,11 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         } catch (Exception e) {
             logger.error("订单信息推送结算中心 转换异常, {}", e);
         }
-        /*Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
+        Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
         if(ERROR_CODE == wrapper.getCode()){
             logger.error(wrapper.getMessage());
             throw new BusinessException(wrapper.getMessage());
-        }*/
+        }
     }
 
     /**
@@ -2594,17 +2594,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * <p>Description 计划单明细</p>
      *
      * @param iter     循环变量
-     * @param ofcPlannedDetail      计划单明细
      * @param ofcTransplanInfo      计划单基本信息
      * @author        杨东旭
      * @CreateDate    2017/2/3
      * @return        List<OfcPlannedDetail>
      */
-    private List<OfcPlannedDetail> savePlannedDetail(Iterator<OfcGoodsDetailsInfo> iter,OfcPlannedDetail ofcPlannedDetail
+    private List<OfcPlannedDetail> savePlannedDetail(Iterator<OfcGoodsDetailsInfo> iter
             ,OfcTransplanInfo ofcTransplanInfo){
         List<OfcPlannedDetail>ofcPlannedDetailList = new ArrayList<>();
         while (iter.hasNext()) {
-            ofcPlannedDetail = new OfcPlannedDetail();
+            OfcPlannedDetail ofcPlannedDetail = new OfcPlannedDetail();
             //保存计划单明细
             ofcPlannedDetail.setPlanCode(ofcTransplanInfo.getPlanCode());
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = iter.next();
@@ -2613,7 +2612,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                     || (ofcGoodsDetailsInfo.getCubage() != null && ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) != 0 )){
                 try {
                     BeanUtils.copyProperties(ofcPlannedDetail, ofcTransplanInfo);
-                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("\\@")[0]);
+                    ofcGoodsDetailsInfo.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode().split("@")[0]);
                     BeanUtils.copyProperties(ofcPlannedDetail, ofcGoodsDetailsInfo);
                     ofcPlannedDetailList.add(ofcPlannedDetail);
                 } catch (IllegalAccessException e) {
@@ -2683,7 +2682,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 订单中心--订单状态推结算中心(执行中和已完成)
-     * @param ofcOrderStatus
+     * @param ofcOrderStatus    订单状态
      * @return void
      */
     public void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus){
@@ -2707,7 +2706,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
 
     /**
      * 订单中心--→计划单
-     * @param acPlanDto
+     * @param acPlanDto 推送结算实体
      * @return void
      */
     public void pullOfcOrderPlanCode(AcPlanDto acPlanDto){

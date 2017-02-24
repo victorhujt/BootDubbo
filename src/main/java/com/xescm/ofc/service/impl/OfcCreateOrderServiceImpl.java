@@ -305,7 +305,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDINGAUDIT, "review", authResDto);
+        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
         logger.info("自动审核操作：" + wrapper.getCode());
     }
 
