@@ -2117,6 +2117,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
         tfcTransport.setBusinessType(ofcFundamentalInformation.getBusinessType());
         tfcTransport.setGoodsTypeName(ofcDistributionBasicInfo.getGoodsTypeName());
         tfcTransport.setTwoDistribution(ofcFinanceInformation.getTwoDistribution());
+        tfcTransport.setFaceOrder(ofcDistributionBasicInfo.getTransCode());//面单号
 //        tfcTransport.setTransportPool();//
 //        tfcTransport.setMatchingMode();//
 //        tfcTransport.setSchedulingState();//

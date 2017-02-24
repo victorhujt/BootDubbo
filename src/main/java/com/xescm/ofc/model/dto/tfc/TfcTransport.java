@@ -167,6 +167,8 @@ public class TfcTransport implements Serializable {
 
     private String toDistrictCode;//到达县区编码
 
+    private String faceOrder;
+
     public String getCustomerOrderCode() {
         return customerOrderCode;
     }
@@ -773,5 +775,13 @@ public class TfcTransport implements Serializable {
 
     public void setToDistrictCode(String toDistrictCode) {
         this.toDistrictCode = toDistrictCode;
+    }
+
+    public String getFaceOrder() {
+        return faceOrder;
+    }
+
+    public void setFaceOrder(String faceOrder) {
+        this.faceOrder = faceOrder;
     }
 }
