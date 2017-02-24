@@ -4,10 +4,8 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
-import com.xescm.ofc.domain.OfcDistributionBasicInfo;
-import com.xescm.ofc.domain.OfcFinanceInformation;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.*;
+import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
@@ -18,11 +16,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,24 +41,28 @@ public class ScheduledTask{
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Autowired
+    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Autowired
+    @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-    @Autowired
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
-    @Autowired
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
-    @Autowired
+    @Resource
     private OfcCreateOrderService ofcCreateOrderService;
-    @Autowired
+    @Resource
     private OfcOrderPlaceService ofcOrderPlaceService;
-    @Autowired
+    @Resource
     private UamGroupEdasService uamGroupEdasService;
+    @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
+    @Resource
+    private OfcOrderStatusMapper ofcOrderStatusMapper;
 
     //推送历史卡班订单到运输中心
 //    @Scheduled(cron = "0 */1 * * * ?")
@@ -257,5 +262,29 @@ public class ScheduledTask{
         }
         logger.info("历史订单的基地和大区字段补齐,共{}条,成功{}条,失败条数中包含跳过更新{}条", historyOrderNum, successNum, jumpNum);
 
+    }
+
+    //同步历史订单最新状态到订单最新状态表
+    @Scheduled(cron = "0 */1 * * * ?")
+//    @Scheduled(cron = "")
+    public void pushOrderNewStatusToNewTable(){
+        logger.info("开始,同步历史订单最新状态到订单最新状态表");
+        List<OfcFundamentalInformation> ofcFundamentalInformations = ofcFundamentalInformationService.selectAll();
+        OfcOrderNewstatus orderNewstatus=new OfcOrderNewstatus();
+        Map<String, String> mapperMap = new HashMap<>();
+        for (OfcFundamentalInformation ofcFundamentalInformation : ofcFundamentalInformations) {
+            String orderCode = ofcFundamentalInformation.getOrderCode();
+            orderNewstatus.setOrderCode(orderCode);
+            if (null == ofcOrderNewstatusService.selectByKey(orderCode)) {
+                mapperMap.put("orderCode", orderCode);
+                OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
+                OfcOrderNewstatus orderNewstatu = new OfcOrderNewstatus();
+                orderNewstatu.setOrderCode(orderCode);
+                orderNewstatu.setOrderLatestStatus(PubUtils.trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()));
+                orderNewstatu.setStatusUpdateTime(new Date());
+                orderNewstatu.setStatusCreateTime(new Date());
+                ofcOrderNewstatusService.save(orderNewstatu);
+            }
+        }
     }
 }

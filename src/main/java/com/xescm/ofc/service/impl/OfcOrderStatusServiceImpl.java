@@ -91,6 +91,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             if(orderNewstatus==null
                     || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
                     || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+                OfcOrderNewstatus orderNewstatu=new OfcOrderNewstatus();
+                orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
+                orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
+                orderNewstatu.setStatusUpdateTime(new Date());
+                orderNewstatu.setStatusCreateTime(new Date());
+                ofcOrderNewstatusService.save(orderNewstatus);
 
             }else{
                 ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
@@ -126,6 +132,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
                 || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
             ofcOrderStatus = ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
+            OfcOrderNewstatus orderNewstatu=new OfcOrderNewstatus();
+            orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
+            orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
+            orderNewstatu.setStatusUpdateTime(new Date());
+            orderNewstatu.setStatusCreateTime(new Date());
+            ofcOrderNewstatusService.save(orderNewstatus);
         }else{
             ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
             ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
@@ -140,6 +152,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
                 || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
             ofcOrderStatus = ofcOrderStatusMapper.queryLastTimeOrderByOrderCode(orderCode);
+            OfcOrderNewstatus orderNewstatu=new OfcOrderNewstatus();
+            orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
+            orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
+            orderNewstatu.setStatusUpdateTime(new Date());
+            orderNewstatu.setStatusCreateTime(new Date());
+            ofcOrderNewstatusService.save(orderNewstatus);
         }else{
             ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
             ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
