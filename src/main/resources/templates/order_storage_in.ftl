@@ -196,7 +196,7 @@
                 </el-input>
               </el-form-item>
               <el-form-item label="备注" prop="notes" class="xe-col-3">
-                <el-input type="textarea" v-model="notes" ></el-input>
+                <el-input type="textarea" v-model="orderForm.notes" ></el-input>
               </el-form-item>
             </div>
             <div class="xe-block">
@@ -205,25 +205,25 @@
                     <div class="xe-block">
                       <el-form-item label="预计入库时间" class="xe-col-3">
                         <el-date-picker
-                                v-model="arriveTime"
+                                v-model="orderForm.arriveTime"
                                 type="date"
                                 placeholder="选择日期"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                       </el-form-item>
                       <el-form-item label="是否提供运输">
-                        <el-checkbox v-model="isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+                        <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
                       </el-form-item>
                     </div>
                     <div class="xe-block">
                       <el-form-item label="车牌号" class="xe-col-3">
-                        <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
+                        <el-input v-model="orderForm.plateNumber" placeholder="请输入内容"></el-input>
                       </el-form-item>
                       <el-form-item label="司机姓名" class="xe-col-3">
-                        <el-input v-model="driverName"  placeholder="请输入内容"></el-input>
+                        <el-input v-model="orderForm.driverName"  placeholder="请输入内容"></el-input>
                       </el-form-item>
                       <el-form-item label="联系电话" class="xe-col-3">
-                        <el-input v-model="driverContactNumber"  placeholder="请输入内容"></el-input>
+                        <el-input v-model="orderForm.driverContactNumber"  placeholder="请输入内容"></el-input>
                       </el-form-item>
                     </div>
                     <div class="xe-pageHeader">
@@ -234,21 +234,21 @@
                         <el-input
                                 placeholder="请选择"
                                 icon="search"
-                                v-model="consignorName"
+                                v-model="orderForm.consignorName"
                                 v-bind:disabled = "isDisabled"
                                 @click="chosenSend = true">
                         </el-input>
                       </el-form-item>
                       <el-form-item label="联系人" class="xe-col-3">
-                        <el-input v-model="consignorContactName" :readOnly="true"></el-input>
+                        <el-input v-model="orderForm.consignorContactName" :readOnly="true"></el-input>
                       </el-form-item>
                       <el-form-item label="联系电话" class="xe-col-3">
-                        <el-input v-model="consignorPhoneNumber" :readOnly="true"></el-input>
+                        <el-input v-model="orderForm.consignorPhoneNumber" :readOnly="true"></el-input>
                       </el-form-item>
                     </div>
                     <div class="xe-block">
-                      <el-form-item label="地址选择" class="xe-col-3">
-                        <el-input v-model="consignorAddress" :readOnly="true"></el-input>
+                      <el-form-item label="地址" class="xe-col-3">
+                        <el-input v-model="orderForm.consignorAddress" :readOnly="true"></el-input>
                       </el-form-item>
                     </div>
                   </el-collapse-item>
@@ -885,8 +885,19 @@
                              }
                         },"json");
             },
-            saveStorage:function(form){
+            submitForm:function(formName) {
+                this.$refs[formName].validate(function(valid){
+                    if (valid) {
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                return false;
+            }
+            });
+            },
+            saveStorage:function(){
                 debugger;
+              //  this.submitForm(form);
                // this.submitForm(form);
                 if(this.orderForm.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
                     alert('只能选择一周之前的日期!');
