@@ -358,7 +358,6 @@
         el: '#app',
         data :function() {
             var validateOrdeTime = function(rule, value, callback){
-                debugger;
                 if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
                     callback(new Error('只能选择一周之前的日期!'));
                 }else if(value.getTime()>new Date().getTime()){
@@ -368,13 +367,14 @@
                 }
             };
             var checkPhoneOrMobile = function(rule, value, callback){
-                debugger;
-                var mp=/^1\d{10}$/;
-                var pp=/^0\d{2,3}-?\d{7,8}$/;
-                if(mp.test(value)||pp.test(value)){
-                    callback();
-                } else {
-                    callback(new Error('请输入正确格式的联系方式!'));
+                if(value!=""){
+                    var mp=/^1\d{10}$/;
+                    var pp=/^0\d{2,3}-?\d{7,8}$/;
+                    if(mp.test(value)||pp.test(value)){
+                        callback();
+                    } else {
+                        callback(new Error('请输入正确格式的联系方式!'));
+                    }
                 }
             };
 
@@ -575,7 +575,7 @@
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ],
                     driverContactNumber:[
-                        {required: true,validator: checkPhoneOrMobile, trigger: 'blur'},
+                        {validator: checkPhoneOrMobile, trigger: 'blur'},
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ]
                 }
@@ -672,7 +672,6 @@
             },
             getGoodsCategory:function(val) {
                 var vueObj=this;
-                val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(result) {
@@ -930,21 +929,8 @@
                              }
                         },"json");
             },
-            submitForm:function(formName) {
-                    debugger;
-                this.$refs[formName].validate(function(valid){
-                    if (valid) {
-                        alert('submit!');
-                    } else {
-                        console.log('error submit!!');
-                return false;
-            }
-            });
-            },
             saveStorage:function(){
-                debugger;
-               this.submitForm('orderForm');
-               // this.submitForm(form);
+                this.submitForm('orderForm');
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -968,7 +954,7 @@
                 //订单基本信息
                 ofcOrderDTOStr.businessType =this.orderForm.serviceType;
                 ofcOrderDTOStr.merchandiser = this.orderForm.merchandiser;
-                if(this.orderTime){
+                if(this.orderForm.orderTime){
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderTime, "yyyy-MM-dd HH:mm:ss");
                 }
                 this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
@@ -988,12 +974,6 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
                 ofcOrderDTOStr.driverName=this.orderForm.driverName;
-//                if(this.orderForm.driverContactNumber){
-//                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
-//                        alert("输入运输信息时输入正确的联系方式");
-//                        return;
-//                    }
-//                }
                 ofcOrderDTOStr.contactNumber=this.orderForm.driverContactNumber;
 
                 //发货方信息
@@ -1002,12 +982,7 @@
                 ofcOrderDTOStr.consignorType=this.orderForm.consignorType;
                 ofcOrderDTOStr.consignorContactCode=this.orderForm.consignorContactCode;
                 ofcOrderDTOStr.consignorContactName=this.orderForm.consignorContactName;
-//                if(this.orderForm.consignorPhoneNumber){
-//                    if(!this.checkPhoneOrMobile(this.orderForm.consignorPhoneNumber)){
-//                        alert("请输入正确的发货方联系方式");
-//                        return;
-//                    }
-//                }
+
                 //收货方信息(仓库的信息)
                 ofcOrderDTOStr.consignorContactPhone=this.orderForm.consignorPhoneNumber;
                 ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
@@ -1153,6 +1128,15 @@
                 var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
                 return cscContantAndCompanyDtoConsignorStr;
             },
+            submitForm:function(formName) {
+                this.$refs[formName].validate(function(valid){
+                    if (valid) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            },
             getCscContantAndCompanyDtoConsigneeStr:function(warehouse){
                 var paramConsignee = {};
                 var cscContactDto = {};
@@ -1184,16 +1168,6 @@
                 this.chosenGoodCode = true;
                 this.currentRowData = currentRowData;
             }
-//            },
-//            checkPhoneOrMobile:function(phone){
-//                var mp=/^1\d{10}$/;
-//                var pp=/^0\d{2,3}-?\d{7,8}$/;
-//                if(mp.test(phone)||pp.test(phone)){
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
         }
     });
 </script>

@@ -257,7 +257,7 @@
             <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
-                        <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  >
+                        <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @visible-change="getGoodsCategory(scope.row)">
                             <el-option
                                     v-for="item in goodsMsgOptions"
                                     :label="item.label"
@@ -357,7 +357,7 @@
         el: '#app',
         data :function() {
           var validateOrdeTime = function(rule, value, callback){
-            debugger;
+            
             if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
               callback(new Error('只能选择一周之前的日期!'));
             }else if(value.getTime()>new Date().getTime()){
@@ -367,13 +367,15 @@
             }
           };
           var checkPhoneOrMobile = function(rule, value, callback){
-            debugger;
-            var mp=/^1\d{10}$/;
-            var pp=/^0\d{2,3}-?\d{7,8}$/;
-            if(mp.test(value)||pp.test(value)){
-              callback();
-            } else {
-              callback(new Error('请输入正确格式的联系方式!'));
+            
+            if(value!=""){
+                var mp=/^1\d{10}$/;
+                var pp=/^0\d{2,3}-?\d{7,8}$/;
+                if(mp.test(value)||pp.test(value)){
+                    callback();
+                } else {
+                    callback(new Error('请输入正确格式的联系方式!'));
+                }
             }
           };
 
@@ -563,7 +565,7 @@
                   { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                 ],
                 driverContactNumber:[
-                  {required: true,validator: checkPhoneOrMobile, trigger: 'blur'},
+                  {validator: checkPhoneOrMobile, trigger: 'blur'},
                   { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                 ]
               }
@@ -921,7 +923,7 @@
                         },"json");
             },
           submitForm:function(formName) {
-            debugger;
+            
             this.$refs[formName].validate(function(valid){
               if (valid) {
                 alert('submit!');
@@ -933,19 +935,6 @@
           },
             saveStorage:function(){
                 this.submitForm('orderForm');
-                if(!this.orderForm.orderTime){
-                    alert("订单日期不能为空");
-                    return;
-                }else{
-                    if(this.orderForm.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-                        alert('只能选择一周之前的日期!');
-                        return;
-                    }
-                    if(this.orderForm.orderTime.getTime()>new Date().getTime()){
-                        alert('只能选择一周之前的日期!');
-                        return;
-                    }
-                }
                 if(this.orderForm.serviceType=="614"){
                     if(!this.supplierName){
                         alert('业务类型为分拨出库时，供应商必须选择!');
@@ -998,12 +987,12 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
                 ofcOrderDTOStr.driverName=this.orderForm.driverName;
-                if(this.orderForm.driverContactNumber){
-                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
-                        alert("输入运输信息时输入正确的联系方式");
-                        return;
-                    }
-                }
+//                if(this.orderForm.driverContactNumber){
+//                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
+//                        alert("输入运输信息时输入正确的联系方式");
+//                        return;
+//                    }
+//                }
                 ofcOrderDTOStr.contactNumber=this.orderForm.driverContactNumber;
 
                 //发货方信息
@@ -1015,12 +1004,12 @@
                 ofcOrderDTOStr.consigneeName=this.orderForm.consigneeName;
                 ofcOrderDTOStr.consigneeCode=this.orderForm.consigneeCode;
                 ofcOrderDTOStr.consigneeContactName=this.orderForm.consigneeContactName;
-                if(this.orderForm.consigneePhoneNumber){
-                    if(!this.checkPhoneOrMobile(this.orderForm.consigneePhoneNumber)){
-                        alert("请输入正确的收货方联系方式");
-                        return;
-                    }
-                }
+//                if(this.orderForm.consigneePhoneNumber){
+//                    if(!this.checkPhoneOrMobile(this.orderForm.consigneePhoneNumber)){
+//                        alert("请输入正确的收货方联系方式");
+//                        return;
+//                    }
+//                }
                 ofcOrderDTOStr.consigneeContactPhone=this.orderForm.consigneePhoneNumber;
                 ofcOrderDTOStr.consigneeType=this.orderForm.consigneeType;
                 ofcOrderDTOStr.consigneeContactCode=this.orderForm.consigneeContactCode;
@@ -1191,18 +1180,19 @@
                 return cscContantAndCompanyDtoConsignorStr;
             },
             openGoodsList: function(currentRowData) {
-                this.chosenGoodCode=true;
+                this.chosenGoodCode = true;
                 this.currentRowData = currentRowData;
-            },
-            checkPhoneOrMobile:function(phone){
-                var mp=/^1\d{10}$/;
-                var pp=/^0\d{2,3}-?\d{7,8}$/;
-                if(mp.test(phone)||pp.test(phone)){
-                    return true;
-                } else {
-                    return false;
-                }
             }
+//            },
+//            checkPhoneOrMobile:function(phone){
+//                var mp=/^1\d{10}$/;
+//                var pp=/^0\d{2,3}-?\d{7,8}$/;
+//                if(mp.test(phone)||pp.test(phone)){
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
         }
     });
 </script>

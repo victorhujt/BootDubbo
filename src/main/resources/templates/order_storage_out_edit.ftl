@@ -369,7 +369,7 @@
         el: '#app',
         data :function() {
           var validateOrdeTime = function(rule, value, callback){
-            debugger;
+            
             if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
               callback(new Error('只能选择一周之前的日期!'));
             }else if(value.getTime()>new Date().getTime()){
@@ -379,14 +379,17 @@
             }
           };
           var checkPhoneOrMobile = function(rule, value, callback){
-            debugger;
-            var mp=/^1\d{10}$/;
-            var pp=/^0\d{2,3}-?\d{7,8}$/;
-            if(mp.test(value)||pp.test(value)){
-              callback();
-            } else {
-              callback(new Error('请输入正确格式的联系方式!'));
-            }
+              if(value!=""){
+                  
+                  var mp=/^1\d{10}$/;
+                  var pp=/^0\d{2,3}-?\d{7,8}$/;
+                  if(mp.test(value)||pp.test(value)){
+                      callback();
+                  } else {
+                      callback(new Error('请输入正确格式的联系方式!'));
+                  }
+              }
+
           };
             return {
                 orderCode:'',
@@ -573,7 +576,7 @@
                   { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                 ],
                 driverContactNumber:[
-                  {required: true,validator: checkPhoneOrMobile, trigger: 'blur'},
+                  {validator: checkPhoneOrMobile, trigger: 'blur'},
                   { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                 ]
               }
@@ -648,6 +651,10 @@
                                             var goodDetail=ofcGoodsDetailsInfo[i];
                                             var good={};
                                             good.goodsType=goodDetail.goodsType;
+                                            var p={};
+                                            p.label=goodDetail.goodsCategory;
+                                            p.value=goodDetail.goodsCategory;
+                                            vueObj.goodsCategoryOptions.push(p);
                                             good.goodsCategory=goodDetail.goodsCategory;
                                             good.goodsCode=goodDetail.goodsCode;
                                             good.goodsName=goodDetail.goodsName;
@@ -755,7 +762,7 @@
             },
             getGoodsCategory:function(val) {
                 var vueObj=this;
-                val.goodsCategory = null;
+               // val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
@@ -1005,21 +1012,8 @@
             });
           },
           saveStorage:function(){
-            debugger;
+            
             this.submitForm('orderForm');
-                if(!this.orderForm.orderTime){
-                    alert("订单日期不能为空");
-                    return;
-                }else{
-                    if(this.orderForm.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-                        alert('只能选择一周之前的日期!');
-                        return;
-                    }
-                    if(this.orderForm.orderTime.getTime()>new Date().getTime()){
-                        alert('只能选择一周之前的日期!');
-                        return;
-                    }
-                }
                 if(this.orderForm.serviceType=="614"){
                     if(!this.orderForm.supplierName){
                         alert('业务类型为分拨出库时，供应商必须选择!');
@@ -1072,22 +1066,22 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
                 ofcOrderDTOStr.driverName=this.orderForm.driverName;
-                if(this.orderForm.driverContactNumber){
-                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
-                        alert("输入运输信息时输入正确的联系方式");
-                        return;
-                    }
-                }
+//                if(this.orderForm.driverContactNumber){
+//                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
+//                        alert("输入运输信息时输入正确的联系方式");
+//                        return;
+//                    }
+//                }
                 ofcOrderDTOStr.contactNumber=this.orderForm.driverContactNumber;
                 ofcOrderDTOStr.consigneeName=this.orderForm.consigneeName;
                 ofcOrderDTOStr.consigneeCode=this.orderForm.consigneeCode;
                 ofcOrderDTOStr.consigneeContactName=this.orderForm.consigneeContactName;
-                if(this.orderForm.consigneePhoneNumber){
-                    if(!this.checkPhoneOrMobile(this.orderForm.consigneePhoneNumber)){
-                        alert("请输入正确的收货方联系方式");
-                        return;
-                    }
-                }
+//                if(this.orderForm.consigneePhoneNumber){
+//                    if(!this.checkPhoneOrMobile(this.orderForm.consigneePhoneNumber)){
+//                        alert("请输入正确的收货方联系方式");
+//                        return;
+//                    }
+//                }
                 ofcOrderDTOStr.consigneeContactPhone=this.orderForm.consigneePhoneNumber;
                 ofcOrderDTOStr.consigneeType=this.orderForm.consigneeType;
                 ofcOrderDTOStr.consigneeContactCode=this.orderForm.consigneeContactCode;
@@ -1215,15 +1209,6 @@
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;
                 this.currentRowData = currentRowData;
-            },
-            checkPhoneOrMobile:function(phone){
-                var mp=/^1\d{10}$/;
-                var pp=/^0\d{2,3}-?\d{7,8}$/;
-                if(mp.test(phone)||pp.test(phone)){
-                    return true;
-                } else {
-                    return false;
-                }
             },
             getWareHouseNameByCode:function(val){
                 for(var i=0;i<this.wareHouseOptions.length;i++){

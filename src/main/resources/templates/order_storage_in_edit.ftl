@@ -369,7 +369,7 @@
         el: '#app',
         data :function() {
             var validateOrdeTime = function(rule, value, callback){
-                debugger;
+                
                 if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
                     callback(new Error('只能选择一周之前的日期!'));
                 }else if(value.getTime()>new Date().getTime()){
@@ -379,13 +379,15 @@
                 }
             };
             var checkPhoneOrMobile = function(rule, value, callback){
-                debugger;
-                var mp=/^1\d{10}$/;
-                var pp=/^0\d{2,3}-?\d{7,8}$/;
-                if(mp.test(value)||pp.test(value)){
-                  callback();
-                } else {
-                  callback(new Error('请输入正确格式的联系方式!'));
+                
+                if(value!=""){
+                    var mp=/^1\d{10}$/;
+                    var pp=/^0\d{2,3}-?\d{7,8}$/;
+                    if(mp.test(value)||pp.test(value)){
+                        callback();
+                    } else {
+                        callback(new Error('请输入正确格式的联系方式!'));
+                    }
                 }
             };
             return {
@@ -582,7 +584,7 @@
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ],
                     driverContactNumber:[
-                        {required: true,validator: checkPhoneOrMobile, trigger: 'blur'},
+                        {validator: checkPhoneOrMobile, trigger: 'blur'},
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ]
                 }
@@ -618,6 +620,7 @@
                             var ofcDistributionBasicInfo=result.result.ofcDistributionBasicInfo;
                             if(ofcFundamentalInformation!=null){
                                 vueObj.orderCode=ofcFundamentalInformation.orderCode;
+                                
                                 vueObj.orderForm.orderTime=DateUtil.parse(ofcFundamentalInformation.orderTime);
                                 vueObj.orderForm.merchandiser=ofcFundamentalInformation.merchandiser;
                                 vueObj.orderForm.customerName=ofcFundamentalInformation.custName;
@@ -656,6 +659,10 @@
                                             var good={};
                                             good.goodsType=goodDetail.goodsType;
                                             good.goodsCategory=goodDetail.goodsCategory;
+                                            var p={};
+                                            p.label=goodDetail.goodsCategory;
+                                            p.value=goodDetail.goodsCategory;
+                                            vueObj.goodsCategoryOptions.push(p);
                                             good.goodsCode=goodDetail.goodsCode;
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
@@ -760,7 +767,6 @@
             },
             getGoodsCategory:function(val) {
                 var vueObj=this;
-                val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
@@ -996,22 +1002,16 @@
                         },"json");
             },
             submitForm:function(formName) {
-
               this.$refs[formName].validate(function(valid){
                     if (valid) {
-                        alert('submit!');
+                        return true;
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });
             },
             saveStorage:function(){
-                    debugger;
-                var validate=this.submitForm('orderForm');
-                if(!validate){
-                    return;
-                }
+               this.submitForm('orderForm');
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -1206,15 +1206,6 @@
             openGoodsList: function(currentRowData) {
                 this.chosenGoodCode=true;
                 this.currentRowData = currentRowData;
-            },
-            checkPhoneOrMobile:function(phone){
-                var mp=/^1\d{10}$/;
-                var pp=/^0\d{2,3}-?\d{7,8}$/;
-                if(mp.test(phone)||pp.test(phone)){
-                    return true;
-                } else {
-                    return false;
-                }
             },
             getWareHouseNameByCode:function(val){
                 for(var i=0;i<this.wareHouseOptions.length;i++){
