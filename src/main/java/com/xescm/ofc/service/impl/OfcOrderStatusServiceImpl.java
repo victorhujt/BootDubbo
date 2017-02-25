@@ -236,12 +236,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     status.setOrderCode(orderCode);
                     if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                         if("出库完毕".equals(statusDesc)){
-                            //提供运输
-                            if(ofcWarehouseInformation!=null&&ofcWarehouseInformation.getProvideTransport()==WAREHOUSEORDERPROVIDETRANS){
-
-
-                            //不提供运输
-                            }else if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSEORDERNOTPROVIDETRANS){
+                          if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSEORDERNOTPROVIDETRANS){
                                 save(status);
                             }
                             super.save(status);
