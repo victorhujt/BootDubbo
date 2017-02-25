@@ -256,7 +256,7 @@
             <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
-                        <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  @change="getGoodsCategory(scope.row)">
+                        <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  >
                             <el-option
                                     v-for="item in goodsMsgOptions"
                                     :label="item.label"
@@ -268,7 +268,7 @@
                 </el-table-column>
                 <el-table-column property="goodsCategory" label="货品类别">
                     <template scope="scope">
-                        <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择">
+                        <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择" @visible-change="getGoodsCategory(scope.row)">
                             <el-option
                                     v-for="subitem in goodsCategoryOptions"
                                     :label="subitem.label"
