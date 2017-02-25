@@ -141,7 +141,7 @@
           <div class="xe-pageHeader">
             基本信息
           </div>
-        <el-form  label-width="100px">
+      <el-form :model="orderForm" ref="orderForm" :rules="rules"  label-width="100px" class="demo-ruleForm">
           <div class="xe-block">
             <el-form-item label="订单日期" required prop="orderTime" class="xe-col-3">
               <el-date-picker
@@ -188,14 +188,6 @@
             </el-form-item>
           </div>
           <div class="xe-block">
-            <el-form-item label="备注" prop="notes" class="xe-col-3">
-              <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes">
-            </el-form-item>
-          </div>
-          <div class="xe-pageHeader">
-            供应商信息
-          </div>
-          <div class="xe-block">
             <el-form-item label="供应商名称" class="xe-col-3">
               <el-input
                       placeholder="请选择"
@@ -205,7 +197,11 @@
                       @click="chosenSupplier = true">
               </el-input>
             </el-form-item>
+            <el-form-item label="备注" prop="notes" class="xe-col-3">
+              <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes">
+            </el-form-item>
           </div>
+
           <div class="xe-pageHeader">
             运输信息
           </div>
@@ -360,8 +356,8 @@
               </template>
             </el-table-column>
           </el-table>
-        <div class="block" style="float:right;">
-          <el-button type="primary" @click="saveStorage">下单</el-button>
+        <div class="block">
+          <el-button type="primary" @click="saveStorage">确认下单</el-button>
         </div>
 
         </el-form>
@@ -387,9 +383,9 @@
                 var mp=/^1\d{10}$/;
                 var pp=/^0\d{2,3}-?\d{7,8}$/;
                 if(mp.test(value)||pp.test(value)){
-                    callback(new Error('请输入正确格式的联系方式!'));
+                  callback();
                 } else {
-                    callback();
+                  callback(new Error('请输入正确格式的联系方式!'));
                 }
             };
             return {
@@ -1000,8 +996,8 @@
                         },"json");
             },
             submitForm:function(formName) {
-                debugger;
-                this.$refs[formName].validate(function(valid){
+
+              this.$refs[formName].validate(function(valid){
                     if (valid) {
                         alert('submit!');
                     } else {
@@ -1012,7 +1008,10 @@
             },
             saveStorage:function(){
                     debugger;
-                    this.submitForm('orderForm');
+                var validate=this.submitForm('orderForm');
+                if(!validate){
+                    return;
+                }
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息

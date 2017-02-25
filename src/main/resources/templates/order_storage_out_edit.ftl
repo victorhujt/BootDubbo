@@ -138,12 +138,13 @@
                 <el-button type="primary" @click="setCurrentGoodsInfo(goodCurrentRow)">确 定</el-button>
             </div>
         </el-dialog>
+
+      <el-form :model="orderForm" :rules="rules" ref="orderForm" label-width="100px" class="demo-ruleForm">
         <div class="xe-pageHeader">
             基本信息
         </div>
-        <el-form  label-width="100px">
             <div class="xe-block">
-                <el-form-item label="订单日期" class="xe-col-3">
+                <el-form-item label="订单日期" require prop="orderTime" class="xe-col-3">
                     <el-date-picker
                             v-model="orderForm.orderTime"
                             align="right"
@@ -152,10 +153,10 @@
                             :picker-options="pickerOptions">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="开单员" class="xe-col-3">
+                <el-form-item label="开单员"  require prop="merchandiser" class="xe-col-3">
                     <el-input v-model="orderForm.merchandiser" placeholder="请输入内容"></el-input>
                 </el-form-item>
-                <el-form-item label="客户名称" class="xe-col-3">
+                <el-form-item label="客户名称" require prop="customerName" class="xe-col-3">
                     <el-input
                             placeholder="请选择"
                             icon="search"
@@ -165,7 +166,7 @@
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-form-item label="仓库名称" class="xe-col-3">
+                <el-form-item label="仓库名称" require prop="wareHouse" class="xe-col-3">
                     <el-select v-model="orderForm.wareHouse" placeholder="请选择">
                         <el-option
                                 v-for="item in wareHouseOptions"
@@ -174,7 +175,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="业务名称" class="xe-col-3">
+                <el-form-item label="业务名称" require prop="serviceType" class="xe-col-3">
                     <el-select v-model="orderForm.serviceType" placeholder="请选择">
                         <el-option
                                 v-for="item in serviceTypeOptions"
@@ -188,22 +189,17 @@
                 </el-form-item>
             </div>
             <div class="xe-block">
+              <el-form-item label="供应商名称" class="xe-col-3">
+                <el-input
+                        placeholder="请选择"
+                        icon="search"
+                        v-model="orderForm.supplierName"
+                        v-bind:disabled = "isDisabled"
+                        @click="chosenSupplier = true">
+                </el-input>
+              </el-form-item>
                 <el-form-item label="备注" class="xe-col-3">
                     <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes">
-                </el-form-item>
-            </div>
-            <div class="xe-pageHeader">
-                供应商信息
-            </div>
-            <div class="xe-block">
-                <el-form-item label="供应商名称" class="xe-col-3">
-                    <el-input
-                            placeholder="请选择"
-                            icon="search"
-                            v-model="orderForm.supplierName"
-                            v-bind:disabled = "isDisabled"
-                            @click="chosenSupplier = true">
-                    </el-input>
                 </el-form-item>
             </div>
             <div class="xe-pageHeader">
@@ -230,7 +226,7 @@
                 <el-form-item label="司机姓名" class="xe-col-3">
                     <el-input v-model="orderForm.driverName" placeholder="请输入内容"></el-input>
                 </el-form-item>
-                <el-form-item label="联系电话" class="xe-col-3">
+                <el-form-item label="联系电话" require prop="driverContactNumber" class="xe-col-3">
                     <el-input v-model="orderForm.driverContactNumber" placeholder="请输入内容"></el-input>
                 </el-form-item>
             </div>
@@ -360,8 +356,8 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block" style="float:right;">
-                <el-button type="primary" @click="saveStorage">下单</el-button>
+            <div class="block">
+                <el-button type="primary" @click="saveStorage">确认下单</el-button>
             </div>
 
         </el-form>
@@ -372,6 +368,26 @@
     new Vue({
         el: '#app',
         data :function() {
+          var validateOrdeTime = function(rule, value, callback){
+            debugger;
+            if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
+              callback(new Error('只能选择一周之前的日期!'));
+            }else if(value.getTime()>new Date().getTime()){
+              callback(new Error('只能选择一周之前的日期!'));
+            }else{
+              callback();
+            }
+          };
+          var checkPhoneOrMobile = function(rule, value, callback){
+            debugger;
+            var mp=/^1\d{10}$/;
+            var pp=/^0\d{2,3}-?\d{7,8}$/;
+            if(mp.test(value)||pp.test(value)){
+              callback();
+            } else {
+              callback(new Error('请输入正确格式的联系方式!'));
+            }
+          };
             return {
                 orderCode:'',
                 goodsCode:'',
@@ -524,7 +540,43 @@
                     consigneeContactCode:'',
                     consigneeContactName:'',
                     consigneeAddressCode:''
-                }
+                },
+              rules: {
+                orderTime:[
+                  { type: 'date', required: true, message: '请选择日期', trigger: 'blur' },
+                  {validator: validateOrdeTime, trigger: 'blur'}
+                ],
+                merchandiser:[
+                  { required: true, message: '请输入开单员', trigger: 'blur' },
+                  { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
+                ],
+                customerName:[
+                  { required: true, message: '请输入客户名称', trigger: 'change' },
+                  { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'change' }
+                ],
+                wareHouse:[
+                  { required: true, message: '请选择仓库名称', trigger: 'change' }
+                ],
+                serviceType:[
+                  { required: true, message: '请选择业务类型', trigger: 'change' }
+                ],
+                customerOrderNum:[
+                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                ],
+                notes:[
+                  { min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'change' }
+                ],
+                plateNumber:[
+                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                ],
+                driverName:[
+                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                ],
+                driverContactNumber:[
+                  {required: true,validator: checkPhoneOrMobile, trigger: 'blur'},
+                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                ]
+              }
 
             };
         },
@@ -941,7 +993,20 @@
                             }
                         },"json");
             },
-            saveStorage:function(){
+          submitForm:function(formName) {
+
+            this.$refs[formName].validate(function(valid){
+              if (valid) {
+                alert('submit!');
+              } else {
+                console.log('error submit!!');
+                return false;
+              }
+            });
+          },
+          saveStorage:function(){
+            debugger;
+            this.submitForm('orderForm');
                 if(!this.orderForm.orderTime){
                     alert("订单日期不能为空");
                     return;

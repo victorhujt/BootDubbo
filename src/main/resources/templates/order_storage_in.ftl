@@ -190,10 +190,12 @@
                 <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes" ></el-input>
               </el-form-item>
             </div>
-          <div class="xe-pageHeader">
+        <#--  <div class="xe-pageHeader">
               运输信息
-          </div>
+          </div>-->
             <div class="xe-block">
+              <el-collapse v-model="activeNames" accordion>
+                <el-collapse-item title="运输信息" name="1">
                     <div class="xe-block">
                       <el-form-item label="预计入库时间" class="xe-col-3">
                         <el-date-picker
@@ -243,7 +245,9 @@
                         <el-input v-model="orderForm.consignorAddress" :readOnly="true"></el-input>
                       </el-form-item>
                     </div>
-            </div>
+                </el-collapse-item>
+              </el-collapse>
+             </div>
 
             <div class="xe-pageHeader">
               货品信息
