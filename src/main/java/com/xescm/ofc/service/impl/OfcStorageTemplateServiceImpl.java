@@ -97,10 +97,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             throw new BusinessException("模板配置筛选条件为空!");
         }
         List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateMapper.selectTemplateByCondition(templateCondition);
-        if(null == ofcStorageTemplateList || ofcStorageTemplateList.size() < 1){
-            logger.error("模板配置筛选结果为空!");
-            throw new BusinessException("模板配置筛选结果为空!");
-        }
+        OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
+        ofcStorageTemplate.setTemplateCode("standard");
+        ofcStorageTemplate.setTemplateName("标准");
+        ofcStorageTemplateList.add(0, ofcStorageTemplate);
         return ofcStorageTemplateList;
     }
 
