@@ -190,9 +190,10 @@
                 <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes" ></el-input>
               </el-form-item>
             </div>
+          <div class="xe-pageHeader">
+              运输信息
+          </div>
             <div class="xe-block">
-                <el-collapse v-model="activeNames" accordion>
-                  <el-collapse-item title="运输信息" name="1">
                     <div class="xe-block">
                       <el-form-item label="预计入库时间" class="xe-col-3">
                         <el-date-picker
@@ -207,13 +208,13 @@
                       </el-form-item>
                     </div>
                     <div class="xe-block">
-                      <el-form-item label="车牌号" class="xe-col-3">
+                      <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
                         <el-input v-model="orderForm.plateNumber" placeholder="请输入内容"></el-input>
                       </el-form-item>
-                      <el-form-item label="司机姓名" class="xe-col-3">
+                      <el-form-item label="司机姓名"  prop="driverName"  class="xe-col-3">
                         <el-input v-model="orderForm.driverName"  placeholder="请输入内容"></el-input>
                       </el-form-item>
-                      <el-form-item label="联系电话" class="xe-col-3">
+                      <el-form-item label="联系电话" prop="driverContactNumber" class="xe-col-3">
                         <el-input v-model="orderForm.driverContactNumber"  placeholder="请输入内容"></el-input>
                       </el-form-item>
                     </div>
@@ -242,8 +243,6 @@
                         <el-input v-model="orderForm.consignorAddress" :readOnly="true"></el-input>
                       </el-form-item>
                     </div>
-                  </el-collapse-item>
-                </el-collapse>
             </div>
 
             <div class="xe-pageHeader">
@@ -354,6 +353,28 @@
     new Vue({
         el: '#app',
         data :function() {
+            var validateOrdeTime = function(rule, value, callback){
+                debugger;
+                if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
+                    callback(new Error('只能选择一周之前的日期!'));
+                }else if(value.getTime()>new Date().getTime()){
+                    callback(new Error('只能选择一周之前的日期!'));
+                }else{
+                    callback();
+                }
+            };
+            var checkPhoneOrMobile = function(rule, value, callback){
+                debugger;
+                var mp=/^1\d{10}$/;
+                var pp=/^0\d{2,3}-?\d{7,8}$/;
+                if(mp.test(value)||pp.test(value)){
+                    callback();
+                } else {
+                    callback(new Error('请输入正确格式的联系方式!'));
+                }
+            };
+
+
             return {
                 activeNames:'',
                 wareHouseObj:'',
@@ -519,7 +540,10 @@
                     consignorAddressCode:''
                 },
                 rules: {
-                    orderTime:[ { type: 'date', required: true, message: '请选择日期', trigger: 'blur' }],
+                    orderTime:[
+                        { type: 'date', required: true, message: '请选择日期', trigger: 'blur' },
+                        {validator: validateOrdeTime, trigger: 'blur'}
+                    ],
                     merchandiser:[
                         { required: true, message: '请输入开单员', trigger: 'blur' },
                         { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
@@ -533,8 +557,23 @@
                     ],
                     serviceType:[
                         { required: true, message: '请选择业务类型', trigger: 'change' }
+                    ],
+                    customerOrderNum:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    notes:[
+                        { min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'change' }
+                    ],
+                    plateNumber:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    driverName:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    driverContactNumber:[
+                        {required: true,validator: checkPhoneOrMobile, trigger: 'blur'},
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ]
-
                 }
             };
         },
@@ -888,6 +927,7 @@
                         },"json");
             },
             submitForm:function(formName) {
+                    debugger;
                 this.$refs[formName].validate(function(valid){
                     if (valid) {
                         alert('submit!');
@@ -899,16 +939,8 @@
             },
             saveStorage:function(){
                 debugger;
-              //  this.submitForm(form);
+               this.submitForm('orderForm');
                // this.submitForm(form);
-                if(this.orderForm.orderTime.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-                    alert('只能选择一周之前的日期!');
-                    return;
-                }
-                if(this.orderForm.orderTime.getTime()>new Date().getTime()){
-                    alert('只能选择一周之前的日期!');
-                    return;
-                }
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -952,12 +984,12 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
                 ofcOrderDTOStr.driverName=this.orderForm.driverName;
-                if(this.orderForm.driverContactNumber){
-                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
-                        alert("输入运输信息时输入正确的联系方式");
-                        return;
-                    }
-                }
+//                if(this.orderForm.driverContactNumber){
+//                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
+//                        alert("输入运输信息时输入正确的联系方式");
+//                        return;
+//                    }
+//                }
                 ofcOrderDTOStr.contactNumber=this.orderForm.driverContactNumber;
 
                 //发货方信息
@@ -966,13 +998,12 @@
                 ofcOrderDTOStr.consignorType=this.orderForm.consignorType;
                 ofcOrderDTOStr.consignorContactCode=this.orderForm.consignorContactCode;
                 ofcOrderDTOStr.consignorContactName=this.orderForm.consignorContactName;
-                if(this.orderForm.consignorPhoneNumber){
-                    if(!this.checkPhoneOrMobile(this.orderForm.consignorPhoneNumber)){
-                        alert("请输入正确的发货方联系方式");
-                        return;
-                    }
-                }
-
+//                if(this.orderForm.consignorPhoneNumber){
+//                    if(!this.checkPhoneOrMobile(this.orderForm.consignorPhoneNumber)){
+//                        alert("请输入正确的发货方联系方式");
+//                        return;
+//                    }
+//                }
                 //收货方信息(仓库的信息)
                 ofcOrderDTOStr.consignorContactPhone=this.orderForm.consignorPhoneNumber;
                 ofcOrderDTOStr.consigneeName=this.wareHouseObj.warehouseName;
@@ -1146,18 +1177,19 @@
                 return cscContantAndCompanyDtoConsigneeStr;
             },
             openGoodsList: function(currentRowData) {
-                this.chosenGoodCode=true;
+                this.chosenGoodCode = true;
                 this.currentRowData = currentRowData;
-            },
-            checkPhoneOrMobile:function(phone){
-                var mp=/^1\d{10}$/;
-                var pp=/^0\d{2,3}-?\d{7,8}$/;
-                if(mp.test(phone)||pp.test(phone)){
-                    return true;
-                } else {
-                    return false;
-                }
             }
+//            },
+//            checkPhoneOrMobile:function(phone){
+//                var mp=/^1\d{10}$/;
+//                var pp=/^0\d{2,3}-?\d{7,8}$/;
+//                if(mp.test(phone)||pp.test(phone)){
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
         }
     });
 </script>
