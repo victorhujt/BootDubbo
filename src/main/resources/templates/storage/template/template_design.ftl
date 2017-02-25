@@ -95,6 +95,10 @@
         </template>
     </div>
 </div>
+
+
+
+
 <script type="text/javascript" >
 
     var scripts = [null,
@@ -109,12 +113,11 @@
     function main() {
         initCustomerName();
         $("#custName").on("select2-selecting", function(e) {
-            vm.templateForm.custName = e.val;
+            vm.templateForm.custName = e.choice.name;
             vm.templateForm.custCode = e.choice.code;
+            vm.custNameNotNull = false;
         });
-
     }
-
 
     function initCustomerName() {
         var ofc_web_url = $("#ofc_web_url").html();
@@ -147,7 +150,7 @@
                 colDefaultValDia:false,
                 colDefaultValModel:{
                     orderTime:'',
-                    merchandiser:'',
+                    merchandiser:'${userName!}',
                     warehouseName:'',
                     businessType:'',
                     provideTransport:''
@@ -191,16 +194,23 @@
         } ,
         beforeMount:function () {
           var vm = this;
-          CommonClient.post("/ofc/storage_template/merchandiser",{},function (result) {
-              if(undefined == result || null == result || result.length == 0){
+          vm.colDefaultValModel = {
+              merchandiser:'${userName!}'
+          };
+          CommonClient.post("/ofc/storage_template/warehouse",{},function (result) {
+              vm.warehouseNameList = [];
+              if(result.code != 200){
+                  layer.msg("加载所有仓库失败!");
                   return;
               }
-              var merchandiserList = [];
-              $.each(result, function (index, item) {
-                  var merchandiser = {};
-
+              $.each(result.result, function (index, item) {
+                  var warehouseName = {};
+                  warehouseName.lable = item.warehouseName;
+                  warehouseName.value = item.warehouseName;
+                  vm.warehouseNameList.push(warehouseName);
               })
           })
+
         },
         methods:{
             templateTypeChange:function (val) {
@@ -330,27 +340,27 @@
                     template.templateName = templateName;
                     template.custName = custName;
                     template.custCode = custCode;
-                    var reflectColName = StringUtil.trim(design.reflectColName);
+                    var reflectColName = StringUtil.isEmpty(design.reflectColName) ? "" : StringUtil.trim(design.reflectColName);
                     var index = design.indexNum;
-                    if(index == 0 && StringUtil.isEmpty(reflectColName)){
+                    if(index == 1 && StringUtil.isEmpty(reflectColName)){
                         alert('客户订单号模板列名为空!');
                         return;
-                    } else if(index == 2 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 3 && StringUtil.isEmpty(reflectColName)){
                         alert('开单员模板列名为空!');
                         return;
-                    } else if(index == 3 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 4 && StringUtil.isEmpty(reflectColName)){
                         alert('仓库名称模板列名为空!');
                         return;
-                    } else if(index == 4 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 5 && StringUtil.isEmpty(reflectColName)){
                         alert('业务类型模板列名为空!');
                         return;
-                    } else if(index == 6 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 7 && StringUtil.isEmpty(reflectColName)){
                         alert('货品编码模板列名为空!');
                         return;
-                    } else if(index == 11 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 12 && StringUtil.isEmpty(reflectColName)){
                         designData.length == 21 ? alert('入库数量模板列名为空!') : alert('出库数量模板列名为空!');
                         return;
-                    } else if(index == 21 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 22 && StringUtil.isEmpty(reflectColName)){
                         alert('收货方名称模板列名为空!');
                         return;
                     }
@@ -358,7 +368,7 @@
                     template.standardColCode = design.standardColCode;
                     template.standardColName = design.standardColName;
                     template.reflectColName = reflectColName;
-                    template.colDefaultVal = StringUtil.trim(design.colDefaultVal);
+                    template.colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
                     templateList.push(template);
                 }
                 xescm.common.submit("/ofc/storage_template/save", {"templateList":JSON.stringify(templateList)}, "确认保存该模板配置?", function () {

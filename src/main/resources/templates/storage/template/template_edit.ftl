@@ -138,7 +138,7 @@
                 layer.msg("错误!模板编码为空!");
                 return;
             }
-            CommonClient.post("/ofc/storage_template/merchandiser",{},function (result) {
+           /* CommonClient.post("/ofc/storage_template/merchandiser",{},function (result) {
                 if(undefined == result || null == result || result.length == 0){
                     return;
                 }
@@ -147,7 +147,7 @@
                     var merchandiser = {};
 
                 })
-            })
+            });*/
             //加载当前模板的数据
             var url = "/ofc/storage_template/detail_data/" + vm.templateCode;
             CommonClient.post(url, {}, function (result) {
@@ -184,6 +184,7 @@
                     tableItem.indexNum = indexNum;
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
+                    debugger
                     tableItem.colDefaultVal = colDefaultVal;
                     vm.tableData.push(tableItem);
                 });

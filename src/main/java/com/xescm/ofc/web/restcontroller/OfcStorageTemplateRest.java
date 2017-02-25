@@ -8,30 +8,28 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
-import com.xescm.ofc.service.OfcMerchandiserService;
-import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
+import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
@@ -46,9 +44,7 @@ public class OfcStorageTemplateRest extends BaseController{
     @Resource
     private OfcStorageTemplateService ofcStorageTemplateService;
     @Resource
-    private OfcMerchandiserService ofcMerchandiserService;
-    @Resource
-    private OfcOperationDistributingService ofcOperationDistributingService;
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
 
     /**
      * 模板配置保存
@@ -60,7 +56,7 @@ public class OfcStorageTemplateRest extends BaseController{
         logger.info("模板配置保存 ==> templateList:{}",templateList);
         if(PubUtils.isSEmptyOrNull(templateList)){
             logger.error("模板配置保存入参为空 ==> templateList:{}",templateList);
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置保存失败!");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!");
         }
         TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
         };
@@ -69,19 +65,19 @@ public class OfcStorageTemplateRest extends BaseController{
             ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
         } catch (Exception e) {
             logger.error("模板配置保存,json转换异常,{},{}",e,e.getMessage());
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置保存失败!数据转换异常!");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!数据转换异常!");
         }
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             ofcStorageTemplateService.saveTemplate(ofcStorageTemplates,authResDto);
         }catch (BusinessException e) {
             logger.error("模板配置保存失败!{},{}",e,e.getMessage());
-            return new Wrapper(Wrapper.ERROR_CODE,e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }catch (Exception e) {
             logger.error("模板配置保存失败!{},{}",e,e.getMessage());
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置保存失败!未知异常!");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!未知异常!");
         }
-        return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
     }
 
 
@@ -95,7 +91,7 @@ public class OfcStorageTemplateRest extends BaseController{
         logger.info("模板配置筛选 ==> templateCondition:{}",templateCondition);
         if(null == templateCondition){
             logger.error("模板配置筛选入参为空 ==> templateCondition:null");
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置筛选失败!");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置筛选失败!");
         }
         List<OfcStorageTemplate> ofcStorageTemplateList;
         PageInfo<OfcStorageTemplate> pageInfo;
@@ -105,12 +101,12 @@ public class OfcStorageTemplateRest extends BaseController{
             pageInfo = new PageInfo<>(ofcStorageTemplateList);
         }catch (BusinessException e) {
             logger.error("模板配置筛选失败!{},{}",e,e.getMessage());
-            return new Wrapper(Wrapper.ERROR_CODE,e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }catch (Exception e) {
             logger.error("模板配置筛选失败!{},{}",e,e.getMessage());
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置筛选失败!未知异常!");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置筛选失败!未知异常!");
         }
-        return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,pageInfo);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,pageInfo);
     }
 
 
@@ -140,19 +136,19 @@ public class OfcStorageTemplateRest extends BaseController{
         logger.info("模板配置编辑确认 ==> templateList:{}",templateList);
         if(PubUtils.isSEmptyOrNull(templateList)){
             logger.error("模板配置编辑确认错误, 入参为空, templateList:null or '' ");
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置编辑确认错误");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置编辑确认错误");
         }
         AuthResDto authResDto = getAuthResDtoByToken();
         try {
             ofcStorageTemplateService.templateEditConfirm(templateList,authResDto);
         } catch (BusinessException e) {
             logger.error("模板配置编辑确认错误, {}",e);
-            return new Wrapper(Wrapper.ERROR_CODE,e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         } catch (Exception e) {
             logger.error("模板配置编辑确认错误, {}",e);
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置编辑确认错误");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置编辑确认错误");
         }
-        return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
     }
 
     /**
@@ -166,17 +162,17 @@ public class OfcStorageTemplateRest extends BaseController{
         try {
             if(PubUtils.isSEmptyOrNull(templateName)){
                 logger.error("模板配置删除错误, 入参为空, templateName:null or '' ");
-                return new Wrapper(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
             }
             ofcStorageTemplateService.delTemplateByName(templateName);
         } catch (BusinessException e) {
             logger.error("模板配置删除错误, {}",e);
-            return new Wrapper(Wrapper.ERROR_CODE,e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         } catch (Exception e) {
             logger.error("模板配置删除错误, {}",e);
-            return new Wrapper(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
-        return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
     }
 
     /**
@@ -210,7 +206,7 @@ public class OfcStorageTemplateRest extends BaseController{
         logger.info("模板配置详情数据 ==> templateName:{}",templateCode);
         if(PubUtils.isSEmptyOrNull(templateCode)){
             logger.error("模板配置详情数据错误, 入参为空, templateList:null or '' ");
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置详情数据错误");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置详情数据错误");
         }
         List<OfcStorageTemplate> ofcStorageTemplateList;
         try {
@@ -219,35 +215,26 @@ public class OfcStorageTemplateRest extends BaseController{
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateDetail(templateCondition);
         } catch (BusinessException e) {
             logger.error("模板配置详情数据错误, {}",e);
-            return new Wrapper(Wrapper.ERROR_CODE,e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         } catch (Exception e) {
             logger.error("模板配置详情数据错误, {}",e);
-            return new Wrapper(Wrapper.ERROR_CODE,"模板配置详情数据错误");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置详情数据错误");
         }
-        return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,ofcStorageTemplateList);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,ofcStorageTemplateList);
     }
-
-    /**
-     * 加载开单员
-     */
-    @RequestMapping(value = "merchandiser")
-    @ResponseBody
-    public List<OfcMerchandiser> loadMerchandiser(){
-        List<OfcMerchandiser> merchandiserList = ofcMerchandiserService.selectAll();
-        return merchandiserList;
-    }
-
 
     /**
      * 加载所有仓库
      */
-    @RequestMapping(value = "warehouse")
+    @RequestMapping(value = "/warehouse")
     @ResponseBody
     public Wrapper loadWarehouse(){
-
-//        List<> merchandiserList = ofcMerchandiserService.selectAll();
-//        return new Wrapper(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,merchandiserList);
-        return null;
+        Wrapper<List<RmcWarehouseRespDto>> listWrapper = rmcWarehouseEdasService.queryWarehouseList(new RmcWareHouseQO());
+        if(listWrapper.getCode() == Wrapper.ERROR_CODE) {
+            logger.error("从资源中心加载所有仓库列表失败, 接口返回的错误信息为: {}", listWrapper.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, listWrapper.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,listWrapper.getResult());
     }
 
 
@@ -264,7 +251,7 @@ public class OfcStorageTemplateRest extends BaseController{
     /**
      * 根据客户编码查询配置模板列表
      */
-    @RequestMapping(value = "templist")
+    @RequestMapping(value = "/templist")
     @ResponseBody
     public List<OfcStorageTemplate> templateListByCustCode(String custCode){
         TemplateCondition templateCondition = new TemplateCondition();
