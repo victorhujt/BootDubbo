@@ -1,4 +1,7 @@
+<link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
+<link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
 <title>导入模板配置添加</title>
+<span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
 <div id="vm">
     <div class="list-mian-01">
 
@@ -44,11 +47,14 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="客户名称"  class="xe-col-2" required>
-                    <el-input v-model="templateForm.custName" id="custName" placeholder="请输入客户名称" v-on:change="custNameChange"></el-input>
+                    <el-input v-model="templateForm.custName" v-if="custNameShow"  placeholder="请输入客户名称"></el-input>
+                    <input class="form-control select2-single"  name="custName" id="custName" placeholder="请输入客户名称"/>
                     <div  v-if="custNameNotNull"><p style="color: red">客户名称不能为空</p></div>
                 </el-form-item>
                 <el-form-item label="客户编码"  class="xe-col-2">
-                    <el-input v-model="templateForm.custCode" :disabled="true" id="custName" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>
+                    <el-input v-model="templateForm.custCode"  :disabled="true" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>
+                    <input  name="custCode" id="custCode" hidden placeholder="请输入客户编码"/>
+                    <#--<el-input v-model="templateForm.custCode" :disabled="true" id="custName" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>-->
                     <div  v-if="custCodeNotNull"><p style="color: red">客户编码不能为空</p></div>
                 </el-form-item>
             </div>
@@ -90,10 +96,38 @@
     </div>
 </div>
 <script type="text/javascript" >
+
+    var scripts = [null,
+        "/components/select2.v3/select2.min.js",
+        "/components/select2.v3/select2_locale_zh-CN.js",
+        null];
+
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
+        $(document).ready(main);
+    });
+
+    function main() {
+        initCustomerName();
+        $("#custName").on("select2-selecting", function(e) {
+            vm.templateForm.custName = e.val;
+            vm.templateForm.custCode = e.choice.code;
+        });
+
+    }
+
+
+    function initCustomerName() {
+        var ofc_web_url = $("#ofc_web_url").html();
+        var url = ofc_web_url + "/ofc/distributing/queryCustomerSelect2";
+        var notice = "没有找到相关客户";
+        Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
+    }
+
     var vm = new Vue({
         el:'#vm',
         data:function () {
             return{
+                custNameShow:false,
                 templateTypeNotNull:false,
                 templateNameNotNull:false,
                 custNameNotNull:false,

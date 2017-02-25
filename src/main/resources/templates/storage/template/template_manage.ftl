@@ -15,11 +15,10 @@
         <el-form :model="templateForm"  label-width="100px" class="demo-ruleForm">
             <div class="xe-block">
                 <el-form-item label="客户名称"  class="xe-col-3">
-                    <#--<el-input v-model="templateForm.custName" name="custName" id="custName" placeholder="请输入客户名称"></el-input>-->
-                    <input class="form-control select2-single" name="custName" id="custName" />
-                    <input class="form-control select2-single" type="text" name="custCode" id="custCode" readonly="readonly">
-                    <#--<input id="custCode" hidden/>-->
-                    <#--<el-input  id="custCode" ></el-input>-->
+                    <el-input v-model="templateForm.custName" v-if="custNameShow"  placeholder="请输入客户名称"></el-input>
+                    <#--<el-input v-model="templateForm.custCode" v-if="custCodeShow"  name="custCode" id="custCode" placeholder="请输入客户编码"></el-input>-->
+                    <input class="form-control select2-single"  name="custName" id="custName" placeholder="请输入客户名称"/>
+                    <input  name="custCode" hidden id="custCode" placeholder="请输入客户编码"/>
                 </el-form-item>
                 <el-form-item label="模板类型"  class="xe-col-3">
                     <el-select placeholder="请选择" v-model="templateForm.templateType">
@@ -104,6 +103,15 @@
 
     function main() {
         initCustomerName();
+        $("#custName").on("change", function(e) {
+            vm.templateForm.custName = e.val;
+        });
+//        $("#custName").on("change", function(e) {
+//            console.log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
+//        });
+//        $("#custName").on("select2-selecting", function(e) {
+//            console.log ("selecting val="+ e.val+" choice="+ JSON.stringify(e.choice));
+//        });
     }
 
 
@@ -114,6 +122,7 @@
         Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
     }
 
+
     var dialog = new Vue({
         el:'#dialog',
         data:{}
@@ -122,6 +131,8 @@
         el:'#vm',
         data :function() {
             return{
+                custNameShow:false,
+                custCodeShow:false,
                 templateCodeShow:false,
                 formLabelWidth:'100px',
                 templateForm:{
@@ -166,7 +177,7 @@
                             rowData.custCode = item.custCode;
                             rowData.custName = item.custName;
                             vm.tableData.push(rowData);
-                        })
+                        });
                         vm.total=result.result.total;
 
                     } else if (result.code == 500) {
