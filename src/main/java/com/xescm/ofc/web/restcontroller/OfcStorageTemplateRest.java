@@ -153,18 +153,18 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置删除
-     * @param templateName
+     * @param temlpateCode
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Wrapper storageTemplateDel(String templateName){
-        logger.info("模板配置删除 ==> templateName:{}",templateName);
+    public Wrapper storageTemplateDel(String temlpateCode){
+        logger.info("模板配置删除 ==> temlpateCode:{}",temlpateCode);
         try {
-            if(PubUtils.isSEmptyOrNull(templateName)){
+            if(PubUtils.isSEmptyOrNull(temlpateCode)){
                 logger.error("模板配置删除错误, 入参为空, templateName:null or '' ");
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
             }
-            ofcStorageTemplateService.delTemplateByName(templateName);
+            ofcStorageTemplateService.delTemplateByCode(temlpateCode);
         } catch (BusinessException e) {
             logger.error("模板配置删除错误, {}",e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
@@ -270,9 +270,9 @@ public class OfcStorageTemplateRest extends BaseController{
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
-            String templateType = "";
-            String custCode = "";
-            String templateCode = "";
+            String templateType = httpServletRequest.getParameter("templateType");
+            String custCode = httpServletRequest.getParameter("custCode");
+            String templateCode = httpServletRequest.getParameter("templateCode");
             Integer activeSheetNum = ofcStorageTemplateService.checkStorageTemplate(file);
             Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file,authResDto,templateType,custCode,templateCode,activeSheetNum);
             if(checkResult.getCode() == Wrapper.ERROR_CODE){

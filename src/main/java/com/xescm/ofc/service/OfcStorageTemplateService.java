@@ -17,7 +17,7 @@ public interface OfcStorageTemplateService {
 
     List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition);
 
-    void  delTemplateByName(String temlpateName);
+    void  delTemplateByCode(String temlpateCode);
 
     void templateEditConfirm(String templateName, AuthResDto authResDto) throws Exception;
 

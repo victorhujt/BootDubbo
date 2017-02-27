@@ -24,7 +24,7 @@
     </div>
 
 
-    <el-upload    :action="uploadAction" type="drag" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
+    <el-upload    :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
                   :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" <#--:default-file-list="fileList"-->>
         <i class="el-icon-upload"></i>
         <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -81,6 +81,7 @@
     var Main = {
         data() {
             return {
+                uploadParam:{},
                 custNameShow:false,
                 custCodeShow:false,
                 fileList: [],
@@ -123,15 +124,13 @@
                     layer.msg("请先选择客户!")
                     return;
                 }
-
-                //
-
                 //限制只允许上传一个文件
                 var fileList = vm.fileList;
                 if(fileList.length > 0){
                     layer.msg("只允许上传一个文件!");
                     return false;
                 }
+                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, "templateName":vm.templateBatchIn.templateName, "templateType":"storageIn"};
             },
             uploading(event, file, fileList){
                 //文件大小限制
