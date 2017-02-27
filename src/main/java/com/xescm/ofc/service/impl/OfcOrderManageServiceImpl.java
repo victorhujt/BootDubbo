@@ -824,6 +824,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("订单取消失败,查不到该订单!");
             throw new BusinessException("订单取消失败,查不到该订单!");
         }
+        boolean result = cancelAcOrder(ofcFundamentalInformation.getOrderCode());
+        logger.info("订单中心取消订单，调用结算中心取消订单接口,返回结果：{}", result);
+
         String orderType = ofcFundamentalInformation.getOrderType();
         if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
             orderCancelToTfc(orderCode);
@@ -1048,8 +1051,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcFundamentalInformation.setAbolishMark(1);//表明已作废
             ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
-            boolean result = cancelAcOrder(ofcFundamentalInformation.getOrderCode());
-            logger.info("订单中心取消订单，调用结算中心取消订单接口,返回结果：{}", result);
+
             return String.valueOf(Wrapper.SUCCESS_CODE);
         } else {
             throw new BusinessException("计划单状态不在可取消范围内");
