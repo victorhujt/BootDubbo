@@ -3,6 +3,7 @@ package com.xescm.ofc.edas.service.impl;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
+import com.xescm.ofc.edas.model.dto.whc.FeedBackInventoryDto;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.CreateOrderService;
@@ -51,5 +52,10 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
             logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public Wrapper<?> FeedBackInventory(FeedBackInventoryDto feedBackInventoryDto) {
+        return null;
     }
 }
