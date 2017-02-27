@@ -28,9 +28,11 @@
                 <el-form-item label="模板名称"  class="xe-col-3">
                     <el-input v-model="templateForm.templateName" placeholder="请输入配置名称"></el-input>
                 </el-form-item >
-                <el-form-item class="xe-col-3">
-                    <el-button type="primary" v-on:click="templateSearchBtn" icon="search">筛选</el-button>
-                </el-form-item>
+            </div>
+            <div class="xe-block">
+              <el-form-item class="xe-col-3">
+                <el-button type="primary" v-on:click="templateSearchBtn" icon="search">筛选</el-button>
+              </el-form-item>
             </div>
         </el-form>
 

@@ -6,8 +6,40 @@
     <div class="list-mian-01">
 
         <el-dialog title="设置列默认值" v-model="colDefaultValDia" size="small">
-            <div :model="colDefaultValModel">
-                <label class="label">订单日期</label>
+           <el-form :model="colDefaultValModel" label-width="120px">
+             <div class="xe-block">
+               <el-form-item label="订单名称" class="xe-col-2">
+                 <el-input v-model="colDefaultValModel.orderTime"  placeholder="请输入内容"></el-input>
+               </el-form-item>
+             </div>
+             <div class="xe-block">
+               <el-form-item label="开单员" class="xe-col-2">
+                 <el-input v-model="colDefaultValModel.merchandiser"  placeholder="请输入内容"></el-input>
+               </el-form-item>
+             </div>
+             <div class="xe-block">
+               <el-form-item label="仓库名称" class="xe-col-2">
+                 <el-select placeholder="请选择" v-model="colDefaultValModel.warehouseName">
+                   <el-option  v-for="item in warehouseNameList" :label="item.label" :value="item.value"></el-option>
+                 </el-select>
+               </el-form-item>
+             </div>
+             <div class="xe-block">
+               <el-form-item label="业务类型" class="xe-col-2">
+                 <el-select placeholder="请选择" v-model="colDefaultValModel.businessType">
+                   <el-option  v-for="item in businessTypeList" :label="item.label" :value="item.value"></el-option>
+                 </el-select>
+               </el-form-item>
+             </div>
+             <div class="xe-block">
+               <el-form-item label="是否提供运输服务" class="xe-col-2">
+                 <el-checkbox v-model="colDefaultValModel.provideTransport" ></el-checkbox>
+               </el-form-item>
+             </div>
+
+
+
+           <#--   <label class="label">订单日期</label>
                 <el-input v-model="colDefaultValModel.orderTime"  placeholder="请输入内容"    value=""></el-input>
                 <label class="label">开单员</label>
                 <el-input v-model="colDefaultValModel.merchandiser"  placeholder="请输入内容"    value=""></el-input>
@@ -21,11 +53,13 @@
                 </el-select>
                 <label class="label">是否提供运输服务</label>
                 <el-checkbox v-model="colDefaultValModel.provideTransport" ></el-checkbox>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="cancelSetDefault">取 消</el-button>
-                    <el-button type="primary" @click="confirmSetDefault">确 定</el-button>
-                </div>
-            </div>
+
+-->
+           </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="cancelSetDefault">取 消</el-button>
+            <el-button type="primary" @click="confirmSetDefault">确 定</el-button>
+          </div>
 
         </el-dialog>
 
@@ -130,6 +164,8 @@
         el:'#vm',
         data:function () {
             return{
+                warehouseName:'',
+                businessType:'',
                 custNameShow:false,
                 templateTypeNotNull:false,
                 templateNameNotNull:false,
@@ -195,7 +231,11 @@
         beforeMount:function () {
           var vm = this;
           vm.colDefaultValModel = {
-              merchandiser:'${userName!}'
+              orderTime:'',
+              merchandiser:'${userName!}',
+              warehouseName:'',
+              businessType:'',
+              provideTransport:''
           };
           CommonClient.post("/ofc/storage_template/warehouse",{},function (result) {
               vm.warehouseNameList = [];
@@ -382,7 +422,7 @@
                 this.colDefaultValDia = false;
             },
             confirmSetDefault:function () {
-                this.colDefaultValDia = false;
+
                 var defOrderTime = this.colDefaultValModel.orderTime;
                 var defMerchandiser = this.colDefaultValModel.merchandiser;
                 var defWarehouseName = this.colDefaultValModel.warehouseName;
@@ -398,6 +438,7 @@
                 }else{
                     table[17].colDefaultVal = "是";
                 }
+                this.colDefaultValDia = false;
             }
         }
 
