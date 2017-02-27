@@ -266,15 +266,12 @@ public class OfcStorageTemplateRest extends BaseController{
      */
     @RequestMapping(value = "/batch_in_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest httpServletRequest, OfcStorageTemplate ofcStorageTemplate){
+    public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, OfcStorageTemplate ofcStorageTemplate){
         Wrapper<?> result = null;
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
-            String templateType = httpServletRequest.getParameter("templateType");
-            String custCode = httpServletRequest.getParameter("custCode");
-            String templateCode = httpServletRequest.getParameter("templateCode");
             Integer activeSheetNum = ofcStorageTemplateService.checkStorageTemplate(file);
-            Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file,authResDto,templateType,custCode,templateCode,activeSheetNum);
+            Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file, authResDto, ofcStorageTemplate, activeSheetNum);
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
 
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){

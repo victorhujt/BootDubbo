@@ -23,7 +23,7 @@ public interface OfcStorageTemplateService {
 
     List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
 
-    Wrapper<?> checkStorageTemplate(MultipartFile file, AuthResDto authResDto,String templateType, String custCode, String templateCode, Integer sheetNum);
+    Wrapper<?> checkStorageTemplate(MultipartFile file, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer sheetNum);
 
     Integer checkStorageTemplate(MultipartFile file);
 }

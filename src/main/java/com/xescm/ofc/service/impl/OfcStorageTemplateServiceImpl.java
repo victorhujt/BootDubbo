@@ -198,15 +198,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * 校验模板
      * @param uploadFile
      * @param authResDto
-     * @param custCode
-     * @param templateCode
+     * @param ofcStorageTemplate: templateType custCode templateCode
      * @param activeSheetNum
      * @return
      */
     @Override
-    public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto, String templateType, String custCode, String templateCode, Integer activeSheetNum) {
+    public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
         //拿到所用模板的明细Map
-        Map<String,OfcStorageTemplate> templateDetilMap = getTemplateReflect(templateCode,templateType);
+        Map<String,OfcStorageTemplate> templateDetilMap = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
         //将模板映射成标准格式, 如果不是标准格式的就跳过不校验, 且不展示
         InputStream inputStream ;
         Workbook workbook;
@@ -253,7 +252,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 //校验第一行,校验表格是否有所有的必填列列名, 并返回所有必填项在用户上传的Excel模板中的列号
                 Map<Integer, String> requiedItemIndex = new HashMap<>();
                 if(rowNum == 0){
-                    requiedItemIndex = checkExcelRequiedItem(commonRow, templateType, templateDetilMap);
+                    requiedItemIndex = checkExcelRequiedItem(commonRow, ofcStorageTemplate.getTemplateType(), templateDetilMap);
                 }
                 if (null == commonRow) {
                     //标记当前行出错,并跳出当前循环
