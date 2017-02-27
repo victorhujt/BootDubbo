@@ -265,8 +265,7 @@ public class ScheduledTask{
     }
 
     //同步历史订单最新状态到订单最新状态表
-    @Scheduled(cron = "0 */1 * * * ?")
-//    @Scheduled(cron = "")
+    @Scheduled(cron = "0 30 19 27 2 ?")
     public void pushOrderNewStatusToNewTable(){
         logger.info("开始,同步历史订单最新状态到订单最新状态表");
         List<OfcFundamentalInformation> ofcFundamentalInformations = ofcFundamentalInformationService.selectAll();
