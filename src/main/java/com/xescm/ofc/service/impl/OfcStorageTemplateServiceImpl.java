@@ -284,7 +284,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         modelNameStr.put(cellNum,refCellValue);
                     }else if(rowNum > 0) { // 表格的数据体
                         System.out.println();
-
                     }
                 }
 
@@ -365,6 +364,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private Map<String,OfcStorageTemplate> getTemplateReflect(String templateCode) {
         TemplateCondition templateCondition = new TemplateCondition();
         templateCondition.setTemplateCode(templateCode);
+        if (StringUtils.equals("standard", templateCode)) {
+
+        }else {
+
+        }
         List<OfcStorageTemplate> ofcStorageTemplateListForConvert = this.selectTemplateDetail(templateCondition);
         Map<String,OfcStorageTemplate> map = new HashMap<>();
         for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplateListForConvert) {
