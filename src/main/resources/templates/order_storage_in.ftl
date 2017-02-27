@@ -969,7 +969,7 @@
                 ofcOrderDTOStr.supportCode=this.orderForm.supplierCode;//供应商编码
                 ofcOrderDTOStr.warehouseName=this.wareHouseObj.warehouseName;//仓库名称
                 ofcOrderDTOStr.warehouseCode=this.wareHouseObj.warehouseCode;//仓库编码
-                if(this.arriveTime){
+                if(this.orderForm.arriveTime){
                     ofcOrderDTOStr.arriveTime=DateUtil.format(this.orderForm.arriveTime, "yyyy-MM-dd HH:mm:ss");
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;

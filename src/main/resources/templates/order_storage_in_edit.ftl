@@ -1055,17 +1055,11 @@
                 if(!ofcOrderDTOStr.warehouseCode){
                     ofcOrderDTOStr.warehouseCode=this.orderForm.wareHouseCode;
                 }
-                if(this.arriveTime){
+                if(this.orderForm.arriveTime){
                     ofcOrderDTOStr.arriveTime=DateUtil.format(this.orderForm.arriveTime, "yyyy-MM-dd HH:mm:ss");
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
                 ofcOrderDTOStr.driverName=this.orderForm.driverName;
-//                if(this.orderForm.driverContactNumber){
-//                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
-//                        alert("输入运输信息时输入正确的联系方式");
-//                        return;
-//                    }
-//                }
                 ofcOrderDTOStr.contactNumber=this.orderForm.driverContactNumber;
                 //发货方信息
                 ofcOrderDTOStr.consignorName=this.orderForm.consignorName;

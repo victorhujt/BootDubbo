@@ -196,6 +196,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public void feedBackStatusFromWhc(FeedBackOrderStatusDto feedBackOrderStatusDto) {
         try {
             String orderCode=feedBackOrderStatusDto.getOrderCode();
+            String type="";
             String traceStatus=feedBackOrderStatusDto.getStatus();
             Date traceTime=feedBackOrderStatusDto.getTraceTime();
             if(StringUtils.isEmpty(orderCode)){
@@ -206,8 +207,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
 
             OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
-
-            OfcWarehouseInformation ofcWarehouseInformation=ofcWarehouseInformationService.selectByKey(orderCode);
+            OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
+            ofcWarehouseInformation.setOrderCode(orderCode);
+            ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
             if(ofcFundamentalInformation==null){
                 throw new BusinessException("订单不存在");
             }
@@ -223,8 +225,14 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     throw new BusinessException("订单已经取消");
                 }
 
-                String statusDesc=translateStatusToDesc(traceStatus,ofcFundamentalInformation.getBusinessType());
+                if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
+                     type=OFC_WHC_IN_TYPE;
+                }
+                else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
+                     type=OFC_WHC_OUT_TYPE;
+                }
 
+                String statusDesc=translateStatusToDesc(traceStatus,type);
                 if(orderStatus.getStatusDesc().indexOf(statusDesc)<0){
                     status.setLastedOperTime(new Date());
                     status.setStatusDesc(statusDesc);
@@ -232,17 +240,19 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     status.setOperator("");
                     status.setOrderStatus(orderStatus.getOrderStatus());
                     status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
-                            +" "+translateStatusToDesc(orderCode,ofcFundamentalInformation.getBusinessType()));
+                            +" "+statusDesc);
                     status.setOrderCode(orderCode);
                     if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                         if("出库完毕".equals(statusDesc)){
                           if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSEORDERNOTPROVIDETRANS){
-                                save(status);
+                              status.setOrderStatus(HASBEENCOMPLETED);
+                              save(status);
                             }
                             super.save(status);
                         }
                     }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
                         if("入库完毕".equals(statusDesc)){
+                            status.setOrderStatus(HASBEENCOMPLETED);
                             save(status);
                         }else{
                             super.save(status);

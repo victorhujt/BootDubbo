@@ -1231,12 +1231,12 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             if(ofcWarehouseInformation.getProvideTransport()==WAREHOUSEORDERPROVIDETRANS){
                 Wrapper result= orderCancelToTfc(orderCode);
                 if(result.getCode()==Wrapper.SUCCESS_CODE){
-                    response=orderCancelToWhc(orderCode,type);
+                    response=orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
                 }else{
                     throw new BusinessException("仓储订单提供运输时取消运输中心失败");
                 }
             }else if(ofcWarehouseInformation.getProvideTransport()==WAREHOUSEORDERNOTPROVIDETRANS){
-                response=orderCancelToWhc(orderCode,type);
+                response=orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
             }else{
                 throw new BusinessException("无法确定仓储订单是否需要提供运输");
             }
@@ -1256,11 +1256,13 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
      * @param orderCode 订单编号
      * @return
      */
-    private Wrapper orderCancelToWhc(String orderCode,String type) {
+    private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode) {
         logger.info("调用仓储中心取消接口, 订单号:{}",orderCode);
         OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
         cancelOrderDTO.setOrderNo(orderCode);
         cancelOrderDTO.setBillType(type);
+        cancelOrderDTO.setWarehouseID(warehouseCode);
+        cancelOrderDTO.setCustomerID(customerCode);
         Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
         return response;
     }
