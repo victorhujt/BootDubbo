@@ -216,13 +216,13 @@
                 window.open(html.substring(0,index) + "/index#" + url);
             },
             templateDel:function(val){
-                var orderTemplateName = val;
-                if(undefined == orderTemplateName || StringUtil.isEmpty(orderTemplateName)){
-                    layer.msg("模板名称为空!");
+                var orderTemplateCode = val;
+                if(undefined == orderTemplateCode || StringUtil.isEmpty(orderTemplateCode)){
+                    layer.msg("模板编码为空!");
                     return;
                 }
                 var param = {};
-                param.templateName = orderTemplateName;
+                param.templateCode = orderTemplateCode;
                 xescm.common.submit("/ofc/storage_template/delete",param,"确认删除该模板?",function () {
                     vm.templateSearchBtn();
                 })

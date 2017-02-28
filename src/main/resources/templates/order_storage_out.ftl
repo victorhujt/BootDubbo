@@ -348,7 +348,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-button type="primary" @click="saveStorage">确认下单</el-button>
+            <el-button type="primary" @click="saveStorage('orderForm')">确认下单</el-button>
         </el-form>
     </div>
 </body>
@@ -357,7 +357,6 @@
         el: '#app',
         data :function() {
           var validateOrdeTime = function(rule, value, callback){
-            
             if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
               callback(new Error('只能选择一周之前的日期!'));
             }else if(value.getTime()>new Date().getTime()){
@@ -367,7 +366,6 @@
             }
           };
           var checkPhoneOrMobile = function(rule, value, callback){
-            
             if(value!=""){
                 var mp=/^1\d{10}$/;
                 var pp=/^0\d{2,3}-?\d{7,8}$/;
@@ -923,18 +921,28 @@
                         },"json");
             },
           submitForm:function(formName) {
-            
-            this.$refs[formName].validate(function(valid){
-              if (valid) {
-                alert('submit!');
-              } else {
-                console.log('error submit!!');
-                return false;
-              }
-            });
+              this.$refs[formName].validate((valid) =>{
+                  if (valid) {
+                      alert('submit!');
+                      return true;
+                  } else {
+                      console.log('error submit!!');
+                      return false;
+                  }
+              });
           },
-            saveStorage:function(){
-                this.submitForm('orderForm');
+            saveStorage:function(formName){
+//                var valid = this.submitForm('orderForm');
+                this.$refs[formName].validate((valid) =>{
+                    if (valid) {
+                        alert('submit!');
+                        return true;
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+               // console.log(valid);
                 if(this.orderForm.serviceType=="614"){
                     if(!this.supplierName){
                         alert('业务类型为分拨出库时，供应商必须选择!');
@@ -969,7 +977,9 @@
                 if(this.orderForm.orderTime){
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderTime, "yyyy-MM-dd HH:mm:ss");
                 }
-                this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
+                if(this.orderForm.wareHouse!=""){
+                    this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
+                }
 
                 //订单基本信息
                 ofcOrderDTOStr.custName = this.orderForm.customerName;
@@ -987,12 +997,6 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
                 ofcOrderDTOStr.driverName=this.orderForm.driverName;
-//                if(this.orderForm.driverContactNumber){
-//                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
-//                        alert("输入运输信息时输入正确的联系方式");
-//                        return;
-//                    }
-//                }
                 ofcOrderDTOStr.contactNumber=this.orderForm.driverContactNumber;
 
                 //发货方信息
@@ -1004,12 +1008,6 @@
                 ofcOrderDTOStr.consigneeName=this.orderForm.consigneeName;
                 ofcOrderDTOStr.consigneeCode=this.orderForm.consigneeCode;
                 ofcOrderDTOStr.consigneeContactName=this.orderForm.consigneeContactName;
-//                if(this.orderForm.consigneePhoneNumber){
-//                    if(!this.checkPhoneOrMobile(this.orderForm.consigneePhoneNumber)){
-//                        alert("请输入正确的收货方联系方式");
-//                        return;
-//                    }
-//                }
                 ofcOrderDTOStr.consigneeContactPhone=this.orderForm.consigneePhoneNumber;
                 ofcOrderDTOStr.consigneeType=this.orderForm.consigneeType;
                 ofcOrderDTOStr.consigneeContactCode=this.orderForm.consigneeContactCode;

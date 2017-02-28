@@ -4,6 +4,7 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,13 +18,15 @@ public interface OfcStorageTemplateService {
 
     List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition);
 
-    void  delTemplateByName(String temlpateName);
+    void  delTemplateByCode(String temlpateCode);
 
     void templateEditConfirm(String templateName, AuthResDto authResDto) throws Exception;
 
     List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
 
-    Wrapper<?> checkStorageTemplate(MultipartFile file, AuthResDto authResDto,String templateType, String custCode, String templateCode, Integer sheetNum);
+    Wrapper<?> checkStorageTemplate(MultipartFile file, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer sheetNum);
 
     Integer checkStorageTemplate(MultipartFile file);
+
+    List<RmcWarehouseRespDto> allWarehouseByRmc();
 }

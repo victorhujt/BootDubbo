@@ -61,8 +61,6 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
         logger.info("OFC消费MQ开始。。。");
-
-
         String topicName = message.getTopic();
         String tag=message.getTag();
         String userName ="";
@@ -145,20 +143,13 @@ public class CreateOrderApiConsumer implements MessageListener {
             } catch (Exception ex) {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
             }
-         }else if(StringUtils.equals(topicName,mqConfig.getWhc2ofcOrderStatusTopic())){
+         }else if(StringUtils.equals(topicName,mqConfig.getOfcOrderStatusTopic())){
         	logger.info("仓储计划单状态反馈的消息体为{}:",messageBody);
 			logger.info("仓储计划单状态开始消费");
 			try {
-	    	  logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
-				 List<FeedBackOrderStatusDto> feedBackOrderStatusDtos = null;
-				 TypeReference<List<FeedBackOrderStatusDto>> feedBackOrderStatusDtosTypeRef = new TypeReference<List<FeedBackOrderStatusDto>>() {
-                 };
-                 feedBackOrderStatusDtos = JacksonUtil.parseJsonWithFormat(messageBody,feedBackOrderStatusDtosTypeRef);
-                 if(feedBackOrderStatusDtos!=null&&feedBackOrderStatusDtos.size()>0){
-                     for(int i=0;i<feedBackOrderStatusDtos.size();i++){
-                         ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDtos.get(i));
-                     }
-                 }
+			    logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+                FeedBackOrderStatusDto feedBackOrderStatusDto= JacksonUtil.parseJson(messageBody,FeedBackOrderStatusDto.class);
+                ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
 			} catch (Exception e) {
                 logger.error("仓储计划单状态反馈出现异常{}",e.getMessage(),e);
 			}
@@ -166,21 +157,13 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
                 logger.info("仓储计划单出入库单反馈开始消费");
                 logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
-                List<FeedBackOrderDto> feedBackOrderDtos = null;
-                TypeReference<List<FeedBackOrderDto>> feedBackOrderDtoTypeRef = new TypeReference<List<FeedBackOrderDto>>() {};
                 try {
-                    feedBackOrderDtos= JacksonUtil.parseJson(messageBody,feedBackOrderDtoTypeRef);
-                    if(feedBackOrderDtos!=null&&feedBackOrderDtos.size()>0){
-                        for(int i=0;i<feedBackOrderDtos.size();i++){
-                            ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDtos.get(i));
-                        }
-                    }
+                    FeedBackOrderDto feedBackOrderDto= JacksonUtil.parseJson(messageBody,FeedBackOrderDto.class);
+                    ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
                 } catch (Exception e) {
                     logger.error("仓储计划单出入库单反馈出现异常{}",e.getMessage(),e);
                 }
-        }/*else if(StringUtils.equals(topicName,mqConfig.getDmsCallbackStatusTopic())){
-
-        }*/
+            }
         return Action.CommitMessage;
     }
 

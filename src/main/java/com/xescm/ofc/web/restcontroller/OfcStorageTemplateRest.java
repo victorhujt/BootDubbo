@@ -153,18 +153,18 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置删除
-     * @param templateName
+     * @param temlpateCode
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Wrapper storageTemplateDel(String templateName){
-        logger.info("模板配置删除 ==> templateName:{}",templateName);
+    public Wrapper storageTemplateDel(String temlpateCode){
+        logger.info("模板配置删除 ==> temlpateCode:{}",temlpateCode);
         try {
-            if(PubUtils.isSEmptyOrNull(templateName)){
+            if(PubUtils.isSEmptyOrNull(temlpateCode)){
                 logger.error("模板配置删除错误, 入参为空, templateName:null or '' ");
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
             }
-            ofcStorageTemplateService.delTemplateByName(templateName);
+            ofcStorageTemplateService.delTemplateByCode(temlpateCode);
         } catch (BusinessException e) {
             logger.error("模板配置删除错误, {}",e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
@@ -229,12 +229,8 @@ public class OfcStorageTemplateRest extends BaseController{
     @RequestMapping(value = "/warehouse")
     @ResponseBody
     public Wrapper loadWarehouse(){
-        Wrapper<List<RmcWarehouseRespDto>> listWrapper = rmcWarehouseEdasService.queryWarehouseList(new RmcWareHouseQO());
-        if(listWrapper.getCode() == Wrapper.ERROR_CODE) {
-            logger.error("从资源中心加载所有仓库列表失败, 接口返回的错误信息为: {}", listWrapper.getMessage());
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, listWrapper.getMessage());
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,listWrapper.getResult());
+        List<RmcWarehouseRespDto> rmcWarehouseRespDtos = ofcStorageTemplateService.allWarehouseByRmc();
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,rmcWarehouseRespDtos);
     }
 
 
@@ -266,15 +262,18 @@ public class OfcStorageTemplateRest extends BaseController{
      */
     @RequestMapping(value = "/batch_in_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, HttpServletRequest httpServletRequest, OfcStorageTemplate ofcStorageTemplate){
+    public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, OfcStorageTemplate ofcStorageTemplate){
         Wrapper<?> result = null;
         try {
+            if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getCustCode())){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "请先选择客户");
+            }else if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getTemplateCode())){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "请选择模板");
+            }
             AuthResDto authResDto = getAuthResDtoByToken();
-            String templateType = "";
-            String custCode = "";
-            String templateCode = "";
             Integer activeSheetNum = ofcStorageTemplateService.checkStorageTemplate(file);
-            Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file,authResDto,templateType,custCode,templateCode,activeSheetNum);
+            Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file, authResDto, ofcStorageTemplate, activeSheetNum);
+
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
 
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){

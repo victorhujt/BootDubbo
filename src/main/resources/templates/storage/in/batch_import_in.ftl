@@ -24,8 +24,8 @@
     </div>
 
 
-    <el-upload    :action="uploadAction" type="drag" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
-                  :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" <#--:default-file-list="fileList"-->>
+    <el-upload    :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
+                  :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :default-file-list="fileList">
         <i class="el-icon-upload"></i>
         <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
@@ -50,6 +50,7 @@
             //加载当前客户下所有模板!
             var param = {};
             param.custCode = e.choice.code;
+            debugger
             CommonClient.post("/ofc/storage_template/templist", param, function (result) {
                 vm.templateNameList = [];
                 var templateNameList = vm.templateNameList;
@@ -81,6 +82,7 @@
     var Main = {
         data() {
             return {
+                uploadParam:{},
                 custNameShow:false,
                 custCodeShow:false,
                 fileList: [],
@@ -89,9 +91,9 @@
                 uploadAction:'${OFC_WEB_URL!}/ofc/storage_template/batch_in_upload',
                 authResDto:'',
                 templateBatchIn:{
-                    custName:'',
-                    custCode:'',
-                    templateName:''
+//                    custName:'',
+//                    custCode:'',
+//                    templateName:''
                 },
                 pageSheetList:[],
                 templateNameList:[]
@@ -107,9 +109,10 @@
             handleSuccess(response, file, fileList) {
                 var vm = this;
                 if(response.code == 500) {
-
+                    layer.msg(response.message);
+                    vm.fileList = [];
                 }else if(response.code == 200) {
-
+                    layer.msg(response.message);
 
                 }
             },
@@ -120,22 +123,27 @@
                 var vm = this;
                 //必须选好客户和模板
                 if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
-                    layer.msg("请先选择客户!")
+                    layer.msg("请先选择客户!");
+                    vm.fileList = [];
                     return;
                 }
-
-                //
-
                 //限制只允许上传一个文件
                 var fileList = vm.fileList;
                 if(fileList.length > 0){
                     layer.msg("只允许上传一个文件!");
+                    vm.fileList = [];
                     return false;
                 }
+                debugger
+                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
+                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
             },
             uploading(event, file, fileList){
+                var vm = this;
+                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
+                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
                 //文件大小限制
-                var fileSize = file.size;
+//               var fileSize = file.size;
                 /*var vm = this;
                 //必须选好客户和模板
                 if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){

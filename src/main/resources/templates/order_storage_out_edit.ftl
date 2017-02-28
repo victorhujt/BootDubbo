@@ -1046,7 +1046,7 @@
                 ofcOrderDTOStr.orderCode=this.orderCode;
                 ofcOrderDTOStr.businessType =this.orderForm.serviceType;
                 ofcOrderDTOStr.merchandiser = this.orderForm.merchandiser;
-                if(this.orderTime){
+                if(this.orderForm.orderTime){
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderTime, "yyyy-MM-dd HH:mm:ss");
                 }
 
