@@ -86,6 +86,9 @@
       <if test="quantity != null" >
         quantity = #{quantity,jdbcType=INTEGER},
       </if>
+      <if test="realQuantity != null" >
+        real_uantity = #{realQuantity,jdbcType=INTEGER},
+      </if>
       <if test="unitPrice != null" >
         unit_price = #{unitPrice,jdbcType=INTEGER},
       </if>

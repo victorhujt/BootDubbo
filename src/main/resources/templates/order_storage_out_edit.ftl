@@ -388,8 +388,6 @@
               }else{
                 callback();
               }
-            }else{
-              return callback(new Error('联系电话不能为空'));
             }
           };
             return {
@@ -1065,22 +1063,10 @@
                 }
                 ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
                 ofcOrderDTOStr.driverName=this.orderForm.driverName;
-//                if(this.orderForm.driverContactNumber){
-//                    if(!this.checkPhoneOrMobile(this.orderForm.driverContactNumber)){
-//                        alert("输入运输信息时输入正确的联系方式");
-//                        return;
-//                    }
-//                }
                 ofcOrderDTOStr.contactNumber=this.orderForm.driverContactNumber;
                 ofcOrderDTOStr.consigneeName=this.orderForm.consigneeName;
                 ofcOrderDTOStr.consigneeCode=this.orderForm.consigneeCode;
                 ofcOrderDTOStr.consigneeContactName=this.orderForm.consigneeContactName;
-//                if(this.orderForm.consigneePhoneNumber){
-//                    if(!this.checkPhoneOrMobile(this.orderForm.consigneePhoneNumber)){
-//                        alert("请输入正确的收货方联系方式");
-//                        return;
-//                    }
-//                }
                 ofcOrderDTOStr.consigneeContactPhone=this.orderForm.consigneePhoneNumber;
                 ofcOrderDTOStr.consigneeType=this.orderForm.consigneeType;
                 ofcOrderDTOStr.consigneeContactCode=this.orderForm.consigneeContactCode;

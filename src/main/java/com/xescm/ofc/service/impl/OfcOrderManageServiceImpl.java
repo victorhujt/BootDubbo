@@ -2730,14 +2730,16 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
                 ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
                 //校验出库商品的库存
                 List<InventoryDTO> inventoryGoods=new ArrayList<>();
+                int count=0;
                 for(OfcGoodsDetailsInfo ofcGoodsDetailsInfo:goodsDetailsList){
                     InventoryDTO  inventoryDTO=new InventoryDTO();
+                    inventoryDTO.setLineNo(String.valueOf(++count));
                     inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
                     inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
                     inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
                     inventoryDTO.setLotatt03(ofcGoodsDetailsInfo.getProductionBatch());
-                    inventoryDTO.setLotatt01(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE1));
-                    inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(),DateUtils.DateFormatType.TYPE1));
+                    inventoryDTO.setLotatt01(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE2));
+                    inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(),DateUtils.DateFormatType.TYPE2));
                     inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
                     inventoryGoods.add(inventoryDTO);
                 }
@@ -2760,7 +2762,7 @@ public class OfcOrderManageServiceImpl  implements OfcOrderManageService {
             defaultMqProducer.toSendWhc(json, ofcFundamentalInformation.getOrderCode(), ofcFundamentalInformation.getBusinessType());
         } catch (Exception e) {
             logger.error("订单信息推到仓储中心, 转换异常");
-            throw new BusinessException("订单信息推送仓储中心异常!");
+           throw new BusinessException(e.getMessage());
         }
     }
 

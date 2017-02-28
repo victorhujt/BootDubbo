@@ -377,8 +377,6 @@
           }else{
             callback();
           }
-        }else{
-          return callback(new Error('联系电话不能为空'));
         }
       };
       return {

@@ -144,24 +144,24 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
             }
          }else if(StringUtils.equals(topicName,mqConfig.getOfcOrderStatusTopic())){
-        	logger.info("仓储计划单状态反馈的消息体为{}:",messageBody);
-			logger.info("仓储计划单状态开始消费");
+        	logger.info("仓储单状态反馈的消息体为{}:",messageBody);
+			logger.info("仓储单状态开始消费");
 			try {
-			    logger.info("仓储计划单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+			    logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                 FeedBackOrderStatusDto feedBackOrderStatusDto= JacksonUtil.parseJson(messageBody,FeedBackOrderStatusDto.class);
                 ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
 			} catch (Exception e) {
-                logger.error("仓储计划单状态反馈出现异常{}",e.getMessage(),e);
+                logger.error("仓储单状态反馈出现异常{}",e.getMessage(),e);
 			}
         }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
-                logger.info("仓储计划单出入库单反馈的消息体为{}:",messageBody);
-                logger.info("仓储计划单出入库单反馈开始消费");
-                logger.info("仓储计划单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+                logger.info("仓储单出入库单反馈的消息体为{}:",messageBody);
+                logger.info("仓储单出入库单反馈开始消费");
+                logger.info("仓储单出入库单反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                 try {
                     FeedBackOrderDto feedBackOrderDto= JacksonUtil.parseJson(messageBody,FeedBackOrderDto.class);
                     ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
                 } catch (Exception e) {
-                    logger.error("仓储计划单出入库单反馈出现异常{}",e.getMessage(),e);
+                    logger.error("仓储单出入库单反馈出现异常{}",e.getMessage(),e);
                 }
             }
         return Action.CommitMessage;

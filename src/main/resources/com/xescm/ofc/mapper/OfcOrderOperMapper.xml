@@ -140,7 +140,8 @@
     <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR"></result>
     <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"></result>
     <result column="notes" property="notes" jdbcType="VARCHAR"></result>
-    <result column="store_name" property="storeName" jdbcType="VARCHAR"></result>
+    <result column="is_exception" property="isException" jdbcType="VARCHAR"></result>
+    <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR"></result>
   </resultMap>
 
   <!-- 运营-订单管理查询 -->
@@ -160,7 +161,9 @@
       odbi.consignee_contact_name,
       owi.warehouse_name,
       ofi.notes,
-      ofi.store_name
+      ofi.store_name,
+      ofi.is_exception,
+      ofi.exception_reason
     FROM
     ofc_fundamental_information ofi
       LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
@@ -221,7 +224,9 @@
     odbi.consignee_contact_name,
     owi.warehouse_name,
     ofi.notes,
-    ofi.store_name
+    ofi.store_name,
+    ofi.is_exception,
+    ofi.exception_reason
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code

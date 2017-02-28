@@ -66,42 +66,18 @@ public class MqConfig {
     /**
      *  /**
      * 仓储订单状态反馈
+     *
      */
     private String whc2ofcOrderStatusTopic;
-
-    public String getWhc2ofcOrderStatusTopic() {
-        return whc2ofcOrderStatusTopic;
-    }
-
-    public void setWhc2ofcOrderStatusTopic(String whc2ofcOrderStatusTopic) {
-        this.whc2ofcOrderStatusTopic = whc2ofcOrderStatusTopic;
-    }
-
     /**
      * DMS回传状态topic
      */
     public String dmsCallbackStatusTopic;
-
-    public String getDmsCallbackStatusTopic() {
-        return dmsCallbackStatusTopic;
-    }
-
-    public void setDmsCallbackStatusTopic(String dmsCallbackStatusTopic) {
-        this.dmsCallbackStatusTopic = dmsCallbackStatusTopic;
-    }
-    public String getWhc2OfcOrderTopic() {
-        return whc2OfcOrderTopic;
-    }
-
-    public void setWhc2OfcOrderTopic(String whc2OfcOrderTopic) {
-        this.whc2OfcOrderTopic = whc2OfcOrderTopic;
-    }
-
     private String whc2OfcOrderTopic;
-
     private String producerId; //XX发布者
     private String consumerId; //XX消费者
     private String onsAddr;  //阿里云地址
+
 
     public String getAccessKey() {
         return accessKey;
@@ -175,6 +151,30 @@ public class MqConfig {
         this.ofc2WhcOrderTopic = ofc2WhcOrderTopic;
     }
 
+    public String getWhc2ofcOrderStatusTopic() {
+        return whc2ofcOrderStatusTopic;
+    }
+
+    public void setWhc2ofcOrderStatusTopic(String whc2ofcOrderStatusTopic) {
+        this.whc2ofcOrderStatusTopic = whc2ofcOrderStatusTopic;
+    }
+
+    public String getDmsCallbackStatusTopic() {
+        return dmsCallbackStatusTopic;
+    }
+
+    public void setDmsCallbackStatusTopic(String dmsCallbackStatusTopic) {
+        this.dmsCallbackStatusTopic = dmsCallbackStatusTopic;
+    }
+
+    public String getWhc2OfcOrderTopic() {
+        return whc2OfcOrderTopic;
+    }
+
+    public void setWhc2OfcOrderTopic(String whc2OfcOrderTopic) {
+        this.whc2OfcOrderTopic = whc2OfcOrderTopic;
+    }
+
     public String getProducerId() {
         return producerId;
     }
@@ -198,6 +198,4 @@ public class MqConfig {
     public void setOnsAddr(String onsAddr) {
         this.onsAddr = onsAddr;
     }
-
-
 }

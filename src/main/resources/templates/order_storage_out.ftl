@@ -269,7 +269,7 @@
                 </el-table-column>
                 <el-table-column property="goodsCategory" label="货品类别">
                     <template scope="scope">
-                        <el-select  size="small" v-model="scope.row.goodsCategory"  placeholder="请选择" @visible-change="getGoodsCategory(scope.row)">
+                        <el-select  size="small" v-model="scope.row.goodsCategory"  @visible-change="getGoodsCategory(scope.row)" placeholder="请选择">
                             <el-option
                                     v-for="subitem in goodsCategoryOptions"
                                     :label="subitem.label"
@@ -375,8 +375,6 @@
               }else{
                 callback();
               }
-            }else{
-              return callback(new Error('联系电话不能为空'));
             }
           };
 
@@ -663,7 +661,6 @@
             },
             getGoodsCategory:function(val) {
                 var vueObj=this;
-                val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(result) {
@@ -1173,16 +1170,6 @@
                 this.chosenGoodCode = true;
                 this.currentRowData = currentRowData;
             }
-//            },
-//            checkPhoneOrMobile:function(phone){
-//                var mp=/^1\d{10}$/;
-//                var pp=/^0\d{2,3}-?\d{7,8}$/;
-//                if(mp.test(phone)||pp.test(phone)){
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
         }
     });
 </script>
