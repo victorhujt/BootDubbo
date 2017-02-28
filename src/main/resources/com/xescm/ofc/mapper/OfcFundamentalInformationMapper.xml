@@ -194,5 +194,13 @@
     AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
     AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
+  <select id="checkCustOrderCodeRepeat" resultType="java.lang.Integer">
+    SELECT
+    COUNT (1)
+    FROM
+    ofc_fundamental_information ofi
+    WHERE
+    ofi.cust_order_code = #{custOrderCode, jdbcType = "VARCHAR"}
+  </select>
 
 </mapper>

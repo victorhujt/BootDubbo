@@ -30,4 +30,7 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
      * @return
      */
     OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(OfcFundamentalInformation ofcFundamentalInformation);
+
+
+    int checkCustOrderCodeRepeat(@Param("custOrderCode") String custOrderCode);
 }

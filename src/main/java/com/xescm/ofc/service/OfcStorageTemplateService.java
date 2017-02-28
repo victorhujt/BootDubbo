@@ -4,6 +4,7 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface OfcStorageTemplateService {
     Wrapper<?> checkStorageTemplate(MultipartFile file, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer sheetNum);
 
     Integer checkStorageTemplate(MultipartFile file);
+
+    List<RmcWarehouseRespDto> allWarehouseByRmc();
 }

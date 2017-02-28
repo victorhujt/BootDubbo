@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.dto.component.req.Select2ReqDto;
+import com.xescm.base.model.dto.component.resp.Select2RespDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
@@ -26,6 +28,7 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -42,6 +45,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -231,44 +235,44 @@ public class OfcOperationDistributing extends BaseController{
      * @param select2ReqDto
      * @return
      */
-    //@RequestMapping(value = "/queryCustomerSelect2",method = RequestMethod.GET)
-    //@ResponseBody
-//    public Object queryCustomerByName(Select2ReqDto select2ReqDto) {
-//        Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
-//        try {
-//            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
-//            queryParam.setCustomerName(select2ReqDto.getName());
-//            queryParam.setPageNum(select2ReqDto.getPageNum());
-//            queryParam.setPageSize(select2ReqDto.getPageSize());
-//            Wrapper<PageInfo<CscCustomerVo>> pageInfoWrapper = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
-//            result.setCode(pageInfoWrapper.getCode());
-//            result.setMessage(pageInfoWrapper.getMessage());
-//            PageInfo<CscCustomerVo> resultForRevert = pageInfoWrapper.getResult();
-//            PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
-//            BeanUtils.copyProperties(pageInfo,resultForRevert);
-//            pageInfo.setList(null);
-//            List<Select2RespDto> select2RespDtoList = new ArrayList<>();
-//            for (CscCustomerVo cscCustomerVo : resultForRevert.getList()) {
-//                Select2RespDto select2RespDto = new Select2RespDto();
-//                select2RespDto.setId(cscCustomerVo.getId());
-//                select2RespDto.setCode(cscCustomerVo.getCustomerCode());
-//                select2RespDto.setName(cscCustomerVo.getCustomerName());
-//                select2RespDtoList.add(select2RespDto);
-//            }
-//            pageInfo.setList(select2RespDtoList);
-//            if (Wrapper.ERROR_CODE == result.getCode()) {
-//                logger.error("查询客户列表失败,查询结果有误!");
-//            }
-//            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,pageInfo);
-//        } catch (BusinessException ex) {
-//            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
-//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-//        } catch (Exception ex) {
-//            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
-//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
-//        }
-//        return result;
-//    }
+    @RequestMapping(value = "/queryCustomerSelect2",method = RequestMethod.GET)
+    @ResponseBody
+    public Object queryCustomerByName(Select2ReqDto select2ReqDto) {
+        Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
+        try {
+            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
+            queryParam.setCustomerName(select2ReqDto.getName());
+            queryParam.setPageNum(select2ReqDto.getPageNum());
+            queryParam.setPageSize(select2ReqDto.getPageSize());
+            Wrapper<PageInfo<CscCustomerVo>> pageInfoWrapper = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
+            result.setCode(pageInfoWrapper.getCode());
+            result.setMessage(pageInfoWrapper.getMessage());
+            PageInfo<CscCustomerVo> resultForRevert = pageInfoWrapper.getResult();
+            PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
+            BeanUtils.copyProperties(pageInfo,resultForRevert);
+            pageInfo.setList(null);
+            List<Select2RespDto> select2RespDtoList = new ArrayList<>();
+            for (CscCustomerVo cscCustomerVo : resultForRevert.getList()) {
+                Select2RespDto select2RespDto = new Select2RespDto();
+                select2RespDto.setId(cscCustomerVo.getId());
+                select2RespDto.setCode(cscCustomerVo.getCustomerCode());
+                select2RespDto.setName(cscCustomerVo.getCustomerName());
+                select2RespDtoList.add(select2RespDto);
+            }
+            pageInfo.setList(select2RespDtoList);
+            if (Wrapper.ERROR_CODE == result.getCode()) {
+                logger.error("查询客户列表失败,查询结果有误!");
+            }
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,pageInfo);
+        } catch (BusinessException ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
+        }
+        return result;
+    }
 
     /**
      * Excel导入,上传,展示Sheet页

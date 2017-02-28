@@ -229,12 +229,8 @@ public class OfcStorageTemplateRest extends BaseController{
     @RequestMapping(value = "/warehouse")
     @ResponseBody
     public Wrapper loadWarehouse(){
-        Wrapper<List<RmcWarehouseRespDto>> listWrapper = rmcWarehouseEdasService.queryWarehouseList(new RmcWareHouseQO());
-        if(listWrapper.getCode() == Wrapper.ERROR_CODE) {
-            logger.error("从资源中心加载所有仓库列表失败, 接口返回的错误信息为: {}", listWrapper.getMessage());
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, listWrapper.getMessage());
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,listWrapper.getResult());
+        List<RmcWarehouseRespDto> rmcWarehouseRespDtos = ofcStorageTemplateService.allWarehouseByRmc();
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,rmcWarehouseRespDtos);
     }
 
 
@@ -269,9 +265,15 @@ public class OfcStorageTemplateRest extends BaseController{
     public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, OfcStorageTemplate ofcStorageTemplate){
         Wrapper<?> result = null;
         try {
+            if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getCustCode())){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "请先选择客户");
+            }else if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getTemplateCode())){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "请选择模板");
+            }
             AuthResDto authResDto = getAuthResDtoByToken();
             Integer activeSheetNum = ofcStorageTemplateService.checkStorageTemplate(file);
             Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file, authResDto, ofcStorageTemplate, activeSheetNum);
+
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
 
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){

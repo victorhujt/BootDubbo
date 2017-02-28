@@ -30,4 +30,6 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
      * @return
      */
     OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
+
+    int checkCustOrderCodeRepeat(String custOrderCode);
 }
