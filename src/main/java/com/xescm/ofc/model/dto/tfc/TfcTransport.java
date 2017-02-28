@@ -169,6 +169,16 @@ public class TfcTransport implements Serializable {
 
     private String faceOrder;
 
+    /**
+     * 运费
+     */
+    private BigDecimal luggage;
+
+    /**
+     * 代收服务费
+     */
+    private BigDecimal collectServiceCharge;
+
     public String getCustomerOrderCode() {
         return customerOrderCode;
     }
@@ -783,5 +793,21 @@ public class TfcTransport implements Serializable {
 
     public void setFaceOrder(String faceOrder) {
         this.faceOrder = faceOrder;
+    }
+
+    public BigDecimal getLuggage() {
+        return luggage;
+    }
+
+    public void setLuggage(BigDecimal luggage) {
+        this.luggage = luggage;
+    }
+
+    public BigDecimal getCollectServiceCharge() {
+        return collectServiceCharge;
+    }
+
+    public void setCollectServiceCharge(BigDecimal collectServiceCharge) {
+        this.collectServiceCharge = collectServiceCharge;
     }
 }

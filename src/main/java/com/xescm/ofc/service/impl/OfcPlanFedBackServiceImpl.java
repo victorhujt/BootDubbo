@@ -376,7 +376,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         //根据订单号获取订单及状态
         String transPortNo= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
         String status= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
-        Date traceTime= ofcPlanFedBackCondition.getTraceTime();
+        Date traceTime = ofcPlanFedBackCondition.getTraceTime();
         try{
             if(transPortNo.equals("")){
                 throw new BusinessException("运输单号不可以为空");
@@ -384,7 +384,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             if(status.equals("")){
                 throw new BusinessException("跟踪状态不可以为空");
             }
-            if(traceTime==null){
+            if(traceTime ==null){
                 throw new BusinessException("跟踪时间不可以为空");
             }
 
@@ -408,7 +408,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             String orstatus=orderStatus.getNotes();
             boolean flag;
             switch (status) {
-                case "已发运":
+                case "20":
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "车辆已发运，发往目的地：");
                     if (!flag) {
@@ -418,7 +418,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         logger.info("跟踪状态已发运");
                     }
                     break;
-                case "已到达":
+                case "30":
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "车辆已到达目的地：");
                     if (!flag) {
@@ -429,7 +429,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     }
                     //当前计划单序号等于订单下计划单数量，表示最后一个计划单
                     break;
-                case "已签收":
+                case "40":
                     Date now = new Date();
                     flag = checkStatus(false, statusList, "end", "客户已签收");
                     if (!flag) {
@@ -452,7 +452,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         logger.info("跟踪状态已完成");
                     }
                     break;
-                case "已回单":
+                case "50":
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "客户已回单");
                     if (!flag) {
@@ -462,7 +462,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         logger.info("跟踪状态已回单");
                     }
                     break;
-                case "中转入":
+                case "32":
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "客户已中转入");
                     if (!flag) {
@@ -472,7 +472,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         logger.info("跟踪状态中转入");
                     }
                     break;
-                case "中转出":
+                case "34":
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "客户已中转出");
                     if (!flag) {
@@ -482,7 +482,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         logger.info("跟踪状态中转出");
                     }
                     break;
-                case "异常":
+                case "36":
                     logger.info("跟踪状态返回‘异常’");
                     break;
                 default:
@@ -492,7 +492,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 ofcOrderStatusService.save(orderStatus);
                 if(StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEEN_COMPLETED)){
                     //订单中心--订单状态推结算中心(执行中和已完成)
-                    ofcOrderManageService.pullOfcOrderStatus(orderStatus);
+                    //ofcOrderManageService.pullOfcOrderStatus(orderStatus);
                 }
             }
         }catch (Exception e){

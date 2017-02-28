@@ -278,12 +278,14 @@ public class ScheduledTask{
             if (null == ofcOrderNewstatusService.selectByKey(orderCode)) {
                 mapperMap.put("orderCode", orderCode);
                 OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
-                OfcOrderNewstatus orderNewstatu = new OfcOrderNewstatus();
-                orderNewstatu.setOrderCode(orderCode);
-                orderNewstatu.setOrderLatestStatus(PubUtils.trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()));
-                orderNewstatu.setStatusUpdateTime(new Date());
-                orderNewstatu.setStatusCreateTime(new Date());
-                ofcOrderNewstatusService.save(orderNewstatu);
+                if(null!=ofcOrderStatus){
+                    OfcOrderNewstatus orderNewstatu = new OfcOrderNewstatus();
+                    orderNewstatu.setOrderCode(orderCode);
+                    orderNewstatu.setOrderLatestStatus(PubUtils.trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()));
+                    orderNewstatu.setStatusUpdateTime(new Date());
+                    orderNewstatu.setStatusCreateTime(new Date());
+                    ofcOrderNewstatusService.save(orderNewstatu);
+                }
             }
         }
     }
