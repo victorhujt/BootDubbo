@@ -437,7 +437,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         }
                     }
                 } else if (!PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBaseId()).equals("")
-                        && StringUtils.equals(ofcFundamentalInformation.getOperator(), CreateOrderApiConstant.USER_NAME)) {
+                        && StringUtils.equals(ofcFundamentalInformation.getOperator(), CREATE_ORDER_BYAPI)) {
                     //鲜易网, 给的BaseId是有值的, 但不可用!
                     RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
                     rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
@@ -457,7 +457,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     if (rmcPickup != null) {
                         if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderSource())) {
                             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
-                                    || StringUtils.equals(ofcFundamentalInformation.getOperator(), CreateOrderApiConstant.USER_NAME)) {
+                                    || StringUtils.equals(ofcFundamentalInformation.getOperator(), CREATE_ORDER_BYAPI)) {
                                 //更新订单的大区和基地
                                 updateOrderAreaAndBase(rmcPickup, ofcFundamentalInformation);
                             }
@@ -1958,7 +1958,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals("review")) {
             //创单接口订单和钉钉录单补充大区基地信息
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
-                    || StringUtils.equals(ofcFundamentalInformation.getOperator(), CreateOrderApiConstant.USER_NAME)) {
+                    || StringUtils.equals(ofcFundamentalInformation.getOperator(), CREATE_ORDER_BYAPI)) {
                 updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
             }
             String userName = authResDtoByToken.getUserName();
