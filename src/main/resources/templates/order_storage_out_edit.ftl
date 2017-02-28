@@ -357,7 +357,7 @@
                 </el-table-column>
             </el-table>
             <div class="block">
-                <el-button type="primary" @click="saveStorage">确认下单</el-button>
+                <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
             </div>
 
         </el-form>
@@ -378,18 +378,19 @@
               callback();
             }
           };
-          var checkPhoneOrMobile = function(rule, value, callback){
-              if(value!=""){
-                  
-                  var mp=/^1\d{10}$/;
-                  var pp=/^0\d{2,3}-?\d{7,8}$/;
-                  if(mp.test(value)||pp.test(value)){
-                      callback();
-                  } else {
-                      callback(new Error('请输入正确格式的联系方式!'));
-                  }
+          var checkPhoneOrMobile = function(rule, value, callback) {
+            if(value!==""){
+              var mp=/^1\d{10}$/;
+              var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
+              var phone = pp.test(value)||mp.test(value);
+              if(phone!==true){
+                callback(new Error('请正确输入联系电话'));
+              }else{
+                callback();
               }
-
+            }else{
+              return callback(new Error('联系电话不能为空'));
+            }
           };
             return {
                 orderCode:'',
@@ -1001,10 +1002,10 @@
                         },"json");
             },
           submitForm:function(formName) {
-
+                var _this = this;
             this.$refs[formName].validate(function(valid){
               if (valid) {
-                alert('submit!');
+                _this.saveStorage();
               } else {
                 console.log('error submit!!');
                 return false;
@@ -1012,8 +1013,6 @@
             });
           },
           saveStorage:function(){
-            
-            this.submitForm('orderForm');
                 if(this.orderForm.serviceType=="614"){
                     if(!this.orderForm.supplierName){
                         alert('业务类型为分拨出库时，供应商必须选择!');
