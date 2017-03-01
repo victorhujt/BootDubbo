@@ -53,4 +53,9 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     public List<OfcGoodsDetailsInfo> queryByOrderCode(String orderCode) {
         return ofcGoodsDetailsInfoMapper.queryByOrderCode(orderCode);
     }
+
+    @Override
+    public int updateByOrderCode(Object key) {
+        return ofcGoodsDetailsInfoMapper.updateByOrderCode(key);
+    }
 }

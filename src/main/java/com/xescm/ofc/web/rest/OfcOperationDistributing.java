@@ -1,9 +1,10 @@
-package com.xescm.ofc.web.restcontroller;
+package com.xescm.ofc.web.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
+import com.xescm.base.model.dto.component.req.Select2ReqDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
@@ -217,6 +218,34 @@ public class OfcOperationDistributing extends BaseController{
             queryParam.setCustomerName(custName);
             queryParam.setPageNum(pageNum);
             queryParam.setPageSize(pageSize);
+            result = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
+            if (Wrapper.ERROR_CODE == result.getCode()) {
+                logger.error("查询客户列表失败,查询结果有误!");
+            }
+        } catch (BusinessException ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
+        }
+        return result;
+    }
+
+    /**
+     * 查询客户名称Select2
+     * @param select2ReqDto
+     * @return
+     */
+    @RequestMapping(value = "/queryCustomerSelect2",method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryCustomerByName(Select2ReqDto select2ReqDto) {
+        Wrapper<PageInfo<CscCustomerVo>> result;
+        try {
+            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
+            queryParam.setCustomerName(select2ReqDto.getName());
+            queryParam.setPageNum(select2ReqDto.getPageNum());
+            queryParam.setPageSize(select2ReqDto.getPageSize());
             result = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
             if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询客户列表失败,查询结果有误!");

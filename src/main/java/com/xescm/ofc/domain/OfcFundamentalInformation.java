@@ -246,6 +246,66 @@ public class OfcFundamentalInformation {
      */
     @Column(name = "area_name")
     private String areaName;
+    /**
+     * 删除标志位 0或者空表示未删除  1:表示已经删除
+     */
+//    @Column(name = "is_delete")
+//    private String isDelete;
+//
+//    public String getIsDelete() {
+//        return isDelete;
+//    }
+//
+//    public void setIsDelete(String isDelete) {
+//        this.isDelete = isDelete;
+//    }
 
+    public String getSaleOrganization() {
+        return saleOrganization;
+    }
+
+    public void setSaleOrganization(String saleOrganization) {
+        this.saleOrganization = saleOrganization;
+    }
+
+    public String getProductGroup() {
+        return productGroup;
+    }
+
+    public void setProductGroup(String productGroup) {
+        this.productGroup = productGroup;
+    }
+
+    public String getSaleDepartment() {
+        return saleDepartment;
+    }
+
+    public void setSaleDepartment(String saleDepartment) {
+        this.saleDepartment = saleDepartment;
+    }
+
+    public String getSaleGroup() {
+        return saleGroup;
+    }
+
+    public void setSaleGroup(String saleGroup) {
+        this.saleGroup = saleGroup;
+    }
+
+    public String getSaleDepartmentDesc() {
+        return saleDepartmentDesc;
+    }
+
+    public void setSaleDepartmentDesc(String saleDepartmentDesc) {
+        this.saleDepartmentDesc = saleDepartmentDesc;
+    }
+
+    public String getSaleGroupDesc() {
+        return saleGroupDesc;
+    }
+
+    public void setSaleGroupDesc(String saleGroupDesc) {
+        this.saleGroupDesc = saleGroupDesc;
+    }
 
 }

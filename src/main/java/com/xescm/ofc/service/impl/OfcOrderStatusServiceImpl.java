@@ -16,6 +16,8 @@ import java.util.*;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
+import static com.xescm.ofc.constant.OrderConstConstant.*;
+
 /**
  * 订单状态
  * Created by lyh on 2016/10/10.

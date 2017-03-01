@@ -17,14 +17,5 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
 
     List<OfcGoodsDetailsInfo> queryByOrderCode(@Param(value = "orderCode") String orderCode);
 
-    /**
-     * <p>Title:      batchInsertGoodsDetail. </p>
-     * <p>Description 批量插入订单明细表主键id</p>
-     *
-     * @param
-     * @Author	      nothing
-     * @CreateDate    2017/2/10 11:27
-     * @return
-     */
-    void batchInsertGoodsDetail(@Param("detail") OfcGoodsDetailsInfo goodsDetailInfos);
+    int updateByOrderCode(Object key);
 }

@@ -786,6 +786,7 @@ public class TfcTransport implements Serializable {
     public void setToDistrictCode(String toDistrictCode) {
         this.toDistrictCode = toDistrictCode;
     }
+<<<<<<< HEAD
 
     public String getFaceOrder() {
         return faceOrder;
@@ -810,4 +811,6 @@ public class TfcTransport implements Serializable {
     public void setCollectServiceCharge(BigDecimal collectServiceCharge) {
         this.collectServiceCharge = collectServiceCharge;
     }
+=======
+>>>>>>> dev_edas_storage
 }

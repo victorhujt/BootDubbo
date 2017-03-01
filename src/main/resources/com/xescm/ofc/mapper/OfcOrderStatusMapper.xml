@@ -84,7 +84,7 @@
     LEFT JOIN ofc_distribution_basic_info odbi ON oos.order_code = odbi.order_code
     <where>
       <if test="orderCode!=null and orderCode!=''">
-         OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
+        OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
       </if>
       <if test="custOrderCode!=null and custOrderCode!=''">
         OR ofi.cust_order_code =#{custOrderCode}

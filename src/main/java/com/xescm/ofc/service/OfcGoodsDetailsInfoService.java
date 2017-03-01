@@ -16,4 +16,5 @@ public interface OfcGoodsDetailsInfoService extends IService<OfcGoodsDetailsInfo
 
     List<OfcGoodsDetailsInfo> queryByOrderCode(String orderCode);
 
+    int updateByOrderCode(Object key);
 }

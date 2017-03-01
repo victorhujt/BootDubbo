@@ -47,35 +47,8 @@ public class DefaultMqProducer {
         boolean isSend=false;
         logger.info(mqConfig.getOfc2WhcOrderTopic()+"开始生产");
         Message message = new Message(mqConfig.getOfc2WhcOrderTopic(), tag,jsonStr.getBytes());
-        //入库单收货反馈测试
-//        ofcSiloprogramStatusFedBackCondition c=new ofcSiloprogramStatusFedBackCondition();
-//        ofcWarehouseFeedBackCondition c1=new ofcWarehouseFeedBackCondition();
-//        c1.setPlanCode(code);
-//        List<OfcPlannedDetail> listp=new ArrayList<>();
-//        List<ofcWarehouseFeedBackCondition> list2=new ArrayList<>();
-//        OfcPlannedDetail d=new OfcPlannedDetail();
-//        d.setPlanCode(code);
-//        d.setRealQuantity(BigDecimal.valueOf(10));
-//        c.setPlanCode(code);
-//        d.setGoodsCode("SC-0001");
-//        d.setGoodsName("龙虾");
-//        d.setGoodsSpec("10KG装");
-//        listp.add(d);
-//        c1.setPlannedDetails(listp);
-//        list2.add(c1);
-//        String shjson= JacksonUtil.toJsonWithFormat(list2);
-//        tag="620";
-//        c.setStatus("00");
-//        c.setTraceTime(new Date());
-//        List<ofcSiloprogramStatusFedBackCondition> list=new ArrayList<>();
-//        list.add(c);
-//        String json= JacksonUtil.toJsonWithFormat(list);
-//        Message message1 = new Message(mqConfig.getOfcOrderStatusTopic(), tag,json.getBytes());
-//        Message message2 = new Message(mqConfig.getOfc2WhcOrderTopic(), tag,shjson.getBytes());
-            message.setKey(code);
+        message.setKey(code);
          SendResult sendResult = producer.send(message);
-      //  SendResult sendResult= producer.send(message1);
-        //producer.send(message2);
         if (sendResult != null) {
             isSend=true;
             logger.info("{0}生产成功,tag为{1}生产时间为{2},MsgID为{3}",mqConfig.getOfc2WhcOrderTopic(),tag,new Date(),sendResult.getMessageId());

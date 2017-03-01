@@ -66,7 +66,7 @@ public class OfcOrderManageOperaRest extends BaseController {
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             AuthResDto authResDto = getAuthResDtoByToken();
-            List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderList(authResDto,form);
+            List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderList(authResDto, form);
             PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (BusinessException ex) {
@@ -112,6 +112,42 @@ public class OfcOrderManageOperaRest extends BaseController {
     }
 
     /**
+     * 仓储订单的审核与反审核  暂用该方法    如果改版后的方法兼容  该方法可去除
+     * @param orderCode
+     * @param orderStatus
+     * @param reviewTag
+     * @return
+     */
+    @RequestMapping(value = "/auditOrderOrNotAuditOper", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> auditOrderOrNotAuditOper(String orderCode, String orderStatus, String reviewTag) {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
+            if (StringUtils.isBlank(reviewTag)) {
+                throw new Exception("订单标识不能为空！");
+            }
+            String result = ofcOrderManageService.auditStorageOrder(orderCode, orderStatus, reviewTag, authResDtoByToken);
+            if(!result.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "审核或反审核出现异常");
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+    }
+
+
+    /**
      * 订单删除
      *
      * @param orderCode     订单编号
@@ -139,6 +175,41 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
+
+
+    /**
+     * 订单删除
+     *
+     * @param orderCode
+     * @return
+     */
+//    @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Wrapper<?> orderDeleteOper(String orderCode) {
+//        try {
+//            if (StringUtils.isBlank(orderCode)) {
+//                throw new Exception("订单编号不能为空！");
+//            }
+//            String result = ofcOrderManageService.orderDelete(orderCode);
+//            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+//        } catch (BusinessException ex) {
+//            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+//            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+//        } catch (Exception ex) {
+//            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+//            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+//        }
+//    }
+
+
+
+
+
+
+
+
+
+
     /**
      * 订单取消
      * @param orderCode     订单编号
@@ -164,6 +235,55 @@ public class OfcOrderManageOperaRest extends BaseController {
             logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
         }
+    }
+
+
+    @RequestMapping(value ="/orderStorageCancelOper", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> orderStorageCancelOper(String orderCode, String orderStatus) {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
+            String result = ofcOrderManageService.orderStorageCancel(orderCode, orderStatus, authResDtoByToken);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+    }
+
+    /**
+     * 订单的复制
+     * @param orderCode
+     * @param orderStatus
+     * @return
+     */
+    @RequestMapping(value ="/copyOrderOper", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> copyOrder(String orderCode,String orderStatus){
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        String result;
+        try{
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }
+             result = ofcOrderManageService.copyOrder(orderCode, orderStatus, authResDtoByToken);
+    } catch (Exception ex) {
+        logger.error("订单中心订单管理订单复制出现异常orderCode：{},orderStatus：{},{}", "", orderCode, orderStatus, ex.getMessage(), ex);
+        return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+    }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,result);
     }
 
     /**
@@ -238,7 +358,7 @@ public class OfcOrderManageOperaRest extends BaseController {
      * @return      ModelAndView
      */
     @RequestMapping(value = "/orderDetailBatchOpera/{orderBatchCode}", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode,Model model) {
+    public ModelAndView orderDetailBatchOpera(@PathVariable String orderBatchCode, Model model) {
         ModelAndView modelAndView = new ModelAndView("order_detail_batch_opera");
         try {
             if (StringUtils.isBlank(orderBatchCode)) {
@@ -315,10 +435,10 @@ public class OfcOrderManageOperaRest extends BaseController {
      */
     @RequestMapping(value = "queryBaseListByArea", method = {RequestMethod.POST})
     @ResponseBody
-    public Wrapper<?> queryBaseListByArea(String areaCode){
-        logger.info("运营中心订单管理根据所选大区查询基地,入参:areaCode = {}",areaCode);
-        if(PubUtils.isSEmptyOrNull(areaCode)){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"该大区编码为空!无法查询其基地!");
+    public Wrapper<?> queryBaseListByArea(String areaCode) {
+        logger.info("运营中心订单管理根据所选大区查询基地,入参:areaCode = {}", areaCode);
+        if (PubUtils.isSEmptyOrNull(areaCode)) {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该大区编码为空!无法查询其基地!");
         }
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(areaCode);
@@ -328,11 +448,11 @@ public class OfcOrderManageOperaRest extends BaseController {
         } catch (BusinessException ex) {
             logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex){
+        } catch (Exception ex) {
             logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"根据所选大区查询基地查询成功",ofcGroupVoList);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选大区查询基地查询成功", ofcGroupVoList);
     }
 
     /**
@@ -340,10 +460,10 @@ public class OfcOrderManageOperaRest extends BaseController {
      */
     @RequestMapping(value = "queryAreaMsgByBase", method = {RequestMethod.POST})
     @ResponseBody
-    public Wrapper<?> queryAreaMsgByBase(String baseCode){
-        logger.info("运营中心订单管理根据所选基地反查大区,入参:baseCode = {}",baseCode);
-        if(PubUtils.isSEmptyOrNull(baseCode)){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"该基地编码为空!无法查询其所属大区!");
+    public Wrapper<?> queryAreaMsgByBase(String baseCode) {
+        logger.info("运营中心订单管理根据所选基地反查大区,入参:baseCode = {}", baseCode);
+        if (PubUtils.isSEmptyOrNull(baseCode)) {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该基地编码为空!无法查询其所属大区!");
         }
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(baseCode);
@@ -353,12 +473,10 @@ public class OfcOrderManageOperaRest extends BaseController {
         } catch (BusinessException ex) {
             logger.info("根据所选基地反查大区出错：{", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex){
+        } catch (Exception ex) {
             logger.info("根据所选基地反查大区出错：{", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"根据所选基地反查大区查询成功",ofcGroupVo);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选基地反查大区查询成功", ofcGroupVo);
     }
-
-
 }
