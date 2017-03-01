@@ -50,9 +50,9 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
 
     /**
      * 根据客户订单编号与客户编号查询不是已经取消的订单
-     * @param custOrderCode     客户订单编号
-     * @param custCode      客户编号
-     * @return  OfcFundamentalInformation
+     * @param custOrderCode 客户订单编号
+     * @param custCode 客户编码
+     * @return
      */
     public OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(String custOrderCode, String custCode){
         OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();

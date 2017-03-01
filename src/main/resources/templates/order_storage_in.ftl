@@ -367,7 +367,7 @@
           callback();
         }
       };
-      var checkPhone = function(rule, value, callback) {
+      var checkPhoneOrMobile = function(rule, value, callback) {
         if(value!==""){
           var mp=/^1\d{10}$/;
           var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
@@ -377,10 +377,8 @@
           }else{
             callback();
           }
-        }else{
-          return callback(new Error('联系电话不能为空'));
         }
-      }
+      };
       return {
         activeNames:'',
         wareHouseObj:'',
@@ -578,7 +576,7 @@
             { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
           ],
           driverContactNumber:[
-            {validator: checkPhone,trigger: 'blur'},
+            {validator: checkPhoneOrMobile,trigger: 'blur'},
             { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
           ]
         }
