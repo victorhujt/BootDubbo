@@ -1,7 +1,7 @@
 package com.xescm.ofc.model.dto.ofc;
 
-import com.xescm.csc.model.dto.CscGoodsApiDto;
-import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -36,11 +36,8 @@ public class OfcStorageTemplateDto {
     private String contactNumbe;
     private String consigneeName;//收货方名称
     //上面部分字段是Excel表中的字段, 但是下单的话还需要其他字段的补充
-    private CscContantAndCompanyDto cscConsigneeDto;
-    private CscGoodsApiDto cscGoodsApiDto;
-
-
-
-
+    private CscContantAndCompanyResponseDto cscConsigneeDto = new CscContantAndCompanyResponseDto();
+    private CscGoodsApiVo cscGoodsApiVo = new CscGoodsApiVo();
+    private OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
 
 }

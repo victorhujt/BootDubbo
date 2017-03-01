@@ -153,18 +153,18 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置删除
-     * @param temlpateCode
+     * @param templateCode
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Wrapper storageTemplateDel(String temlpateCode){
-        logger.info("模板配置删除 ==> temlpateCode:{}",temlpateCode);
+    public Wrapper storageTemplateDel(String templateCode){
+        logger.info("模板配置删除 ==> temlpateCode:{}",templateCode);
         try {
-            if(PubUtils.isSEmptyOrNull(temlpateCode)){
-                logger.error("模板配置删除错误, 入参为空, templateName:null or '' ");
+            if(PubUtils.isSEmptyOrNull(templateCode)){
+                logger.error("模板配置删除错误, 入参为空, temlpateCode:null or '' ");
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
             }
-            ofcStorageTemplateService.delTemplateByCode(temlpateCode);
+            ofcStorageTemplateService.delTemplateByCode(templateCode);
         } catch (BusinessException e) {
             logger.error("模板配置删除错误, {}",e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
@@ -252,7 +252,7 @@ public class OfcStorageTemplateRest extends BaseController{
     public List<OfcStorageTemplate> templateListByCustCode(String custCode){
         TemplateCondition templateCondition = new TemplateCondition();
         templateCondition.setCustCode(custCode);
-        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
+        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateService.selectTemplate(templateCondition);
         return ofcStorageTemplateList;
     }
 
@@ -275,11 +275,13 @@ public class OfcStorageTemplateRest extends BaseController{
             Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file, authResDto, ofcStorageTemplate, activeSheetNum);
 
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
-
+                List<String> errorMsg = (List<String>) checkResult.getResult();
+                String resultJson = JacksonUtil.toJsonWithFormat(errorMsg);
+                result =  WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),resultJson);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
                 Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
-                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
-                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJSON);
+                String resultJson = JacksonUtil.toJsonWithFormat(resultMap);
+                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJson);
             }
         } catch (BusinessException e) {
             e.printStackTrace();

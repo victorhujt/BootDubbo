@@ -1,6 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -11,7 +10,9 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.enums.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -59,6 +60,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private RmcWarehouseEdasService rmcWarehouseEdasService;
     @Resource
     private CscContactEdasService cscContactEdasService;
+    @Resource
+    private CscGoodsEdasService cscGoodsEdasService;
     @Resource
     private OfcStorageTemplateMapper ofcStorageTemplateMapper;
     @Resource
@@ -109,12 +112,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     /**
-     * 模板配置筛选
+     * 模板配置筛选// 模板导入用
      * @param templateCondition 筛选条件
      * @return 筛选结果
      */
     @Override
-    public List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition) {
+    public List<OfcStorageTemplate> selectTemplate(TemplateCondition templateCondition) {
         if(null == templateCondition){
             logger.error("模板配置筛选条件为空!");
             throw new BusinessException("模板配置筛选条件为空!");
@@ -126,6 +129,24 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcStorageTemplateList.add(0, ofcStorageTemplate);
         return ofcStorageTemplateList;
     }
+
+    /**
+     * 模板配置筛选
+     * @param templateCondition 筛选条件
+     * @return 筛选结果
+     */
+    @Override
+    public List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition) {
+        if(null == templateCondition){
+            logger.error("模板配置筛选条件为空!");
+            throw new BusinessException("模板配置筛选条件为空!");
+        }
+        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateMapper.selectTemplateByCondition(templateCondition);
+
+        return ofcStorageTemplateList;
+    }
+
+
 
     /**
      * 模板配置删除
@@ -142,7 +163,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
         ofcStorageTemplate.setTemplateCode(temlpateCode);
-        int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
+//        int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
+        int delete = ofcStorageTemplateMapper.deleteByTemplateCode(temlpateCode);
         if(delete == 0){
             logger.error("模板配置删除失败!");
             throw new BusinessException("模板配置删除失败");
@@ -239,7 +261,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<Integer,OfcStorageTemplate> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = new ArrayList<>();
-        Map<String, CscGoodsApiDto> goodsCheck = new HashMap<>();
+        Map<String, CscGoodsApiVo> goodsCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consigneeCheck = new HashMap<>();
         boolean requiredField = true;
         //去RMC查到所有仓库
@@ -417,13 +439,27 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //如果没校验过就调用CSC接口进行校验
                             if(!goodsCheck.containsKey(cellValue)){
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
-
-                                goodsCheck.put(cellValue, cscGoodsApiDto);
+                                cscGoodsApiDto.setGoodsCode(cellValue);
+                                cscGoodsApiDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+                                Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                                List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
+                                //没有校验通过
+                                if(null == cscGoodsApiVoResult && cscGoodsApiVoResult.size() == 0){
+                                    logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    checkPass = false;
+                                    break;
+                                    //校验通过
+                                }else {
+                                    logger.info("当前货品编码:{},校验通过", cellValue);
+                                    goodsCheck.put(cellValue, cscGoodsApiVoResult.get(0));
+                                }
                             }else {
+                                logger.info("当前货品编码:{},不用校验", cellValue);
                                 //不用校验, 直接堆
-                                goodsCheck.get(cellValue);
+                                CscGoodsApiVo cscGoodsApiVo = goodsCheck.get(cellValue);
+                                ofcStorageTemplateDto.setCscGoodsApiVo(cscGoodsApiVo);
                             }
-
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //货品名称
                         }else if(StringUtils.equals(StorageImportInEnum.GOODS_NAME.getStandardColCode(), standardColCode)){
@@ -567,23 +603,21 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
                                 //即在客户中心没有找到该收货方
                                 if(null == result || result.size() == 0){
-
-                                    logger.error("当前行:{},列:{} 没有找到发货方名称", rowNum + 1, cellNum);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "没有找到该发货方名称:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    logger.error("当前行:{},列:{} 发货方名称校验失败, 请维护", rowNum + 1, cellNum);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "发货方名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
                                     checkPass = false;
                                     break;
                                     //找到该收货方了
                                 }else {
                                     CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = result.get(0);
-
+                                    ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
                                     consigneeCheck.put(cellValue, cscContantAndCompanyResponseDto);
                                 }
                             }else {
                                 CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeCheck.get(cellValue);
-
+                                ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
                                 setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             }
-
                         }
                     }
                 }

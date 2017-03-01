@@ -25,7 +25,16 @@
   </resultMap>
 
 
-  <select id="checkTemplateNameUnique" parameterType="java.lang.String" resultType="java.lang.Integer">
+    <delete id="deleteByTemplateCode">
+      DELETE
+      FROM
+      ofc_storage_template
+      WHERE
+      template_code = #{templateCode}
+    </delete>
+
+
+    <select id="checkTemplateNameUnique" parameterType="java.lang.String" resultType="java.lang.Integer">
       SELECT
       COUNT(temp.id)
       FROM

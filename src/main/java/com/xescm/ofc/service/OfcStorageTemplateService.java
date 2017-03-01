@@ -16,6 +16,8 @@ import java.util.List;
 public interface OfcStorageTemplateService {
     void saveTemplate(List<OfcStorageTemplate> templateList, AuthResDto authResDto);
 
+    List<OfcStorageTemplate> selectTemplate(TemplateCondition templateCondition);
+
     List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition);
 
     void  delTemplateByCode(String temlpateCode);
