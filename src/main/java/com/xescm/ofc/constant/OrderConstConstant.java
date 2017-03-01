@@ -29,6 +29,8 @@ public final class OrderConstConstant {
     public static final String HASBEEN_COMPLETED="40";       //已完成
     public static final String HASBEEN_CANCELED="50";       //已取消
 
+    public static final String ISEXCEPTION="1";       //异常订单标志位
+
     public static final Integer WEARHOUSE_WITH_TRANS=1;       //仓储订单提供运输
     public static final Integer WAREHOUSE_NO_TRANS=0;       //仓储订单不提供运输
 

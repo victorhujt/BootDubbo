@@ -10,6 +10,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
@@ -39,6 +40,93 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderOperMapper ofcOrderOperMapper;
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
+
+    @Override
+    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OrderStorageOperForm form, String tag) {
+        if(tag.equals("in")){
+            if(StringUtils.isEmpty(form.getBusinessType())||form.getBusinessType().indexOf("61")!=-1){
+                List<String> businessTypes=new ArrayList<>();
+                businessTypes.add("620");
+                businessTypes.add("621");
+                businessTypes.add("622");
+                businessTypes.add("623");
+                businessTypes.add("624");
+                businessTypes.add("625");
+                businessTypes.add("626");
+                form.setBusinessTypes(businessTypes);
+            }
+        }else if(tag.equals("out")){
+            if(StringUtils.isEmpty(form.getBusinessType())||form.getBusinessType().indexOf("62")!=-1){
+                List<String> businessTypes=new ArrayList<>();
+                businessTypes.add("610");
+                businessTypes.add("611");
+                businessTypes.add("612");
+                businessTypes.add("613");
+                businessTypes.add("614");
+                form.setBusinessTypes(businessTypes);
+            }
+        }
+        return queryStorageOrderList(authResDto,form);
+    }
+
+
+    public List<OrderSearchOperResult> queryStorageOrderList(AuthResDto authResDto,OrderStorageOperForm form) {
+        //订单管理筛选后端权限校验
+        if(null == authResDto || null == form){
+            throw new BusinessException("订单管理筛选后端权限校验入参有误");
+        }
+        List<OrderSearchOperResult> orderSearchOperResults = new ArrayList<>();
+        UamGroupDto uamGroupDto = new UamGroupDto();
+        uamGroupDto.setSerialNo(authResDto.getGroupRefCode());
+        Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
+        ofcOrderManageOperService.checkUamGroupEdasResultNullOrError(allGroupByType);
+        if(CollectionUtils.isEmpty(allGroupByType.getResult()) || allGroupByType.getResult().size() > 1){
+            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果为空或有误");
+        }
+        UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
+        if(null == uamGroupDtoResult || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getType())){
+            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果有误");
+        }
+        if(PubUtils.isSEmptyOrNull(uamGroupDtoResult.getSerialNo())){
+            throw new BusinessException("当前登录的用户没有流水号!");
+        }
+        String groupType = uamGroupDtoResult.getType();
+        if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+            throw new BusinessException("基地所属大区未选择!");
+        }
+        if(StringUtils.equals(groupType,"1")){
+            //鲜易供应链身份
+            if(StringUtils.equals("GD1625000003",uamGroupDtoResult.getSerialNo())){
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form);
+                //大区身份
+            }else{
+                if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo())){
+                    throw new BusinessException("运营中心订单管理筛选入参:大区为空!");
+                }
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form);
+            }
+            //基地身份
+        }else if(StringUtils.equals(groupType,"3")){
+            if(PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+                throw new BusinessException("运营中心订单管理筛选入参: 基地为空!");
+            }
+            orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form);
+            //仓库身份, 其他身份
+        }else{
+            throw new BusinessException("运营中心订单管理筛选入参: 权限不足!");
+        }
+        if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+            throw new BusinessException("运营中心订单管理筛选入参: 基地所属大区为空");
+        }
+        return orderSearchOperResults;
+    }
+
+
+
+
+
+
+
 
     @Override
     public List<OrderScreenResult> queryOrderOper(OrderOperForm form) {

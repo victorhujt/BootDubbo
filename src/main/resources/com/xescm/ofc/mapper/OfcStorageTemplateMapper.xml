@@ -5,7 +5,9 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="index_num" property="indexNum" jdbcType="INTEGER" />
+    <result column="template_code" property="templateCode" jdbcType="VARCHAR" />
     <result column="template_type" property="templateType" jdbcType="VARCHAR" />
     <result column="template_name" property="templateName" jdbcType="VARCHAR" />
     <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
@@ -21,4 +23,156 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
   </resultMap>
+
+
+  <select id="checkTemplateNameUnique" parameterType="java.lang.String" resultType="java.lang.Integer">
+      SELECT
+      COUNT(temp.id)
+      FROM
+      (SELECT
+      ost.id
+      FROM
+      ofc_storage_template  ost
+      WHERE
+      ost.template_name = #{templateName,jdbcType=VARCHAR}
+      GROUP BY
+      ost.template_name) temp
+      GROUP BY
+      temp.id
+
+  </select>
+
+  <select id="selectTemplateByCondition" parameterType="com.xescm.ofc.model.dto.form.TemplateCondition" resultMap="BaseResultMap">
+    SELECT
+      ost.index_num,
+      ost.template_code,
+      ost.template_type,
+      ost.template_name,
+      ost.cust_code,
+      ost.cust_name,
+      ost.standard_col_code,
+      ost.standard_col_name,
+      ost.reflect_col_name,
+      ost.col_default_val,
+      ost.creat_time,
+      ost.creator,
+      ost.creator_name,
+      ost.oper_time,
+      ost.operator,
+      ost.operator_name
+    FROM
+    ofc_storage_template ost
+    <where>
+      <if test="custCode != null and custCode != ''">
+        AND ost.cust_code = #{custCode, jdbcType=VARCHAR}
+      </if>
+      <if test="custName != null and custName != ''">
+        AND ost.cust_name = #{custName, jdbcType=VARCHAR}
+      </if>
+      <if test="templateType != null and templateType != ''">
+        AND ost.template_type = #{templateType, jdbcType=VARCHAR}
+      </if>
+      <if test="templateCode != null and templateCode != ''">
+        AND ost.template_code = #{templateCode, jdbcType=VARCHAR}
+      </if>
+      <if test="templateName != null and templateName != ''">
+        AND ost.template_name LIKE concat(concat('%',#{templateName, jdbcType=VARCHAR}),'%')
+      </if>
+    </where>
+    GROUP BY
+      ost.template_code
+
+  </select>
+  <select id="selectTemplateDetail" resultType="com.xescm.ofc.domain.OfcStorageTemplate">
+    SELECT
+    ost.index_num,
+    ost.template_code,
+    ost.template_type,
+    ost.template_name,
+    ost.cust_code,
+    ost.cust_name,
+    ost.standard_col_code,
+    ost.standard_col_name,
+    ost.reflect_col_name,
+    ost.col_default_val,
+    ost.creat_time,
+    ost.creator,
+    ost.creator_name,
+    ost.oper_time,
+    ost.operator,
+    ost.operator_name
+    FROM
+    ofc_storage_template ost
+    <where>
+      <if test="custName != null and custName != ''">
+        AND ost.cust_name = #{custName, jdbcType=VARCHAR}
+      </if>
+      <if test="templateType != null and templateType != ''">
+        AND ost.template_type = #{templateType, jdbcType=VARCHAR}
+      </if>
+      <if test="templateCode != null and templateCode != ''">
+        AND ost.template_code = #{templateCode, jdbcType=VARCHAR}
+      </if>
+      <if test="templateName != null and templateName != ''">
+        AND ost.template_name LIKE concat(concat('%',#{templateName, jdbcType=VARCHAR}),'%')
+      </if>
+    </where>
+    ORDER BY
+     ost.index_num
+  </select>
+  <update id="updateByTemplateCode" parameterType="com.xescm.ofc.domain.OfcStorageTemplate">
+    UPDATE
+    ofc_storage_template
+    <set>
+      <if test="templateCode != null and templateCode != ''">
+        template_code = #{templateCode},
+      </if>
+      <if test="templateType != null and templateType != ''">
+        template_type = #{templateType},
+      </if>
+      <if test="templateName != null and templateName != ''">
+        template_name = #{templateName},
+      </if>
+      <if test="custCode != null and custCode != ''">
+        cust_code = #{custCode},
+      </if>
+      <if test="custName != null and custName != ''">
+        cust_name = #{custName},
+      </if>
+      <if test="standardColCode != null and standardColCode != ''">
+        standard_col_code = #{standardColCode},
+      </if>
+      <if test="standardColName != null and standardColName != ''">
+        standard_col_name = #{standardColName},
+      </if>
+      <if test="reflectColName != null and reflectColName != ''">
+        reflect_col_name = #{reflectColName},
+      </if>
+      <if test="colDefaultVal != null and colDefaultVal != ''">
+        col_default_val = #{colDefaultVal},
+      </if>
+      <if test="creatTime != null and creatTime != ''">
+        creat_time = #{creatTime},
+      </if>
+      <if test="creator != null and creator != ''">
+        creator = #{creator},
+      </if>
+      <if test="creatorName != null and creatorName != ''">
+        creator_name = #{creatorName},
+      </if>
+      <if test="operTime != null and operTime != ''">
+        oper_time = #{operTime},
+      </if>
+      <if test="operator != null and operator != ''">
+        operator = #{operator},
+      </if>
+      <if test="operatorName != null and operatorName != ''">
+        operator_name = #{operatorName}
+      </if>
+      where
+        template_code = #{templateCode}
+        and
+        index_num = #{indexNum,jdbcType=INTEGER}
+    </set>
+  </update>
 </mapper>

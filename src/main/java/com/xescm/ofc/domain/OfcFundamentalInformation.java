@@ -259,6 +259,33 @@ public class OfcFundamentalInformation {
 //    public void setIsDelete(String isDelete) {
 //        this.isDelete = isDelete;
 //    }
+    /**
+     * 订单的异常状态  0或者空为正常状态 1:异常状态
+      */
+    @Column(name = "is_exception")
+    private String isException;
+
+    public String getIsException() {
+        return isException;
+    }
+
+    public void setIsException(String isException) {
+        this.isException = isException;
+    }
+
+    /**
+     * 异常原因
+     */
+    @Column(name ="exception_reason")
+    private String exceptionReason;
+
+    public String getExceptionReason() {
+        return exceptionReason;
+    }
+
+    public void setExceptionReason(String exceptionReason) {
+        this.exceptionReason = exceptionReason;
+    }
 
     public String getSaleOrganization() {
         return saleOrganization;

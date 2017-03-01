@@ -3,6 +3,7 @@ package com.xescm.ofc.mapper;
 import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,8 @@ public interface OfcOrderOperMapper {
      * @return list
      */
     List<OrderSearchOperResult> queryOrderList(@Param("form") OrderOperForm form);
+
+    List<OrderSearchOperResult> queryStorageOrderList(@Param("form") OrderStorageOperForm form);
 
     /**
      * 根据订单批次号查询订单列表

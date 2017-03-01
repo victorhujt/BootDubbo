@@ -40,12 +40,27 @@ public class OfcGoodsDetailsInfo {
     /**
      * 单位
      */
+    @Column(name = "unit")
     private String unit;
 
     /**
      * 数量
      */
+    @Column(name = "quantity")
     private BigDecimal quantity;
+    /**
+     * 实收数量
+     */
+    @Column(name = "real_quantity")
+    private BigDecimal realQuantity;
+
+    public BigDecimal getRealQuantity() {
+        return realQuantity;
+    }
+
+    public void setRealQuantity(BigDecimal realQuantity) {
+        this.realQuantity = realQuantity;
+    }
 
     /**
      * 单价

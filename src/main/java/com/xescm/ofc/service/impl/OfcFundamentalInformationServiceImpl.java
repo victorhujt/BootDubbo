@@ -1,6 +1,8 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
@@ -61,5 +63,14 @@ public class OfcFundamentalInformationServiceImpl extends BaseService<OfcFundame
         ofcFundamentalInformation.setCustOrderCode(custOrderCode);
         ofcFundamentalInformation.setCustCode(custCode);
         return ofcFundamentalInformationMapper.queryOfcFundInfoByCustOrderCodeAndCustCode(ofcFundamentalInformation);
+    }
+
+
+    @Override
+    public int checkCustOrderCodeRepeat(String custOrderCode) {
+        if(PubUtils.isSEmptyOrNull(custOrderCode)) {
+            throw new BusinessException("校验客户订单编号重复失败, 原因: 客户订单编号为空!");
+        }
+        return ofcFundamentalInformationMapper.checkCustOrderCodeRepeat(custOrderCode);
     }
 }

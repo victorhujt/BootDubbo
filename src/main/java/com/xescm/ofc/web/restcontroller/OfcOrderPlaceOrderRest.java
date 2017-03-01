@@ -339,6 +339,93 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      * @param customerCode 客户编码
      * @return
      */
+    @RequestMapping(value = "/queryWarehouseByCustomerCode",method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryWarehouseByCustomerCode(String customerCode){
+        try {
+            if(PublicUtil.isEmpty(customerCode)){
+                throw new BusinessException("客户编码不可以为空！");
+            }
+            //客户编码查询出绑定的仓库编码
+            List<RmcWarehouseRespDto> warehouseRespDtoList=new ArrayList<>();
+            QueryWarehouseDto dto=new QueryWarehouseDto();
+            dto.setCustomerCode(customerCode);
+            Wrapper<List<CscWarehouseDto>>  warehouse=cscWarehouseEdasService.getCscWarehouseByCustomerId(dto);
+            if(warehouse.getCode()==warehouse.SUCCESS_CODE){
+                //通过查询出的仓库编码查询出仓库的信息
+                if(!PublicUtil.isEmpty(warehouse.getResult())){
+                    RmcWarehouseDto rmcWarehouseDto=new RmcWarehouseDto();
+                    for (CscWarehouseDto cscWarehouseDto : warehouse.getResult()){
+                        rmcWarehouseDto.setWarehouseCode(cscWarehouseDto.getWarehouseCode());
+                        Wrapper<RmcWarehouseRespDto> resp=rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouseDto);
+                        if(resp.getCode()==Wrapper.SUCCESS_CODE){
+                            warehouseRespDtoList.add(resp.getResult());
+                        }else{
+                            logger.error("通过仓库编码查询仓库信息产生异常{},仓库编码为{}",resp.getMessage(),rmcWarehouseDto.getWarehouseCode());
+                        }
+                    }
+                }else{
+                    logger.info("客户没有开通仓库{}",warehouse.getMessage());
+                }
+            }else{
+                logger.error("通过客户编码查询客户绑定的仓库编码产生异常{}",warehouse.getMessage());
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,warehouse.getMessage());
+            }
+             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", warehouseRespDtoList);
+        }catch (Exception ex) {
+            logger.error("客户编码查询绑定的仓库信息出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+
+    }
+
+    /**
+     * 加载当前用户下的仓库信息
+     * @return
+     */
+    @RequestMapping(value = "/loadWarehouseByUser",method = RequestMethod.POST)
+    @ResponseBody
+    public Object loadWarehouseByUser(){
+        try {
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            RmcWareHouseQO rmcWareHouseQO=new RmcWareHouseQO();
+            rmcWareHouseQO.setUserId(authResDtoByToken.getUserId());
+            Wrapper<List<RmcWarehouseRespDto>>  warehouseResult=rmcWarehouseEdasService.queryWarehouseList(rmcWareHouseQO);
+            if(warehouseResult.getCode()!=warehouseResult.SUCCESS_CODE){
+                logger.error("查询用户下的仓库产生异常{}",warehouseResult.getMessage());
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,warehouseResult.getMessage());
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", warehouseResult.getResult());
+        }catch (Exception ex) {
+            logger.error("查询用户下的仓库产生异常{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+    }
+
+
+    @RequestMapping(value = "/loadAreaAndBaseByUser",method = RequestMethod.POST)
+    @ResponseBody
+    public Object loadAreaAndBaseByUser() {
+        AuthResDto authResDto = getAuthResDtoByToken();
+        Map<String, List<OfcGroupVo>> groupMap = null;
+        try {
+            groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
+            if (groupMap==null) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到大区和基地信息");
+            }
+        } catch (Exception ex) {
+            logger.error("查询用户下的大区和基地信息异常{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+           return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",groupMap);
+    }
+
+    /**
+     * 下单收发货方筛选
+     * @param cscContantAndCompanyDto 收发货方筛选条件
+     * @param customerCode 客户编码
+     * @return
+     */
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody
     public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode){
@@ -380,6 +467,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
     public void supplierSelectByCscApi( CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         logger.debug("==>下单供应商筛选,cscSupplierInfoDto = {}",cscSupplierInfoDto);
+        Wrapper<PageInfo<CscSupplierInfoDto>> result;
         //调用外部接口,最低传CustomerCode
         try {
             if (cscSupplierInfoDto == null) {
@@ -389,16 +477,18 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
                 cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
             }
-            Wrapper<List<CscSupplierInfoDto>> cscSupplierList = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
-            if (cscSupplierList.getCode() == 200) {
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(JacksonUtil.toJsonWithFormat(cscSupplierList.getResult()));
-            } else {
-                logger.error("==>查询供应商结果:{}", cscSupplierList.getMessage());
+            result = cscSupplierEdasService.querySupplierByAttributePageList(cscSupplierInfoDto);
+            if (Wrapper.ERROR_CODE == result.getCode()) {
+                logger.error("查询供应商列表失败,查询结果有误!");
             }
-        }catch (Exception ex) {
+        } catch (BusinessException ex) {
+            logger.error("==>订单中心筛选供应商出现异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
             logger.error("订单中心筛选供应商出现异常:{}", ex.getMessage(), ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询供应商发生未知异常！");
         }
+        return result;
     }
 
     /**

@@ -62,6 +62,8 @@
     <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
     <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
     <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="is_exception" property="isException" jdbcType="VARCHAR" />
+    <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR" />
 
   </resultMap>
   <resultMap id="convCustOrderCode" type="java.lang.String">
@@ -74,6 +76,7 @@
     from
     ofc_fundamental_information ofi
       WHERE ofi.cust_order_code =#{custOrderCode}
+       AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
 
   <select id="checkCustOrderCode" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation" resultType="java.lang.Integer">
@@ -91,7 +94,7 @@
       AND
       cust_order_code = #{custOrderCode}
       AND (abolish_mark is null OR abolish_mark  = 0)
-
+      AND  (ofi.is_exception is null OR ofi.is_exception  = 0)
     </where>
   </select>
 
@@ -102,6 +105,7 @@
     ofc_fundamental_information ofi
     WHERE ofi.cust_order_code =#{custOrderCode}
     AND ofi.cust_code = #{custCode}
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
 
   <select id="queryOrder" resultMap="BaseResultMap">
@@ -147,6 +151,7 @@
     ) ORDER BY temp.lasted_oper_time DESC) oos
     WHERE ofi.order_code = ofd.order_code
     AND ofi.order_code = oos.order_code
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
     <choose>
       <when test=" 'orderCode'.toString() == searchType ">
         AND ofi.order_code = #{code}
@@ -221,11 +226,13 @@
       LEFT JOIN ofc_distribution_basic_info odb ON odb.order_code = ofi.order_code
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
       WHERE ofi.order_batch_number = #{orderBatchNumber}
+      AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
   
   <select id="queryDataByCustOrderCode" resultType="com.xescm.ofc.domain.OfcFundamentalInformation">
     SELECT ofi.order_code,ofi.cust_code,ofi.cust_name
     FROM ofc_fundamental_information ofi WHERE ofi.cust_order_code = #{custOrderCode}
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
 
   <select id="getLastMerchandiser" resultType="com.xescm.ofc.domain.OfcFundamentalInformation">
@@ -233,7 +240,7 @@
     ofi.merchandiser
     from
     ofc_fundamental_information ofi
-    WHERE ofi.operator_name =#{operatorName} ORDER BY ofi.oper_time DESC LIMIT 1
+    WHERE ofi.operator_name =#{operatorName} AND (ofi.is_exception is null OR ofi.is_exception  = 0) ORDER BY ofi.oper_time DESC LIMIT 1
   </select>
 
   <select id="queryOfcFundInfoByCustOrderCodeAndCustCode" resultType="com.xescm.ofc.domain.OfcFundamentalInformation" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation">
@@ -242,6 +249,15 @@
     WHERE ofi.cust_order_code = #{custOrderCode}
     AND ofi.cust_code = #{custCode}
     AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
+  </select>
+  <select id="checkCustOrderCodeRepeat" resultType="java.lang.Integer">
+    SELECT
+    COUNT (1)
+    FROM
+    ofc_fundamental_information ofi
+    WHERE
+    ofi.cust_order_code = #{custOrderCode, jdbcType = "VARCHAR"}
   </select>
 
 </mapper>

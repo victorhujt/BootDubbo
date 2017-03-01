@@ -42,6 +42,10 @@ public class OrderSearchOperResult {
 
     private String storeName;
 
+    private String isException;
+
+    private String exceptionReason;
+
 
 
 }
