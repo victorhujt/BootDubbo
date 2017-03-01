@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -265,7 +264,8 @@ public class ScheduledTask{
     }
 
     //同步历史订单最新状态到订单最新状态表
-    @Scheduled(cron = "0 */1 * * * ?")
+    //@Scheduled(cron = "0 */1 * * * ?")//一分鐘執行一次
+    //@Scheduled(cron = "0 35 17 28 FEB ?")//定時執行一次
 //    @Scheduled(cron = "")
     public void pushOrderNewStatusToNewTable(){
         logger.info("开始,同步历史订单最新状态到订单最新状态表");
