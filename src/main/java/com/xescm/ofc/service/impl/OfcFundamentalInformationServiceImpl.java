@@ -4,7 +4,6 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
-import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

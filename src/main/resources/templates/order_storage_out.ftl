@@ -375,6 +375,8 @@
               }else{
                 callback();
               }
+            }else{
+                callback();
             }
           };
 

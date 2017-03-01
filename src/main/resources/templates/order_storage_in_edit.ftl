@@ -388,6 +388,8 @@
               }else{
                 callback();
               }
+            }else{
+                callback();
             }
           };
             return {

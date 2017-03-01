@@ -29,7 +29,6 @@ import com.xescm.epc.edas.dto.OfcDistributionBasicInfoDto;
 import com.xescm.epc.edas.dto.TransportNoDTO;
 import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
-import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.OrderSourceEnum;
@@ -357,7 +356,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         //反审核
         if (reviewTag.equals("rereview")) {
-            if(ofcOrderStatus.getOrderStatus().equals(ALREADY_EXAMINE)){
+            if(!ofcOrderStatus.getOrderStatus().equals(ALREADY_EXAMINE)){
                 throw new BusinessException("订单编号["+orderCode+"]不能执行反审核，仅能对订单状态为【已审核】的订单执行反审核操作！");
             }else{
                 ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
@@ -1155,13 +1154,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("计划单状态不在可删除范围内");
         }
     }
-
-
-
-
-
-
-
 
     /**
      * 客户中心订单取消
@@ -2755,9 +2747,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
             if(ofcWarehouseInformation.getProvideTransport()== WAREHOUSE_NO_TRANS){
                 if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("edit")){//编辑时把之前提供运输修改不需要提供运输
-                    OfcWarehouseInformation condition=new OfcWarehouseInformation();
+                    OfcDistributionBasicInfo condition=new OfcDistributionBasicInfo();
                     condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                    ofcWarehouseInformationService.delete(condition);
+                    ofcDistributionBasicInfoService.delete(condition);
                 }
             }
         Wrapper<?> wrapper=null;
@@ -3017,9 +3009,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             String businessType = ofcFundamentalInformation.getBusinessType();
             if (PubUtils.trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
-            } else if (PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)
-                    && PubUtils.trimAndNullAsEmpty(businessType).equals(SALES_OUT_OF_THE_LIBRARY)
-                    && Objects.equals(ofcWarehouseInformation.getProvideTransport(), WEARHOUSE_WITH_TRANS)) {//仓储订单
+            } else if (PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
                 //仓储订单推仓储中心
                 pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation);
                 //仓储带运输订单推仓储中心和运输中心
@@ -3106,7 +3096,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
                     inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
                     inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
-                    inventoryDTO.setLotatt03(ofcGoodsDetailsInfo.getProductionBatch());
+                    inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());
                     inventoryDTO.setLotatt01(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE2));
                     inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(),DateUtils.DateFormatType.TYPE2));
                     inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());

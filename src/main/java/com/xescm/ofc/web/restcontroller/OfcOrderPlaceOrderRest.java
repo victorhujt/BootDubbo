@@ -420,6 +420,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ApiImplicitParams({
     })
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
+    @ResponseBody
     public Wrapper supplierSelectByCscApi( CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
         logger.debug("==>下单供应商筛选,cscSupplierInfoDto = {}",cscSupplierInfoDto);
         Wrapper<PageInfo<CscSupplierInfoDto>> result;

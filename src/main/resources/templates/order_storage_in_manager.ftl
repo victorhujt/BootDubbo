@@ -144,7 +144,13 @@
                 <el-table-column type="selection">
                 </el-table-column>
                 <el-table-column property="customerName" label="客户名称"></el-table-column>
-                <el-table-column property="orderCode" label="订单编号"></el-table-column>
+                <el-table-column
+                        property="orderCode"
+                        label="订单编号">
+                    <template scope="scope">
+                        <el-button type="text" @click="orderDetails(scope.row.orderCode)"><p style="color: blue">{{scope.row.orderCode}}</p></el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column property="orderBatchNumber" label="订单批次号"></el-table-column>
                 <el-table-column property="customerOrderCode" label="客户订单号"></el-table-column>
                 <el-table-column property="orderDate" label="订单日期"></el-table-column>
@@ -152,14 +158,14 @@
                 <el-table-column property="orderStatusName" label="订单状态"></el-table-column>
                 <el-table-column property="wareHouseName" label="仓库名称"></el-table-column>
                 <el-table-column property="baseName" label="基地名称"></el-table-column>
-                <el-table-column
-                        fixed="right"
-                        label="操作"
-                        width="100">
-                    <template scope="scope">
-                        <el-button @click="orderDetails" type="text" size="small">查看</el-button>
-                    </template>
-                </el-table-column>
+                <#--<el-table-column-->
+                        <#--fixed="right"-->
+                        <#--label="操作"-->
+                        <#--width="100">-->
+                    <#--<template scope="scope">-->
+                        <#--<el-button @click="orderDetails" type="text" size="small">查看</el-button>-->
+                    <#--</template>-->
+                <#--</el-table-column>-->
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
             </el-pagination>
@@ -306,14 +312,11 @@
                 this.customerPageSize=val;
                 this.selectCustomer();
             },
-            orderDetails:function () {
-                if(this.valiateSelectOrder()){
-                    var order=this.multipleSelection[0];
-                    var url = "/ofc/orderStorageInDetails/"+"?orderCode="+order.orderCode;
+            orderDetails:function (val) {
+                    var url = "/ofc/orderStorageInDetails/"+"?orderCode="+val;
                     var html = window.location.href;
                     var index = html.indexOf("/index#");
                     window.open(html.substring(0,index) + "/index#" + url);
-                }
             },
             handleCustomerCurrentPage:function(val) {
                 this.currentCustomerPage = val;
@@ -585,7 +588,7 @@
                     param.startDate=DateUtil.format(this.beginDate, "yyyy-MM-dd HH:mm:ss");
                 }
                 if(this.endDate){
-                    param.endDate = this.endDate.getFullYear()+"-"+this.endDate.getMonth()+"-"+this.endDate.getDate()+" 23:59:59";
+                    param.endDate = this.endDate.getFullYear()+"-"+(this.endDate.getMonth()+1)+"-"+this.endDate.getDate()+" 23:59:59";
                 }
                 param.pageNum = this.currentPage;
                 param.pageSize=this.pageSize;

@@ -377,6 +377,8 @@
           }else{
             callback();
           }
+        }else{
+            callback();
         }
       };
       return {
@@ -576,8 +578,8 @@
             { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
           ],
           driverContactNumber:[
-            {validator: checkPhoneOrMobile,trigger: 'blur'},
-            { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+            { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' },
+            {validator: checkPhoneOrMobile,trigger: 'blur'}
           ]
         }
       };
@@ -969,7 +971,7 @@
         ofcOrderDTOStr.supportCode=this.orderForm.supplierCode;//供应商编码
         ofcOrderDTOStr.warehouseName=this.wareHouseObj.warehouseName;//仓库名称
         ofcOrderDTOStr.warehouseCode=this.wareHouseObj.warehouseCode;//仓库编码
-        if(this.arriveTime){
+        if(this.orderForm.arriveTime){
           ofcOrderDTOStr.arriveTime=DateUtil.format(this.orderForm.arriveTime, "yyyy-MM-dd HH:mm:ss");
         }
         ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
@@ -1099,7 +1101,6 @@
                 });
       },
       submitForm:function(formName) {
-
           var _this = this;
         console.log("---")
         this.$refs[formName].validate(function(valid){
