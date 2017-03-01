@@ -2974,7 +2974,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
     /**
      * 订单自动审核
-     *
      * @param ofcFundamentalInformation 基本信息
      * @param goodsDetailsList          货品信息
      * @param ofcDistributionBasicInfo  运输信息
@@ -2996,7 +2995,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals("review")) {
             //创单接口订单和钉钉录单补充大区基地信息
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
-                    || StringUtils.equals(ofcFundamentalInformation.getOperator(), CreateOrderApiConstant.USER_NAME)) {
+                    || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
                 updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
             }
             String userName = authResDtoByToken.getUserName();
@@ -3256,6 +3255,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFaceOrder(ofcDistributionBasicInfo.getTransCode());//面单号
         tfcTransport.setCollectServiceCharge(ofcFinanceInformation.getCollectServiceCharge());
         tfcTransport.setLuggage(ofcFinanceInformation.getLuggage());
+        tfcTransport.setTransportType(ofcFundamentalInformation.getTransportType());
 //        tfcTransport.setTransportPool();//
 //        tfcTransport.setMatchingMode();//
 //        tfcTransport.setSchedulingState();//
