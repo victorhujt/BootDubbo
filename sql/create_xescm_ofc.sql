@@ -1,4 +1,5 @@
-SET FOREIGN_KEY_CHECKS = 0;
+SET FOREIGN_KEY_CHECKS=0;
+
 
 CREATE TABLE `ofc_attachment` (
   `serial_no` varchar(20) NOT NULL COMMENT '附件流水号',
@@ -13,7 +14,7 @@ CREATE TABLE `ofc_attachment` (
   `creator_id` varchar(32) DEFAULT NULL COMMENT '创建人id',
   `created_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
   `last_operator` varchar(50) DEFAULT NULL COMMENT '最后操作人',
-  `last_operator_id` varchar(32) DEFAULT NULL COMMENT '最后操作人id',
+  `last_operator_id` varchar(50) DEFAULT NULL COMMENT '最后操作人id',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新日期',
   `yn` int(11) DEFAULT '0' COMMENT '删除标识(1-已删除；0-未删除)',
   `pic_param` varchar(100) DEFAULT NULL COMMENT '图片操作命令',
@@ -29,8 +30,7 @@ CREATE TABLE `ofc_create_order_error_log` (
   `cust_code` varchar(255) DEFAULT '' COMMENT '货主编码',
   `error_log` varchar(1000) DEFAULT '' COMMENT '错误信息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=469 DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
-
+) ENGINE=InnoDB AUTO_INCREMENT=1414 DEFAULT CHARSET=utf8 COMMENT='对接鲜易网创建订单错误日志记录';
 
 CREATE TABLE `ofc_distribution_basic_info` (
   `trans_code` varchar(50) DEFAULT NULL COMMENT '运输单号',
@@ -55,9 +55,9 @@ CREATE TABLE `ofc_distribution_basic_info` (
   `pickup_time` datetime DEFAULT NULL COMMENT '取货时间',
   `expected_arrived_time` datetime DEFAULT NULL COMMENT '期望送货时间',
   `consignor_code` varchar(50) DEFAULT NULL COMMENT '发货方编码',
-  `consignor_name` varchar(100) DEFAULT NULL COMMENT '发货方名称',
+  `consignor_name` varchar(100) DEFAULT NULL,
   `consignee_code` varchar(50) DEFAULT NULL COMMENT '收货方编码',
-  `consignee_name` varchar(100) DEFAULT NULL COMMENT '收货方名称',
+  `consignee_name` varchar(100) DEFAULT NULL,
   `carrier_code` varchar(30) DEFAULT NULL COMMENT '承运商编码',
   `carrier_name` varchar(50) DEFAULT NULL COMMENT '承运商名称',
   `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
@@ -65,8 +65,8 @@ CREATE TABLE `ofc_distribution_basic_info` (
   `driver_name` varchar(30) DEFAULT NULL COMMENT '司机姓名',
   `contact_number` varchar(30) DEFAULT NULL COMMENT '联系电话',
   `creation_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `creator` varchar(20) DEFAULT NULL COMMENT '创建人员',
-  `operator` varchar(20) DEFAULT NULL COMMENT '操作人员',
+  `creator` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   `consignor_contact_name` varchar(250) DEFAULT NULL COMMENT '收货方联系人名称',
   `consignor_contact_code` varchar(250) DEFAULT NULL COMMENT '发货方联系人编码',
@@ -77,8 +77,8 @@ CREATE TABLE `ofc_distribution_basic_info` (
   `base_id` varchar(50) DEFAULT NULL COMMENT '基地ID(电商)',
   `consignor_contact_phone` varchar(250) DEFAULT NULL COMMENT '发货方联系人电话',
   `consignee_contact_phone` varchar(250) DEFAULT NULL COMMENT '收货方联系人电话',
-  `goods_type` varchar(20) DEFAULT NULL COMMENT '货品种类',
-  `goods_type_name` varchar(20) DEFAULT NULL COMMENT '货品种类名称',
+  `goods_type` varchar(20) DEFAULT NULL,
+  `goods_type_name` varchar(20) DEFAULT NULL,
   KEY `index:order_code` (`order_code`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单中心配送基本信息';
 
@@ -94,8 +94,8 @@ CREATE TABLE `ofc_finance_information` (
   `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
   `notes` varchar(300) DEFAULT NULL COMMENT '备注',
   `creation_time` datetime DEFAULT NULL COMMENT '创建日期',
-  `creator` varchar(20) DEFAULT NULL COMMENT '创建人员',
-  `operator` varchar(20) DEFAULT NULL COMMENT '操作人员',
+  `creator` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   `print_invoice` varchar(10) DEFAULT NULL COMMENT '是否打印发票(电商)',
   `buyer_payment_method` varchar(100) DEFAULT NULL COMMENT '买家支付方式(电商)',
@@ -142,10 +142,10 @@ CREATE TABLE `ofc_fundamental_information` (
   `finished_time` datetime DEFAULT NULL COMMENT '完成日期',
   `abolish_mark` int(1) DEFAULT NULL COMMENT '作废标记',
   `abolish_time` datetime DEFAULT NULL COMMENT '作废时间',
-  `abolisher` varchar(20) DEFAULT NULL COMMENT '作废人员',
+  `abolisher` varchar(50) DEFAULT NULL COMMENT '作废人',
   `creation_time` datetime DEFAULT NULL COMMENT '创建日期',
-  `creator` varchar(20) DEFAULT NULL COMMENT '创建人员',
-  `operator` varchar(20) DEFAULT NULL COMMENT '操作人员',
+  `creator` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   `sale_organization` varchar(100) DEFAULT NULL COMMENT '销售组织(众品SAP专用)',
   `product_group` varchar(100) DEFAULT NULL COMMENT '产品组(众品SAP专用)',
@@ -163,14 +163,18 @@ CREATE TABLE `ofc_fundamental_information` (
   `area_code` varchar(50) DEFAULT NULL COMMENT '大区编码',
   `area_name` varchar(50) DEFAULT NULL COMMENT '大区名称',
   PRIMARY KEY (`order_code`),
-  UNIQUE KEY `index:order_code` (`order_code`) USING BTREE
+  UNIQUE KEY `index:order_code` (`order_code`) USING BTREE,
+  KEY `ndex_order_time` (`order_time`),
+  KEY `index_base_code` (`base_code`) USING BTREE,
+  KEY `index_area_code` (`area_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单中心基本信息';
 
 
 CREATE TABLE `ofc_goods_details_info` (
+  `id` varchar(32) NOT NULL COMMENT '主键',
   `goods_code` varchar(30) DEFAULT NULL COMMENT '货品代码',
   `goods_name` varchar(1000) DEFAULT NULL COMMENT '货品名称',
-  `goods_spec` varchar(20) DEFAULT NULL COMMENT '货品规格',
+  `goods_spec` varchar(50) DEFAULT NULL COMMENT '货品规格',
   `unit` varchar(6) DEFAULT NULL COMMENT '单位',
   `quantity` decimal(18,2) DEFAULT NULL COMMENT '数量',
   `unit_price` decimal(18,2) DEFAULT NULL COMMENT '单价',
@@ -180,8 +184,8 @@ CREATE TABLE `ofc_goods_details_info` (
   `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
   `notes` varchar(300) DEFAULT NULL COMMENT '备注',
   `creation_time` datetime DEFAULT NULL COMMENT '创建日期',
-  `creator` varchar(20) DEFAULT NULL COMMENT '创建人员',
-  `operator` varchar(20) DEFAULT NULL COMMENT '操作人员',
+  `creator` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
   `weight` decimal(65,3) DEFAULT NULL COMMENT '重量',
   `cubage` decimal(65,3) DEFAULT NULL COMMENT '体积',
@@ -196,23 +200,22 @@ CREATE TABLE `ofc_goods_details_info` (
   `charging_ways` varchar(20) DEFAULT NULL COMMENT '计费方式',
   `charging_quantity` decimal(65,3) DEFAULT NULL COMMENT '计费数量',
   `charging_unit_price` decimal(18,2) DEFAULT NULL COMMENT '计费单价 ',
+  PRIMARY KEY (`id`),
   KEY `index_order_code` (`order_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货品明细信息';
-
-
 CREATE TABLE `ofc_merchandiser` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `merchandiser` varchar(30) DEFAULT NULL COMMENT '开单员名称',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`)
   UNIQUE KEY `index:merchandiser` (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COMMENT='开单员信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 COMMENT='开单员信息表';
 
 
 CREATE TABLE `ofc_mobile_order` (
   `mobile_order_code` varchar(30) NOT NULL COMMENT '流水号',
   `upload_date` datetime DEFAULT NULL COMMENT '上传日期',
   `dingding_account_no` varchar(30) DEFAULT NULL COMMENT '钉钉账号',
-  `operator` varchar(30) DEFAULT NULL COMMENT '开单员',
+  `operator` varchar(50) DEFAULT NULL COMMENT '开单员',
   `order_type` varchar(30) NOT NULL COMMENT '订单类型（默认值 60 运输订单）',
   `business_type` varchar(30) DEFAULT NULL COMMENT '业务类型 【602】-卡班    ,【601】－干线，【600】－城配',
   `tran_code` varchar(30) NOT NULL COMMENT '运输单号',
@@ -225,13 +228,26 @@ CREATE TABLE `ofc_mobile_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='拍照录单表';
 
 
+CREATE TABLE `ofc_order_newstatus` (
+  `order_code` varchar(30) NOT NULL DEFAULT '' COMMENT '订单编号',
+  `order_latest_status` varchar(30) DEFAULT NULL COMMENT '订单最新状态',
+  `status_update_time` datetime(3) DEFAULT NULL COMMENT '订单状态更新时间',
+  `status_create_time` datetime(3) DEFAULT NULL COMMENT '订单状态创建时间',
+  PRIMARY KEY (`order_code`),
+  KEY `index_order_code` (`order_code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划单最新状态表';
+
+
 CREATE TABLE `ofc_order_status` (
+  `id` varchar(32) NOT NULL COMMENT '主键',
   `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
   `order_status` varchar(20) DEFAULT NULL COMMENT '订单状态',
   `status_desc` varchar(255) DEFAULT NULL COMMENT '状态描述',
   `lasted_oper_time` datetime(3) DEFAULT NULL COMMENT '最近操作时间',
   `notes` varchar(255) DEFAULT NULL COMMENT '备注',
-  `operator` varchar(20) DEFAULT NULL COMMENT '操作人员',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
+  `creation_time` datetime DEFAULT NULL COMMENT '操作时间',
+  PRIMARY KEY (`id`),
   KEY `index:order_code` (`order_code`) USING HASH,
   KEY `index_order_code` (`order_code`),
   KEY `index_order_status` (`order_status`),
@@ -239,223 +255,6 @@ CREATE TABLE `ofc_order_status` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单中心订单状态';
 
 
-CREATE TABLE `ofc_planned_detail` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `goods_code` varchar(30) DEFAULT NULL COMMENT '货品代码',
-  `goods_name` varchar(1000) DEFAULT NULL COMMENT '货品名称',
-  `goods_spec` varchar(30) DEFAULT NULL COMMENT '货品规格',
-  `unit` varchar(30) DEFAULT NULL COMMENT '单位',
-  `quantity` decimal(18,2) DEFAULT NULL COMMENT '数量',
-  `real_quantity` decimal(18,2) DEFAULT NULL COMMENT '实发数量',
-  `unit_price` decimal(18,2) DEFAULT NULL COMMENT '单价',
-  `production_batch` varchar(30) DEFAULT NULL COMMENT '生产批次',
-  `production_time` datetime DEFAULT NULL COMMENT '生产日期',
-  `invalid_time` datetime DEFAULT NULL COMMENT '失效日期',
-  `weight` decimal(65,3) DEFAULT NULL COMMENT '重量',
-  `cubage` decimal(65,3) DEFAULT NULL COMMENT '体积',
-  `total_box` int(100) DEFAULT NULL COMMENT '合计标准箱',
-  `billing_weight` decimal(65,3) DEFAULT NULL COMMENT '记账重量',
-  KEY `index_plan_code` (`plan_code`) USING BTREE,
-  KEY `index_goods_code` (`goods_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='计划单明细表';
-
-
-CREATE TABLE `ofc_silopro_newstatus` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `job_new_status` varchar(30) DEFAULT NULL COMMENT '作业最新状态',
-  `job_status_update_time` datetime DEFAULT NULL COMMENT '作业状态更新时间',
-  KEY `index_plan_code` (`plan_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单最新状态表';
-
-
-CREATE TABLE `ofc_silopro_source_status` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `resource_allocation_status` varchar(30) DEFAULT NULL COMMENT '资源分配状态',
-  `service_provider_code` varchar(30) DEFAULT NULL COMMENT '服务商编码',
-  `service_provider_name` varchar(30) DEFAULT NULL COMMENT '服务商名称',
-  `service_provider_contact` varchar(30) DEFAULT NULL COMMENT '服务商联系人',
-  `service_provider_contact_phone` varchar(30) DEFAULT NULL COMMENT '服务商联系电话',
-  `resource_confirmation` varchar(30) DEFAULT NULL COMMENT '资源确认人员',
-  `resource_confirmation_time` datetime DEFAULT NULL COMMENT '资源确认时间',
-  `plate_number` varchar(30) DEFAULT NULL COMMENT '车牌号',
-  `driver_name` varchar(30) DEFAULT NULL COMMENT '司机姓名',
-  `contact_number` varchar(30) DEFAULT NULL COMMENT '司机联系电话',
-  `trans_code` varchar(30) DEFAULT NULL COMMENT '运输单号',
-  KEY `index_plan_code` (`plan_code`) USING BTREE,
-  KEY `index_order_code` (`order_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划资源状态表';
-
-
-CREATE TABLE `ofc_silopro_status` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `planned_single_state` varchar(30) DEFAULT NULL COMMENT '计划单状态',
-  `planned_start_time` datetime DEFAULT NULL COMMENT '计划开始时间',
-  `planned_completion_time` datetime DEFAULT NULL COMMENT '计划完成时间',
-  `task_start_time` datetime DEFAULT NULL COMMENT '任务开始时间',
-  `task_completion_time` datetime DEFAULT NULL COMMENT '任务完成时间',
-  KEY `index_plan_code` (`plan_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单状态表';
-
-
-CREATE TABLE `ofc_siloprogram_info` (
-  `plan_code` varchar(30) NOT NULL DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) NOT NULL DEFAULT '' COMMENT '订单编号',
-  `order_batch_number` varchar(30) DEFAULT NULL COMMENT '订单批次号',
-  `program_serial_number` varchar(30) DEFAULT NULL COMMENT '计划序号',
-  `business_type` varchar(20) DEFAULT NULL COMMENT '类型',
-  `document_type` varchar(30) DEFAULT NULL COMMENT '单据类型',
-  `order_time` datetime DEFAULT NULL COMMENT '日期',
-  `cust_code` varchar(50) DEFAULT NULL COMMENT '货主编码',
-  `warehouse_code` varchar(30) DEFAULT NULL COMMENT '仓库编码',
-  `warehouse_name` varchar(30) DEFAULT NULL COMMENT '仓库名称',
-  `estimated_time_of_delivery` datetime DEFAULT NULL COMMENT '出库发货时间',
-  `arrive_time` datetime DEFAULT NULL COMMENT '预计到达时间',
-  `loading_place` varchar(30) DEFAULT NULL COMMENT '装货地',
-  `unloading_place` varchar(30) DEFAULT NULL COMMENT '卸货地',
-  `delivery_place` varchar(30) DEFAULT NULL COMMENT '交货地',
-  `eceiving_platform` varchar(30) DEFAULT NULL COMMENT '收货月台',
-  `the_total_value_of` varchar(30) DEFAULT NULL COMMENT '总货值',
-  `support_code` varchar(30) DEFAULT NULL COMMENT '供应商编码',
-  `support_name` varchar(30) DEFAULT NULL COMMENT '供应商名称',
-  `notes` varchar(200) DEFAULT NULL COMMENT '备注',
-  `consignee_code` varchar(30) DEFAULT NULL COMMENT '收货方编码',
-  `consignee_name` varchar(30) DEFAULT NULL COMMENT '收货方名称',
-  `consignee_contact` varchar(30) DEFAULT NULL COMMENT '收货方联系人',
-  `consignee_contact_phone` varchar(30) DEFAULT NULL COMMENT '收货方联系电话',
-  `consignee_fax` varchar(30) DEFAULT NULL COMMENT '收货方传真',
-  `consignee_email` varchar(30) DEFAULT NULL COMMENT '收货方Email',
-  `consignee_post_code` varchar(30) DEFAULT NULL COMMENT '收货方邮编',
-  `consignee_province` varchar(30) DEFAULT NULL COMMENT '收货方省',
-  `consignee_city` varchar(30) DEFAULT NULL COMMENT '收货方市',
-  `consignee_district_and_county` varchar(30) DEFAULT NULL COMMENT '收货方区县',
-  `consignee_township_streets` varchar(30) DEFAULT NULL COMMENT '收货方乡镇街道',
-  `consignee_address` varchar(30) DEFAULT NULL COMMENT '收货方地址',
-  `print_invoice` varchar(30) DEFAULT NULL COMMENT '是否打印发票',
-  `buyer_payment_method` varchar(30) DEFAULT NULL COMMENT '支付方式',
-  `order_amount` varchar(30) DEFAULT NULL COMMENT '订单金额',
-  `collect_flag` varchar(30) DEFAULT NULL COMMENT '是否货到付款',
-  `insure` varchar(30) DEFAULT NULL COMMENT '是否保价',
-  `insure_value` varchar(30) DEFAULT NULL COMMENT '保价金额',
-  `warehouse_number` varchar(30) DEFAULT NULL COMMENT '仓储作业单号',
-  `service_charge` varchar(30) DEFAULT NULL COMMENT '服务费用',
-  `creation_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `create_personnel` varchar(30) DEFAULT NULL COMMENT '创建人员',
-  `merchandiser` varchar(20) DEFAULT NULL COMMENT '开单员',
-  `void_personnel` varchar(30) DEFAULT NULL COMMENT '作废人员',
-  `void_time` datetime DEFAULT NULL COMMENT '作废时间',
-  PRIMARY KEY (`plan_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储计划单信息表';
-
-
-CREATE TABLE `ofc_transplan_info` (
-  `plan_code` varchar(30) NOT NULL DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) NOT NULL DEFAULT '' COMMENT '订单编号',
-  `order_batch_number` varchar(30) DEFAULT NULL COMMENT '订单批次号',
-  `program_serial_number` varchar(30) DEFAULT NULL COMMENT '计划序号',
-  `business_type` varchar(20) DEFAULT NULL COMMENT '类型',
-  `order_time` datetime DEFAULT NULL COMMENT '日期',
-  `cust_code` varchar(50) DEFAULT NULL COMMENT '货主编码',
-  `pickup_time` datetime DEFAULT NULL COMMENT '预计发货时间',
-  `expected_arrived_time` datetime DEFAULT NULL COMMENT '预计到达时间',
-  `weight` decimal(18,3) DEFAULT NULL COMMENT '重量',
-  `quantity` decimal(18,3) DEFAULT NULL COMMENT '数量',
-  `volume` decimal(18,3) DEFAULT NULL COMMENT '体积',
-  `money` decimal(18,3) DEFAULT NULL COMMENT '金额',
-  `shippin_customer_code` varchar(50) DEFAULT NULL COMMENT '发货客户代码',
-  `shipping_address` varchar(30) DEFAULT NULL COMMENT '发货客户地址',
-  `shipping_customer_contact` varchar(30) DEFAULT NULL COMMENT '发货客户联系人',
-  `customer_contact_phone` varchar(30) DEFAULT NULL COMMENT '发货客户联系电话',
-  `departure_province` varchar(30) DEFAULT NULL COMMENT '出发省份',
-  `departure_city` varchar(30) DEFAULT NULL COMMENT '出发城市',
-  `departure_district` varchar(30) DEFAULT NULL COMMENT '出发区县',
-  `departure_towns` varchar(30) DEFAULT NULL COMMENT '出发乡镇',
-  `departure_place_code` varchar(255) DEFAULT NULL COMMENT '出发地区域编码',
-  `receiving_customer_code` varchar(50) DEFAULT NULL COMMENT '收货客户代码',
-  `receiving_customer_address` varchar(30) DEFAULT NULL COMMENT '收货客户地址',
-  `receiving_customer_contact` varchar(30) DEFAULT NULL COMMENT '收货客户联系人',
-  `receiving_customer_contact_phone` varchar(30) DEFAULT NULL COMMENT '收货客户联系电话',
-  `destination_province` varchar(30) DEFAULT NULL COMMENT '目的省份',
-  `destination_city` varchar(30) DEFAULT NULL COMMENT '目的城市',
-  `destination_district` varchar(30) DEFAULT NULL COMMENT '目的区县',
-  `destination_town` varchar(30) DEFAULT NULL COMMENT '目的乡镇',
-  `destination_code` varchar(255) DEFAULT NULL COMMENT '目的地区域编码',
-  `receiving_address_longitude` varchar(30) DEFAULT NULL COMMENT '收货地址经度',
-  `receiving_address_latitude` varchar(30) DEFAULT NULL COMMENT '收货地址纬度',
-  `notes` varchar(200) DEFAULT NULL COMMENT '备注',
-  `sale_organization` varchar(30) DEFAULT NULL COMMENT '销售组织',
-  `product_group` varchar(30) DEFAULT NULL COMMENT '产品组',
-  `sale_department` varchar(30) DEFAULT NULL COMMENT '销售部门',
-  `sale_group` varchar(30) DEFAULT NULL COMMENT '销售组',
-  `sale_department_desc` varchar(200) DEFAULT NULL COMMENT '销售部门描述',
-  `sale_group_desc` varchar(200) DEFAULT NULL COMMENT '销售组描述',
-  `single_source_of_transport` varchar(30) DEFAULT NULL COMMENT '运输单来源',
-  `service_charge` decimal(18,2) DEFAULT NULL COMMENT '服务费用',
-  `base_id` varchar(50) DEFAULT NULL COMMENT '基地ID(电商)',
-  `creation_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `create_personnel` varchar(30) DEFAULT NULL COMMENT '创建人员',
-  `void_personnel` varchar(30) DEFAULT NULL COMMENT '作废人员',
-  `void_time` datetime DEFAULT NULL COMMENT '作废时间',
-  `shippin_customer_name` varchar(50) DEFAULT NULL COMMENT '发货客户名称',
-  `receiving_customer_name` varchar(50) DEFAULT NULL COMMENT '收货客户名称',
-  `merchandiser` varchar(20) DEFAULT NULL COMMENT '开单员',
-  `transport_type` varchar(20) DEFAULT NULL COMMENT '运输类型',
-  `base_name` varchar(50) DEFAULT NULL COMMENT '基地名称(电商)',
-  `cust_name` varchar(50) DEFAULT NULL COMMENT '货主名称',
-  `goods_type` varchar(20) DEFAULT NULL COMMENT '货品种类',
-  `goods_type_name` varchar(20) DEFAULT NULL COMMENT '货品种类名称',
-  `two_distribution` varchar(10) DEFAULT '' COMMENT '是否二次配送',
-  PRIMARY KEY (`plan_code`),
-  KEY `index_order_code` (`order_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划单信息表';
-
-
-CREATE TABLE `ofc_transplan_newstatus` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `transport_single_latest_status` varchar(30) DEFAULT NULL COMMENT '运输单最新状态',
-  `transport_single_update_time` datetime DEFAULT NULL COMMENT '运输单更新时间',
-  `operator` varchar(30) DEFAULT NULL COMMENT '操作人',
-  `location` varchar(30) DEFAULT NULL COMMENT '当前位置',
-  `temperature` varchar(30) DEFAULT NULL COMMENT '当前温度',
-  `humidity` varchar(30) DEFAULT NULL COMMENT '当前湿度',
-  `oper_unit` varchar(30) DEFAULT NULL COMMENT '操作单位',
-  `description` varchar(300) DEFAULT NULL COMMENT '描述信息',
-  KEY `index_plan_code` (`plan_code`) USING BTREE,
-  KEY `index_order_code` (`order_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划单最新状态表';
-
-
-CREATE TABLE `ofc_transplan_status` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `planned_single_state` varchar(30) DEFAULT NULL COMMENT '计划单状态',
-  `planned_start_time` datetime DEFAULT NULL COMMENT '计划开始时间',
-  `planned_completion_time` datetime DEFAULT NULL COMMENT '计划完成时间',
-  `task_start_time` datetime DEFAULT NULL COMMENT '任务开始时间',
-  `task_completion_time` datetime DEFAULT NULL COMMENT '任务完成时间',
-  KEY `index_plan_code` (`plan_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划单状态表';
-
-
-CREATE TABLE `ofc_traplan_source_status` (
-  `plan_code` varchar(30) DEFAULT '' COMMENT '计划单编号',
-  `order_code` varchar(30) DEFAULT '' COMMENT '订单编号',
-  `resource_allocation_status` varchar(30) DEFAULT NULL COMMENT '资源分配状态',
-  `service_provider_code` varchar(30) DEFAULT NULL COMMENT '服务商编码',
-  `service_provider_name` varchar(30) DEFAULT NULL COMMENT '服务商名称',
-  `service_provider_contact` varchar(30) DEFAULT NULL COMMENT '服务商联系人',
-  `service_provider_contact_phone` varchar(30) DEFAULT NULL COMMENT '服务商联系电话',
-  `resource_confirmation` varchar(30) DEFAULT NULL COMMENT '资源确认人员',
-  `resource_confirmation_time` datetime DEFAULT NULL COMMENT '资源确认时间',
-  `plate_number` varchar(30) DEFAULT NULL COMMENT '车牌号',
-  `driver_name` varchar(30) DEFAULT NULL COMMENT '司机姓名',
-  `contact_number` varchar(30) DEFAULT NULL COMMENT '司机联系电话',
-  `trans_code` varchar(30) DEFAULT NULL COMMENT '运输单号',
-  KEY `index_plan_code` (`plan_code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='运输计划资源状态表';
 
 
 CREATE TABLE `ofc_warehouse_information` (
@@ -464,16 +263,16 @@ CREATE TABLE `ofc_warehouse_information` (
   `provide_transport` int(1) DEFAULT NULL COMMENT '是否需要提供运输',
   `shipment_time` datetime DEFAULT NULL COMMENT '出库发货时间',
   `arrive_time` datetime DEFAULT NULL COMMENT '入库预计到达时间',
-  `warehouse_name` varchar(50) DEFAULT '' COMMENT '仓库名称',
+  `warehouse_name` varchar(30) DEFAULT '' COMMENT '仓库名称',
   `plate_number` varchar(20) DEFAULT NULL COMMENT '车牌号',
   `driver_name` varchar(20) DEFAULT NULL COMMENT '司机姓名',
   `contact_number` varchar(50) DEFAULT NULL COMMENT '联系电话',
   `order_code` varchar(30) DEFAULT NULL COMMENT '订单编号',
   `creation_time` datetime DEFAULT NULL COMMENT '创建日期',
-  `creator` varchar(20) DEFAULT NULL COMMENT '创建人',
-  `operator` varchar(20) DEFAULT NULL COMMENT '操作人',
+  `creator` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `operator` varchar(50) DEFAULT NULL COMMENT '操作人',
   `oper_time` datetime DEFAULT NULL COMMENT '操作时间',
-  `warehouse_code` varchar(50) DEFAULT NULL COMMENT '仓库编码',
+  `warehouse_code` varchar(30) DEFAULT NULL COMMENT '仓库编码',
   KEY `index:order_code` (`order_code`) USING HASH,
   KEY `index_order_code` (`order_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓配信息表';
