@@ -401,7 +401,7 @@
 
 
   <resultMap id="OfcBatchOrderMap" type="com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo" >
-    <result column="orderCode" property="order_code" jdbcType="VARCHAR" />
+    <result column="orderCode" property="orderCode" jdbcType="VARCHAR" />
     <result column="batch_order_number" property="batchOrderNumber" jdbcType="VARCHAR" />
     <result column="cust_name" property="custName" jdbcType="VARCHAR" />
     <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />

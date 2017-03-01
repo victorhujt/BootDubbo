@@ -17,8 +17,6 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
 
     String getOrderCodeByCustOrderCodeAndCustCode(String custOrderCode, String custCode);
 
-    OfcBatchOrderVo queryByBatchNumber(String orderBatchNumber);
-
     OfcFundamentalInformation queryDataByCustOrderCode(String custOrderCode);
 
     OfcFundamentalInformation getLastMerchandiser(String operatorName);

@@ -73,11 +73,4 @@ public class OfcOrderStatus {
         this.id = id;
     }
 
-    /**
-     * 创建时间
-     */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS",timezone = "GMT+8")
-    @Column(name = "creation_time")
-    private String creationTime;
 }

@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
 
@@ -261,7 +262,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             }catch (Exception e){
                 throw new BusinessException(e.getMessage(), e);
             }
-        }
+        }*/
         return null;
     }
 
@@ -377,8 +378,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     @Override
     public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName) {
         //根据订单号获取订单及状态
-        String transPortNo= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
-        String status= PubUtils.trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
+        String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
+        String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
         Date traceTime = ofcPlanFedBackCondition.getTraceTime();
         try{
             if(transPortNo.equals("")){
@@ -398,11 +399,11 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 throw new BusinessException("传送运输单号信息失败，查不到相关订单");
             }
 
-            String destination= new StringBuilder().append(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationDistrict()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()))
-                    .append(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))
+            String destination= new StringBuilder().append(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()))
+                    .append(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()))
+                    .append(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationDistrict()))
+                    .append(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()))
+                    .append(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestination()))
                     .toString();
             logger.info("######发货方目的地为：{}",destination);
 
@@ -514,8 +515,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedbackNew(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName) {
         for(int i=0;i<ofcSchedulingSingleFeedbackCondition.getOrderCode().size();i++){
             //注意，运输单号即是订单号
-            String transPortNo= PubUtils.trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getOrderCode().get(i));
-            if(transPortNo.equals("") || !PubUtils.trimAndNullAsEmpty(transPortNo).startsWith(ORDER_PRE)){
+            String transPortNo= trimAndNullAsEmpty(ofcSchedulingSingleFeedbackCondition.getOrderCode().get(i));
+            if(transPortNo.equals("") || !trimAndNullAsEmpty(transPortNo).startsWith(ORDER_PRE)){
                 throw new BusinessException("运输订单号为空或者格式不正确");
             }
             if(ofcSchedulingSingleFeedbackCondition.getDeliveryNo().equals("")){
@@ -532,15 +533,15 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             StringBuilder info=new StringBuilder("订单");
             String tag="";
             info.append("调度完成");
-            if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()).equals("")){
+            if(trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()).equals("")){
                 ofcDistributionBasicInfo.setPlateNumber(ofcSchedulingSingleFeedbackCondition.getVehical());
             }
             info.append("，安排车辆车牌号：【").append(ofcSchedulingSingleFeedbackCondition.getVehical()).append("】");
-            if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()).equals("")){
+            if(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()).equals("")){
                 ofcDistributionBasicInfo.setDriverName(ofcSchedulingSingleFeedbackCondition.getDriver());
             }
             info.append("，司机姓名：【").append(ofcSchedulingSingleFeedbackCondition.getDriver()).append("】");
-            if(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")){
+            if(trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")){
                 ofcDistributionBasicInfo.setContactNumber(ofcSchedulingSingleFeedbackCondition.getTel());
             }
             info.append("，联系电话：【").append(ofcSchedulingSingleFeedbackCondition.getTel()).append("】");
@@ -571,12 +572,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 if (status != null) {
                     String statusNote = status.getNotes();
                     if (!PubUtils.isSEmptyOrNull(statusNote)) {
-                        if (PubUtils.trimAndNullAsEmpty(position).equals("start")) {
+                        if (trimAndNullAsEmpty(position).equals("start")) {
                             if (statusNote.startsWith(msg)) {
                                 flag = true;
                                 break;
                             }
-                        } else if (PubUtils.trimAndNullAsEmpty(position).equals("end")) {
+                        } else if (trimAndNullAsEmpty(position).equals("end")) {
                             if (statusNote.endsWith(msg)) {
                                 flag = true;
                                 break;

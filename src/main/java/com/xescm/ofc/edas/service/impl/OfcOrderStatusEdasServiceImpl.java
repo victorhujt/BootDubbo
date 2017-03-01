@@ -29,7 +29,7 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
     @Resource
     private CreateOrderService createOrderService;
 
-    @Autowired
+    @Resource
     private OfcOrderNewstatusService OfcOrderNewstatusService;
 
     @Override

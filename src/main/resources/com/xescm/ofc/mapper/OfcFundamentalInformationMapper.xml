@@ -257,7 +257,7 @@
     FROM
     ofc_fundamental_information ofi
     WHERE
-    ofi.cust_order_code = #{custOrderCode, jdbcType = "VARCHAR"}
+    ofi.cust_order_code = #{custOrderCode}
   </select>
 
 </mapper>

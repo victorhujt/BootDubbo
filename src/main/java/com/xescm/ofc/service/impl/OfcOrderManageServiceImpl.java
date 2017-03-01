@@ -78,7 +78,6 @@ import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -1168,7 +1167,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * 客户中心订单取消
      *
      * @param orderCode         订单编号
-     * @param orderStatus       订单状态
      * @param authResDtoByToken 权限token
      * @return String
      */
@@ -1178,9 +1176,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if(orderStatus==null){
             throw new BusinessException("订单没有任何状态");
         }
-        if((!PubUtils.trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(PENDINGAUDIT))
-                && (!PubUtils.trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(HASBEENCOMPLETED))
-                && (!PubUtils.trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(HASBEENCANCELED))){
+        if((!PubUtils.trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(PENDING_AUDIT))
+                && (!PubUtils.trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(HASBEEN_COMPLETED))
+                && (!PubUtils.trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(HASBEEN_CANCELED))){
             StringBuilder notes = new StringBuilder();
 
 //            planCancle(orderCode,authResDtoByToken.getUserName());
@@ -2720,7 +2718,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
          if(PubUtils.trimAndNullAsEmpty(reviewTag).equals("save")){
              ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode("SO", 6));
          }
-        ofcFundamentalInformation.setAbolishMark(ORDERWASNOTABOLISHED);//未作废
+        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         //货品数量
         BigDecimal goodsAmountCount = new BigDecimal(0);
         //保存货品明细
@@ -2847,7 +2845,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 OfcWarehouseInformation c=new OfcWarehouseInformation();
                 c.setOrderCode(ofcFundamentalInformation.getOrderCode());
                 OfcWarehouseInformation owinfo=ofcWarehouseInformationService.selectOne(c);
-                if(owinfo.getProvideTransport()==WAREHOUSEORDERNOTPROVIDETRANS){//编辑时将不提供运输修改为提供运输
+                if(owinfo.getProvideTransport()==WAREHOUSE_NO_TRANS){//编辑时将不提供运输修改为提供运输
                     //配送基本信息
                     ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
                     ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
@@ -2916,107 +2914,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
-    /**
-     * 仓储订单的取消操作
-     * @param orderCode
-     * @param orderStatus
-     * @param authResDtoByToken
-     * @return
-     */
-    @Override
-    public String orderStorageCancel(String orderCode, String orderStatus, AuthResDto authResDtoByToken) {
-        if((!PubUtils.trimAndNullAsEmpty(orderStatus).equals(PENDING_AUDIT))
-                && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEEN_COMPLETED))
-                && (!PubUtils.trimAndNullAsEmpty(orderStatus).equals(HASBEEN_CANCELED))){
-            StringBuilder notes = new StringBuilder();
-            OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-            ofcOrderStatus.setOrderCode(orderCode);
-            ofcOrderStatus.setOrderStatus(HASBEEN_CANCELED);
-            ofcOrderStatus.setStatusDesc("已取消");
-            notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
-            notes.append(" 订单已取消");
-            notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
-            notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
-            ofcOrderStatus.setNotes(notes.toString());
-            ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
-            ofcOrderStatus.setLastedOperTime(new Date());
-
-            //取消的订单推送到结算中心进行结算取消--hiyond date:2016-12-23
-            OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
-            ofcDistributionBasicInfo.setOrderCode(orderCode);
-            ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
-
-            OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
-            ofcWarehouseInformation.setOrderCode(orderCode);
-            ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
-
-            //作废订单
-            OfcFundamentalInformation ofcFundamentalInformation=new OfcFundamentalInformation();
-            ofcFundamentalInformation.setOrderCode(orderCode);
-            ofcFundamentalInformation = ofcFundamentalInformationService.selectOne(ofcFundamentalInformation);
-            if(ofcWarehouseInformation!=null){
-                if(ofcWarehouseInformation.getProvideTransport()==WEARHOUSE_WITH_TRANS){
-                    //调运输中心的取消接口
-                    //调仓储中心的取消接口
-                    OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
-                    cancelOrderDTO.setOrderNo(orderCode);
-                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
-                        //出库
-                        cancelOrderDTO.setBillType("RK");
-                    }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
-                        //入库
-                        cancelOrderDTO.setBillType("CK");
-                    }
-                    Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
-                    if(response.getCode()!=Wrapper.SUCCESS_CODE){
-                        throw new BusinessException(response.getMessage());
-                    }
-
-                }else if(ofcWarehouseInformation.getProvideTransport()==WAREHOUSE_NO_TRANS){
-                    //调仓储中心的取消接口
-                    OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
-                    cancelOrderDTO.setOrderNo(orderCode);
-                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
-                        //出库
-                        cancelOrderDTO.setBillType("RK");
-                    }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
-                        //入库
-                        cancelOrderDTO.setBillType("CK");
-                    }
-                    Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
-                    if(response.getCode()!=Wrapper.SUCCESS_CODE){
-                        throw new BusinessException(response.getMessage());
-                    }
-                }else{
-                    throw new BusinessException("无法确定仓储订单是否提供运输");
-                }
-            }
-
-
-            ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
-            ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
-            ofcFundamentalInformation.setOperTime(new Date());
-            ofcFundamentalInformation.setAbolisher(authResDtoByToken.getUserId());
-            ofcFundamentalInformation.setAbolisherName(authResDtoByToken.getUserName());
-            ofcFundamentalInformation.setAbolishMark(1);//表明已作废
-            ofcFundamentalInformation.setAbolishTime(ofcFundamentalInformation.getOperTime());
-            ofcFundamentalInformationService.update(ofcFundamentalInformation);
-
-            if(ofcDistributionBasicInfo != null){
-                CancelAcOrderDto cancelOfcOrderDto = new CancelAcOrderDto();
-                cancelOfcOrderDto.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                cancelOfcOrderDto.setTransCode(ofcDistributionBasicInfo.getTransCode());
-                Wrapper<?> wrapper = acOrderEdasService.cancelOfcOrder(cancelOfcOrderDto);
-                if(wrapper == null) {
-                    logger.info("取消订单推送到结算中心,code:{},message:{},返回信息:{},", wrapper.getCode(), wrapper.getMessage(), ToStringBuilder.reflectionToString(wrapper.getResult()));
-                }
-            }
-            ofcOrderStatusService.save(ofcOrderStatus);
-            return String.valueOf(Wrapper.SUCCESS_CODE);
-        }else {
-            throw new BusinessException("计划单状态不在可取消范围内");
-        }
-    }
 
     /**
      * 订单的复制

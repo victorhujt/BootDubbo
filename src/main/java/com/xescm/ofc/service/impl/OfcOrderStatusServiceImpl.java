@@ -241,11 +241,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             OfcOrderStatus orderStatus=orderStatusSelect(orderCode,"orderCode");
             OfcOrderStatus status=new OfcOrderStatus();
             if(orderStatus!=null){
-                if(HASBEENCOMPLETED.equals(orderStatus.getOrderStatus())){
+                if(HASBEEN_COMPLETED.equals(orderStatus.getOrderStatus())){
                     throw new BusinessException("订单已经完成");
                 }
 
-                if(HASBEENCANCELED.equals(orderStatus.getOrderStatus())){
+                if(HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())){
                     throw new BusinessException("订单已经取消");
                 }
 
@@ -268,15 +268,15 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     status.setOrderCode(orderCode);
                     if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                         if("出库完毕".equals(statusDesc)){
-                          if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSEORDERNOTPROVIDETRANS){
-                              status.setOrderStatus(HASBEENCOMPLETED);
+                          if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WEARHOUSE_WITH_TRANS){
+                              status.setOrderStatus(HASBEEN_COMPLETED);
                               save(status);
                             }
                             super.save(status);
                         }
                     }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
                         if("入库完毕".equals(statusDesc)){
-                            status.setOrderStatus(HASBEENCOMPLETED);
+                            status.setOrderStatus(HASBEEN_COMPLETED);
                             save(status);
                         }else{
                             super.save(status);
