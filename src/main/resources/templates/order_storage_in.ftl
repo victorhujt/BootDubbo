@@ -367,7 +367,7 @@
           callback();
         }
       };
-      var checkPhone = function(rule, value, callback) {
+      var checkPhoneOrMobile = function(rule, value, callback) {
         if(value!==""){
           var mp=/^1\d{10}$/;
           var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
@@ -378,9 +378,9 @@
             callback();
           }
         }else{
-          return callback(new Error('联系电话不能为空'));
+            callback();
         }
-      }
+      };
       return {
         activeNames:'',
         wareHouseObj:'',
@@ -578,8 +578,8 @@
             { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
           ],
           driverContactNumber:[
-            {validator: checkPhone,trigger: 'blur'},
-            { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+            { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' },
+            {validator: checkPhoneOrMobile,trigger: 'blur'}
           ]
         }
       };
@@ -971,7 +971,7 @@
         ofcOrderDTOStr.supportCode=this.orderForm.supplierCode;//供应商编码
         ofcOrderDTOStr.warehouseName=this.wareHouseObj.warehouseName;//仓库名称
         ofcOrderDTOStr.warehouseCode=this.wareHouseObj.warehouseCode;//仓库编码
-        if(this.arriveTime){
+        if(this.orderForm.arriveTime){
           ofcOrderDTOStr.arriveTime=DateUtil.format(this.orderForm.arriveTime, "yyyy-MM-dd HH:mm:ss");
         }
         ofcOrderDTOStr.plateNumber=this.orderForm.plateNumber;
@@ -1101,7 +1101,6 @@
                 });
       },
       submitForm:function(formName) {
-
           var _this = this;
         console.log("---")
         this.$refs[formName].validate(function(valid){

@@ -179,6 +179,8 @@ public class TfcTransport implements Serializable {
      */
     private BigDecimal collectServiceCharge;
 
+    private String transportType;
+
     public String getCustomerOrderCode() {
         return customerOrderCode;
     }
@@ -809,5 +811,13 @@ public class TfcTransport implements Serializable {
 
     public void setCollectServiceCharge(BigDecimal collectServiceCharge) {
         this.collectServiceCharge = collectServiceCharge;
+    }
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
     }
 }
