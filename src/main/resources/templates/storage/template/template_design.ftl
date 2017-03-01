@@ -8,7 +8,7 @@
         <el-dialog title="设置列默认值" v-model="colDefaultValDia" size="small">
            <el-form :model="colDefaultValModel" label-width="120px">
              <div class="xe-block">
-               <el-form-item label="订单名称" class="xe-col-2">
+               <el-form-item label="订单日期" class="xe-col-2">
                  <el-input v-model="colDefaultValModel.orderTime"  placeholder="请输入内容"></el-input>
                </el-form-item>
              </div>

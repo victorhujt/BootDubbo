@@ -253,7 +253,7 @@
   </select>
   <select id="checkCustOrderCodeRepeat" resultType="java.lang.Integer">
     SELECT
-    COUNT (1)
+    COUNT(ofi.order_code)
     FROM
     ofc_fundamental_information ofi
     WHERE
