@@ -21,6 +21,7 @@ import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcStorageTemplateService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
@@ -63,6 +64,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private CscContactEdasService cscContactEdasService;
     @Resource
     private CscGoodsEdasService cscGoodsEdasService;
+    @Resource
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
     private OfcStorageTemplateMapper ofcStorageTemplateMapper;
     @Resource
@@ -268,14 +271,18 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<String, CscContantAndCompanyResponseDto> consigneeCheck = new HashMap<>();
         boolean requiredField = true;
         //去RMC查到所有仓库
-        Map<String, RmcWarehouseRespDto> allWarehouseByRmc =  this.getAllWarehouseByRmc();
+        Map<String, RmcWarehouseRespDto> allWarehouseByRmc =  this.getAllWarehouseByCustCode(ofcStorageTemplate.getCustCode());
         try {
             clazz = Class.forName("com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto");
         } catch (ClassNotFoundException e) {
             logger.error("校验Excel,ClassNotFoundException:{}",e);
         }
         int numberOfSheets = workbook.getNumberOfSheets();
+        //必填列列号
         Map<Integer, String> requiedItemIndex = new HashMap<>();
+        //有用列
+        List<String> usefulCol = new ArrayList<>();
+
         //遍历sheet
         for (int sheetNum = 0; sheetNum < numberOfSheets; sheetNum ++) {
 
@@ -349,6 +356,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             continue;
                         }
                         modelNameStr.put(cellNum + 1,ofcStorageTemplateForReflect);
+                        String usefulColName = cellValue;
+                        String usefulColCode = ofcStorageTemplateForReflect.getStandardColCode();
+                        usefulCol.add(usefulColName + "@" + usefulColCode);
                     }else if(rowNum > 0) { // 表格的数据体
                         OfcStorageTemplate ofcStorageTemplateForCheck = modelNameStr.get(cellNum + 1);
                         if(null == ofcStorageTemplateForCheck){
@@ -700,9 +710,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.error("当前Excel校验出错!");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "当前Excel校验出错", xlsErrorMsg);
         }
-
+        logger.info("当前Excel校验成功!");
         //校验成功!
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ofcStorageTemplateDtoList);
+        //ofcStorageTemplateDtoList 用来下单用的
+        //然后堆一个
+        List<Object> succeedResult = new ArrayList<>();
+        succeedResult.add(usefulCol);
+        succeedResult.add(ofcStorageTemplateDtoList);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
     }
 
     /**
@@ -738,11 +753,16 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     /**
      * @return key : 仓库名称, value : 仓库信息
+     * @param custCode 客户编码
      */
-    private Map<String,RmcWarehouseRespDto> getAllWarehouseByRmc() {
-        List<RmcWarehouseRespDto> rmcWarehouseRespDtos = this.allWarehouseByRmc();
+    private Map<String,RmcWarehouseRespDto> getAllWarehouseByCustCode(String custCode) {
+        if(PubUtils.isSEmptyOrNull(custCode)){
+            logger.error("仓储批量导单抓取当前客户下的仓库失败, 入参为空!");
+            throw new BusinessException("仓储批量导单抓取当前客户下的仓库失败");
+        }
+        List<RmcWarehouseRespDto> rmcWarehouseByCustCode  = ofcWarehouseInformationService.getWarehouseListByCustCode(custCode);
         Map<String, RmcWarehouseRespDto> map = new HashMap<>();
-        for (RmcWarehouseRespDto rmcWarehouseRespDto : rmcWarehouseRespDtos) {
+        for (RmcWarehouseRespDto rmcWarehouseRespDto : rmcWarehouseByCustCode) {
             map.put(rmcWarehouseRespDto.getWarehouseName(), rmcWarehouseRespDto);
         }
         return map;

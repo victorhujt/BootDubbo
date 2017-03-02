@@ -11,6 +11,7 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
+import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
@@ -277,9 +278,8 @@ public class OfcStorageTemplateRest extends BaseController{
                 List<String> errorMsg = (List<String>) checkResult.getResult();
                 result =  WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),errorMsg);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
-                Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
-                String resultJson = JacksonUtil.toJsonWithFormat(resultMap);
-                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJson);
+                List<Object> resultList = (List<Object>) checkResult.getResult();
+                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultList);
             }
         } catch (BusinessException e) {
             logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);

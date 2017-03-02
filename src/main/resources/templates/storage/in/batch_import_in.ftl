@@ -44,8 +44,28 @@
             <el-table-column
                     property="errorMsg"
                     label="错误信息">
+
             </el-table-column>
         </el-table>
+
+        <el-table
+                :data="orderTableData"
+                v-if="orderMsgShow"
+                highlight-current-row
+                border
+                style="width: 100%">
+            <el-table-column
+                    type="index"
+                    label="序号">
+            </el-table-column>
+            <el-table-column
+                    v-for="item in orderTableHeads"
+                    :property="item.propertyCode"
+                    :label="item.propertyName">
+
+            </el-table-column>
+        </el-table>
+
     </div>
 
 
@@ -101,6 +121,9 @@
     var Main = {
         data() {
             return {
+                orderTableHeads:[],
+                orderTableData:[],
+                orderMsgShow:false,
                 tableData:[],
                 errorMsgShow:false,
                 uploadParam:{},
@@ -125,12 +148,12 @@
                 fileList = [];
             },
             handlePreview(file) {
-                console.log(file);
             },
             handleSuccess(response, file, fileList) {
                 var vm = this;
                 if(response.code == 500) {
                     vm.errorMsgShow = true;
+                    vm.orderMsgShow = false;
                     layer.msg(response.message);
                     vm.fileList = [];
                     var tableData = vm.tableData = [];
@@ -144,10 +167,38 @@
                     vm.fileList = [];
                     layer.msg(response.message);
                     vm.tableData = [];
+                    vm.orderMsgShow = false;
                 }else if(response.code == 200) {
-                    vm.tableData = [];
+                    var tableData = vm.orderTableData = [];
                     layer.msg(response.message);
                     vm.errorMsgShow = false;
+                    debugger;
+                    var tableHeadMsg = response.result[0];
+                    var orderMsg = response.result[1];
+                    var headData = vm.orderTableHeads = [];
+                    vm.orderMsgShow = true;
+
+                    $.each(tableHeadMsg, function (index, itemIn) {
+                        var items = itemIn.split('@');
+                        var propertyName = items[0];
+                        var propertyCode = items[1];
+                        var head = {};
+                        head.propertyName = propertyName;
+                        head.propertyCode = propertyCode;
+                        headData.push(head);
+                    });
+
+                    $.each(orderMsg, function (indexOut, itemOut) {
+                        var tableRow = {};
+                        $.each(tableHeadMsg, function (indexIn, itemIn) {
+                            var items = itemIn.split('@');
+                            var propertyName = items[0];
+                            var propertyCode = items[1];
+                            tableRow[propertyCode] = itemOut[propertyCode];
+                        });
+                        tableData.push(tableRow);
+                    });
+                    console.log(tableData)
                 }
             },
             handleError(err, response, file) {
@@ -168,7 +219,6 @@
                     vm.fileList = [];
                     return false;
                 }
-                debugger
                 vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
                     , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
             },
@@ -194,7 +244,7 @@
                 }*/
             }
         }
-    }
-    var Ctor = Vue.extend(Main)
+    };
+    var Ctor = Vue.extend(Main);
     var vm = new Ctor().$mount('#app')
 </script>
