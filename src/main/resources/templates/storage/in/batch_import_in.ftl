@@ -91,9 +91,9 @@
                 uploadAction:'${OFC_WEB_URL!}/ofc/storage_template/batch_in_upload',
                 authResDto:'',
                 templateBatchIn:{
-//                    custName:'',
-//                    custCode:'',
-//                    templateName:''
+                    custName:'',
+                    custCode:'',
+                    templateName:''
                 },
                 pageSheetList:[],
                 templateNameList:[]

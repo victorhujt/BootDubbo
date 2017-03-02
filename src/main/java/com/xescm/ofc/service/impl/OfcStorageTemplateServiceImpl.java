@@ -5,9 +5,16 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
+import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.ofc.domain.OfcStorageTemplate;
-import com.xescm.ofc.enums.StorageImportInEnum;
-import com.xescm.ofc.enums.StorageImportOutEnum;
+import com.xescm.ofc.enums.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcStorageTemplateMapper;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
@@ -51,6 +58,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
+    @Resource
+    private CscContactEdasService cscContactEdasService;
+    @Resource
+    private CscGoodsEdasService cscGoodsEdasService;
     @Resource
     private OfcStorageTemplateMapper ofcStorageTemplateMapper;
     @Resource
@@ -101,12 +112,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     /**
-     * 模板配置筛选
+     * 模板配置筛选// 模板导入用
      * @param templateCondition 筛选条件
      * @return 筛选结果
      */
     @Override
-    public List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition) {
+    public List<OfcStorageTemplate> selectTemplate(TemplateCondition templateCondition) {
         if(null == templateCondition){
             logger.error("模板配置筛选条件为空!");
             throw new BusinessException("模板配置筛选条件为空!");
@@ -118,6 +129,24 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcStorageTemplateList.add(0, ofcStorageTemplate);
         return ofcStorageTemplateList;
     }
+
+    /**
+     * 模板配置筛选
+     * @param templateCondition 筛选条件
+     * @return 筛选结果
+     */
+    @Override
+    public List<OfcStorageTemplate> selectTemplateByCondition(TemplateCondition templateCondition) {
+        if(null == templateCondition){
+            logger.error("模板配置筛选条件为空!");
+            throw new BusinessException("模板配置筛选条件为空!");
+        }
+        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateMapper.selectTemplateByCondition(templateCondition);
+
+        return ofcStorageTemplateList;
+    }
+
+
 
     /**
      * 模板配置删除
@@ -134,7 +163,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
         ofcStorageTemplate.setTemplateCode(temlpateCode);
-        int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
+//        int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
+        int delete = ofcStorageTemplateMapper.deleteByTemplateCode(temlpateCode);
         if(delete == 0){
             logger.error("模板配置删除失败!");
             throw new BusinessException("模板配置删除失败");
@@ -214,7 +244,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     @Override
     public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
-        //拿到所用模板的明细Map, 即根据模板Excel列名拿到用户配置模板的映射
+        //根据模板编码和类型拿到用户保存的配置模板的映射
         Map<String,OfcStorageTemplate> templateDetilMap = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
         //将模板映射成标准格式, 如果不是标准格式的就跳过不校验, 且不展示
         InputStream inputStream ;
@@ -231,6 +261,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<Integer,OfcStorageTemplate> modelNameStr = new LinkedHashMap<>();
         Class clazz = null;
         List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = new ArrayList<>();
+        Map<String, CscGoodsApiVo> goodsCheck = new HashMap<>();
+        Map<String, CscContantAndCompanyResponseDto> consigneeCheck = new HashMap<>();
         boolean requiredField = true;
         //去RMC查到所有仓库
         Map<String, RmcWarehouseRespDto> allWarehouseByRmc =  this.getAllWarehouseByRmc();
@@ -321,6 +353,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }
                         //客户订单号
                         if(StringUtils.equals(StorageImportInEnum.CUST_ORDER_CODE.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有客户订单号", rowNum + 1, cellNum + 1);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                checkPass = false;
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //订单日期
                         }else if(StringUtils.equals(StorageImportInEnum.ORDER_TIME.getStandardColCode(), standardColCode)){
@@ -345,15 +383,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     cellValue = colDefaultVal;
                                 }else {
                                     logger.error("当前行:{},列:{} 没有仓库名称", rowNum + 1, cellNum);
-                                    xlsErrorMsg.add("行:{},列:{} 缺少必填字段");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
                                     checkPass = false;
                                     break;
                                 }
                             }
                             //如果有仓库名称, 校验该仓库名称是否存在!
                             if(!allWarehouseByRmc.containsKey(cellValue)){
-                                logger.error("当前行:{},列:{}仓库名称:{}, 未找到", rowNum + 1, cellNum + 1, cellValue);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "仓库名称:" + cellValue + "未找到! 请维护!");
+                                logger.error("当前行:{},列:{}仓库名称:{}, 调用接口未能找到该仓库", rowNum + 1, cellNum + 1, cellValue);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "仓库名称:" + cellValue + "没有维护!");
                                 checkPass = false;
                                 break;
                             }
@@ -364,33 +402,92 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
                                     cellValue = colDefaultVal;
                                 }else {
-                                    logger.error("当前行:{},列:{} 没有业务类型", rowNum + 1, cellNum);
-                                    xlsErrorMsg.add("行:{},列:{} 缺少必填字段");
+                                    logger.error("当前行:{},列:{} 没有业务类型", rowNum + 1, cellNum + 1);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 缺少必填字段:" + ofcStorageTemplateForCheck.getReflectColName());
+                                    checkPass = false;
+                                    break;
+                                }
+                            }else {
+                                //如果当前单元格不空, 需要校验是否是ofc可识别的订单类型
+                                Wrapper result = checkBusinessType(cellValue, ofcStorageTemplate.getTemplateType());
+                                if(Wrapper.ERROR_CODE == result.getCode()){
+                                    logger.error("当前行:{},列:{} 业务类型:{}不可识别", rowNum + 1, cellNum + 1, cellValue);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 业务类型:" + cellValue + "不可识别!");
                                     checkPass = false;
                                     break;
                                 }
                             }
-                            //
-
-
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //备注
                         }else if(StringUtils.equals(StorageImportInEnum.NOTES.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有备注", rowNum + 1, cellNum);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                checkPass = false;
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //货品编码
                         }else if(StringUtils.equals(StorageImportInEnum.GOODS_CODE.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有货品编码", rowNum + 1, cellNum);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                checkPass = false;
+                                break;
+                            }
+                            //货品编码不空,判断是否已经校验过
+                            //如果没校验过就调用CSC接口进行校验
+                            if(!goodsCheck.containsKey(cellValue)){
+                                CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
+                                cscGoodsApiDto.setGoodsCode(cellValue);
+                                cscGoodsApiDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+                                Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                                List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
+                                //没有校验通过
+                                if(null == cscGoodsApiVoResult && cscGoodsApiVoResult.size() == 0){
+                                    logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    checkPass = false;
+                                    break;
+                                    //校验通过
+                                }else {
+                                    logger.info("当前货品编码:{},校验通过", cellValue);
+                                    goodsCheck.put(cellValue, cscGoodsApiVoResult.get(0));
+                                }
+                            }else {
+                                logger.info("当前货品编码:{},不用校验", cellValue);
+                                //不用校验, 直接堆
+                                CscGoodsApiVo cscGoodsApiVo = goodsCheck.get(cellValue);
+                                ofcStorageTemplateDto.setCscGoodsApiVo(cscGoodsApiVo);
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //货品名称
                         }else if(StringUtils.equals(StorageImportInEnum.GOODS_NAME.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有货品名称", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //规格
                         }else if(StringUtils.equals(StorageImportInEnum.GOODS_SPEC.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有规格", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //单位
                         }else if(StringUtils.equals(StorageImportInEnum.UNIT.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有单位", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //单价
                         }else if(StringUtils.equals(StorageImportInEnum.UNIT_PRICE.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有单价", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //入库数量 or  出库数量
                         }else if(StringUtils.equals(StorageImportInEnum.QUANTITY.getStandardColCode(), standardColCode)){
@@ -418,40 +515,112 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
                             //批次号
                         }else if(StringUtils.equals(StorageImportInEnum.PRODUCTION_BATCH.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有批次号", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //生产日期
                         }else if(StringUtils.equals(StorageImportInEnum.PRODUCTION_TIME.getStandardColCode(), standardColCode)){
-
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有生产日期", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //失效日期
                         }else if(StringUtils.equals(StorageImportInEnum.INVALID_TIME.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有失效日期", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //供应商名称
                         }else if(StringUtils.equals(StorageImportInEnum.SUPPORT_NAME.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有供应商名称", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //预计入库时间
                         }else if(StringUtils.equals(StorageImportInEnum.ARRIVE_TIME.getStandardColCode(), standardColCode)
                                 ||StringUtils.equals(StorageImportOutEnum.SHIPMENT_TIME.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有预计入库时间", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //是否提供运输服务
                         }else if(StringUtils.equals(StorageImportInEnum.PROVIDE_TRANSPORT.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有是否提供运输服务", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //车牌号
                         }else if(StringUtils.equals(StorageImportInEnum.PLATE_NUMBER.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有车牌号", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //司机姓名
                         }else if(StringUtils.equals(StorageImportInEnum.DRIVER_NAME.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有司机姓名", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //联系电话
                         }else if(StringUtils.equals(StorageImportInEnum.CONTACT_NUMBER.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有联系电话", rowNum + 1, cellNum + 1);
+                                break;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //发货方名称
                         }else if(StringUtils.equals(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode(), standardColCode)){
-                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有发货方名称", rowNum + 1, cellNum);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                checkPass = false;
+                                break;
+                            }
+                            //对发货方名称进行校验
+                            //去接口查该收货方名称是否在客户中心维护
+                            if(!consigneeCheck.containsKey(cellValue)){
+                                CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
+                                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+                                CscContactDto cscContactDto = new CscContactDto();
+                                cscContantAndCompanyDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+                                cscContactCompanyDto.setContactCompanyName(cellValue);
+                                cscContactDto.setPurpose("1");//用途为收货方
+                                cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+                                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
+                                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                                if(Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()){
+                                    throw new BusinessException(queryCscCustomerResult.getMessage());
+                                }
+                                List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
+                                //即在客户中心没有找到该收货方
+                                if(null == result || result.size() == 0){
+                                    logger.error("当前行:{},列:{} 发货方名称校验失败, 请维护", rowNum + 1, cellNum);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "发货方名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    checkPass = false;
+                                    break;
+                                    //找到该收货方了
+                                }else {
+                                    CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = result.get(0);
+                                    ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
+                                    consigneeCheck.put(cellValue, cscContantAndCompanyResponseDto);
+                                }
+                            }else {
+                                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeCheck.get(cellValue);
+                                ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
+                                setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            }
                         }
                     }
                 }
-
                 if(rowNum > 0){
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
@@ -480,6 +649,36 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
         //校验成功!
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ofcStorageTemplateDtoList);
+    }
+
+    /**
+     * 校验订单业务类型
+     * @param cellValue  单元格的值
+     * @param templateType 模板类型
+     * @return 校验结果
+     */
+    private Wrapper checkBusinessType(String cellValue, String templateType) {
+        List<String> result = new ArrayList<>();
+        Boolean check = true;
+        //入库单
+        if(StringUtils.equals(templateType, "storageIn")){
+            List<String> codeList = BusinessTypeStorageInEnum.getCodeList();
+            List<String> descList = BusinessTypeStorageInEnum.getDescList();
+            if(!codeList.contains(cellValue) && !descList.contains(cellValue)){
+                check = false;
+            }
+            //出库单
+        }else if(StringUtils.equals(templateType, "storageOut")){
+            List<String> codeList = BusinessTypeStorageOutEnum.getCodeList();
+            List<String> descList = BusinessTypeStorageOutEnum.getDescList();
+            if(!codeList.contains(cellValue) && !descList.contains(cellValue)){
+                check = false;
+            }
+        }
+        if(!check){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE, result);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
 
@@ -520,6 +719,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     private void setFiledValue(Class clazz, OfcStorageTemplateDto ofcStorageTemplateDto, Object cellValue, String cellNumCode) {
         try {
+            if(null == cellValue){
+                return;
+            }
             Field field = clazz.getDeclaredField(cellNumCode);
             field.setAccessible(true);
             field.set(ofcStorageTemplateDto,cellValue);
@@ -558,25 +760,32 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 //标记当前列出错, 并跳过当前循环
                 continue;
             }
-            String commonCellValue = commonCell.getStringCellValue();
-            //
+            String commonCellValue = commonCell.getStringCellValue();// 当前列 列名
+            //根据当前列列名找到映射数据
             OfcStorageTemplate ofcStorageTemplate = cellReflectToDomain(commonCellValue, templateDetilMap);
             if(null == ofcStorageTemplate){
-              // 当前模板中的列名, 没有找到在初始化的Map的映射表中找到映射
+                // 当前模板中的列名, 没有找到在初始化的Map的映射表中找到映射
                 logger.info("当前模板中的列名:{}, 没有找到在初始化的Map的映射表中找到映射", commonCellValue);
                 continue;
             }
             //如果能找到
-            ofcStorageTemplateMap.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);
-            colNumMap.put(ofcStorageTemplate.getStandardColCode(), cellNum);
+            ofcStorageTemplateMap.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);//key : 标准列code, value: 对应映射实体
+            colNumMap.put(ofcStorageTemplate.getStandardColCode(), cellNum); //key : 标准列code, value: 必填列号
         }
         String[] item = StringUtils.equals(templateType,"storageIn") ? inRquiredItem : outRquiredItem;
         Map<Integer, String> requiredColNum = new HashMap<>();
         for (String requiredItem : item) {
             if(!ofcStorageTemplateMap.containsKey(requiredItem)){
-                OfcStorageTemplate ofcStorageTemplate = ofcStorageTemplateMap.get(requiredItem);
-                logger.error("当前表格缺少列:{}",ofcStorageTemplate);
-                throw new BusinessException("当前表格缺少列:" + ofcStorageTemplate.getReflectColName());
+                if(StringUtils.equals("storageIn", templateType)){
+                    InRquiredItem anyByStandardCode = InRquiredItem.getAnyByStandardCode(requiredItem);
+                    logger.error("没有找到在初始化的Map的映射表中找到映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
+                    throw new BusinessException("没有找到在初始化的Map的映射表中找到映射列:" + anyByStandardCode.getStandardColName());
+                }else if(StringUtils.equals("storageIn", templateType)){
+                    OutRquiredItem anyByStandardCode = OutRquiredItem.getAnyByStandardCode(requiredItem);
+                    logger.error("没有找到在初始化的Map的映射表中找到映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
+                    throw new BusinessException("没有找到在初始化的Map的映射表中找到映射列:" + anyByStandardCode.getStandardColName());
+                }
+
             }else {
                 //将当前Excel模板必填列的列号记录
                 requiredColNum.put(colNumMap.get(requiredItem), ofcStorageTemplateMap.get(requiredItem).getReflectColName());
@@ -614,7 +823,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * 获取模板映射map
      * @param templateCode 模板编码
      * @param templateType 模板类型
-     * @return
+     * @return 模板映射map
      */
     private Map<String,OfcStorageTemplate> getTemplateReflect(String templateCode, String templateType) {
         List<OfcStorageTemplate> ofcStorageTemplateListForConvert = new ArrayList<>();
@@ -644,9 +853,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     /**
      * 制造标准模板
-     * @param ofcStorageTemplateListForConvert
-     * @param standardColCode
-     * @param standardColName
+     * @param ofcStorageTemplateListForConvert 模板映射List
+     * @param standardColCode 标准模板列编码
+     * @param standardColName 标准模板列名称
      */
     private void insertStandardTemplate(List<OfcStorageTemplate> ofcStorageTemplateListForConvert, String standardColCode, String standardColName) {
         OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
@@ -659,7 +868,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     /**
      * 模板映射
-     * @param cellValue
+     * @param cellValue 单元格的值
      * @param templateDetilMap
      * @return
      */
