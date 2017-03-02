@@ -20,16 +20,36 @@
                     </el-select>
                 </el-form-item>
             </div>
+            <div class="xe-block">
+                <el-upload    :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
+                              :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
+                              :on-error="handleError" :default-file-list="fileList">
+                    <i class="el-icon-upload"></i>
+                    <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
+                    <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
+                </el-upload>
+            </div>
         </el-form>
+
+        <el-table
+                :data="tableData"
+                v-if="errorMsgShow"
+                highlight-current-row
+                border
+                style="width: 100%">
+            <el-table-column
+                    type="index"
+                    label="序号">
+            </el-table-column>
+            <el-table-column
+                    property="errorMsg"
+                    label="错误信息">
+            </el-table-column>
+        </el-table>
     </div>
 
 
-    <el-upload    :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
-                  :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :default-file-list="fileList">
-        <i class="el-icon-upload"></i>
-        <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
-    </el-upload>
+
 </div>
 <script type="text/javascript">
 
@@ -50,7 +70,6 @@
             //加载当前客户下所有模板!
             var param = {};
             param.custCode = e.choice.code;
-            debugger
             CommonClient.post("/ofc/storage_template/templist", param, function (result) {
                 vm.templateNameList = [];
                 var templateNameList = vm.templateNameList;
@@ -82,6 +101,8 @@
     var Main = {
         data() {
             return {
+                tableData:[],
+                errorMsgShow:false,
                 uploadParam:{},
                 custNameShow:false,
                 custCodeShow:false,
@@ -109,11 +130,24 @@
             handleSuccess(response, file, fileList) {
                 var vm = this;
                 if(response.code == 500) {
+                    vm.errorMsgShow = true;
                     layer.msg(response.message);
                     vm.fileList = [];
-                }else if(response.code == 200) {
+                    var tableData = vm.tableData = [];
+                    $.each(response.result, function (index, item) {
+                        var rowData = {};
+                        rowData.errorMsg = item;
+                        tableData.push(rowData)
+                    });
+                }else if(response.code == 501 || response.code == 502 || response.code == 503) {
+                    vm.errorMsgShow = false;
+                    vm.fileList = [];
                     layer.msg(response.message);
-
+                    vm.tableData = [];
+                }else if(response.code == 200) {
+                    vm.tableData = [];
+                    layer.msg(response.message);
+                    vm.errorMsgShow = false;
                 }
             },
             handleError(err, response, file) {

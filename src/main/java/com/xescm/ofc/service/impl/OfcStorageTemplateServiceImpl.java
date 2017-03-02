@@ -322,7 +322,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     //如果必填列为空则报错提示
                     if(null == commonCell && requiedItemIndex.containsKey(cellNum)){
                         String requiredColName = requiedItemIndex.get(cellNum);
-                        logger.error("用户上传的Excel缺少必填项: {}, 位于第{}行, 第{}列", requiedItemIndex.get(cellNum), requiredColName, (rowNum + 1), (cellNum + 1));
+                        logger.error("用户上传的Excel缺少必填项: {},{}, 位于第{}行, 第{}列", requiedItemIndex.get(cellNum), requiredColName, (rowNum + 1), (cellNum + 1));
                         xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!" + requiredColName + "必填!");
                         checkPass = false;
                         break;
@@ -466,7 +466,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                                 if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                     logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验失败, 请维护!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -698,7 +698,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         //如果校验出错
         if(!checkPass){
             logger.error("当前Excel校验出错!");
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE, xlsErrorMsg);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "当前Excel校验出错", xlsErrorMsg);
         }
 
         //校验成功!
