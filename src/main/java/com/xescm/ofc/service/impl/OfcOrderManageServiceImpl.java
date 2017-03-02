@@ -3254,6 +3254,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFaceOrder(ofcDistributionBasicInfo.getTransCode());//面单号
         tfcTransport.setCollectServiceCharge(ofcFinanceInformation.getCollectServiceCharge());
         tfcTransport.setLuggage(ofcFinanceInformation.getLuggage());
+        tfcTransport.setTransportType(ofcFundamentalInformation.getTransportType());
 //        tfcTransport.setTransportPool();//
 //        tfcTransport.setMatchingMode();//
 //        tfcTransport.setSchedulingState();//
