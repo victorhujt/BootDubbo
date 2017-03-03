@@ -232,7 +232,6 @@
                     vm.fileList = [];
                     return;
                 }
-                debugger
                 //限制只允许上传一个文件
                 var fileList = vm.fileList;
                 if(fileList.length > 0){
@@ -242,7 +241,6 @@
             },
             uploading(event, file, fileList){
                 var vm = this;
-                debugger
                 var fileList = vm.fileList;
                 if(fileList.length > 0){
                     vm.$message("只允许上传一个文件!");
@@ -252,7 +250,6 @@
             },
             uploadChange(file,fileList){
                 var vm = this;
-                debugger
                 if(fileList.length > 0){
                     vm.$message("只允许上传一个文件!");
                     return false;
