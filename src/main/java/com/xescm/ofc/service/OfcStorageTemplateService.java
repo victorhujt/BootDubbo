@@ -31,4 +31,8 @@ public interface OfcStorageTemplateService {
     Integer checkStorageTemplate(MultipartFile file);
 
     List<RmcWarehouseRespDto> allWarehouseByRmc();
+
+    Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception;
+
+    Wrapper storageTemplateAudit(Object result);
 }

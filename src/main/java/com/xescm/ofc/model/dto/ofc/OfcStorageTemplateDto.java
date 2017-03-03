@@ -12,9 +12,11 @@ import java.math.BigDecimal;
  */
 @Data
 public class OfcStorageTemplateDto {
+    private String orderBatchNumber;
     private String custOrderCode;
     private String orderTime;
     private String merchandiser;
+    private String warehouseCode;
     private String warehouseName;
     private String businessType;
     private String notes;

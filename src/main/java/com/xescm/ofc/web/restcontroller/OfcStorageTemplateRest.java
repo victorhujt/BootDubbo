@@ -1,6 +1,5 @@
 package com.xescm.ofc.web.restcontroller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
@@ -11,11 +10,10 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
-import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -29,9 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
-import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_AUTH;
 import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_CUST;
 import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_TEMPLATE;
 
@@ -288,6 +284,7 @@ public class OfcStorageTemplateRest extends BaseController{
             logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
+        logger.info("导单结果:{}", ToStringBuilder.reflectionToString(result));
         return result;
     }
 
@@ -299,6 +296,35 @@ public class OfcStorageTemplateRest extends BaseController{
     @RequestMapping(value = "batch_out")
     public ModelAndView batchOut(){
         return new ModelAndView("/storage/out/batch_import_out");
+    }
+
+
+    /**
+     * 仓储开单批量导单确认下单
+     */
+    @RequestMapping(value = "/confirm")
+    @ResponseBody
+    public Wrapper confirm(String orderList){
+        try {
+            AuthResDto authResDto = getAuthResDtoByToken();
+            //下单
+            Wrapper placeOrderResult = ofcStorageTemplateService.orderConfirm(orderList, authResDto);
+            if(Wrapper.ERROR_CODE == placeOrderResult.getCode()){
+                return placeOrderResult;
+            }
+            //审核
+            Wrapper auditOrderResult = ofcStorageTemplateService.storageTemplateAudit(placeOrderResult.getResult());
+            if(Wrapper.ERROR_CODE == auditOrderResult.getCode()){
+                return auditOrderResult;
+            }
+        }catch (BusinessException e) {
+            logger.error("仓储开单批量导单确认下单出错, 错误信息:{},{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        }catch (Exception e) {
+            logger.error("仓储开单批量导单确认下单出错, 错误信息:{},{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
 

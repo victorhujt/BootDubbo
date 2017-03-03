@@ -69,4 +69,13 @@ public enum BusinessTypeStorageOutEnum {
         }
         return code;
     }
+
+    public static String getBusinessCodeByTypeDesc(String desc) {
+        for (BusinessTypeStorageOutEnum typeEnum : getList()) {
+            if(StringUtils.equals(typeEnum.getDesc(), desc)){
+                return typeEnum.getCode();
+            }
+        }
+        return desc;
+    }
 }

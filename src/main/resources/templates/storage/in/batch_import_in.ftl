@@ -65,6 +65,9 @@
 
             </el-table-column>
         </el-table>
+        <div class="xe-block">
+            <el-button type="primary"  v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
+        </div>
 
     </div>
 
@@ -121,12 +124,13 @@
     var Main = {
         data() {
             return {
+                orderList:'',
                 orderTableHeads:[],
                 orderTableData:[],
                 orderMsgShow:false,
                 tableData:[],
                 errorMsgShow:false,
-                uploadParam:{},
+                uploadParam:{custCode:'', templateCode:'', templateType:''},
                 custNameShow:false,
                 custCodeShow:false,
                 fileList: [],
@@ -151,6 +155,7 @@
             },
             handleSuccess(response, file, fileList) {
                 var vm = this;
+                vm.orderList = '';
                 if(response.code == 500) {
                     vm.errorMsgShow = true;
                     vm.orderMsgShow = false;
@@ -172,12 +177,10 @@
                     var tableData = vm.orderTableData = [];
                     layer.msg(response.message);
                     vm.errorMsgShow = false;
-                    debugger;
                     var tableHeadMsg = response.result[0];
                     var orderMsg = response.result[1];
                     var headData = vm.orderTableHeads = [];
                     vm.orderMsgShow = true;
-
                     $.each(tableHeadMsg, function (index, itemIn) {
                         var items = itemIn.split('@');
                         var propertyName = items[0];
@@ -192,13 +195,12 @@
                         var tableRow = {};
                         $.each(tableHeadMsg, function (indexIn, itemIn) {
                             var items = itemIn.split('@');
-                            var propertyName = items[0];
                             var propertyCode = items[1];
                             tableRow[propertyCode] = itemOut[propertyCode];
                         });
                         tableData.push(tableRow);
                     });
-                    console.log(tableData)
+                    vm.orderList = orderMsg;
                 }
             },
             handleError(err, response, file) {
@@ -221,19 +223,15 @@
                 }
                 vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
                     , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
+                console.log(JSON.stringify(vm.uploadParam));
+                //return false; 阻止上传
             },
             uploading(event, file, fileList){
                 var vm = this;
                 vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
                     , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
+                console.log("uploading::" + JSON.stringify(vm.uploadParam));
                 //文件大小限制
-//               var fileSize = file.size;
-                /*var vm = this;
-                //必须选好客户和模板
-                if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
-                    layer.msg("请先选择客户!")
-                    return;
-                }*/
             },
             uploadChange(file,fileList){
                 var vm = this;
@@ -242,6 +240,15 @@
                     layer.msg("请先选择客户!")
                     return;
                 }*/
+            },
+            orderSaveBtn(){
+                var vm = this;
+                var param = {};
+                param.orderList = JSON.stringify(vm.orderList);
+                var url = "/ofc/storage_template/confirm";
+                xescm.common.submit(url, param, "确认执行批量导入?", function (result) {
+
+                });
             }
         }
     };
