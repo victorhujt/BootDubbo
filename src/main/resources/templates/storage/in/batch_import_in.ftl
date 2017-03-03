@@ -15,13 +15,13 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="模板名称"   class="xe-col-3" requird>
-                    <el-select placeholder="请选择" v-model="templateBatchIn.templateName">
+                    <el-select placeholder="请选择" @change="templateChange(templateBatchIn.templateName)" v-model="templateBatchIn.templateName">
                         <el-option  v-for="item in templateNameList" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-upload    :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
+                <el-upload  :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
                               :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
                               :on-error="handleError" :default-file-list="fileList">
                     <i class="el-icon-upload"></i>
@@ -93,7 +93,7 @@
             //加载当前客户下所有模板!
             var param = {};
             param.custCode = e.choice.code;
-            CommonClient.post("/ofc/storage_template/templist", param, function (result) {
+            CommonClient.syncpost("/ofc/storage_template/templist", param, function (result) {
                 vm.templateNameList = [];
                 var templateNameList = vm.templateNameList;
                 if(result == null || result.length == 0) {
@@ -109,8 +109,11 @@
                     templateNameList.push(templateName);
                 });
 
-            })
+            });
+            vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
+                , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
         });
+
     }
 
     function initCustomerName() {
@@ -148,8 +151,18 @@
             };
         },
         methods: {
+            templateChange(val){
+                console.log(val);
+                var vm = this;
+                if(undefined == val || StringUtil.isEmpty(val)){
+                    return;
+                }
+                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, "templateCode":val, "templateType":"storageIn"};
+            },
             handleRemove(file, fileList) {
-                fileList = [];
+                this.errorMsgShow = false;
+                this.orderMsgShow = false;
+                this.fileList = [];
             },
             handlePreview(file) {
             },
@@ -159,9 +172,12 @@
                 if(response.code == 500) {
                     vm.errorMsgShow = true;
                     vm.orderMsgShow = false;
-                    layer.msg(response.message);
+                    vm.$message(response.message);
                     vm.fileList = [];
                     var tableData = vm.tableData = [];
+                    /*if(response.result.length == 0){
+                        return;
+                    }*/
                     $.each(response.result, function (index, item) {
                         var rowData = {};
                         rowData.errorMsg = item;
@@ -170,12 +186,13 @@
                 }else if(response.code == 501 || response.code == 502 || response.code == 503) {
                     vm.errorMsgShow = false;
                     vm.fileList = [];
-                    layer.msg(response.message);
+                    vm.$message(response.message);
                     vm.tableData = [];
                     vm.orderMsgShow = false;
                 }else if(response.code == 200) {
+                    vm.fileList.push(file);
                     var tableData = vm.orderTableData = [];
-                    layer.msg(response.message);
+                    vm.$message(response.message);
                     vm.errorMsgShow = false;
                     var tableHeadMsg = response.result[0];
                     var orderMsg = response.result[1];
@@ -210,34 +227,44 @@
                 var vm = this;
                 //必须选好客户和模板
                 if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
-                    layer.msg("请先选择客户!");
+                    vm.$message("请先选择客户!");
                     vm.fileList = [];
                     return;
                 }
+                debugger
                 //限制只允许上传一个文件
                 var fileList = vm.fileList;
                 if(fileList.length > 0){
-                    layer.msg("只允许上传一个文件!");
-                    vm.fileList = [];
+                    vm.$message("只允许上传一个文件!");
                     return false;
                 }
-                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
-                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
-                console.log(JSON.stringify(vm.uploadParam));
-                //return false; 阻止上传
             },
             uploading(event, file, fileList){
                 var vm = this;
-                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
-                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
-                console.log("uploading::" + JSON.stringify(vm.uploadParam));
+                debugger
+                var fileList = vm.fileList;
+                if(fileList.length > 0){
+                    vm.$message("只允许上传一个文件!");
+                    return false;
+                }
+//                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
+//                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
+//                console.log("uploading::" + JSON.stringify(vm.uploadParam));
                 //文件大小限制
             },
             uploadChange(file,fileList){
                 var vm = this;
+                debugger
+                if(fileList.length > 0){
+                    vm.$message("只允许上传一个文件!");
+                    return false;
+                }
+//                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
+//                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
+//                console.log("uploading::" + JSON.stringify(vm.uploadParam));
                 //必须选好客户和模板
                 /*if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
-                    layer.msg("请先选择客户!")
+                    vm.$message("请先选择客户!")
                     return;
                 }*/
             },

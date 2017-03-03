@@ -39,7 +39,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -281,7 +280,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = new ArrayList<>();
         Map<String, CscGoodsApiVo> goodsCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consigneeCheck = new HashMap<>();
-        boolean requiredField = true;
         //去RMC查到所有仓库
         Map<String, RmcWarehouseRespDto> allWarehouseByRmc =  this.getAllWarehouseByCustCode(ofcStorageTemplate.getCustCode());
         try {
@@ -396,7 +394,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //订单日期
                         }else if(StringUtils.equals(StorageImportInEnum.ORDER_TIME.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.info("订单日期 ==> ", cellValue);
                                 cellValue = DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1);
+                                logger.info("订单日期 ==> ", cellValue);
+
                             }else {
                                 //如果Excel中用户手写了订单日期, 就用用户写的日期, 并对该单元格的值进行校验
                                 String[] split = cellValue.split(" ");
@@ -409,6 +410,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     continue;
                                 }
                             }
+                            logger.info("订单日期 ==> ", cellValue);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //开单员
                         }else if(StringUtils.equals(StorageImportInEnum.MERCHANDISER.getStandardColCode(), standardColCode)){
@@ -706,6 +708,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     }
                 }
                 if(rowNum > 0 && checkPass){
+                    //补齐
+                    ofcStorageTemplateDto.getOfcOrderDTO().setCustCode(ofcStorageTemplate.getCustCode());
+                    ofcStorageTemplateDto.getOfcOrderDTO().setCustName(ofcStorageTemplate.getCustName());
+                    if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getOrderTime())){
+                        ofcStorageTemplateDto.getOfcOrderDTO().setOrderTime(new Date());
+                    }
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
             }
@@ -878,12 +886,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             if(!ofcStorageTemplateMap.containsKey(requiredItem)){
                 if(StringUtils.equals("storageIn", templateType)){
                     InRquiredItem anyByStandardCode = InRquiredItem.getAnyByStandardCode(requiredItem);
-                    logger.error("没有找到在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
-                    throw new BusinessException("没有找到在初始化的Map的映射表中找到必填映射列:" + anyByStandardCode.getStandardColName());
+                    logger.error("没有在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
+                    throw new BusinessException("没有在初始化映射表中找到必填映射列:" + anyByStandardCode.getStandardColName());
                 }else if(StringUtils.equals("storageIn", templateType)){
                     OutRquiredItem anyByStandardCode = OutRquiredItem.getAnyByStandardCode(requiredItem);
-                    logger.error("没有找到在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
-                    throw new BusinessException("没有找到在初始化的Map的映射表中找到必填映射列:" + anyByStandardCode.getStandardColName());
+                    logger.error("没有在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
+                    throw new BusinessException("没有在初始化映射表中找到必填映射列:" + anyByStandardCode.getStandardColName());
                 }
 
             }else {
@@ -1085,6 +1093,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
         BeanUtils.copyProperties(ofcGoodsDetailsInfo, cscGoodsApiVo);
+        ofcGoodsDetailsInfo.setId(null);
         ofcGoodsDetailsInfo.setGoodsSpec(cscGoodsApiVo.getSpecification());
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
         return ofcGoodsDetailsInfo;
