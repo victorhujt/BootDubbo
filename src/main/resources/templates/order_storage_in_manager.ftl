@@ -507,7 +507,8 @@
                 }
             },
             batchImport:function(){
-                var url = "/ofc/storage_template/batch_in";
+                var templateType = "storageIn";
+                var url = "/ofc/storage_template/batch_import/" + templateType;
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0,index) + "/index#" + url);

@@ -234,10 +234,15 @@ public class OfcStorageTemplateRest extends BaseController{
     /**
      * 跳转入库开单批量导单
      */
-    @RequestMapping(value = "batch_in")
-    public ModelAndView batchIn(Model model){
-        ModelAndView modelAndView = new ModelAndView("/storage/in/batch_import_in");
+    @RequestMapping(value = "/batch_import/{templateType}")
+    public ModelAndView batchIn(Model model, @PathVariable("templateType") String templateType){
+        if(PubUtils.isSEmptyOrNull(templateType)){
+            logger.error("跳转入库开单批量导单,templateType为空, templateType:{}", templateType);
+            return new ModelAndView("/error/error-500");
+        }
+        ModelAndView modelAndView = new ModelAndView("/storage/template/batch_import");
         setDefaultModel(model);
+        model.addAttribute("templateType", templateType);
         return modelAndView;
     }
 
@@ -254,9 +259,9 @@ public class OfcStorageTemplateRest extends BaseController{
 
 
     /**
-     * 跳转入库开单批量导单
+     * 仓储开单批量导单
      */
-    @RequestMapping(value = "/batch_in_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/batch_import_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, OfcStorageTemplate ofcStorageTemplate){
         Wrapper<?> result = null;

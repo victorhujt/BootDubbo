@@ -111,7 +111,7 @@
 
             });
             vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
-                , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
+                , "templateCode":vm.templateBatchIn.templateName, "templateType":vm.templateType};
         });
 
     }
@@ -127,6 +127,7 @@
     var Main = {
         data() {
             return {
+                templateType:'${templateType!}',
                 orderList:'',
                 orderTableHeads:[],
                 orderTableData:[],
@@ -139,7 +140,7 @@
                 fileList: [],
                 excel:'',
                 fileTypeAccept:'.xls,.xlsx',
-                uploadAction:'${OFC_WEB_URL!}/ofc/storage_template/batch_in_upload',
+                uploadAction:'${OFC_WEB_URL!}/ofc/storage_template/batch_import_upload',
                 authResDto:'',
                 templateBatchIn:{
                     custName:'',
@@ -157,7 +158,7 @@
                 if(undefined == val || StringUtil.isEmpty(val)){
                     return;
                 }
-                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, "templateCode":val, "templateType":"storageIn"};
+                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, "templateCode":val, "templateType":vm.templateType};
             },
             handleRemove(file, fileList) {
                 this.errorMsgShow = false;
@@ -247,9 +248,6 @@
                     vm.$message("只允许上传一个文件!");
                     return false;
                 }
-//                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
-//                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
-//                console.log("uploading::" + JSON.stringify(vm.uploadParam));
                 //文件大小限制
             },
             uploadChange(file,fileList){
@@ -259,9 +257,6 @@
                     vm.$message("只允许上传一个文件!");
                     return false;
                 }
-//                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
-//                    , "templateCode":vm.templateBatchIn.templateName, "templateType":"storageIn"};
-//                console.log("uploading::" + JSON.stringify(vm.uploadParam));
                 //必须选好客户和模板
                 /*if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
                     vm.$message("请先选择客户!")
@@ -274,7 +269,8 @@
                 param.orderList = JSON.stringify(vm.orderList);
                 var url = "/ofc/storage_template/confirm";
                 xescm.common.submit(url, param, "确认执行批量导入?", function (result) {
-
+                    var url = vm.templateType == "storageIn" ? "/ofc/orderStorageInManager" : "/ofc/orderStorageOutManager";
+                    xescm.common.loadPage(url);
                 });
             }
         }
