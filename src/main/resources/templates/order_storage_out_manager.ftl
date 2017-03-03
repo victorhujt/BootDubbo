@@ -361,7 +361,7 @@
                                 });
                                 vueObj.total=result.result.total;
                             } else if (result.code == 403) {
-                                alert("没有权限")
+                                vueObj.promptInfo("没有权限","error");
                             }
                         },"json");
             },
@@ -382,7 +382,7 @@
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     if(order.orderStatusName!="待审核"){
-                        alert("只有处于待审核状态才可以进行编辑");
+                        this.promptInfo("只有处于待审核状态才可以进行编辑","warning");
                         return;
                     }
                     var url = "/ofc/orderStorageOutEdit/"+"?orderCode="+order.orderCode;
@@ -393,7 +393,7 @@
             },
             deleteOrder:function(){
                 if(this.multipleSelection.length<1){
-                    alert("请至少选中一行");
+                    this.promptInfo("请至少选中一行","warning");
                     return false;
                 }
                 var flag=true;
@@ -401,24 +401,24 @@
                     var order=this.multipleSelection[i];
                     var vueObj=this;
                     if(order.orderStatusName!="待审核"){
-                        alert("只有处于待审核状态才可以删除");
+                        vueObj.promptInfo("只有处于待审核状态才可以删除","warning");
                         return;
                     }
                     CommonClient.syncpost(sys.rootPath + "/ofc/orderDeleteOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
                         if(result==undefined||result==null){
-                            alert("订单删除失败！");
+                            vueObj.promptInfo("订单删除失败","error");
                             flag=false;
                             return;
                         }else if(result.code==200){
                         }else{
                             flag=false;
-                            alert(result.message);
+                            vueObj.promptInfo(result.message,"error");
                             return;
                         }
                     });
                 }
                 if(flag){
-                    alert("订单删除成功！");
+                    vueObj.promptInfo("订单删除成功！","success");
                     vueObj.selectOrder();
                 }
             },
@@ -428,13 +428,13 @@
                     var vueObj=this;
                     CommonClient.post(sys.rootPath + "/ofc/copyOrderOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
                         if (result == undefined || result == null ) {
-                            alert("复制订单出现异常");
+                            vueObj.promptInfo(" 复制订单出现异常","error");
                             return;
                         }else if(result.code==200&&result.result!=null){
-                            alert("订单复制成功！订单编号:"+result.result);
+                            vueObj.promptInfo("订单复制成功！订单编号:"+result.result,"success");
                             vueObj.selectOrder();
                         }else{
-                            alert(result.message);
+                            vueObj.promptInfo(result.message,"error");
                         }
                     });
                 }
@@ -457,7 +457,7 @@
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     if(order.orderStatusName!="待审核"){
-                        alert("只有待审核的可以审核");
+                        this.promptInfo("只有待审核的可以审核","error");
                         return;
                     }
                     this.auditOrderOrNotAuditOper(order.orderCode,"review");
@@ -476,21 +476,21 @@
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
                             if (result == undefined || result == null ) {
-                                alert("取消订单出现异常");
+                                vueObj.promptInfo("取消订单出现异常","error");
                                 return;
                             }else if(result.code==200){
-                                alert(result.message);
+                                vueObj.promptInfo(result.message,"success");
                                 vueObj.selectOrder();
                             }else{
                                 if(result.message==null){
-                                    alert("订单取消失败");
+                                    vueObj.promptInfo("订单取消失败","error");
                                 }else{
-                                    alert(result.message);
+                                    vueObj.promptInfo(result.message,"error");
                                 }
                             }
                         });
                     }else{
-                        alert("订单编号"+order.orderCode+"不能执行取消，仅能对订单状态为【已审核】或【执行中】的订单执行取消操作！");
+                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行取消，仅能对订单状态为【已审核】或【执行中】的订单执行取消操作！","error");
                         return;
                     }
                 }
@@ -502,23 +502,23 @@
                 var vueObj=this;
                 CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
                     if (result == undefined || result == null ) {
-                        alert("审核或者反审核出现异常");
+                        vueObj.promptInfo("审核或者反审核出现异常","error");
                         return;
                     }else if(result.code==200){
-                        alert(result.message);
+                        vueObj.promptInfo(result.message,"success");
                         vueObj.selectOrder();
                     }else{
-                        alert(result.message);
+                        vueObj.promptInfo(result.message,"error");
                     }
                 });
             },
             valiateSelectOrder:function(){
                 if(this.multipleSelection.length<1){
-                    alert("请至少选中一行");
+                    this.promptInfo("请至少选中一行","error");
                     return false;
                 }
                 if(this.multipleSelection.length>1){
-                    alert("只能选择一行");
+                    this.promptInfo("只能选择一行","error");
                     return false;
                 }
                 return true;
@@ -559,12 +559,12 @@
                 if(this.beginDate&& this.endDate){
                     this.beginDate=new Date(this.beginDate);
                     if( this.beginDate.getTime()> this.endDate.getTime()){
-                        alert("订单的起始日期不能大于结束日期");
+                        vueObj.promptInfo("订单的起始日期不能大于结束日期","error");
                         return;
                     }
                     if(this.baseName){
                         if(!this.areaName){
-                            alert("选择基地时，必须选择大区");
+                            vueObj.promptInfo("选择基地时，必须选择大区","error");
                             return;
                         }
                     }
@@ -594,7 +594,7 @@
                         var i=0;
                         $.each(result.result.list, function (index, item) {
                             var order={};
-                            order.customerName=item.custName;
+                            order.customerName=item.custName;wei
                             order.orderCode=item.orderCode;
                             order.orderBatchNumber=item.orderBatchNumber;
                             order.customerOrderCode=item.custOrderCode;
@@ -608,10 +608,17 @@
                         })
                         vueObj.total=result.result.total;
                     } else if (result.code == 403) {
-                        alert("没有权限")
+                        vueObj.promptInfo("没有权限","error");
+
                     }
                 });
-            }
+            },
+              promptInfo:function(message,type){
+                this.$message({
+                  message: message,
+                  type: type
+                });
+              }
         }
     });
 </script>
