@@ -221,16 +221,48 @@
             var url = "/ofc/storage_template/detail_data/" + templateCode;
             CommonClient.post(url, {}, function (result) {
                 var itemOut = {};
+                var orderTime;
+                var merchandiser;
+                var warehouseName;
+                var businessType;
+                var provideTransport;
                 $.each(result.result,function (index, item) {
                     if(index == 0) {
                         itemOut = item;
                     }
                     var tableItem = {};
+                    var indexNum = item.indexNum;
+                    tableItem.indexNum = indexNum;
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
-                    tableItem.colDefaultVal = item.colDefaultVal;
+                    var colDefaultVal = item.colDefaultVal;
+                    if(!StringUtil.isEmpty(colDefaultVal)){
+
+                        if(indexNum == 2){
+                            orderTime = colDefaultVal;
+                        }else if(indexNum == 3){
+                            merchandiser = colDefaultVal;
+                        }else if(indexNum == 4){
+                            warehouseName = colDefaultVal;
+                        }else if(indexNum == 5){
+                            businessType = colDefaultVal;
+                        }else if(indexNum == 18){
+                            provideTransport = colDefaultVal;
+                        }
+
+                    }
+                    tableItem.colDefaultVal = colDefaultVal;
                     vm.tableData.push(tableItem);
                 });
+                vm.colDefaultValModel={
+                    orderTime:orderTime,
+                    merchandiser:merchandiser,
+                    warehouseName:warehouseName,
+                    businessType:businessType,
+                    provideTransport:"是" === provideTransport ? true : false
+                };
+                console.log('=============' + JSON.stringify(vm.colDefaultValModel));
+
                 var templateType = itemOut.templateType;
                 var templateTypeName = itemOut.templateType == 'storageIn' ? '入库单' : '出库单';
                 vm.templatesTypeList = [
@@ -238,8 +270,9 @@
                 ];
                 vm.templateForm.templateName = itemOut.templateName;
                 vm.templateForm.custName = itemOut.custName;
+                $("#custName").val(itemOut.custName);
                 vm.templateForm.custCode = itemOut.custCode;
-
+                $("#custCode").val(itemOut.custCode);
             })
 
 
