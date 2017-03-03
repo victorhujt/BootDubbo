@@ -613,12 +613,12 @@
                     }
                 });
             },
-              promptInfo:function(message,type){
+            promptInfo:function(message,type){
                 this.$message({
                   message: message,
                   type: type
                 });
-              }
+            }
         }
     });
 </script>

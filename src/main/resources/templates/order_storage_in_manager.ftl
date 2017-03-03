@@ -393,7 +393,7 @@
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     if(order.orderStatusName!="待审核"){
-                      this.promptInfo("只有处于待审核状态才可以进行编辑","warning");
+                        this.promptInfo("只有处于待审核状态才可以进行编辑","warning");
                         return;
                     }
                     var url = "/ofc/orderStorageInEdit/"+"?orderCode="+order.orderCode;
@@ -625,12 +625,12 @@
                     }
                 });
             },
-          promptInfo:function(message,type){
-            this.$message({
-              message: message,
-              type: type
-            });
-          }
+            promptInfo:function(message,type){
+                this.$message({
+                  message: message,
+                  type: type
+                });
+            }
         }
     });
 </script>

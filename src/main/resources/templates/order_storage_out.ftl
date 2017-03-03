@@ -607,11 +607,11 @@
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限","error");
                         } else {
-                          vueObj.promptInfo(result.message,'error');
+                            vueObj.promptInfo(result.message,'error');
                         }
                     },"json");
                 } else {
-                  vueObj.promptInfo("请选择客户信息!",'warning');
+                    this.promptInfo("请选择客户信息!",'warning');
                 }
             },
             consigneeHandleCurrentChange:function(val) {
@@ -627,7 +627,7 @@
             },
             add:function() {
                 if(!this.orderForm.customerName){
-                  this.promptInfo("请选择客户!",'warning');
+                    this.promptInfo("请选择客户!",'warning');
                     return;
                 }
                 var vueObj=this;
@@ -718,7 +718,7 @@
                         });
                         vueObj.totalSupplier=data.result.total;
                     } else if (result.code == 403) {
-                      vueObj.promptInfo("没有权限",'error');
+                        vueObj.promptInfo("没有权限",'error');
                     }
                 },"json");
 
@@ -738,7 +738,7 @@
                     this.orderForm.supplierCode=val.supplierCode;
                     this.chosenSupplier=false;
                 } else {
-                  this.promptInfo("请选择供应商!",'warning');
+                    this.promptInfo("请选择供应商!",'warning');
                 }
             },
             setCurrentGoodsInfo:function(val){
@@ -801,7 +801,7 @@
                         });
                         vueObj.totalConsignee=result.result.total;
                     } else if (result.code == 403) {
-                      vueObj.promptInfo("没有权限",'error');
+                        vueObj.promptInfo("没有权限",'error');
                     }
                 },"json");
 
@@ -860,7 +860,7 @@
                         });
                         vueObj.totalGoods=data.result.total;
                     } else if (data.code == 403) {
-                      vueObj.promptInfo("没有权限",'error');
+                        vueObj.promptInfo("没有权限",'error');
                     }
                 },"json");
             },
@@ -918,7 +918,7 @@
                                 });
                                 vueObj.total=result.result.total;
                             } else if (result.code == 403) {
-                              vueObj.promptInfo("没有权限",'error');
+                                vueObj.promptInfo("没有权限",'error');
                             }
                         },"json");
             },
@@ -936,7 +936,7 @@
             saveStorage:function(formName){
                 if(this.orderForm.serviceType=="614"){
                     if(!this.supplierName){
-                      this.promptInfo("业务类型为分拨出库时，供应商必须选择!",'warning');
+                        this.promptInfo("业务类型为分拨出库时，供应商必须选择!",'warning');
                         return;
                     }
                 }
@@ -956,7 +956,7 @@
                 if(this.orderForm.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
                     if(!this.orderForm.consigneeName){
-                      this.promptInfo("提供运输时,发货方不能为空，请选择发货方!",'warning');
+                        this.promptInfo("提供运输时,发货方不能为空，请选择发货方!",'warning');
                         return;
                     }
                 }else{
@@ -1042,11 +1042,11 @@
                     var good=goodsTable[i];
                     if(good.unitPrice!=""){
                         if(isNaN(good.unitPrice)){
-                          this.promptInfo("货品单价必须为数字",'error');
+                            this.promptInfo("货品单价必须为数字",'error');
                             return;
                         }
                         if(good.unitPrice>99999.99||good.unitPrice<0){
-                          this.promptInfo("货品单价不能大于99999.99或小于0",'warning');
+                            this.promptInfo("货品单价不能大于99999.99或小于0",'warning');
                             return;
                         }
                         if(isNaN(good.quantity)){
@@ -1056,26 +1056,26 @@
                     }
                     if(good.quantity>99999.999||good.quantity<0||!good.quantity||good.quantity==0){
                         if(!good.quantity){
-                          this.promptInfo("货品数量不能为空",'warning');
+                            this.promptInfo("货品数量不能为空",'warning');
                             return;
                         }
                         if(good.quantity>99999.999){
-                          this.promptInfo("货品数量不能大于99999.999",'warning');
+                            this.promptInfo("货品数量不能大于99999.999",'warning');
                             return;
                         }
                         if(good.quantity<0){
-                          this.promptInfo("货品数量不能小于0",'error');
+                            this.promptInfo("货品数量不能小于0",'error');
                             return;
                         }
                         if(good.quantity==0){
-                          this.promptInfo("货品数量不能小于0",'error');
+                            this.promptInfo("货品数量不能小于0",'error');
                             return;
                         }
                         return;
                     }
                     if( good.productionTime&& good.invalidTime){
                         if( good.productionTime.getTime()> good.invalidTime.getTime()){
-                          this.promptInfo("生产日期不能大于失效日期",'error');
+                            this.promptInfo("生产日期不能大于失效日期",'error');
                             return;
                         }
                     }
@@ -1083,7 +1083,7 @@
                 }
 
                 if(goodDetail.length <1){
-                  this.promptInfo("请添加至少一条货品!",'warning');
+                    this.promptInfo("请添加至少一条货品!",'warning');
                     return;
                 }
                 var ofcOrderDto = JSON.stringify(ofcOrderDTOStr);
@@ -1172,12 +1172,12 @@
                 this.chosenGoodCode = true;
                 this.currentRowData = currentRowData;
             },
-          promptInfo:function(message,type){
-            this.$message({
-              message: message,
-              type: type
-            });
-          }
+            promptInfo:function(message,type){
+                this.$message({
+                     message: message,
+                     type: type
+                });
+            }
         }
     });
 </script>
