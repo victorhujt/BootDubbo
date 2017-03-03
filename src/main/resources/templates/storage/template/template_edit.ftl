@@ -184,7 +184,6 @@
                     tableItem.indexNum = indexNum;
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
-                    debugger
                     tableItem.colDefaultVal = colDefaultVal;
                     vm.tableData.push(tableItem);
                 });
