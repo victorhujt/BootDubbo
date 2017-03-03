@@ -1,27 +1,46 @@
 <title>导入模板配置编辑</title>
+<link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
+<link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
+<span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
 <div id="vm">
     <div class="list-mian-01">
 
         <el-dialog title="设置列默认值" v-model="colDefaultValDia" size="small">
-            <div :model="colDefaultValModel">
-                <label class="label">订单日期</label>
-                <el-input v-model="colDefaultValModel.orderTime"  placeholder="请输入内容"    value=""></el-input>
-                <label class="label">开单员</label>
-                <el-input v-model="colDefaultValModel.merchandiser"  placeholder="请输入内容"    value=""></el-input>
-                <label class="label">仓库名称</label>
-                <el-select placeholder="请选择" v-model="colDefaultValModel.warehouseName">
-                    <el-option  v-for="item in warehouseNameList" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-                <label class="label">业务类型</label>
-                <el-select placeholder="请选择" v-model="colDefaultValModel.businessType">
-                    <el-option  v-for="item in businessTypeList" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-                <label class="label">是否提供运输服务</label>
-                <el-checkbox v-model="colDefaultValModel.provideTransport" ></el-checkbox>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="cancelSetDefault">取 消</el-button>
-                    <el-button type="primary" @click="confirmSetDefault">确 定</el-button>
+            <el-form :model="colDefaultValModel" label-width="120px">
+                <div class="xe-block">
+                    <el-form-item label="订单日期" class="xe-col-2">
+                        {{colDefaultValModel.orderTime}}
+                    </el-form-item>
                 </div>
+                <div class="xe-block">
+                    <el-form-item label="开单员" class="xe-col-2">
+                        <el-input v-model="colDefaultValModel.merchandiser"  placeholder="请输入内容"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="xe-block">
+                    <el-form-item label="仓库名称" class="xe-col-2">
+                        <el-select placeholder="请选择" v-model="colDefaultValModel.warehouseName">
+                            <el-option  v-for="item in warehouseNameList" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="xe-block">
+                    <el-form-item label="业务类型" class="xe-col-2">
+                        <el-select placeholder="请选择" v-model="colDefaultValModel.businessType">
+                            <el-option  v-for="item in businessTypeList" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="xe-block">
+                    <el-form-item label="是否提供运输服务" class="xe-col-2">
+                        <el-checkbox v-model="colDefaultValModel.provideTransport" ></el-checkbox>
+                    </el-form-item>
+                </div>
+
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelSetDefault">取 消</el-button>
+                <el-button type="primary" @click="confirmSetDefault">确 定</el-button>
             </div>
 
         </el-dialog>
@@ -44,11 +63,14 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="客户名称"  class="xe-col-2" required>
-                    <el-input v-model="templateForm.custName" id="custName" placeholder="请输入客户名称" v-on:change="custNameChange"></el-input>
+                    <el-input v-model="templateForm.custName" v-if="custNameShow"  placeholder="请输入客户名称"></el-input>
+                    <input class="form-control select2-single"  name="custName" id="custName" placeholder="请输入客户名称"/>
                     <div  v-if="custNameNotNull"><p style="color: red">客户名称不能为空</p></div>
                 </el-form-item>
                 <el-form-item label="客户编码"  class="xe-col-2">
-                    <el-input v-model="templateForm.custCode" :disabled="true" id="custName" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>
+                    <el-input v-model="templateForm.custCode"  :disabled="true" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>
+                    <input  name="custCode" id="custCode" hidden placeholder="请输入客户编码"/>
+                <#--<el-input v-model="templateForm.custCode" :disabled="true" id="custName" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>-->
                     <div  v-if="custCodeNotNull"><p style="color: red">客户编码不能为空</p></div>
                 </el-form-item>
             </div>
@@ -89,12 +111,46 @@
         </template>
     </div>
 </div>
+
+
+
+
 <script type="text/javascript" >
+
+    var scripts = [null,
+        "/components/select2.v3/select2.min.js",
+        "/components/select2.v3/select2_locale_zh-CN.js",
+        null];
+
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
+        $(document).ready(main);
+    });
+
+    function main() {
+        initCustomerName();
+        $("#custName").on("select2-selecting", function(e) {
+            vm.templateForm.custName = e.choice.name;
+            vm.templateForm.custCode = e.choice.code;
+            vm.custNameNotNull = false;
+        });
+    }
+
+    function initCustomerName() {
+        var ofc_web_url = $("#ofc_web_url").html();
+        var url = ofc_web_url + "/ofc/distributing/queryCustomerSelect2";
+        var notice = "没有找到相关客户";
+        Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
+    }
+
     var vm = new Vue({
         el:'#vm',
         data:function () {
             return{
-                templateCode:'${templateCode!}',
+                templateCodeShow:'${templateCode!}',
+                orderTime:'${orderTime!}',
+                warehouseName:'',
+                businessType:'',
+                custNameShow:false,
                 templateTypeNotNull:false,
                 templateNameNotNull:false,
                 custNameNotNull:false,
@@ -102,7 +158,7 @@
                 standardColCodeShow:false,
                 merchandiserList:[],
                 templateForm:{
-                    templateType:'',
+                    templateType:'storageIn',
                     templateName:'',
                     custName:'',
                     custCode:''
@@ -113,7 +169,11 @@
                 ],
                 colDefaultValDia:false,
                 colDefaultValModel:{
-
+                    orderTime:'',
+                    merchandiser:'${userName!}',
+                    warehouseName:'',
+                    businessType:'',
+                    provideTransport:''
                 },
                 warehouseNameList:[
                     //加载所有仓库
@@ -133,23 +193,32 @@
         } ,
         beforeMount:function () {
             var vm = this;
-            var templateCode = vm.templateCode;
+            vm.colDefaultValModel = {
+                orderTime:vm.orderTime,
+                merchandiser:'${userName!}',
+                warehouseName:'',
+                businessType:'',
+                provideTransport:''
+            };
+            var templateCode = vm.templateCodeShow;
             if(undefined == templateCode || StringUtil.isEmpty(templateCode)){
                 layer.msg("错误!模板编码为空!");
                 return;
             }
-           /* CommonClient.post("/ofc/storage_template/merchandiser",{},function (result) {
-                if(undefined == result || null == result || result.length == 0){
+            CommonClient.syncpost("/ofc/storage_template/warehouse",{},function (result) {
+                vm.warehouseNameList = [];
+                if(result.code != 200){
+                    vm.$message("加载所有仓库失败!");
                     return;
                 }
-                var merchandiserList = [];
-                $.each(result, function (index, item) {
-                    var merchandiser = {};
-
+                $.each(result.result, function (index, item) {
+                    var warehouseName = {};
+                    warehouseName.lable = item.warehouseName;
+                    warehouseName.value = item.warehouseName;
+                    vm.warehouseNameList.push(warehouseName);
                 })
-            });*/
-            //加载当前模板的数据
-            var url = "/ofc/storage_template/detail_data/" + vm.templateCode;
+            });
+            var url = "/ofc/storage_template/detail_data/" + templateCode;
             CommonClient.post(url, {}, function (result) {
                 var itemOut = {};
                 $.each(result.result,function (index, item) {
@@ -157,44 +226,23 @@
                         itemOut = item;
                     }
                     var tableItem = {};
-                    var indexNum = item.indexNum;
-                    var colDefaultVal = item.colDefaultVal;
-                    if(!StringUtil.isEmpty(colDefaultVal)){
-                        var orderTime;
-                        var merchandiser;
-                        var warehouseName;
-                        var businessType;
-                        if(indexNum == 3){
-                            merchandiser = colDefaultVal;
-                        }else if(indexNum == 4){
-                            warehouseName = colDefaultVal;
-                        }else if(indexNum == 5){
-                            businessType = colDefaultVal;
-                        }else if(indexNum == 18){
-
-                        }
-                        vm.colDefaultValModel={
-                            orderTime:'',
-                            merchandiser:merchandiser,
-                            warehouseName:warehouseName,
-                            businessType:businessType,
-                            provideTransport:''
-                        }
-                    }
-                    tableItem.indexNum = indexNum;
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
-                    debugger
-                    tableItem.colDefaultVal = colDefaultVal;
+                    tableItem.colDefaultVal = item.colDefaultVal;
                     vm.tableData.push(tableItem);
                 });
-                vm.templateForm={
-                    templateType:itemOut.templateType,
-                    templateName:itemOut.templateName,
-                    custName:itemOut.custName,
-                    custCode:itemOut.custCode
-                };
+                var templateType = itemOut.templateType;
+                var templateTypeName = itemOut.templateType == 'storageIn' ? '入库单' : '出库单';
+                vm.templatesTypeList = [
+                    {label:templateType,value:templateTypeName}
+                ];
+                vm.templateForm.templateName = itemOut.templateName;
+                vm.templateForm.custName = itemOut.custName;
+                vm.templateForm.custCode = itemOut.custCode;
+
             })
+
+
         },
         methods:{
             templateTypeChange:function (val) {
@@ -298,9 +346,9 @@
             },
 
             templateSaveBtn:function () {
+                var vm = this;
                 var templateList = [];
                 var designData = this.tableData;
-                var templateCode = this.templateCode;
                 var templateType = this.templateForm.templateType;
                 var templateName = this.templateForm.templateName;
                 var custName = this.templateForm.custName;
@@ -321,44 +369,43 @@
                 for (var i = 0; i < designData.length; i ++){
                     var design = designData[i];
                     var template = {};
-                    template.templateCode = templateCode;
                     template.templateType = templateType;
                     template.templateName = templateName;
                     template.custName = custName;
                     template.custCode = custCode;
-                    var reflectColName = StringUtil.trim(design.reflectColName);
+                    var reflectColName = StringUtil.isEmpty(design.reflectColName) ? "" : StringUtil.trim(design.reflectColName);
                     var index = design.indexNum;
-                    if(index == 0 && StringUtil.isEmpty(reflectColName)){
-                        alert('客户订单号模板列名为空!');
-                        return;
-                    } else if(index == 2 && StringUtil.isEmpty(reflectColName)){
-                        alert('开单员模板列名为空!');
+                    if(index == 1 && StringUtil.isEmpty(reflectColName)){
+                        vm.$message('客户订单号模板列名为空!');
                         return;
                     } else if(index == 3 && StringUtil.isEmpty(reflectColName)){
-                        alert('仓库名称模板列名为空!');
+                        vm.$message('开单员模板列名为空!');
                         return;
                     } else if(index == 4 && StringUtil.isEmpty(reflectColName)){
-                        alert('业务类型模板列名为空!');
+                        vm.$message('仓库名称模板列名为空!');
                         return;
-                    } else if(index == 6 && StringUtil.isEmpty(reflectColName)){
-                        alert('货品编码模板列名为空!');
+                    } else if(index == 5 && StringUtil.isEmpty(reflectColName)){
+                        vm.$message('业务类型模板列名为空!');
                         return;
-                    } else if(index == 11 && StringUtil.isEmpty(reflectColName)){
-                        designData.length == 21 ? alert('入库数量模板列名为空!') : alert('出库数量模板列名为空!');
+                    } else if(index == 7 && StringUtil.isEmpty(reflectColName)){
+                        vm.$message('货品编码模板列名为空!');
                         return;
-                    } else if(index == 21 && StringUtil.isEmpty(reflectColName)){
-                        alert('收货方名称模板列名为空!');
+                    } else if(index == 12 && StringUtil.isEmpty(reflectColName)){
+                        designData.length == 21 ? vm.$message('入库数量模板列名为空!') : vm.$message('出库数量模板列名为空!');
+                        return;
+                    } else if(index == 22 && StringUtil.isEmpty(reflectColName)){
+                        vm.$message('收货方名称模板列名为空!');
                         return;
                     }
                     template.indexNum = design.indexNum;
                     template.standardColCode = design.standardColCode;
                     template.standardColName = design.standardColName;
                     template.reflectColName = reflectColName;
-                    template.colDefaultVal = StringUtil.trim(design.colDefaultVal);
+                    template.colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
                     templateList.push(template);
                 }
-                xescm.common.submit("/ofc/storage_template/edit_confirm", {"templateList":JSON.stringify(templateList)}, "确认保存该模板配置?", function () {
-
+                xescm.common.submit("/ofc/storage_template/edit", {"templateList":JSON.stringify(templateList)}, "确认修改该模板配置?", function () {
+                    xescm.common.loadPage("/ofc/storage/template");
                 });
             },
             templateDefaultSetBtn:function () {
@@ -368,7 +415,7 @@
                 this.colDefaultValDia = false;
             },
             confirmSetDefault:function () {
-                this.colDefaultValDia = false;
+
                 var defOrderTime = this.colDefaultValModel.orderTime;
                 var defMerchandiser = this.colDefaultValModel.merchandiser;
                 var defWarehouseName = this.colDefaultValModel.warehouseName;
@@ -384,6 +431,7 @@
                 }else{
                     table[17].colDefaultVal = "是";
                 }
+                this.colDefaultValDia = false;
             }
         }
 
