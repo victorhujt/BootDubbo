@@ -313,7 +313,7 @@ public class OfcStorageTemplateRest extends BaseController{
                 return placeOrderResult;
             }
             //审核
-            Wrapper auditOrderResult = ofcStorageTemplateService.storageTemplateAudit(placeOrderResult.getResult());
+            Wrapper auditOrderResult = ofcStorageTemplateService.storageTemplateAudit(placeOrderResult.getResult(), authResDto);
             if(Wrapper.ERROR_CODE == auditOrderResult.getCode()){
                 return auditOrderResult;
             }

@@ -32,4 +32,5 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
 
 
     int checkCustOrderCodeRepeat(@Param("custOrderCode") String custOrderCode);
+
 }

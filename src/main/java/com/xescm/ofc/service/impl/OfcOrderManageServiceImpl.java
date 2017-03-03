@@ -2911,7 +2911,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
         if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
             //调用自动审核
-            orderAutoAudit(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcWarehouseInformation
+            this.orderAutoAudit(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcWarehouseInformation
                     , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);

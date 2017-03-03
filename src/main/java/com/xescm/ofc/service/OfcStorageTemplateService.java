@@ -34,5 +34,5 @@ public interface OfcStorageTemplateService {
 
     Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception;
 
-    Wrapper storageTemplateAudit(Object result);
+    Wrapper storageTemplateAudit(Object result, AuthResDto authResDto);
 }

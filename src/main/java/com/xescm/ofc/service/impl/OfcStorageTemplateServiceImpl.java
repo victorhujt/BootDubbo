@@ -14,18 +14,14 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscGoodsEdasService;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcStorageTemplate;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcStorageTemplateMapper;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
-import com.xescm.ofc.service.OfcOrderManageService;
-import com.xescm.ofc.service.OfcStorageTemplateService;
-import com.xescm.ofc.service.OfcWarehouseInformationService;
+import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
@@ -67,6 +63,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Resource
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    @Resource
+    private OfcOrderStatusService ofcOrderStatusService;
     @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
     @Resource
@@ -1010,13 +1010,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     public Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception{
         logger.info("orderList ==> {}", orderList);
         logger.info("authResDto ==> {}", authResDto);
+        String orderBatchNumber = null;
         if(PubUtils.isSEmptyOrNull(orderList) || null == authResDto){
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
             throw new BusinessException("仓储开单批量导单确认下单失败!");
         }
         TypeReference<List<OfcStorageTemplateDto>> typeReference = new TypeReference<List<OfcStorageTemplateDto>>() {
         };
-        List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = JacksonUtil.parseJson(orderList, typeReference);
+        List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = JacksonUtil.parseJsonWithFormat(orderList, typeReference);
         if(CollectionUtils.isEmpty(ofcStorageTemplateDtoList)){
             throw new BusinessException("仓储开单批量导单确认下单失败! 订单列表为空!");
         }
@@ -1045,7 +1046,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg);
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
-            String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
+            orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
             ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
             ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
             if(ofcOrderDTO.getProvideTransport() == null){
@@ -1064,7 +1065,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 return save;
             }
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
 
     /**
@@ -1102,12 +1103,36 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     /**
      * 仓储开单批量导单审核
      * @param result 审核的结果
+     * @param authResDto 当前登录用户
      * @return 批量审核的结果
      */
     @Override
-    public Wrapper storageTemplateAudit(Object result) {
-        return null;
+    public Wrapper storageTemplateAudit(Object result, AuthResDto authResDto) {
+        logger.info("=========>仓储开单批量导单审核开始....");
+        logger.info("=========>result:{}", result);
+        logger.info("=========>authResDto:{}", authResDto);
+        if(null == result || null == authResDto){
+            logger.error("仓储开单批量导单审核失败, 入参有误");
+            throw new BusinessException("仓储开单批量导单审核失败!");
+        }
+        String orderBatchNumber = (String) result;
+        List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.queryFundamentalByBatchNumber(orderBatchNumber);
+        for (OfcFundamentalInformation ofcFundamentalInformation : ofcFundamentalInformationList) {
+            String orderCode = ofcFundamentalInformation.getOrderCode();
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+            OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+            OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
+            String review;
+            try {
+                review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, null, ofcWarehouseInformation
+                        , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), "review", authResDto);
+            } catch (Exception e) {
+                logger.error("仓储开单批量导单审核, 当前订单审核失败, 直接跳过该订单, 订单号: {}", orderCode);
+                continue;
+            }
+            logger.info("仓储开单批量导单审核, 订单号:{}审核结果:{}", orderCode, review);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
-
 
 }
