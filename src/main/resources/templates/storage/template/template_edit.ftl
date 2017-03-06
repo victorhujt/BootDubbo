@@ -387,6 +387,10 @@
                 var designData = this.tableData;
                 var templateType = this.templateForm.templateType;
                 var templateName = this.templateForm.templateName;
+                if(templateName.length > 50){
+                    vm.$message("模板列名过长，最大长度50位！");
+                    return;
+                }
                 var templateCode = vm.templateCodeShow;
                 var custName = this.templateForm.custName;
                 var custCode = this.templateForm.custCode;
@@ -413,6 +417,10 @@
                     template.custCode = custCode;
                     var reflectColName = StringUtil.isEmpty(design.reflectColName) ? "" : StringUtil.trim(design.reflectColName);
                     var index = design.indexNum;
+                    if(reflectColName.length > 50) {
+                        vm.$message("第" + index + "行模板列名过长!最长50位!");
+                        return;
+                    }
                     if(index == 1 && StringUtil.isEmpty(reflectColName)){
                         vm.$message('客户订单号模板列名为空!');
                         return;
