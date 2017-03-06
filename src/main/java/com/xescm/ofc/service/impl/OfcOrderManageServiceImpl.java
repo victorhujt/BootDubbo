@@ -3106,6 +3106,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 List<InventoryDTO> inventoryGoods = new ArrayList<>();
                 int count = 0;
                 for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsList) {
+                    if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                        if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
+                            continue;
+                        }
+                    }
                     InventoryDTO inventoryDTO = new InventoryDTO();
                     inventoryDTO.setLineNo(String.valueOf(++count));
                     inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
