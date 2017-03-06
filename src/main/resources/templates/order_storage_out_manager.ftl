@@ -598,7 +598,7 @@
                         var i=0;
                         $.each(result.result.list, function (index, item) {
                             var order={};
-                            order.customerName=item.custName;wei
+                            order.customerName=item.custName;
                             order.orderCode=item.orderCode;
                             order.orderBatchNumber=item.orderBatchNumber;
                             order.customerOrderCode=item.custOrderCode;

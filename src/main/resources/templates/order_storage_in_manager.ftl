@@ -158,14 +158,6 @@
                 <el-table-column property="orderStatusName" label="订单状态"></el-table-column>
                 <el-table-column property="wareHouseName" label="仓库名称"></el-table-column>
                 <el-table-column property="baseName" label="基地名称"></el-table-column>
-                <#--<el-table-column-->
-                        <#--fixed="right"-->
-                        <#--label="操作"-->
-                        <#--width="100">-->
-                    <#--<template scope="scope">-->
-                        <#--<el-button @click="orderDetails" type="text" size="small">查看</el-button>-->
-                    <#--</template>-->
-                <#--</el-table-column>-->
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
             </el-pagination>
@@ -468,7 +460,7 @@
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     if(order.orderStatusName!="待审核"){
-                        this.promptInfo("只有待审核的可以审核","error");
+                        this.promptInfo("只有待审核的可以审核","warning");
                         return;
                     }
                     this.auditOrderOrNotAuditOper(order.orderCode,"review");
@@ -529,11 +521,11 @@
             },
             valiateSelectOrder:function(){
                 if(this.multipleSelection.length<1){
-                    this.promptInfo("请至少选中一行","error");
+                    this.promptInfo("请至少选中一行","warning");
                     return false;
                 }
                 if(this.multipleSelection.length>1){
-                    this.promptInfo("只能选择一行","error");
+                    this.promptInfo("只能选择一行","warning");
                     return false;
                 }
                 return true;
