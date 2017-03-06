@@ -126,13 +126,18 @@
         $(document).ready(main);
     });
 
+
     function main() {
         initCustomerName();
+        custNameSelected();
         $("#custName").on("select2-selecting", function(e) {
             vm.templateForm.custName = e.choice.name;
             vm.templateForm.custCode = e.choice.code;
             vm.custNameNotNull = false;
         });
+    }
+    function custNameSelected() {
+        $("#custName").select2("data", {"code": vm.templateForm.custCode, "name": vm.templateForm.custName});
     }
 
     function initCustomerName() {
@@ -270,9 +275,8 @@
                 ];
                 vm.templateForm.templateName = itemOut.templateName;
                 vm.templateForm.custName = itemOut.custName;
-                $("#custName").val(itemOut.custName);
+
                 vm.templateForm.custCode = itemOut.custCode;
-                $("#custCode").val(itemOut.custCode);
             })
 
 
@@ -384,6 +388,7 @@
                 var designData = this.tableData;
                 var templateType = this.templateForm.templateType;
                 var templateName = this.templateForm.templateName;
+                var templateCode = vm.templateCodeShow;
                 var custName = this.templateForm.custName;
                 var custCode = this.templateForm.custCode;
                 if(StringUtil.isEmpty(templateType)){
@@ -402,6 +407,7 @@
                 for (var i = 0; i < designData.length; i ++){
                     var design = designData[i];
                     var template = {};
+                    template.templateCode = templateCode;
                     template.templateType = templateType;
                     template.templateName = templateName;
                     template.custName = custName;
@@ -437,7 +443,7 @@
                     template.colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
                     templateList.push(template);
                 }
-                xescm.common.submit("/ofc/storage_template/edit", {"templateList":JSON.stringify(templateList)}, "确认修改该模板配置?", function () {
+                xescm.common.submit("/ofc/storage_template/edit_confirm", {"templateList":JSON.stringify(templateList)}, "确认修改该模板配置?", function () {
                     xescm.common.loadPage("/ofc/storage/template");
                 });
             },

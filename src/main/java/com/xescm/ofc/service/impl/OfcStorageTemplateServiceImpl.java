@@ -198,12 +198,20 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         String userId = authResDto.getUserId();
         String userName = authResDto.getUserName();
         Date now = new Date();
+        Integer changeNum = StringUtils.equals(ofcStorageTemplates.get(0).getTemplateType(), "storageIn") ? 21 : 22;
+        Integer updateNum = changeNum;
         for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplates) {
             ofcStorageTemplate.setOperator(userId);
             ofcStorageTemplate.setOperatorName(userName);
             ofcStorageTemplate.setOperTime(now);
-            ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemplate);
+            int i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemplate);
+            updateNum -= i;
         }
+        if(updateNum.compareTo(changeNum) == 0){
+            logger.error("模板配置编辑更新失败! updateNum:{}", updateNum);
+            throw new BusinessException("模板配置编辑更新失败!");
+        }
+
     }
 
     /**
