@@ -697,7 +697,7 @@
                         vueObj.orderForm.supportName = '';    // 清空供应商
                         var data=result.result;
                         if (data == undefined || data == null || data.length ==0) {
-                            layer.msg("暂时未查询到该客户下的仓库信息！！");
+                            layer.msg("暂时未查询到该客户下的仓库信息！");
                         } else if (result.code == 200) {
                             $.each(data,function (index,rmcWarehouseRespDto) {
                                 var warehouse={};
@@ -708,7 +708,12 @@
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
                         } else {
-                            vueObj.promptInfo(result.message,'error');
+                            if(result.message==null||result.message==""){
+                                vueObj.promptInfo("查询到该客户下的仓库信息异常",'error');
+                            }else{
+                                vueObj.promptInfo(result.message,'error');
+                            }
+
                         }
                     },"json");
                 } else {
@@ -721,7 +726,7 @@
                     var data=result.result;
                     if (data == undefined || data == null || data.length ==0) {
                         vueObj.wareHouseName="";
-                        layer.msg("暂时未查询到该客户下的仓库信息！！");
+                        layer.msg("暂时未查询到该客户下的仓库信息！");
                     } else if (result.code == 200) {
                         $.each(data,function (index,rmcWarehouseRespDto) {
                             var warehouse={};
@@ -732,7 +737,11 @@
                     } else if (result.code == 403) {
                         vueObj.promptInfo("没有权限","error");
                     } else {
-                        vueObj.promptInfo(result.message,"error");
+                        if(result.message==null||result.message==""){
+                            vueObj.promptInfo("查询到该客户下的仓库信息","error");
+                        }else{
+                            vueObj.promptInfo(result.message,"error");
+                        }
                     }
                 },"json");
             },

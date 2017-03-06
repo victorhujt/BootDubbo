@@ -672,9 +672,6 @@
             GoodsCurrentChange:function(val) {
                 this.goodsCurrentRow = val;
             },
-            goodsCodeClick:function() {
-                console.log('弹窗');
-            },
             selectSupplier:function(){
                 if(!this.orderForm.custName && !this.orderForm.custCode){
                     this.promptInfo("请选择客户!",'warning');

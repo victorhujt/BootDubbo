@@ -98,7 +98,7 @@
                             v-model="abolishTime">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="创建人员" class="xe-col-3">
+                <el-form-item label="取消人" class="xe-col-3">
                     <el-input v-model="abolisher" ></el-input>
                 </el-form-item>
             </div>
@@ -375,7 +375,7 @@
                                 vueObj.createTime=DateUtil.parse(ofcFundamentalInformation.creationTime);
                                 vueObj.finishedTime=DateUtil.parse(ofcFundamentalInformation.finishedTime);
                                 vueObj.abolishTime=DateUtil.parse(ofcFundamentalInformation.abolishTime);
-                                vueObj.creator=ofcFundamentalInformation.creator;
+                                vueObj.creator=ofcFundamentalInformation.creatorName;
                                 vueObj.abolisher=ofcFundamentalInformation.abolisher;
                                 if(ofcWarehouseInformation!=null){
                                     vueObj.wareHouseName=ofcWarehouseInformation.warehouseName;

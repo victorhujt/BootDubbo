@@ -17,7 +17,6 @@
                     <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
-
             <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange" style="width: 100%">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column property="customerCode" label="客户编码"></el-table-column>
@@ -34,7 +33,7 @@
             </div>
         </el-dialog>
         <div class="xe-pageHeader">
-            出库单管理
+            出库订单筛选
         </div>
         <el-form label-width="100px">
             <div class="xe-block">
@@ -125,8 +124,9 @@
             </div>
 
         </el-form>
-
-
+        <div class="xe-pageHeader">
+            出库订单列表
+        </div>
         <div>
             <el-button type="primary" size="small" @click="addOrder">添加</el-button>
             <el-button type="primary" size="small" @click="editOrder">编辑</el-button>
@@ -281,9 +281,11 @@
                     if(baseArray.length>0){
                         $.each(baseArray,function (index,OfcGroupVo) {
                             var base={};
-                            base.label=OfcGroupVo.groupName;
-                            base.value= OfcGroupVo.serialNo;
-                            vueObj.baseNameOptions.push(base);
+                            if(OfcGroupVo.groupName!=""&&OfcGroupVo.serialNo!=""){
+                                base.label=OfcGroupVo.groupName;
+                                base.value=OfcGroupVo.serialNo;
+                                vueObj.baseNameOptions.push(base);
+                            }
                         });
                     }else{
                         layer.msg("当前用户下没有基地信息！");
@@ -292,8 +294,6 @@
             });
             vueObj.selectOrder();
         },
-
-
         methods: {
             handleCustomerCurrentChange:function(val) {
                 this.currentCustomerRow = val;
@@ -412,7 +412,11 @@
                         }else if(result.code==200){
                         }else{
                             flag=false;
-                            vueObj.promptInfo(result.message,"error");
+                            if(result.message==null||result.message==""){
+                                vueObj.promptInfo("订单删除失败","error");
+                            }else{
+                                vueObj.promptInfo(result.message,"error");
+                            }
                             return;
                         }
                     });
@@ -434,7 +438,11 @@
                             vueObj.promptInfo("订单复制成功！订单编号:"+result.result,"success");
                             vueObj.selectOrder();
                         }else{
-                            vueObj.promptInfo(result.message,"error");
+                            if(result.message==null||result.message==""){
+                                vueObj.promptInfo("复制订单出现异常","error");
+                            }else{
+                                vueObj.promptInfo(result.message,"error");
+                            }
                         }
                     });
                 }
@@ -482,7 +490,7 @@
                                 vueObj.promptInfo(result.message,"success");
                                 vueObj.selectOrder();
                             }else{
-                                if(result.message==null){
+                                if(result.message==null||result.message==""){
                                     vueObj.promptInfo("订单取消失败","error");
                                 }else{
                                     vueObj.promptInfo(result.message,"error");
@@ -512,17 +520,21 @@
                         vueObj.promptInfo(result.message,"success");
                         vueObj.selectOrder();
                     }else{
-                        vueObj.promptInfo(result.message,"error");
+                        if(result.message==null||result.message==""){
+                            vueObj.promptInfo("审核或者反审核出现异常","error");
+                        }else{
+                            vueObj.promptInfo(result.message,"error");
+                        }
                     }
                 });
             },
             valiateSelectOrder:function(){
                 if(this.multipleSelection.length<1){
-                    this.promptInfo("请至少选中一行","error");
+                    this.promptInfo("请至少选中一行","warning");
                     return false;
                 }
                 if(this.multipleSelection.length>1){
-                    this.promptInfo("只能选择一行","error");
+                    this.promptInfo("只能选择一行","warning");
                     return false;
                 }
                 return true;
@@ -559,16 +571,15 @@
                 var param={};
                 var vueObj=this;
                 vueObj.orderData=[];
-
                 if(this.beginDate&& this.endDate){
                     this.beginDate=new Date(this.beginDate);
                     if( this.beginDate.getTime()> this.endDate.getTime()){
                         vueObj.promptInfo("订单的起始日期不能大于结束日期","error");
                         return;
                     }
-                    if(this.baseName){
-                        if(!this.areaName){
-                            vueObj.promptInfo("选择基地时，必须选择大区","error");
+                    if(this.baseName!=""){
+                        if(this.areaName==""){
+                            vueObj.promptInfo("选择基地时，必须选择大区","warning");
                             return;
                         }
                     }
@@ -593,7 +604,7 @@
                 param.tag="out";
                 CommonClient.post(sys.rootPath + "/ofc/queryOrderStorageDataOper",param,function (result) {
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
-                        layer.msg("暂时未查询到相关订单信息！");
+                        layer.msg("暂时未查询到相关订单信息!");
                     } else if (result.code == 200) {
                         var i=0;
                         $.each(result.result.list, function (index, item) {
@@ -618,10 +629,10 @@
                 });
             },
             promptInfo:function(message,type){
-                this.$message({
-                  message: message,
-                  type: type
-                });
+                    this.$message({
+                        message: message,
+                        type: type
+                    });
             }
         }
     });
