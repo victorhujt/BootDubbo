@@ -90,6 +90,9 @@
     </where>
     GROUP BY
       ost.template_code
+    ORDER BY
+      ost.creat_time DESC
+
 
   </select>
   <select id="selectTemplateDetail" resultType="com.xescm.ofc.domain.OfcStorageTemplate">

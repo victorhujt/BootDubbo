@@ -151,7 +151,6 @@
         },
         methods:{
             templateSearchBtn:function (val) {
-                debugger
                 var vm = this;
                 vm.tableData = [];
                 vm.total=0;
@@ -169,7 +168,7 @@
                         $.each(result.result.list, function (index, item) {
                             var rowData = {};
                             rowData.templateName = item.templateName;
-                            rowData.templateType = item.templateType;
+                            rowData.templateType = item.templateType == 'storageIn' ? '入库单' : '出库单';
                             rowData.templateCode = item.templateCode;
                             rowData.custCode = item.custCode;
                             rowData.custName = item.custName;
@@ -196,7 +195,6 @@
                 this.templateSearchBtn();
             },
             handleCurrentPage:function(val){
-                debugger
                 this.currentPage=val;
                 this.templateSearchBtn();
             },

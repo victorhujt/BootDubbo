@@ -35,6 +35,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -188,23 +189,54 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * 模板配置编辑
      * @param templateList 模板配置列表
      * @param authResDto 登录用户
+     * @param lastTemplateType 修改之前的模板类型
      */
     @Transactional
     @Override
-    public void templateEditConfirm(String templateList, AuthResDto authResDto) throws Exception {
+    public void templateEditConfirm(String templateList, AuthResDto authResDto, String lastTemplateType) throws Exception {
         TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
         };
         List<OfcStorageTemplate> ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
         String userId = authResDto.getUserId();
         String userName = authResDto.getUserName();
         Date now = new Date();
-        Integer changeNum = StringUtils.equals(ofcStorageTemplates.get(0).getTemplateType(), "storageIn") ? 21 : 22;
+        OfcStorageTemplate ofcStorageTemplateForFix = ofcStorageTemplates.get(0);
+        String currTemplateType = ofcStorageTemplateForFix.getTemplateType();
+        OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
+        ofcStorageTemplate.setIndexNum(22);
+
+        Integer changeNum = StringUtils.equals(currTemplateType, "storageIn") ? 21 : 22;
         Integer updateNum = changeNum;
-        for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplates) {
-            ofcStorageTemplate.setOperator(userId);
-            ofcStorageTemplate.setOperatorName(userName);
-            ofcStorageTemplate.setOperTime(now);
-            int i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemplate);
+        int num = 0;
+        for (OfcStorageTemplate ofcStorageTemp : ofcStorageTemplates) {
+            num ++ ;
+            ofcStorageTemp.setOperator(userId);
+            ofcStorageTemp.setOperatorName(userName);
+            ofcStorageTemp.setOperTime(now);
+            int i = 0;
+            if(num != changeNum){
+                i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
+            }else {
+                if(StringUtils.equals(currTemplateType, "storageIn") && StringUtils.equals(lastTemplateType, "storageOut")){
+                    ofcStorageTemplate.setTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
+                    //删掉模板中第22条
+                    int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
+                    if(delete == 0){
+                        logger.error("模板配置编辑更新失败, 删掉模板中第22条失败");
+                        throw new BusinessException("模板配置编辑更新失败");
+                    }
+                }else if(StringUtils.equals(currTemplateType, "storageOut") && StringUtils.equals(lastTemplateType, "storageIn")){
+                    //新增模板第22条
+                    ModelMapper modelMapper = new ModelMapper();
+                    modelMapper.map(ofcStorageTemplate, ofcStorageTemplateForFix);
+                    modelMapper.map(ofcStorageTemp, ofcStorageTemplate);
+                    ofcStorageTemp.setId(null);
+                    ofcStorageTemp.setCreatTime(now);
+                    ofcStorageTemp.setCreator(userId);
+                    ofcStorageTemp.setCreatorName(userName);
+                    i = ofcStorageTemplateMapper.insert(ofcStorageTemp);
+                }
+            }
             updateNum -= i;
         }
         if(updateNum.compareTo(changeNum) == 0){

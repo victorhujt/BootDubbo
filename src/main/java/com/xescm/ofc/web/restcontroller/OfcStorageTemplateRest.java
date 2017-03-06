@@ -129,7 +129,7 @@ public class OfcStorageTemplateRest extends BaseController{
      */
     @RequestMapping(value = "/edit_confirm")
     @ResponseBody
-    public Wrapper storageTemplateEditConfirm(String templateList){
+    public Wrapper storageTemplateEditConfirm(String templateList, String lastTemplateType){
         logger.info("模板配置编辑确认 ==> templateList:{}",templateList);
         if(PubUtils.isSEmptyOrNull(templateList)){
             logger.error("模板配置编辑确认错误, 入参为空, templateList:null or '' ");
@@ -137,7 +137,7 @@ public class OfcStorageTemplateRest extends BaseController{
         }
         AuthResDto authResDto = getAuthResDtoByToken();
         try {
-            ofcStorageTemplateService.templateEditConfirm(templateList,authResDto);
+            ofcStorageTemplateService.templateEditConfirm(templateList, authResDto, lastTemplateType);
         } catch (BusinessException e) {
             logger.error("模板配置编辑确认错误, {}",e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());

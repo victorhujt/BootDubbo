@@ -151,6 +151,7 @@
         el:'#vm',
         data:function () {
             return{
+                lastTemplateType:'',
                 templateCodeShow:'${templateCode!}',
                 orderTime:'${orderTime!}',
                 warehouseName:'',
@@ -240,9 +241,9 @@
                     tableItem.indexNum = indexNum;
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
+                    console.log('------' + tableItem.reflectColName);
                     var colDefaultVal = item.colDefaultVal;
                     if(!StringUtil.isEmpty(colDefaultVal)){
-
                         if(indexNum == 2){
                             orderTime = colDefaultVal;
                         }else if(indexNum == 3){
@@ -266,17 +267,14 @@
                     businessType:businessType,
                     provideTransport:"是" === provideTransport ? true : false
                 };
-                console.log('=============' + JSON.stringify(vm.colDefaultValModel));
-
                 var templateType = itemOut.templateType;
-                var templateTypeName = itemOut.templateType == 'storageIn' ? '入库单' : '出库单';
-                vm.templatesTypeList = [
-                    {label:templateType,value:templateTypeName}
-                ];
-                vm.templateForm.templateName = itemOut.templateName;
-                vm.templateForm.custName = itemOut.custName;
-
-                vm.templateForm.custCode = itemOut.custCode;
+                vm.templateForm = {
+                    templateType:templateType,
+                    templateName:itemOut.templateName,
+                    custName:itemOut.custName,
+                    custCode:itemOut.custCode
+                };
+                vm.lastTemplateType = templateType;
             })
 
 
@@ -443,7 +441,7 @@
                     template.colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
                     templateList.push(template);
                 }
-                xescm.common.submit("/ofc/storage_template/edit_confirm", {"templateList":JSON.stringify(templateList)}, "确认修改该模板配置?", function () {
+                xescm.common.submit("/ofc/storage_template/edit_confirm", {"templateList":JSON.stringify(templateList), "lastTemplateType":vm.lastTemplateType}, "确认修改该模板配置?", function () {
                     xescm.common.loadPage("/ofc/storage/template");
                 });
             },

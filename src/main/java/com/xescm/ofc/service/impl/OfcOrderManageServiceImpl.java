@@ -3087,7 +3087,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param goodsDetailsList          货品明细
      * @param ofcWarehouseInformation   仓库信息
      * @param ofcFinanceInformation     财务信息
-     * @return void
      */
     @Override
     public void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
