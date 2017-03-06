@@ -282,6 +282,7 @@
         methods:{
             templateTypeChange:function (val) {
                 var vm = this;
+                //去掉默认的业务类型
                 vm.colDefaultValModel.businessType = '';
                 if(!StringUtil.isEmpty(val)){
                     vm.templateTypeNotNull = false;

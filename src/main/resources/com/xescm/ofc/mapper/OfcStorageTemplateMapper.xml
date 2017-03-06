@@ -157,10 +157,10 @@
       <if test="standardColName != null and standardColName != ''">
         standard_col_name = #{standardColName},
       </if>
-      <if test="reflectColName != null and reflectColName != ''">
+      <if test="reflectColName != null">
         reflect_col_name = #{reflectColName},
       </if>
-      <if test="colDefaultVal != null and colDefaultVal != ''">
+      <if test="colDefaultVal != null">
         col_default_val = #{colDefaultVal},
       </if>
       <if test="creatTime != null and creatTime != ''">
