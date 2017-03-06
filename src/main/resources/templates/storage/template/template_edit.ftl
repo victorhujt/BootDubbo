@@ -225,7 +225,7 @@
                 })
             });
             var url = "/ofc/storage_template/detail_data/" + templateCode;
-            CommonClient.post(url, {}, function (result) {
+            CommonClient.syncpost(url, {}, function (result) {
                 var itemOut = {};
                 var orderTime;
                 var merchandiser;
@@ -243,6 +243,7 @@
                     tableItem.reflectColName = item.reflectColName;
                     console.log('------' + tableItem.reflectColName);
                     var colDefaultVal = item.colDefaultVal;
+                    console.log('------' + colDefaultVal);
                     if(!StringUtil.isEmpty(colDefaultVal)){
                         if(indexNum == 2){
                             orderTime = colDefaultVal;
@@ -276,7 +277,6 @@
                 };
                 vm.lastTemplateType = templateType;
             })
-
 
         },
         methods:{

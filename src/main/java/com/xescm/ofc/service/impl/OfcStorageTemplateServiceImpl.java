@@ -217,7 +217,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             if(num != changeNum){
                 i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
             }else {
+
                 if(StringUtils.equals(currTemplateType, "storageIn") && StringUtils.equals(lastTemplateType, "storageOut")){
+                    //21
                     ofcStorageTemplate.setTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
                     //删掉模板中第22条
                     int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
@@ -226,6 +228,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         throw new BusinessException("模板配置编辑更新失败");
                     }
                 }else if(StringUtils.equals(currTemplateType, "storageOut") && StringUtils.equals(lastTemplateType, "storageIn")){
+                    //22
                     //新增模板第22条
                     ModelMapper modelMapper = new ModelMapper();
                     modelMapper.map(ofcStorageTemplate, ofcStorageTemplateForFix);
@@ -235,6 +238,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     ofcStorageTemp.setCreator(userId);
                     ofcStorageTemp.setCreatorName(userName);
                     i = ofcStorageTemplateMapper.insert(ofcStorageTemp);
+                }else {
+                    i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
                 }
             }
             updateNum -= i;
