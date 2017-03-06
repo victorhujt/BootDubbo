@@ -1918,7 +1918,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     throw new BusinessException("复制计划单信息异常", ex);
                 }
                 //创建第一个卡班单
-                ofcTransplanInfo.setBusinessType(BusinessTypeEnum.CABANNES.getCode());
+                 ofcTransplanInfo.setBusinessType(BusinessTypeEnum.CABANNES.getCode());
                 if (!PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")
                         && !PubUtils.trimAndNullAsEmpty(rmcPickup.getWarehouseName()).equals("")) {
                     ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
@@ -3106,6 +3106,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 List<InventoryDTO> inventoryGoods = new ArrayList<>();
                 int count = 0;
                 for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsList) {
+                    if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                        if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
+                            continue;
+                        }
+                    }
                     InventoryDTO inventoryDTO = new InventoryDTO();
                     inventoryDTO.setLineNo(String.valueOf(++count));
                     inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
@@ -3181,16 +3186,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFromCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
         tfcTransport.setFromCustomerName(ofcDistributionBasicInfo.getConsignorContactName());
         tfcTransport.setFromCustomerNameCode(ofcDistributionBasicInfo.getConsignorContactCode());
-        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDepartureProvince())) {
-            // 拼3级
-            StringBuilder fromCustomerAddress = new StringBuilder(ofcDistributionBasicInfo.getDepartureProvince());
-            if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDepartureCity())) {
-                fromCustomerAddress.append(ofcDistributionBasicInfo.getDepartureCity());
-                if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDepartureDistrict())) {
-                    fromCustomerAddress.append(ofcDistributionBasicInfo.getDepartureDistrict());
-                }
-            }
-            tfcTransport.setFromCustomerAddress(fromCustomerAddress.toString());
+        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlace())) {
+            tfcTransport.setFromCustomerAddress(ofcDistributionBasicInfo.getDeparturePlace());
         }
 
         tfcTransport.setFromCustomer(ofcDistributionBasicInfo.getConsignorName());// ??
@@ -3212,16 +3209,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setToCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());// 收货方编码
         tfcTransport.setToCustomerName(ofcDistributionBasicInfo.getConsigneeContactName());// 收货方联系人
         tfcTransport.setToCustomerNameCode(ofcDistributionBasicInfo.getConsigneeContactCode());//收货方联系人编码
-        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationProvince())) {
-            // 拼3级
-            StringBuilder toCustomerAddress = new StringBuilder(ofcDistributionBasicInfo.getDestinationProvince());
-            if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCity())) {
-                toCustomerAddress.append(ofcDistributionBasicInfo.getDestinationCity());
-                if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationDistrict())) {
-                    toCustomerAddress.append(ofcDistributionBasicInfo.getDestinationDistrict());
-                }
-            }
-            tfcTransport.setToCustomerAddress(toCustomerAddress.toString());
+        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
+            tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
         }
         tfcTransport.setToCustomer(ofcDistributionBasicInfo.getConsigneeName());// 收货方
         tfcTransport.setToCustomerTle(ofcDistributionBasicInfo.getConsigneeContactPhone());
@@ -3267,6 +3256,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setTransportPoolName();//
         List<TfcTransportDetail> tfcTransportDetails = new ArrayList<>();
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
+            if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
+                    continue;
+                }
+            }
             TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
             tfcTransportDetail.setStandard(ofcGoodsDetailsInfo.getGoodsSpec());
 //            tfcTransportDetail.setPono();

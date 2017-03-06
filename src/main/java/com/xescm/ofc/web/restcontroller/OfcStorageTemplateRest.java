@@ -112,15 +112,15 @@ public class OfcStorageTemplateRest extends BaseController{
      * @param templateCode 模板编码
      */
     @RequestMapping(value = "/edit/{templateCode}")
-    public ModelAndView storageTemplateEdit(@PathVariable String templateCode){
+    public String storageTemplateEdit(@PathVariable String templateCode, Model model){
         logger.info("模板配置编辑 ==> templateCode:{}",templateCode);
         if(PubUtils.isSEmptyOrNull(templateCode)){
             logger.error("模板配置编辑错误, 入参为空, templateCode:null or '' ");
-            return new ModelAndView("/error/error-500");
+            return "/error/error-500";
         }
-        ModelAndView modelAndView = new ModelAndView("/storage/template/template_edit");
-        modelAndView.addObject("templateCode",templateCode);
-        return modelAndView;
+        setDefaultModel(model);
+        model.addAttribute("templateCode",templateCode);
+        return "/storage/template/template_edit";
     }
 
     /**

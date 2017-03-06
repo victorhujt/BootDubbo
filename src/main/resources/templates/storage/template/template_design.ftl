@@ -396,7 +396,7 @@
                     templateList.push(template);
                 }
                 xescm.common.submit("/ofc/storage_template/save", {"templateList":JSON.stringify(templateList)}, "确认保存该模板配置?", function () {
-
+                    xescm.common.loadPage("/ofc/storage/template");
                 });
             },
             templateDefaultSetBtn:function () {
