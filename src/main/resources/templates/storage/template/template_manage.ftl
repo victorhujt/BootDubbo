@@ -108,12 +108,6 @@
         $("#custName").on("change", function(e) {
             vm.templateForm.custName = e.val;
         });
-//        $("#custName").on("change", function(e) {
-//            console.log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
-//        });
-//        $("#custName").on("select2-selecting", function(e) {
-//            console.log ("selecting val="+ e.val+" choice="+ JSON.stringify(e.choice));
-//        });
     }
 
 
@@ -157,6 +151,7 @@
         },
         methods:{
             templateSearchBtn:function (val) {
+                debugger
                 var vm = this;
                 vm.tableData = [];
                 vm.total=0;
@@ -166,7 +161,7 @@
                 param.custName = StringUtil.trim(this.templateForm.custName);
                 param.pageNum = vm.currentPage;
                 param.pageSize = vm.pageSize;
-                CommonClient.post("/ofc/storage_template/select", param, function (result) {
+                CommonClient.syncpost("/ofc/storage_template/select", param, function (result) {
                     if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
                         layer.msg("查询结果为空！");
                     } else if (result.code == 200) {// 1:normal
@@ -196,12 +191,14 @@
                 xescm.common.loadPage(url)
             },
             handleSizeChange:function(val){
+
                 this.pageSize=val;
-//                this.selectOrder();
+                this.templateSearchBtn();
             },
             handleCurrentPage:function(val){
+                debugger
                 this.currentPage=val;
-//                this.selectOrder();
+                this.templateSearchBtn();
             },
             templateEdit:function(val){
                 var vm = this;

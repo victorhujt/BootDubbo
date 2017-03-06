@@ -3256,6 +3256,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setTransportPoolName();//
         List<TfcTransportDetail> tfcTransportDetails = new ArrayList<>();
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
+            if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
+                    continue;
+                }
+            }
             TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
             tfcTransportDetail.setStandard(ofcGoodsDetailsInfo.getGoodsSpec());
 //            tfcTransportDetail.setPono();
