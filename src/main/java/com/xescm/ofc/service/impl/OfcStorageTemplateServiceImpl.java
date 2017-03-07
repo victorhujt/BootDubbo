@@ -27,7 +27,6 @@ import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -36,8 +35,11 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -390,9 +392,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         break;
                     }
                     //如果非必填列为空则跳过
-                    if (null == commonCell) {
+                     if (null == commonCell) {
                         //标记当前列出错, 并跳过当前循环
-                        break;
+                        continue;
                     }
                     //校验第一行,包括固定内容和收货人列表
                     String cellValue = null;
@@ -756,8 +758,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     //补齐
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustCode(ofcStorageTemplate.getCustCode());
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustName(ofcStorageTemplate.getCustName());
+                    Date now = new Date();
                     if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getOrderTime())){
-                        ofcStorageTemplateDto.getOfcOrderDTO().setOrderTime(new Date());
+                        ofcStorageTemplateDto.getOfcOrderDTO().setOrderTime(now);
+                        ofcStorageTemplateDto.setOrderTime(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1));
                     }
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
@@ -1082,13 +1086,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             orderListByCustOrderCode.add(ofcStorageTemplateDto);
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
+
         for (String orderMapKey : orderMap.keySet()) {
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
             logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
             BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg.getOfcOrderDTO());
-            BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg);
+            BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg, "orderTime");
+            ofcOrderDTO.setOrderTime(DateUtils.String2Date(forOrderMsg.getOrderTime(), DateUtils.DateFormatType.TYPE1));
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
             orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);

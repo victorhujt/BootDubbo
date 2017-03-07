@@ -110,7 +110,7 @@
                 });
 
             });
-            vm.uploadParam = {"custCode":vm.templateBatchIn.custCode
+            vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, "custName":vm.templateBatchIn.custName
                 , "templateCode":vm.templateBatchIn.templateName, "templateType":vm.templateType};
         });
 
@@ -134,7 +134,7 @@
                 orderMsgShow:false,
                 tableData:[],
                 errorMsgShow:false,
-                uploadParam:{custCode:'', templateCode:'', templateType:''},
+                uploadParam:{custCode:'', custName:'', templateCode:'', templateType:''},
                 custNameShow:false,
                 custCodeShow:false,
                 fileList: [],
@@ -158,7 +158,7 @@
                 if(undefined == val || StringUtil.isEmpty(val)){
                     return;
                 }
-                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, "templateCode":val, "templateType":vm.templateType};
+                vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, custName:vm.templateBatchIn.custName, "templateCode":val, "templateType":vm.templateType};
             },
             handleRemove(file, fileList) {
                 this.errorMsgShow = false;

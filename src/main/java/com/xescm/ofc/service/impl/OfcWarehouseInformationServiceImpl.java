@@ -92,8 +92,7 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
 
         }catch (BusinessException ex){
             throw new BusinessException(ex.getMessage());
-        }
-        catch (Exception ex){
+        }catch (Exception ex){
             throw new BusinessException("下单页面抓取仓库信息失败",ex);
         }
 

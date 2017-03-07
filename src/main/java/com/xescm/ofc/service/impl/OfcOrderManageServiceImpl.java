@@ -2552,12 +2552,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcGroupVo vo = ofcOrderManageOperService.queryAreaMsgByBase(dto);
         if (vo != null) {
             ofcInfo.setAreaCode(vo.getSerialNo());
+            ofcFundamentalInformation.setAreaCode(vo.getSerialNo());
             ofcInfo.setAreaName(vo.getGroupName());
+            ofcFundamentalInformation.setAreaName(vo.getGroupName());
         }
         ofcInfo.setBaseCode(rmcPickup.getSerialNo());
+        ofcFundamentalInformation.setBaseCode(rmcPickup.getSerialNo());
         ofcInfo.setBaseName(rmcPickup.getBaseName());
+        ofcFundamentalInformation.setBaseName(rmcPickup.getBaseName());
         ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
-        ofcFundamentalInformationService.update(ofcInfo);
+        int update = ofcFundamentalInformationService.update(ofcInfo);
+        if(update == 0){
+            logger.error("更新订单的大区和基地失败!");
+            throw new BusinessException("更新订单的大区和基地失败!");
+        }
     }
 
     /**
