@@ -35,8 +35,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -317,8 +315,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.error("校验Excel读取内部异常{}",e);
             throw new BusinessException("校验Excel读取内部异常");
         }
-
-        workbook.getSheetAt(0).getRow(0).getLastCellNum();
 
         boolean checkPass = true;
         List<String> xlsErrorMsg = new ArrayList<>();
@@ -682,7 +678,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.PROVIDE_TRANSPORT.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
-                                    cellValue = colDefaultVal.equals("是") ? "1" : "0";
+                                    cellValue = StringUtils.equals(ofcStorageTemplate.getTemplateType(), "storageIn") ? "0" : colDefaultVal.equals("是") ? "1" : "0";
                                 }else {
                                     logger.error("当前行:{},列:{} 没有是否提供运输服务, 默认为0", rowNum + 1, cellNum + 1);
                                     cellValue = "0";
@@ -1109,6 +1105,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 ofcGoodsDetailsInfoList.add(ofcGoodsDetailsInfo);
             }
             CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, ofcGoodsDetailsInfoList, "batchSave"
                     , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
             if(save.getCode() == Wrapper.ERROR_CODE){
@@ -1119,20 +1116,48 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
 
+    private void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
+        logger.info("==========> cscConsigneeDto:{} ", ToStringBuilder.reflectionToString(cscConsigneeDto));
+        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanySerialNo());
+        ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactSerialNo());
+        ofcOrderDTO.setConsigneeName(cscConsigneeDto.getContactCompanyName());
+        ofcOrderDTO.setConsigneeContactName(cscConsigneeDto.getContactName());
+        ofcOrderDTO.setConsigneeType(cscConsigneeDto.getType());
+        ofcOrderDTO.setConsigneeContactPhone(cscConsigneeDto.getPhone());
+        ofcOrderDTO.setDestinationProvince(cscConsigneeDto.getProvinceName());
+        ofcOrderDTO.setDestinationCity(cscConsigneeDto.getCityName());
+        ofcOrderDTO.setDestinationDistrict(cscConsigneeDto.getAreaName());
+        ofcOrderDTO.setDestinationTowns(cscConsigneeDto.getStreetName());
+        ofcOrderDTO.setDestination(cscConsigneeDto.getDetailAddress());
+        StringBuilder sb = new StringBuilder(cscConsigneeDto.getProvince());
+        if(!PubUtils.isSEmptyOrNull(cscConsigneeDto.getCity())){
+            sb.append(cscConsigneeDto.getCity());
+            if(!PubUtils.isSEmptyOrNull(cscConsigneeDto.getArea())) {
+                sb.append(cscConsigneeDto.getArea());
+                if(!PubUtils.isSEmptyOrNull(cscConsigneeDto.getStreet())) {
+                    sb.append(cscConsigneeDto.getStreet());
+                }
+            }
+        }
+        ofcOrderDTO.setDestinationCode(sb.toString());
+    }
+
     /**
-     * 转换客户中心DTO
+     * 转换客户中心DTO发货方
      * @param cscConsigneeDto 发货方
      * @return 转换后的发货方
      * @throws Exception 异常
      */
     private CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) throws Exception{
+        logger.info("转换客户中心DTO发货方 cscConsigneeDto:{}", cscConsigneeDto);
         CscContantAndCompanyDto cscContactAndCompanyDto = new CscContantAndCompanyDto();
         CscContactDto cscContactDto = new CscContactDto();
         CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
-        BeanUtils.copyProperties(cscContactDto, cscConsigneeDto);
-        BeanUtils.copyProperties(cscContactCompanyDto, cscConsigneeDto);
+        BeanUtils.copyProperties(cscConsigneeDto, cscContactDto);
+        BeanUtils.copyProperties(cscConsigneeDto, cscContactCompanyDto);
         cscContactAndCompanyDto.setCscContactDto(cscContactDto);
         cscContactAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
+        logger.info("转换客户中心DTO发货方 cscContactAndCompanyDto:{}", cscContactAndCompanyDto);
         return cscContactAndCompanyDto;
     }
 
@@ -1142,12 +1167,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 转换后的货品
      */
     private OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto) throws Exception{
+        logger.info("转换客户中心货品: ofcStorageTemplateDto.getCscGoodsApiVo():{}", ofcStorageTemplateDto.getCscGoodsApiVo());
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-        BeanUtils.copyProperties(ofcGoodsDetailsInfo, cscGoodsApiVo);
+        BeanUtils.copyProperties(cscGoodsApiVo, ofcGoodsDetailsInfo);
         ofcGoodsDetailsInfo.setId(null);
         ofcGoodsDetailsInfo.setGoodsSpec(cscGoodsApiVo.getSpecification());
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
+        logger.info("转换客户中心货品 ofcGoodsDetailsInfo:{}", ofcGoodsDetailsInfo);
         return ofcGoodsDetailsInfo;
     }
 
