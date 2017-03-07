@@ -3292,7 +3292,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setGoodsTypeName(ofcDistributionBasicInfo.getGoodsTypeName());
         tfcTransport.setTwoDistribution(ofcFinanceInformation.getTwoDistribution() == null ? null : ofcFinanceInformation.getTwoDistribution());
         tfcTransport.setFaceOrder(ofcDistributionBasicInfo.getTransCode());//面单号
-        tfcTransport.setCollectServiceCharge(ofcFinanceInformation.getCollectServiceCharge());
+        tfcTransport.setCollectServiceCharge(ofcFinanceInformation.getCollectLoanAmount());
         tfcTransport.setLuggage(ofcFinanceInformation.getLuggage());
         tfcTransport.setTransportType(ofcFundamentalInformation.getTransportType());
 //        tfcTransport.setTransportPool();//
