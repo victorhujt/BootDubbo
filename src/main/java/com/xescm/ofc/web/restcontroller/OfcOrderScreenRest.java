@@ -39,7 +39,7 @@ public class OfcOrderScreenRest extends BaseController {
     @RequestMapping(value = "/queryOrderPageByCondition", method=RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> queryOrderPageByCondition(Page<OrderScreenCondition> page,  OrderScreenCondition orderScreenCondition) {
-        logger.debug("==>订单中心订单查询条件 queryOrderPageByCondition={}", orderScreenCondition);
+        logger.info("==>订单中心订单查询条件 queryOrderPageByCondition={}", orderScreenCondition);
 //        logger.debug("==>订单中心订单查询标志位 tag={}", tag);
         PageInfo<OrderScreenResult> pageInfo;
         try {

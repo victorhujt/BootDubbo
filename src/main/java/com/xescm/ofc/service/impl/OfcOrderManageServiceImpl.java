@@ -195,11 +195,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     && (!ofcOrderStatus.getOrderStatus().equals(HASBEEN_CANCELED))) {
                 if (ofcOrderStatus.getOrderStatus().equals(ALREADY_EXAMINE) && reviewTag.equals("rereview")) {
                     planCancle(orderCode, authResDtoByToken.getUserName());
-                    logger.debug("作废计划单完成");
+                    logger.info("作废计划单完成");
                     ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
                     ofcOrderStatus.setStatusDesc("反审核");
                     ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单反审核完成");
-                    logger.debug("作废计划单");
+                    logger.info("作废计划单");
                 } else if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals("review")) {
                     ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
                     ofcOrderStatus.setStatusDesc("已审核");
@@ -281,7 +281,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     } else {
                         throw new BusinessException("订单类型有误");
                     }
-                    logger.debug("计划单创建成功");
+                    logger.info("计划单创建成功");
                 } else {
                     throw new BusinessException("缺少标志位");
                 }
@@ -566,7 +566,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 custOrderCodes.put(ofcTransplanInfo.getPlanCode(), ofcFundamentalInformation.getCustOrderCode());
                 if (!PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).equals(WITH_THE_KABAN)) {
                     //向TFC推送
-                    logger.debug("计划单最新状态保存成功");
+                    logger.info("计划单最新状态保存成功");
                     ofcTransplanStatusService.save(ofcTransplanStatus);
                     ofcTransplanInfoToTfc(ofcTransplanInfoList, ofcPlannedDetailMap, userName, custOrderCodes);
                     //订单来源为钉钉录单时
@@ -596,12 +596,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 acPlanDto.setPlanCodeList(planCodeList);
                 pullOfcOrderPlanCode(acPlanDto);
 
-                logger.debug("计划单信息保存成功");
+                logger.info("计划单信息保存成功");
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
 
-                logger.debug("计划单状态保存成功");
+                logger.info("计划单状态保存成功");
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
-                logger.debug("计划单资源状态保存成功");
+                logger.info("计划单资源状态保存成功");
             } else {
                 if (isEmpty(companyList.get().getResult())) {
                     throw new BusinessException("没有查询到相关服务商!");
@@ -766,7 +766,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
                 if (PubUtils.trimAndNullAsEmpty(ofcTransplanInfo.getBusinessType()).equals(WITH_THE_CITY)) {//卡班拆城配
                     //向TFC推送
-                    logger.debug("计划单状态保存成功");
+                    logger.info("计划单状态保存成功");
                     ofcTransplanStatusService.save(ofcTransplanStatus);
                     ofcTransplanInfoList.add(ofcTransplanInfo);
 
@@ -791,7 +791,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     planCodeList.add(ofcTransplanInfo.getPlanCode());
                     acPlanDto.setPlanCodeList(planCodeList);
                     pullOfcOrderPlanCode(acPlanDto);
-                    logger.debug("计划单信息保存成功");
+                    logger.info("计划单信息保存成功");
                 } catch (Exception ex) {
                     if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                         logger.error("获取单号发生重复，导致保存计划单信息发生错误！{}", ex);
@@ -802,9 +802,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }
                 ofcTransplanNewstatusService.save(ofcTransplanNewstatus);
-                logger.debug("计划单状态保存成功");
+                logger.info("计划单状态保存成功");
                 ofcTraplanSourceStatusService.save(ofcTraplanSourceStatus);
-                logger.debug("计划单资源状态保存成功");
+                logger.info("计划单资源状态保存成功");
 
             } else {
                 if ((companyList.get() != null) && isEmpty(companyList.get().getResult())) {
@@ -928,16 +928,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     ofcPlannedDetailService.save(ofcPlannedDetail);
                 }
 
-                logger.debug("计划单明细保存成功");
+                logger.info("计划单明细保存成功");
             }
             ofcSiloprogramInfoService.save(ofcSiloprogramInfo);
-            logger.debug("计划单信息保存成功");
+            logger.info("计划单信息保存成功");
             ofcSiloproNewstatusService.save(ofcSiloproNewstatus);
-            logger.debug("计划单最新状态保存成功");
+            logger.info("计划单最新状态保存成功");
             ofcSiloproStatusService.save(ofcSiloproStatus);
-            logger.debug("计划单状态保存成功");
+            logger.info("计划单状态保存成功");
             ofcSiloproSourceStatusService.save(ofcSiloproSourceStatus);
-            logger.debug("计划单资源状态保存成功");
+            logger.info("计划单资源状态保存成功");
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                 logger.error("获取单号发生重复:{}", ex);
@@ -1618,7 +1618,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(ofcDistributionBasicInfo.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
-        logger.debug(ofcOrderStatus.toString());
+        logger.info(ofcOrderStatus.toString());
         String status = ofcOrderStatus.getOrderStatus();
         if ((!status.equals(IMPLEMENTATION_IN)) && (!status.equals(HASBEEN_COMPLETED)) && (!status.equals(HASBEEN_CANCELED))) {
             if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals("review")) {
@@ -1646,7 +1646,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     logger.info("订单类型为{}", ofcFundamentalInformation.getOrderType());
                     throw new BusinessException("订单类型有误");
                 }
-                logger.debug("计划单创建成功");
+                logger.info("计划单创建成功");
             } else {
                 throw new BusinessException("缺少标志位");
             }
@@ -2045,7 +2045,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
-        logger.debug(ofcOrderStatus.toString());
+        logger.info(ofcOrderStatus.toString());
         if ((!ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATION_IN))
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEEN_COMPLETED))
                 && (!ofcOrderStatus.getOrderStatus().equals(HASBEEN_CANCELED))) {
@@ -2089,7 +2089,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 } else {
                     throw new BusinessException("订单类型有误");
                 }
-                logger.debug("计划单创建成功");
+                logger.info("计划单创建成功");
             } else {
                 throw new BusinessException("缺少标志位");
             }
@@ -2554,7 +2554,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
                 ofcPlannedDetailService.save(ofcPlannedDetail);
             }
-            logger.debug("计划单明细保存成功");
+            logger.info("计划单明细保存成功");
         }
         return ofcPlannedDetailList;
     }
@@ -3041,7 +3041,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
-        logger.debug("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", ofcFundamentalInformation.getOrderCode(), ofcOrderStatus.toString());
+        logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", ofcFundamentalInformation.getOrderCode(), ofcOrderStatus.toString());
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals("review")) {
             //创单接口订单和钉钉录单补充大区基地信息
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
@@ -3069,10 +3069,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
                 //仓储订单推仓储中心
-               // pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation);
+                pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation);
                 //仓储带运输订单推仓储中心和运输中心
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-                  //  pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
+                    pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
                 }
             } else {
                 logger.error("订单类型有误");

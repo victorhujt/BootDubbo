@@ -345,7 +345,7 @@ public class OfcOrderManageOperaRest extends BaseController {
     @RequestMapping(value = "queryOrderByOrderBatchNumber", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderByOrderBatchNumber(Page<OrderOperForm> page, OrderOperForm form) {
-        logger.debug("根据批次号查询订单page:{},form:{}", page, form);
+        logger.info("根据批次号查询订单page:{},form:{}", page, form);
         String orderBatchNumber = form.getOrderBatchNumber();
         try {
             if (StringUtils.isBlank(orderBatchNumber)) {

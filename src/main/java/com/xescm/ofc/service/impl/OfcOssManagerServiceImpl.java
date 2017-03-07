@@ -29,8 +29,8 @@ public class OfcOssManagerServiceImpl implements OfcOssManagerService {
     @Override
     public URL getFileURL(String filePath) {
 
-        logger.debug("==> 开始获取文件路径...");
-        logger.debug("==> 获取文件路径 filePath = {}", filePath);
+        logger.info("==> 开始获取文件路径...");
+        logger.info("==> 获取文件路径 filePath = {}", filePath);
         // 生成URL签名(HTTP GET请求)
         URL signedUrl = null;
         OSSClient ossServer = new OSSClient(ossConfigure.getOutEndpoint(), ossConfigure.getAccessKeyId(), ossConfigure.getAccessKeySecret());
@@ -47,18 +47,18 @@ public class OfcOssManagerServiceImpl implements OfcOssManagerService {
                 logger.error("生成URL签名失败={}", e.getMessage(), e);
             }
         }
-        logger.debug("==> 获取文件路径 filePath = {}", filePath);
+        logger.info("==> 获取文件路径 filePath = {}", filePath);
         return signedUrl;
     }
 
     @Override
     public void deleteFile(String filePath) {
-        logger.debug("==> 开始删除文件...");
-        logger.debug("==> 删除文件 ossConfigure = {}", ossConfigure);
-        logger.debug("==> 删除文件 filePath = {}", filePath);
+        logger.info("==> 开始删除文件...");
+        logger.info("==> 删除文件 ossConfigure = {}", ossConfigure);
+        logger.info("==> 删除文件 filePath = {}", filePath);
         OSSClient ossClient = new OSSClient(ossConfigure.getEndpoint(), ossConfigure.getAccessKeyId(), ossConfigure.getAccessKeySecret());
         ossClient.deleteObject(ossConfigure.getBucketName(), filePath);
-        logger.debug("==> 删除文件成功 filePath = {}", filePath);
+        logger.info("==> 删除文件成功 filePath = {}", filePath);
     }
 
 }

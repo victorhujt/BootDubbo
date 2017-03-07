@@ -14,6 +14,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscGoodsEdasService;
+import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -78,6 +79,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
     private OfcOrderManageService ofcOrderManageService;
+    @Resource
+    private CscSupplierEdasService cscSupplierEdasService;
     @Resource
     private OfcStorageTemplateMapper ofcStorageTemplateMapper;
     @Resource
@@ -326,6 +329,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = new ArrayList<>();
         Map<String, CscGoodsApiVo> goodsCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consigneeCheck = new HashMap<>();
+        Map<String, CscSupplierInfoDto> supplierCheck = new HashMap<>();
         //去RMC查到所有仓库
         Map<String, RmcWarehouseRespDto> allWarehouseByRmc =  this.getAllWarehouseByCustCode(ofcStorageTemplate.getCustCode());
         try {
@@ -659,6 +663,40 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有供应商名称", rowNum + 1, cellNum + 1);
                                 continue;
+                            }
+                            //对供应商名称进行校验// supplierCheck
+
+                            //供应商名称不空,判断是否已经校验过
+                            //如果没校验过就调用CSC接口进行校验
+                            if(!supplierCheck.containsKey(cellValue)){
+                                CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
+                                cscSupplierInfoDto.setSupplierName(cellValue);
+                                cscSupplierInfoDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+                                Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
+                                if(Wrapper.ERROR_CODE == listWrapper.getCode()){
+                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验失败, 请维护!");
+                                    checkPass = false;
+                                    continue;
+                                }
+                                List<CscSupplierInfoDto> result = listWrapper.getResult();
+                                //没有校验通过
+                                if(null == result || result.size() == 0){
+                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    checkPass = false;
+                                    continue;
+                                    //校验通过
+                                }else {
+                                    logger.info("当前供应商名称:{},校验通过", cellValue);
+                                    supplierCheck.put(cellValue, result.get(0));
+                                    ofcStorageTemplateDto.setCscSupplierInfoDto(result.get(0));
+                                }
+                            }else {
+                                logger.info("当前供应商名称:{},已经校验过, 不用校验", cellValue);
+                                //不用校验, 直接堆
+                                CscSupplierInfoDto cscSupplierInfoDto = supplierCheck.get(cellValue);
+                                ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //预计入库时间
@@ -1128,6 +1166,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
             CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
+            convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
             Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, ofcGoodsDetailsInfoList, "batchSave"
                     , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
             if(save.getCode() == Wrapper.ERROR_CODE){
@@ -1138,7 +1177,21 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
 
+    private void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
+        if(null == cscSupplierInfoDto || PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierCode())){
+            return;
+        }
+        logger.info("==========> cscSupplierInfoDto:{} ", ToStringBuilder.reflectionToString(cscSupplierInfoDto));
+        ofcOrderDTO.setSupportCode(cscSupplierInfoDto.getSupplierCode());
+        ofcOrderDTO.setSupportName(cscSupplierInfoDto.getSupplierName());
+        ofcOrderDTO.setSupportContactCode(cscSupplierInfoDto.getContactCode());
+        ofcOrderDTO.setSupportContactName(cscSupplierInfoDto.getContactName());
+    }
+
     private void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
+        if(null == cscConsigneeDto || PubUtils.isSEmptyOrNull(cscConsigneeDto.getContactCompanySerialNo())){
+            return;
+        }
         logger.info("==========> cscConsigneeDto:{} ", ToStringBuilder.reflectionToString(cscConsigneeDto));
         ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanySerialNo());
         ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactSerialNo());

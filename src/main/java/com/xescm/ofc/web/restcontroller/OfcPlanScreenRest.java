@@ -33,7 +33,7 @@ public class OfcPlanScreenRest extends BaseController {
     @RequestMapping(value = "/queryPlanPageByCondition", method=RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> queryPlanPageByCondition(Page<OrderScreenCondition> page, OfcPlanScreenCondition ofcPlanScreenCondition) {
-        logger.debug("==>订单中心订单查询条件 queryPlanPageByCondition={}", ofcPlanScreenCondition);
+        logger.info("==>订单中心订单查询条件 queryPlanPageByCondition={}", ofcPlanScreenCondition);
         PageInfo<OfcPlanScreenResult> pageInfo;
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());

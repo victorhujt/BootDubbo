@@ -36,7 +36,7 @@ public class MqInitializer {
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public Consumer consumerCreateOrderApi(){
-        logger.debug("createOrderApi消费开始---");
+        logger.info("createOrderApi消费开始---");
         Consumer consumer = ONSFactory.createConsumer(getConsumerProperties());
         if(PubUtils.isNull(mqConfig.getConsumerTopicNames())){
             logger.error("没有配置需要消费的Topic列表");

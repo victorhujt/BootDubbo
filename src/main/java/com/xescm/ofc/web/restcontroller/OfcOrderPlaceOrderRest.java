@@ -37,7 +37,9 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -98,11 +100,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ResponseBody
     public Wrapper<?> orderEdit(String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
             , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag){
-        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOJson={}", ofcOrderDTOStr);
-        logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
+        logger.info("==>订单中心下单或编辑实体 ofcOrderDTOJson={}", ofcOrderDTOStr);
+        logger.info("==>订单中心下单或编辑标志位 tag={}", tag);
         String result;
         if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
-            logger.debug("订单中心编辑入参实体出现异常ofcOrderDTOJson={}", ofcOrderDTOStr);
+            logger.info("订单中心编辑入参实体出现异常ofcOrderDTOJson={}", ofcOrderDTOStr);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单中心编辑入参实体出现异常ofcOrderDTOJson");
         }
         try {
@@ -167,8 +169,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ResponseBody
     public Wrapper<?> orderPlace(String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
             ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag){
-        logger.debug("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
-        logger.debug("==>订单中心下单或编辑标志位 tag={}", tag);
+        logger.info("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
+        logger.info("==>订单中心下单或编辑标志位 tag={}", tag);
         String resultMessage;
         try {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
@@ -252,7 +254,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
     public void goodsSelectByCscApi(CscGoodsApiDto cscGoods, HttpServletResponse response){
-        logger.debug("==>下单货品筛选,cscGoods = {}",cscGoods);
+        logger.info("==>下单货品筛选,cscGoods = {}",cscGoods);
         //调用外部接口,最低传CustomerCode
         try{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -277,8 +279,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @ResponseBody
     public Object goodsSelectByCsc(String  cscGoods,String customerCode){
         //调用外部接口,最低传CustomerCode
-        logger.debug("==>下单货品筛选,cscGoods = {}",cscGoods);
-        logger.debug("==>下单货品筛选,customerCode = {}",customerCode);
+        logger.info("==>下单货品筛选,cscGoods = {}",cscGoods);
+        logger.info("==>下单货品筛选,customerCode = {}",customerCode);
         Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists=null;
         try{
 
@@ -310,8 +312,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     })
     @RequestMapping(value = "/contactSelect",method = RequestMethod.POST)
     public void contactSelectByCscApi(  String cscContantAndCompanyDto, String customerCode, HttpServletResponse response){
-        logger.debug("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
-        logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
+        logger.info("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
+        logger.info("==>下单收发货方筛选,customerCode = {}",customerCode);
         //调用外部接口,最低传CustomerCode和purpose
         try {
             CscContantAndCompanyDto csc = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDto, CscContantAndCompanyDto.class);
@@ -384,8 +386,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @RequestMapping(value = "/contactSelectForPage",method = RequestMethod.POST)
     @ResponseBody
     public Object contactSelectByPage(String cscContantAndCompanyDto, String customerCode){
-        logger.debug("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
-        logger.debug("==>下单收发货方筛选,customerCode = {}",customerCode);
+        logger.info("==>下单收发货方筛选,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
+        logger.info("==>下单收发货方筛选,customerCode = {}",customerCode);
         //调用外部接口,最低传CustomerCode和purpose
         AtomicReference<Wrapper<PageInfo<CscContantAndCompanyResponseDto>>> result= new AtomicReference<>(null);
         try {
@@ -422,18 +424,33 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @RequestMapping(value = "/supplierSelect",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper supplierSelectByCscApi( CscSupplierInfoDto cscSupplierInfoDto, HttpServletResponse response) throws InvocationTargetException{
-        logger.debug("==>下单供应商筛选,cscSupplierInfoDto = {}",cscSupplierInfoDto);
+        logger.info("==>下单供应商筛选,cscSupplierInfoDto = {}",cscSupplierInfoDto);
         Wrapper<PageInfo<CscSupplierInfoDto>> result;
         //调用外部接口,最低传CustomerCode
         try {
             if (cscSupplierInfoDto == null) {
                 AuthResDto authResDtoByToken = getAuthResDtoByToken();
-                cscSupplierInfoDto.setCustomerCode(authResDtoByToken.getGroupRefCode());
+//                cscSupplierInfoDto.setCustomerCode(authResDtoByToken.getGroupRefCode());
+                cscSupplierInfoDto.setCustomerCode(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getCustomerCode()));
                 cscSupplierInfoDto.setSupplierName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getSupplierName()));
                 cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
                 cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
             }
             result = cscSupplierEdasService.querySupplierByAttributePageList(cscSupplierInfoDto);
+            if(result.getCode() == Wrapper.ERROR_CODE){
+                logger.error("下单供应商筛选失败, 原因:{}", result.getMessage());
+                throw new BusinessException("下单供应商筛选, 原因:" + result.getMessage());
+            }
+            logger.info("=================>>>>>>下单供应商筛选 result JSON :{}", JacksonUtil.toJson(result));
+            PageInfo<CscSupplierInfoDto> cscSupplierInfoDtoPageInfo = result.getResult();
+            if(null == cscSupplierInfoDtoPageInfo){
+                logger.error("下单供应商筛选出错 result.getResult() is null");
+                throw new BusinessException("下单供应商筛选出错");
+            }
+            if(CollectionUtils.isEmpty(cscSupplierInfoDtoPageInfo.getList())){
+                logger.error("下单供应商筛选出错 result.getResult().getList() is null");
+                throw new BusinessException("下单供应商筛选出错");
+            }
             if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询供应商列表失败,查询结果有误!");
             }

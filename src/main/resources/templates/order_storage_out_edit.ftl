@@ -820,7 +820,7 @@
                 console.log('弹窗');
             },
             selectSupplier:function(){
-                if(!this.orderForm.custName && !this.orderForm.custCode){
+                if(StringUtil.isEmpty(this.orderForm.custName)&&StringUtil.isEmpty(this.orderForm.custCode)){
                     this.promptInfo("请选择客户!",'warning');
                     this.supplierDataInfo.chosenSupplier=false;
                     return;

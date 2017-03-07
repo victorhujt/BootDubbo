@@ -99,8 +99,8 @@ public class OfcJumpontroller extends BaseController{
 
     @RequestMapping(value="/ofc/orderFollow",method = RequestMethod.GET)
     public String orderFollow(String code, String followTag){
-        logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
-        logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
+        logger.info("==>订单中心订单追踪条件筛选code code={}", code);
+        logger.info("==>订单中心订单追踪条件标志位 followTag={}", followTag);
         return "order_follow";
     }
 

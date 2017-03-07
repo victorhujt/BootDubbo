@@ -47,8 +47,8 @@ public class OfcOrderFollowOperRest extends BaseController {
     @RequestMapping(value = "/orderFollowOperSearch", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderFollowOperSearch(String code, String searchType) throws Exception {
-        logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
-        logger.debug("==>订单中心订单追踪条件标志位 searchType={}", searchType);
+        logger.info("==>订单中心订单追踪条件筛选code code={}", code);
+        logger.info("==>订单中心订单追踪条件标志位 searchType={}", searchType);
 
         try {
             code = PubUtils.trimAndNullAsEmpty(code);
