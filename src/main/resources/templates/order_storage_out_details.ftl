@@ -14,19 +14,19 @@
         <el-form  label-width="100px">
             <div class="xe-block">
                 <el-form-item label="订单号" class="xe-col-3">
-                    <el-input v-model="orderCode"></el-input>
+                    <el-input v-model="orderCode" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="客户订单号" class="xe-col-3">
-                    <el-input v-model="customerOrderNum"></el-input>
+                    <el-input v-model="customerOrderNum" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="订单批次号" class="xe-col-3">
-                    <el-input v-model="orderBatchNumber"></el-input>
+                    <el-input v-model="orderBatchNumber" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="订单日期" class="xe-col-3">
                     <el-date-picker
-                            v-model="orderTime">
+                            v-model="orderTime" :readOnly="true">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="客户名称" class="xe-col-3">
@@ -34,72 +34,73 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="订单状态" class="xe-col-3">
-                    <el-input v-model="orderStatus">
+                    <el-input v-model="orderStatus" :readOnly="true">
                     </el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="订单类型" class="xe-col-3">
-                    <el-input v-model="orderType">
+                    <el-input v-model="orderType" :readOnly="true">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="业务类型" class="xe-col-3">
-                    <el-input v-model="serviceType"></el-input>
+                    <el-input v-model="serviceType" :readOnly="true"></el-input>
 
                 </el-form-item>
                 <el-form-item label="供应商名称" class="xe-col-3">
-                    <el-input v-model="supplierName"></el-input>
+                    <el-input v-model="supplierName" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="仓库名称" class="xe-col-3">
-                    <el-input v-model="wareHouseName"></el-input>
+                    <el-input v-model="wareHouseName" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="预计到仓时间" class="xe-col-3">
                     <el-date-picker
                             v-model="shipmentTime"
                             align="right"
                             type="date"
+                            :readOnly="true"
                             placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="备注" class="xe-col-3">
-                    <el-input type="textarea" v-model="notes">
+                    <el-input type="textarea" v-model="notes" :readOnly="true">
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="开单员" class="xe-col-3">
-                    <el-input v-model="merchandiser" ></el-input>
+                    <el-input v-model="merchandiser" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="订单来源" class="xe-col-3">
-                    <el-input v-model="orderSource" ></el-input>
+                    <el-input v-model="orderSource" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="创建日期" class="xe-col-3">
                     <el-date-picker
-                            v-model="createTime">
+                            v-model="createTime" :readOnly="true">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="创建人员" class="xe-col-3">
-                    <el-input v-model="creator" ></el-input>
+                    <el-input v-model="creator" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="完成日期" class="xe-col-3">
                     <el-date-picker
-                            v-model="finishedTime">
+                            v-model="finishedTime" :readOnly="true">
                     </el-date-picker>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="取消日期" class="xe-col-3">
                     <el-date-picker
-                            v-model="abolishTime">
+                            v-model="abolishTime" :readOnly="true">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="取消人" class="xe-col-3">
-                    <el-input v-model="abolisher" ></el-input>
+                    <el-input v-model="abolisher" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-pageHeader">
@@ -107,28 +108,28 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="是否提供运输" class="xe-col-3">
-                    <el-input v-model="needTransport"></el-input>
+                    <el-input v-model="needTransport" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="出发地" class="xe-col-3">
-                    <el-input v-model="consignorAddress" placeholder="请输入内容"></el-input>
+                    <el-input v-model="consignorAddress" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="目的地" class="xe-col-3">
-                    <el-input v-model="destinationAddress" placeholder="请输入内容"></el-input>
+                    <el-input v-model="destinationAddress" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="车牌号" class="xe-col-3">
-                    <el-input v-model="plateNumber" placeholder="请输入内容"></el-input>
+                    <el-input v-model="plateNumber" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="司机姓名" class="xe-col-3">
-                    <el-input v-model="driverName" placeholder="请输入内容"></el-input>
+                    <el-input v-model="driverName" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="联系电话" class="xe-col-3">
-                    <el-input v-model="driverContactNumber" placeholder="请输入内容"></el-input>
+                    <el-input v-model="driverContactNumber" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-pageHeader">
@@ -136,18 +137,18 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="名称" class="xe-col-3">
-                    <el-input v-model="consigneeName"></el-input>
+                    <el-input v-model="consigneeName" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="联系人" class="xe-col-3">
-                    <el-input v-model="consigneeContactName" ></el-input>
+                    <el-input v-model="consigneeContactName" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="联系电话" class="xe-col-3">
-                    <el-input v-model="consigneeContactPhone"></el-input>
+                    <el-input v-model="consigneeContactPhone" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="地址" class="xe-col-3">
-                    <el-input v-model="destinationAddress"></el-input>
+                    <el-input v-model="destinationAddress" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-pageHeader">
@@ -156,52 +157,52 @@
             <el-table :data="goodsData" border highlight-current-row  style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
-                        <el-input v-model="scope.row.goodsType"></el-input>
+                        <el-input v-model="scope.row.goodsType" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsCategory" label="货品类别">
                     <template scope="scope">
-                        <el-input v-model="scope.row.goodsCategory"></el-input>
+                        <el-input v-model="scope.row.goodsCategory" :readOnly="true"></el-input>
                     </template>
                 </el-table-column >
                 <el-table-column property="goodsCode" label="货品编码">
                     <template scope="scope">
-                        <el-input v-model="scope.row.goodsCode"></el-input>
+                        <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsName" label="货品名称">
                     <template scope="scope">
-                        <el-input v-model="scope.row.goodsName"></el-input>
+                        <el-input v-model="scope.row.goodsName" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsSpec" label="规格">
                     <template scope="scope">
-                        <el-input v-model="scope.row.goodsSpec" placeholder="请输入内容"></el-input>
+                        <el-input v-model="scope.row.goodsSpec" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unit" label="单位">
                     <template scope="scope">
-                        <el-input v-model="scope.row.unit"></el-input>
+                        <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="quantity" label="入库数量">
                     <template scope="scope">
-                        <el-input v-model="scope.row.quantity"></el-input>
+                        <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="realQuantity" label="实际数量">
                     <template scope="scope">
-                        <el-input v-model="scope.row.realQuantity"></el-input>
+                        <el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
-                        <el-input v-model="scope.row.unitPrice"></el-input>
+                        <el-input v-model="scope.row.unitPrice" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="productionBatch" label="批次号">
                     <template scope="scope">
-                        <el-input v-model="scope.row.productionBatch"></el-input>
+                        <el-input v-model="scope.row.productionBatch" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="productionTime" label="生产日期">
@@ -210,6 +211,7 @@
                                 v-model="scope.row.productionTime"
                                 align="right"
                                 type="date"
+                                :readOnly="true"
                                 placeholder="选择日期">
                         </el-date-picker>
                     </template>
@@ -220,6 +222,7 @@
                                 v-model="scope.row.invalidTime"
                                 align="right"
                                 type="date"
+                                :readOnly="true"
                                 placeholder="选择日期">
                         </el-date-picker>
                     </template>
@@ -228,7 +231,7 @@
             <el-table :data="orderStatusData" border highlight-current-row >
                 <el-table-column property="notes" label="跟踪信息">
                     <template scope="scope">
-                        <el-input v-model="scope.row.notes" class="borderNone"></el-input>
+                        <el-input v-model="scope.row.notes" class="borderNone" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -404,7 +407,7 @@
                                         for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
                                             var goodDetail=ofcGoodsDetailsInfo[i];
                                             var good={};
-                                            good.goodsType=vueObj.getGoodNameByCode(goodDetail.goodsType);
+                                            good.goodsType=goodDetail.goodsType;
                                             good.goodsCategory=goodDetail.goodsCategory;
                                             good.goodsCode=goodDetail.goodsCode;
                                             good.goodsName=goodDetail.goodsName;
@@ -457,14 +460,6 @@
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0,index) + "/index#" + newurl);
-            },
-            getGoodNameByCode:function(val){
-                for(var i=0;i<this.goodsMsgOptions.length;i++){
-                    var option=this.goodsMsgOptions[i];
-                    if(option.value==val){
-                        return option.label;
-                    }
-                }
             }
         }
     });

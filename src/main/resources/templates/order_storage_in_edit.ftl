@@ -108,11 +108,35 @@
 
         <el-dialog title="货品列表" v-model="goodDataInfo.chosenGoodCode" size="small">
             <el-form :model="goodDataInfo.goodsForm">
-                <el-form-item label="货品编码" :label-width="formLabelWidth">
-                    <el-input v-model="goodDataInfo.goodsForm.goodsCode" auto-complete="off"></el-input>
+                <el-form-item label="货品种类" :label-width="formLabelWidth">
+                    <template scope="scope">
+                        <el-select size="small" v-model="goodDataInfo.goodsForm.goodsTypeId"  @change="getGoodsCategory" placeholder="请选择" >
+                            <el-option
+                                    v-for="item in goodsMsgOptions"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    style="width:100px;">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-form-item>
+                <el-form-item label="货品小类" :label-width="formLabelWidth">
+                    <template scope="scope">
+                        <el-select  size="small" v-model="goodDataInfo.goodsForm.goodsTypeSonId"   placeholder="请选择">
+                            <el-option
+                                    v-for="subitem in goodsCategoryOptions"
+                                    :label="subitem.label"
+                                    :value="subitem.value"
+                                    style="width:100px;">
+                            </el-option>
+                        </el-select>
+                    </template>
                 </el-form-item>
                 <el-form-item label="货品名称" :label-width="formLabelWidth">
                     <el-input v-model="goodDataInfo.goodsForm.goodsName" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="条形码" :label-width="formLabelWidth">
+                    <el-input v-model="goodDataInfo.goodsForm.barCode" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
@@ -120,13 +144,15 @@
             </el-form>
 
             <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品类别"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
+                <el-table-column property="goodsBrand" label="品牌"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码"></el-table-column>
                 <el-table-column property="goodsName" label="货品名称"></el-table-column>
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
                 <el-table-column property="unit" label="单位"></el-table-column>
+                <el-table-column property="barCode" label="条形码"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleGoodSizeChange" @current-change="handleGoodCurrentPage" :current-page="goodDataInfo.currentGoodPage" :page-sizes="pageSizes" :page-size="goodDataInfo.goodPageSize" layout="total, sizes, prev, pager, next, jumper" :total="goodDataInfo.totalGoods">
             </el-pagination>
@@ -255,106 +281,82 @@
           <div class="xe-pageHeader">
             货品信息
           </div>
-          <#--<div class="block" style="float:right;">
-            <el-button type="primary" @click="add">添加货品</el-button>
-          </div>-->
           <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
-            <el-table-column type="index"></el-table-column>
-            <el-table-column property="goodsType" label="货品种类">
-              <template scope="scope">
-                <el-select size="small" v-model="scope.row.goodsType" placeholder="请选择"  >
-                  <el-option
-                          v-for="item in goodsMsgOptions"
-                          :label="item.label"
-                          :value="item.value"
-                          style="width:100px;">
-                  </el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column property="goodsCategory" label="货品类别">
-              <template scope="scope">
-                <el-select  size="small" v-model="scope.row.goodsCategory" @visible-change="getGoodsCategory(scope.row)" placeholder="请选择">
-                  <el-option
-                          v-for="subitem in goodsCategoryOptions"
-                          :label="subitem.label"
-                          :value="subitem.value"
-                          style="width:100px;">
-                  </el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column property="goodsCode" label="货品编码">
-              <template scope="scope">
-                <el-input
-                        placeholder="请选择"
-                        icon="search"
-                        v-model="scope.row.goodsCode"
-                        v-bind:disabled = "isDisabled"
-                        @click="openGoodsList(scope.row)">
-                </el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="goodsName" label="货品名称">
-              <template scope="scope">
-                <el-input v-model="scope.row.goodsName" placeholder="请输入内容"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="goodsSpec" label="规格">
-              <template scope="scope">
-                <el-input v-model="scope.row.goodsSpec" placeholder="请输入内容"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="unit" label="单位">
-              <template scope="scope">
-                <el-input v-model="scope.row.unit" placeholder="请输入内容"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="quantity" label="入库数量">
-              <template scope="scope">
-                <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="unitPrice" label="单价">
-              <template scope="scope">
-                <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="productionBatch" label="批次号">
-              <template scope="scope">
-                <el-input v-model="scope.row.productionBatch" placeholder="请输入内容"></el-input>
-              </template>
-            </el-table-column>
-            <el-table-column property="productionTime" label="生产日期">
-              <template scope="scope">
-                <el-date-picker
-                        v-model="scope.row.productionTime"
-                        align="right"
-                        type="date"
-                        placeholder="选择日期"
-                        :picker-options="pickerOptions1">
-                </el-date-picker>
-              </template>
-            </el-table-column>
-            <el-table-column property="invalidTime" label="失效日期">
-              <template scope="scope">
-                <el-date-picker
-                        v-model="scope.row.invalidTime"
-                        align="right"
-                        type="date"
-                        placeholder="选择日期"
-                        :picker-options="pickerOptions1">
-                </el-date-picker>
-              </template>
-            </el-table-column>
-            <el-table-column property="goodsOperation" label="操作">
-              <template scope="scope">
-                <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
-              </template>
-            </el-table-column>
+              <el-table-column property="goodsType" label="货品种类">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.goodsType" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="goodsCategory" label="货品小类">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.goodsCategory" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="goodsCode" label="货品编码">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="goodsName" label="货品名称">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.goodsName" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="goodsSpec" label="规格">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.goodsSpec" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="unit" label="单位">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="quantity" label="入库数量">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="unitPrice" label="单价">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="productionBatch" label="批次号">
+                  <template scope="scope">
+                      <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="productionTime" label="生产日期">
+                  <template scope="scope">
+                      <el-date-picker
+                              v-model="scope.row.productionTime"
+                              align="right"
+                              type="date"
+                              placeholder="选择日期"
+                              :picker-options="pickerOptions1">
+                      </el-date-picker>
+                  </template>
+              </el-table-column>
+              <el-table-column property="invalidTime" label="失效日期">
+                  <template scope="scope">
+                      <el-date-picker
+                              v-model="scope.row.invalidTime"
+                              align="right"
+                              type="date"
+                              placeholder="选择日期"
+                              :picker-options="pickerOptions1">
+                      </el-date-picker>
+                  </template>
+              </el-table-column>
+              <el-table-column property="goodsOperation" label="操作">
+                  <template scope="scope">
+                      <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
+                  </template>
+              </el-table-column>
           </el-table>
         <div class="block">
-          <el-button @click="add">添加货品</el-button>
+          <el-button @click="addGoods">添加货品</el-button>
           <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </div>
 
@@ -439,8 +441,10 @@
                     goodsCodeData:[],
                     chosenGoodCode:false,
                     goodsForm:{
-                        goodsCode:'',
-                        goodsName:''
+                        goodsName:'',
+                        goodsTypeId:'',
+                        goodsTypeSonId:'',
+                        barCode:''
                     }
                 },
                 currentRowData : '',
@@ -748,27 +752,13 @@
                 this.customerDataInfo.currentCustomerPage = val;
                 this.selectCustomer();
             },
-            add:function() {
-                if(!this.orderForm.custName){
-                    this.promptInfo("请选择客户",'warning');
+            addGoods:function(){
+                if(StringUtil.isEmpty(this.orderForm.custName)&&StringUtil.isEmpty(this.orderForm.custCode)){
+                    this.promptInfo("请选择客户!",'warning');
                     return;
                 }
+                this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
-                var newData = {
-                    goodsType: '',
-                    goodsCategory: '',
-                    goodsCode: '',
-                    goodsName: '',
-                    goodsSpec: '',
-                    unit: '',
-                    quantity: '',
-                    unitPrice:'',
-                    productionBatch:'',
-                    productionTime:'',
-                    invalidTime:'',
-                    goodsOperation: '',
-                    goodsCategoryOptions: []
-                };
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                     var data=eval(result);
                     vueObj.goodsMsgOptions=[];
@@ -779,7 +769,6 @@
                         vueObj.goodsMsgOptions.push(good);
                     });
                 });
-                vueObj.goodsData.push(newData);
             },
             deleteRow:function(index, rows) {
                 rows.splice(index, 1);
@@ -865,11 +854,22 @@
                 }
             },
             setCurrentGoodsInfo:function(val){
-                this.currentRowData.goodsCode=val.goodsCode;
-                this.currentRowData.goodsName=val.goodsName;
-                this.currentRowData.goodsSpec=val.goodsSpec;
-                this.currentRowData.unit=val.unit;
                 this.goodDataInfo.chosenGoodCode = false;
+                var newData = {
+                    goodsType: val.goodsType,
+                    goodsCategory: val.goodsCategory,
+                    goodsCategory: val.goodsCategory,
+                    goodsCode: val.goodsCode,
+                    goodsName: val.goodsName,
+                    goodsSpec: val.goodsSpec,
+                    unit: val.unit,
+                    quantity: '',
+                    unitPrice:'',
+                    productionBatch:'',
+                    productionTime:'',
+                    invalidTime:''
+                };
+                this.goodsData.push(newData);
             },
             cancelSelectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];
@@ -960,8 +960,10 @@
                 var vueObj=this;
                 var cscGoods = {};
                 var customerCode = vueObj.orderForm.custCode;
-                cscGoods.goodsCode = vueObj.goodDataInfo.goodsForm.goodsCode;
                 cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
+                cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
+                cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
+                cscGoods.barCode=vueObj.goodDataInfo.goodsForm.barCode;
                 cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                 cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                 var param = JSON.stringify(cscGoods);
@@ -975,8 +977,10 @@
                             goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
                             goodCode.goodsCode=cscGoodsVo.goodsCode;
                             goodCode.goodsName=cscGoodsVo.goodsName;
+                            goodCode.goodsBrand=cscGoodsVo.brand;
                             goodCode.goodsSpec=cscGoodsVo.specification;
                             goodCode.unit=cscGoodsVo.unit;
+                            goodCode.barCode=cscGoodsVo.barCode;
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
                         vueObj.goodDataInfo.totalGoods=data.result.total;
@@ -998,6 +1002,10 @@
                 this.goodDataInfo.goodPageSize=10;
                 this.goodDataInfo.totalGoods=0;
                 this.goodDataInfo.chosenGoodCode=false;
+                this.goodDataInfo.goodsForm.goodsTypeId="";
+                this.goodDataInfo.goodsForm.goodsTypeSonId="";
+                this.goodDataInfo.goodsForm.goodsName="";
+                this.goodDataInfo.goodsForm.barCode="";
             },
             cancelSelectCustomer:function(){
                 this.customerDataInfo.customerData=[];

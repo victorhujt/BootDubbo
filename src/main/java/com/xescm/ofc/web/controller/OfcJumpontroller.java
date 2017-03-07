@@ -13,16 +13,17 @@ import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
-import com.xescm.ofc.service.OfcDmsCallbackStatusService;
 import com.xescm.ofc.service.OfcMerchandiserService;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.uam.provider.UamGroupEdasService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,7 +53,7 @@ public class OfcJumpontroller extends BaseController{
     @Resource
     private CscCustomerEdasService cscCustomerEdasService;
     @Resource
-    private RmcWarehouseEdasService rmcWarehouseEdasService;
+    private UamGroupEdasService uamGroupEdasService;
 
 
     @RequestMapping(value="/ofc/orderPlace")
@@ -383,6 +384,17 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/orderStorageOutManager")
     public ModelAndView orderStorageOutManager(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_out_manager");
+        UamGroupDto uamGroupDto=new UamGroupDto();
+        uamGroupDto.setSerialNo(getAuthResDtoByToken().getGroupRefCode());
+        Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
+        UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
+        String groupType=uamGroupDtoResult.getType();
+        if(StringUtils.equals(groupType,"1")) {
+            //鲜易供应链身份
+            if (StringUtils.equals("GD1625000003", uamGroupDtoResult.getSerialNo())) {
+                model.addAttribute("isSuper", "Y");
+            }
+        }
         return modelAndView;
     }
 
@@ -402,6 +414,18 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/orderStorageInManager")
     public ModelAndView orderStorageInManager(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_in_manager");
+        UamGroupDto uamGroupDto=new UamGroupDto();
+        uamGroupDto.setSerialNo(getAuthResDtoByToken().getGroupRefCode());
+        Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
+        UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
+        String groupType=uamGroupDtoResult.getType();
+        if(StringUtils.equals(groupType,"1")) {
+            //鲜易供应链身份
+            if (StringUtils.equals("GD1625000003", uamGroupDtoResult.getSerialNo())) {
+                model.addAttribute("isSuper", "Y");
+            }
+        }
+        //model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
         return modelAndView;
     }
 

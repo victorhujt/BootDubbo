@@ -178,6 +178,7 @@
             formLabelWidth: '100px',
             pageSize:10,
             total:0,
+            isSuper:'${isSuper!}',
             wareHouseOptions:[],
             pageSizes:[10, 20, 30, 40,50],
             customerData:[],
@@ -255,6 +256,7 @@
                             warehouse.label=RmcWarehouseRespDto.warehouseName;
                             warehouse.value= RmcWarehouseRespDto.warehouseCode;
                             vueObj.wareHouseOptions.push(warehouse);
+                           // vueObj.wareHouseName = vueObj.wareHouseOptions[0].value;
                         });
                     }else{
                         layer.msg("当前用户下没有仓库信息！");
@@ -271,13 +273,19 @@
                     var baseArray=result.result.base;
                     if(areaArray.length>0){
                         $.each(areaArray,function (index,OfcGroupVo) {
-                            var area={};
-                            if(OfcGroupVo.groupName&&OfcGroupVo.serialNo){
+                            if(OfcGroupVo.groupName!=""&&OfcGroupVo.serialNo!=""){
+                                var area={};
                                 area.label=OfcGroupVo.groupName;
                                 area.value= OfcGroupVo.serialNo;
                                 vueObj.areaNameOptions.push(area);
                             }
                         });
+                        if(vueObj.isSuper=="Y"){
+
+                        }else{
+                            vueObj.areaName = vueObj.areaNameOptions[0].value;
+                        }
+
                     }else{
                         layer.msg("当前用户下没有大区信息！");
                     }
@@ -291,12 +299,17 @@
                                 vueObj.baseNameOptions.push(base);
                             }
                         });
+                        if(vueObj.isSuper=="Y"){
+
+                        }else{
+                            vueObj.baseName = vueObj.baseNameOptions[0].value;
+                        }
+
                     }else{
                         layer.msg("当前用户下没有基地信息！");
                     }
                 }
             });
-            vueObj.selectOrder();
         },
         methods: {
             handleCustomerCurrentChange:function(val) {
@@ -461,7 +474,6 @@
                     this.customerCode="";
                     this.orderStatus="";
                     this.businessType="";
-                    this.areaName="";
                     this.baseName="";
                     this.wareHouseName="";
 
@@ -582,18 +594,26 @@
                         vueObj.promptInfo("订单的起始日期不能大于结束日期","error");
                         return;
                     }
-                    if(this.baseName!=""){
-                        if(this.areaName==""){
-                            vueObj.promptInfo("选择基地时，必须选择大区","warning");
-                            return;
-                        }
-                    }
+
                 }
                 if(this.beginDate){
                     param.startDate=DateUtil.format(this.beginDate, "yyyy-MM-dd HH:mm:ss");
                 }
                 if(this.endDate){
                     param.endDate = this.endDate.getFullYear()+"-"+(this.endDate.getMonth()+1)+"-"+this.endDate.getDate()+" 23:59:59";
+                }
+                if(this.isSuper=="Y"){
+                    if(this.baseName!=""){
+                        if(this.areaName==""){
+                            vueObj.promptInfo("选择基地时，必须选择大区","warning");
+                            return;
+                        }
+                    }
+                }else{
+                    if(this.areaName==""){
+                        vueObj.promptInfo("必须选择大区","warning");
+                        return;
+                    }
                 }
                 param.pageNum = this.currentPage;
                 param.pageSize=this.pageSize;
