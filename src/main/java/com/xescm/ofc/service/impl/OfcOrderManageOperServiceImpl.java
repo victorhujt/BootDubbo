@@ -44,7 +44,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Override
     public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OrderStorageOperForm form, String tag) {
         if(tag.equals("in")){
-            if(StringUtils.isEmpty(form.getBusinessType())||form.getBusinessType().indexOf("61")!=-1){
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("620");
                 businessTypes.add("621");
@@ -54,9 +53,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("625");
                 businessTypes.add("626");
                 form.setBusinessTypes(businessTypes);
-            }
         }else if(tag.equals("out")){
-            if(StringUtils.isEmpty(form.getBusinessType())||form.getBusinessType().indexOf("62")!=-1){
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("610");
                 businessTypes.add("611");
@@ -64,7 +61,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("613");
                 businessTypes.add("614");
                 form.setBusinessTypes(businessTypes);
-            }
         }
         return queryStorageOrderList(authResDto,form);
     }

@@ -22,7 +22,7 @@ public interface OfcStorageTemplateService {
 
     void  delTemplateByCode(String temlpateCode);
 
-    void templateEditConfirm(String templateName, AuthResDto authResDto) throws Exception;
+    void templateEditConfirm(String templateName, AuthResDto authResDto, String lastTemplateType) throws Exception;
 
     List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
 

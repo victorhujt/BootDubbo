@@ -151,6 +151,7 @@
         el:'#vm',
         data:function () {
             return{
+                lastTemplateType:'',
                 templateCodeShow:'${templateCode!}',
                 orderTime:'${orderTime!}',
                 warehouseName:'',
@@ -224,7 +225,7 @@
                 })
             });
             var url = "/ofc/storage_template/detail_data/" + templateCode;
-            CommonClient.post(url, {}, function (result) {
+            CommonClient.syncpost(url, {}, function (result) {
                 var itemOut = {};
                 var orderTime;
                 var merchandiser;
@@ -240,9 +241,10 @@
                     tableItem.indexNum = indexNum;
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
+                    console.log('------' + tableItem.reflectColName);
                     var colDefaultVal = item.colDefaultVal;
+                    console.log('------' + colDefaultVal);
                     if(!StringUtil.isEmpty(colDefaultVal)){
-
                         if(indexNum == 2){
                             orderTime = colDefaultVal;
                         }else if(indexNum == 3){
@@ -266,24 +268,21 @@
                     businessType:businessType,
                     provideTransport:"是" === provideTransport ? true : false
                 };
-                console.log('=============' + JSON.stringify(vm.colDefaultValModel));
-
                 var templateType = itemOut.templateType;
-                var templateTypeName = itemOut.templateType == 'storageIn' ? '入库单' : '出库单';
-                vm.templatesTypeList = [
-                    {label:templateType,value:templateTypeName}
-                ];
-                vm.templateForm.templateName = itemOut.templateName;
-                vm.templateForm.custName = itemOut.custName;
-
-                vm.templateForm.custCode = itemOut.custCode;
+                vm.templateForm = {
+                    templateType:templateType,
+                    templateName:itemOut.templateName,
+                    custName:itemOut.custName,
+                    custCode:itemOut.custCode
+                };
+                vm.lastTemplateType = templateType;
             })
-
 
         },
         methods:{
             templateTypeChange:function (val) {
                 var vm = this;
+                //去掉默认的业务类型
                 vm.colDefaultValModel.businessType = '';
                 if(!StringUtil.isEmpty(val)){
                     vm.templateTypeNotNull = false;
@@ -388,6 +387,10 @@
                 var designData = this.tableData;
                 var templateType = this.templateForm.templateType;
                 var templateName = this.templateForm.templateName;
+                if(templateName.length > 50){
+                    vm.$message("模板列名过长，最大长度50位！");
+                    return;
+                }
                 var templateCode = vm.templateCodeShow;
                 var custName = this.templateForm.custName;
                 var custCode = this.templateForm.custCode;
@@ -414,6 +417,10 @@
                     template.custCode = custCode;
                     var reflectColName = StringUtil.isEmpty(design.reflectColName) ? "" : StringUtil.trim(design.reflectColName);
                     var index = design.indexNum;
+                    if(reflectColName.length > 50) {
+                        vm.$message("第" + index + "行模板列名过长!最长50位!");
+                        return;
+                    }
                     if(index == 1 && StringUtil.isEmpty(reflectColName)){
                         vm.$message('客户订单号模板列名为空!');
                         return;
@@ -443,7 +450,7 @@
                     template.colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
                     templateList.push(template);
                 }
-                xescm.common.submit("/ofc/storage_template/edit_confirm", {"templateList":JSON.stringify(templateList)}, "确认修改该模板配置?", function () {
+                xescm.common.submit("/ofc/storage_template/edit_confirm", {"templateList":JSON.stringify(templateList), "lastTemplateType":vm.lastTemplateType}, "确认修改该模板配置?", function () {
                     xescm.common.loadPage("/ofc/storage/template");
                 });
             },

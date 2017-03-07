@@ -27,7 +27,6 @@ import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,8 +34,10 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -188,23 +189,59 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * 模板配置编辑
      * @param templateList 模板配置列表
      * @param authResDto 登录用户
+     * @param lastTemplateType 修改之前的模板类型
      */
     @Transactional
     @Override
-    public void templateEditConfirm(String templateList, AuthResDto authResDto) throws Exception {
+    public void templateEditConfirm(String templateList, AuthResDto authResDto, String lastTemplateType) throws Exception {
         TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
         };
         List<OfcStorageTemplate> ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
         String userId = authResDto.getUserId();
         String userName = authResDto.getUserName();
         Date now = new Date();
-        Integer changeNum = StringUtils.equals(ofcStorageTemplates.get(0).getTemplateType(), "storageIn") ? 21 : 22;
+        OfcStorageTemplate ofcStorageTemplateForFix = ofcStorageTemplates.get(0);
+        String currTemplateType = ofcStorageTemplateForFix.getTemplateType();
+        OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
+        ofcStorageTemplate.setIndexNum(22);
+
+        Integer changeNum = StringUtils.equals(currTemplateType, "storageIn") ? 21 : 22;
         Integer updateNum = changeNum;
-        for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplates) {
-            ofcStorageTemplate.setOperator(userId);
-            ofcStorageTemplate.setOperatorName(userName);
-            ofcStorageTemplate.setOperTime(now);
-            int i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemplate);
+        int num = 0;
+        for (OfcStorageTemplate ofcStorageTemp : ofcStorageTemplates) {
+            num ++ ;
+            ofcStorageTemp.setOperator(userId);
+            ofcStorageTemp.setOperatorName(userName);
+            ofcStorageTemp.setOperTime(now);
+            int i = 0;
+            if(num != changeNum){
+                i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
+            }else {
+
+                if(StringUtils.equals(currTemplateType, "storageIn") && StringUtils.equals(lastTemplateType, "storageOut")){
+                    //21
+                    ofcStorageTemplate.setTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
+                    //删掉模板中第22条
+                    int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
+                    if(delete == 0){
+                        logger.error("模板配置编辑更新失败, 删掉模板中第22条失败");
+                        throw new BusinessException("模板配置编辑更新失败");
+                    }
+                }else if(StringUtils.equals(currTemplateType, "storageOut") && StringUtils.equals(lastTemplateType, "storageIn")){
+                    //22
+                    //新增模板第22条
+                    ModelMapper modelMapper = new ModelMapper();
+                    modelMapper.map(ofcStorageTemplate, ofcStorageTemplateForFix);
+                    modelMapper.map(ofcStorageTemp, ofcStorageTemplate);
+                    ofcStorageTemp.setId(null);
+                    ofcStorageTemp.setCreatTime(now);
+                    ofcStorageTemp.setCreator(userId);
+                    ofcStorageTemp.setCreatorName(userName);
+                    i = ofcStorageTemplateMapper.insert(ofcStorageTemp);
+                }else {
+                    i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
+                }
+            }
             updateNum -= i;
         }
         if(updateNum.compareTo(changeNum) == 0){
@@ -266,8 +303,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Override
     public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
 
-        //根据模板编码和类型拿到用户保存的配置模板的映射
-        Map<String,OfcStorageTemplate> templateDetilMap = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
+        //根据模板编码和类型拿到用户保存的配置模板的映射 key是用户表头列名
+        List<Object> templateReflect = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
+        Map<String,OfcStorageTemplate> templateDetilMap = (Map<String, OfcStorageTemplate>) templateReflect.get(0);//key是用户表头列名
+        Map<String,OfcStorageTemplate> forDefaultButNotRequired = (Map<String, OfcStorageTemplate>) templateReflect.get(1);//key是用户表头列标准编码
+
         //将模板映射成标准格式, 如果不是标准格式的就跳过不校验, 且不展示
         InputStream inputStream ;
         Workbook workbook;
@@ -278,8 +318,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.error("校验Excel读取内部异常{}",e);
             throw new BusinessException("校验Excel读取内部异常");
         }
-
-        workbook.getSheetAt(0).getRow(0).getLastCellNum();
 
         boolean checkPass = true;
         List<String> xlsErrorMsg = new ArrayList<>();
@@ -353,9 +391,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         break;
                     }
                     //如果非必填列为空则跳过
-                    if (null == commonCell) {
+                     if (null == commonCell) {
                         //标记当前列出错, 并跳过当前循环
-                        break;
+                        continue;
                     }
                     //校验第一行,包括固定内容和收货人列表
                     String cellValue = null;
@@ -643,7 +681,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.PROVIDE_TRANSPORT.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
-                                    cellValue = colDefaultVal.equals("是") ? "1" : "0";
+                                    cellValue = StringUtils.equals(ofcStorageTemplate.getTemplateType(), "storageIn") ? "0" : colDefaultVal.equals("是") ? "1" : "0";
                                 }else {
                                     logger.error("当前行:{},列:{} 没有是否提供运输服务, 默认为0", rowNum + 1, cellNum + 1);
                                     cellValue = "0";
@@ -719,9 +757,22 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     //补齐
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustCode(ofcStorageTemplate.getCustCode());
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustName(ofcStorageTemplate.getCustName());
+                    Date now = new Date();
                     if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getOrderTime())){
-                        ofcStorageTemplateDto.getOfcOrderDTO().setOrderTime(new Date());
+                        ofcStorageTemplateDto.getOfcOrderDTO().setOrderTime(now);
+                        ofcStorageTemplateDto.setOrderTime(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1));
                     }
+                    //如果Excel中没有是否提供运输这一列, 则默认设置为用户默认的, 如果没有默认的就置为否(即0)
+                    if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getProvideTransport())){
+                        //拿着provideTransport找到默认值
+                        OfcStorageTemplate forDefault = forDefaultButNotRequired.get("provideTransport");
+                        String provideTrans = null;
+                        if(null != forDefault){
+                            provideTrans = forDefault.getColDefaultVal();
+                        }
+                        ofcStorageTemplateDto.setProvideTransport(PubUtils.isSEmptyOrNull(provideTrans) ? "0" : StringUtils.equals(provideTrans, "是") ? "1" : "0");
+                    }
+
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
             }
@@ -943,9 +994,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * 获取用户保存的所选模板映射map
      * @param templateCode 模板编码
      * @param templateType 模板类型
-     * @return 模板映射map  key:映射列名  value:映射列名对应的保存的模板映射
+     * @return List<Object> 0: key:映射列名  value:映射列名对应的保存的模板映射  1: key:映射列编码  value:映射列名对应的保存的模板映射
      */
-    private Map<String,OfcStorageTemplate> getTemplateReflect(String templateCode, String templateType) {
+    private List<Object> getTemplateReflect(String templateCode, String templateType) {
         List<OfcStorageTemplate> ofcStorageTemplateListForConvert = new ArrayList<>();
         if(StringUtils.equals("standard",templateCode)){
             if(StringUtils.equals("storageIn",templateType)){
@@ -964,14 +1015,19 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             templateCondition.setTemplateCode(templateCode);
             ofcStorageTemplateListForConvert = this.selectTemplateDetail(templateCondition);
         }
-        Map<String,OfcStorageTemplate> map = new HashMap<>();
+        Map<String, OfcStorageTemplate> map = new HashMap<>();
+        Map<String, OfcStorageTemplate> mapForDefaultButNotRequire = new HashMap<>();
         for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplateListForConvert) {
             String reflectColName = ofcStorageTemplate.getReflectColName();
             if(!PubUtils.isSEmptyOrNull(reflectColName)){
                 map.put(reflectColName, ofcStorageTemplate);
             }
+            mapForDefaultButNotRequire.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);
         }
-        return map;
+        List<Object> result = new ArrayList<>();
+        result.add(map);
+        result.add(mapForDefaultButNotRequire);
+        return result;
     }
 
     /**
@@ -1045,13 +1101,18 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             orderListByCustOrderCode.add(ofcStorageTemplateDto);
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
+
         for (String orderMapKey : orderMap.keySet()) {
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
             logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
-            BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg.getOfcOrderDTO());
-            BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg);
+            BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
+            BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
+            ofcOrderDTO.setOrderTime(DateUtils.String2Date(forOrderMsg.getOrderTime(), DateUtils.DateFormatType.TYPE1));
+            if(!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())){
+                ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
+            }
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
             orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
@@ -1066,6 +1127,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 ofcGoodsDetailsInfoList.add(ofcGoodsDetailsInfo);
             }
             CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, ofcGoodsDetailsInfoList, "batchSave"
                     , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
             if(save.getCode() == Wrapper.ERROR_CODE){
@@ -1076,20 +1138,48 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
 
+    private void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
+        logger.info("==========> cscConsigneeDto:{} ", ToStringBuilder.reflectionToString(cscConsigneeDto));
+        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanySerialNo());
+        ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactSerialNo());
+        ofcOrderDTO.setConsigneeName(cscConsigneeDto.getContactCompanyName());
+        ofcOrderDTO.setConsigneeContactName(cscConsigneeDto.getContactName());
+        ofcOrderDTO.setConsigneeType(cscConsigneeDto.getType());
+        ofcOrderDTO.setConsigneeContactPhone(cscConsigneeDto.getPhone());
+        ofcOrderDTO.setDestinationProvince(cscConsigneeDto.getProvinceName());
+        ofcOrderDTO.setDestinationCity(cscConsigneeDto.getCityName());
+        ofcOrderDTO.setDestinationDistrict(cscConsigneeDto.getAreaName());
+        ofcOrderDTO.setDestinationTowns(cscConsigneeDto.getStreetName());
+        ofcOrderDTO.setDestination(cscConsigneeDto.getDetailAddress());
+        StringBuilder sb = new StringBuilder(cscConsigneeDto.getProvince());
+        if(!PubUtils.isSEmptyOrNull(cscConsigneeDto.getCity())){
+            sb.append(cscConsigneeDto.getCity());
+            if(!PubUtils.isSEmptyOrNull(cscConsigneeDto.getArea())) {
+                sb.append(cscConsigneeDto.getArea());
+                if(!PubUtils.isSEmptyOrNull(cscConsigneeDto.getStreet())) {
+                    sb.append(cscConsigneeDto.getStreet());
+                }
+            }
+        }
+        ofcOrderDTO.setDestinationCode(sb.toString());
+    }
+
     /**
-     * 转换客户中心DTO
+     * 转换客户中心DTO发货方
      * @param cscConsigneeDto 发货方
      * @return 转换后的发货方
      * @throws Exception 异常
      */
     private CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) throws Exception{
+        logger.info("转换客户中心DTO发货方 cscConsigneeDto:{}", cscConsigneeDto);
         CscContantAndCompanyDto cscContactAndCompanyDto = new CscContantAndCompanyDto();
         CscContactDto cscContactDto = new CscContactDto();
         CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
-        BeanUtils.copyProperties(cscContactDto, cscConsigneeDto);
-        BeanUtils.copyProperties(cscContactCompanyDto, cscConsigneeDto);
+        BeanUtils.copyProperties(cscConsigneeDto, cscContactDto);
+        BeanUtils.copyProperties(cscConsigneeDto, cscContactCompanyDto);
         cscContactAndCompanyDto.setCscContactDto(cscContactDto);
         cscContactAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
+        logger.info("转换客户中心DTO发货方 cscContactAndCompanyDto:{}", cscContactAndCompanyDto);
         return cscContactAndCompanyDto;
     }
 
@@ -1099,12 +1189,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 转换后的货品
      */
     private OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto) throws Exception{
+        logger.info("转换客户中心货品: ofcStorageTemplateDto.getCscGoodsApiVo():{}", ofcStorageTemplateDto.getCscGoodsApiVo());
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-        BeanUtils.copyProperties(ofcGoodsDetailsInfo, cscGoodsApiVo);
+        BeanUtils.copyProperties(cscGoodsApiVo, ofcGoodsDetailsInfo);
         ofcGoodsDetailsInfo.setId(null);
         ofcGoodsDetailsInfo.setGoodsSpec(cscGoodsApiVo.getSpecification());
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
+        logger.info("转换客户中心货品 ofcGoodsDetailsInfo:{}", ofcGoodsDetailsInfo);
         return ofcGoodsDetailsInfo;
     }
 

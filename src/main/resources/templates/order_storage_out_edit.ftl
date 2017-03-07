@@ -5,6 +5,9 @@
         .block {
             margin: 20px 0;
         }
+        .el-textarea__inner{
+          font-size:12px;
+        }
     </style>
 </head>
 <body>
@@ -194,11 +197,11 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注" prop="notes" class="xe-col-3">
-                    <el-input type="textarea"  v-model="orderForm.notes" ></el-input>
+                    <el-input type="textarea"  v-model="orderForm.notes"></el-input>
                 </el-form-item>
             </div>
 
-            <div class="xe-block">
+            <div>
                 <el-collapse v-model="activeNames" accordion>
                     <el-collapse-item title="运输信息" name="1">
                         <div class="xe-block">
@@ -256,9 +259,9 @@
             <div class="xe-pageHeader">
                 货品信息
             </div>
-            <div style="float:right;margin-bottom:15px;">
+            <#--<div style="float:right;margin-bottom:15px;">
                 <el-button type="primary" @click="add">添加货品</el-button>
-            </div>
+            </div>-->
             <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
@@ -353,6 +356,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-button @click="add">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </el-form>
     </div>
@@ -697,7 +701,7 @@
                         vueObj.orderForm.supportName = '';    // 清空供应商
                         var data=result.result;
                         if (data == undefined || data == null || data.length ==0) {
-                            layer.msg("暂时未查询到该客户下的仓库信息！！");
+                            layer.msg("暂时未查询到该客户下的仓库信息！");
                         } else if (result.code == 200) {
                             $.each(data,function (index,rmcWarehouseRespDto) {
                                 var warehouse={};
@@ -708,7 +712,12 @@
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
                         } else {
-                            vueObj.promptInfo(result.message,'error');
+                            if(result.message==null||result.message==""){
+                                vueObj.promptInfo("查询到该客户下的仓库信息异常",'error');
+                            }else{
+                                vueObj.promptInfo(result.message,'error');
+                            }
+
                         }
                     },"json");
                 } else {
@@ -721,7 +730,7 @@
                     var data=result.result;
                     if (data == undefined || data == null || data.length ==0) {
                         vueObj.wareHouseName="";
-                        layer.msg("暂时未查询到该客户下的仓库信息！！");
+                        layer.msg("暂时未查询到该客户下的仓库信息！");
                     } else if (result.code == 200) {
                         $.each(data,function (index,rmcWarehouseRespDto) {
                             var warehouse={};
@@ -732,7 +741,11 @@
                     } else if (result.code == 403) {
                         vueObj.promptInfo("没有权限","error");
                     } else {
-                        vueObj.promptInfo(result.message,"error");
+                        if(result.message==null||result.message==""){
+                            vueObj.promptInfo("查询到该客户下的仓库信息","error");
+                        }else{
+                            vueObj.promptInfo(result.message,"error");
+                        }
                     }
                 },"json");
             },

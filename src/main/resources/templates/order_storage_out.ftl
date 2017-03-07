@@ -10,13 +10,13 @@
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="customerDataInfo.chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectCustomer">筛选</el-button>
                 </el-form-item>
             </el-form>
 
             <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="custCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
                 <el-table-column property="custName" label="公司名称"></el-table-column>
@@ -31,41 +31,40 @@
             </div>
         </el-dialog>
 
-            <el-dialog title="收货方联系人" v-model="consigneeDataInfo.chosenSend" size="small">
-                <el-form :model="consigneeDataInfo.consigneeForm">
-                    <el-form-item label="名称" :label-width="formLabelWidth">
-                        <el-input v-model="consigneeDataInfo.consigneeForm.consigneeName" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="联系人" :label-width="formLabelWidth">
-                        <el-input v-model="consigneeDataInfo.consigneeForm.consigneeContactName" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="联系电话" :label-width="formLabelWidth">
-                        <el-input v-model="consigneeDataInfo.consigneeForm.consigneeContactPhone" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="" :label-width="formLabelWidth">
-                        <el-button type="primary" @click="selectConsignee">筛选</el-button>
-                    </el-form-item>
-                </el-form>
+        <el-dialog title="收货方联系人" v-model="consigneeDataInfo.chosenSend" size="small">
+            <el-form :model="consigneeDataInfo.consigneeForm">
+                <el-form-item label="名称" :label-width="formLabelWidth">
+                    <el-input v-model="consigneeDataInfo.consigneeForm.consigneeName" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="联系人" :label-width="formLabelWidth">
+                    <el-input v-model="consigneeDataInfo.consigneeForm.consigneeContactName" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" :label-width="formLabelWidth">
+                    <el-input v-model="consigneeDataInfo.consigneeForm.consigneeContactPhone" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="" :label-width="formLabelWidth20">
+                    <el-button type="primary" @click="selectConsignee">筛选</el-button>
+                </el-form-item>
+            </el-form>
 
-                <el-table :data="consigneeDataInfo.consigneeData" highlight-current-row @current-change="consigneeHandleCurrentChange" border style="width: 100%">
-                    <el-table-column type="index"></el-table-column>
-                    <el-table-column property="consigneeName" label="名称"></el-table-column>
-                    <el-table-column property="consigneeContactName" label="联系人"></el-table-column>
-                    <el-table-column property="consigneeContactPhone" label="联系电话"></el-table-column>
-                    <el-table-column property="destination" label="地址"></el-table-column>
-                    <el-table-column property="consigneeCode" label="收货方编码"></el-table-column>
-                    <el-table-column property="consigneeType" label="收货方类型"></el-table-column>
-                    <el-table-column property="consigneeContactCode" label="收货方联系人编码"></el-table-column>
-                    <el-table-column property="destinationCode" label="收货方地址编码"></el-table-column>
-                </el-table>
-                <el-pagination @size-change="handleConsigneeSizeChange" @current-change="handleConsigneeCurrentPage" :current-page="consigneeDataInfo.currentConsigneePage" :page-sizes="pageSizes" :page-size="consigneeDataInfo.consigneePageSize" layout="total, sizes, prev, pager, next, jumper" :total="consigneeDataInfo.totalConsignee">
-                </el-pagination>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="cancelSelectConsignee">取 消</el-button>
-                    <el-button type="primary" @click="setCurrentConsigneeInfo(consigneeDataInfo.consigneeCurrentRow)">确 定</el-button>
-                </div>
-            </el-dialog>
-
+            <el-table :data="consigneeDataInfo.consigneeData" highlight-current-row @current-change="consigneeHandleCurrentChange" border style="width: 100%">
+                <el-table-column type="index" label="序号"></el-table-column>
+                <el-table-column property="consigneeName" label="名称"></el-table-column>
+                <el-table-column property="consigneeContactName" label="联系人"></el-table-column>
+                <el-table-column property="consigneeContactPhone" label="联系电话"></el-table-column>
+                <el-table-column property="destination" label="地址"></el-table-column>
+                <el-table-column property="consigneeCode" label="收货方编码"></el-table-column>
+                <el-table-column property="consigneeType" label="收货方类型"></el-table-column>
+                <el-table-column property="consigneeContactCode" label="收货方联系人编码"></el-table-column>
+                <el-table-column property="destinationCode" label="收货方地址编码"></el-table-column>
+            </el-table>
+            <el-pagination @size-change="handleConsigneeSizeChange" @current-change="handleConsigneeCurrentPage" :current-page="consigneeDataInfo.currentConsigneePage" :page-sizes="pageSizes" :page-size="consigneeDataInfo.consigneePageSize" layout="total, sizes, prev, pager, next, jumper" :total="consigneeDataInfo.totalConsignee">
+            </el-pagination>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelSelectConsignee">取 消</el-button>
+                <el-button type="primary" @click="setCurrentConsigneeInfo(consigneeDataInfo.consigneeCurrentRow)">确 定</el-button>
+            </div>
+        </el-dialog>
 
         <el-dialog title="供应商信息" v-model="supplierDataInfo.chosenSupplier" size="small">
             <el-form :model="supplierDataInfo.supplierForm">
@@ -78,13 +77,13 @@
                 <el-form-item label="联系电话" :label-width="formLabelWidth">
                     <el-input v-model="supplierDataInfo.supplierForm.contactPhone" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item  label="" :label-width="formLabelWidth">
+                <el-form-item  label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectSupplier">筛选</el-button>
                 </el-form-item>
             </el-form>
 
             <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="supportName" label="名称"></el-table-column>
                 <el-table-column property="contactName" label="联系人"></el-table-column>
                 <el-table-column property="contactPhone" label="联系电话"></el-table-column>
@@ -102,7 +101,6 @@
             </div>
         </el-dialog>
 
-
         <el-dialog title="货品列表" v-model="goodDataInfo.chosenGoodCode" size="small">
             <el-form :model="goodDataInfo.goodsForm">
                 <el-form-item label="货品编码" :label-width="formLabelWidth">
@@ -111,13 +109,13 @@
                 <el-form-item label="货品名称" :label-width="formLabelWidth">
                     <el-input v-model="goodDataInfo.goodsForm.goodsName" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
                 </el-form-item>
             </el-form>
 
             <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品类别"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码"></el-table-column>
@@ -192,8 +190,7 @@
                     <el-input type="textarea"  v-model="orderForm.notes" ></el-input>
                 </el-form-item>
             </div>
-
-            <div class="xe-block">
+            <div>
               <el-collapse v-model="activeNames" accordion>
                 <el-collapse-item title="运输信息" name="1">
                     <div class="xe-block">
@@ -251,9 +248,9 @@
             <div class="xe-pageHeader">
                 货品信息
             </div>
-            <div style="float:right;margin-bottom:15px;">
+            <#--<div style="float:right;margin-bottom:15px;">
                 <el-button type="primary" @click="add">添加货品</el-button>
-            </div>
+            </div>-->
             <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
@@ -348,6 +345,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-button @click="add">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </el-form>
     </div>
@@ -379,7 +377,6 @@
                 callback();
             }
           };
-
           return {
               activeNames:'',
               wareHouseObj:'',
@@ -498,6 +495,7 @@
                 },
               pageSizes:[10, 20, 30, 40,50],
               formLabelWidth: '100px',
+              formLabelWidth20: '20px',
               isDisabled: false,
               isDisabled11: false,
               goodsData: [],
@@ -599,7 +597,12 @@
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
                         } else {
-                            vueObj.promptInfo(result.message,'error');
+                            if(result.message==null||result.message==""){
+                                vueObj.promptInfo("查询到该客户下的仓库信息异常",'error');
+                            }else{
+                                vueObj.promptInfo(result.message,'error');
+                            }
+
                         }
                     },"json");
                 } else {
@@ -608,7 +611,6 @@
             },
             consigneeHandleCurrentChange:function(val) {
                 this.consigneeDataInfo.consigneeCurrentRow=val;
-
             },
             handleCustomerSizeChange:function(val) {
                 this.customerDataInfo.customerPageSize=val;
@@ -672,9 +674,6 @@
             GoodsCurrentChange:function(val) {
                 this.goodsCurrentRow = val;
             },
-            goodsCodeClick:function() {
-                console.log('弹窗');
-            },
             selectSupplier:function(){
                 if(!this.orderForm.custName && !this.orderForm.custCode){
                     this.promptInfo("请选择客户!",'warning');
@@ -724,7 +723,6 @@
                 this.supplierDataInfo.currentSupplierPage = val;
                 this.selectSupplier();
             },
-
             setCurrentSupplierInfo:function(val){
                 if (val != null) {
                     this.orderForm.supportName=val.supportName;
@@ -799,7 +797,6 @@
                 },"json");
 
             },
-
             handleConsigneeSizeChange:function(val){
                 this.consigneeDataInfo.consigneePageSize=val;
                 this.selectConsignee();
@@ -825,8 +822,6 @@
                 this.orderForm.destinationCode=val.destinationCode;
                 this.consigneeDataInfo.chosenSend = false;
             },
-
-
             selectGoods:function(){
                 this.goodDataInfo.goodsCodeData=[];
                 var vueObj=this;
@@ -915,7 +910,7 @@
                             }
                         },"json");
             },
-          submitForm:function(formName) {
+            submitForm:function(formName) {
                 var _this = this;
               this.$refs[formName].validate(function(valid) {
                   if (valid) {

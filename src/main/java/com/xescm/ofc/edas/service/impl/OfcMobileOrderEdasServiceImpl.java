@@ -37,6 +37,11 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
     @Resource
     private OfcAttachmentService ofcAttachmentService;
 
+    /**
+     * 钉钉易录单保存订单接口
+     * @param ofcMobileOrderDto
+     * @return
+     */
     @Override
     public Wrapper<MobileOrderVo> saveMobileOrder(OfcMobileOrderDto ofcMobileOrderDto) {
         logger.debug("==>保存拍照录单信息 mobileOrder={}", ofcMobileOrderDto);
@@ -60,7 +65,11 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resVo);
     }
 
-
+    /**
+     *
+     * @param dto 按条件查询订单信息和图片信息
+     * @return
+     */
     @Override
     public Wrapper<MobileOrderVo> queryMobileOrderByCode(OfcMobileOrderDto dto){
         MobileOrderVo resultVo = new MobileOrderVo();
@@ -84,6 +93,11 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, resultVo);
     }
 
+    /**
+     * 查询拍照订单前20条按时间倒叙
+     * @param ofcMobileOrderDto
+     * @return
+     */
     @Override
     public Wrapper<List<MobileOrderVo>> queryMobileOrderList(OfcMobileOrderDto ofcMobileOrderDto){
         logger.debug("==> 查询手机订单前20条");
@@ -106,6 +120,11 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, resList);
     }
 
+    /**
+     * 保存图片
+     * @param attachmentDto
+     * @return
+     */
     @Override
     public Wrapper<AttachmentVo> saveAttachment(AttachmentDto attachmentDto) {
         OfcAttachment ofcAttachment=new OfcAttachment();
@@ -127,6 +146,11 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resultVo);
     }
 
+    /**
+     * 删除图片
+     * @param attachmentDto
+     * @return
+     */
     @Override
     public Wrapper<?> delAttachment(AttachmentDto attachmentDto) {
         OfcAttachment ofcAttachment=new OfcAttachment();

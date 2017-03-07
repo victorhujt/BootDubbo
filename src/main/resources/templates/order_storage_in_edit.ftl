@@ -255,9 +255,9 @@
           <div class="xe-pageHeader">
             货品信息
           </div>
-          <div class="block" style="float:right;">
+          <#--<div class="block" style="float:right;">
             <el-button type="primary" @click="add">添加货品</el-button>
-          </div>
+          </div>-->
           <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
             <el-table-column type="index"></el-table-column>
             <el-table-column property="goodsType" label="货品种类">
@@ -354,6 +354,7 @@
             </el-table-column>
           </el-table>
         <div class="block">
+          <el-button @click="add">添加货品</el-button>
           <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </div>
 
@@ -376,19 +377,19 @@
                 }
             };
             var checkPhoneOrMobile = function(rule, value, callback) {
-            if(value!==""){
-              var mp=/^1\d{10}$/;
-              var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
-              var phone = pp.test(value)||mp.test(value);
-              if(phone!==true){
-                callback(new Error('请正确输入联系电话'));
-              }else{
-                callback();
-              }
-            }else{
-                callback();
-            }
-          };
+                if(value!==""){
+                    var mp=/^1\d{10}$/;
+                    var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
+                    var phone = pp.test(value)||mp.test(value);
+                    if(phone!==true){
+                        callback(new Error('请正确输入联系电话'));
+                    }else{
+                        callback();
+                    }
+                }else{
+                    callback();
+                }
+            };
             return {
                 activeNames:'',
                 wareHouseObj:'',
@@ -690,7 +691,7 @@
                         vueObj.orderForm.supportName = '';    // 清空供应商
                         var data=result.result;
                         if (data == undefined || data == null || data.length ==0) {
-                            layer.msg("暂时未查询到该客户下的仓库信息！！");
+                            layer.msg("暂时未查询到该客户下的仓库信息！");
                         } else if (result.code == 200) {
                             $.each(data,function (index,rmcWarehouseRespDto) {
                                 var warehouse={};
@@ -701,7 +702,11 @@
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
                         } else {
-                            vueObj.promptInfo(result.message,'error');
+                            if(result.message==null||result.message==""){
+                                vueObj.promptInfo("查询到该客户下的仓库信息",'error');
+                            }else{
+                                vueObj.promptInfo(result.message,'error');
+                            }
                         }
                     },"json");
                 } else {
@@ -724,7 +729,11 @@
                     } else if (result.code == 403) {
                         vueObj.promptInfo("没有权限",'error');
                     } else {
-                        vueObj.promptInfo(result.message,'error');
+                        if(result.message==null||result.message==""){
+                            vueObj.promptInfo("查询到该客户下的仓库信息",'error');
+                        }else{
+                            vueObj.promptInfo(result.message,'error');
+                        }
                     }
                 },"json");
             },
