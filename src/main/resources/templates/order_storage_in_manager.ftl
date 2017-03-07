@@ -128,19 +128,19 @@
         <div class="xe-pageHeader">
             入库单列表
         </div>
-        <div>
-            <el-button type="primary" size="small" @click="addOrder">添加</el-button>
-            <el-button type="primary" size="small" @click="editOrder">编辑</el-button>
-            <el-button type="primary" size="small" @click="deleteOrder">删除</el-button>
-            <el-button type="primary" size="small" @click="copyOrder">复制</el-button>
-            <el-button type="primary" size="small" @click="auditOrder">审核</el-button>
-            <el-button type="primary" size="small" @click="repeatAuditOrder">反审核</el-button>
-            <el-button type="primary" size="small" @click="cancelOrder">取消</el-button>
-            <el-button type="primary" size="small" @click="batchImport">批量导入</el-button>
+        <div style="margin-top:20px;">
+            <el-button size="small" @click="addOrder">添加</el-button>
+            <el-button size="small" @click="editOrder">编辑</el-button>
+            <el-button size="small" @click="deleteOrder">删除</el-button>
+            <el-button size="small" @click="copyOrder">复制</el-button>
+            <el-button size="small" @click="auditOrder">审核</el-button>
+            <el-button size="small" @click="repeatAuditOrder">反审核</el-button>
+            <el-button size="small" @click="cancelOrder">取消</el-button>
+            <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
         <div class="block">
             <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column type="selection">
                 </el-table-column>
                 <el-table-column property="customerName" label="客户名称"></el-table-column>
@@ -148,7 +148,7 @@
                         property="orderCode"
                         label="订单编号">
                     <template scope="scope">
-                        <el-button type="text" @click="orderDetails(scope.row.orderCode)"><p style="color: blue">{{scope.row.orderCode}}</p></el-button>
+                      <span @click="orderDetails(scope.row.orderCode)" class="xe-link">{{scope.row.orderCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column property="orderBatchNumber" label="订单批次号"></el-table-column>

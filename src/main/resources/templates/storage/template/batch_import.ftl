@@ -1,6 +1,11 @@
 <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
 <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
 <title>入库开单_批量导入</title>
+<style>
+  .el-upload__input{
+    opacity:0;
+  }
+</style>
 <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
 <div id="app">
     <div class="list-mian-01">
@@ -20,7 +25,7 @@
                     </el-select>
                 </el-form-item>
             </div>
-            <div class="xe-block">
+            <div class="xe-block" style="margin-left:100px;">
                 <el-upload  :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
                               :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
                               :on-error="handleError" :default-file-list="fileList">

@@ -232,7 +232,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="block" style="float:right;">
+            <div class="block">
                 <el-button type="primary" @click="goBack">返回</el-button>
             </div>
         </el-form>

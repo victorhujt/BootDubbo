@@ -10,13 +10,13 @@
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="customerDataInfo.chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectCustomer">筛选</el-button>
                 </el-form-item>
             </el-form>
 
             <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="custCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
                 <el-table-column property="custName" label="公司名称"></el-table-column>
@@ -42,13 +42,13 @@
                 <el-form-item label="联系电话" :label-width="formLabelWidth">
                     <el-input v-model="consigneeDataInfo.consigneeForm.consigneeContactPhone" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectConsignee">筛选</el-button>
                 </el-form-item>
             </el-form>
 
             <el-table :data="consigneeDataInfo.consigneeData" highlight-current-row @current-change="consigneeHandleCurrentChange" border style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="consigneeName" label="名称"></el-table-column>
                 <el-table-column property="consigneeContactName" label="联系人"></el-table-column>
                 <el-table-column property="consigneeContactPhone" label="联系电话"></el-table-column>
@@ -77,13 +77,13 @@
                 <el-form-item label="联系电话" :label-width="formLabelWidth">
                     <el-input v-model="supplierDataInfo.supplierForm.contactPhone" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item  label="" :label-width="formLabelWidth">
+                <el-form-item  label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectSupplier">筛选</el-button>
                 </el-form-item>
             </el-form>
 
             <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="supportName" label="名称"></el-table-column>
                 <el-table-column property="contactName" label="联系人"></el-table-column>
                 <el-table-column property="contactPhone" label="联系电话"></el-table-column>
@@ -109,13 +109,13 @@
                 <el-form-item label="货品名称" :label-width="formLabelWidth">
                     <el-input v-model="goodDataInfo.goodsForm.goodsName" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
                 </el-form-item>
             </el-form>
 
             <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品类别"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码"></el-table-column>
@@ -495,6 +495,7 @@
                 },
               pageSizes:[10, 20, 30, 40,50],
               formLabelWidth: '100px',
+              formLabelWidth20: '20px',
               isDisabled: false,
               isDisabled11: false,
               goodsData: [],

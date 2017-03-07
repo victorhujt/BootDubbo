@@ -201,7 +201,7 @@
                 </el-form-item>
             </div>
 
-            <div class="xe-block">
+            <div>
                 <el-collapse v-model="activeNames" accordion>
                     <el-collapse-item title="运输信息" name="1">
                         <div class="xe-block">
