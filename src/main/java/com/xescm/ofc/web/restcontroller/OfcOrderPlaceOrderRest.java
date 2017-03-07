@@ -37,7 +37,9 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -434,6 +436,20 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 cscSupplierInfoDto.setContactPhone(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactPhone()));
             }
             result = cscSupplierEdasService.querySupplierByAttributePageList(cscSupplierInfoDto);
+            logger.info("=================>>>>>> result :{}", ToStringBuilder.reflectionToString(result));
+            logger.info("=================>>>>>> result JSON :{}", JacksonUtil.toJson(result));
+            if(null == result.getResult()){
+                logger.error("下单供应商筛选出错 result.getResult() is null");
+                throw new BusinessException("下单供应商筛选出错");
+            }
+            PageInfo<CscSupplierInfoDto> cscSupplierInfoDtoPageInfo = result.getResult();
+            if(CollectionUtils.isEmpty(result.getResult().getList())){
+                logger.error("下单供应商筛选出错 result.getResult().getList() is null");
+                throw new BusinessException("下单供应商筛选出错");
+            }
+            List<CscSupplierInfoDto> cscSupplierInfoDtos = result.getResult().getList();
+            logger.info("=================>>>>>> cscSupplierInfoDtoPageInfo :{}", ToStringBuilder.reflectionToString(cscSupplierInfoDtoPageInfo));
+            logger.info("=================>>>>>> cscSupplierInfoDtos :{}", ToStringBuilder.reflectionToString(cscSupplierInfoDtos));
             if (Wrapper.ERROR_CODE == result.getCode()) {
                 logger.error("查询供应商列表失败,查询结果有误!");
             }
