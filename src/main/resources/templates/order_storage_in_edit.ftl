@@ -255,9 +255,9 @@
           <div class="xe-pageHeader">
             货品信息
           </div>
-          <div class="block" style="float:right;">
+          <#--<div class="block" style="float:right;">
             <el-button type="primary" @click="add">添加货品</el-button>
-          </div>
+          </div>-->
           <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
             <el-table-column type="index"></el-table-column>
             <el-table-column property="goodsType" label="货品种类">
@@ -354,6 +354,7 @@
             </el-table-column>
           </el-table>
         <div class="block">
+          <el-button @click="add">添加货品</el-button>
           <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </div>
 

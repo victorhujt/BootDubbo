@@ -5,6 +5,9 @@
         .block {
             margin: 20px 0;
         }
+        .el-textarea__inner{
+          font-size:12px;
+        }
     </style>
 </head>
 <body>
@@ -194,7 +197,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注" prop="notes" class="xe-col-3">
-                    <el-input type="textarea"  v-model="orderForm.notes" ></el-input>
+                    <el-input type="textarea"  v-model="orderForm.notes"></el-input>
                 </el-form-item>
             </div>
 
@@ -256,9 +259,9 @@
             <div class="xe-pageHeader">
                 货品信息
             </div>
-            <div style="float:right;margin-bottom:15px;">
+            <#--<div style="float:right;margin-bottom:15px;">
                 <el-button type="primary" @click="add">添加货品</el-button>
-            </div>
+            </div>-->
             <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
@@ -353,6 +356,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-button @click="add">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </el-form>
     </div>

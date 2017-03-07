@@ -120,7 +120,7 @@
           <div class="xe-block">
             <el-form-item label="" class="xe-col-3">
               <el-button type="primary" @click="selectOrder">筛选</el-button>
-              <el-button type="primary" @click="resetCondition">重置</el-button>
+              <el-button @click="resetCondition">重置</el-button>
             </el-form-item>
           </div>
 
