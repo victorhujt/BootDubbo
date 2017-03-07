@@ -1092,8 +1092,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
             logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
-            BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg.getOfcOrderDTO());
-            BeanUtils.copyProperties(ofcOrderDTO, forOrderMsg, "orderTime");
+            BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
+            BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
             ofcOrderDTO.setOrderTime(DateUtils.String2Date(forOrderMsg.getOrderTime(), DateUtils.DateFormatType.TYPE1));
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
