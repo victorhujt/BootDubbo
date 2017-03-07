@@ -71,7 +71,7 @@ public class OfcMobileOrderRest extends BaseController {
 
     @RequestMapping(value = "/mobileOrderDetails/{orderCode}")
     public ModelAndView orderDetailByOrderCode(@PathVariable("orderCode") String code) {
-        logger.debug("==>手机订单详情code code={}", code);
+        logger.info("==>手机订单详情code code={}", code);
         ModelAndView modelAndView = new ModelAndView("mobile_order_detail_opera");
         modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
@@ -88,7 +88,7 @@ public class OfcMobileOrderRest extends BaseController {
 
     @RequestMapping(value = "/acceptMobileOrder/{orderCode}")
     public ModelAndView acceptMobileOrder(@PathVariable("orderCode") String code) {
-        logger.debug("==>手机订单详情code code={}", code);
+        logger.info("==>手机订单详情code code={}", code);
         ModelAndView modelAndView = new ModelAndView("mobile_order_accept_opera");
         modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
@@ -116,7 +116,7 @@ public class OfcMobileOrderRest extends BaseController {
     @ResponseBody
     public Wrapper<?> mobileOrderPlace(String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
             , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String mobileOrderCode){
-        logger.debug("==>拍照下单订单中心下单 ofcOrderDTOStr={}", ofcOrderDTOStr);
+        logger.info("==>拍照下单订单中心下单 ofcOrderDTOStr={}", ofcOrderDTOStr);
         String orderCode;
         try {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");

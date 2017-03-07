@@ -44,7 +44,7 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
      */
     @Override
     public Wrapper<MobileOrderVo> saveMobileOrder(OfcMobileOrderDto ofcMobileOrderDto) {
-        logger.debug("==>保存拍照录单信息 mobileOrder={}", ofcMobileOrderDto);
+        logger.info("==>保存拍照录单信息 mobileOrder={}", ofcMobileOrderDto);
         OfcMobileOrder order=new OfcMobileOrder();
         MobileOrderVo resVo = new MobileOrderVo();
         try {
@@ -59,7 +59,7 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
         } catch (BusinessException ex) {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
-            logger.debug("保存拍照录单信息={}", e.getMessage(), e);
+            logger.info("保存拍照录单信息={}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resVo);
@@ -100,7 +100,7 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
      */
     @Override
     public Wrapper<List<MobileOrderVo>> queryMobileOrderList(OfcMobileOrderDto ofcMobileOrderDto){
-        logger.debug("==> 查询手机订单前20条");
+        logger.info("==> 查询手机订单前20条");
         List<OfcMobileOrder> list = null;
         List<MobileOrderVo> resList = new ArrayList<>();
         OfcMobileOrder condition=new OfcMobileOrder();
@@ -140,7 +140,7 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
         } catch (BusinessException ex) {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
-            logger.debug("保存附件信息={}", e.getMessage(), e);
+            logger.info("保存附件信息={}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,resultVo);
@@ -167,7 +167,7 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
         } catch (BusinessException ex) {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception e) {
-            logger.debug("删除附件信息={}", e.getMessage(), e);
+            logger.info("删除附件信息={}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);

@@ -60,8 +60,8 @@ public class OfcOrderFollowRest extends BaseController{
     @RequestMapping(value = "/orderFollowCon",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderFollowCon( String code, String followTag) throws InvocationTargetException {
-        logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
-        logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
+        logger.info("==>订单中心订单追踪条件筛选code code={}", code);
+        logger.info("==>订单中心订单追踪条件标志位 followTag={}", followTag);
         //Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> map = new HashMap<>();
         try{
@@ -85,8 +85,8 @@ public class OfcOrderFollowRest extends BaseController{
 
     @RequestMapping(value = "/orderDetails/{orderCode}/{followTag}/{historyUrlTag}", method = RequestMethod.GET)
     public String orderDetails(@PathVariable("orderCode") String code,@PathVariable String followTag,@PathVariable String historyUrlTag, Map<String,Object> map) throws InvocationTargetException{
-        logger.debug("==>订单中心订单详情code code={}", code);
-        logger.debug("==>订单中心订单详情标志位 followTag={}", followTag);
+        logger.info("==>订单中心订单详情code code={}", code);
+        logger.info("==>订单中心订单详情标志位 followTag={}", followTag);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
 //        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
 //        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());

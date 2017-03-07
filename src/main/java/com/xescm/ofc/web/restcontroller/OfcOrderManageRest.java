@@ -77,9 +77,9 @@ public class OfcOrderManageRest extends BaseController{
     @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderAudit(String orderCode, String orderStatus, String reviewTag){
-        logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
-        logger.debug("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
-        logger.debug("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
+        logger.info("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
+        logger.info("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
+        logger.info("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
         String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
@@ -102,8 +102,8 @@ public class OfcOrderManageRest extends BaseController{
     @RequestMapping(value = "/orderDelete", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderDelete( String orderCode, String orderStatus){
-        logger.debug("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
-        logger.debug("==>订单中心订单管理订单删除订单状态code orderStatus={}", orderStatus);
+        logger.info("==>订单中心订单管理订单删除订单code orderCode={}", orderCode);
+        logger.info("==>订单中心订单管理订单删除订单状态code orderStatus={}", orderStatus);
         String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
@@ -126,8 +126,8 @@ public class OfcOrderManageRest extends BaseController{
     @RequestMapping(value = "/orderCancel", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderCancel( String orderCode, String orderStatus){
-        logger.debug("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);
-        logger.debug("==>订单中心订单管理订单取消订单状态code orderStatus={}", orderStatus);
+        logger.info("==>订单中心订单管理订单取消订单code orderCode={}", orderCode);
+        logger.info("==>订单中心订单管理订单取消订单状态code orderStatus={}", orderStatus);
         String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
@@ -151,8 +151,8 @@ public class OfcOrderManageRest extends BaseController{
      */
     @RequestMapping(value = "/getOrderDetailByCode/{orderCode}/{dtotag}")
     public String getOrderDetailByCode(Model model, @PathVariable String orderCode, @PathVariable String dtotag, Map<String,Object> map){
-        logger.debug("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
-        logger.debug("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
+        logger.info("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
+        logger.info("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
         setDefaultModel(model);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
 //        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
@@ -221,7 +221,7 @@ public class OfcOrderManageRest extends BaseController{
      */
     @RequestMapping("/goodsDelete")
     public void goodsDelete( OfcGoodsDetailsInfo ofcGoodsDetailsInfo,HttpServletResponse response){
-        logger.debug("==>订单中心订单管理订单删除实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
+        logger.info("==>订单中心订单管理订单删除实体 ofcGoodsDetailsInfo={}", ofcGoodsDetailsInfo);
         try {
             String result = ofcGoodsDetailsInfoService.deleteByOrderCode(ofcGoodsDetailsInfo);
             response.setCharacterEncoding("UTF-8");
@@ -291,9 +291,9 @@ public class OfcOrderManageRest extends BaseController{
     @ResponseBody
     public Wrapper<?> planUpdate(String planCode, String planStatus, String serviceProviderName
             ,String serviceProviderContact,String serviceProviderContactPhone){
-        logger.debug("==>计划单编号", planCode);
-        logger.debug("==>计划单资源分配状态", planStatus);
-        logger.debug("==>服务商名称", serviceProviderName);
+        logger.info("==>计划单编号", planCode);
+        logger.info("==>计划单资源分配状态", planStatus);
+        logger.info("==>服务商名称", serviceProviderName);
         String result;
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         String userName=authResDtoByToken.getUserName();
@@ -323,7 +323,7 @@ public class OfcOrderManageRest extends BaseController{
     @RequestMapping(value = "/planSeleForTime", method = RequestMethod.POST)
     @ResponseBody
     public void planSeleForTime( String planCode,ServletResponse response){
-        logger.debug("==>订单中心订单管理订单审核反审核订单code orderCode={}", planCode);
+        logger.info("==>订单中心订单管理订单审核反审核订单code orderCode={}", planCode);
         OfcTransplanInfo ofcTransplanInfo= ofcTransplanInfoService.selectByKey(planCode);
         RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
         if(ofcTransplanInfo.getExpectedArrivedTime()!=null){

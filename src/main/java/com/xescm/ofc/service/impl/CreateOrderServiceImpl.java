@@ -150,7 +150,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String createOrderResultDtoJson = JacksonUtil.toJson(createOrderResultDto);
                 return createOrderResultDtoJson;
             }
-            logger.debug("订单中心创建订单接口结束");
+            logger.info("订单中心创建订单接口结束");
         }
         return null;
     }
