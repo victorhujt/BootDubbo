@@ -1,6 +1,5 @@
 package com.xescm.ofc.web.restcontroller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
@@ -13,10 +12,8 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
-import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -29,9 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
+
+import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_CUST;
+import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_TEMPLATE;
 
 /**
  *
@@ -43,12 +41,11 @@ public class OfcStorageTemplateRest extends BaseController{
 
     @Resource
     private OfcStorageTemplateService ofcStorageTemplateService;
-    @Resource
-    private RmcWarehouseEdasService rmcWarehouseEdasService;
+
 
     /**
      * 模板配置保存
-     * @param templateList
+     * @param templateList 模板列表
      */
     @RequestMapping(value = "/save")
     @ResponseBody
@@ -83,7 +80,7 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置筛选
-     * @param templateCondition
+     * @param templateCondition 筛选条件
      */
     @RequestMapping(value = "/select")
     @ResponseBody
@@ -112,7 +109,7 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置编辑
-     * @param templateCode
+     * @param templateCode 模板编码
      */
     @RequestMapping(value = "/edit/{templateCode}")
     public ModelAndView storageTemplateEdit(@PathVariable String templateCode){
@@ -128,7 +125,7 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置编辑确认
-     * @param templateList
+     * @param templateList 模板列表
      */
     @RequestMapping(value = "/edit_confirm")
     @ResponseBody
@@ -153,7 +150,7 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置删除
-     * @param templateCode
+     * @param templateCode 模板编码
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -177,7 +174,7 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置详情跳转
-     * @param templateCode
+     * @param templateCode 模板编码
      */
     @RequestMapping(value = "/detail/{templateCode}")
     public ModelAndView storageTemplateDetail(@PathVariable String templateCode){
@@ -198,7 +195,7 @@ public class OfcStorageTemplateRest extends BaseController{
 
     /**
      * 模板配置详情数据
-     * @param templateCode
+     * @param templateCode 模板编码
      */
     @RequestMapping(value = "/detail_data/{templateCode}")
     @ResponseBody
@@ -237,10 +234,15 @@ public class OfcStorageTemplateRest extends BaseController{
     /**
      * 跳转入库开单批量导单
      */
-    @RequestMapping(value = "batch_in")
-    public ModelAndView batchIn(Model model){
-        ModelAndView modelAndView = new ModelAndView("/storage/in/batch_import_in");
+    @RequestMapping(value = "/batch_import/{templateType}")
+    public ModelAndView batchIn(Model model, @PathVariable("templateType") String templateType){
+        if(PubUtils.isSEmptyOrNull(templateType)){
+            logger.error("跳转入库开单批量导单,templateType为空, templateType:{}", templateType);
+            return new ModelAndView("/error/error-500");
+        }
+        ModelAndView modelAndView = new ModelAndView("/storage/template/batch_import");
         setDefaultModel(model);
+        model.addAttribute("templateType", templateType);
         return modelAndView;
     }
 
@@ -252,23 +254,22 @@ public class OfcStorageTemplateRest extends BaseController{
     public List<OfcStorageTemplate> templateListByCustCode(String custCode){
         TemplateCondition templateCondition = new TemplateCondition();
         templateCondition.setCustCode(custCode);
-        List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateService.selectTemplate(templateCondition);
-        return ofcStorageTemplateList;
+        return ofcStorageTemplateService.selectTemplate(templateCondition);
     }
 
 
     /**
-     * 跳转入库开单批量导单
+     * 仓储开单批量导单
      */
-    @RequestMapping(value = "/batch_in_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/batch_import_upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, OfcStorageTemplate ofcStorageTemplate){
         Wrapper<?> result = null;
         try {
             if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getCustCode())){
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "请先选择客户");
+                return WrapMapper.wrap(ERROR_CUST, "请先选择客户");
             }else if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getTemplateCode())){
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "请选择模板");
+                return WrapMapper.wrap(ERROR_TEMPLATE, "请选择模板");
             }
             AuthResDto authResDto = getAuthResDtoByToken();
             Integer activeSheetNum = ofcStorageTemplateService.checkStorageTemplate(file);
@@ -276,22 +277,19 @@ public class OfcStorageTemplateRest extends BaseController{
 
             if(checkResult.getCode() == Wrapper.ERROR_CODE){
                 List<String> errorMsg = (List<String>) checkResult.getResult();
-                String resultJson = JacksonUtil.toJsonWithFormat(errorMsg);
-                result =  WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),resultJson);
+                result =  WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),errorMsg);
             }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
-                Map<String,JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
-                String resultJson = JacksonUtil.toJsonWithFormat(resultMap);
-                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultJson);
+                List<Object> resultList = (List<Object>) checkResult.getResult();
+                result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultList);
             }
         } catch (BusinessException e) {
-            e.printStackTrace();
             logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
+        logger.info("导单结果:{}", ToStringBuilder.reflectionToString(result));
         return result;
     }
 
@@ -302,8 +300,36 @@ public class OfcStorageTemplateRest extends BaseController{
      */
     @RequestMapping(value = "batch_out")
     public ModelAndView batchOut(){
-        ModelAndView modelAndView = new ModelAndView("/storage/out/batch_import_out");
-        return modelAndView;
+        return new ModelAndView("/storage/out/batch_import_out");
+    }
+
+
+    /**
+     * 仓储开单批量导单确认下单
+     */
+    @RequestMapping(value = "/confirm")
+    @ResponseBody
+    public Wrapper confirm(String orderList){
+        try {
+            AuthResDto authResDto = getAuthResDtoByToken();
+            //下单
+            Wrapper placeOrderResult = ofcStorageTemplateService.orderConfirm(orderList, authResDto);
+            if(Wrapper.ERROR_CODE == placeOrderResult.getCode()){
+                return placeOrderResult;
+            }
+            //审核
+            Wrapper auditOrderResult = ofcStorageTemplateService.storageTemplateAudit(placeOrderResult.getResult(), authResDto);
+            if(Wrapper.ERROR_CODE == auditOrderResult.getCode()){
+                return auditOrderResult;
+            }
+        }catch (BusinessException e) {
+            logger.error("仓储开单批量导单确认下单出错, 错误信息:{},{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        }catch (Exception e) {
+            logger.error("仓储开单批量导单确认下单出错, 错误信息:{},{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
 

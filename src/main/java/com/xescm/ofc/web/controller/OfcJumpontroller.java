@@ -434,7 +434,8 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/storage/template_add")
     public String storageTemplateAdd(Model model){
         AuthResDto authResDto = getAuthResDtoByToken();
-        model.addAttribute("userName",authResDto.getUserName());
+        model.addAttribute("userName", authResDto.getUserName());
+        model.addAttribute("orderTime", DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE2));
         setDefaultModel(model);
         return "/storage/template/template_design";
     }

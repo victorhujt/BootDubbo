@@ -8,8 +8,8 @@
         <el-dialog title="设置列默认值" v-model="colDefaultValDia" size="small">
            <el-form :model="colDefaultValModel" label-width="120px">
              <div class="xe-block">
-               <el-form-item label="订单名称" class="xe-col-2">
-                 <el-input v-model="colDefaultValModel.orderTime"  placeholder="请输入内容"></el-input>
+               <el-form-item label="订单日期" class="xe-col-2">
+                   {{colDefaultValModel.orderTime}}
                </el-form-item>
              </div>
              <div class="xe-block">
@@ -37,24 +37,6 @@
                </el-form-item>
              </div>
 
-
-
-           <#--   <label class="label">订单日期</label>
-                <el-input v-model="colDefaultValModel.orderTime"  placeholder="请输入内容"    value=""></el-input>
-                <label class="label">开单员</label>
-                <el-input v-model="colDefaultValModel.merchandiser"  placeholder="请输入内容"    value=""></el-input>
-                <label class="label">仓库名称</label>
-                <el-select placeholder="请选择" v-model="colDefaultValModel.warehouseName">
-                    <el-option  v-for="item in warehouseNameList" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-                <label class="label">业务类型</label>
-                <el-select placeholder="请选择" v-model="colDefaultValModel.businessType">
-                    <el-option  v-for="item in businessTypeList" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-                <label class="label">是否提供运输服务</label>
-                <el-checkbox v-model="colDefaultValModel.provideTransport" ></el-checkbox>
-
--->
            </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="cancelSetDefault">取 消</el-button>
@@ -164,6 +146,7 @@
         el:'#vm',
         data:function () {
             return{
+                orderTime:'${orderTime!}',
                 warehouseName:'',
                 businessType:'',
                 custNameShow:false,
@@ -231,7 +214,7 @@
         beforeMount:function () {
           var vm = this;
           vm.colDefaultValModel = {
-              orderTime:'',
+              orderTime:vm.orderTime,
               merchandiser:'${userName!}',
               warehouseName:'',
               businessType:'',
@@ -240,7 +223,7 @@
           CommonClient.post("/ofc/storage_template/warehouse",{},function (result) {
               vm.warehouseNameList = [];
               if(result.code != 200){
-                  layer.msg("加载所有仓库失败!");
+                  vm.$message("加载所有仓库失败!");
                   return;
               }
               $.each(result.result, function (index, item) {
@@ -354,6 +337,7 @@
             },
 
             templateSaveBtn:function () {
+                var vm = this;
                 var templateList = [];
                 var designData = this.tableData;
                 var templateType = this.templateForm.templateType;
@@ -383,25 +367,25 @@
                     var reflectColName = StringUtil.isEmpty(design.reflectColName) ? "" : StringUtil.trim(design.reflectColName);
                     var index = design.indexNum;
                     if(index == 1 && StringUtil.isEmpty(reflectColName)){
-                        alert('客户订单号模板列名为空!');
+                        vm.$message('客户订单号模板列名为空!');
                         return;
                     } else if(index == 3 && StringUtil.isEmpty(reflectColName)){
-                        alert('开单员模板列名为空!');
+                        vm.$message('开单员模板列名为空!');
                         return;
                     } else if(index == 4 && StringUtil.isEmpty(reflectColName)){
-                        alert('仓库名称模板列名为空!');
+                        vm.$message('仓库名称模板列名为空!');
                         return;
                     } else if(index == 5 && StringUtil.isEmpty(reflectColName)){
-                        alert('业务类型模板列名为空!');
+                        vm.$message('业务类型模板列名为空!');
                         return;
                     } else if(index == 7 && StringUtil.isEmpty(reflectColName)){
-                        alert('货品编码模板列名为空!');
+                        vm.$message('货品编码模板列名为空!');
                         return;
                     } else if(index == 12 && StringUtil.isEmpty(reflectColName)){
-                        designData.length == 21 ? alert('入库数量模板列名为空!') : alert('出库数量模板列名为空!');
+                        designData.length == 21 ? vm.$message('入库数量模板列名为空!') : vm.$message('出库数量模板列名为空!');
                         return;
                     } else if(index == 22 && StringUtil.isEmpty(reflectColName)){
-                        alert('收货方名称模板列名为空!');
+                        vm.$message('收货方名称模板列名为空!');
                         return;
                     }
                     template.indexNum = design.indexNum;

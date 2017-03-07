@@ -16,5 +16,7 @@ public class GenCodePreffixConstant {
     public static final String ATTACHMENT_PRE = "AT";
     //仓储计划单编号的前缀
     public static final String SILOPROGRAMINFO_PRE  ="WP";
+    //仓储模板编码前缀
+    public static final String STO_TEMP_PRE = "TC";
 
 }

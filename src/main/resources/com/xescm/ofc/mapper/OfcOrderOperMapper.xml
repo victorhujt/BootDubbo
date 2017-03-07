@@ -116,6 +116,39 @@
     <result column="lasted_oper_time" property="lastedOperTime" jdbcType="TIMESTAMP"></result>
 
   </resultMap>
+
+  <resultMap id="orderInfoDto" type="com.xescm.ofc.edas.model.dto.ofc.OfcOrderInfoDto">
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_name" property="consignorContactName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_phone" property="consignorContactPhone" jdbcType="VARCHAR" />
+    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR" />
+    <result column="consignee_contact_phone" property="consigneeContactPhone" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="orderDetailInfoDto" type="com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailInfoDto">
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_spec" property="goodsSpec" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="pack" property="pack" jdbcType="VARCHAR" />
+    <result column="charging_ways" property="chargingWays" jdbcType="DECIMAL" />
+    <result column="charging_unit_price" property="chargingUnitPrice" jdbcType="VARCHAR" />
+    <result column="charging_quantity" property="chargingQuantity" jdbcType="TIMESTAMP" />
+    <result column="billing_weight" property="billingWeight" jdbcType="TIMESTAMP" />
+    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+  </resultMap>
+
   <sql id="Base_Column_List_Fundamental" >
     order_code, order_batch_number, order_time, cust_code, cust_name, sec_cust_code, 
     sec_cust_name, order_type, business_type, cust_order_code, notes, store_code, store_name, 
@@ -140,7 +173,8 @@
     <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR"></result>
     <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"></result>
     <result column="notes" property="notes" jdbcType="VARCHAR"></result>
-    <result column="store_name" property="storeName" jdbcType="VARCHAR"></result>
+    <result column="is_exception" property="isException" jdbcType="VARCHAR"></result>
+    <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR"></result>
   </resultMap>
 
   <!-- 运营-订单管理查询 -->
@@ -160,7 +194,9 @@
       odbi.consignee_contact_name,
       owi.warehouse_name,
       ofi.notes,
-      ofi.store_name
+      ofi.store_name,
+      ofi.is_exception,
+      ofi.exception_reason
     FROM
     ofc_fundamental_information ofi
       LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
@@ -221,7 +257,9 @@
     odbi.consignee_contact_name,
     owi.warehouse_name,
     ofi.notes,
-    ofi.store_name
+    ofi.store_name,
+    ofi.is_exception,
+    ofi.exception_reason
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
@@ -267,23 +305,6 @@
     </where>
     ORDER BY ofi.order_code DESC
   </select>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <select id="queryOrderByOrderBatchNumber" resultMap="Order_Search_Oper_Map">
     SELECT DISTINCT
@@ -393,7 +414,26 @@
 
   </select>
 
+  <!-- 根据订单号查询订单信息 -->
+  <select id="getOrderInfoByOrderCode" resultMap="orderInfoDto">
+    SELECT
+	ofi.order_code , ofi.order_time , ofi.order_type , ofi.cust_name , ofi.business_type , odbi.trans_code ,
+	odbi.plate_number , odbi.driver_name , odbi.consignor_name , odbi.consignor_contact_name , odbi.consignor_contact_phone ,
+	CONCAT( departure_province , departure_city , departure_district , departure_towns , departure_place ) departure_place,
+	odbi.consignee_name , odbi.consignee_contact_name , odbi.consignee_contact_phone ,
+	CONCAT( destination_province , destination_city , destination_district , destination_towns , odbi.destination )destination
+    FROM ofc_fundamental_information ofi LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    WHERE ofi.order_code IN
+    <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
+      #{orderCode}
+    </foreach>
+  </select>
 
-
+  <!-- 根据订单号查询订单商品信息 -->
+  <select id="getOrderDetailInfoByQrderCode" resultMap="orderDetailInfoDto">
+    SELECT gdi.goods_code, gdi.goods_name, gdi.goods_spec, gdi.unit, gdi.pack, gdi.charging_ways, gdi.charging_unit_price,
+    gdi.charging_quantity, gdi.billing_weight, gdi.cubage from ofc_goods_details_info gdi
+    where order_code = #{orderCode}
+  </select>
 
 </mapper>

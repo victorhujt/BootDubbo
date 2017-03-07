@@ -164,11 +164,6 @@
                         <el-input v-model="scope.row.goodsCategory"></el-input>
                     </template>
                 </el-table-column >
-                <el-table-column property="goodsType" label="货品种类">
-                    <template scope="scope">
-                        <el-input v-model="scope.row.goodsType"></el-input>
-                    </template>
-                </el-table-column>
                 <el-table-column property="goodsCode" label="货品编码">
                     <template scope="scope">
                         <el-input v-model="scope.row.goodsCode"></el-input>
@@ -409,7 +404,7 @@
                                         for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
                                             var goodDetail=ofcGoodsDetailsInfo[i];
                                             var good={};
-                                            good.goodsType=goodDetail.goodsType;
+                                            good.goodsType=vueObj.getGoodNameByCode(goodDetail.goodsType);
                                             good.goodsCategory=goodDetail.goodsCategory;
                                             good.goodsCode=goodDetail.goodsCode;
                                             good.goodsName=goodDetail.goodsName;
@@ -462,6 +457,14 @@
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0,index) + "/index#" + newurl);
+            },
+            getGoodNameByCode:function(val){
+                for(var i=0;i<this.goodsMsgOptions.length;i++){
+                    var option=this.goodsMsgOptions[i];
+                    if(option.value==val){
+                        return option.label;
+                    }
+                }
             }
         }
     });

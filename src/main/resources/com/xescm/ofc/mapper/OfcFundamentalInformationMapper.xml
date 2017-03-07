@@ -44,7 +44,7 @@
 
 
 
-    <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
+   <!-- <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
     <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
     <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
     <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
@@ -61,7 +61,7 @@
     <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
     <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
     <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
-    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />-->
     <result column="is_exception" property="isException" jdbcType="VARCHAR" />
     <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR" />
 
@@ -253,11 +253,12 @@
   </select>
   <select id="checkCustOrderCodeRepeat" resultType="java.lang.Integer">
     SELECT
-    COUNT (1)
+    COUNT(ofi.order_code)
     FROM
     ofc_fundamental_information ofi
     WHERE
     ofi.cust_order_code = #{custOrderCode}
   </select>
+
 
 </mapper>
