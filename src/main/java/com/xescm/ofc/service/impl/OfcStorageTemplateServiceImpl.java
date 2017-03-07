@@ -303,8 +303,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Override
     public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
 
-        //根据模板编码和类型拿到用户保存的配置模板的映射
-        Map<String,OfcStorageTemplate> templateDetilMap = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
+        //根据模板编码和类型拿到用户保存的配置模板的映射 key是用户表头列名
+        List<Object> templateReflect = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
+        Map<String,OfcStorageTemplate> templateDetilMap = (Map<String, OfcStorageTemplate>) templateReflect.get(0);//key是用户表头列名
+        Map<String,OfcStorageTemplate> forDefaultButNotRequired = (Map<String, OfcStorageTemplate>) templateReflect.get(1);//key是用户表头列标准编码
+
         //将模板映射成标准格式, 如果不是标准格式的就跳过不校验, 且不展示
         InputStream inputStream ;
         Workbook workbook;
@@ -759,6 +762,17 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         ofcStorageTemplateDto.getOfcOrderDTO().setOrderTime(now);
                         ofcStorageTemplateDto.setOrderTime(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1));
                     }
+                    //如果Excel中没有是否提供运输这一列, 则默认设置为用户默认的, 如果没有默认的就置为否(即0)
+                    if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getProvideTransport())){
+                        //拿着provideTransport找到默认值
+                        OfcStorageTemplate forDefault = forDefaultButNotRequired.get("provideTransport");
+                        String provideTrans = null;
+                        if(null != forDefault){
+                            provideTrans = forDefault.getColDefaultVal();
+                        }
+                        ofcStorageTemplateDto.setProvideTransport(PubUtils.isSEmptyOrNull(provideTrans) ? "0" : StringUtils.equals(provideTrans, "是") ? "1" : "0");
+                    }
+
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
             }
@@ -980,9 +994,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * 获取用户保存的所选模板映射map
      * @param templateCode 模板编码
      * @param templateType 模板类型
-     * @return 模板映射map  key:映射列名  value:映射列名对应的保存的模板映射
+     * @return List<Object> 0: key:映射列名  value:映射列名对应的保存的模板映射  1: key:映射列编码  value:映射列名对应的保存的模板映射
      */
-    private Map<String,OfcStorageTemplate> getTemplateReflect(String templateCode, String templateType) {
+    private List<Object> getTemplateReflect(String templateCode, String templateType) {
         List<OfcStorageTemplate> ofcStorageTemplateListForConvert = new ArrayList<>();
         if(StringUtils.equals("standard",templateCode)){
             if(StringUtils.equals("storageIn",templateType)){
@@ -1001,14 +1015,19 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             templateCondition.setTemplateCode(templateCode);
             ofcStorageTemplateListForConvert = this.selectTemplateDetail(templateCondition);
         }
-        Map<String,OfcStorageTemplate> map = new HashMap<>();
+        Map<String, OfcStorageTemplate> map = new HashMap<>();
+        Map<String, OfcStorageTemplate> mapForDefaultButNotRequire = new HashMap<>();
         for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplateListForConvert) {
             String reflectColName = ofcStorageTemplate.getReflectColName();
             if(!PubUtils.isSEmptyOrNull(reflectColName)){
                 map.put(reflectColName, ofcStorageTemplate);
             }
+            mapForDefaultButNotRequire.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);
         }
-        return map;
+        List<Object> result = new ArrayList<>();
+        result.add(map);
+        result.add(mapForDefaultButNotRequire);
+        return result;
     }
 
     /**
@@ -1091,6 +1110,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
             BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
             ofcOrderDTO.setOrderTime(DateUtils.String2Date(forOrderMsg.getOrderTime(), DateUtils.DateFormatType.TYPE1));
+            if(!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())){
+                ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
+            }
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
             orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
