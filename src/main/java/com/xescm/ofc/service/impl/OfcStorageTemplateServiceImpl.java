@@ -371,7 +371,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     try {
                         requiedItemIndex = checkExcelRequiedItem(commonRow, ofcStorageTemplate.getTemplateType(), templateDetilMap);
                     } catch (BusinessException e) {
-                        logger.error("表头必填列校验错误!, e:{}", e);
+                        logger.error("表头必填列校验错误!, e:{}", e.getMessage());
                         xlsErrorMsg.add(e.getMessage());
                         return WrapMapper.wrap(Wrapper.ERROR_CODE, "当前Excel校验出错", xlsErrorMsg);
                     }
@@ -1013,7 +1013,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         List<String> inRquiredItems = InRquiredItem.getstandardCodeList();
         List<String> outRquiredItems = OutRquiredItem.getstandardCodeList();
         List<String> item = StringUtils.equals(templateType,"storageIn") ? inRquiredItems : outRquiredItems;
-        List<String> check = item;
+        List<String> check = new ArrayList<>();
+        check.addAll(item);
         Map<String, Integer> colNumMap = new HashMap<>();
         if(null == commonRow){
             logger.error("当前表格没有表头!请添加后重新上传!");
@@ -1028,7 +1029,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 continue;
             }
             String commonCellValue = commonCell.getStringCellValue();// 当前列 列名
-            check.remove(commonCellValue);
             //根据当前列列名找到映射数据
             OfcStorageTemplate ofcStorageTemplate = cellReflectToDomain(commonCellValue, templateDetilMap);
             if(null == ofcStorageTemplate){
@@ -1036,13 +1036,18 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 logger.info("当前模板中的列名:{}, 没有找到在初始化的Map的映射表中找到映射, 说明此列不在存储的模板中", commonCellValue);
                 continue;
             }
+            String standardColCode = ofcStorageTemplate.getStandardColCode();
             //如果能找到
-            ofcStorageTemplateMap.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);//key : 标准列code, value: 对应映射实体
-            colNumMap.put(ofcStorageTemplate.getStandardColCode(), cellNum); //key : 标准列code, value: 必填列号
+            int index = check.indexOf(standardColCode);
+            if(index != -1){
+                check.remove(index);
+            }
+            ofcStorageTemplateMap.put(standardColCode, ofcStorageTemplate);//key : 标准列code, value: 对应映射实体
+            colNumMap.put(standardColCode, cellNum); //key : 标准列code, value: 必填列号
         }
 
         if (check.size() >0) {
-            logger.error("必填列有缺失! 缺失的字段List:{}", ToStringBuilder.reflectionToString(check));
+            logger.error("必填列有缺失! 缺失的字段List:{}", check.toArray());
             StringBuilder sb = new StringBuilder("【");
             for (String s : check) {
                 if(!PubUtils.isSEmptyOrNull(s)){
@@ -1051,7 +1056,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 }
             }
             sb.append("】");
-            throw new BusinessException("必填列有缺失!缺失的字段为:" + sb.toString());
+            if(check.size() == item.size()){
+                logger.error("必填列有缺失!缺失的字段为:{}。建议：是否未匹配模板？", sb.toString());
+                throw new BusinessException("必填列有缺失!缺失的字段为:" + sb.toString()+ "。建议：是否未匹配模板？");
+            }else {
+                logger.error("必填列有缺失!缺失的字段为:{}", sb.toString());
+                throw new BusinessException("必填列有缺失!缺失的字段为:" + sb.toString());
+            }
+
         }
         Map<Integer, String> requiredColNum = new HashMap<>();
         //遍历必填列编码
