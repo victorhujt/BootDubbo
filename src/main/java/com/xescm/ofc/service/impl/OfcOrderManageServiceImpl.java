@@ -2977,10 +2977,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (ofcFundamentalInformation == null) {
             throw new BusinessException("订单号不存在订单");
         }
+
         OfcOrderStatus ordertatus = ofcOrdertatusService.orderStatusSelect(orderCode, "orderCode");
         if (ordertatus == null) {
             throw new BusinessException("订单号不存在任何状态");
         }
+
         String status = ordertatus.getOrderStatus();
         StringBuilder notes = new StringBuilder();
         OfcOrderStatus s = new OfcOrderStatus();
@@ -3004,6 +3006,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             s.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(s);
 
+            //复制订单基本信息
             newofcFundamentalInformation.setFinishedTime(null);
             newofcFundamentalInformation.setAbolishTime(null);
             newofcFundamentalInformation.setOperator("");
@@ -3013,6 +3016,43 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             newofcFundamentalInformation = ofcOrderPlaceService.getAreaAndBaseMsg(authResDtoByToken, newofcFundamentalInformation);
             ofcFundamentalInformationService.save(newofcFundamentalInformation);
 
+            //复制仓储的信息
+            OfcWarehouseInformation cw = new OfcWarehouseInformation();
+            cw.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            OfcWarehouseInformation  owinfo = ofcWarehouseInformationService.selectOne(cw);
+            if(owinfo!=null){
+                OfcWarehouseInformation ofcnewWarehouseInformation=new OfcWarehouseInformation();
+                BeanUtils.copyProperties(ofcnewWarehouseInformation, owinfo);
+                ofcnewWarehouseInformation.setOrderCode(newofcFundamentalInformation.getOrderCode());
+                ofcWarehouseInformationService.save(ofcnewWarehouseInformation);
+
+                //提供运输时 复制配送信息
+                if(owinfo.getProvideTransport()==WEARHOUSE_WITH_TRANS){
+                    OfcDistributionBasicInfo f = new OfcDistributionBasicInfo();
+                    f.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                    OfcDistributionBasicInfo  BasicInfo = ofcDistributionBasicInfoService.selectOne(f);
+                    if(BasicInfo!=null){
+                        OfcDistributionBasicInfo newofcDistributionBasicInfo=new OfcDistributionBasicInfo();
+                        BeanUtils.copyProperties(newofcDistributionBasicInfo, BasicInfo);
+                        newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
+                        ofcDistributionBasicInfoService.save(newofcDistributionBasicInfo);
+                    }
+                }
+            }
+
+            //复制货品详情的信息
+            OfcGoodsDetailsInfo infoCondition=new OfcGoodsDetailsInfo();
+            infoCondition.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            List<OfcGoodsDetailsInfo> goodsInfo=ofcGoodsDetailsInfoService.queryByOrderCode(ofcFundamentalInformation.getOrderCode());
+           if(goodsInfo!=null&&goodsInfo.size()>0){
+                for(OfcGoodsDetailsInfo  info:goodsInfo){
+                    OfcGoodsDetailsInfo newGoodsInfo=new OfcGoodsDetailsInfo();
+                    BeanUtils.copyProperties(newGoodsInfo,info);
+                    newGoodsInfo.setId(UUID.randomUUID().toString().replace("-",""));
+                    newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
+                    ofcGoodsDetailsInfoService.save(newGoodsInfo);
+                }
+           }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("复制订单出现异常");

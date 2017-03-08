@@ -252,6 +252,7 @@
                             warehouse.value= RmcWarehouseRespDto.warehouseCode;
                             vueObj.wareHouseOptions.push(warehouse);
                         });
+                        vueObj.wareHouseName = vueObj.wareHouseOptions[0].value;
                     }else{
                         layer.msg("当前用户下没有仓库信息！");
                     }
@@ -267,13 +268,12 @@
                     var baseArray=result.result.base;
                     if(areaArray.length>0){
                         $.each(areaArray,function (index,OfcGroupVo) {
-                            var area={};
-                            if(OfcGroupVo.groupName&&OfcGroupVo.serialNo){
+                                var area={};
                                 area.label=OfcGroupVo.groupName;
                                 area.value= OfcGroupVo.serialNo;
                                 vueObj.areaNameOptions.push(area);
-                            }
                         });
+                        vueObj.areaName = vueObj.areaNameOptions[0].value;
                     }else{
                         layer.msg("当前用户下没有大区信息！");
                     }
@@ -281,18 +281,16 @@
                     if(baseArray.length>0){
                         $.each(baseArray,function (index,OfcGroupVo) {
                             var base={};
-                            if(OfcGroupVo.groupName!=""&&OfcGroupVo.serialNo!=""){
-                                base.label=OfcGroupVo.groupName;
-                                base.value=OfcGroupVo.serialNo;
-                                vueObj.baseNameOptions.push(base);
-                            }
+                            base.label=OfcGroupVo.groupName;
+                            base.value=OfcGroupVo.serialNo;
+                            vueObj.baseNameOptions.push(base);
                         });
+                        vueObj.baseName = vueObj.baseNameOptions[0].value;
                     }else{
                         layer.msg("当前用户下没有基地信息！");
                     }
                 }
             });
-            vueObj.selectOrder();
         },
         methods: {
             handleCustomerCurrentChange:function(val) {
@@ -456,7 +454,6 @@
                 this.customerCode="";
                 this.orderStatus="";
                 this.businessType="";
-                this.areaName="";
                 this.baseName="";
                 this.wareHouseName="";
 

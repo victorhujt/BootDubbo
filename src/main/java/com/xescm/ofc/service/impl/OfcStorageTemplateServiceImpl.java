@@ -362,13 +362,19 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     ofcStorageTemplateDto = (OfcStorageTemplateDto) clazz.newInstance();
                 } catch (Exception e) {
                     logger.error("校验明细类型Excel:{}", e);
-                    throw new BusinessException("校验Excel错误");
+                    throw new BusinessException("校验Excel失败! 内部错误!");
                 }
                 //校验第一行,校验表格是否有所有的必填列列名,
                 //并返回所有必填项在用户上传的Excel模板中的列号,及必填列号对应的映射模板列名称
 
                 if(rowNum == 0){
-                    requiedItemIndex = checkExcelRequiedItem(commonRow, ofcStorageTemplate.getTemplateType(), templateDetilMap);
+                    try {
+                        requiedItemIndex = checkExcelRequiedItem(commonRow, ofcStorageTemplate.getTemplateType(), templateDetilMap);
+                    } catch (BusinessException e) {
+                        logger.error("表头必填列校验错误!, e:{}", e);
+                        xlsErrorMsg.add(e.getMessage());
+                        return WrapMapper.wrap(Wrapper.ERROR_CODE, "当前Excel校验出错", xlsErrorMsg);
+                    }
                 }
                 if (null == commonRow) {
                     //标记当前行出错,并跳出当前循环
@@ -390,7 +396,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     if(null == commonCell && requiedItemIndex.containsKey(cellNum)){
                         String requiredColName = requiedItemIndex.get(cellNum);
                         logger.error("用户上传的Excel缺少必填项: {},{}, 位于第{}行, 第{}列", requiedItemIndex.get(cellNum), requiredColName, (rowNum + 1), (cellNum + 1));
-                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!" + requiredColName + "必填!");
+//                        xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!" + requiredColName + "必填!");
+                        xlsErrorMsg.add("【" + requiredColName + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
                         checkPass = false;
                         break;
                     }
@@ -432,11 +439,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.info("当前列在模板映射配置没有standardColCode, 所以直接跳过");
                             continue;
                         }
-                        //客户订单号
+                        //客户订单号//必填列名
                         if(StringUtils.equals(StorageImportInEnum.CUST_ORDER_CODE.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有客户订单号", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+//                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
                                 checkPass = false;
                                 continue;
                             }
@@ -455,14 +463,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 //正则还需要修正
                                 if(split.length > 1 ? !(split[0].matches(PubUtils.REGX_YEARDATE) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(PubUtils.REGX_YEARDATE)){
                                     logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName() + ",不是日期类型");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                     checkPass = false;
                                     continue;
                                 }
                             }
                             logger.info("订单日期 ==> ", cellValue);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //开单员
+                            //开单员//必填列名
                         }else if(StringUtils.equals(StorageImportInEnum.MERCHANDISER.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
@@ -472,14 +480,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 }
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //仓库名称
+                            //仓库名称//必填列名
                         }else if(StringUtils.equals(StorageImportInEnum.WAREHOUSE_NAME.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
                                     cellValue = colDefaultVal;
                                 }else {
                                     logger.error("当前行:{},列:{} 没有仓库名称", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
                                     checkPass = false;
                                     continue;
                                 }
@@ -487,21 +495,22 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //如果有仓库名称, 校验该仓库名称是否存在!
                             if(!allWarehouseByRmc.containsKey(cellValue)){
                                 logger.error("当前行:{},列:{}仓库名称:{}, 调用接口未能找到该仓库", rowNum + 1, cellNum + 1, cellValue);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "仓库名称:" + cellValue + "没有维护!");
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "仓库名称【" + cellValue + "】无效!");
                                 checkPass = false;
                                 continue;
                             }
                             RmcWarehouseRespDto rmcWarehouseRespDto = allWarehouseByRmc.get(cellValue);
                             ofcStorageTemplateDto.setWarehouseCode(rmcWarehouseRespDto.getWarehouseCode());
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //业务类型
+                            //业务类型//必填列名
                         }else if(StringUtils.equals(StorageImportInEnum.BUSINESS_TYPE.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
                                     cellValue = colDefaultVal;
                                 }else {
                                     logger.error("当前行:{},列:{} 没有业务类型", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 缺少必填字段:" + ofcStorageTemplateForCheck.getReflectColName());
+//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 缺少必填字段:" + ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
                                     checkPass = false;
                                     continue;
                                 }
@@ -510,7 +519,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 Wrapper result = checkBusinessType(cellValue, ofcStorageTemplate.getTemplateType());
                                 if(Wrapper.ERROR_CODE == result.getCode()){
                                     logger.error("当前行:{},列:{} 业务类型:{}不可识别", rowNum + 1, cellNum + 1, cellValue);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 业务类型:" + cellValue + "不可识别!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 业务类型【" + cellValue + "】无效!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -526,11 +535,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //货品编码
+                            //货品编码//必填列名
                         }else if(StringUtils.equals(StorageImportInEnum.GOODS_CODE.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有货品编码", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
                                 checkPass = false;
                                 continue;
                             }
@@ -543,7 +552,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
                                 if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
                                     logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验失败, 请维护!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "【" + ofcStorageTemplateForCheck.getReflectColName() + "】为：【" + cellValue +"】校验出错！");
                                     checkPass = false;
                                     continue;
                                 }
@@ -551,7 +560,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 //没有校验通过
                                 if(null == cscGoodsApiVoResult || cscGoodsApiVoResult.size() == 0){
                                     logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码【" + cellValue + "】货品档案信息不存在！");
                                     checkPass = false;
                                     continue;
                                     //校验通过
@@ -594,11 +604,29 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有单价", rowNum + 1, cellNum + 1);
                                 continue;
                             }
-                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //入库数量 or  出库数量
+                            boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
+                            boolean matchesInt = cellValue.matches("\\d{1,6}");
+                            if(!matchesPot && !matchesInt){
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "单价【" + cellValue + "】格式错误！");
+                                checkPass = false;
+                                continue;
+                            }
+                            BigDecimal bigDecimal = new BigDecimal(cellValue);
+                            Field field;
+                            try {
+                                field = clazz.getDeclaredField(standardColCode);
+                                field.setAccessible(true);
+                                field.set(ofcStorageTemplateDto,bigDecimal);
+                            } catch (Exception e) {
+                                logger.error("当前行:{},列:{} 单价校验失败", rowNum + 1, cellNum + 1);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                            }
+                            //入库数量 or  出库数量//必填列名
                         }else if(StringUtils.equals(StorageImportInEnum.QUANTITY.getStandardColCode(), standardColCode)){
 
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.info("【{}】列第{}行数据为空，请检查文件！", ofcStorageTemplateForCheck.getReflectColName(), (rowNum + 1));
                                 cellValue = "0";
                             }
                             boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
@@ -638,7 +666,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             String[] split = cellValue.split(" ");
                             if(split.length > 1 ? !(split[0].matches(DateUtils.DATE) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(DateUtils.DATE)){
                                 logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName() + ",不是日期类型");
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                 checkPass = false;
                                 continue;
                             }
@@ -653,7 +681,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             String[] split = cellValue.split(" ");
                             if(split.length > 1 ? !(split[0].matches(PubUtils.REGX_YEARDATE) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(PubUtils.REGX_YEARDATE)){
                                 logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName() + ",不是日期类型");
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                 checkPass = false;
                                 continue;
                             }
@@ -675,7 +703,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验失败, 请维护!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -683,7 +711,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 //没有校验通过
                                 if(null == result || result.size() == 0){
                                     logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称【" + cellValue + "】无效！");
                                     checkPass = false;
                                     continue;
                                     //校验通过
@@ -699,7 +728,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //预计入库时间
+                            //预计入(出)库时间
                         }else if(StringUtils.equals(StorageImportInEnum.ARRIVE_TIME.getStandardColCode(), standardColCode)
                                 ||StringUtils.equals(StorageImportOutEnum.SHIPMENT_TIME.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
@@ -710,7 +739,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             if(!PubUtils.isDateTimeFormat(cellValue)
                                     && !PubUtils.isTimeFormat(cellValue) && !PubUtils.isYearDateFormat(cellValue)){
                                 logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName() + ",不是日期类型");
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                 checkPass = false;
                                 continue;
                             }
@@ -724,6 +753,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     logger.error("当前行:{},列:{} 没有是否提供运输服务, 默认为0", rowNum + 1, cellNum + 1);
                                     cellValue = "0";
                                 }
+                            }
+                            //只接受:是/否
+                            if(!StringUtils.equals("是", cellValue) && !StringUtils.equals("否", cellValue)){
+                                logger.error("当前行:{},列:{} 校验失败,是否提供运输服务字段只接受:是/否, 用户表中数据为:{}", rowNum + 1, cellNum + 1, cellValue);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "是否提供运输校验失败:"+ cellValue + ",只接受:是/否");
+                                checkPass = false;
+                                continue;
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue.equals("是") ? "1" : "0", standardColCode);
                             //车牌号
@@ -746,12 +782,32 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有联系电话", rowNum + 1, cellNum + 1);
                                 continue;
                             }
-                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //发货方名称
+                            //校验该电话格式是否正确
+
+                            boolean matchesPot = PubUtils.isMobileNumber(cellValue);
+                            if(!matchesPot){
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "联系电话【" + cellValue + "】格式错误！");
+                                checkPass = false;
+                                continue;
+                            }
+                            BigDecimal bigDecimal = new BigDecimal(cellValue);
+                            Field field;
+                            try {
+                                field = clazz.getDeclaredField(standardColCode);
+                                field.setAccessible(true);
+                                field.set(ofcStorageTemplateDto,bigDecimal);
+                            } catch (Exception e) {
+                                logger.error("当前行:{},列:{} 联系电话校验失败", rowNum + 1, cellNum + 1);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                            }
+
+//                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            //发货方名称//必填列名
                         }else if(StringUtils.equals(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有发货方名称", rowNum + 1, cellNum);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
                                 checkPass = false;
                                 continue;
                             }
@@ -774,7 +830,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 //即在客户中心没有找到该收货方
                                 if(null == result || result.size() == 0){
                                     logger.error("当前行:{},列:{} 发货方名称校验失败, 请维护", rowNum + 1, cellNum);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "发货方名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "发货方名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "发货方名称【" + cellValue + "】无效！");
                                     checkPass = false;
                                     continue;
                                     //找到该收货方了
@@ -795,10 +852,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     //补齐
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustCode(ofcStorageTemplate.getCustCode());
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustName(ofcStorageTemplate.getCustName());
+                    //若文件中不存在此列，则所有订单默认为当前日期.
                     Date now = new Date();
                     if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getOrderTime())){
                         ofcStorageTemplateDto.getOfcOrderDTO().setOrderTime(now);
                         ofcStorageTemplateDto.setOrderTime(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1));
+                    }
+                    //若文件中不存在此列，则所有订单默认为当前操作员名称。
+                    if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getMerchandiser())){
+                        ofcStorageTemplateDto.setMerchandiser(authResDto.getUserName());
                     }
                     //如果Excel中没有是否提供运输这一列, 则默认设置为用户默认的, 如果没有默认的就置为否(即0)
                     if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getProvideTransport())){
@@ -988,7 +1050,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 }else if(StringUtils.equals("storageIn", templateType)){
                     OutRquiredItem anyByStandardCode = OutRquiredItem.getAnyByStandardCode(requiredItem);
                     logger.error("没有在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
-                    throw new BusinessException("没有在初始化映射表中找到必填映射列:" + anyByStandardCode.getStandardColName());
+                    throw new BusinessException("【" + anyByStandardCode.getStandardColName() + "】列名不存在，请检查文件");
                 }
 
             }else {

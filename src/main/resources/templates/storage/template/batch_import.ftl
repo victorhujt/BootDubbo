@@ -270,7 +270,8 @@
                 var param = {};
                 param.orderList = JSON.stringify(vm.orderList);
                 var url = "/ofc/storage_template/confirm";
-                xescm.common.submit(url, param, "确认执行批量导入?", function (result) {
+                var inOrOut = vm.templateType == "storageIn" ? "入库" : "出库";
+                xescm.common.submit(url, param, "您确定进行批量导入" + inOrOut + "订单吗？请确认数据无误后，继续操作!", function () {
                     var url = vm.templateType == "storageIn" ? "/ofc/orderStorageInManager" : "/ofc/orderStorageOutManager";
                     xescm.common.loadPage(url);
                 });
