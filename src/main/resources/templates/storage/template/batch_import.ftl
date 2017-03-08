@@ -29,6 +29,10 @@
                         <el-option  v-for="item in templateNameList" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item class="xe-col-1">
+                    <a  id="tempIn" href="${(OFC_WEB_URL)!}/templates/template_in_bound_list.xlsx">入库单导入标准模板.xls</a>
+                    <a  id="tempOut" href="${(OFC_WEB_URL)!}/templates/template_out_bound_list.xlsx">出库单导入标准模板.xls</a>
+                </el-form-item>
             </div>
             <div class="xe-block" style="margin-left:100px;">
                 <el-upload  :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
@@ -123,6 +127,13 @@
             vm.uploadParam = {"custCode":vm.templateBatchIn.custCode, "custName":vm.templateBatchIn.custName
                 , "templateCode":vm.templateBatchIn.templateName, "templateType":vm.templateType};
         });
+        if(vm.templateType == 'storageIn'){
+            $("#tempIn").show();
+            $("#tempOut").hide();
+        }else if (vm.templateType == 'storageOut'){
+            $("#tempIn").hide();
+            $("#tempOut").show();
+        }
 
     }
 
@@ -140,6 +151,7 @@
                 loading2:false,
                 templateType:'${templateType!}',
                 titleName:'${templateType!}' == 'storageIn' ? '入库开单_批量导入' : '出库开单_批量导入',
+                <#--standardTemplteTitle:'${templateType!}' == 'storageIn' ? '入库单导入标准模板.xls' : '出库单导入标准模板.xls',-->
                 orderList:'',
                 orderTableHeads:[],
                 orderTableData:[],
