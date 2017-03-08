@@ -369,39 +369,39 @@
                     template.custName = custName;
                     template.custCode = custCode;
                     var reflectColName = StringUtil.isEmpty(design.reflectColName) ? "" : StringUtil.trim(design.reflectColName);
-
+                    var colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
                     var index = design.indexNum;
                     if(reflectColName.length > 50) {
                         vm.$message("第" + index + "行模板列名过长!最长50位!");
                         return;
                     }
                     if(index == 1 && StringUtil.isEmpty(reflectColName)){
-                        vm.$message('客户订单号模板列名为空!');
+                        vm.$message('客户订单号模板列名必填!');
                         return;
-                    } else if(index == 3 && StringUtil.isEmpty(reflectColName)){
-                        vm.$message('开单员模板列名为空!');
+                    } else if(index == 3 && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
+                        vm.$message('开单员模板列名或对应默认值必填一个!');
                         return;
-                    } else if(index == 4 && StringUtil.isEmpty(reflectColName)){
-                        vm.$message('仓库名称模板列名为空!');
+                    } else if(index == 4 && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
+                        vm.$message('仓库名称模板列名或对应默认值必填一个!');
                         return;
-                    } else if(index == 5 && StringUtil.isEmpty(reflectColName)){
-                        vm.$message('业务类型模板列名为空!');
+                    } else if(index == 5 && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
+                        vm.$message('业务类型模板列名或对应默认值必填一个!');
                         return;
                     } else if(index == 7 && StringUtil.isEmpty(reflectColName)){
-                        vm.$message('货品编码模板列名为空!');
+                        vm.$message('货品编码模板列名必填!');
                         return;
                     } else if(index == 12 && StringUtil.isEmpty(reflectColName)){
-                        designData.length == 21 ? vm.$message('入库数量模板列名为空!') : vm.$message('出库数量模板列名为空!');
+                        designData.length == 21 ? vm.$message('入库数量模板列名必填!') : vm.$message('出库数量模板列名必填!');
                         return;
                     } else if(index == 22 && StringUtil.isEmpty(reflectColName)){
-                        vm.$message('收货方名称模板列名为空!');
+                        vm.$message('收货方名称模板列名必填!');
                         return;
                     }
                     template.indexNum = design.indexNum;
                     template.standardColCode = design.standardColCode;
                     template.standardColName = design.standardColName;
                     template.reflectColName = reflectColName;
-                    template.colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
+                    template.colDefaultVal = colDefaultVal;
                     templateList.push(template);
                 }
                 xescm.common.submit("/ofc/storage_template/save", {"templateList":JSON.stringify(templateList)}, "确认保存该模板配置?", function () {
