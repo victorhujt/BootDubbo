@@ -52,10 +52,10 @@
                 <el-table-column property="consignorContactName" label="联系人"></el-table-column>
                 <el-table-column property="consignorContactPhone" label="联系电话"></el-table-column>
                 <el-table-column property="departurePlace" label="地址"></el-table-column>
-                <el-table-column property="consignorCode" label="发货方编码"></el-table-column>
-                <el-table-column property="consignorType" label="发货方类型"></el-table-column>
-                <el-table-column property="consignorContactCode" label="发货方联系人编码"></el-table-column>
-                <el-table-column property="departurePlaceCode" label="发货方地址编码"></el-table-column>
+                <el-table-column property="consignorCode" v-if="false" label="发货方编码"></el-table-column>
+                <el-table-column property="consignorType" v-if="false" label="发货方类型"></el-table-column>
+                <el-table-column property="consignorContactCode" v-if="false" label="发货方联系人编码"></el-table-column>
+                <el-table-column property="departurePlaceCode"  v-if="false"label="发货方地址编码"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleConsignorSizeChange" @current-change="handleConsignorCurrentPage" :current-page="consignorDataInfo.currentConsignorPage" :page-sizes="pageSizes" :page-size="consignorDataInfo.consignorPageSize" layout="total, sizes, prev, pager, next, jumper" :total="consignorDataInfo.totalConsignor">
             </el-pagination>
@@ -173,7 +173,7 @@
                             placeholder="请选择"
                             icon="search"
                             v-model="orderForm.custName"
-                            @click="customerDataInfo.chosenCus = true" >
+                            @click="openCustomer" >
                     </el-input>
                 </el-form-item>
             </div>
@@ -187,7 +187,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="业务类型" required  prop="businessType" class="xe-col-3">
+                <el-form-item label="业务名称" required  prop="businessType" class="xe-col-3">
                     <el-select v-model="orderForm.businessType" placeholder="请选择">
                         <el-option
                                 v-for="item in businessTypeOptions"
@@ -221,7 +221,7 @@
                             <el-form-item label="预计入库时间" class="xe-col-3">
                                 <el-date-picker
                                         v-model="orderForm.arriveTime"
-                                        type="date"
+                                        type="datetime"
                                         placeholder="选择日期"
                                         :picker-options="pickerOptions1">
                                 </el-date-picker>
@@ -359,9 +359,9 @@
         data:function () {
             var validateOrdeTime = function(rule, value, callback){
                 if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-                    callback(new Error('只能选择一周之前的日期!'));
+                    callback(new Error('只能选择一周之内的日期!'));
                 }else if(value.getTime()>new Date().getTime()){
-                    callback(new Error('只能选择一周之前的日期!'));
+                    callback(new Error('不能选择当前日期的往后日期'));
                 }else{
                     callback();
                 }
@@ -383,6 +383,7 @@
             return {
                 activeNames:'',
                 wareHouseObj:'',
+                sendAddress:'',
                 goodsCategoryOptions:[],
                 customerDataInfo:{
                     currentCustomerPage:1,
@@ -551,7 +552,7 @@
                         { required: true, message: '请选择仓库名称', trigger: 'change' }
                     ],
                     businessType:[
-                        { required: true, message: '请选择业务类型', trigger: 'change' }
+                        { required: true, message: '请选择业务名称', trigger: 'change' }
                     ],
                     custOrderCode:[
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
@@ -604,6 +605,9 @@
                                 warehouse.value= rmcWarehouse;
                                 vueObj.wareHouseOptions.push(warehouse);
                             });
+                            if(vueObj.wareHouseOptions.length==1){
+                                vueObj.orderForm.wareHouse=vueObj.wareHouseOptions[0].value;
+                            }
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
                         } else {
@@ -762,7 +766,11 @@
                             consignor.consignorName=CscContantAndCompanyDto.contactCompanyName;
                             consignor.consignorContactName=CscContantAndCompanyDto.contactName;
                             consignor.consignorContactPhone=CscContantAndCompanyDto.phone;
-                            consignor.departurePlace=CscContantAndCompanyDto.provinceName+","+CscContantAndCompanyDto.cityName+","+CscContantAndCompanyDto.areaName;
+                            consignor.departurePlace=CscContantAndCompanyDto.provinceName+","+CscContantAndCompanyDto.cityName;
+
+                            if(CscContantAndCompanyDto.areaName!=null){
+                                consignor.departurePlace=consignor.departurePlace+","+CscContantAndCompanyDto.areaName;
+                            }
                             if(CscContantAndCompanyDto.streetName!=null){
                                 consignor.departurePlace=consignor.departurePlace+","+CscContantAndCompanyDto.streetName;
                             }
@@ -775,6 +783,9 @@
                             vueObj.consignorDataInfo.consignorData.push(consignor);
                         });
                         vueObj.consignorDataInfo.totalConsignor=result.result.total;
+                        if(vueObj.consignorDataInfo.consignorData.length==1){
+                            vueObj.setCurrentConsignorInfo(vueObj.consignorDataInfo.consignorData[0]);
+                        }
                     } else if (result.code == 403) {
                         vueObj.promptInfo("没有权限",'error');
                     }
@@ -799,7 +810,13 @@
                 this.orderForm.consignorName=val.consignorName;
                 this.orderForm.consignorContactPhone=val.consignorContactPhone;
                 this.orderForm.consignorContactName=val.consignorContactName;
-                this.orderForm.departurePlace=val.departurePlace;
+                this.sendAddress=val.departurePlace;
+                var array=val.departurePlace.split(",");
+                if(array!=undefined&&array.length>0){
+                    for(var i=0;i<array.length;i++){
+                        this.orderForm.departurePlace+=array[i];
+                    }
+                }
                 this.orderForm.consignorType=val.type;
                 this.orderForm.consignorCode=val.consignorCode;
                 this.orderForm.consignorContactCode=val.consignorContactCode;
@@ -924,7 +941,7 @@
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
                 }
-
+                ofcOrderDTOStr.departurePlace=this.sendAddress;
                  ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
                 //收货方信息(仓库的信息)
                 this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
@@ -940,7 +957,7 @@
                 cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStr();
                 cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr(this.wareHouseObj);
                 //出发地
-                var consignorAddressNameMessage =this.orderForm.departurePlace.split(',');
+                var consignorAddressNameMessage =this.sendAddress.split(',');
                 ofcOrderDTOStr.departureProvince=consignorAddressNameMessage[0];
                 ofcOrderDTOStr.departureCity=consignorAddressNameMessage[1];
                 ofcOrderDTOStr.departureDistrict=consignorAddressNameMessage[2];
@@ -1070,7 +1087,7 @@
                 cscContactDto.phone =this.orderForm.consignorContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consignorName;
                 var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
-                var consignorAddressNameMessage =this.orderForm.departurePlace.split(',');
+                var consignorAddressNameMessage =this.sendAddress.split(',');
                 cscContactDto.province = consignorAddressCodeMessage[0];
                 cscContactDto.city = consignorAddressCodeMessage[1];
                 cscContactDto.area = consignorAddressCodeMessage[2];
@@ -1144,6 +1161,12 @@
                     message: message,
                     type: type
                 });
+            },
+            openCustomer:function(){
+                this.customerDataInfo.customerData=[];
+                this.customerDataInfo.customerPageSize=10;
+                this.customerDataInfo.total=0;
+                this.customerDataInfo.chosenCus=true;
             }
         }
     })

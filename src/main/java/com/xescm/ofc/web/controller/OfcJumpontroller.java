@@ -414,18 +414,6 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/orderStorageInManager")
     public ModelAndView orderStorageInManager(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_in_manager");
-        UamGroupDto uamGroupDto=new UamGroupDto();
-        uamGroupDto.setSerialNo(getAuthResDtoByToken().getGroupRefCode());
-        Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
-        UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
-        String groupType=uamGroupDtoResult.getType();
-        if(StringUtils.equals(groupType,"1")) {
-            //鲜易供应链身份
-            if (StringUtils.equals("GD1625000003", uamGroupDtoResult.getSerialNo())) {
-                model.addAttribute("isSuper", "Y");
-            }
-        }
-        //model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
         return modelAndView;
     }
 

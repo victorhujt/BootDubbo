@@ -394,50 +394,37 @@ public class OfcOrderManageRest extends BaseController{
             OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
             //货品详情信息
             List<OfcGoodsDetailsInfo>   ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
-            //提供运输
 
             CscContantAndCompanyDto consignor=null;
             CscContantAndCompanyDto consignee=null;
-
-            if(tag.equals("edit")){
-                if(ofcOrderDTO.getProvideTransport()==1) {
-                    //编辑时 出库校验收货方
-                    if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("61")) {
-                        consignor=new CscContantAndCompanyDto();
-                        if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
-                            throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
+                if(tag.equals("edit")){
+                    if(ofcOrderDTO.getProvideTransport()==1) {
+                        if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("61")) {
+                            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
+                                throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
+                            }
+                        } else if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("62")) {
+                            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
+                                throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
+                            }
                         }
-                        //收货方信息
-                        logger.info(cscContantAndCompanyDtoConsigneeStr);
-                        consignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-                        //编辑时 入库校验发货方
-                    } else if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("62")) {
-                        consignee=new CscContantAndCompanyDto();
-                        if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
-                            throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
-                        }
-                        //发货方信息
-                        logger.info(cscContantAndCompanyDtoConsignorStr);
-                        consignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
-                    }
-                }
-            }else{
-                if(ofcOrderDTO.getProvideTransport()==1) {
-                    if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
-                        throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
-                    }
-                    if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
-                        throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
                     }
                 }
                 //发货方信息
-                logger.info(cscContantAndCompanyDtoConsignorStr);
-                consignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+                if((PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr))){
+                    consignor=new CscContantAndCompanyDto();
+                }else{
+                    logger.info(cscContantAndCompanyDtoConsignorStr);
+                    consignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+                }
 
-                //收货方信息
-                logger.info(cscContantAndCompanyDtoConsigneeStr);
-                consignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-            }
+                if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
+                    consignee=new CscContantAndCompanyDto();
+                }else{
+                    //收货方信息
+                    logger.info(cscContantAndCompanyDtoConsigneeStr);
+                    consignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+                }
 
             //供应商信息
             CscSupplierInfoDto cscSupplierInfoDto=null;
