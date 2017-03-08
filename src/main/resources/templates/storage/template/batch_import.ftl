@@ -3,7 +3,7 @@
 <style type="text/css">
     @import url("//unpkg.com/element-ui/lib/theme-default/index.css");
 </style>
-<title>入库开单_批量导入</title>
+
 <style>
   .el-upload__input{
     opacity:0;
@@ -11,6 +11,7 @@
 </style>
 <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
 <div id="app">
+    <title>{{titleName}}</title>
     <div class="list-mian-01">
         <el-form :model="templateBatchIn"  label-width="100px" class="demo-ruleForm" v-loading="loading2"
                  element-loading-text="拼命加载中">
@@ -138,6 +139,7 @@
             return {
                 loading2:false,
                 templateType:'${templateType!}',
+                titleName:'${templateType!}' == 'storageIn' ? '入库开单_批量导入' : '出库开单_批量导入',
                 orderList:'',
                 orderTableHeads:[],
                 orderTableData:[],
