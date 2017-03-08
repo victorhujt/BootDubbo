@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,11 +66,12 @@ public class CreateOrderApiConsumer implements MessageListener {
         String userName ="";
         String key = message.getKey();
         String messageBody = null;
-        try {
+        /*try {
             messageBody = new String(message.getBody(),"GBK");
         } catch (UnsupportedEncodingException e) {
             logger.error("字符編碼發生錯誤");
-        }
+        }*/
+        messageBody = new String(message.getBody());
         logger.info("OFC消费MQ开始。。。MessageBody:" + messageBody + ",topicName:" + topicName + ",tag:" + tag );
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
