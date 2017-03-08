@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
@@ -1243,15 +1244,30 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             if(ofcOrderDTO.getProvideTransport() == null){
                 ofcOrderDTO.setProvideTransport(0);
             }
-            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
+//            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
+            Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
+            MathContext mathContext = new MathContext(3);
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = convertCscGoods(ofcStorageTemplateDto);
-                ofcGoodsDetailsInfoList.add(ofcGoodsDetailsInfo);
+                String goodsCode = ofcGoodsDetailsInfo.getGoodsCode();
+                if(ofcGoodsDetailsInfoMap.containsKey(goodsCode)){
+                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(goodsCode);
+                    if(null == info.getQuantity() || null == ofcGoodsDetailsInfo.getQuantity()){
+                        logger.error("货品数量出错!");
+                        throw new BusinessException("货品数量出错!");
+                    }
+                    info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity(), mathContext));
+                    ofcGoodsDetailsInfoMap.put(goodsCode, info);
+                }else {
+                    ofcGoodsDetailsInfoMap.put(goodsCode, ofcGoodsDetailsInfo);
+                }
             }
+            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
+            ofcGoodsDetailsInfoMap.values();
             CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
-            Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, ofcGoodsDetailsInfoList, "batchSave"
+            Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, detailsInfos, "batchSave"
                     , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
             if(save.getCode() == Wrapper.ERROR_CODE){
                 logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
