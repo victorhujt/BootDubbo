@@ -386,9 +386,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {//提供运输
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
                     //仓储订单推仓储中心
-                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation);
+                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation,ofcDistributionBasicInfo);
                 } else if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSE_NO_TRANS) {//不提供运输
-                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation);
+                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation,ofcDistributionBasicInfo);
                 } else {
                     throw new BusinessException("无法确定是否需要运输");
                 }
@@ -2798,7 +2798,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         Wrapper<?> wrapper = null;
         OfcWarehouseInformation owinfo =null;
-        if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
+        if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS||cscContantAndCompanyDtoConsignor!=null||cscContantAndCompanyDtoConsignee!=null) {
             OfcWarehouseInformation cw = new OfcWarehouseInformation();
             cw.setOrderCode(ofcFundamentalInformation.getOrderCode());
             owinfo = ofcWarehouseInformationService.selectOne(cw);
@@ -3109,7 +3109,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
                 //仓储订单推仓储中心
-                pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation);
+                pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation,ofcDistributionBasicInfo);
                 //仓储带运输订单推仓储中心和运输中心
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
@@ -3177,7 +3177,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Override
     public void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
-            , OfcFinanceInformation ofcFinanceInformation) {
+            , OfcFinanceInformation ofcFinanceInformation,OfcDistributionBasicInfo dinfo) {
         String json;
         try {
             logger.info("订单信息推送仓储中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
@@ -3185,31 +3185,40 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                //出库
-                ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
-                //校验出库商品的库存
-                List<InventoryDTO> inventoryGoods = new ArrayList<>();
-                int count = 0;
-                for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsList) {
-                    if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                        if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
-                            continue;
-                        }
+                //分拨出库不进行库存的校验
+                if(!"614".equals(ofcFundamentalInformation.getBusinessType())){
+                    //出库
+                    ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
+                    if(dinfo!=null){
+                        ofOrderDto.setConsigneeCode(dinfo.getConsigneeCode());//收货方编码
+                        ofOrderDto.setConsigneeContactCode(dinfo.getConsigneeContactCode());//收货方联系人编码
+                        ofOrderDto.setConsigneeContactName(dinfo.getConsigneeContactName());//收货方联系名称
+                        ofOrderDto.setConsigneeContactPhone(dinfo.getConsigneeContactPhone());//收货方联系电话
                     }
-                    InventoryDTO inventoryDTO = new InventoryDTO();
-                    inventoryDTO.setLineNo(String.valueOf(++count));
-                    inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
-                    inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
-                    inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
-                    inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());
-                    inventoryDTO.setLotatt01(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE2));
-                    inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
-                    inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
-                    inventoryGoods.add(inventoryDTO);
-                }
-                Wrapper wrapper = whcOrderCancelEdasService.validateStockCount(inventoryGoods);
-                if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
-                    throw new BusinessException(wrapper.getMessage());
+                    //校验出库商品的库存
+                    List<InventoryDTO> inventoryGoods = new ArrayList<>();
+                    int count = 0;
+                    for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsList) {
+                        if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                            if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
+                                continue;
+                            }
+                        }
+                        InventoryDTO inventoryDTO = new InventoryDTO();
+                        inventoryDTO.setLineNo(String.valueOf(++count));
+                        inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
+                        inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+                        inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
+                        inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());
+                        inventoryDTO.setLotatt01(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE2));
+                        inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
+                        inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
+                        inventoryGoods.add(inventoryDTO);
+                    }
+                    Wrapper wrapper = whcOrderCancelEdasService.validateStockCount(inventoryGoods);
+                    if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
+                        throw new BusinessException(wrapper.getMessage());
+                    }
                 }
             } else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
                 //入库

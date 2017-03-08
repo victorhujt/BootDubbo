@@ -55,7 +55,7 @@ public interface OfcOrderManageService {
 
     void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
-            , OfcFinanceInformation ofcFinanceInformation);
+            , OfcFinanceInformation ofcFinanceInformation,OfcDistributionBasicInfo dinfo);
 
     RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String pickup);
 
