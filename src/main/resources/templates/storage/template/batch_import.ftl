@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
 <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
+<style type="text/css">
+    @import url("//unpkg.com/element-ui/lib/theme-default/index.css");
+</style>
 <title>入库开单_批量导入</title>
 <style>
   .el-upload__input{
@@ -9,7 +12,8 @@
 <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
 <div id="app">
     <div class="list-mian-01">
-        <el-form :model="templateBatchIn"  label-width="100px" class="demo-ruleForm">
+        <el-form :model="templateBatchIn"  label-width="100px" class="demo-ruleForm" v-loading="loading2"
+                 element-loading-text="拼命加载中">
             <div class="xe-block" >
                 <el-form-item label="客户名称"  class="xe-col-3" requird>
                     <el-input v-model="templateBatchIn.custName" v-if="custNameShow"   ></el-input>
@@ -132,6 +136,7 @@
     var Main = {
         data() {
             return {
+                loading2:false,
                 templateType:'${templateType!}',
                 orderList:'',
                 orderTableHeads:[],
@@ -158,7 +163,6 @@
         },
         methods: {
             templateChange(val){
-                console.log(val);
                 var vm = this;
                 if(undefined == val || StringUtil.isEmpty(val)){
                     return;
@@ -174,6 +178,7 @@
             },
             handleSuccess(response, file, fileList) {
                 var vm = this;
+                vm.loading2 = false;
                 vm.orderList = '';
                 if(response.code == 500) {
                     vm.errorMsgShow = true;
@@ -196,6 +201,7 @@
                     vm.tableData = [];
                     vm.orderMsgShow = false;
                 }else if(response.code == 200) {
+
                     vm.fileList.push(file);
                     var tableData = vm.orderTableData = [];
                     vm.$message(response.message);
@@ -251,6 +257,7 @@
                     vm.$message("只允许上传一个文件!");
                     return false;
                 }
+                vm.loading2 = true;
                 //文件大小限制
             },
             uploadChange(file,fileList){

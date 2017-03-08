@@ -1010,8 +1010,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return key必填列号, value对应的映射列名
      */
     private Map<Integer, String> checkExcelRequiedItem(Row commonRow, String templateType, Map<String, OfcStorageTemplate> templateDetilMap) {
-        String[] inRquiredItem = {"custOrderCode","merchandiser","warehouseName","businessType","goodsCode","quantity"};
-        String[] outRquiredItem = {"custOrderCode","merchandiser","warehouseName","businessType","goodsCode","quantity","consigneeName"};
+        List<String> inRquiredItems = InRquiredItem.getstandardCodeList();
+        List<String> outRquiredItems = OutRquiredItem.getstandardCodeList();
+        List<String> item = StringUtils.equals(templateType,"storageIn") ? inRquiredItems : outRquiredItems;
+        List<String> check = item;
         Map<String, Integer> colNumMap = new HashMap<>();
         if(null == commonRow){
             logger.error("当前表格没有表头!请添加后重新上传!");
@@ -1026,6 +1028,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 continue;
             }
             String commonCellValue = commonCell.getStringCellValue();// 当前列 列名
+            check.remove(commonCellValue);
             //根据当前列列名找到映射数据
             OfcStorageTemplate ofcStorageTemplate = cellReflectToDomain(commonCellValue, templateDetilMap);
             if(null == ofcStorageTemplate){
@@ -1037,8 +1040,19 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             ofcStorageTemplateMap.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);//key : 标准列code, value: 对应映射实体
             colNumMap.put(ofcStorageTemplate.getStandardColCode(), cellNum); //key : 标准列code, value: 必填列号
         }
-        String[] item = StringUtils.equals(templateType,"storageIn") ? inRquiredItem : outRquiredItem;
-        int requiredNum = StringUtils.equals(templateType,"storageIn") ? inRquiredItem.length : outRquiredItem.length;
+
+        if (check.size() >0) {
+            logger.error("必填列有缺失! 缺失的字段List:{}", ToStringBuilder.reflectionToString(check));
+            StringBuilder sb = new StringBuilder("【");
+            for (String s : check) {
+                if(!PubUtils.isSEmptyOrNull(s)){
+                    sb.append(OutRquiredItem.getAnyByStandardCode(s).getStandardColName());
+                    sb.append(" ");
+                }
+            }
+            sb.append("】");
+            throw new BusinessException("必填列有缺失!缺失的字段为:" + sb.toString());
+        }
         Map<Integer, String> requiredColNum = new HashMap<>();
         //遍历必填列编码
         for (String requiredItem : item) {
@@ -1047,21 +1061,17 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     InRquiredItem anyByStandardCode = InRquiredItem.getAnyByStandardCode(requiredItem);
                     logger.error("没有在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
                     throw new BusinessException("没有在初始化映射表中找到必填映射列:" + anyByStandardCode.getStandardColName());
-                }else if(StringUtils.equals("storageIn", templateType)){
+                }else if(StringUtils.equals("storageOut", templateType)){
                     OutRquiredItem anyByStandardCode = OutRquiredItem.getAnyByStandardCode(requiredItem);
                     logger.error("没有在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
                     throw new BusinessException("【" + anyByStandardCode.getStandardColName() + "】列名不存在，请检查文件");
                 }
-
             }else {
                 //将当前Excel模板必填列的列号记录
                 requiredColNum.put(colNumMap.get(requiredItem), ofcStorageTemplateMap.get(requiredItem).getReflectColName());
             }
         }
-        if (requiredColNum.size() != requiredNum) {
-            logger.error("必填列有缺失! :{}", ToStringBuilder.reflectionToString(requiredColNum));
-            throw new BusinessException("必填列有缺失!");
-        }
+
         return requiredColNum;
     }
 
