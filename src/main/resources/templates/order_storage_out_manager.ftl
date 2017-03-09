@@ -261,7 +261,7 @@
             });
 
             //大区和基地信息
-            CommonClient.post(sys.rootPath + "/ofc/loadAreaAndBaseByUser",{},function (result) {
+            CommonClient.syncpost(sys.rootPath + "/ofc/loadAreaAndBaseByUser",{},function (result) {
                 if (result == undefined || result == null) {
                     layer.msg("当前用户下没有大区和基地信息！");
                 } else if (result.code == 200) {
@@ -274,7 +274,9 @@
                                 area.value= OfcGroupVo.serialNo;
                                 vueObj.areaNameOptions.push(area);
                         });
-                        vueObj.areaName = vueObj.areaNameOptions[0].value;
+                        if(vueObj.areaNameOptions.length==1){
+                            vueObj.areaName=vueObj.areaNameOptions[0].value;
+                        }
                     }else{
                         layer.msg("当前用户下没有大区信息！");
                     }
@@ -286,7 +288,9 @@
                             base.value=OfcGroupVo.serialNo;
                             vueObj.baseNameOptions.push(base);
                         });
-                        vueObj.baseName = vueObj.baseNameOptions[0].value;
+                        if(vueObj.baseNameOptions.length==1){
+                            vueObj.baseName=vueObj.baseNameOptions[0].value;
+                        }
                     }else{
                         layer.msg("当前用户下没有基地信息！");
                     }
@@ -456,8 +460,15 @@
                 this.orderStatus="";
                 this.businessType="";
                 this.baseName="";
+                this.areaName="";
                 this.wareHouseName="";
-
+                if(this.baseNameOptions.length==1&&this.areaNameOptions.length==1){
+                    this.areaName=this.areaNameOptions[0].value;
+                    this.baseName=this.baseNameOptions[0].value;
+                }
+                if(this.baseNameOptions.length>1&&this.areaNameOptions.length==1){
+                    this.areaName=this.areaNameOptions[0].value;
+                }
             },
             auditOrder:function(){
                 if(this.valiateSelectOrder()){
