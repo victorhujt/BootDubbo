@@ -42,6 +42,7 @@
                             style="width:114px;"
                             v-model="beginDate"
                             type="date"
+                            :clearable="false"
                             placeholder="选择起始日期">
                     </el-date-picker>
                     <label for="" style="width:15px;">至</label>
@@ -49,6 +50,7 @@
                             style="width:114px;"
                             v-model="endDate"
                             type="date"
+                            :clearable="false"
                             placeholder="选择结束日期">
                     </el-date-picker>
                 </el-form-item>
@@ -65,7 +67,7 @@
                             placeholder="请选择"
                             icon="search"
                             v-model="customerName"
-                            @click="chosenCus = true">
+                            @click="openCustomer">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="仓库名称" class="xe-col-3">
@@ -77,7 +79,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="业务名称" class="xe-col-3">
+                <el-form-item label="业务类型" class="xe-col-3">
                     <el-select v-model="businessType" placeholder="请选择">
                         <el-option
                                 v-for="item in businessTypeOptions"
@@ -89,7 +91,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="大区名称" class="xe-col-3">
-                    <el-select v-model="areaName" placeholder="请选择">
+                    <el-select v-model="areaName" placeholder="请选择" @change="getBaseNameByArea">
                         <el-option
                                 v-for="item in areaNameOptions"
                                 :label="item.label"
@@ -574,11 +576,17 @@
                         vueObj.promptInfo("订单的起始日期不能大于结束日期","error");
                         return;
                     }
-                    if(this.baseName!=""){
-                        if(this.areaName==""){
-                            vueObj.promptInfo("选择基地时，必须选择大区","warning");
-                            return;
-                        }
+
+                    if( this.endDate.getTime()-this.beginDate.getTime()> 3600 * 1000 * 24 * 90){
+                        vueObj.promptInfo("订单的起始日期和结束日期不能相差90天","warning");
+                        return;
+                    }
+                }
+
+                if(!StringUtil.isEmpty(this.baseName)){
+                    if(StringUtil.isEmpty(this.areaName)){
+                        vueObj.promptInfo("选择基地时，必须选择大区","warning");
+                        return;
                     }
                 }
                 if(this.beginDate){
@@ -630,7 +638,38 @@
                         message: message,
                         type: type
                     });
+            },
+            getBaseNameByArea:function(){
+                var  _this=this;
+                _this.baseNameOptions=[];
+                CommonClient.post(sys.rootPath + "/ofc/queryBaseListByArea",{"areaCode":_this.areaName},function(data) {
+                    if (data == undefined || data == null || null == data.result
+                            || undefined == data.result || data.result.size == 0) {
+                        layer.msg("暂时未查询到基地信息！！");
+                    }else if(data.code == 200){
+                        var res=eval(data.result);
+                        $.each(res,function (index,baseMsg) {
+                            var option={};
+                            option.label=baseMsg.groupName;
+                            option.value=baseMsg.serialNo;
+                            _this.baseNameOptions.push(option);
+                        });
+                    }else if (res.code == 403) {
+                        vueObj.promptInfo("没有权限","error");
+                    } else if(res.code == 500){
+                        vueObj.promptInfo("查询基地出错!","error");
+                    } else {
+                        vueObj.promptInfo("查询基地出错!","error");
+                    }
+                })
+            },
+            openCustomer:function(){
+                this.customerData=[];
+                this.customerPageSize=10;
+                this.total=0;
+                this.chosenCus=true;
             }
+
         }
     });
 </script>

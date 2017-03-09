@@ -60,7 +60,7 @@
                     <el-date-picker
                             v-model="arriveTime"
                             align="right"
-                            type="date"
+                            type="datetime"
                             :readOnly="true"
                             placeholder="选择日期">
                     </el-date-picker>
@@ -365,6 +365,7 @@
                             var ofcDistributionBasicInfo=result.result.ofcDistributionBasicInfo;
                             var status=result.result.status;
                             var statusArray=result.result.statusLog;
+
                             if(ofcFundamentalInformation!=null){
                                 vueObj.orderCode=ofcFundamentalInformation.orderCode;
                                 vueObj.orderTime=DateUtil.parse(ofcFundamentalInformation.orderTime);
@@ -388,7 +389,6 @@
                                     vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
                                     vueObj.driverName=ofcWarehouseInformation.driverName;
                                     vueObj.driverContactNumber=ofcWarehouseInformation.contactNumber;
-                                    if(ofcWarehouseInformation.provideTransport=="1"){
                                         if(ofcDistributionBasicInfo!=null){
                                             //发货方
                                             vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
@@ -409,7 +409,6 @@
                                             vueObj.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
                                             vueObj.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
                                         };
-                                    }
                                     if(ofcGoodsDetailsInfo!=null&&ofcGoodsDetailsInfo.length>0){
                                         for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
                                             var goodDetail=ofcGoodsDetailsInfo[i];

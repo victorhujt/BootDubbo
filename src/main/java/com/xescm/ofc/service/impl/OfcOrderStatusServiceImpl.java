@@ -1,7 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcOrderNewstatus;
-import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
@@ -12,12 +10,8 @@ import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
-import com.xescm.ofc.service.OfcOrderNewstatusService;
-import com.xescm.ofc.service.OfcOrderStatusService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +19,6 @@ import javax.annotation.Resource;
 import java.util.*;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
-import static com.xescm.ofc.constant.OrderConstConstant.*;
-
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
@@ -231,13 +223,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
 
             OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
-            OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
-            ofcWarehouseInformation.setOrderCode(orderCode);
-            ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
             if(ofcFundamentalInformation==null){
                 throw new BusinessException("订单不存在");
             }
-
             OfcOrderStatus orderStatus=orderStatusSelect(orderCode,"orderCode");
             OfcOrderStatus status=new OfcOrderStatus();
             if(orderStatus!=null){
@@ -248,41 +236,26 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 if(HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())){
                     throw new BusinessException("订单已经取消");
                 }
+            }
 
-                if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
-                     type=OFC_WHC_IN_TYPE;
-                }
-                else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
-                     type=OFC_WHC_OUT_TYPE;
-                }
+            if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
+                 type=OFC_WHC_IN_TYPE;
+            }
+            else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
+                 type=OFC_WHC_OUT_TYPE;
+            }
 
-                String statusDesc=translateStatusToDesc(traceStatus,type);
-                if(orderStatus.getStatusDesc().indexOf(statusDesc)<0){
-                    status.setLastedOperTime(new Date());
-                    status.setStatusDesc(statusDesc);
-                    status.setOrderCode(orderCode);
-                    status.setOperator("");
-                    status.setOrderStatus(orderStatus.getOrderStatus());
-                    status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
-                            +" "+statusDesc);
-                    status.setOrderCode(orderCode);
-                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
-                        if("出库完毕".equals(statusDesc)){
-                          if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WEARHOUSE_WITH_TRANS){
-                              status.setOrderStatus(HASBEEN_COMPLETED);
-                              save(status);
-                            }
-                            super.save(status);
-                        }
-                    }else if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
-                        if("入库完毕".equals(statusDesc)){
-                            status.setOrderStatus(HASBEEN_COMPLETED);
-                            save(status);
-                        }else{
-                            super.save(status);
-                        }
-                    }
-                }
+            String statusDesc=translateStatusToDesc(traceStatus,type);
+            if(orderStatus.getStatusDesc().indexOf(statusDesc)<0){
+                status.setLastedOperTime(new Date());
+                status.setStatusDesc(statusDesc);
+                status.setOrderCode(orderCode);
+                status.setOperator("");
+                status.setOrderStatus(orderStatus.getOrderStatus());
+                status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
+                        +" "+statusDesc);
+                status.setOrderCode(orderCode);
+                super.save(status);
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
@@ -299,6 +272,34 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 			}
 			if(detailDtos==null||detailDtos!=null&&detailDtos.size()==0){
                 throw new BusinessException("货品详情不能为空");
+            }
+            OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
+            ofcWarehouseInformation.setOrderCode(orderCode);
+            ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
+            OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
+			if(ofcFundamentalInformation==null){
+                throw new BusinessException("订单不存在");
+            }
+
+            OfcOrderStatus orderStatus=orderStatusSelect(orderCode,"orderCode");
+            OfcOrderStatus status=new OfcOrderStatus();
+            if(orderStatus!=null) {
+                if (HASBEEN_COMPLETED.equals(orderStatus.getOrderStatus())) {
+                    throw new BusinessException("订单已经完成");
+                }
+                if (HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())) {
+                    throw new BusinessException("订单已经取消");
+                }
+            }
+
+            if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
+                status.setOrderStatus(HASBEEN_COMPLETED);
+            } else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+                if(ofcWarehouseInformation!=null){
+                    if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSE_NO_TRANS){
+                        status.setOrderStatus(HASBEEN_COMPLETED);
+                    }
+                }
             }
 
             for (FeedBackOrderDetailDto feedBackOrderDetailDto : detailDtos) {
@@ -320,6 +321,15 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     ofcGoodsDetailsInfoService.save(newInfo);
                 }
             }
+            status.setLastedOperTime(new Date());
+            status.setStatusDesc("订单号"+orderCode+"已完成");
+            status.setOrderCode(orderCode);
+            status.setOperator("");
+            status.setOrderStatus(HASBEEN_COMPLETED);
+            status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)
+                    +" "+"订单号"+orderCode+"已完成");
+            status.setOrderCode(orderCode);
+            save(status);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
