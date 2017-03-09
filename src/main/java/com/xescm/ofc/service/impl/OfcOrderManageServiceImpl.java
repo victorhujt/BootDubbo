@@ -289,7 +289,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
-
+                logger.info("=====>订单中心--订单状态推结算中心");
                 //订单中心--订单状态推结算中心(执行中和已完成)
                 pullOfcOrderStatus(ofcOrderStatus);
                 return String.valueOf(Wrapper.SUCCESS_CODE);
@@ -2628,6 +2628,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatusService.save(ofcOrderStatus);
 
         //订单中心--订单状态推结算中心(执行中和已完成)
+        logger.info("=====>订单中心--订单状态推结算中心");
         pullOfcOrderStatus(ofcOrderStatus);
     }
 
@@ -2638,18 +2639,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return void
      */
     public void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus) {
+        logger.info("订单中心--订单状态推结算中心(执行中和已完成) ofcOrderStatus:{}", ofcOrderStatus);
         if (PubUtils.isNull(ofcOrderStatus)) {
+            logger.error("订单状态推结算中心异常");
             throw new BusinessException("订单状态推结算中心异常");
         }
         AcOrderStatusDto acOrderStatusDto = new AcOrderStatusDto();
         try {
             BeanUtils.copyProperties(acOrderStatusDto, ofcOrderStatus);
+            logger.info("订单状态开始推结算中心 acOrderStatusDto{}", acOrderStatusDto);
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
-            if (null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE) {
+            if (null == integerWrapper || integerWrapper.getCode() != Wrapper.SUCCESS_CODE) {
                 logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}"
                         , integerWrapper == null ? "integerWrapper 为null" : integerWrapper.getMessage());
                 throw new BusinessException("订单状态推结算中心异常");
             }
+            logger.info("订单状态开始推结算中心成功 integerWrapper{}", integerWrapper);
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}", e, e.getMessage());
             throw new BusinessException("订单状态推结算中心异常");
@@ -2663,6 +2668,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return void
      */
     public void pullOfcOrderPlanCode(AcPlanDto acPlanDto) {
+        logger.info("订单中心--→计划单");
         if (PubUtils.isNull(acPlanDto)) {
             throw new BusinessException("订单计划单推结算中心异常");
         }
@@ -3125,6 +3131,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 logger.error("自动审核出错, 更新订单状态为执行中失败");
                 throw new BusinessException("自动审核出错!");
             }
+            logger.info("=====>订单中心--订单状态推结算中心");
+            this.pullOfcOrderStatus(ofcOrderStatus);
         } else {
             logger.error("订单状态错误或缺少审核标志位");
             throw new BusinessException("订单状态错误或缺少审核标志位");
