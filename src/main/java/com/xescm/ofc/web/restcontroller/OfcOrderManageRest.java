@@ -397,34 +397,33 @@ public class OfcOrderManageRest extends BaseController{
 
             CscContantAndCompanyDto consignor=null;
             CscContantAndCompanyDto consignee=null;
-                if(tag.equals("edit")){
-                    if(ofcOrderDTO.getProvideTransport()==1) {
-                        if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("61")) {
-                            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
-                                throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
-                            }
-                        } else if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("62")) {
-                            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
-                                throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
-                            }
-                        }
+            if(ofcOrderDTO.getProvideTransport()==1) {
+                if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("61")) {
+                    if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
+                        throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
+                    }
+                } else if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("62")) {
+                    if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
+                        throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
                     }
                 }
-                //发货方信息
-                if((PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr))){
-                    consignor=new CscContantAndCompanyDto();
-                }else{
-                    logger.info(cscContantAndCompanyDtoConsignorStr);
-                    consignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
-                }
+            }
 
-                if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
-                    consignee=new CscContantAndCompanyDto();
-                }else{
-                    //收货方信息
-                    logger.info(cscContantAndCompanyDtoConsigneeStr);
-                    consignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-                }
+            //发货方信息
+            if((PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr))){
+                consignor=new CscContantAndCompanyDto();
+            }else{
+                logger.info(cscContantAndCompanyDtoConsignorStr);
+                consignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
+            }
+
+            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
+                consignee=new CscContantAndCompanyDto();
+            }else{
+                //收货方信息
+                logger.info(cscContantAndCompanyDtoConsigneeStr);
+                consignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
+            }
 
             //供应商信息
             CscSupplierInfoDto cscSupplierInfoDto=null;

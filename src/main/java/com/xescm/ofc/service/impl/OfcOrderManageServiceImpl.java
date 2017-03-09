@@ -2856,16 +2856,21 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             } else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
                 cscContantAndCompanyDtoConsignee = dto;//入库时收货方是仓库
             }
-            //收货方、发货方校验
-            wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-            if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                throw new BusinessException(wrapper.getMessage());
-            }
-        } else {
-            if (!PubUtils.trimAndNullAsEmpty(reviewTag).equals("batchSave")) {
+            if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+                //收货方、发货方校验
                 wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                 if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                     throw new BusinessException(wrapper.getMessage());
+                }
+            }
+
+        } else {
+            if (!PubUtils.trimAndNullAsEmpty(reviewTag).equals("batchSave")) {
+                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                        throw new BusinessException(wrapper.getMessage());
+                    }
                 }
             }
         }

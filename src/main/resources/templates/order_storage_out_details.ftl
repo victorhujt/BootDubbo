@@ -381,52 +381,55 @@
                                     vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
                                     vueObj.driverName=ofcWarehouseInformation.driverName;
                                     vueObj.driverContactNumber=ofcWarehouseInformation.contactNumber;
-                                        if(ofcDistributionBasicInfo!=null){
-                                            //发货方
-                                            vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
-                                            vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
-                                            vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
-                                            vueObj.isNeedTransport=true;
-                                            if(vueObj.isNeedTransport){
-                                                vueObj.needTransport="是";
-                                            }else{
-                                                vueObj.needTransport="否";
-                                            }
-                                            vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
-                                            vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity+ofcDistributionBasicInfo.destinationDistrict;
-                                            if(ofcDistributionBasicInfo.destinationTowns){
-                                                vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns+ofcDistributionBasicInfo.destination;
-                                            }
-                                            vueObj.consigneeName=ofcDistributionBasicInfo.consigneeName;
-                                            vueObj.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
-                                            vueObj.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
-                                        };
-                                    if(ofcGoodsDetailsInfo!=null&&ofcGoodsDetailsInfo.length>0){
-                                        for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
-                                            var goodDetail=ofcGoodsDetailsInfo[i];
-                                            var good={};
-                                            good.goodsType=goodDetail.goodsType;
-                                            good.goodsCategory=goodDetail.goodsCategory;
-                                            good.goodsCode=goodDetail.goodsCode;
-                                            good.goodsName=goodDetail.goodsName;
-                                            good.goodsSpec=goodDetail.goodsSpec;
-                                            good.quantity=goodDetail.quantity;
-                                            good.realQuantity=goodDetail.realQuantity;
-                                            good.unitPrice=goodDetail.unitPrice;
-                                            good.productionBatch=goodDetail.productionBatch;
-                                            good.productionTime=DateUtil.parse(goodDetail.productionTime);
-                                            good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
-                                            vueObj.goodsData.push(good);
-                                        }
+                                    if(ofcWarehouseInformation.provideTransport=="1"){
+                                        vueObj.isNeedTransport=true;
+                                        vueObj.needTransport="是";
+                                    }else{
+                                        vueObj.isNeedTransport=false;
+                                        vueObj.needTransport="否";
                                     }
-                                    if(statusArray!=null&&statusArray.length>0){
-                                        for(var i=0;i<statusArray.length;i++){
-                                            var orderStatus=statusArray[i];
-                                            var status={};
-                                            status.notes=orderStatus.notes;
-                                            vueObj.orderStatusData.push(status);
-                                        }
+
+                                if(ofcDistributionBasicInfo!=null){
+                                    //发货方
+                                    vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
+                                    vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
+                                    vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
+                                    vueObj.isNeedTransport=true;
+                                    vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
+                                    vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity+ofcDistributionBasicInfo.destinationDistrict;
+                                    if(ofcDistributionBasicInfo.destinationTowns){
+                                        vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns+ofcDistributionBasicInfo.destination;
                                     }
+                                    vueObj.consigneeName=ofcDistributionBasicInfo.consigneeName;
+                                    vueObj.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
+                                    vueObj.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
+                                };
+                                if(ofcGoodsDetailsInfo!=null&&ofcGoodsDetailsInfo.length>0){
+                                    for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
+                                        var goodDetail=ofcGoodsDetailsInfo[i];
+                                        var good={};
+                                        good.goodsType=goodDetail.goodsType;
+                                        good.goodsCategory=goodDetail.goodsCategory;
+                                        good.goodsCode=goodDetail.goodsCode;
+                                        good.goodsName=goodDetail.goodsName;
+                                        good.goodsSpec=goodDetail.goodsSpec;
+                                        good.quantity=goodDetail.quantity;
+                                        good.realQuantity=goodDetail.realQuantity;
+                                        good.unitPrice=goodDetail.unitPrice;
+                                        good.productionBatch=goodDetail.productionBatch;
+                                        good.productionTime=DateUtil.parse(goodDetail.productionTime);
+                                        good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                        vueObj.goodsData.push(good);
+                                    }
+                                }
+                                if(statusArray!=null&&statusArray.length>0){
+                                    for(var i=0;i<statusArray.length;i++){
+                                        var orderStatus=statusArray[i];
+                                        var status={};
+                                        status.notes=orderStatus.notes;
+                                        vueObj.orderStatusData.push(status);
+                                    }
+                                }
                                 }
                             }
 
