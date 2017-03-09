@@ -958,13 +958,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     /**
      * 只要用户的Excel中的列名是标准列名, 也进行自动映射
-     * @param commonRow
-     * @param templateDetilMap
-     * @param forDefaultButNotRequiredName
+     * @param commonRow Excel第一列
+     * @param templateDetilMap 用户模板
+     * @param forDefaultButNotRequiredName 表中没有
      */
     private void sameNameAutoReflect(Row commonRow, Map<String, OfcStorageTemplate> templateDetilMap
             , Map<String, OfcStorageTemplate> forDefaultButNotRequiredName) {
-        Map<String, OfcStorageTemplate> map = new HashMap<>(); // key 存放标准列名, value放对应的OfcStorageTemplate
         //先以用户模板配置的为准
         for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
             Cell commonCell = commonRow.getCell(cellNum);
@@ -1251,8 +1250,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     /**
      * 模板映射
      * @param cellValue 单元格的值
-     * @param templateDetilMap
-     * @return
+     * @param templateDetilMap 用户模板
+     * @return 映射到的实体
      */
     private OfcStorageTemplate cellReflectToDomain(String cellValue, Map<String, OfcStorageTemplate> templateDetilMap) {
         OfcStorageTemplate ofcStorageTemplate = templateDetilMap.get(cellValue);
@@ -1277,7 +1276,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     public Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception{
         logger.info("orderList ==> {}", orderList);
         logger.info("authResDto ==> {}", authResDto);
-        String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
+        List<String> orderBatchNumberList = new ArrayList<>();
         if(PubUtils.isSEmptyOrNull(orderList) || null == authResDto){
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
             throw new BusinessException("仓储开单批量导单确认下单失败!");
@@ -1306,6 +1305,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
 
         for (String orderMapKey : orderMap.keySet()) {
+
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
@@ -1318,7 +1318,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
-
+            String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
+            orderBatchNumberList.add(orderBatchNumber);
             ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
             ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
             if(ofcOrderDTO.getProvideTransport() == null){
@@ -1354,7 +1355,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 return save;
             }
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumberList);
     }
 
     private void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
@@ -1447,8 +1448,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.error("仓储开单批量导单审核失败, 入参有误");
             throw new BusinessException("仓储开单批量导单审核失败!");
         }
-        String orderBatchNumber = (String) result;
-        List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.queryFundamentalByBatchNumber(orderBatchNumber);
+        List<String> orderBatchNumber = (List<String>) result;
+        List<OfcFundamentalInformation> ofcFundamentalInformationList = new ArrayList<>();
+        for (String batchNum : orderBatchNumber) {
+            ofcFundamentalInformationList.addAll(ofcFundamentalInformationService.queryFundamentalByBatchNumber(batchNum));
+        }
         logger.info("============>仓储开单批量导单需要审核的订单:{}", ofcFundamentalInformationList);
         for (OfcFundamentalInformation ofcFundamentalInformation : ofcFundamentalInformationList) {
             String orderCode = ofcFundamentalInformation.getOrderCode();
