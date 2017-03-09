@@ -3066,6 +3066,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
                     || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
                 updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                this.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
             }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
