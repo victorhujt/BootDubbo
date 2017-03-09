@@ -201,6 +201,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
         };
         List<OfcStorageTemplate> ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
+        this.checkTemplateListRequired(ofcStorageTemplates);
         String userId = authResDto.getUserId();
         String userName = authResDto.getUserName();
         Date now = new Date();
@@ -1459,6 +1460,48 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.info("仓储开单批量导单审核, 订单号:{}审核结果:{}", orderCode, review);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+    /**
+     * 后端校验模板必填
+     * @param ofcStorageTemplates 用户上传的模板
+     */
+    @Override
+    public void checkTemplateListRequired(List<OfcStorageTemplate> ofcStorageTemplates) {
+        logger.info("校验模板必填 ofcStorageTemplates:{}", ofcStorageTemplates);
+        if(CollectionUtils.isEmpty(ofcStorageTemplates)){
+            logger.error("校验模板必填失败!");
+            throw new BusinessException("校验模板必填失败!");
+        }
+        String templateType = ofcStorageTemplates.get(0).getTemplateType();
+        boolean storageIn = StringUtils.equals(templateType, "storageIn");
+        int standardNum = storageIn ? StorageImportInEnum.queryList().size() : StorageImportOutEnum.queryList().size();
+        if(standardNum != ofcStorageTemplates.size()){
+            logger.error("校验模板必填失败! 模板数量错误! ");
+            throw new BusinessException("校验模板必填失败! 模板数量错误! ");
+        }
+        for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplates) {
+            int indexNum = ofcStorageTemplate.getIndexNum();
+            String reflectColName = ofcStorageTemplate.getReflectColName();
+            String colDefaultVal = ofcStorageTemplate.getColDefaultVal();
+            if(indexNum == 1 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(StorageImportOutEnum.CUST_ORDER_CODE.getStandardColName() + "的模板列名不能为空!");
+            }else if(indexNum == 3 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+                throw new BusinessException(StorageImportOutEnum.MERCHANDISER.getStandardColName() + "的模板列名和默认值必填一个");
+            }else if(indexNum == 4 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+                throw new BusinessException(StorageImportOutEnum.WAREHOUSE_NAME.getStandardColName() + "的模板列名和默认值必填一个");
+            }else if(indexNum == 5 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+                throw new BusinessException(StorageImportOutEnum.BUSINESS_TYPE.getStandardColName() + "的模板列名和默认值必填一个");
+            }else if(indexNum == 7 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(StorageImportOutEnum.GOODS_CODE.getStandardColName() + "的模板列名不能为空!");
+            }else if(indexNum == 12 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(storageIn ? StorageImportInEnum.QUANTITY.getStandardColName()
+                        : StorageImportOutEnum.QUANTITY.getStandardColName()  + "的模板列名不能为空!");
+            }else if(indexNum == 22 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(StorageImportOutEnum.CONSIGNEE_NAME  + "的模板列名不能为空!");
+            }
+        }
+        logger.info("校验模板必填成功!");
     }
 
 }
