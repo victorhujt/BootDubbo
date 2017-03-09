@@ -139,7 +139,7 @@
 
             <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
-                <el-table-column property="goodsType" label="货品类别"></el-table-column>
+                <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
                 <el-table-column property="goodsBrand" label="品牌"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码"></el-table-column>
@@ -147,6 +147,7 @@
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
                 <el-table-column property="unit" label="单位"></el-table-column>
                 <el-table-column property="barCode" label="条形码"></el-table-column>
+                <el-table-column property="expiryDate" v-if="false" label="保质期限"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleGoodSizeChange" @current-change="handleGoodCurrentPage" :current-page="goodDataInfo.currentGoodPage" :page-sizes="pageSizes" :page-size="goodDataInfo.goodPageSize" layout="total, sizes, prev, pager, next, jumper" :total="goodDataInfo.totalGoods">
             </el-pagination>
@@ -173,6 +174,7 @@
                             placeholder="请选择"
                             icon="search"
                             v-model="orderForm.custName"
+                            :readOnly="true"
                             @click="openCustomer" >
                     </el-input>
                 </el-form-item>
@@ -251,7 +253,7 @@
                                         icon="search"
                                         v-model="orderForm.consignorName"
                                         v-bind:disabled = "isDisabled"
-                                        @click="consignorDataInfo.chosenSend = true">
+                                        @click="openConsignor">
                                 </el-input>
                             </el-form-item>
                             <el-form-item label="联系人" class="xe-col-3">
@@ -309,6 +311,11 @@
                         <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column property="expiryDate" label="保质期限">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.expiryDate" v-if="false"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
                         <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
@@ -326,6 +333,7 @@
                                 align="right"
                                 type="date"
                                 placeholder="选择日期"
+                                @blur="accountInvalidTime(scope.row)"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                     </template>
@@ -722,6 +730,7 @@
                     quantity: '',
                     unitPrice:'',
                     productionBatch:'',
+                    expiryDate:val.expiryDate,
                     productionTime:'',
                     invalidTime:''
                 };
@@ -732,11 +741,6 @@
                 this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignor:function(){
-                if(!this.orderForm.custName){
-                    this.promptInfo("请选择客户",'warning');
-                    this.consignorDataInfo.chosenSend=false;
-                    return;
-                }
                 this.consignorDataInfo.consignorData=[];
                 var vueObj=this;
                 var cscContactDto = {};
@@ -752,7 +756,7 @@
                 cscContantAndCompanyDto.pageNum=this.consignorDataInfo.currentConsignorPage;
                 cscContantAndCompanyDto.pageSize=this.consignorDataInfo.consignorPageSize;
                 cscContantAndCompanyDto = JSON.stringify(cscContantAndCompanyDto);
-                CommonClient.post(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":cscContantAndCompanyDto,"customerCode":customerCode}, function(result) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/contactSelectForPage",{"cscContantAndCompanyDto":cscContantAndCompanyDto,"customerCode":customerCode}, function(result) {
                     if (result == undefined || result == null || result.result ==null || result.result.size == 0 || result.result.list == null) {
                         layer.msg("暂时未查询到发货方信息！！");
                     } else if (result.code == 200) {
@@ -783,9 +787,6 @@
                             vueObj.consignorDataInfo.consignorData.push(consignor);
                         });
                         vueObj.consignorDataInfo.totalConsignor=result.result.total;
-                        if(vueObj.consignorDataInfo.consignorData.length==1){
-                            vueObj.setCurrentConsignorInfo(vueObj.consignorDataInfo.consignorData[0]);
-                        }
                     } else if (result.code == 403) {
                         vueObj.promptInfo("没有权限",'error');
                     }
@@ -807,6 +808,10 @@
                 this.consignorDataInfo.chosenSend=false;
             },
             setCurrentConsignorInfo:function(val){
+                this.orderForm.consignorName="";
+                this.orderForm.consignorContactPhone="";
+                this.orderForm.consignorContactName="";
+                this.orderForm.departurePlace="";
                 this.orderForm.consignorName=val.consignorName;
                 this.orderForm.consignorContactPhone=val.consignorContactPhone;
                 this.orderForm.consignorContactName=val.consignorContactName;
@@ -849,6 +854,7 @@
                             goodCode.goodsSpec=cscGoodsVo.specification;
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
+                            goodCode.expiryDate=cscGoodsVo.expiryDate;
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
                         vueObj.goodDataInfo.totalGoods=data.result.total;
@@ -1167,6 +1173,43 @@
                 this.customerDataInfo.customerPageSize=10;
                 this.customerDataInfo.total=0;
                 this.customerDataInfo.chosenCus=true;
+            },
+            openConsignor:function(){
+                debugger;
+                if(StringUtil.isEmpty(this.orderForm.custName)){
+                    this.promptInfo("请选择客户",'warning');
+                    this.consignorDataInfo.chosenSend=false;
+                    return;
+                }
+                this.selectConsignor();
+                if(this.consignorDataInfo.consignorData.length==1){
+                    this.openMessage();
+                }else{
+                    this.consignorDataInfo.chosenSend = true;
+                    this.consignorDataInfo.consignorData=[];
+                }
+            },
+            openMessage:function(){
+                debugger;
+                var _this=this;
+                _this.$confirm('您只有一条发货方记录, 点击确认将自动帮你加载?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.setCurrentConsignorInfo(_this.consignorDataInfo.consignorData[0]);
+                }).catch(function() {
+                    _this.orderForm.consignorName="";
+                    _this.orderForm.departurePlace="";
+                    _this.orderForm.consignorContactName="";
+                    _this.orderForm.consignorContactPhone="";
+                });
+            },
+            accountInvalidTime:function(val){
+//                if(val.productionTime!=null){
+//                    debugger;
+//                    val.invalidTime=new Date(val.productionTime.getTime()+val.expiryDate*3600 * 1000 * 24);
+//                }
             }
         }
     })
