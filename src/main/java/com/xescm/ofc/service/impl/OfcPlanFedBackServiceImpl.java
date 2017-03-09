@@ -431,7 +431,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 + " " + "车辆已到达目的地：" + destination);
                         logger.info("跟踪状态已到达");
                     }
-                    //当前计划单序号等于订单下计划单数量，表示最后一个计划单
                     break;
                 case "40":
                     Date now = new Date();
@@ -496,7 +495,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 ofcOrderStatusService.save(orderStatus);
                 if(StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEEN_COMPLETED)){
                     //订单中心--订单状态推结算中心(执行中和已完成)
-                    //ofcOrderManageService.pullOfcOrderStatus(orderStatus);
+                    ofcOrderManageService.pullOfcOrderStatus(orderStatus);
                 }
             }
         }catch (Exception e){

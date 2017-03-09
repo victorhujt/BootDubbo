@@ -192,13 +192,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }else {
                     orderNewstatus=new OfcOrderNewstatus();
                 }
-                if(ofcOrderStatus.getOrderStatus().equals(IMPLEMENTATION_IN)){
-                    if(!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)){
-                        updateOrderNewStatus(ofcOrderStatus,tag);
+                if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
+                    if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
+                        updateOrderNewStatus(ofcOrderStatus, tag);
                     }
-                }else{
-                    updateOrderNewStatus(ofcOrderStatus,tag);
-                }
                 ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                 return super.save(ofcOrderStatus);
             }else {
@@ -238,10 +235,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
 
-            if(PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
+            if(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
                  type=OFC_WHC_IN_TYPE;
             }
-            else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
+            else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                  type=OFC_WHC_OUT_TYPE;
             }
 
@@ -292,9 +289,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
 
-            if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
+            if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
                 status.setOrderStatus(HASBEEN_COMPLETED);
-            } else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+            } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 if(ofcWarehouseInformation!=null){
                     if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSE_NO_TRANS){
                         status.setOrderStatus(HASBEEN_COMPLETED);
