@@ -967,40 +967,40 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("订单取消失败,查不到该订单!");
             throw new BusinessException("订单取消失败,查不到该订单!");
         }
+        String orderType = ofcFundamentalInformation.getOrderType();
         try {
-            Wrapper<Integer> cancelStatus = acOrderEdasService.queryOrderCancelStatus(ofcFundamentalInformation.getOrderCode());
-            if(cancelStatus.getCode()==200){
-                String orderType = ofcFundamentalInformation.getOrderType();
-                if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
+            if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
+                Wrapper<Integer> cancelStatus = acOrderEdasService.queryOrderCancelStatus(ofcFundamentalInformation.getOrderCode());
+                if(cancelStatus.getCode()==200){
                     try {
                         orderCancelToTfc(orderCode);
                     } catch (Exception e) {
                         logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(),e);
                         throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}",e.getMessage(),e);
                     }
+                }else {
+                    throw new BusinessException("取消订单失败，结算中心结算单暂时无法取消");
+                }
                 boolean result = cancelAcOrder(ofcFundamentalInformation.getOrderCode());
                 logger.info("订单中心取消订单，调用结算中心取消订单接口,返回结果：{}", result);
-                } else if (StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
-                    OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
-                    ofcWarehouse.setOrderCode(orderCode);
-                    OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
-                    if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-                        try {
-                            orderCancelToTfc(orderCode);
-                        } catch (Exception e) {
-                            logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(),e);
-                            throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}",e.getMessage(),e);
-                        }
-                    }
+            } else if (StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
+                OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
+                ofcWarehouse.setOrderCode(orderCode);
+                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
+                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     try {
-                        orderCancelToWhc(orderCode);
+                        orderCancelToTfc(orderCode);
                     } catch (Exception e) {
-                        logger.info("取消订单，调用WHC取消接口发生异常,返回结果：{}", e.getMessage(),e);
-                        throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}",e.getMessage(),e);
+                        logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(),e);
+                        throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}",e.getMessage(),e);
                     }
                 }
-            }else {
-                throw new BusinessException("取消订单失败，结算中心结算单暂时无法取消");
+                try {
+                    orderCancelToWhc(orderCode);
+                } catch (Exception e) {
+                    logger.info("取消订单，调用WHC取消接口发生异常,返回结果：{}", e.getMessage(),e);
+                    throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}",e.getMessage(),e);
+                }
             }
         } catch (Exception e) {
             logger.info("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(),e);
@@ -1029,12 +1029,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("调用运输中心取消接口, 订单号:{}", orderCode);
         CancelOrderDTO cancelOrderDTO = new CancelOrderDTO();
         cancelOrderDTO.setOrderNo(orderCode);
-        Wrapper wrapper = cancelOrderEdasService.cancelOrder(cancelOrderDTO);
-        if (wrapper == null || Wrapper.ERROR_CODE == wrapper.getCode()) {
-            logger.error("调用运输中心取消接口取消订单失败,原因:{}", null == wrapper ? "wrapper为null" : wrapper.getMessage());
-            throw new BusinessException("取消订单失败,原因:" + (null == wrapper ? "接口异常!" : wrapper.getMessage()));
+        try {
+            Wrapper wrapper = cancelOrderEdasService.cancelOrder(cancelOrderDTO);
+            if (wrapper == null || Wrapper.ERROR_CODE == wrapper.getCode()) {
+                logger.error("调用运输中心取消接口取消订单失败,原因:{}", null == wrapper ? "wrapper为null" : wrapper.getMessage());
+                throw new BusinessException("取消订单失败,原因:" + (null == wrapper ? "接口异常!" : wrapper.getMessage()));
+            }
+            logger.info("调用运输中心取消接口, 订单号:{}, 取消成功!", orderCode);
+        } catch (BusinessException e) {
+            logger.info("调用运输中心取消接口失败!", orderCode);
+            throw new BusinessException("取消订单失败,原因:{}",e.getMessage(),e);
         }
-        logger.info("调用运输中心取消接口, 订单号:{}, 取消成功!", orderCode);
     }
 
     /**

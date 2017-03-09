@@ -266,7 +266,7 @@ public class ScheduledTask{
 
     //同步历史订单最新状态到订单最新状态表
     //@Scheduled(cron = "0 */1 * * * ?")//一分鐘執行一次
-    @Scheduled(cron = "0 0 11 9 MAR ?")//定時執行一次
+    @Scheduled(cron = "0 35 16 9 MAR ?")//定時執行一次
 //    @Scheduled(cron = "")
     public void pushOrderNewStatusToNewTable(){
         logger.info("开始,同步历史订单最新状态到订单最新状态表");
