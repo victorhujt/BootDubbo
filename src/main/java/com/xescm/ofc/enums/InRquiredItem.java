@@ -12,10 +12,10 @@ import java.util.List;
  */
 public enum InRquiredItem {
 
-    CUST_ORDER_CODE("custOrderCode", "客户订单编号"),
-    MERCHANDISER("merchandiser", "开单员"),
-    WAREHOUSE_NAME("warehouseName", "仓库编码"),
-    BUSINESS_TYPE("businessType", "业务类型"),
+    CUST_ORDER_CODE("custOrderCode", "客户订单号"),
+//    MERCHANDISER("merchandiser", "开单员"),
+//    WAREHOUSE_NAME("warehouseName", "仓库编码"),
+//    BUSINESS_TYPE("businessType", "业务类型"),
     GOODS_CODE("goodsCode", "货品编码"),
     QUANTITY("quantity", "入库数量");
 

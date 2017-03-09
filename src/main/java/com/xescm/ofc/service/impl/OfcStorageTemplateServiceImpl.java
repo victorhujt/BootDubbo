@@ -863,6 +863,42 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getMerchandiser())){
                         ofcStorageTemplateDto.setMerchandiser(authResDto.getUserName());
                     }
+                    //若文件中不存在此列，则仓库名称列报错
+                    if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getWarehouseName())){
+//                        logger.error("当前行:{},仓库名称校验失败,仓库名称是空的, 请维护", rowNum + 1);
+//                        xlsErrorMsg.add("行:" + (rowNum + 1) + "仓库名称为空！");
+//                        checkPass = false;
+                        OfcStorageTemplate forBusinessType = forDefaultButNotRequired.get("warehouseName");
+                        if(PubUtils.isSEmptyOrNull(forBusinessType.getColDefaultVal())){
+                            logger.error("当前行:{},仓库名称校验失败,仓库名称是空的, 请维护", rowNum + 1);
+                            xlsErrorMsg.add("行:" + (rowNum + 1) + "仓库名称为空！");
+                            checkPass = false;
+                        }
+                        if(allWarehouseByRmc.containsKey(forBusinessType.getColDefaultVal())){
+                            ofcStorageTemplateDto.setBusinessType(forBusinessType.getColDefaultVal());
+                        }else {
+                            logger.error("当前行:{},仓库名称校验失败,仓库名称校验失败, 请维护", rowNum + 1);
+                            xlsErrorMsg.add("行:" + (rowNum + 1) + "仓库名称校验失败！");
+                            checkPass = false;
+                        }
+                    }
+                    //若文件中不存在此列，则业务类型列报错
+                    if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getBusinessType())){
+                        OfcStorageTemplate forBusinessType = forDefaultButNotRequired.get("businessType");
+                        if(PubUtils.isSEmptyOrNull(forBusinessType.getColDefaultVal())){
+                            logger.error("当前行:{},业务类型校验失败,业务类型是空的, 请维护", rowNum + 1);
+                            xlsErrorMsg.add("行:" + (rowNum + 1) + "业务类型为空！");
+                            checkPass = false;
+                        }
+                        Wrapper wrapper = checkBusinessType(forBusinessType.getColDefaultVal(), ofcStorageTemplate.getTemplateType());
+                        if(wrapper.getCode() == 200){
+                            ofcStorageTemplateDto.setBusinessType((String) wrapper.getResult());
+                        }else {
+                            logger.error("当前行:{},业务类型校验失败,业务类型校验失败, 请维护", rowNum + 1);
+                            xlsErrorMsg.add("行:" + (rowNum + 1) + "业务类型校验失败！");
+                            checkPass = false;
+                        }
+                    }
                     //如果Excel中没有是否提供运输这一列, 则默认设置为用户默认的, 如果没有默认的就置为否(即0)
                     if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getProvideTransport())){
                         //拿着provideTransport找到默认值
