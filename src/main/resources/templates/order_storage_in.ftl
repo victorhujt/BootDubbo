@@ -316,9 +316,9 @@
                         <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="expiryDate" label="保质期限">
+                <el-table-column property="expiryDate" label="保质期限" v-if="false">
                     <template scope="scope">
-                        <el-input v-model="scope.row.expiryDate" v-if="false"></el-input>
+                        <el-input v-model="scope.row.expiryDate"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
@@ -338,7 +338,7 @@
                                 align="right"
                                 type="date"
                                 placeholder="选择日期"
-                                @blur="accountInvalidTime(scope.row)"
+                                @change="accountInvalidTime(scope.row)"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                     </template>
@@ -1239,6 +1239,10 @@
 //                    debugger;
 //                    val.invalidTime=new Date(val.productionTime.getTime()+val.expiryDate*3600 * 1000 * 24);
 //                }
+              if(val.productionTime!=null) {
+                console.log(val);
+                val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
+              }
             }
         }
     })

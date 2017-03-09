@@ -152,6 +152,7 @@
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
                 <el-table-column property="unit" label="单位"></el-table-column>
                 <el-table-column property="barCode" label="条形码"></el-table-column>
+                <el-table-column property="expiryDate" v-if="false" label="保质期限"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleGoodSizeChange" @current-change="handleGoodCurrentPage" :current-page="goodDataInfo.currentGoodPage" :page-sizes="pageSizes" :page-size="goodDataInfo.goodPageSize" layout="total, sizes, prev, pager, next, jumper" :total="goodDataInfo.totalGoods">
             </el-pagination>
@@ -327,12 +328,18 @@
                         <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
+              <el-table-column property="expiryDate" label="保质期限" v-if="false">
+                <template scope="scope">
+                  <el-input v-model="scope.row.expiryDate"></el-input>
+                </template>
+              </el-table-column>
                 <el-table-column property="productionTime" label="生产日期">
                     <template scope="scope">
                         <el-date-picker
                                 v-model="scope.row.productionTime"
                                 align="right"
                                 type="date"
+                                @change="accountInvalidTime(scope.row)"
                                 placeholder="选择日期"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
@@ -742,6 +749,7 @@
                     quantity: '',
                     unitPrice:'',
                     productionBatch:'',
+                    expiryDate:val.expiryDate,
                     productionTime:'',
                     invalidTime:''
                 };
@@ -868,6 +876,7 @@
                             goodCode.goodsSpec=cscGoodsVo.specification;
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
+                            goodCode.expiryDate=cscGoodsVo.expiryDate;
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
                         vueObj.goodDataInfo.totalGoods=data.result.total;
@@ -1237,7 +1246,12 @@
                 }).catch(function() {
                     _this.orderForm.supportName="";
                 });
+            },
+          accountInvalidTime:function(val){
+            if(val.productionTime!=null) {
+              val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
             }
+          }
 
         }
     });
