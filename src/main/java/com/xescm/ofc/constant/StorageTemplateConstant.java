@@ -13,4 +13,14 @@ public class StorageTemplateConstant {
 
     //验证token失败
     public static final Integer ERROR_AUTH = 503;
+
+    //入库
+    public static final String STORAGE_IN = "storageIn";
+
+    //出库
+    public static final String STORAGE_OUT = "storageOut";
+
+    //标准模板
+    public static final String STANDARD = "standard";
+
 }

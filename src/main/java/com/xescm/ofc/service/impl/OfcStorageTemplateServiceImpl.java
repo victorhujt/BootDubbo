@@ -54,6 +54,9 @@ import java.util.*;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.STO_TEMP_PRE;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
+import static com.xescm.ofc.constant.StorageTemplateConstant.STANDARD;
+import static com.xescm.ofc.constant.StorageTemplateConstant.STORAGE_IN;
+import static com.xescm.ofc.constant.StorageTemplateConstant.STORAGE_OUT;
 
 /**
  *
@@ -146,7 +149,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         List<OfcStorageTemplate> ofcStorageTemplateList = ofcStorageTemplateMapper.selectTemplateByCondition(templateCondition);
         OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
-        ofcStorageTemplate.setTemplateCode("standard");
+        ofcStorageTemplate.setTemplateCode(STANDARD);
         ofcStorageTemplate.setTemplateName("标准");
         ofcStorageTemplateList.add(0, ofcStorageTemplate);
         return ofcStorageTemplateList;
@@ -212,7 +215,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
         ofcStorageTemplate.setIndexNum(22);
 
-        Integer changeNum = StringUtils.equals(currTemplateType, "storageIn") ? 21 : 22;
+        Integer changeNum = StringUtils.equals(currTemplateType, STORAGE_IN) ? 21 : 22;
         Integer updateNum = changeNum;
         int num = 0;
         for (OfcStorageTemplate ofcStorageTemp : ofcStorageTemplates) {
@@ -225,7 +228,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
             }else {
 
-                if(StringUtils.equals(currTemplateType, "storageIn") && StringUtils.equals(lastTemplateType, "storageOut")){
+                if(StringUtils.equals(currTemplateType, STORAGE_IN) && StringUtils.equals(lastTemplateType, STORAGE_OUT)){
                     //21
                     ofcStorageTemplate.setTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
                     //删掉模板中第22条
@@ -234,7 +237,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         logger.error("模板配置编辑更新失败, 删掉模板中第22条失败");
                         throw new BusinessException("模板配置编辑更新失败");
                     }
-                }else if(StringUtils.equals(currTemplateType, "storageOut") && StringUtils.equals(lastTemplateType, "storageIn")){
+                }else if(StringUtils.equals(currTemplateType, STORAGE_OUT) && StringUtils.equals(lastTemplateType, STORAGE_IN)){
                     //22
                     //新增模板第22条
                     ModelMapper modelMapper = new ModelMapper();
@@ -757,7 +760,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.PROVIDE_TRANSPORT.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
-                                    cellValue = StringUtils.equals(ofcStorageTemplate.getTemplateType(), "storageIn") ? "0" : colDefaultVal.equals("是") ? "1" : "0";
+                                    cellValue = StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_IN) ? "0" : colDefaultVal.equals("是") ? "1" : "0";
                                 }else {
                                     logger.error("当前行:{},列:{} 没有是否提供运输服务, 默认为0", rowNum + 1, cellNum + 1);
                                     cellValue = "0";
@@ -990,7 +993,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private Wrapper checkBusinessType(String cellValue, String templateType) {
         Boolean check = true;
         //入库单
-        if(StringUtils.equals(templateType, "storageIn")){
+        if(StringUtils.equals(templateType, STORAGE_IN)){
             List<String> codeList = BusinessTypeStorageInEnum.getCodeList();
             List<String> descList = BusinessTypeStorageInEnum.getDescList();
             if(!codeList.contains(cellValue) && !descList.contains(cellValue)){
@@ -999,7 +1002,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 cellValue = BusinessTypeStorageInEnum.getBusinessCodeByTypeDesc(cellValue);
             }
             //出库单
-        }else if(StringUtils.equals(templateType, "storageOut")){
+        }else if(StringUtils.equals(templateType, STORAGE_OUT)){
             List<String> codeList = BusinessTypeStorageOutEnum.getCodeList();
             List<String> descList = BusinessTypeStorageOutEnum.getDescList();
             if(!codeList.contains(cellValue) && !descList.contains(cellValue)){
@@ -1087,7 +1090,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private Map<Integer, String> checkExcelRequiedItem(Row commonRow, String templateType, Map<String, OfcStorageTemplate> templateDetilMap) {
         List<String> inRquiredItems = InRquiredItem.getstandardCodeList();
         List<String> outRquiredItems = OutRquiredItem.getstandardCodeList();
-        List<String> item = StringUtils.equals(templateType,"storageIn") ? inRquiredItems : outRquiredItems;
+        List<String> item = StringUtils.equals(templateType,STORAGE_IN) ? inRquiredItems : outRquiredItems;
         List<String> check = new ArrayList<>();
         check.addAll(item);
         Map<String, Integer> colNumMap = new HashMap<>();
@@ -1146,11 +1149,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         //遍历必填列编码
         for (String requiredItem : item) {
             if(!ofcStorageTemplateMap.containsKey(requiredItem)){
-                if(StringUtils.equals("storageIn", templateType)){
+                if(StringUtils.equals(STORAGE_IN, templateType)){
                     InRquiredItem anyByStandardCode = InRquiredItem.getAnyByStandardCode(requiredItem);
                     logger.error("没有在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
                     throw new BusinessException("没有在初始化映射表中找到必填映射列:" + anyByStandardCode.getStandardColName());
-                }else if(StringUtils.equals("storageOut", templateType)){
+                }else if(StringUtils.equals(STORAGE_OUT, templateType)){
                     OutRquiredItem anyByStandardCode = OutRquiredItem.getAnyByStandardCode(requiredItem);
                     logger.error("没有在初始化的Map的映射表中找到必填映射列:{},{}", requiredItem, anyByStandardCode.getStandardColName());
                     throw new BusinessException("【" + anyByStandardCode.getStandardColName() + "】列名不存在，请检查文件");
@@ -1197,13 +1200,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     private List<Object> getTemplateReflect(String templateCode, String templateType) {
         List<OfcStorageTemplate> ofcStorageTemplateListForConvert = new ArrayList<>();
-        if(StringUtils.equals("standard",templateCode)){
-            if(StringUtils.equals("storageIn",templateType)){
+        if(StringUtils.equals(STANDARD,templateCode)){
+            if(StringUtils.equals(STORAGE_IN, templateType)){
                 List<StorageImportInEnum> storageImportInEnums = StorageImportInEnum.queryList();
                 for (StorageImportInEnum storageImportInEnum : storageImportInEnums) {
                     insertStandardTemplate(ofcStorageTemplateListForConvert, storageImportInEnum.getStandardColCode(), storageImportInEnum.getStandardColName());
                 }
-            }else if(StringUtils.equals("storageOut",templateType)){
+            }else if(StringUtils.equals(STORAGE_OUT,templateType)){
                 List<StorageImportOutEnum> storageImportOutEnums = StorageImportOutEnum.queryList();
                 for (StorageImportOutEnum storageImportOutEnum : storageImportOutEnums) {
                     insertStandardTemplate(ofcStorageTemplateListForConvert, storageImportOutEnum.getStandardColCode(), storageImportOutEnum.getStandardColName());
@@ -1430,6 +1433,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcGoodsDetailsInfo.setId(null);
         ofcGoodsDetailsInfo.setGoodsSpec(cscGoodsApiVo.getSpecification());
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
+        ofcGoodsDetailsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
+        ofcGoodsDetailsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
+        if(!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())){
+            ofcGoodsDetailsInfo.setUnitPrice(new BigDecimal(cscGoodsApiVo.getUnitPrice()));
+        }
         logger.info("转换客户中心货品 ofcGoodsDetailsInfo:{}", ofcGoodsDetailsInfo);
         return ofcGoodsDetailsInfo;
     }
@@ -1485,7 +1493,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             throw new BusinessException("校验模板必填失败!");
         }
         String templateType = ofcStorageTemplates.get(0).getTemplateType();
-        boolean storageIn = StringUtils.equals(templateType, "storageIn");
+        boolean storageIn = StringUtils.equals(templateType, STORAGE_IN);
         int standardNum = storageIn ? StorageImportInEnum.queryList().size() : StorageImportOutEnum.queryList().size();
         if(standardNum != ofcStorageTemplates.size()){
             logger.error("校验模板必填失败! 模板数量错误! ");
