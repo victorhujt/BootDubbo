@@ -65,6 +65,7 @@ import com.xescm.whc.edas.dto.InventoryDTO;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.modelmapper.ModelMapper;
@@ -290,7 +291,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
-
+                logger.info("=====>订单中心--订单状态推结算中心");
                 //订单中心--订单状态推结算中心(执行中和已完成)
                 pullOfcOrderStatus(ofcOrderStatus);
                 return String.valueOf(Wrapper.SUCCESS_CODE);
@@ -2629,6 +2630,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatusService.save(ofcOrderStatus);
 
         //订单中心--订单状态推结算中心(执行中和已完成)
+        logger.info("=====>订单中心--订单状态推结算中心");
         pullOfcOrderStatus(ofcOrderStatus);
     }
 
@@ -2639,18 +2641,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return void
      */
     public void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus) {
+        logger.info("订单中心--订单状态推结算中心(执行中和已完成) ofcOrderStatus:{}", ofcOrderStatus);
         if (PubUtils.isNull(ofcOrderStatus)) {
+            logger.error("订单状态推结算中心异常");
             throw new BusinessException("订单状态推结算中心异常");
         }
         AcOrderStatusDto acOrderStatusDto = new AcOrderStatusDto();
         try {
             BeanUtils.copyProperties(acOrderStatusDto, ofcOrderStatus);
+            logger.info("订单状态开始推结算中心 acOrderStatusDto{}", acOrderStatusDto);
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
-            if (null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE) {
+            if (null == integerWrapper || integerWrapper.getCode() != Wrapper.SUCCESS_CODE) {
                 logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}"
                         , integerWrapper == null ? "integerWrapper 为null" : integerWrapper.getMessage());
                 throw new BusinessException("订单状态推结算中心异常");
             }
+            logger.info("订单状态开始推结算中心成功 integerWrapper{}", integerWrapper);
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}", e, e.getMessage());
             throw new BusinessException("订单状态推结算中心异常");
@@ -2664,6 +2670,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return void
      */
     public void pullOfcOrderPlanCode(AcPlanDto acPlanDto) {
+        logger.info("订单中心--→计划单");
         if (PubUtils.isNull(acPlanDto)) {
             throw new BusinessException("订单计划单推结算中心异常");
         }
@@ -3126,6 +3133,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 logger.error("自动审核出错, 更新订单状态为执行中失败");
                 throw new BusinessException("自动审核出错!");
             }
+            logger.info("=====>订单中心--订单状态推结算中心");
+            this.pullOfcOrderStatus(ofcOrderStatus);
         } else {
             logger.error("订单状态错误或缺少审核标志位");
             throw new BusinessException("订单状态错误或缺少审核标志位");
@@ -3246,7 +3255,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcGoodsDetailsInfos      货品信息
      * @return 运输中心接口DTO
      */
-    private TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+    private TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation
+            , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+        logger.info("====>ofcFundamentalInformation{}", ofcFundamentalInformation);
+        logger.info("====>ofcFinanceInformation{}", ofcFinanceInformation);
+        logger.info("====>ofcDistributionBasicInfo{}", ofcDistributionBasicInfo);
+        logger.info("====>ofcGoodsDetailsInfos{}", ofcGoodsDetailsInfos);
+        if(null == ofcFundamentalInformation || null == ofcFinanceInformation || null == ofcDistributionBasicInfo || CollectionUtils.isEmpty(ofcGoodsDetailsInfos)){
+            logger.error("订单中心实体转运输中心接口DTO异常! 入参错误");
+            throw new BusinessException("订单中心实体转运输中心接口DTO异常! 入参错误");
+        }
         TfcTransport tfcTransport = new TfcTransport();
         tfcTransport.setCustomerOrderCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustOrderCode()));
 //        tfcTransport.setBaseName();
@@ -3294,37 +3312,43 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFromCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureCity()));
         tfcTransport.setFromDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureDistrict()));
         tfcTransport.setFromTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureTowns()));
-        String[] departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
-        if (departurePlaceCode.length > 0) {
-            tfcTransport.setFromProvinceCode(departurePlaceCode[0]);
-            if (departurePlaceCode.length > 1) {
-                tfcTransport.setFromCityCode(departurePlaceCode[1]);
-                if (departurePlaceCode.length > 2) {
-                    tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
+        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())){
+            String[] departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
+            if (departurePlaceCode.length > 0) {
+                tfcTransport.setFromProvinceCode(departurePlaceCode[0]);
+                if (departurePlaceCode.length > 1) {
+                    tfcTransport.setFromCityCode(departurePlaceCode[1]);
+                    if (departurePlaceCode.length > 2) {
+                        tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
                 }
             }
+        }else {
+            logger.error("没有收货方地址编码");
         }
-        tfcTransport.setToCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()));// 收货方编码
-        tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方联系人
-        tfcTransport.setToCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactCode()));//收货方联系人编码
-        if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
-            tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
-        }
-        tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方
-        tfcTransport.setToCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()));
-        tfcTransport.setToProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()));
-        tfcTransport.setToCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()));
-        tfcTransport.setToDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationDistrict()));
-        tfcTransport.setToTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()));
-        String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
-        if (destinationPlaceCode.length > 0) {
-            tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
-            if (destinationPlaceCode.length > 1) {
-                tfcTransport.setToCityCode(destinationPlaceCode[1]);
-                if (destinationPlaceCode.length > 2) {
-                    tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+            tfcTransport.setToCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()));// 收货方编码
+            tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方联系人
+            tfcTransport.setToCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactCode()));//收货方联系人编码
+            if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
+                tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
+            }
+            tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方
+            tfcTransport.setToCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()));
+            tfcTransport.setToProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()));
+            tfcTransport.setToCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()));
+            tfcTransport.setToDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationDistrict()));
+            tfcTransport.setToTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()));
+            if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())){
+                String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
+                if (destinationPlaceCode.length > 0) {
+                    tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
+                    if (destinationPlaceCode.length > 1) {
+                        tfcTransport.setToCityCode(destinationPlaceCode[1]);
+                        if (destinationPlaceCode.length > 2) {
+                            tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
                 }
             }
+        }else {
+            logger.error("没有收货方地址编码");
         }
 //        tfcTransport.setToLon();// ??
 //        tfcTransport.setToLat();// ??

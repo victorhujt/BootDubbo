@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_CUST;
@@ -252,9 +253,12 @@ public class OfcStorageTemplateRest extends BaseController{
      */
     @RequestMapping(value = "/templist")
     @ResponseBody
-    public List<OfcStorageTemplate> templateListByCustCode(String custCode){
-        TemplateCondition templateCondition = new TemplateCondition();
-        templateCondition.setCustCode(custCode);
+    public List<OfcStorageTemplate> templateListByCustCode(TemplateCondition templateCondition){
+        if(null == templateCondition || PubUtils.isSEmptyOrNull(templateCondition.getTemplateType())
+                || PubUtils.isSEmptyOrNull(templateCondition.getCustCode())){
+            logger.error("根据客户编码查询配置模板列表入参错误 templateCondition:{}", templateCondition);
+            return new ArrayList<>();
+        }
         return ofcStorageTemplateService.selectTemplate(templateCondition);
     }
 

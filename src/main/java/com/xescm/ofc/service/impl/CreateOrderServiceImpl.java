@@ -112,6 +112,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                 logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
                             }
                         } catch (Exception ex) {
+                            logger.error("订单中心创建订单接口异常: {}, {}", ex, ex.getMessage());
                             addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
                             saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
                         }
