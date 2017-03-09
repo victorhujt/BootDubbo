@@ -15,7 +15,7 @@
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="customerDataInfo.chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectCustomer">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -47,7 +47,7 @@
                 <el-form-item label="联系电话" :label-width="formLabelWidth">
                     <el-input v-model="consignorDataInfo.consignorForm.consignorContactPhone" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectConsignor">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -82,7 +82,7 @@
                 <el-form-item label="联系电话" :label-width="formLabelWidth">
                     <el-input v-model="supplierDataInfo.supplierForm.contactPhone" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item  label="" :label-width="formLabelWidth">
+                <el-form-item  label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectSupplier">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -108,7 +108,7 @@
 
         <el-dialog title="货品列表" v-model="goodDataInfo.chosenGoodCode" size="small">
             <el-form :model="goodDataInfo.goodsForm">
-                <el-form-item label="货品种类" :label-width="formLabelWidth">
+                <el-form-item label="货品种类" :label-width="formLabelWidth"  class="xe-col-3">
                     <template scope="scope">
                         <el-select size="small" v-model="goodDataInfo.goodsForm.goodsTypeId"  @change="getGoodsCategory" placeholder="请选择" >
                             <el-option
@@ -120,7 +120,7 @@
                         </el-select>
                     </template>
                 </el-form-item>
-                <el-form-item label="货品小类" :label-width="formLabelWidth">
+                <el-form-item label="货品小类" :label-width="formLabelWidth" class="xe-col-3">
                     <template scope="scope">
                         <el-select  size="small" v-model="goodDataInfo.goodsForm.goodsTypeSonId"   placeholder="请选择">
                             <el-option
@@ -132,13 +132,13 @@
                         </el-select>
                     </template>
                 </el-form-item>
-                <el-form-item label="货品名称" :label-width="formLabelWidth">
+                <el-form-item label="货品名称" :label-width="formLabelWidth" class="xe-col-3">
                     <el-input v-model="goodDataInfo.goodsForm.goodsName" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="条形码" :label-width="formLabelWidth">
+                <el-form-item label="条形码" :label-width="formLabelWidth" class="xe-col-3">
                     <el-input v-model="goodDataInfo.goodsForm.barCode" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -519,6 +519,7 @@
                 },
                 pageSizes:[10, 20, 30, 40,50],
                 formLabelWidth: '100px',
+                formLabelWidth20: '20px',
                 isDisabled: false,
                 goodsData: [],
                 orderForm:{
@@ -637,7 +638,6 @@
                                     }else{
                                         vueObj.orderForm.isNeedTransport=false;
                                     }
-                                     debugger;
                                     if(ofcDistributionBasicInfo!=null){
                                         //发货方
                                         vueObj.orderForm.consignorName=ofcDistributionBasicInfo.consignorName;
