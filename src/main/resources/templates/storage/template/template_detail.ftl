@@ -116,7 +116,11 @@
                     }
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
+                    if(indexNum == 2){
+                        item.colDefaultVal = '当前日期';
+                    }
                     tableItem.colDefaultVal = item.colDefaultVal;
+
                     vm.tableData.push(tableItem);
                 });
                 var templateType = itemOut.templateType;

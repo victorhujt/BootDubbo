@@ -307,6 +307,9 @@
       <if test="form.custName!=null and form.custName!=''">
         AND ofi.cust_name = #{form.custName}
       </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND ofi.cust_code = #{form.custCode}
+      </if>
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>

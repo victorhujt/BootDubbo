@@ -79,6 +79,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Resource
     private CscSupplierEdasService cscSupplierEdasService;
@@ -1435,9 +1437,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     @Override
     public Wrapper storageTemplateAudit(Object result, AuthResDto authResDto) {
-        logger.info("=========>仓储开单批量导单审核开始....");
-        logger.info("=========>result:{}", result);
-        logger.info("=========>authResDto:{}", authResDto);
+        logger.info("仓储开单批量导单审核开始=========>result:{}", result);
+        logger.info("仓储开单批量导单审核开始=========>authResDto:{}", authResDto);
         if(null == result || null == authResDto){
             logger.error("仓储开单批量导单审核失败, 入参有误");
             throw new BusinessException("仓储开单批量导单审核失败!");
@@ -1448,10 +1449,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             String orderCode = ofcFundamentalInformation.getOrderCode();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.queryByOrderCode(orderCode);
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
             String review;
             try {
-                review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, null, ofcWarehouseInformation
+                review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation
                         , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), "review", authResDto);
             } catch (Exception e) {
                 logger.error("仓储开单批量导单审核, 当前订单审核失败, 直接跳过该订单, 订单号: {}", orderCode);
