@@ -162,7 +162,7 @@
                 param.pageSize = vm.pageSize;
                 CommonClient.syncpost("/ofc/storage_template/select", param, function (result) {
                     if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
-                        layer.msg("查询结果为空！");
+                        vm.$message.error("查询结果为空！");
                     } else if (result.code == 200) {// 1:normal
                         // 刷新页面数据
                         $.each(result.result.list, function (index, item) {
@@ -177,11 +177,11 @@
                         vm.total=result.result.total;
 
                     } else if (result.code == 500) {
-                        layer.msg(result.message);
+                        vm.$message.error(result.message);
                     } else if (result.code == 403){
-                        layer.msg("没有权限")
+                        vm.$message.error("没有权限")
                     } else {
-                        layer.msg("操作失败")
+                        vm.$message.error("操作失败")
                     }
                 })
             },
@@ -202,7 +202,7 @@
                 var vm = this;
                 var orderTemplateCode = val;
                 if(undefined == orderTemplateCode || StringUtil.isEmpty(orderTemplateCode)){
-                    layer.msg("模板编码为空!");
+                    vm.$message.error("模板编码为空!");
                     return;
                 }
                 var url = "/ofc/storage_template/edit/" + orderTemplateCode;
@@ -213,7 +213,7 @@
             templateDel:function(val){
                 var orderTemplateCode = val;
                 if(undefined == orderTemplateCode || StringUtil.isEmpty(orderTemplateCode)){
-                    layer.msg("模板编码为空!");
+                    vm.$message.error("模板编码为空!");
                     return;
                 }
                 var param = {};
@@ -226,7 +226,7 @@
                 var vm = this;
                 var orderTemplateCode = val;
                 if(undefined == orderTemplateCode || StringUtil.isEmpty(orderTemplateCode)){
-                    layer.msg("模板编码为空!");
+                    vm.$message.error("模板编码为空!");
                     return;
                 }
 

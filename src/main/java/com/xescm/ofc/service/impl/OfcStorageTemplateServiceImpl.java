@@ -881,6 +881,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},仓库名称校验失败,模板配置中仓库名称列默认值是空的, 请维护", rowNum + 1);
                             xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中仓库名称默认值为空！");
                             checkPass = false;
+                            continue;
                         }
                         if(allWarehouseByRmc.containsKey(forWarehouseName.getColDefaultVal())){
                             ofcStorageTemplateDto.setWarehouseName(forWarehouseName.getColDefaultVal());
@@ -888,6 +889,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},仓库名称校验失败,模板配置中仓库名称默认值{}校验失败, 请维护", rowNum + 1, forWarehouseName.getColDefaultVal());
                             xlsErrorMsg.add("行" + (rowNum + 1) + "模板配置中仓库名称默认值【" + forWarehouseName.getColDefaultVal() + "】校验失败！该客户下没有该仓库!");
                             checkPass = false;
+                            continue;
                         }
                     }
                     //若文件中不存在此列，则业务类型列报错
@@ -897,6 +899,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},模板配置中业务类型默认值校验失败,业务类型是空的, 请维护", rowNum + 1);
                             xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中业务类型默认值为空！");
                             checkPass = false;
+                            continue;
                         }
                         Wrapper wrapper = checkBusinessType(forBusinessType.getColDefaultVal(), ofcStorageTemplate.getTemplateType());
                         if(wrapper.getCode() == 200){
@@ -905,6 +908,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},业务类型校验失败,模板配置中业务类型默认值校验失败, 请维护", rowNum + 1);
                             xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中业务类型默认值【" + forBusinessType.getColDefaultVal() + "】校验失败！");
                             checkPass = false;
+                            continue;
                         }
                     }
                     //如果Excel中没有是否提供运输这一列, 则默认设置为用户默认的, 如果没有默认的就置为否(即0)

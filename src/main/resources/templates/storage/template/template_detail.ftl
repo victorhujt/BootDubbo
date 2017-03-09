@@ -98,7 +98,7 @@
             var vm = this;
             var templateCode = vm.templateCodeShow;
             if(undefined == templateCode || StringUtil.isEmpty(templateCode)){
-                layer.msg("错误!模板编码为空!");
+                vm.$message.error("错误!模板编码为空!");
                 return;
             }
             var url = "/ofc/storage_template/detail_data/" + templateCode;
