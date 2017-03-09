@@ -333,7 +333,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (ofcDistributionBasicInfo == null) {
                 throw new BusinessException("该订单需要提供运输,但是不存在配送基本信息");
             }
-        }else{
+        } else {
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
         }
         OfcOrderStatus status = ofcOrderStatusService.orderStatusSelect(orderCode, "orderCode");
@@ -392,9 +392,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {//提供运输
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
                     //仓储订单推仓储中心
-                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation,ofcDistributionBasicInfo);
+                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
                 } else if (ofcWarehouseInformation.getProvideTransport() == WAREHOUSE_NO_TRANS) {//不提供运输
-                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation,ofcDistributionBasicInfo);
+                    pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
                 } else {
                     throw new BusinessException("无法确定是否需要运输");
                 }
@@ -974,14 +974,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         try {
             if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
                 Wrapper<Integer> cancelStatus = acOrderEdasService.queryOrderCancelStatus(ofcFundamentalInformation.getOrderCode());
-                if(cancelStatus.getCode()==200){
+                if (cancelStatus.getCode() == 200) {
                     try {
                         orderCancelToTfc(orderCode);
                     } catch (Exception e) {
-                        logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(),e);
-                        throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}",e.getMessage(),e);
+                        logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
+                        throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                     }
-                }else {
+                } else {
                     throw new BusinessException("取消订单失败，结算中心结算单暂时无法取消");
                 }
                 boolean result = cancelAcOrder(ofcFundamentalInformation.getOrderCode());
@@ -994,20 +994,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     try {
                         orderCancelToTfc(orderCode);
                     } catch (Exception e) {
-                        logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(),e);
-                        throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}",e.getMessage(),e);
+                        logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
+                        throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                     }
                 }
                 try {
                     orderCancelToWhc(orderCode);
                 } catch (Exception e) {
-                    logger.info("取消订单，调用WHC取消接口发生异常,返回结果：{}", e.getMessage(),e);
-                    throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}",e.getMessage(),e);
+                    logger.info("取消订单，调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
+                    throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                 }
             }
         } catch (Exception e) {
-            logger.info("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(),e);
-            throw new BusinessException("取消订单，调用结算中心取消接口发生异常,返回结果：{}",e.getMessage(),e);
+            logger.info("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
+            throw new BusinessException("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
         }
         logger.info("订单取消成功!");
     }
@@ -1041,7 +1041,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("调用运输中心取消接口, 订单号:{}, 取消成功!", orderCode);
         } catch (BusinessException e) {
             logger.info("调用运输中心取消接口失败!", orderCode);
-            throw new BusinessException("取消订单失败,原因:{}",e.getMessage(),e);
+            throw new BusinessException("取消订单失败,原因:{}", e.getMessage(), e);
         }
     }
 
@@ -1210,7 +1210,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             try {
                 orderCancel(orderCode);
             } catch (Exception e) {
-                throw new BusinessException("调用其他中心取消接口异常:{}",e.getMessage(),e);
+                throw new BusinessException("调用其他中心取消接口异常:{}", e.getMessage(), e);
             }
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
@@ -1955,7 +1955,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     throw new BusinessException("复制计划单信息异常", ex);
                 }
                 //创建第一个卡班单
-                 ofcTransplanInfo.setBusinessType(BusinessTypeEnum.CABANNES.getCode());
+                ofcTransplanInfo.setBusinessType(BusinessTypeEnum.CABANNES.getCode());
                 if (!trimAndNullAsEmpty(rmcPickup.getWarehouseCode()).equals("")
                         && !trimAndNullAsEmpty(rmcPickup.getWarehouseName()).equals("")) {
                     ofcTransplanInfo.setBaseId(rmcPickup.getWarehouseCode());
@@ -2601,7 +2601,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcFundamentalInformation.setBaseName(rmcPickup.getBaseName());
         ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
         int update = ofcFundamentalInformationService.update(ofcInfo);
-        if(update == 0){
+        if (update == 0) {
             logger.error("更新订单的大区和基地失败!");
             throw new BusinessException("更新订单的大区和基地失败!");
         }
@@ -2708,13 +2708,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
-        if(null == ofcFundamentalInformation || null == ofcWarehouseInformation || null == ofcDistributionBasicInfo){
+        if (null == ofcFundamentalInformation || null == ofcWarehouseInformation || null == ofcDistributionBasicInfo) {
             logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
-                    ", ofcFundamentalInformation:{}, ofcWarehouseInformation:{},ofcDistributionBasicInfo:{}"
+                            ", ofcFundamentalInformation:{}, ofcWarehouseInformation:{},ofcDistributionBasicInfo:{}"
                     , ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
             throw new BusinessException("创建仓储订单失败!");
         }
-        if(null == ofcWarehouseInformation.getProvideTransport()){
+        if (null == ofcWarehouseInformation.getProvideTransport()) {
             logger.error("ofcWarehouseInformation.getProvideTransport为空");
             throw new BusinessException("创建仓储订单失败!");
         }
@@ -2810,10 +2810,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
 
         Wrapper<?> wrapper = null;
-        OfcDistributionBasicInfo dinfo=null;
+        OfcDistributionBasicInfo dinfo = null;
         OfcDistributionBasicInfo condition = new OfcDistributionBasicInfo();
         condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
-        dinfo=ofcDistributionBasicInfoService.selectOne(condition);
+        dinfo = ofcDistributionBasicInfoService.selectOne(condition);
 
         if (trimAndNullAsEmpty(reviewTag).equals("edit")) {
             //编辑时不提供运输改为提供运输时 收货方即是仓库的信息   前台不好处理  后台通过仓库编码获取仓库的信息
@@ -2905,7 +2905,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
             ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
         } else if (trimAndNullAsEmpty(reviewTag).equals("edit")) {
-            if(dinfo!=null){
+            if (dinfo != null) {
                 ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
                 ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
                 ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
@@ -3023,38 +3023,38 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             //复制仓储的信息
             OfcWarehouseInformation cw = new OfcWarehouseInformation();
             cw.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            OfcWarehouseInformation  owinfo = ofcWarehouseInformationService.selectOne(cw);
-            if(owinfo!=null){
-                OfcWarehouseInformation ofcnewWarehouseInformation=new OfcWarehouseInformation();
+            OfcWarehouseInformation owinfo = ofcWarehouseInformationService.selectOne(cw);
+            if (owinfo != null) {
+                OfcWarehouseInformation ofcnewWarehouseInformation = new OfcWarehouseInformation();
                 BeanUtils.copyProperties(ofcnewWarehouseInformation, owinfo);
                 ofcnewWarehouseInformation.setOrderCode(newofcFundamentalInformation.getOrderCode());
                 ofcWarehouseInformationService.save(ofcnewWarehouseInformation);
 
                 //提供运输时 复制配送信息
-                    OfcDistributionBasicInfo f = new OfcDistributionBasicInfo();
-                    f.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                    OfcDistributionBasicInfo  BasicInfo = ofcDistributionBasicInfoService.selectOne(f);
-                    if(BasicInfo!=null){
-                        OfcDistributionBasicInfo newofcDistributionBasicInfo=new OfcDistributionBasicInfo();
-                        BeanUtils.copyProperties(newofcDistributionBasicInfo, BasicInfo);
-                        newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
-                        ofcDistributionBasicInfoService.save(newofcDistributionBasicInfo);
-                    }
+                OfcDistributionBasicInfo f = new OfcDistributionBasicInfo();
+                f.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                OfcDistributionBasicInfo BasicInfo = ofcDistributionBasicInfoService.selectOne(f);
+                if (BasicInfo != null) {
+                    OfcDistributionBasicInfo newofcDistributionBasicInfo = new OfcDistributionBasicInfo();
+                    BeanUtils.copyProperties(newofcDistributionBasicInfo, BasicInfo);
+                    newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
+                    ofcDistributionBasicInfoService.save(newofcDistributionBasicInfo);
+                }
             }
 
             //复制货品详情的信息
-            OfcGoodsDetailsInfo infoCondition=new OfcGoodsDetailsInfo();
+            OfcGoodsDetailsInfo infoCondition = new OfcGoodsDetailsInfo();
             infoCondition.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            List<OfcGoodsDetailsInfo> goodsInfo=ofcGoodsDetailsInfoService.queryByOrderCode(ofcFundamentalInformation.getOrderCode());
-           if(goodsInfo!=null&&goodsInfo.size()>0){
-                for(OfcGoodsDetailsInfo  info:goodsInfo){
-                    OfcGoodsDetailsInfo newGoodsInfo=new OfcGoodsDetailsInfo();
-                    BeanUtils.copyProperties(newGoodsInfo,info);
-                    newGoodsInfo.setId(UUID.randomUUID().toString().replace("-",""));
+            List<OfcGoodsDetailsInfo> goodsInfo = ofcGoodsDetailsInfoService.queryByOrderCode(ofcFundamentalInformation.getOrderCode());
+            if (goodsInfo != null && goodsInfo.size() > 0) {
+                for (OfcGoodsDetailsInfo info : goodsInfo) {
+                    OfcGoodsDetailsInfo newGoodsInfo = new OfcGoodsDetailsInfo();
+                    BeanUtils.copyProperties(newGoodsInfo, info);
+                    newGoodsInfo.setId(UUID.randomUUID().toString().replace("-", ""));
                     newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                     ofcGoodsDetailsInfoService.save(newGoodsInfo);
                 }
-           }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("复制订单出现异常");
@@ -3089,7 +3089,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
                     || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
                 this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
-                this.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
+                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
@@ -3111,7 +3111,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
                 //仓储订单推仓储中心
-                pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation,ofcDistributionBasicInfo);
+                pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
                 //仓储带运输订单推仓储中心和运输中心
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
@@ -3157,7 +3157,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         logger.info("订单信息推送运输中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
         //订单中心实体转运输中心接口DTO
-        if(ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)){
+        if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
             ofcFundamentalInformation.setBusinessType(WITH_THE_CITY);
         }
         TfcTransport tfcTransport = convertOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
@@ -3184,7 +3184,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Override
     public void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
-            , OfcFinanceInformation ofcFinanceInformation,OfcDistributionBasicInfo dinfo) {
+            , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo dinfo) {
         String json;
         try {
             logger.info("订单信息推送仓储中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
@@ -3193,10 +3193,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 //分拨出库不进行库存的校验
-                if(!"614".equals(ofcFundamentalInformation.getBusinessType())){
+                if (!"614".equals(ofcFundamentalInformation.getBusinessType())) {
                     //出库
                     ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
-                    if(dinfo!=null){
+                    if (dinfo != null) {
                         ofOrderDto.setConsigneeCode(dinfo.getConsigneeName());//收货方编码
                         ofOrderDto.setConsigneeContactCode(dinfo.getConsigneeContactCode());//收货方联系人编码
                         ofOrderDto.setConsigneeContactName(dinfo.getConsigneeContactName());//收货方联系名称
@@ -3206,7 +3206,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     List<InventoryDTO> inventoryGoods = new ArrayList<>();
                     int count = 0;
                     for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsList) {
-                        if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                        if (ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0) {
                             if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
                                 continue;
                             }
@@ -3261,7 +3261,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("====>ofcFinanceInformation{}", ofcFinanceInformation);
         logger.info("====>ofcDistributionBasicInfo{}", ofcDistributionBasicInfo);
         logger.info("====>ofcGoodsDetailsInfos{}", ofcGoodsDetailsInfos);
-        if(null == ofcFundamentalInformation || null == ofcFinanceInformation || null == ofcDistributionBasicInfo || CollectionUtils.isEmpty(ofcGoodsDetailsInfos)){
+        if (null == ofcFundamentalInformation || null == ofcFinanceInformation || null == ofcDistributionBasicInfo || CollectionUtils.isEmpty(ofcGoodsDetailsInfos)) {
             logger.error("订单中心实体转运输中心接口DTO异常! 入参错误");
             throw new BusinessException("订单中心实体转运输中心接口DTO异常! 入参错误");
         }
@@ -3286,13 +3286,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setCustomerName(trimAndNullAsEmpty(ofcFundamentalInformation.getCustName()));
 //        tfcTransport.setCustomerTel();
         tfcTransport.setFromTransportName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getBaseId()));
-        if(null != ofcFundamentalInformation.getCreationTime()){
+        if (null != ofcFundamentalInformation.getCreationTime()) {
             tfcTransport.setCreateTime(ofcFundamentalInformation.getCreationTime());
         }
-        if(null != ofcDistributionBasicInfo.getPickupTime()){
+        if (null != ofcDistributionBasicInfo.getPickupTime()) {
             tfcTransport.setExpectedShipmentTime(ofcDistributionBasicInfo.getPickupTime());
         }
-        if(null != ofcDistributionBasicInfo.getExpectedArrivedTime()){
+        if (null != ofcDistributionBasicInfo.getExpectedArrivedTime()) {
             tfcTransport.setExpectedArriveTime(ofcDistributionBasicInfo.getExpectedArrivedTime());
         }
         tfcTransport.setWeight(ofcDistributionBasicInfo.getWeight() == null ? null : ofcDistributionBasicInfo.getWeight().doubleValue());
@@ -3312,7 +3312,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFromCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureCity()));
         tfcTransport.setFromDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureDistrict()));
         tfcTransport.setFromTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureTowns()));
-        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())){
+        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())) {
             String[] departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
             if (departurePlaceCode.length > 0) {
                 tfcTransport.setFromProvinceCode(departurePlaceCode[0]);
@@ -3320,34 +3320,36 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     tfcTransport.setFromCityCode(departurePlaceCode[1]);
                     if (departurePlaceCode.length > 2) {
                         tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
+                    }
                 }
             }
-        }else {
+        } else {
             logger.error("没有收货方地址编码");
         }
-            tfcTransport.setToCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()));// 收货方编码
-            tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方联系人
-            tfcTransport.setToCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactCode()));//收货方联系人编码
-            if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
-                tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
-            }
-            tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方
-            tfcTransport.setToCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()));
-            tfcTransport.setToProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()));
-            tfcTransport.setToCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()));
-            tfcTransport.setToDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationDistrict()));
-            tfcTransport.setToTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()));
-            if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())){
-                String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
-                if (destinationPlaceCode.length > 0) {
-                    tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
-                    if (destinationPlaceCode.length > 1) {
-                        tfcTransport.setToCityCode(destinationPlaceCode[1]);
-                        if (destinationPlaceCode.length > 2) {
-                            tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+        tfcTransport.setToCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()));// 收货方编码
+        tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方联系人
+        tfcTransport.setToCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactCode()));//收货方联系人编码
+        if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
+            tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
+        }
+        tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方
+        tfcTransport.setToCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()));
+        tfcTransport.setToProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()));
+        tfcTransport.setToCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()));
+        tfcTransport.setToDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationDistrict()));
+        tfcTransport.setToTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()));
+        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())) {
+            String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
+            if (destinationPlaceCode.length > 0) {
+                tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
+                if (destinationPlaceCode.length > 1) {
+                    tfcTransport.setToCityCode(destinationPlaceCode[1]);
+                    if (destinationPlaceCode.length > 2) {
+                        tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+                    }
                 }
             }
-        }else {
+        } else {
             logger.error("没有收货方地址编码");
         }
 //        tfcTransport.setToLon();// ??
@@ -3387,7 +3389,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setTransportPoolName();//
         List<TfcTransportDetail> tfcTransportDetails = new ArrayList<>();
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
-            if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+            if (ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0) {
                 if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
                     continue;
                 }
