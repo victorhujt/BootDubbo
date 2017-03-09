@@ -254,7 +254,6 @@
                             warehouse.value= RmcWarehouseRespDto.warehouseCode;
                             vueObj.wareHouseOptions.push(warehouse);
                         });
-                        vueObj.wareHouseName = vueObj.wareHouseOptions[0].value;
                     }else{
                         layer.msg("当前用户下没有仓库信息！");
                     }
