@@ -107,6 +107,7 @@
             //加载当前客户下所有模板!
             var param = {};
             param.custCode = e.choice.code;
+            param.templateType = vm.templateType;
             CommonClient.syncpost("/ofc/storage_template/templist", param, function (result) {
                 vm.templateNameList = [];
                 var templateNameList = vm.templateNameList;
