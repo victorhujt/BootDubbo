@@ -132,7 +132,10 @@
                 <el-form-item label="条形码" :label-width="formLabelWidth" class="xe-col-3">
                     <el-input v-model="goodDataInfo.goodsForm.barCode" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth20">
+                <el-form-item label="货品编码" :label-width="formLabelWidth" class="xe-col-3">
+                    <el-input v-model="goodDataInfo.goodsForm.goodsCode" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="" :label-width="formLabelWidth">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
                 </el-form-item>
             </el-form>
@@ -209,7 +212,8 @@
                             icon="search"
                             v-model="orderForm.supportName"
                             v-bind:disabled = "isDisabled"
-                            @click="supplierDataInfo.chosenSupplier = true">
+                            :readOnly="true"
+                            @click="openSupplier">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注" prop="notes" class="xe-col-3">
@@ -253,6 +257,7 @@
                                         icon="search"
                                         v-model="orderForm.consignorName"
                                         v-bind:disabled = "isDisabled"
+                                        :readOnly="true"
                                         @click="openConsignor">
                                 </el-input>
                             </el-form-item>
@@ -311,9 +316,9 @@
                         <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="expiryDate" label="保质期限">
+                <el-table-column property="expiryDate" label="保质期限" v-if="false">
                     <template scope="scope">
-                        <el-input v-model="scope.row.expiryDate" v-if="false"></el-input>
+                        <el-input v-model="scope.row.expiryDate"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
@@ -333,7 +338,7 @@
                                 align="right"
                                 type="date"
                                 placeholder="选择日期"
-                                @blur="accountInvalidTime(scope.row)"
+                                @change="accountInvalidTime(scope.row)"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                     </template>
@@ -441,6 +446,7 @@
                         goodsName:'',
                         goodsTypeId:'',
                         goodsTypeSonId:'',
+                        goodsCode:'',
                         barCode:''
                     }
                 },
@@ -659,11 +665,6 @@
                 this.goodsCurrentRow = val;
             },
             selectSupplier:function(){
-                if(StringUtil.isEmpty(this.orderForm.custName)&&StringUtil.isEmpty(this.orderForm.custCode)){
-                    this.promptInfo("请选择客户!",'warning');
-                    this.supplierDataInfo.chosenSupplier=false;
-                    return;
-                }
                 this.supplierDataInfo.supplierData=[];
                 var vueObj=this;
                 var param = {};
@@ -671,7 +672,7 @@
                 param.customerCode = vueObj.orderForm.custCode;
                 param.pNum = vueObj.supplierDataInfo.currentSupplierPage;
                 param.pSize=vueObj.supplierDataInfo.supplierPageSize;
-                CommonClient.post(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     vueObj.supplierDataInfo.supplierData = [];
                     vueObj.orderForm.supportName = '';
                     var data = eval(result);
@@ -837,6 +838,7 @@
                 cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
                 cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
                 cscGoods.barCode=vueObj.goodDataInfo.goodsForm.barCode;
+                cscGoods.goodsCode=vueObj.goodDataInfo.goodsForm.goodsCode;
                 cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                 cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                 var param = JSON.stringify(cscGoods);
@@ -880,6 +882,7 @@
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
+                this.goodDataInfo.goodsForm.goodsCode="";
             },
             cancelSelectCustomer:function(){
                 this.customerDataInfo.customerData=[];
@@ -994,7 +997,7 @@
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
 
-                    if(good.unitPrice!=""){
+                    if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
                             return;
@@ -1175,7 +1178,6 @@
                 this.customerDataInfo.chosenCus=true;
             },
             openConsignor:function(){
-                debugger;
                 if(StringUtil.isEmpty(this.orderForm.custName)){
                     this.promptInfo("请选择客户",'warning');
                     this.consignorDataInfo.chosenSend=false;
@@ -1205,11 +1207,42 @@
                     _this.orderForm.consignorContactPhone="";
                 });
             },
+            openSupplier:function(){
+                if(StringUtil.isEmpty(this.orderForm.custName)){
+                    this.promptInfo("请选择客户",'warning');
+                    this.supplierDataInfo.chosenSupplier=false;
+                    return;
+                }
+                this.selectSupplier();
+                if(this.supplierDataInfo.supplierData.length==1){
+                    this.openSupplierMessage();
+                }else{
+                    this.supplierDataInfo.chosenSupplier = true;
+                    this.supplierDataInfo.supplierData=[];
+                }
+            },
+            openSupplierMessage:function(){
+                debugger;
+                var _this=this;
+                _this.$confirm('您只有一条供应商记录, 点击确认将自动帮你加载?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.setCurrentSupplierInfo(_this.supplierDataInfo.supplierData[0]);
+                }).catch(function() {
+                    _this.orderForm.supportName="";
+                });
+            },
             accountInvalidTime:function(val){
 //                if(val.productionTime!=null){
 //                    debugger;
 //                    val.invalidTime=new Date(val.productionTime.getTime()+val.expiryDate*3600 * 1000 * 24);
 //                }
+              if(val.productionTime!=null) {
+                console.log(val);
+                val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
+              }
             }
         }
     })

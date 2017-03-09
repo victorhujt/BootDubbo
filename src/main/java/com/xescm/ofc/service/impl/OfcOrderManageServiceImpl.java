@@ -293,7 +293,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderStatusService.save(ofcOrderStatus);
                 logger.info("=====>订单中心--订单状态推结算中心");
                 //订单中心--订单状态推结算中心(执行中和已完成)
-                pullOfcOrderStatus(ofcOrderStatus);
+                this.pullOfcOrderStatus(ofcOrderStatus);
                 return String.valueOf(Wrapper.SUCCESS_CODE);
             } else {
                 throw new BusinessException("订单类型既非”已审核“，也非”未审核“，请检查");
@@ -2631,7 +2631,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
         //订单中心--订单状态推结算中心(执行中和已完成)
         logger.info("=====>订单中心--订单状态推结算中心");
-        pullOfcOrderStatus(ofcOrderStatus);
+        this.pullOfcOrderStatus(ofcOrderStatus);
     }
 
     /**
@@ -2647,19 +2647,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("订单状态推结算中心异常");
         }
         AcOrderStatusDto acOrderStatusDto = new AcOrderStatusDto();
+        logger.info("订单状态开始推结算中心 acOrderStatusDto{}", acOrderStatusDto);
         try {
             BeanUtils.copyProperties(acOrderStatusDto, ofcOrderStatus);
-            logger.info("订单状态开始推结算中心 acOrderStatusDto{}", acOrderStatusDto);
+        } catch (Exception e) {
+            logger.error("订单状态开始推结算中心 实体转换异常");
+            throw new BusinessException("订单状态开始推结算中心 实体转换异常");
+        }
+        try {
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
             if (null == integerWrapper || integerWrapper.getCode() != Wrapper.SUCCESS_CODE) {
-                logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}"
+                logger.error("订单中心--订单状态推结算中心(执行中和已完成), AC返回结果异常, {}"
                         , integerWrapper == null ? "integerWrapper 为null" : integerWrapper.getMessage());
-                throw new BusinessException("订单状态推结算中心异常");
             }
             logger.info("订单状态开始推结算中心成功 integerWrapper{}", integerWrapper);
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}", e, e.getMessage());
-            throw new BusinessException("订单状态推结算中心异常");
         }
     }
 
@@ -2672,18 +2675,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     public void pullOfcOrderPlanCode(AcPlanDto acPlanDto) {
         logger.info("订单中心--→计划单");
         if (PubUtils.isNull(acPlanDto)) {
+            logger.error("订单计划单推结算中心异常");
             throw new BusinessException("订单计划单推结算中心异常");
         }
         try {
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderPlanCode(acPlanDto);
             if (null == integerWrapper || integerWrapper.getCode() == Wrapper.ERROR_CODE) {
-                logger.error("订单中心--订单计划单推结算中心异常(执行中和已完成) 异常, {}"
+                logger.error("订单中心--订单计划单推结算中心异常(执行中和已完成) AC返回结果异常, {}"
                         , integerWrapper == null ? "integerWrapper 为null" : integerWrapper.getMessage());
-                throw new BusinessException("订单计划单推结算中心异常");
             }
         } catch (Exception e) {
             logger.error("订单中心--订单计划单推结算中心异常(执行中和已完成) 异常, {}", e, e.getMessage());
-            throw new BusinessException("订单计划单推结算中心异常");
         }
     }
 
@@ -2880,6 +2882,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                     throw new BusinessException(wrapper.getMessage());
                 }
+            }else{
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                        throw new BusinessException(wrapper.getMessage());
+                    }
+                }
             }
 
         } else {
@@ -2888,6 +2897,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                         throw new BusinessException(wrapper.getMessage());
+                    }
+                }else{
+                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+                        wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                        if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                            throw new BusinessException(wrapper.getMessage());
+                        }
                     }
                 }
             }
