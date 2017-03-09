@@ -65,6 +65,7 @@ import com.xescm.whc.edas.dto.InventoryDTO;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.modelmapper.ModelMapper;
@@ -3244,7 +3245,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcGoodsDetailsInfos      货品信息
      * @return 运输中心接口DTO
      */
-    private TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+    private TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation
+            , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+        logger.info("====>ofcFundamentalInformation{}", ofcFundamentalInformation);
+        logger.info("====>ofcFinanceInformation{}", ofcFinanceInformation);
+        logger.info("====>ofcDistributionBasicInfo{}", ofcDistributionBasicInfo);
+        logger.info("====>ofcGoodsDetailsInfos{}", ofcGoodsDetailsInfos);
+        if(null == ofcFundamentalInformation || null == ofcFinanceInformation || null == ofcDistributionBasicInfo || CollectionUtils.isEmpty(ofcGoodsDetailsInfos)){
+            logger.error("订单中心实体转运输中心接口DTO异常! 入参错误");
+            throw new BusinessException("订单中心实体转运输中心接口DTO异常! 入参错误");
+        }
         TfcTransport tfcTransport = new TfcTransport();
         tfcTransport.setCustomerOrderCode(ofcFundamentalInformation.getCustOrderCode());
 //        tfcTransport.setBaseName();
@@ -3286,16 +3296,21 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFromCity(ofcDistributionBasicInfo.getDepartureCity());
         tfcTransport.setFromDistrict(ofcDistributionBasicInfo.getDepartureDistrict());
         tfcTransport.setFromTown(ofcDistributionBasicInfo.getDepartureTowns());
-        String[] departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
-        if (departurePlaceCode.length > 0) {
-            tfcTransport.setFromProvinceCode(departurePlaceCode[0]);
-            if (departurePlaceCode.length > 1) {
-                tfcTransport.setFromCityCode(departurePlaceCode[1]);
-                if (departurePlaceCode.length > 2) {
-                    tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
+        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())){
+            String[] departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
+            if (departurePlaceCode.length > 0) {
+                tfcTransport.setFromProvinceCode(departurePlaceCode[0]);
+                if (departurePlaceCode.length > 1) {
+                    tfcTransport.setFromCityCode(departurePlaceCode[1]);
+                    if (departurePlaceCode.length > 2) {
+                        tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
+                    }
                 }
             }
+        }else {
+            logger.error("没有收货方地址编码");
         }
+
         tfcTransport.setToCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());// 收货方编码
         tfcTransport.setToCustomerName(ofcDistributionBasicInfo.getConsigneeContactName());// 收货方联系人
         tfcTransport.setToCustomerNameCode(ofcDistributionBasicInfo.getConsigneeContactCode());//收货方联系人编码
@@ -3308,15 +3323,19 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setToCity(ofcDistributionBasicInfo.getDestinationCity());
         tfcTransport.setToDistrict(ofcDistributionBasicInfo.getDestinationDistrict());
         tfcTransport.setToTown(ofcDistributionBasicInfo.getDestinationTowns());
-        String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
-        if (destinationPlaceCode.length > 0) {
-            tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
-            if (destinationPlaceCode.length > 1) {
-                tfcTransport.setToCityCode(destinationPlaceCode[1]);
-                if (destinationPlaceCode.length > 2) {
-                    tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())){
+            String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
+            if (destinationPlaceCode.length > 0) {
+                tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
+                if (destinationPlaceCode.length > 1) {
+                    tfcTransport.setToCityCode(destinationPlaceCode[1]);
+                    if (destinationPlaceCode.length > 2) {
+                        tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+                    }
                 }
             }
+        }else {
+            logger.error("没有收货方地址编码");
         }
 //        tfcTransport.setToLon();// ??
 //        tfcTransport.setToLat();// ??
