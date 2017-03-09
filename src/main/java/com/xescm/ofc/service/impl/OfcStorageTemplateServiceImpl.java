@@ -79,6 +79,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Resource
     private CscSupplierEdasService cscSupplierEdasService;
@@ -201,6 +203,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
         };
         List<OfcStorageTemplate> ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
+        this.checkTemplateListRequired(ofcStorageTemplates);
         String userId = authResDto.getUserId();
         String userName = authResDto.getUserName();
         Date now = new Date();
@@ -501,7 +504,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //如果有仓库名称, 校验该仓库名称是否存在!
                             if(!allWarehouseByRmc.containsKey(cellValue)){
                                 logger.error("当前行:{},列:{}仓库名称:{}, 调用接口未能找到该仓库", rowNum + 1, cellNum + 1, cellValue);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "仓库名称【" + cellValue + "】无效!");
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "仓库名称【" + cellValue + "】无效! 该客户下没有该仓库!");
                                 checkPass = false;
                                 continue;
                             }
@@ -878,6 +881,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},仓库名称校验失败,模板配置中仓库名称列默认值是空的, 请维护", rowNum + 1);
                             xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中仓库名称默认值为空！");
                             checkPass = false;
+                            continue;
                         }
                         if(allWarehouseByRmc.containsKey(forWarehouseName.getColDefaultVal())){
                             ofcStorageTemplateDto.setWarehouseName(forWarehouseName.getColDefaultVal());
@@ -885,6 +889,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},仓库名称校验失败,模板配置中仓库名称默认值{}校验失败, 请维护", rowNum + 1, forWarehouseName.getColDefaultVal());
                             xlsErrorMsg.add("行" + (rowNum + 1) + "模板配置中仓库名称默认值【" + forWarehouseName.getColDefaultVal() + "】校验失败！该客户下没有该仓库!");
                             checkPass = false;
+                            continue;
                         }
                     }
                     //若文件中不存在此列，则业务类型列报错
@@ -894,6 +899,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},模板配置中业务类型默认值校验失败,业务类型是空的, 请维护", rowNum + 1);
                             xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中业务类型默认值为空！");
                             checkPass = false;
+                            continue;
                         }
                         Wrapper wrapper = checkBusinessType(forBusinessType.getColDefaultVal(), ofcStorageTemplate.getTemplateType());
                         if(wrapper.getCode() == 200){
@@ -902,6 +908,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             logger.error("当前行:{},业务类型校验失败,模板配置中业务类型默认值校验失败, 请维护", rowNum + 1);
                             xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中业务类型默认值【" + forBusinessType.getColDefaultVal() + "】校验失败！");
                             checkPass = false;
+                            continue;
                         }
                     }
                     //如果Excel中没有是否提供运输这一列, 则默认设置为用户默认的, 如果没有默认的就置为否(即0)
@@ -1270,7 +1277,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     public Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception{
         logger.info("orderList ==> {}", orderList);
         logger.info("authResDto ==> {}", authResDto);
-        String orderBatchNumber = null;
+        String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
         if(PubUtils.isSEmptyOrNull(orderList) || null == authResDto){
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
             throw new BusinessException("仓储开单批量导单确认下单失败!");
@@ -1311,7 +1318,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
-            orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
+
             ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
             ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
             if(ofcOrderDTO.getProvideTransport() == null){
@@ -1434,23 +1441,24 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     @Override
     public Wrapper storageTemplateAudit(Object result, AuthResDto authResDto) {
-        logger.info("=========>仓储开单批量导单审核开始....");
-        logger.info("=========>result:{}", result);
-        logger.info("=========>authResDto:{}", authResDto);
+        logger.info("仓储开单批量导单审核开始=========>result:{}", result);
+        logger.info("仓储开单批量导单审核开始=========>authResDto:{}", authResDto);
         if(null == result || null == authResDto){
             logger.error("仓储开单批量导单审核失败, 入参有误");
             throw new BusinessException("仓储开单批量导单审核失败!");
         }
         String orderBatchNumber = (String) result;
         List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.queryFundamentalByBatchNumber(orderBatchNumber);
+        logger.info("============>仓储开单批量导单需要审核的订单:{}", ofcFundamentalInformationList);
         for (OfcFundamentalInformation ofcFundamentalInformation : ofcFundamentalInformationList) {
             String orderCode = ofcFundamentalInformation.getOrderCode();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.queryByOrderCode(orderCode);
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
             String review;
             try {
-                review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, null, ofcWarehouseInformation
+                review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation
                         , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), "review", authResDto);
             } catch (Exception e) {
                 logger.error("仓储开单批量导单审核, 当前订单审核失败, 直接跳过该订单, 订单号: {}", orderCode);
@@ -1459,6 +1467,48 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.info("仓储开单批量导单审核, 订单号:{}审核结果:{}", orderCode, review);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+    /**
+     * 后端校验模板必填
+     * @param ofcStorageTemplates 用户上传的模板
+     */
+    @Override
+    public void checkTemplateListRequired(List<OfcStorageTemplate> ofcStorageTemplates) {
+        logger.info("校验模板必填 ofcStorageTemplates:{}", ofcStorageTemplates);
+        if(CollectionUtils.isEmpty(ofcStorageTemplates)){
+            logger.error("校验模板必填失败!");
+            throw new BusinessException("校验模板必填失败!");
+        }
+        String templateType = ofcStorageTemplates.get(0).getTemplateType();
+        boolean storageIn = StringUtils.equals(templateType, "storageIn");
+        int standardNum = storageIn ? StorageImportInEnum.queryList().size() : StorageImportOutEnum.queryList().size();
+        if(standardNum != ofcStorageTemplates.size()){
+            logger.error("校验模板必填失败! 模板数量错误! ");
+            throw new BusinessException("校验模板必填失败! 模板数量错误! ");
+        }
+        for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplates) {
+            int indexNum = ofcStorageTemplate.getIndexNum();
+            String reflectColName = ofcStorageTemplate.getReflectColName();
+            String colDefaultVal = ofcStorageTemplate.getColDefaultVal();
+            if(indexNum == 1 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(StorageImportOutEnum.CUST_ORDER_CODE.getStandardColName() + "的模板列名不能为空!");
+            }else if(indexNum == 3 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+                throw new BusinessException(StorageImportOutEnum.MERCHANDISER.getStandardColName() + "的模板列名和默认值必填一个");
+            }else if(indexNum == 4 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+                throw new BusinessException(StorageImportOutEnum.WAREHOUSE_NAME.getStandardColName() + "的模板列名和默认值必填一个");
+            }else if(indexNum == 5 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+                throw new BusinessException(StorageImportOutEnum.BUSINESS_TYPE.getStandardColName() + "的模板列名和默认值必填一个");
+            }else if(indexNum == 7 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(StorageImportOutEnum.GOODS_CODE.getStandardColName() + "的模板列名不能为空!");
+            }else if(indexNum == 12 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(storageIn ? StorageImportInEnum.QUANTITY.getStandardColName()
+                        : StorageImportOutEnum.QUANTITY.getStandardColName()  + "的模板列名不能为空!");
+            }else if(indexNum == 22 && PubUtils.isSEmptyOrNull(reflectColName)){
+                throw new BusinessException(StorageImportOutEnum.CONSIGNEE_NAME  + "的模板列名不能为空!");
+            }
+        }
+        logger.info("校验模板必填成功!");
     }
 
 }

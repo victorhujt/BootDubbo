@@ -64,6 +64,7 @@ public class OfcStorageTemplateRest extends BaseController{
             logger.error("模板配置保存,json转换异常,{},{}",e,e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!数据转换异常!");
         }
+        ofcStorageTemplateService.checkTemplateListRequired(ofcStorageTemplates);
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             ofcStorageTemplateService.saveTemplate(ofcStorageTemplates,authResDto);

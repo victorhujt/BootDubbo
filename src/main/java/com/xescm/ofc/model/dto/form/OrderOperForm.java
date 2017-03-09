@@ -10,6 +10,8 @@ public class OrderOperForm extends BaseForm {
 
     private String custName;
 
+    private String custCode;
+
     private String custOrderCode;
 
     private String orderCode;

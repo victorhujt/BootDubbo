@@ -35,7 +35,8 @@
         <div style="width:380px;margin-right:15px;" class="padding-12 y-float position-relative">
           <input readonly="readonly" id="custName" class="y-float" style="width:335px;" name="custName" type="search" placeholder=""
                  aria-controls="dynamic-table">
-          <label for="custName" class="initBtn" onclick="selectCust();">
+            <input id="custCode" hidden type="search" >
+          <label for="custName" class="initBtn" onclick="selectCust()">
             <i class="fa fa-user bigger-130"></i>
           </label>
         <#--  <button type="button" style="height:34px;" onclick="selectCust();" class="btn btn-minier no-padding-right initBtn" id="">
@@ -477,7 +478,13 @@
       var param = {};
       param.pageNum = pageNum;
       param.pageSize = 10;
-      param.custName = $("#custName").val();
+        var custName = $("#custName").val();
+        var custCode = $("#custCode").val();
+        if(!StringUtil.isEmpty(custName) && StringUtil.isEmpty(custCode)){
+            layer.msg("该客户的客户编码为空!");
+            return;
+        }
+        param.custCode = custCode;
       var startDate = $('#startDate').val() + " 00:00:00";
       var endDate = $('#endDate').val() + " 23:59:59";
       param.startDate = startDate;
@@ -773,7 +780,7 @@
           channel = "";
         }
         custList =custList + "<tr role='row' class='odd' onclick='chosenTr(this)'>";
-        custList =custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
+          custList =custList + "<td class='center'> " + "<label class='pos-rel'>" + "<input value='" + cscCustomerVo.customerName + "@" + cscCustomerVo.customerCode + "' name='cust' type='radio' class='ace'>" + "<span class='lbl'></span>" + "</label>" + "</td>";
         custList =custList + "<td>"+cscCustomerVo.customerCode+"</td>";
         var custType = StringUtil.nullToEmpty(cscCustomerVo.type);
         if(custType == '1'){
@@ -846,6 +853,7 @@
       $("#startDate").val(mon1st);
       $("#endDate").val(DateUtil.formatDate(now));
       $("#custName").val("");
+      $("#custCode").val("");
       $("#orderCode").val("");
       $("#orderState").val("").trigger("chosen:updated");
       $("#orderType").val("").trigger("chosen:updated");
@@ -875,7 +883,11 @@
             alert("请选择客户");
             return;
           }
-          $("#custName").val(val);
+            var arr = val.split('@');
+            $("#custName").val(arr[0]);
+            if(arr.length > 1){
+                $("#custCode").val(arr[1]);
+            }
           layer.close(adoptModalIndex);
           return false;
         },

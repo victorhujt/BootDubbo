@@ -1,4 +1,10 @@
 <title>模板配置详情</title>
+<style type="text/css">
+    .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
+        background-color:#20a0ff;
+        border-color:#20a0ff;
+    }
+</style>
 <div id="vm">
     <div class="list-mian-01">
         <div class="xe-pageHeader">
@@ -37,6 +43,11 @@
                 <el-table-column property="reflectColName" label="模板列名">
                     <template scope="scope">
                         <el-input v-model="scope.row.reflectColName" :disabled="true" class="xe-col-8"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="isRequired" label="是否必填">
+                    <template scope="scope">
+                        <el-checkbox v-model="scope.row.isRequired" disabled=true class="xe-col-8"></el-checkbox>
                     </template>
                 </el-table-column>
                 <el-table-column property="colDefaultVal" label="默认值">
@@ -87,7 +98,7 @@
             var vm = this;
             var templateCode = vm.templateCodeShow;
             if(undefined == templateCode || StringUtil.isEmpty(templateCode)){
-                layer.msg("错误!模板编码为空!");
+                vm.$message.error("错误!模板编码为空!");
                 return;
             }
             var url = "/ofc/storage_template/detail_data/" + templateCode;
@@ -98,9 +109,18 @@
                         itemOut = item;
                     }
                     var tableItem = {};
+                    var indexNum = item.indexNum;
+                    if(indexNum == 1 || indexNum == 3 || indexNum == 4
+                            || indexNum == 5 || indexNum == 7 || indexNum == 12 || indexNum == 22){
+                        tableItem.isRequired = true;
+                    }
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
+                    if(indexNum == 2){
+                        item.colDefaultVal = '当前日期';
+                    }
                     tableItem.colDefaultVal = item.colDefaultVal;
+
                     vm.tableData.push(tableItem);
                 });
                 var templateType = itemOut.templateType;

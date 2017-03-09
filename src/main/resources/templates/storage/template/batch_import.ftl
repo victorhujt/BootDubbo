@@ -195,23 +195,25 @@
                 vm.loading2 = false;
                 vm.orderList = '';
                 if(response.code == 500) {
+
                     vm.errorMsgShow = true;
                     vm.orderMsgShow = false;
-                    vm.$message(response.message);
+                    vm.$message.error(response.message);
                     vm.fileList = [];
                     var tableData = vm.tableData = [];
-                    /*if(response.result.length == 0){
+                    if(undefined == response.result || null == response.result){
                         return;
-                    }*/
+                    }
                     $.each(response.result, function (index, item) {
                         var rowData = {};
                         rowData.errorMsg = item;
                         tableData.push(rowData)
                     });
                 }else if(response.code == 501 || response.code == 502 || response.code == 503) {
+                    
                     vm.errorMsgShow = false;
                     vm.fileList = [];
-                    vm.$message(response.message);
+                    vm.$message.error(response.message);
                     vm.tableData = [];
                     vm.orderMsgShow = false;
                 }else if(response.code == 200) {
@@ -247,20 +249,22 @@
                 }
             },
             handleError(err, response, file) {
-
+                var vm = this;
+                vm.loading2 = false;
             },
             beforeUpload(file){
+                
                 var vm = this;
                 //必须选好客户和模板
                 if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
-                    vm.$message("请先选择客户!");
+                    vm.$message.error("请先选择客户!");
                     vm.fileList = [];
-                    return;
+                    return false;
                 }
                 //限制只允许上传一个文件
                 var fileList = vm.fileList;
                 if(fileList.length > 0){
-                    vm.$message("只允许上传一个文件!");
+                    vm.$message.error("只允许上传一个文件!");
                     return false;
                 }
             },
@@ -268,7 +272,7 @@
                 var vm = this;
                 var fileList = vm.fileList;
                 if(fileList.length > 0){
-                    vm.$message("只允许上传一个文件!");
+                    vm.$message.error("只允许上传一个文件!");
                     return false;
                 }
                 vm.loading2 = true;
@@ -277,12 +281,12 @@
             uploadChange(file,fileList){
                 var vm = this;
                 if(fileList.length > 0){
-                    vm.$message("只允许上传一个文件!");
+                    vm.$message.error("只允许上传一个文件!");
                     return false;
                 }
                 //必须选好客户和模板
                 /*if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
-                    vm.$message("请先选择客户!")
+                    vm.$message.error("请先选择客户!")
                     return;
                 }*/
             },
