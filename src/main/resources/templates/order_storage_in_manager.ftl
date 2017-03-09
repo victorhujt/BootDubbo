@@ -68,6 +68,7 @@
                       placeholder="请选择"
                       icon="search"
                       v-model="customerName"
+                      :readOnly="true"
                       @click="openCustomer">
               </el-input>
             </el-form-item>

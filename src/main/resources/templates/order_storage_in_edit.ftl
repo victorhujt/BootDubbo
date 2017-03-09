@@ -138,6 +138,10 @@
                 <el-form-item label="条形码" :label-width="formLabelWidth" class="xe-col-3">
                     <el-input v-model="goodDataInfo.goodsForm.barCode" auto-complete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="货品编码" :label-width="formLabelWidth" class="xe-col-3">
+                    <el-input v-model="goodDataInfo.goodsForm.goodsCode" auto-complete="off"></el-input>
+                </el-form-item>
+
                 <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
                 </el-form-item>
@@ -145,7 +149,7 @@
 
             <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
-                <el-table-column property="goodsType" label="货品类别"></el-table-column>
+                <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
                 <el-table-column property="goodsBrand" label="品牌"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码"></el-table-column>
@@ -183,6 +187,7 @@
                       placeholder="请选择"
                       icon="search"
                       v-model="orderForm.custName"
+                      :readOnly="true"
                       @click="openCustomer">
               </el-input>
             </el-form-item>
@@ -217,7 +222,8 @@
                       icon="search"
                       v-model="orderForm.supportName"
                       v-bind:disabled = "isDisabled"
-                      @click="supplierDataInfo.chosenSupplier = true">
+                      :readOnly="true"
+                      @click="openSupplier">
               </el-input>
             </el-form-item>
             <el-form-item label="备注" prop="notes" class="xe-col-3">
@@ -263,7 +269,8 @@
                       icon="search"
                       v-model="orderForm.consignorName"
                       v-bind:disabled = "isDisabled"
-                      @click="consignorDataInfo.chosenSend = true">
+                      :readOnly="true"
+                      @click="openConsignor">
               </el-input>
             </el-form-item>
             <el-form-item label="联系人" class="xe-col-3">
@@ -445,6 +452,7 @@
                         goodsName:'',
                         goodsTypeId:'',
                         goodsTypeSonId:'',
+                        goodsCode:'',
                         barCode:''
                     }
                 },
@@ -812,11 +820,6 @@
                 console.log('弹窗');
             },
             selectSupplier:function(){
-                if(StringUtil.isEmpty(this.orderForm.custName) &&StringUtil.isEmpty(this.orderForm.custCode)){
-                    this.promptInfo("请选择客户!",'warning');
-                    this.supplierDataInfo.chosenSupplier=false;
-                    return;
-                }
                 this.supplierDataInfo.supplierData=[];
                 var vueObj=this;
                 var param = {};
@@ -824,7 +827,7 @@
                 param.customerCode = vueObj.orderForm.custCode;
                 param.pNum = vueObj.supplierDataInfo.currentSupplierPage;
                 param.pSize=vueObj.supplierDataInfo.supplierPageSize;
-                CommonClient.post(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     vueObj.supplierDataInfo.supplierData = [];
                     vueObj.orderForm.supportName = '';
                     var data = eval(result);
@@ -893,11 +896,6 @@
                 this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignor:function(){
-                if(!this.orderForm.custName){
-                    this.promptInfo("请选择客户",'warning');
-                    this.consignorDataInfo.chosenSend=false;
-                    return;
-                }
                 this.consignorDataInfo.consignorData=[];
                 var vueObj=this;
                 var cscContactDto = {};
@@ -968,6 +966,10 @@
                 this.consignorDataInfo.chosenSend=false;
             },
             setCurrentConsignorInfo:function(val){
+                this.orderForm.consignorName="";
+                this.orderForm.consignorContactPhone="";
+                this.orderForm.consignorContactName="";
+                this.orderForm.departurePlace="";
                 this.orderForm.consignorName=val.consignorName;
                 this.orderForm.consignorContactPhone=val.consignorContactPhone;
                 this.orderForm.consignorContactName=val.consignorContactName;
@@ -993,6 +995,7 @@
                 cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
                 cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
                 cscGoods.barCode=vueObj.goodDataInfo.goodsForm.barCode;
+                cscGoods.goodsCode=vueObj.goodDataInfo.goodsForm.goodsCode;
                 cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                 cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                 var param = JSON.stringify(cscGoods);
@@ -1035,6 +1038,7 @@
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
+                this.goodDataInfo.goodsForm.goodsCode="";
             },
             cancelSelectCustomer:function(){
                 this.customerDataInfo.customerData=[];
@@ -1149,7 +1153,7 @@
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
 
-                    if(good.unitPrice!=""){
+                    if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
                             return;
@@ -1279,6 +1283,63 @@
                 this.customerDataInfo.customerPageSize=10;
                 this.customerDataInfo.total=0;
                 this.customerDataInfo.chosenCus=true;
+            },
+            openConsignor:function(){
+                if(StringUtil.isEmpty(this.orderForm.custName)){
+                    this.promptInfo("请选择客户",'warning');
+                    this.consignorDataInfo.chosenSend=false;
+                    return;
+                }
+                this.selectConsignor();
+                if(this.consignorDataInfo.consignorData.length==1){
+                    this.openMessage();
+                }else{
+                    this.consignorDataInfo.chosenSend = true;
+                    this.consignorDataInfo.consignorData=[];
+                }
+            },
+            openMessage:function(){
+                debugger;
+                var _this=this;
+                _this.$confirm('您只有一条发货方记录, 点击确认将自动帮你加载?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.setCurrentConsignorInfo(_this.consignorDataInfo.consignorData[0]);
+                }).catch(function() {
+                    _this.orderForm.consignorName="";
+                    _this.orderForm.departurePlace="";
+                    _this.orderForm.consignorContactName="";
+                    _this.orderForm.consignorContactPhone="";
+                });
+            },
+            openSupplier:function(){
+                if(StringUtil.isEmpty(this.orderForm.custName)){
+                    this.promptInfo("请选择客户",'warning');
+                    this.supplierDataInfo.chosenSupplier=false;
+                    return;
+                }
+                this.selectSupplier();
+                if(this.supplierDataInfo.supplierData.length==1){
+                    this.openSupplierMessage();
+                }else{
+                    this.supplierDataInfo.chosenSupplier = true;
+                    this.supplierDataInfo.supplierData=[];
+                }
+            },
+            openSupplierMessage:function(){
+                debugger;
+                var _this=this;
+                _this.$confirm('您只有一条供应商记录, 点击确认将自动帮你加载?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.setCurrentSupplierInfo(_this.supplierDataInfo.supplierData[0]);
+                }).catch(function() {
+                    _this.orderForm.supportName="";
+                });
             }
         }
     });

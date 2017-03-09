@@ -2878,6 +2878,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                     throw new BusinessException(wrapper.getMessage());
                 }
+            }else{
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                        throw new BusinessException(wrapper.getMessage());
+                    }
+                }
             }
 
         } else {
@@ -2886,6 +2893,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                         throw new BusinessException(wrapper.getMessage());
+                    }
+                }else{
+                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+                        wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                        if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                            throw new BusinessException(wrapper.getMessage());
+                        }
                     }
                 }
             }
