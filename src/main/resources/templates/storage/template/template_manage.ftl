@@ -58,15 +58,15 @@
                         property="operat"
                         label="操作列">
                     <template scope="scope">
-                        <el-button type="text" @click="templateEdit(scope.row.templateCode)"><p style="color: blue">编辑</p></el-button>
-                        <el-button type="text" @click="templateDel(scope.row.templateCode)"><p style="color: blue">删除</p></el-button>
+                        <el-button type="text" @click="templateEdit(scope.row.templateCode)"><p class="blue">编辑</p></el-button>
+                        <el-button type="text" @click="templateDel(scope.row.templateCode)"><p class="blue">删除</p></el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
                         property="templateName"
                         label="模板名称">
                     <template scope="scope">
-                        <el-button type="text" @click="templateDetail(scope.row.templateCode)"><p style="color: blue">{{scope.row.templateName}}</p></el-button>
+                        <el-button type="text" @click="templateDetail(scope.row.templateCode)"><p class="blue">{{scope.row.templateName}}</p></el-button>
                     </template>
                 </el-table-column>
                 <el-table-column

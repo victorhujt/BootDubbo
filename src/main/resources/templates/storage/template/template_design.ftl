@@ -2,6 +2,12 @@
 <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
 <title>导入模板配置添加</title>
 <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
+<style type="text/css">
+    .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
+        background-color:#20a0ff;
+        border-color:#20a0ff;
+    }
+</style>
 <div id="vm">
     <div class="list-mian-01">
 
@@ -96,11 +102,12 @@
                         <el-input v-model="scope.row.reflectColName" class="xe-col-8"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column property="isRequired" label="是否必填">
+                    <template scope="scope">
+                        <el-checkbox v-model="scope.row.isRequired" :disabled="true" class="xe-col-8"></el-checkbox>
+                    </template>
+                </el-table-column>
                 <el-table-column property="colDefaultVal" label="默认值">
-                    <#--<template scope="scope">-->
-                        <#--<div slot="reference" >-->
-                        <#--</div>-->
-                    <#--</template>-->
                 </el-table-column>
                 <el-table-column property="standardColCode"  label="平台列名编码" v-if="standardColCodeShow">
                 </el-table-column>
@@ -172,6 +179,7 @@
                     merchandiser:'${userName!}',
                     warehouseName:'',
                     businessType:'',
+                    isRequired:'',
                     provideTransport:''
                 },
                 warehouseNameList:[
@@ -187,27 +195,27 @@
                     {value:'其他入库',label:'其他入库'}
                 ],
                 tableData:[
-                    {indexNum:'1',standardColName:'客户订单号',reflectColName:'',colDefaultVal:'',standardColCode:'custOrderCode'},
-                    {indexNum:'2',standardColName:'订单日期',reflectColName:'',colDefaultVal:'',standardColCode:'orderTime'},
-                    {indexNum:'3',standardColName:'开单员',reflectColName:'',colDefaultVal:'',standardColCode:'merchandiser'},
-                    {indexNum:'4',standardColName:'仓库名称',reflectColName:'',colDefaultVal:'',standardColCode:'warehouseName'},
-                    {indexNum:'5',standardColName:'业务类型',reflectColName:'',colDefaultVal:'',standardColCode:'businessType'},
-                    {indexNum:'6',standardColName:'备注',reflectColName:'',colDefaultVal:'',standardColCode:'notes'},
-                    {indexNum:'7',standardColName:'货品编码',reflectColName:'',colDefaultVal:'',standardColCode:'goodsCode'},
-                    {indexNum:'8',standardColName:'货品名称',reflectColName:'',colDefaultVal:'',standardColCode:'goodsName'},
-                    {indexNum:'9',standardColName:'规格',reflectColName:'',colDefaultVal:'',standardColCode:'goodsSpec'},
-                    {indexNum:'10',standardColName:'单位',reflectColName:'',colDefaultVal:'',standardColCode:'unit'},
-                    {indexNum:'11',standardColName:'单价',reflectColName:'',colDefaultVal:'',standardColCode:'unitPrice'},
-                    {indexNum:'12',standardColName:'入库数量',reflectColName:'',colDefaultVal:'',standardColCode:'quantity'},
-                    {indexNum:'13',standardColName:'批次号',reflectColName:'',colDefaultVal:'',standardColCode:'productionBatch'},
-                    {indexNum:'14',standardColName:'生产日期',reflectColName:'',colDefaultVal:'',standardColCode:'productionTime'},
-                    {indexNum:'15',standardColName:'失效日期',reflectColName:'',colDefaultVal:'',standardColCode:'invalidTime'},
-                    {indexNum:'16',standardColName:'供应商名称',reflectColName:'',colDefaultVal:'',standardColCode:'supportName'},
-                    {indexNum:'17',standardColName:'预计入库时间',reflectColName:'',colDefaultVal:'',standardColCode:'arriveTime'},
-                    {indexNum:'18',standardColName:'是否提供运输服务',reflectColName:'',colDefaultVal:'',standardColCode:'provideTransport'},
-                    {indexNum:'19',standardColName:'车牌号',reflectColName:'',colDefaultVal:'',standardColCode:'plateNumber'},
-                    {indexNum:'20',standardColName:'司机姓名',reflectColName:'',colDefaultVal:'',standardColCode:'driverName'},
-                    {indexNum:'21',standardColName:'联系电话',reflectColName:'',colDefaultVal:'',standardColCode:'contactNumber'}
+                    {indexNum:'1', standardColName:'客户订单号', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'custOrderCode'},
+                    {indexNum:'2', standardColName:'订单日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'orderTime'},
+                    {indexNum:'3', standardColName:'开单员', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'merchandiser'},
+                    {indexNum:'4', standardColName:'仓库名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'warehouseName'},
+                    {indexNum:'5', standardColName:'业务类型', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'businessType'},
+                    {indexNum:'6', standardColName:'备注', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'notes'},
+                    {indexNum:'7', standardColName:'货品编码', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'goodsCode'},
+                    {indexNum:'8', standardColName:'货品名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsName'},
+                    {indexNum:'9', standardColName:'规格', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsSpec'},
+                    {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unit'},
+                    {indexNum:'11', standardColName:'单价', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unitPrice'},
+                    {indexNum:'12', standardColName:'入库数量', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'quantity'},
+                    {indexNum:'13', standardColName:'批次号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionBatch'},
+                    {indexNum:'14', standardColName:'生产日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionTime'},
+                    {indexNum:'15', standardColName:'失效日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'invalidTime'},
+                    {indexNum:'16', standardColName:'供应商名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportName'},
+                    {indexNum:'17', standardColName:'预计入库时间', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'arriveTime'},
+                    {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
+                    {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
+                    {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
+                    {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'}
                 ]
             }
         } ,
@@ -246,27 +254,27 @@
                 }
                 if(val == 'storageIn'){
                     vm.tableData = [
-                        {indexNum:'1',standardColName:'客户订单号',reflectColName:'',colDefaultVal:'',standardColCode:'custOrderCode'},
-                        {indexNum:'2',standardColName:'订单日期',reflectColName:'',colDefaultVal:'',standardColCode:'orderTime'},
-                        {indexNum:'3',standardColName:'开单员',reflectColName:'',colDefaultVal:'',standardColCode:'merchandiser'},
-                        {indexNum:'4',standardColName:'仓库名称',reflectColName:'',colDefaultVal:'',standardColCode:'warehouseName'},
-                        {indexNum:'5',standardColName:'业务类型',reflectColName:'',colDefaultVal:'',standardColCode:'businessType'},
-                        {indexNum:'6',standardColName:'备注',reflectColName:'',colDefaultVal:'',standardColCode:'notes'},
-                        {indexNum:'7',standardColName:'货品编码',reflectColName:'',colDefaultVal:'',standardColCode:'goodsCode'},
-                        {indexNum:'8',standardColName:'货品名称',reflectColName:'',colDefaultVal:'',standardColCode:'goodsName'},
-                        {indexNum:'9',standardColName:'规格',reflectColName:'',colDefaultVal:'',standardColCode:'goodsSpec'},
-                        {indexNum:'10',standardColName:'单位',reflectColName:'',colDefaultVal:'',standardColCode:'unit'},
-                        {indexNum:'11',standardColName:'单价',reflectColName:'',colDefaultVal:'',standardColCode:'unitPrice'},
-                        {indexNum:'12',standardColName:'入库数量',reflectColName:'',colDefaultVal:'',standardColCode:'quantity'},
-                        {indexNum:'13',standardColName:'批次号',reflectColName:'',colDefaultVal:'',standardColCode:'productionBatch'},
-                        {indexNum:'14',standardColName:'生产日期',reflectColName:'',colDefaultVal:'',standardColCode:'productionTime'},
-                        {indexNum:'15',standardColName:'失效日期',reflectColName:'',colDefaultVal:'',standardColCode:'invalidTime'},
-                        {indexNum:'16',standardColName:'供应商名称',reflectColName:'',colDefaultVal:'',standardColCode:'supportName'},
-                        {indexNum:'17',standardColName:'预计入库时间',reflectColName:'',colDefaultVal:'',standardColCode:'arriveTime'},
-                        {indexNum:'18',standardColName:'是否提供运输服务',reflectColName:'',colDefaultVal:'',standardColCode:'provideTransport'},
-                        {indexNum:'19',standardColName:'车牌号',reflectColName:'',colDefaultVal:'',standardColCode:'plateNumber'},
-                        {indexNum:'20',standardColName:'司机姓名',reflectColName:'',colDefaultVal:'',standardColCode:'driverName'},
-                        {indexNum:'21',standardColName:'联系电话',reflectColName:'',colDefaultVal:'',standardColCode:'contactNumber'}
+                        {indexNum:'1', standardColName:'客户订单号', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'custOrderCode'},
+                        {indexNum:'2', standardColName:'订单日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'orderTime'},
+                        {indexNum:'3', standardColName:'开单员', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'merchandiser'},
+                        {indexNum:'4', standardColName:'仓库名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'warehouseName'},
+                        {indexNum:'5', standardColName:'业务类型', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'businessType'},
+                        {indexNum:'6', standardColName:'备注', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'notes'},
+                        {indexNum:'7', standardColName:'货品编码', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'goodsCode'},
+                        {indexNum:'8', standardColName:'货品名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsName'},
+                        {indexNum:'9', standardColName:'规格', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsSpec'},
+                        {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unit'},
+                        {indexNum:'11', standardColName:'单价', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unitPrice'},
+                        {indexNum:'12', standardColName:'入库数量', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'quantity'},
+                        {indexNum:'13', standardColName:'批次号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionBatch'},
+                        {indexNum:'14', standardColName:'生产日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionTime'},
+                        {indexNum:'15', standardColName:'失效日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'invalidTime'},
+                        {indexNum:'16', standardColName:'供应商名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportName'},
+                        {indexNum:'17', standardColName:'预计入库时间', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'arriveTime'},
+                        {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
+                        {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
+                        {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
+                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'}
                     ];
                     vm.businessTypeList=[
                         {value:'采购入库',label:'采购入库'},
@@ -279,28 +287,28 @@
                     ];
                 }else if(val == 'storageOut'){
                     vm.tableData = [
-                        {indexNum:'1',standardColName:'客户订单号',reflectColName:'',colDefaultVal:'',standardColCode:'custOrderCode'},
-                        {indexNum:'2',standardColName:'订单日期',reflectColName:'',colDefaultVal:'',standardColCode:'orderTime'},
-                        {indexNum:'3',standardColName:'开单员',reflectColName:'',colDefaultVal:'',standardColCode:'merchandiser'},
-                        {indexNum:'4',standardColName:'仓库名称',reflectColName:'',colDefaultVal:'',standardColCode:'warehouseName'},
-                        {indexNum:'5',standardColName:'业务类型',reflectColName:'',colDefaultVal:'',standardColCode:'businessType'},
-                        {indexNum:'6',standardColName:'备注',reflectColName:'',colDefaultVal:'',standardColCode:'notes'},
-                        {indexNum:'7',standardColName:'货品编码',reflectColName:'',colDefaultVal:'',standardColCode:'goodsCode'},
-                        {indexNum:'8',standardColName:'货品名称',reflectColName:'',colDefaultVal:'',standardColCode:'goodsName'},
-                        {indexNum:'9',standardColName:'规格',reflectColName:'',colDefaultVal:'',standardColCode:'goodsSpec'},
-                        {indexNum:'10',standardColName:'单位',reflectColName:'',colDefaultVal:'',standardColCode:'unit'},
-                        {indexNum:'11',standardColName:'单价',reflectColName:'',colDefaultVal:'',standardColCode:'unitPrice'},
-                        {indexNum:'12',standardColName:'出库数量',reflectColName:'',colDefaultVal:'',standardColCode:'quantity'},
-                        {indexNum:'13',standardColName:'批次号',reflectColName:'',colDefaultVal:'',standardColCode:'productionBatch'},
-                        {indexNum:'14',standardColName:'生产日期',reflectColName:'',colDefaultVal:'',standardColCode:'productionTime'},
-                        {indexNum:'15',standardColName:'失效日期',reflectColName:'',colDefaultVal:'',standardColCode:'invalidTime'},
-                        {indexNum:'16',standardColName:'供应商名称',reflectColName:'',colDefaultVal:'',standardColCode:'supportName'},
-                        {indexNum:'17',standardColName:'预计出库时间',reflectColName:'',colDefaultVal:'',standardColCode:'shipmentTime'},
-                        {indexNum:'18',standardColName:'是否提供运输服务',reflectColName:'',colDefaultVal:'',standardColCode:'provideTransport'},
-                        {indexNum:'19',standardColName:'车牌号',reflectColName:'',colDefaultVal:'',standardColCode:'plateNumber'},
-                        {indexNum:'20',standardColName:'司机姓名',reflectColName:'',colDefaultVal:'',standardColCode:'driverName'},
-                        {indexNum:'21',standardColName:'联系电话',reflectColName:'',colDefaultVal:'',standardColCode:'contactNumber'},
-                        {indexNum:'22',standardColName:'收货方名称',reflectColName:'',colDefaultVal:'',standardColCode:'consigneeName'}
+                        {indexNum:'1', standardColName:'客户订单号', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'custOrderCode'},
+                        {indexNum:'2', standardColName:'订单日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'orderTime'},
+                        {indexNum:'3', standardColName:'开单员', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'merchandiser'},
+                        {indexNum:'4', standardColName:'仓库名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'warehouseName'},
+                        {indexNum:'5', standardColName:'业务类型', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'businessType'},
+                        {indexNum:'6', standardColName:'备注', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'notes'},
+                        {indexNum:'7', standardColName:'货品编码', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'goodsCode'},
+                        {indexNum:'8', standardColName:'货品名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsName'},
+                        {indexNum:'9', standardColName:'规格', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsSpec'},
+                        {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unit'},
+                        {indexNum:'11', standardColName:'单价', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unitPrice'},
+                        {indexNum:'12', standardColName:'出库数量', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'quantity'},
+                        {indexNum:'13', standardColName:'批次号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionBatch'},
+                        {indexNum:'14', standardColName:'生产日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionTime'},
+                        {indexNum:'15', standardColName:'失效日期', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'invalidTime'},
+                        {indexNum:'16', standardColName:'供应商名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportName'},
+                        {indexNum:'17', standardColName:'预计出库时间', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'shipmentTime'},
+                        {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
+                        {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
+                        {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
+                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                        {indexNum:'22', standardColName:'收货方名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'consigneeName'}
                     ];
                     vm.businessTypeList=[
                         {value:'销售出库',label:'销售出库'},
@@ -401,7 +409,9 @@
                     template.standardColCode = design.standardColCode;
                     template.standardColName = design.standardColName;
                     template.reflectColName = reflectColName;
-                    template.colDefaultVal = colDefaultVal;
+                    if(index != 2){
+                        template.colDefaultVal = colDefaultVal;
+                    }
                     templateList.push(template);
                 }
                 xescm.common.submit("/ofc/storage_template/save", {"templateList":JSON.stringify(templateList)}, "确认保存该模板配置?", function () {

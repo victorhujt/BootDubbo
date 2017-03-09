@@ -1,4 +1,10 @@
 <title>模板配置详情</title>
+<style type="text/css">
+    .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner{
+        background-color:#20a0ff;
+        border-color:#20a0ff;
+    }
+</style>
 <div id="vm">
     <div class="list-mian-01">
         <div class="xe-pageHeader">
@@ -37,6 +43,11 @@
                 <el-table-column property="reflectColName" label="模板列名">
                     <template scope="scope">
                         <el-input v-model="scope.row.reflectColName" :disabled="true" class="xe-col-8"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="isRequired" label="是否必填">
+                    <template scope="scope">
+                        <el-checkbox v-model="scope.row.isRequired" disabled=true class="xe-col-8"></el-checkbox>
                     </template>
                 </el-table-column>
                 <el-table-column property="colDefaultVal" label="默认值">
@@ -98,6 +109,11 @@
                         itemOut = item;
                     }
                     var tableItem = {};
+                    var indexNum = item.indexNum;
+                    if(indexNum == 1 || indexNum == 3 || indexNum == 4
+                            || indexNum == 5 || indexNum == 7 || indexNum == 12 || indexNum == 22){
+                        tableItem.isRequired = true;
+                    }
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
                     tableItem.colDefaultVal = item.colDefaultVal;
