@@ -119,7 +119,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="目的地" class="xe-col-3">
-                    <el-input v-model="destinationAddress"  :readOnly="true"></el-input>
+                    <el-input v-model="consignorAddress"  :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
@@ -134,22 +134,22 @@
                 </el-form-item>
             </div>
             <div class="xe-pageHeader">
-                收货方
+                发货方
             </div>
             <div class="xe-block">
                 <el-form-item label="名称" class="xe-col-3">
-                    <el-input v-model="consigneeName" :readOnly="true"></el-input>
+                    <el-input v-model="consignorName" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="联系人" class="xe-col-3">
-                    <el-input v-model="consigneeContactName" :readOnly="true"></el-input>
+                    <el-input v-model="consignorContactName" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="联系电话" class="xe-col-3">
-                    <el-input v-model="consigneeContactPhone" :readOnly="true"></el-input>
+                    <el-input v-model="consignorContactPhone" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="地址" class="xe-col-3">
-                    <el-input v-model="destinationAddress" :readOnly="true"></el-input>
+                    <el-input v-model="consignorAddress" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-pageHeader">
@@ -389,26 +389,28 @@
                                     vueObj.plateNumber=ofcWarehouseInformation.plateNumber;
                                     vueObj.driverName=ofcWarehouseInformation.driverName;
                                     vueObj.driverContactNumber=ofcWarehouseInformation.contactNumber;
-                                        if(ofcDistributionBasicInfo!=null){
-                                            //发货方
-                                            vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
-                                            vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
-                                            vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
-                                            vueObj.isNeedTransport=true;
-                                            if(vueObj.isNeedTransport){
-                                                vueObj.needTransport="是";
-                                            }else{
-                                                vueObj.needTransport="否";
-                                            }
-                                            vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
-                                            vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity+ofcDistributionBasicInfo.destinationDistrict;
-                                            if(ofcDistributionBasicInfo.destinationTowns){
-                                                vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns+ofcDistributionBasicInfo.destination;
-                                            }
-                                            vueObj.consigneeName=ofcDistributionBasicInfo.consigneeName;
-                                            vueObj.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
-                                            vueObj.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
-                                        };
+                                    if(ofcWarehouseInformation.provideTransport=="1"){
+                                        vueObj.isNeedTransport=true;
+                                        vueObj.needTransport="是";
+                                    }else{
+                                        vueObj.isNeedTransport=false;
+                                        vueObj.needTransport="否";
+                                    }
+                                    if(ofcDistributionBasicInfo!=null){
+                                        //发货方
+                                        vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
+                                        vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
+                                        vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
+
+                                        vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
+                                        vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity+ofcDistributionBasicInfo.destinationDistrict;
+                                        if(ofcDistributionBasicInfo.destinationTowns){
+                                            vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns+ofcDistributionBasicInfo.destination;
+                                        }
+                                        vueObj.consigneeName=ofcDistributionBasicInfo.consigneeName;
+                                        vueObj.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
+                                        vueObj.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
+                                    };
                                     if(ofcGoodsDetailsInfo!=null&&ofcGoodsDetailsInfo.length>0){
                                         for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
                                             var goodDetail=ofcGoodsDetailsInfo[i];

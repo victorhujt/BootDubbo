@@ -2860,16 +2860,21 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             } else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
                 cscContantAndCompanyDtoConsignee = dto;//入库时收货方是仓库
             }
-            //收货方、发货方校验
-            wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-            if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                throw new BusinessException(wrapper.getMessage());
-            }
-        } else {
-            if (!PubUtils.trimAndNullAsEmpty(reviewTag).equals("batchSave")) {
+            if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+                //收货方、发货方校验
                 wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                 if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                     throw new BusinessException(wrapper.getMessage());
+                }
+            }
+
+        } else {
+            if (!PubUtils.trimAndNullAsEmpty(reviewTag).equals("batchSave")) {
+                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                        throw new BusinessException(wrapper.getMessage());
+                    }
                 }
             }
         }
@@ -3012,7 +3017,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcWarehouseInformationService.save(ofcnewWarehouseInformation);
 
                 //提供运输时 复制配送信息
-                if(owinfo.getProvideTransport()==WEARHOUSE_WITH_TRANS){
                     OfcDistributionBasicInfo f = new OfcDistributionBasicInfo();
                     f.setOrderCode(ofcFundamentalInformation.getOrderCode());
                     OfcDistributionBasicInfo  BasicInfo = ofcDistributionBasicInfoService.selectOne(f);
@@ -3022,7 +3026,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                         ofcDistributionBasicInfoService.save(newofcDistributionBasicInfo);
                     }
-                }
             }
 
             //复制货品详情的信息
@@ -3072,6 +3075,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
                     || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
                 updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                this.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
             }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
@@ -3089,7 +3093,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcFundamentalInformation.setOperTime(new Date());
 
             String orderType = ofcFundamentalInformation.getOrderType();
-            String businessType = ofcFundamentalInformation.getBusinessType();
             if (PubUtils.trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (PubUtils.trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
@@ -3138,6 +3141,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         logger.info("订单信息推送运输中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
         //订单中心实体转运输中心接口DTO
+        if(ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)){
+            ofcFundamentalInformation.setBusinessType(WITH_THE_CITY);
+        }
         TfcTransport tfcTransport = convertOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
         String json;
         try {

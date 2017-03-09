@@ -308,9 +308,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
 
         //根据模板编码和类型拿到用户保存的配置模板的映射 key是用户表头列名
+        //这里是用户进行模板配置了的, 下面还有(在第一行校验表头列名的时候, 如果用户的列名能与标准列名对应上, 那么依然进行可以映射)
         List<Object> templateReflect = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
-        Map<String,OfcStorageTemplate> templateDetilMap = (Map<String, OfcStorageTemplate>) templateReflect.get(0);//key是用户表头列名
-        Map<String,OfcStorageTemplate> forDefaultButNotRequired = (Map<String, OfcStorageTemplate>) templateReflect.get(1);//key是用户表头列标准编码
+        //这里拿到的模板配置是不带同名校验的
+        Map<String,OfcStorageTemplate> templateDetilMap = (Map<String, OfcStorageTemplate>) templateReflect.get(0);//key是用户表头列名  //有映射列名的
+        Map<String,OfcStorageTemplate> forDefaultButNotRequired = (Map<String, OfcStorageTemplate>) templateReflect.get(1);//key是用户表头列标准编码 // 没有映射列名的
+        Map<String,OfcStorageTemplate> forDefaultButNotRequiredName = (Map<String, OfcStorageTemplate>) templateReflect.get(2);//key是用户表头列标准名称 // 没有映射列名的
 
         //将模板映射成标准格式, 如果不是标准格式的就跳过不校验, 且不展示
         InputStream inputStream ;
@@ -370,6 +373,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                 if(rowNum == 0){
                     try {
+                        //加入同名校验,相同名字的进行自动映射
+                        sameNameAutoReflect(commonRow, templateDetilMap, forDefaultButNotRequiredName);
                         requiedItemIndex = checkExcelRequiedItem(commonRow, ofcStorageTemplate.getTemplateType(), templateDetilMap);
                     } catch (BusinessException e) {
                         logger.error("表头必填列校验错误!, e:{}", e.getMessage());
@@ -945,6 +950,32 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     /**
+     * 只要用户的Excel中的列名是标准列名, 也进行自动映射
+     * @param commonRow
+     * @param templateDetilMap
+     * @param forDefaultButNotRequiredName
+     */
+    private void sameNameAutoReflect(Row commonRow, Map<String, OfcStorageTemplate> templateDetilMap
+            , Map<String, OfcStorageTemplate> forDefaultButNotRequiredName) {
+        Map<String, OfcStorageTemplate> map = new HashMap<>(); // key 存放标准列名, value放对应的OfcStorageTemplate
+        //先以用户模板配置的为准
+        for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
+            Cell commonCell = commonRow.getCell(cellNum);
+            //空列
+            if (null == commonCell || Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
+                //标记当前列出错, 并跳过当前循环
+                continue;
+            }
+            String commonCellValue = commonCell.getStringCellValue();// 当前列 列名
+            //先以用户模板配置的为准
+            if(!templateDetilMap.containsKey(commonCellValue) && forDefaultButNotRequiredName.containsKey(commonCellValue)){
+                OfcStorageTemplate ofcStorageTemplate = forDefaultButNotRequiredName.get(commonCellValue);
+                templateDetilMap.put(commonCellValue, ofcStorageTemplate);
+            }
+        }
+    }
+
+    /**
      * 校验订单业务类型
      * @param cellValue  单元格的值
      * @param templateType 模板类型
@@ -1041,6 +1072,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     /**
      * 校验表格第一行列名是否有所有的必填列, 并将表格中的必填列的列号返回
+     * 2017年3月9日 增加逻辑: 如果用户的列名能与标准列名对应上, 那么依然进行可以映射
      * @param commonRow 通用行
      * @param templateType 模板类型
      * @param templateDetilMap 列名的模板映射信息
@@ -1057,6 +1089,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.error("当前表格没有表头!请添加后重新上传!");
             throw new BusinessException("当前表格没有表头!请添加后重新上传!");
         }
+
+
         Map<String,OfcStorageTemplate> ofcStorageTemplateMap = new HashMap<>();
         for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
             Cell commonCell = commonRow.getCell(cellNum);
@@ -1176,16 +1210,19 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         Map<String, OfcStorageTemplate> map = new HashMap<>();
         Map<String, OfcStorageTemplate> mapForDefaultButNotRequire = new HashMap<>();
+        Map<String, OfcStorageTemplate> mapForDefaultButNotRequireName = new HashMap<>();
         for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplateListForConvert) {
             String reflectColName = ofcStorageTemplate.getReflectColName();
             if(!PubUtils.isSEmptyOrNull(reflectColName)){
                 map.put(reflectColName, ofcStorageTemplate);
             }
             mapForDefaultButNotRequire.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);
+            mapForDefaultButNotRequireName.put(ofcStorageTemplate.getStandardColName(), ofcStorageTemplate);
         }
         List<Object> result = new ArrayList<>();
         result.add(map);
         result.add(mapForDefaultButNotRequire);
+        result.add(mapForDefaultButNotRequireName);
         return result;
     }
 
