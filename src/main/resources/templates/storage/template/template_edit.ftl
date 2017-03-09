@@ -8,8 +8,8 @@
         <el-dialog title="设置列默认值" v-model="colDefaultValDia" size="small">
             <el-form :model="colDefaultValModel" label-width="120px">
                 <div class="xe-block">
-                    <el-form-item label="订单日期" class="xe-col-2">
-                        {{colDefaultValModel.orderTime}}
+                    <el-form-item label="订单日期" class="xe-col-2">当前日期
+                        <#--{{colDefaultValModel.orderTime}}-->
                     </el-form-item>
                 </div>
                 <div class="xe-block">
@@ -153,7 +153,7 @@
             return{
                 lastTemplateType:'',
                 templateCodeShow:'${templateCode!}',
-                orderTime:'${orderTime!}',
+                <#--orderTime:'${orderTime!}',-->
                 warehouseName:'',
                 businessType:'',
                 custNameShow:false,
@@ -175,7 +175,7 @@
                 ],
                 colDefaultValDia:false,
                 colDefaultValModel:{
-                    orderTime:'',
+//                    orderTime:'',
                     merchandiser:'${userName!}',
                     warehouseName:'',
                     businessType:'',
@@ -200,7 +200,7 @@
         beforeMount:function () {
             var vm = this;
             vm.colDefaultValModel = {
-                orderTime:vm.orderTime,
+//                orderTime:vm.orderTime,
                 merchandiser:'${userName!}',
                 warehouseName:'',
                 businessType:'',
@@ -246,7 +246,7 @@
                     console.log('------' + colDefaultVal);
                     if(!StringUtil.isEmpty(colDefaultVal)){
                         if(indexNum == 2){
-                            orderTime = colDefaultVal;
+//                            orderTime = colDefaultVal;
                         }else if(indexNum == 3){
                             merchandiser = colDefaultVal;
                         }else if(indexNum == 4){
@@ -262,7 +262,7 @@
                     vm.tableData.push(tableItem);
                 });
                 vm.colDefaultValModel={
-                    orderTime:orderTime,
+//                    orderTime:'当前日期',
                     merchandiser:merchandiser,
                     warehouseName:warehouseName,
                     businessType:businessType,
@@ -463,7 +463,7 @@
             },
             confirmSetDefault:function () {
 
-                var defOrderTime = this.colDefaultValModel.orderTime;
+                var defOrderTime = '当前日期';
                 var defMerchandiser = this.colDefaultValModel.merchandiser;
                 var defWarehouseName = this.colDefaultValModel.warehouseName;
                 var defBusinessType = this.colDefaultValModel.businessType;

@@ -873,17 +873,17 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 //                        logger.error("当前行:{},仓库名称校验失败,仓库名称是空的, 请维护", rowNum + 1);
 //                        xlsErrorMsg.add("行:" + (rowNum + 1) + "仓库名称为空！");
 //                        checkPass = false;
-                        OfcStorageTemplate forBusinessType = forDefaultButNotRequired.get("warehouseName");
-                        if(PubUtils.isSEmptyOrNull(forBusinessType.getColDefaultVal())){
-                            logger.error("当前行:{},仓库名称校验失败,仓库名称是空的, 请维护", rowNum + 1);
-                            xlsErrorMsg.add("行:" + (rowNum + 1) + "仓库名称为空！");
+                        OfcStorageTemplate forWarehouseName = forDefaultButNotRequired.get("warehouseName");
+                        if(PubUtils.isSEmptyOrNull(forWarehouseName.getColDefaultVal())){
+                            logger.error("当前行:{},仓库名称校验失败,模板配置中仓库名称列默认值是空的, 请维护", rowNum + 1);
+                            xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中仓库名称默认值为空！");
                             checkPass = false;
                         }
-                        if(allWarehouseByRmc.containsKey(forBusinessType.getColDefaultVal())){
-                            ofcStorageTemplateDto.setBusinessType(forBusinessType.getColDefaultVal());
+                        if(allWarehouseByRmc.containsKey(forWarehouseName.getColDefaultVal())){
+                            ofcStorageTemplateDto.setWarehouseName(forWarehouseName.getColDefaultVal());
                         }else {
-                            logger.error("当前行:{},仓库名称校验失败,仓库名称校验失败, 请维护", rowNum + 1);
-                            xlsErrorMsg.add("行:" + (rowNum + 1) + "仓库名称校验失败！");
+                            logger.error("当前行:{},仓库名称校验失败,模板配置中仓库名称默认值{}校验失败, 请维护", rowNum + 1, forWarehouseName.getColDefaultVal());
+                            xlsErrorMsg.add("行" + (rowNum + 1) + "模板配置中仓库名称默认值【" + forWarehouseName.getColDefaultVal() + "】校验失败！该客户下没有该仓库!");
                             checkPass = false;
                         }
                     }
@@ -891,16 +891,16 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     if(PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getBusinessType())){
                         OfcStorageTemplate forBusinessType = forDefaultButNotRequired.get("businessType");
                         if(PubUtils.isSEmptyOrNull(forBusinessType.getColDefaultVal())){
-                            logger.error("当前行:{},业务类型校验失败,业务类型是空的, 请维护", rowNum + 1);
-                            xlsErrorMsg.add("行:" + (rowNum + 1) + "业务类型为空！");
+                            logger.error("当前行:{},模板配置中业务类型默认值校验失败,业务类型是空的, 请维护", rowNum + 1);
+                            xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中业务类型默认值为空！");
                             checkPass = false;
                         }
                         Wrapper wrapper = checkBusinessType(forBusinessType.getColDefaultVal(), ofcStorageTemplate.getTemplateType());
                         if(wrapper.getCode() == 200){
                             ofcStorageTemplateDto.setBusinessType((String) wrapper.getResult());
                         }else {
-                            logger.error("当前行:{},业务类型校验失败,业务类型校验失败, 请维护", rowNum + 1);
-                            xlsErrorMsg.add("行:" + (rowNum + 1) + "业务类型校验失败！");
+                            logger.error("当前行:{},业务类型校验失败,模板配置中业务类型默认值校验失败, 请维护", rowNum + 1);
+                            xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中业务类型默认值【" + forBusinessType.getColDefaultVal() + "】校验失败！");
                             checkPass = false;
                         }
                     }

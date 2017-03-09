@@ -8,8 +8,8 @@
         <el-dialog title="设置列默认值" v-model="colDefaultValDia" size="small">
            <el-form :model="colDefaultValModel" label-width="120px">
              <div class="xe-block">
-               <el-form-item label="订单日期" class="xe-col-2">
-                   {{colDefaultValModel.orderTime}}
+               <el-form-item label="订单日期" class="xe-col-2">当前日期
+                   <#--{{colDefaultValModel.orderTime}}-->
                </el-form-item>
              </div>
              <div class="xe-block">
@@ -146,7 +146,7 @@
         el:'#vm',
         data:function () {
             return{
-                orderTime:'${orderTime!}',
+                <#--orderTime:'${orderTime!}',-->
                 warehouseName:'',
                 businessType:'',
                 custNameShow:false,
@@ -168,7 +168,7 @@
                 ],
                 colDefaultValDia:false,
                 colDefaultValModel:{
-                    orderTime:'',
+//                    orderTime:'',
                     merchandiser:'${userName!}',
                     warehouseName:'',
                     businessType:'',
@@ -214,7 +214,7 @@
         beforeMount:function () {
           var vm = this;
           vm.colDefaultValModel = {
-              orderTime:vm.orderTime,
+//              orderTime:vm.orderTime,
               merchandiser:'${userName!}',
               warehouseName:'',
               businessType:'',
@@ -416,7 +416,8 @@
             },
             confirmSetDefault:function () {
 
-                var defOrderTime = this.colDefaultValModel.orderTime;
+//                var defOrderTime = this.colDefaultValModel.orderTime;
+                var defOrderTime = '当前日期';
                 var defMerchandiser = this.colDefaultValModel.merchandiser;
                 var defWarehouseName = this.colDefaultValModel.warehouseName;
                 var defBusinessType = this.colDefaultValModel.businessType;
