@@ -326,8 +326,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             inputStream = uploadFile.getInputStream();
             workbook = WorkbookFactory.create(inputStream);
         } catch (Exception e) {
-            logger.error("校验Excel读取内部异常{}",e);
-            throw new BusinessException("校验Excel读取内部异常");
+            logger.error("校验仓配Excel读取内部异常{}",e);
+            throw new BusinessException("校验仓配Excel读取内部异常");
         }
 
         boolean checkPass = true;
@@ -1020,7 +1020,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
         }
         if(!check){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该业务类型无法识别或不是"
+                    + (StringUtils.equals(templateType, STORAGE_IN) ? "入库" : "出库") + "类型的!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cellValue);
     }
