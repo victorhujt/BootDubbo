@@ -54,9 +54,7 @@ import java.util.*;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.STO_TEMP_PRE;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
-import static com.xescm.ofc.constant.StorageTemplateConstant.STANDARD;
-import static com.xescm.ofc.constant.StorageTemplateConstant.STORAGE_IN;
-import static com.xescm.ofc.constant.StorageTemplateConstant.STORAGE_OUT;
+import static com.xescm.ofc.constant.StorageTemplateConstant.*;
 
 /**
  *
@@ -423,7 +421,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     if (Cell.CELL_TYPE_STRING == commonCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(commonCell.getStringCellValue());
                     } else if (Cell.CELL_TYPE_NUMERIC == commonCell.getCellType()) {
-                        cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
+                        if(DateUtil.isCellDateFormatted(commonCell)){
+                            cellValue = PubUtils.trimAndNullAsEmpty(DateUtils.Date2String(commonCell.getDateCellValue(), DateUtils.DateFormatType.TYPE2));
+                        }else {
+                            cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
+                        }
                     }
                     //至此, 已经能拿到每一列的值
                     if(rowNum == 0){//第一行, 将所有表格中固定的字段名称和位置固定
@@ -437,7 +439,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         modelNameStr.put(cellNum + 1,ofcStorageTemplateForReflect);
                         String usefulColName = cellValue;
                         String usefulColCode = ofcStorageTemplateForReflect.getStandardColCode();
-                        usefulCol.add(usefulColName + "@" + usefulColCode);
+                         usefulCol.add(usefulColName + "@" + usefulColCode);
                     }else if(rowNum > 0) { // 表格的数据体
                         OfcStorageTemplate ofcStorageTemplateForCheck = modelNameStr.get(cellNum + 1);
                         if(null == ofcStorageTemplateForCheck){
@@ -473,7 +475,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 String[] split = cellValue.split(" ");
 
                                 //正则还需要修正
-                                if(split.length > 1 ? !(split[0].matches(PubUtils.REGX_YEARDATE) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(PubUtils.REGX_YEARDATE)){
+                                if(split.length > 1 ? !(split[0].matches(REGEX_YYYYMMDD) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(REGEX_YYYYMMDD)){
                                     logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
                                     xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                     checkPass = false;
@@ -676,7 +678,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //校验是不是日期类型
                             //yyyy-MM-dd || yyyy-MM-dd hh:mm:ss
                             String[] split = cellValue.split(" ");
-                            if(split.length > 1 ? !(split[0].matches(DateUtils.DATE) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(DateUtils.DATE)){
+
+                            //正则还需要修正
+                            if(split.length > 1 ? !(split[0].matches(REGEX_YYYYMMDD) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(REGEX_YYYYMMDD)){
                                 logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
                                 xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                 checkPass = false;
@@ -691,7 +695,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
                             //校验是不是日期类型
                             String[] split = cellValue.split(" ");
-                            if(split.length > 1 ? !(split[0].matches(PubUtils.REGX_YEARDATE) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(PubUtils.REGX_YEARDATE)){
+
+                            //正则还需要修正
+                            if(split.length > 1 ? !(split[0].matches(REGEX_YYYYMMDD) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(REGEX_YYYYMMDD)){
                                 logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
                                 xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                 checkPass = false;
@@ -748,8 +754,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             //校验是不是日期类型
-                            if(!PubUtils.isDateTimeFormat(cellValue)
-                                    && !PubUtils.isTimeFormat(cellValue) && !PubUtils.isYearDateFormat(cellValue)){
+                            String[] split = cellValue.split(" ");
+
+                            //正则还需要修正
+                            if(split.length > 1 ? !(split[0].matches(REGEX_YYYYMMDD) && split[1].matches(PubUtils.REGX_TIME)) : !cellValue.matches(REGEX_YYYYMMDD)){
                                 logger.error("当前行:{},列:{} 校验失败,不是日期类型", rowNum + 1, cellNum + 1);
                                 xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ cellValue + ",不是日期类型");
                                 checkPass = false;
@@ -1435,6 +1443,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
         ofcGoodsDetailsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
         ofcGoodsDetailsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
+        ofcGoodsDetailsInfo.setChargingWays("01");//计费方式默认按件数
+        ofcGoodsDetailsInfo.setChargingQuantity(ofcStorageTemplateDto.getQuantity()); // 计费数量默认为货品数量
         if(!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())){
             ofcGoodsDetailsInfo.setUnitPrice(new BigDecimal(cscGoodsApiVo.getUnitPrice()));
         }
