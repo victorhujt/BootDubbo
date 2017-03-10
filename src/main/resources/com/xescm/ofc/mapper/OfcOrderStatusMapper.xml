@@ -57,26 +57,28 @@
     (
     SELECT
     s.order_code,
-    s.order_status,
+    oons.order_latest_status AS order_status,
     s.status_desc,
     s.lasted_oper_time,
     s.notes,
     s.operator,
     s.creation_time
     FROM
-    ofc_order_status s,
-    (
-    SELECT
-    s.order_code,
-    max(s.lasted_oper_time) val
-    FROM
-    ofc_order_status s
-    GROUP BY
-    s.order_code
-    ) b
-    WHERE
-    s.order_code = b.order_code
-    AND s.lasted_oper_time = b.val
+    ofc_order_newstatus oons
+    LEFT JOIN ofc_order_status s ON s.order_code = oons.order_code
+    AND s.order_status = oons.order_latest_status
+    LEFT JOIN ofc_fundamental_information ofi ON oons.order_code = ofi.order_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
+      </if>
+      <if test="custOrderCode!=null and custOrderCode!=''">
+        OR ofi.cust_order_code =#{custOrderCode}
+      </if>
+      <if test="transCode!=null and transCode!=''">
+        OR odbi.trans_code =#{transCode}
+      </if>
+    </where>
     ORDER BY
     s.order_code
     ) oos

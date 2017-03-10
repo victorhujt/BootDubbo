@@ -3316,13 +3316,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setVolume(ofcDistributionBasicInfo.getCubage() == null ? null : Double.valueOf(ofcDistributionBasicInfo.getCubage()));
 //        tfcTransport.setMoney();// ??
         tfcTransport.setFromCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorCode()));
-        tfcTransport.setFromCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactName()));
+        tfcTransport.setFromCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorName()));
         tfcTransport.setFromCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactCode()));
         if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlace())) {
             tfcTransport.setFromCustomerAddress(ofcDistributionBasicInfo.getDeparturePlace());
         }
 
-        tfcTransport.setFromCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorName()));// ??
+        tfcTransport.setFromCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactName()));// ??
         tfcTransport.setFromCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactPhone()));
         tfcTransport.setFromProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureProvince()));
         tfcTransport.setFromCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureCity()));
@@ -3343,12 +3343,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("没有收货方地址编码");
         }
         tfcTransport.setToCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()));// 收货方编码
-        tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方联系人
+        tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方联系人
         tfcTransport.setToCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactCode()));//收货方联系人编码
         if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
             tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
         }
-        tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方
+        tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方
         tfcTransport.setToCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()));
         tfcTransport.setToProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()));
         tfcTransport.setToCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()));
