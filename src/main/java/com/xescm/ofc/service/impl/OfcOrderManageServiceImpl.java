@@ -168,9 +168,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private OfcOrderStatusService ofcOrdertatusService;
 
-    @Resource
-    private OfcOrderNewstatusService ofcOrderNewstatusService;
-
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -615,7 +612,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
 
             /*planUpdate(ofcTransplanInfo.getPlanCode(),"40",ofcTraplanSourceStatus.getServiceProviderName()
-                    ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone(),ofcFundamentalInformation.getCustName());//&&&&&*/
+                    ,ofcTraplanSourceStatus.getServiceProviderContact(),ofcTraplanSourceStatus.getServiceProviderContactPhone()
+                    ,ofcFundamentalInformation.getCustName());//&&&&&*/
 
             //更改计划单状态为执行中//###
 
@@ -1241,8 +1239,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     /**
      * 取消的订单推送到结算中心进行结算取消
      *
-     * @param orderCode
-     * @return
+     * @param orderCode 订单号
+     * @return 取消结果
      */
     @Transactional
     private boolean cancelAcOrder(String orderCode) {
@@ -3221,7 +3219,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     int count = 0;
                     for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsList) {
                         if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                            if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
+                            if ((ofcGoodsDetailsInfo.getWeight() == null
+                                    || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null
+                                    || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
                                 continue;
                             }
                         }
@@ -3280,6 +3280,61 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("订单中心实体转运输中心接口DTO异常! 入参错误");
         }
         TfcTransport tfcTransport = new TfcTransport();
+        this.convertOrderToTfcOfBaseInfo(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, tfcTransport);
+        List<TfcTransportDetail> tfcTransportDetails = new ArrayList<>();
+        for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
+            if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+                if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
+                    continue;
+                }
+            }
+            TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
+            tfcTransportDetail.setStandard(ofcGoodsDetailsInfo.getGoodsSpec());
+//            tfcTransportDetail.setPono();
+//            tfcTransportDetail.setQtyPicked();
+//            tfcTransportDetail.setMarketUnitl();
+//            tfcTransportDetail.setQtyPickedEach();
+//            tfcTransportDetail.setBasicUnits1();
+//            tfcTransportDetail.setQtyOrdered();
+//            tfcTransportDetail.setMarketUnit2();
+//            tfcTransportDetail.setQtyOrderedEach();
+//            tfcTransportDetail.setBasicUnits2();
+//            tfcTransportDetail.setTransportId();
+//            tfcTransportDetail.setTfcBillNo();
+//            tfcTransportDetail.setFromSystem();
+            tfcTransportDetail.setTransportNo(ofcDistributionBasicInfo.getTransCode());
+            tfcTransportDetail.setItemCode(ofcGoodsDetailsInfo.getGoodsCode());
+            tfcTransportDetail.setItemName(ofcGoodsDetailsInfo.getGoodsName());
+            tfcTransportDetail.setQty(ofcGoodsDetailsInfo.getQuantity() == null ? null : ofcGoodsDetailsInfo.getQuantity().doubleValue());
+            tfcTransportDetail.setWeight(ofcGoodsDetailsInfo.getWeight() == null ? null : ofcGoodsDetailsInfo.getWeight().doubleValue());
+            tfcTransportDetail.setVolume(ofcGoodsDetailsInfo.getCubage() == null ? null : ofcGoodsDetailsInfo.getCubage().doubleValue());
+            tfcTransportDetail.setPrice(ofcGoodsDetailsInfo.getUnitPrice() == null ? null : ofcGoodsDetailsInfo.getUnitPrice().doubleValue());
+//            tfcTransportDetail.setMoney();
+            tfcTransportDetail.setUom(ofcGoodsDetailsInfo.getUnit());
+//            tfcTransportDetail.setContainerQty();
+            tfcTransportDetail.setProductionBatch(ofcGoodsDetailsInfo.getProductionBatch());
+            tfcTransportDetail.setProductionTime(ofcGoodsDetailsInfo.getProductionTime());
+            tfcTransportDetail.setInvalidTime(ofcGoodsDetailsInfo.getInvalidTime());
+            tfcTransportDetail.setTotalBox(ofcGoodsDetailsInfo.getTotalBox());
+            tfcTransportDetail.setGoodsType(ofcGoodsDetailsInfo.getGoodsType());
+            tfcTransportDetail.setGoodsCategory(ofcGoodsDetailsInfo.getGoodsCategory());
+            tfcTransportDetail.setPack(ofcGoodsDetailsInfo.getPack());
+            tfcTransportDetail.setChargingWays(ofcGoodsDetailsInfo.getChargingWays());
+            tfcTransportDetails.add(tfcTransportDetail);
+        }
+        tfcTransport.setProductDetail(tfcTransportDetails);
+        return tfcTransport;
+    }
+
+    /**
+     * 订单中心实体转运输中心接口DTO 基本信息
+     * @param ofcFundamentalInformation 基本信息
+     * @param ofcFinanceInformation 财务信息
+     * @param ofcDistributionBasicInfo 运输信息
+     * @param tfcTransport  TfcTransport
+     */
+    private void convertOrderToTfcOfBaseInfo(OfcFundamentalInformation ofcFundamentalInformation
+            , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, TfcTransport tfcTransport) {
         tfcTransport.setCustomerOrderCode(ofcFundamentalInformation.getCustOrderCode());
 //        tfcTransport.setBaseName();
 //        tfcTransport.setInterfaceStatus();
@@ -3387,57 +3442,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setMatchingMode();//
 //        tfcTransport.setSchedulingState();//
 //        tfcTransport.setTransportPoolName();//
-        List<TfcTransportDetail> tfcTransportDetails = new ArrayList<>();
-        for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
-            if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
-                if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
-                    continue;
-                }
-            }
-            TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
-            tfcTransportDetail.setStandard(ofcGoodsDetailsInfo.getGoodsSpec());
-//            tfcTransportDetail.setPono();
-//            tfcTransportDetail.setQtyPicked();
-//            tfcTransportDetail.setMarketUnitl();
-//            tfcTransportDetail.setQtyPickedEach();
-//            tfcTransportDetail.setBasicUnits1();
-//            tfcTransportDetail.setQtyOrdered();
-//            tfcTransportDetail.setMarketUnit2();
-//            tfcTransportDetail.setQtyOrderedEach();
-//            tfcTransportDetail.setBasicUnits2();
-//            tfcTransportDetail.setTransportId();
-//            tfcTransportDetail.setTfcBillNo();
-//            tfcTransportDetail.setFromSystem();
-            tfcTransportDetail.setTransportNo(ofcDistributionBasicInfo.getTransCode());
-            tfcTransportDetail.setItemCode(ofcGoodsDetailsInfo.getGoodsCode());
-            tfcTransportDetail.setItemName(ofcGoodsDetailsInfo.getGoodsName());
-            tfcTransportDetail.setQty(ofcGoodsDetailsInfo.getQuantity() == null ? null : ofcGoodsDetailsInfo.getQuantity().doubleValue());
-            tfcTransportDetail.setWeight(ofcGoodsDetailsInfo.getWeight() == null ? null : ofcGoodsDetailsInfo.getWeight().doubleValue());
-            tfcTransportDetail.setVolume(ofcGoodsDetailsInfo.getCubage() == null ? null : ofcGoodsDetailsInfo.getCubage().doubleValue());
-            tfcTransportDetail.setPrice(ofcGoodsDetailsInfo.getUnitPrice() == null ? null : ofcGoodsDetailsInfo.getUnitPrice().doubleValue());
-//            tfcTransportDetail.setMoney();
-            tfcTransportDetail.setUom(ofcGoodsDetailsInfo.getUnit());
-//            tfcTransportDetail.setContainerQty();
-            tfcTransportDetail.setProductionBatch(ofcGoodsDetailsInfo.getProductionBatch());
-            tfcTransportDetail.setProductionTime(ofcGoodsDetailsInfo.getProductionTime());
-            tfcTransportDetail.setInvalidTime(ofcGoodsDetailsInfo.getInvalidTime());
-            tfcTransportDetail.setTotalBox(ofcGoodsDetailsInfo.getTotalBox());
-            tfcTransportDetail.setGoodsType(ofcGoodsDetailsInfo.getGoodsType());
-            tfcTransportDetail.setGoodsCategory(ofcGoodsDetailsInfo.getGoodsCategory());
-            tfcTransportDetail.setPack(ofcGoodsDetailsInfo.getPack());
-            tfcTransportDetail.setChargingWays(ofcGoodsDetailsInfo.getChargingWays());
-            tfcTransportDetails.add(tfcTransportDetail);
-        }
-        tfcTransport.setProductDetail(tfcTransportDetails);
-        return tfcTransport;
     }
+
+
 
     /**
      * 校验收发货方信息
      *
-     * @param cscContantAndCompanyDtoConsignor
-     * @param cscContantAndCompanyDtoConsignee
-     * @return
+     * @param cscContantAndCompanyDtoConsignor 发货方
+     * @param cscContantAndCompanyDtoConsignee 收货方
+     * @return 校验结果
      */
     private Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee) {
         if (null == cscContantAndCompanyDtoConsignor || null == cscContantAndCompanyDtoConsignee) {
