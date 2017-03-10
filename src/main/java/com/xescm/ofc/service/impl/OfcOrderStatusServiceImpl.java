@@ -1,6 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
@@ -241,7 +240,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                  type=OFC_WHC_OUT_TYPE;
             }
-
             String statusDesc=translateStatusToDesc(traceStatus,type);
             if(orderStatus.getStatusDesc().indexOf(statusDesc)<0){
                 status.setLastedOperTime(new Date());

@@ -1205,7 +1205,6 @@
                 }
             },
             openMessage:function(){
-                debugger;
                 var _this=this;
                 _this.$confirm('您只有一条发货方记录, 点击确认将自动帮你加载?', '提示', {
                     confirmButtonText: '确定',
@@ -1235,7 +1234,6 @@
                 }
             },
             openSupplierMessage:function(){
-                debugger;
                 var _this=this;
                 _this.$confirm('您只有一条供应商记录, 点击确认将自动帮你加载?', '提示', {
                     confirmButtonText: '确定',
