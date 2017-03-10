@@ -659,7 +659,7 @@
                     $.each(data,function (index,CscGoodsTypeVo) {
                         var goodClass={};
                         goodClass.label=CscGoodsTypeVo.goodsTypeName;
-                        goodClass.value=CscGoodsTypeVo.goodsTypeName;
+                        goodClass.value=CscGoodsTypeVo.id;
                         vueObj.goodsCategoryOptions.push(goodClass);
                     });
                 });
@@ -836,6 +836,7 @@
                 this.goodDataInfo.goodsCodeData=[];
                 var vueObj=this;
                 var cscGoods = {};
+                debugger;
                 var customerCode = vueObj.orderForm.custCode;
                 cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
                 cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
@@ -1247,6 +1248,15 @@
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
+            },
+            goodsCategoryNameByValue:function(val){
+                debugger;
+                for(var i=0;i<this.goodsCategoryOptions.length;i++){
+                    var option=this.goodsCategoryOptions[i];
+                    if(option.label==val){
+                        return option.value;
+                    }
+                }
             }
         }
     })

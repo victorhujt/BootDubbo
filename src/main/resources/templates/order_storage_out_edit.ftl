@@ -830,7 +830,7 @@
                     $.each(data,function (index,CscGoodsTypeVo) {
                         var goodClass={};
                         goodClass.label=CscGoodsTypeVo.goodsTypeName;
-                        goodClass.value=CscGoodsTypeVo.goodsTypeName;
+                        goodClass.value=CscGoodsTypeVo.id;
                         vueObj.goodsCategoryOptions.push(goodClass);
                     });
                 });
