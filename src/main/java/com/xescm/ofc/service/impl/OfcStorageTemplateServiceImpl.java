@@ -49,6 +49,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
@@ -462,6 +463,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 checkPass = false;
                                 continue;
                             }
+                            //对数字过长的单元格的值进行处理
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //订单日期
                         }else if(StringUtils.equals(StorageImportInEnum.ORDER_TIME.getStandardColCode(), standardColCode)){
@@ -530,10 +533,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 }
                             }else {
                                 //如果当前单元格不空, 需要校验是否是ofc可识别的订单类型
-                                Wrapper result = checkBusinessType(cellValue, ofcStorageTemplate.getTemplateType());
+                                logger.info("-----------cellValue{}", cellValue);
+                                logger.info("-----------cellValue.split().length :{}", cellValue.split("\\.").length);
+                                Wrapper result = checkBusinessType(cellValue.split("\\.").length > 1 ? cellValue.split("\\.")[0] : cellValue, ofcStorageTemplate.getTemplateType());
                                 if(Wrapper.ERROR_CODE == result.getCode()){
                                     logger.error("当前行:{},列:{} 业务类型:{}不可识别", rowNum + 1, cellNum + 1, cellValue);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 业务类型【" + cellValue + "】无效!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + result.getMessage());
                                     checkPass = false;
                                     continue;
                                 }
@@ -557,6 +562,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 checkPass = false;
                                 continue;
                             }
+                            //对数字过长的单元格的值进行处理
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             //货品编码不空,判断是否已经校验过
                             //如果没校验过就调用CSC接口进行校验
                             if(!goodsCheck.containsKey(cellValue)){
@@ -590,6 +597,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 CscGoodsApiVo cscGoodsApiVo = goodsCheck.get(cellValue);
                                 ofcStorageTemplateDto.setCscGoodsApiVo(cscGoodsApiVo);
                             }
+
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //货品名称
                         }else if(StringUtils.equals(StorageImportInEnum.GOODS_NAME.getStandardColCode(), standardColCode)){
@@ -604,6 +612,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有规格", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //单位
                         }else if(StringUtils.equals(StorageImportInEnum.UNIT.getStandardColCode(), standardColCode)){
@@ -611,6 +620,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有单位", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //单价
                         }else if(StringUtils.equals(StorageImportInEnum.UNIT_PRICE.getStandardColCode(), standardColCode)){
@@ -864,6 +874,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeCheck.get(cellValue);
                                 ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
                             }
+
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                         }
                     }
@@ -968,6 +979,25 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     /**
+     * 处理过长的数字
+     * @param cellValue
+     * @param commonCell
+     * @return
+     */
+    private String resolveTooLangNum(String cellValue, Cell commonCell) {
+        String cellValuePhone;
+        if (commonCell != null && Cell.CELL_TYPE_STRING == commonCell.getCellType()) {
+            cellValuePhone = PubUtils.trimAndNullAsEmpty(commonCell.getStringCellValue());
+            cellValue = cellValuePhone;
+        } else if (commonCell != null && Cell.CELL_TYPE_NUMERIC == commonCell.getCellType()) {
+            cellValuePhone = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
+            DecimalFormat df = new DecimalFormat("0");
+            cellValue = df.format(Double.valueOf(cellValuePhone));
+        }
+        return cellValue;
+    }
+
+    /**
      * 只要用户的Excel中的列名是标准列名, 也进行自动映射
      * @param commonRow Excel第一列
      * @param templateDetilMap 用户模板
@@ -1020,7 +1050,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
         }
         if(!check){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该业务类型无法识别或不是"
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该业务类型【" + cellValue + "】无法识别或不是"
                     + (StringUtils.equals(templateType, STORAGE_IN) ? "入库" : "出库") + "类型的!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, cellValue);
