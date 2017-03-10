@@ -325,6 +325,9 @@
       <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
         AND ofi.base_code = #{form.baseSerialNo}
       </if>
+      <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+        AND ofi.area_code = #{form.areaSerialNo}
+      </if>
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>

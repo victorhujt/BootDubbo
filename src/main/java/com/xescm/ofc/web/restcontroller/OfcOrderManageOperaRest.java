@@ -82,6 +82,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
     @ResponseBody
     public Object queryOrderOper(Page<OrderOperForm> page, OrderOperForm form) {
+        logger.info("==>queryOrderDataOper   page:{}", page);
+        logger.info("==>queryOrderDataOper   form:{}", form);
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             AuthResDto authResDto = getAuthResDtoByToken();
