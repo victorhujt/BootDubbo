@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -11,25 +11,25 @@ import com.xescm.ofc.service.OrderFollowOperService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
  * Created by lyh on 2016/10/12.
- * 订单追踪
+ * 运营中心订单追踪
  */
 @RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderFollowOperRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OrderFollowOperService orderFollowOperService;
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
 
     @RequestMapping(value = "/orderFollowOpera")
@@ -37,11 +37,18 @@ public class OfcOrderFollowOperRest extends BaseController {
         return "order_follow_opera";
     }
 
+    /**
+     * 运营中心订单追踪
+     * @param code 编码
+     * @param searchType 追踪类型
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/orderFollowOperSearch", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderFollowOperSearch(String code, String searchType) throws Exception {
-        logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
-        logger.debug("==>订单中心订单追踪条件标志位 searchType={}", searchType);
+        logger.info("==>订单中心订单追踪条件筛选code code={}", code);
+        logger.info("==>订单中心订单追踪条件标志位 searchType={}", searchType);
 
         try {
             code = PubUtils.trimAndNullAsEmpty(code);
@@ -56,7 +63,6 @@ public class OfcOrderFollowOperRest extends BaseController {
             searchTypes.add("orderCode");
             searchTypes.add("custOrderCode");
             searchTypes.add("transCode");
-            searchTypes.add("planCode");
             if (!searchTypes.contains(searchType)) {
                 throw new Exception("搜索类型错误！");
             }

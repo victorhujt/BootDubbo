@@ -1,12 +1,13 @@
 package com.xescm.ofc.mapper;
 
-import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamentalInformation> {
     String getOrderCodeByCustOrderCode(Object key);
 
@@ -15,8 +16,6 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
     String getOrderCodeByCustOrderCodeAndCustCode(@Param("custOrderCode") String custOrderCode, @Param("custCode") String custCode);
 
     List<OfcFundamentalInformation> queryOrder(@Param("code") String code, @Param("searchType") String searchType);
-
-    OfcBatchOrderVo queryByBatchNumber(@Param("orderBatchNumber") String orderBatchNumber);
 
     List<OfcFundamentalInformation> queryOrderByOrderBatchNumber(@Param("orderBatchNumber") String orderBatchNumber);
 
@@ -30,4 +29,8 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
      * @return
      */
     OfcFundamentalInformation queryOfcFundInfoByCustOrderCodeAndCustCode(OfcFundamentalInformation ofcFundamentalInformation);
+
+
+    int checkCustOrderCodeRepeat(@Param("custOrderCode") String custOrderCode);
+
 }

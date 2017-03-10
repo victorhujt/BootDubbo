@@ -116,6 +116,131 @@
     <result column="lasted_oper_time" property="lastedOperTime" jdbcType="TIMESTAMP"></result>
 
   </resultMap>
+
+  <resultMap id="orderInfoDto" type="com.xescm.ofc.edas.model.dto.ofc.OfcOrderInfoDto">
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="sec_cust_code" property="secCustCode" jdbcType="VARCHAR" />
+    <result column="sec_cust_name" property="secCustName" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="cust_order_code" property="custOrderCode" jdbcType="VARCHAR" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="platform_type" property="platformType" jdbcType="VARCHAR" />
+    <result column="order_source" property="orderSource" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="finished_time" property="finishedTime" jdbcType="TIMESTAMP" />
+    <result column="abolish_mark" property="abolishMark" jdbcType="INTEGER" />
+    <result column="abolish_time" property="abolishTime" jdbcType="TIMESTAMP" />
+    <result column="abolisher" property="abolisher" jdbcType="VARCHAR" />
+    <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
+    <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+    <result column="base_code" property="baseCode" jdbcType="VARCHAR" />
+    <result column="base_name" property="baseName" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+    <result column="urgent" property="urgent" jdbcType="INTEGER" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    <result column="consignor_code" property="consignorCode" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_code" property="consignorContactCode" jdbcType="VARCHAR" />
+    <result column="consignor_contact_name" property="consignorContactName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_phone" property="consignorContactPhone" jdbcType="VARCHAR" />
+    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+    <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
+    <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+    <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="departure_place_code" property="departurePlaceCode" jdbcType="VARCHAR" />
+    <result column="consignee_code" property="consigneeCode" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="consignee_contact_code" property="consigneeContactCode" jdbcType="VARCHAR" />
+    <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR" />
+    <result column="consignee_contact_phone" property="consigneeContactPhone" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR"/>
+    <result column="destination_city" property="destinationCity" jdbcType="VARCHAR"/>
+    <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR"/>
+    <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR"/>
+    <result column="destination_code" property="destinationCode" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="VARCHAR" />
+    <result column="total_standard_box" property="totalStandardBox" jdbcType="INTEGER" />
+    <result column="trans_require" property="transRequire" jdbcType="VARCHAR" />
+    <result column="pickup_time" property="pickupTime" jdbcType="TIMESTAMP" />
+    <result column="expected_arrived_time" property="expectedArrivedTime" jdbcType="TIMESTAMP" />
+    <result column="consignor_type" property="consignorType" jdbcType="VARCHAR" />
+    <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR" />
+    <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
+    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="service_charge" property="serviceCharge" jdbcType="DECIMAL" />
+    <result column="order_amount" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="payment_amount" property="paymentAmount" jdbcType="DECIMAL" />
+    <result column="collect_loan_amount" property="collectLoanAmount" jdbcType="DECIMAL" />
+    <result column="collect_service_charge" property="collectServiceCharge" jdbcType="DECIMAL" />
+    <result column="collect_flag" property="collectFlag" jdbcType="VARCHAR" />
+    <result column="count_flag" property="countFlag" jdbcType="VARCHAR" />
+    <result column="print_invoice" property="printInvoice" jdbcType="VARCHAR" />
+    <result column="buyer_payment_method" property="buyerPaymentMethod" jdbcType="VARCHAR" />
+    <result column="insure" property="insure" jdbcType="VARCHAR" />
+    <result column="insure_value" property="insureValue" jdbcType="VARCHAR" />
+    <result column="pick_up_goods" property="pickUpGoods" jdbcType="VARCHAR" />
+    <result column="home_delivery_fee" property="homeDeliveryFee" jdbcType="DECIMAL" />
+    <result column="cargo_insurance_fee" property="cargoInsuranceFee" jdbcType="DECIMAL" />
+    <result column="insurance" property="insurance" jdbcType="DECIMAL" />
+    <result column="two_distribution" property="twoDistribution" jdbcType="VARCHAR" />
+    <result column="two_distribution_fee" property="twoDistributionFee" jdbcType="DECIMAL" />
+    <result column="return_list" property="returnList" jdbcType="VARCHAR" />
+    <result column="return_list_fee" property="returnListFee" jdbcType="DECIMAL" />
+    <result column="expense_payment_party" property="expensePaymentParty" jdbcType="VARCHAR" />
+    <result column="payment" property="payment" jdbcType="VARCHAR" />
+    <result column="current_amount" property="currentAmount" jdbcType="DECIMAL" />
+    <result column="to_pay_amount" property="toPayAmount" jdbcType="DECIMAL" />
+    <result column="return_amount" property="returnAmount" jdbcType="DECIMAL" />
+    <result column="monthly_amount" property="monthlyAmount" jdbcType="DECIMAL" />
+    <result column="luggage" property="luggage" jdbcType="DECIMAL" />
+    <result column="open_invoices" property="openInvoices" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="orderDetailInfoDto" type="com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailInfoDto">
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_spec" property="goodsSpec" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="pack" property="pack" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="production_batch" property="productionBatch" jdbcType="VARCHAR" />
+    <result column="production_time" property="productionTime" jdbcType="TIMESTAMP" />
+    <result column="invalid_time" property="invalidTime" jdbcType="TIMESTAMP" />
+    <result column="charging_ways" property="chargingWays" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+    <result column="quantity_unit_price" property="quantityUnitPrice" jdbcType="DECIMAL" />
+    <result column="weight_unit_price" property="weightUnitPrice" jdbcType="DECIMAL" />
+    <result column="volume_unit_price" property="volumeUnitPrice" jdbcType="DECIMAL" />
+    <result column="billing_weight" property="billingWeight" jdbcType="DECIMAL" />
+    <result column="charging_unit_price" property="chargingUnitPrice" jdbcType="DECIMAL" />
+  </resultMap>
+
   <sql id="Base_Column_List_Fundamental" >
     order_code, order_batch_number, order_time, cust_code, cust_name, sec_cust_code, 
     sec_cust_name, order_type, business_type, cust_order_code, notes, store_code, store_name, 
@@ -140,7 +265,8 @@
     <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR"></result>
     <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"></result>
     <result column="notes" property="notes" jdbcType="VARCHAR"></result>
-    <result column="store_name" property="storeName" jdbcType="VARCHAR"></result>
+    <result column="is_exception" property="isException" jdbcType="VARCHAR"></result>
+    <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR"></result>
   </resultMap>
 
   <!-- 运营-订单管理查询 -->
@@ -154,17 +280,20 @@
       ofi.order_type,
       ofi.business_type,
       ofi.base_name,
-      (SELECT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code AND notes NOT LIKE '%已回单' LIMIT 1)order_status,
+      ns.order_latest_status as order_status,
       odbi.consignee_type,
       odbi.consignee_name,
       odbi.consignee_contact_name,
       owi.warehouse_name,
       ofi.notes,
-      ofi.store_name
+      ofi.store_name,
+      ofi.is_exception,
+      ofi.exception_reason
     FROM
     ofc_fundamental_information ofi
       LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
     <where>
       <if test="form.startDate!=null and form.startDate!=''">
         AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
@@ -178,8 +307,14 @@
       <if test="form.custName!=null and form.custName!=''">
         AND ofi.cust_name = #{form.custName}
       </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND ofi.cust_code = #{form.custCode}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
       <if test="form.orderState!=null and form.orderState!=''">
-        AND (SELECT DISTINCT MAX(order_status) FROM ofc_order_status WHERE order_code = ofi.order_code ) = #{form.orderState}
+        AND  ns.order_latest_status = #{form.orderState}
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
@@ -190,9 +325,78 @@
       <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
         AND ofi.base_code = #{form.baseSerialNo}
       </if>
-        <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
-            AND ofi.area_code = #{form.areaSerialNo}
-        </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+
+    </where>
+    ORDER BY ofi.order_code DESC
+  </select>
+
+
+
+  <!-- 运营-订单管理查询 -->
+  <select id="queryStorageOrderList" resultMap="Order_Search_Oper_Map">
+    SELECT DISTINCT
+    ofi.cust_name,
+    ofi.order_code,
+    ofi.cust_order_code,
+    ofi.order_batch_number,
+    ofi.order_time,
+    ofi.order_type,
+    ofi.business_type,
+    ofi.base_name,
+    ns.order_latest_status as order_status,
+    odbi.consignee_type,
+    odbi.consignee_name,
+    odbi.consignee_contact_name,
+    owi.warehouse_name,
+    ofi.notes,
+    ofi.store_name,
+    ofi.is_exception,
+    ofi.exception_reason
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
+    <where>
+        1=1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND ofi.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND ofi.cust_name = #{form.custName}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND  ns.order_latest_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND ofi.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND ofi.business_type = #{form.businessType}
+      </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+         AND  ofi.business_type in
+      <foreach item="item" index="index" collection="form.businessTypes"
+               open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </where>
     ORDER BY ofi.order_code DESC
   </select>
@@ -300,15 +504,43 @@
       <when test="'transCode'.toString() == searchType">
         AND ofd.trans_code = #{code}
       </when>
-      <when test=" 'planCode'.toString() == searchType">
-        and ofi.order_code = (SELECT order_code from ofc_transplan_info where plan_code = #{code})
-      </when>
       <otherwise></otherwise>
     </choose>
 
   </select>
 
+  <!-- 根据订单号查询订单信息 -->
+  <select id="getOrderInfoByOrderCode" resultMap="orderInfoDto">
+    SELECT ofi.order_code, ofi.order_batch_number, ofi.order_time , ofi.order_type , ofi.cust_code, ofi.cust_name , ofi.sec_cust_code, ofi.sec_cust_name,
+    ofi.business_type , ofi.cust_order_code, ofi.store_code, ofi.store_name, ofi.platform_type, ofi.order_source, ofi.product_type, ofi.product_name,
+    ofi.finished_time, ofi.abolish_mark, ofi.abolisher, ofi.abolisher_name, ofi.abolish_time, ofi.creation_time, ofi.creator, ofi.creator_name,
+    ofi.operator, ofi.operator_name, ofi.merchandiser, ofi.transport_type, ofi.base_code, ofi.base_name, ofi.area_code, ofi.area_name,odbi.trans_code ,
+    odbi.urgent, odbi.plate_number , odbi.driver_name , odbi.contact_number, odbi.consignor_code, odbi.consignor_name , odbi.consignor_contact_code,
+    odbi.consignor_contact_name , odbi.consignor_contact_phone ,
+    CONCAT( departure_province , departure_city , departure_district , departure_towns , departure_place ) departure_place,odbi.departure_province,
+    odbi.departure_city, odbi.departure_district, odbi.departure_towns, odbi.departure_place_code, odbi.consignee_code, odbi.consignee_name ,
+    odbi.consignee_contact_code, odbi.consignee_contact_name , odbi.consignee_contact_phone ,
+    CONCAT( destination_province , destination_city , destination_district , destination_towns , odbi.destination )destination, odbi.destination_province,
+    odbi.destination_city, odbi.destination_district, odbi.destination_towns, odbi.destination_code, odbi.quantity, odbi.weight, odbi.cubage,
+    odbi.total_standard_box, odbi.trans_require, odbi.pickup_time, odbi.expected_arrived_time, odbi.consignor_type, odbi.consignee_type, odbi.carrier_code,
+    odbi.carrier_name, ofi.notes, finc.service_charge, finc.order_amount, finc.payment_amount, finc.collect_loan_amount, finc.collect_service_charge,
+    finc.collect_flag, finc.count_flag, finc.print_invoice, finc.buyer_payment_method, finc.insure, finc.insure_value, finc.pick_up_goods, finc.home_delivery_fee,
+    finc.cargo_insurance_fee, finc.insurance, finc.two_distribution, finc.two_distribution_fee, finc.return_list, finc.return_list_fee, finc.expense_payment_party,
+    finc.payment, finc.current_amount, finc.to_pay_amount, finc.return_amount, finc.monthly_amount, finc.luggage, finc.open_invoices
+    FROM ofc_fundamental_information ofi LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code LEFT JOIN ofc_finance_information finc
+    ON ofi.order_code = finc.order_code
+    WHERE ofi.order_code IN
+    <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
+      #{orderCode}
+    </foreach>
+  </select>
 
-
+  <!-- 根据订单号查询订单商品信息 -->
+  <select id="getOrderDetailInfoByQrderCode" resultMap="orderDetailInfoDto">
+    SELECT gdi.goods_code, gdi.goods_name, gdi.goods_spec, gdi.unit, gdi.pack, gdi.quantity, gdi.unit_price, gdi.production_batch,
+      gdi.production_time, gdi.charging_ways, gdi.weight, gdi.cubage, gdi.goods_type, gdi.goods_category, gdi.quantity_unit_price,
+      gdi.weight_unit_price, gdi.volume_unit_price, gdi.billing_weight, gdi.charging_unit_price from ofc_goods_details_info gdi
+    where order_code = #{orderCode}
+  </select>
 
 </mapper>

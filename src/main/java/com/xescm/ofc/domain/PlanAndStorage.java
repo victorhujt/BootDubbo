@@ -1,5 +1,7 @@
 package com.xescm.ofc.domain;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ import java.util.Date;
  * 仓储-计划
  * Created by hiyond on 2016/11/25.
  */
+@Data
 public class PlanAndStorage implements Serializable {
 
     private static final long serialVersionUID = -6636402636202541680L;
@@ -38,115 +41,4 @@ public class PlanAndStorage implements Serializable {
 
     private String baseName;
 
-    public String getBaseName() {
-        return baseName;
-    }
-
-    public void setBaseName(String baseName) {
-        this.baseName = baseName;
-    }
-
-    public String getOrderCode() {
-        return orderCode;
-    }
-
-    public void setOrderCode(String orderCode) {
-        this.orderCode = orderCode;
-    }
-
-    public String getPlanCode() {
-        return planCode;
-    }
-
-    public void setPlanCode(String planCode) {
-        this.planCode = planCode;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getBusinessType() {
-        return businessType;
-    }
-
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
-    }
-
-    public String getResourceAllocationStatus() {
-        return resourceAllocationStatus;
-    }
-
-    public void setResourceAllocationStatus(String resourceAllocationStatus) {
-        this.resourceAllocationStatus = resourceAllocationStatus;
-    }
-
-    public String getServiceProviderName() {
-        return serviceProviderName;
-    }
-
-    public void setServiceProviderName(String serviceProviderName) {
-        this.serviceProviderName = serviceProviderName;
-    }
-
-    public String getServiceProviderContact() {
-        return serviceProviderContact;
-    }
-
-    public void setServiceProviderContact(String serviceProviderContact) {
-        this.serviceProviderContact = serviceProviderContact;
-    }
-
-    public String getServiceProviderContactPhone() {
-        return serviceProviderContactPhone;
-    }
-
-    public void setServiceProviderContactPhone(String serviceProviderContactPhone) {
-        this.serviceProviderContactPhone = serviceProviderContactPhone;
-    }
-
-    public String getPlannedSingleState() {
-        return plannedSingleState;
-    }
-
-    public void setPlannedSingleState(String plannedSingleState) {
-        this.plannedSingleState = plannedSingleState;
-    }
-
-    public String getDeparture() {
-        return departure;
-    }
-
-    public void setDeparture(String departure) {
-        this.departure = departure;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    public String getWarehouseName() {
-        return warehouseName;
-    }
-
-    public void setWarehouseName(String warehouseName) {
-        this.warehouseName = warehouseName;
-    }
-
-    public Date getFinishedTime() {
-        return finishedTime;
-    }
-
-    public void setFinishedTime(Date finishedTime) {
-        this.finishedTime = finishedTime;
-    }
 }

@@ -50,8 +50,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(new String[]{"/**"})
-                .addResourceLocations(new String[]{"classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/",});
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/");
     }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -60,7 +60,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // excludePathPatterns 用户排除拦截
     	super.addInterceptors(registry);
     	authViewInterceptor.setEnv(env);
-		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**");
+		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
     }
 
 }

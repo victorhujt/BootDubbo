@@ -43,7 +43,8 @@
 
 
 
-    <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
+
+   <!-- <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
     <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
     <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
     <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
@@ -60,7 +61,9 @@
     <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
     <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
     <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
-    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />-->
+    <result column="is_exception" property="isException" jdbcType="VARCHAR" />
+    <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR" />
 
   </resultMap>
   <resultMap id="convCustOrderCode" type="java.lang.String">
@@ -73,6 +76,7 @@
     from
     ofc_fundamental_information ofi
       WHERE ofi.cust_order_code =#{custOrderCode}
+       AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
 
   <select id="checkCustOrderCode" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation" resultType="java.lang.Integer">
@@ -90,7 +94,7 @@
       AND
       cust_order_code = #{custOrderCode}
       AND (abolish_mark is null OR abolish_mark  = 0)
-
+      AND  (ofi.is_exception is null OR ofi.is_exception  = 0)
     </where>
   </select>
 
@@ -101,6 +105,7 @@
     ofc_fundamental_information ofi
     WHERE ofi.cust_order_code =#{custOrderCode}
     AND ofi.cust_code = #{custCode}
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
 
   <select id="queryOrder" resultMap="BaseResultMap">
@@ -131,13 +136,22 @@
     FROM
     ofc_fundamental_information ofi,
     ofc_distribution_basic_info ofd,
-    (SELECT temp.* FROM ofc_order_status temp
+    (SELECT
+    temp.order_code,
+    temp.order_status,
+    temp.status_desc,
+    temp.lasted_oper_time,
+    temp.notes,
+    temp.operator,
+    temp.creation_time
+    FROM ofc_order_status temp
     WHERE temp.lasted_oper_time = (
     SELECT MAX(lasted_oper_time) FROM ofc_order_status
     WHERE temp.order_code = order_code
     ) ORDER BY temp.lasted_oper_time DESC) oos
     WHERE ofi.order_code = ofd.order_code
     AND ofi.order_code = oos.order_code
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
     <choose>
       <when test=" 'orderCode'.toString() == searchType ">
         AND ofi.order_code = #{code}
@@ -154,8 +168,57 @@
   </select>
   
   <select id="queryOrderByOrderBatchNumber" resultMap="BaseResultMap">
-    SELECT ofi.*,odb.consignee_name,owi.warehouse_name,oos.order_status FROM ofc_fundamental_information ofi
-      LEFT JOIN (SELECT temp.* FROM ofc_order_status temp
+    SELECT
+      ofi.order_code,
+      ofi.order_batch_number,
+      ofi.order_time,
+      ofi.cust_code,
+      ofi.cust_name,
+      ofi.sec_cust_code,
+      ofi.sec_cust_name,
+      ofi.order_type,
+      ofi.business_type,
+      ofi.cust_order_code,
+      ofi.notes,
+      ofi.store_code,
+      ofi.store_name,
+      ofi.platform_type,
+      ofi.order_source,
+      ofi.product_type,
+      ofi.product_name,
+      ofi.finished_time,
+      ofi.abolish_mark,
+      ofi.abolish_time,
+      ofi.abolisher,
+      ofi.creation_time,
+      ofi.creator,
+      ofi.operator,
+      ofi.oper_time,
+      ofi.sale_organization,
+      ofi.product_group,
+      ofi.sale_department,
+      ofi.sale_group,
+      ofi.sale_department_desc,
+      ofi.sale_group_desc,
+      ofi.creator_name,
+      ofi.operator_name,
+      ofi.abolisher_name,
+      ofi.merchandiser,
+      ofi.transport_type,
+      ofi.base_code,
+      ofi.base_name,
+      ofi.area_code,
+      ofi.area_name,
+    odb.consignee_name,owi.warehouse_name,oos.order_status FROM ofc_fundamental_information ofi
+      LEFT JOIN (SELECT
+        temp.order_code,
+        temp.order_status,
+        temp.status_desc,
+        temp.lasted_oper_time,
+        temp.notes,
+        temp.operator,
+        temp.creation_time
+       FROM ofc_order_status temp
           WHERE temp.lasted_oper_time = (
           SELECT MAX(lasted_oper_time) FROM ofc_order_status
           WHERE temp.order_code = order_code
@@ -163,11 +226,13 @@
       LEFT JOIN ofc_distribution_basic_info odb ON odb.order_code = ofi.order_code
       LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
       WHERE ofi.order_batch_number = #{orderBatchNumber}
+      AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
   
   <select id="queryDataByCustOrderCode" resultType="com.xescm.ofc.domain.OfcFundamentalInformation">
     SELECT ofi.order_code,ofi.cust_code,ofi.cust_name
     FROM ofc_fundamental_information ofi WHERE ofi.cust_order_code = #{custOrderCode}
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
 
   <select id="getLastMerchandiser" resultType="com.xescm.ofc.domain.OfcFundamentalInformation">
@@ -175,7 +240,7 @@
     ofi.merchandiser
     from
     ofc_fundamental_information ofi
-    WHERE ofi.operator_name =#{operatorName} ORDER BY ofi.oper_time DESC LIMIT 1
+    WHERE ofi.operator_name =#{operatorName} AND (ofi.is_exception is null OR ofi.is_exception  = 0) ORDER BY ofi.oper_time DESC LIMIT 1
   </select>
 
   <select id="queryOfcFundInfoByCustOrderCodeAndCustCode" resultType="com.xescm.ofc.domain.OfcFundamentalInformation" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation">
@@ -184,6 +249,16 @@
     WHERE ofi.cust_order_code = #{custOrderCode}
     AND ofi.cust_code = #{custCode}
     AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+    AND (ofi.is_exception is null OR ofi.is_exception  = 0)
   </select>
+  <select id="checkCustOrderCodeRepeat" resultType="java.lang.Integer">
+    SELECT
+    COUNT(ofi.order_code)
+    FROM
+    ofc_fundamental_information ofi
+    WHERE
+    ofi.cust_order_code = #{custOrderCode}
+  </select>
+
 
 </mapper>

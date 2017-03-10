@@ -1,18 +1,23 @@
 package com.xescm.ofc.mapper;
 
+import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
     int deleteByOrderCode(Object key);
 
     List<OfcOrderStatus> orderStatusScreen(Map<String, String> mapperMap);
 
     OfcOrderStatus orderStatusSelect(Map<String, String> mapperMap);
+
+    OfcOrderNewstatus orderStatusSelectNew(Map<String, String> mapperMap);
 
     OfcOrderStatus queryOrderStateByOrderCode(@Param(value = "orderCode") String orderCode);
 
@@ -44,5 +49,5 @@ public interface OfcOrderStatusMapper extends MyMapper<OfcOrderStatus> {
      * @CreateDate    2017/2/10 12:07
      * @return
      */
-    void batchInsertOrderStatusId(@Param(value = "status") OfcOrderStatus statusList);
+    void batchInsertOrderStatusId(@Param(value = "statusList") List<OfcOrderStatus> statusList);
 }

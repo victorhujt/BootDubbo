@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
@@ -13,23 +13,18 @@ import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
-import com.xescm.ofc.domain.OfcAttachment;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
-import com.xescm.ofc.model.dto.ofc.AttachmentDto;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
-import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.web.controller.BaseController;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,7 +32,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,10 +44,8 @@ import java.util.List;
 @RequestMapping(value = "/ofc", produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcMobileOrderRest extends BaseController {
-    @Autowired
-    private OfcAttachmentService ofcAttachmentService;
 
-    @Autowired
+    @Resource
     private OfcMobileOrderService ofcMobileOrderService;
 
     @Resource
@@ -79,7 +71,7 @@ public class OfcMobileOrderRest extends BaseController {
 
     @RequestMapping(value = "/mobileOrderDetails/{orderCode}")
     public ModelAndView orderDetailByOrderCode(@PathVariable("orderCode") String code) {
-        logger.debug("==>手机订单详情code code={}", code);
+        logger.info("==>手机订单详情code code={}", code);
         ModelAndView modelAndView = new ModelAndView("mobile_order_detail_opera");
         modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
@@ -96,7 +88,7 @@ public class OfcMobileOrderRest extends BaseController {
 
     @RequestMapping(value = "/acceptMobileOrder/{orderCode}")
     public ModelAndView acceptMobileOrder(@PathVariable("orderCode") String code) {
-        logger.debug("==>手机订单详情code code={}", code);
+        logger.info("==>手机订单详情code code={}", code);
         ModelAndView modelAndView = new ModelAndView("mobile_order_accept_opera");
         modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         OfcMobileOrder condition = new OfcMobileOrder();
@@ -113,24 +105,19 @@ public class OfcMobileOrderRest extends BaseController {
 
     /**
      *
-     * @param model
      * @param ofcOrderDTOStr        订单基本信息、收发货方信息
      * @param orderGoodsListStr     货品信息
      * @param cscContantAndCompanyDtoConsignorStr   发货人信息
      * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
      * @param cscSupplierInfoDtoStr                 供应商信息
-     * @param tag           标识下单、编辑、运输开单
-     * @param response
      * @return
      */
     @RequestMapping("/mobileorderPlaceCon")
     @ResponseBody
-    public Wrapper<?> mobileOrderPlace(Model model, String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
-            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String tag, HttpServletResponse response, String mobileOrderCode){
-        logger.debug("==>拍照下单订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
-        logger.debug("==>拍照下单订单中心下单或编辑标志位 tag={}", tag);
-        String resultMessage = null;
-        String orderCode="";
+    public Wrapper<?> mobileOrderPlace(String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
+            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String mobileOrderCode){
+        logger.info("==>拍照下单订单中心下单 ofcOrderDTOStr={}", ofcOrderDTOStr);
+        String orderCode;
         try {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
@@ -146,10 +133,8 @@ public class OfcMobileOrderRest extends BaseController {
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
                 cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
-            // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
             OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
@@ -172,29 +157,30 @@ public class OfcMobileOrderRest extends BaseController {
             }
             if(null !=ofcOrderDTO){
                 if (null == ofcOrderDTO.getProvideTransport()){
-                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSEORDERNOTPROVIDETRANS);
+                    ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
                 }
                 if (null == ofcOrderDTO.getUrgent()){
-                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTIONORDERNOTURGENT);
+                    ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
+                }
+                if(null == ofcOrderDTO.getOrderTime()){
+                    throw new BusinessException("请选择订单日期！");
                 }
             }else{
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,"订单相关信息有误");
+                throw new BusinessException("订单相关信息有误！");
             }
-            resultMessage = ofcMobileOrderService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
-                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto,orderCode);
+            orderCode = ofcMobileOrderService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,authResDtoByToken,authResDtoByToken.getGroupRefCode()
+                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
 
-            if("未定义错误".equals(resultMessage)||"用户操作异常".equals(resultMessage)||"页面跳转出错".equals(resultMessage)){
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,resultMessage);
-            }
-            orderCode=resultMessage.split(":")[1];
             //更新拍照订单的状态，订单号
-            OfcMobileOrder order=new OfcMobileOrder();
-            order.setMobileOrderCode(mobileOrderCode);
-            order.setAccepter(authResDtoByToken.getUserName());
-            order.setAppcetDate(new Date());
-            order.setMobileOrderStatus("1");//已处理
-            order.setOrderCode(orderCode);
-            ofcMobileOrderService.updateByMobileCode(order);
+            if(!PubUtils.isSEmptyOrNull(orderCode)){
+                OfcMobileOrder order=new OfcMobileOrder();
+                order.setMobileOrderCode(mobileOrderCode);
+                order.setAccepter(authResDtoByToken.getUserName());
+                order.setAppcetDate(new Date());
+                order.setMobileOrderStatus(OrderConstConstant.TREATED);//已处理
+                order.setOrderCode(orderCode);
+                ofcMobileOrderService.updateByMobileCode(order);
+            }
         } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
@@ -207,61 +193,6 @@ public class OfcMobileOrderRest extends BaseController {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
             }
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage.split(":")[0]);
-    }
-
-    @RequestMapping(value = "/mobileOrder/updatePicParamByserialNo", method = RequestMethod.POST)
-    public Wrapper<?> updatePicParamByserialNo(AttachmentDto attachmentDto) {
-        OfcAttachment ofcAttachment=new OfcAttachment();
-        try {
-            if(attachmentDto == null){
-                throw new BusinessException("参数不能为空");
-            }
-            if(StringUtils.isEmpty(attachmentDto.getSerialNo())){
-                throw new BusinessException("附件流水号不能为空");
-            }
-
-            if(StringUtils.isEmpty(attachmentDto.getPicParam())){
-                throw new BusinessException("附件流水号操作命令不能为空");
-            }
-            logger.info("操作的附件流水号为:{}",attachmentDto.getSerialNo());
-            BeanUtils.copyProperties(ofcAttachment,attachmentDto);
-            ofcAttachmentService.updatePicParamByserialNo(ofcAttachment);
-        } catch (BusinessException ex) {
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception e) {
-            logger.debug("更新附件操作失败={}", e.getMessage(), e);
-            e.printStackTrace();
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,  e.getMessage());
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
-    }
-
-
-    @RequestMapping(value ="/mobileOrder/operateImage", method = RequestMethod.POST)
-    public void operateImage(Model model,AttachmentDto attachmentDto,HttpServletResponse response) {
-        OfcAttachment ofcAttachment=new OfcAttachment();
-        String url="";
-        try {
-            if(attachmentDto == null){
-                throw new BusinessException("参数不能为空");
-            }
-            if(StringUtils.isEmpty(attachmentDto.getSerialNo())){
-                throw new BusinessException("附件流水号不能为空");
-            }
-
-            if(StringUtils.isEmpty(attachmentDto.getPicParam())){
-                throw new BusinessException("附件流水号操作命令不能为空");
-            }
-            logger.info("操作的附件流水号为:{}",attachmentDto.getSerialNo());
-            BeanUtils.copyProperties(ofcAttachment,attachmentDto);
-            url= ofcAttachmentService.operateAttachMent(attachmentDto.getPicParam(),attachmentDto.getSerialNo());
-            response.getWriter().print(JacksonUtil.toJsonWithFormat(url));
-
-        } catch (BusinessException ex) {
-        } catch (Exception e) {
-            logger.debug("更新附件操作失败={}", e.getMessage(), e);
-            e.printStackTrace();
-        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
     }
 }

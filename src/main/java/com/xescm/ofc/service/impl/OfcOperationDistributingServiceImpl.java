@@ -11,7 +11,6 @@ import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
-import com.xescm.ofc.constant.ExcelCheckConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.ResultCodeEnum;
@@ -23,11 +22,13 @@ import com.xescm.ofc.service.OfcOrderPlaceService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,24 +37,28 @@ import static com.xescm.ofc.constant.ExcelCheckConstant.XLSX_EXCEL;
 import static com.xescm.ofc.constant.ExcelCheckConstant.XLS_EXCEL;
 
 /**
+ * 城配开单
  * Created by lyh on 2016/11/30.
  */
 @Service
 public class OfcOperationDistributingServiceImpl implements OfcOperationDistributingService {
 
-    @Autowired
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Resource
     private OfcOrderPlaceService ofcOrderPlaceService;
-    @Autowired
+    @Resource
     private OfcExcelCheckService ofcExcelCheckService;
 
 
-    @Override
+
     /**
      * 转换页面DTO为CSCCUSTOMERDTO以便复用原有下单逻辑
-     * @param ofcOrderDTO
-     * @param purpose
-     * @return
+     * @param ofcOrderDTO 订单实体
+     * @param purpose 联系人用途: 2 发货方, 1 收货方
+     * @return      CscContantAndCompanyDto
      */
+    @Override
     public CscContantAndCompanyDto switchOrderDtoToCscCAndCDto(OfcOrderDTO ofcOrderDTO, String purpose) {
         CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
         cscContantAndCompanyDto.setCscContactCompanyDto(new CscContactCompanyDto());
@@ -74,6 +79,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 cscContantAndCompanyDto.getCscContactDto().setStreetName(ofcOrderDTO.getDepartureTowns());
             }
             if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getDeparturePlaceCode())){
+                logger.error("转换页面DTO为CSCCUSTOMERDTO以便复用原有下单逻辑,四级地址编码为空");
                 throw new BusinessException("四级地址编码为空");
             }
             String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
@@ -103,6 +109,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 cscContantAndCompanyDto.getCscContactDto().setStreetName(ofcOrderDTO.getDestinationTowns());
             }
             if(PubUtils.isSEmptyOrNull(ofcOrderDTO.getDeparturePlaceCode())){
+                logger.error("转换页面DTO为CSCCUSTOMERDTO以便复用原有下单逻辑,四级地址编码为空");
                 throw new BusinessException("四级地址编码为空");
             }
             String[] departureCode = ofcOrderDTO.getDeparturePlaceCode().split(",");
@@ -122,27 +129,30 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
         return cscContantAndCompanyDto;
     }
+
+
+
     /**
      * 校验客户订单编号
-     * @param jsonArray
-     * @return
-     * @throws Exception
+     * @param jsonArray 订单json数组
+     * @return  Wrapper
      */
     @Override
     public Wrapper<?> validateCustOrderCode(JSONArray jsonArray) {
         List<String> custOrderCodeList = new ArrayList<>();
         for(int i = 0; i < jsonArray.size(); i ++) {
             String json = jsonArray.get(i).toString();
-            OfcOrderDTO ofcOrderDTO = null;
+            OfcOrderDTO ofcOrderDTO;
             try {
                 ofcOrderDTO = JacksonUtil.parseJsonWithFormat(json, OfcOrderDTO.class);
             } catch (Exception e) {
-                e.printStackTrace();
-                throw new BusinessException("校验客户订单编号转换DTO异常",e);
+                logger.error("校验客户订单编号转换DTO异常{}",e);
+                throw new BusinessException("校验客户订单编号转换DTO异常");
             }
             String custOrderCode = ofcOrderDTO.getCustOrderCode();
             if(!PubUtils.isSEmptyOrNull(custOrderCode)){
                 if(custOrderCodeList.contains(custOrderCode)){
+                    logger.error("收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！");
                     return WrapMapper.wrap(Wrapper.ERROR_CODE, "收货方列表中第" + (i + 1) + "行,收货方名称为【" + ofcOrderDTO.getConsigneeName() + "】的客户订单编号重复！请检查！");
                 }
                 custOrderCodeList.add(custOrderCode);
@@ -154,19 +164,19 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     /**
      * 获取用户上传的Excel的sheet页
-     * @param uploadFile
-     * @param suffix
-     * @return
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀 xls,xlsx
+     * @return      List
      */
     @Override
     public List<String> getExcelSheet(MultipartFile uploadFile, String suffix) {
         List<String> sheetMsgList = new ArrayList<>();
         if("xls".equals(suffix)){
-            HSSFWorkbook hssfWorkbook = null;
+            HSSFWorkbook hssfWorkbook;
             try {
                 hssfWorkbook = new HSSFWorkbook(uploadFile.getInputStream());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("获取Sheet页内部异常,{}",e);
                 throw new BusinessException("获取Sheet页内部异常",e);
             }
             int activeSheetIndex = hssfWorkbook.getActiveSheetIndex();
@@ -179,11 +189,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 }
             }
         }else if("xlsx".equals(suffix)){
-            XSSFWorkbook xssfWorkbook = null;
+            XSSFWorkbook xssfWorkbook;
             try {
                 xssfWorkbook = new XSSFWorkbook(uploadFile.getInputStream());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("获取Sheet页内部异常,{}",e);
                 throw new BusinessException("获取Sheet页内部异常",e);
             }
             int activeSheetIndex = xssfWorkbook.getActiveSheetIndex();
@@ -204,6 +214,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     /**
      * 城配开单必填项后端校验
+     * @param ofcOrderDTO 订单实体
      */
     @Override
     public void validateOperationDistributingMsg(OfcOrderDTO ofcOrderDTO) {
@@ -224,38 +235,40 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     /**
      * 城配开单批量下单循环入口
-     * @param jsonArray
-     * @return
+     * @param jsonArray 订单json数组
+     * @return      String
      */
     @Override
     @Transactional
     public String distributingOrderPlace(JSONArray jsonArray,AuthResDto authResDtoByToken,String batchNumber) {
         String resultMessage = null;
-        for(int i = 0; i < jsonArray.size(); i ++){
-            String json = jsonArray.get(i).toString();
+        for (Object aJsonArray : jsonArray) {
+            String json = aJsonArray.toString();
             OfcOrderDTO ofcOrderDTO = null;
             try {
                 ofcOrderDTO = JacksonUtil.parseJsonWithFormat(json, OfcOrderDTO.class);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("城配开单批量下单循环入口, JSON转换异常, {}", e);
             }
             validateOperationDistributingMsg(ofcOrderDTO);
             String orderGoodsListStr = null;
             try {
-                orderGoodsListStr = JacksonUtil.toJson(ofcOrderDTO.getGoodsList());
+                orderGoodsListStr = JacksonUtil.toJson(ofcOrderDTO != null ? ofcOrderDTO.getGoodsList() : new OfcOrderDTO());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("城配开单批量下单循环入口, JSON转换异常, {}", e);
             }
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){
+            if (!PubUtils.isSEmptyOrNull(orderGoodsListStr)) {
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
-            CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"2");//2为发货方
-            CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO,"1");//1为收货方
-            ofcOrderDTO.setOrderBatchNumber(batchNumber);
-            resultMessage =  ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,"distributionPlace",authResDtoByToken,ofcOrderDTO.getCustCode()
-                    ,consignor,consignee,new CscSupplierInfoDto());
-            if(ResultCodeEnum.ERROROPER.getName().equals(resultMessage)){
+            CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO, "2");//2为发货方
+            CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO, "1");//1为收货方
+            if (ofcOrderDTO != null) {
+                ofcOrderDTO.setOrderBatchNumber(batchNumber);
+            }
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO, ofcGoodsDetailsInfos, "distributionPlace", authResDtoByToken, ofcOrderDTO != null ? ofcOrderDTO.getCustCode() : new OfcOrderDTO().toString()
+                    , consignor, consignee, new CscSupplierInfoDto());
+            if (ResultCodeEnum.ERROROPER.getName().equals(resultMessage)) {
                 return resultMessage;
             }
         }
@@ -265,76 +278,45 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     /**
      * Excel校验入口
      * 在这里区分模板类型
-     * @param uploadFile
-     * @param suffix
-     * @param sheetNum
-     * @param authResDto
-     * @param customerCode
-     * @param modelType
-     * @param modelMappingCode
-     * @return
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀: xls, xlsx
+     * @param sheetNum 前端选择的Sheet页页码
+     * @param authResDto 当前登录用户
+     * @param customerCode 客户编码
+     * @param modelType Excel模板类型: 交叉, 明细
+     * @param modelMappingCode 保留
+     * @return  Wrapper
      */
     @Override
-    public Wrapper<?> checkExcel(MultipartFile uploadFile, String suffix, String sheetNum, AuthResDto authResDto, String customerCode,  String modelType, String modelMappingCode) {
+    public Wrapper<?> checkExcel(MultipartFile uploadFile, String suffix, String sheetNum
+            , AuthResDto authResDto, String customerCode,  String modelType, String modelMappingCode) {
         Wrapper<?> checkResult = null;
+        int staticCell = 5;
         //交叉
         if(OrderConstConstant.MODEL_TYPE_ACROSS.equals(modelType)){
             //根据modelMappingCode查询数据库,将用户的Excel表格跟我们的标准模板进行映射
             //这里就要将用户的模板上的字儿完全映射成我们的格式,然后我们在校验的时候就直接按照自己的标准模板来
-            int staticCell = 5;
-            checkResult = acrossCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
-//            checkResult = checkAcrossExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
+            checkResult = checkAcrossExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
 
             //明细列表
         }else if(OrderConstConstant.MODEL_TYPE_BORADWISE.equals(modelType)){
             //根据modelMappingCode查询数据库,将用户的Excel表格跟我们的标准模板进行映射
             //这里就要将用户的模板上的字儿完全映射成我们的格式,然后我们在校验的时候就直接按照自己的标准模板来
-            int staticCell = 5;
-            checkResult = boradwiseCheckExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
-//            checkResult = checkBoradwiseExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
+            checkResult = checkBoradwiseExcel(uploadFile,suffix,sheetNum,customerCode,staticCell,authResDto);
         }
         return checkResult;
     }
 
     /**
-     * 校验用户上传的Excel是否符合我们的格式
-     * 交叉
-     * @param uploadFile
-     * @param suffix
-     * @param customerCode
-     * @param staticCell 固定列
-     * @return
-     * */
-    private Wrapper<?> acrossCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen,  String customerCode, Integer staticCell,AuthResDto authResDto) {
-        if("xls".equals(suffix.toLowerCase())){
-            return ofcExcelCheckService.checkXlsAcross(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
-        }else if("xlsx".equals(suffix.toLowerCase())){
-            return ofcExcelCheckService.checkXlsxAcross(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
-        }
-        return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
-    }
-
-    /**
-     * 校验用户上传的Excel是否符合我们的格式
-     * 明细列表
-     * @param uploadFile
-     * @param suffix
-     * @param sheetNumChosen
-     * @param customerCode
-     * @param staticCell
-     * @return
+     * 校验不同类型Excel模板:Across
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀: xls, xlsx
+     * @param sheetNumChosen 前端选择的Sheet页页码
+     * @param customerCode 客户编码
+     * @param staticCell 从第几列开始是收货方
+     * @param authResDto 当前登录用户
+     * @return  Wrapper
      */
-    private Wrapper<?> boradwiseCheckExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
-        if("xls".equals(suffix.toLowerCase())){
-            return ofcExcelCheckService.checkXlsBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
-        }else if("xlsx".equals(suffix.toLowerCase())){
-            return ofcExcelCheckService.checkXlsxBoradwise(uploadFile,sheetNumChosen,customerCode,staticCell,authResDto);
-        }
-        return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
-    }
-
-
-
     private Wrapper<?> checkAcrossExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         String suffixTolowerCase = suffix.toLowerCase();
         if(StringUtils.equals(suffixTolowerCase, XLS_EXCEL) || StringUtils.equals(suffixTolowerCase, XLSX_EXCEL)){
@@ -343,6 +325,16 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         return WrapMapper.wrap(Wrapper.ERROR_CODE,"上传文档格式不正确!");
     }
 
+    /**
+     * 校验不同类型Excel模板:Boradwise
+     * @param uploadFile 前台上传的文件
+     * @param suffix Excel后缀: xls, xlsx
+     * @param sheetNumChosen 前端选择的Sheet页页码
+     * @param customerCode 客户编码
+     * @param staticCell 从第几列开始是收货方
+     * @param authResDto 当前登录用户
+     * @return  Wrapper
+     */
     private Wrapper<?> checkBoradwiseExcel(MultipartFile uploadFile, String suffix, String sheetNumChosen, String customerCode, int staticCell,AuthResDto authResDto) {
         String suffixTolowerCase = suffix.toLowerCase();
         if(StringUtils.equals(suffixTolowerCase, XLS_EXCEL) || StringUtils.equals(suffixTolowerCase, XLSX_EXCEL)){

@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.rest;
+package com.xescm.ofc.web.restcontroller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -11,37 +11,33 @@ import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcPlanScreenService;
 import com.xescm.ofc.web.controller.BaseController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
 import java.util.List;
 
-//import org.apache.commons.lang.StringUtils;
-
 /**
+ * 运输计划单分配
  * Created by lyh on 2016/10/10.
  */
 @RequestMapping(value = "/ofc",produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcPlanScreenRest extends BaseController {
 
-    @Autowired
+    @Resource
     private OfcPlanScreenService ofcPlanScreenService;
 
     @RequestMapping(value = "/queryPlanPageByCondition", method=RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> queryPlanPageByCondition(Page<OrderScreenCondition> page, HttpServletRequest request, OfcPlanScreenCondition ofcPlanScreenCondition) {
-        logger.debug("==>订单中心订单查询条件 queryPlanPageByCondition={}", ofcPlanScreenCondition);
-//        logger.debug("==>订单中心订单查询标志位 tag={}", tag);
-        PageInfo<OfcPlanScreenResult> pageInfo = null;
+    public Wrapper<?> queryPlanPageByCondition(Page<OrderScreenCondition> page, OfcPlanScreenCondition ofcPlanScreenCondition) {
+        logger.info("==>订单中心订单查询条件 queryPlanPageByCondition={}", ofcPlanScreenCondition);
+        PageInfo<OfcPlanScreenResult> pageInfo;
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OfcPlanScreenResult> orderScreenResults = ofcPlanScreenService.planScreen(ofcPlanScreenCondition);
-           // pageInfo = new PageInfo<OfcPlanScreenResult>(orderScreenResults);
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (BusinessException ex){

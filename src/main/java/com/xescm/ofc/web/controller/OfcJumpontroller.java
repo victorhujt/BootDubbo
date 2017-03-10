@@ -13,13 +13,17 @@ import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.OfcMerchandiserService;
+import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.uam.provider.UamGroupEdasService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,32 +31,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
+ * 页面跳转
  * Created by lyh on 2016/10/18.
  */
 @Controller
 @RequestMapping(produces = {"application/json;charset=UTF-8"})
 public class OfcJumpontroller extends BaseController{
 
-    @Autowired
+    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Autowired
+    @Resource
     private CscStoreEdasService cscStoreEdasService;
-    @Autowired
+    @Resource
     private OfcMerchandiserService ofcMerchandiserService;
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
-    @Autowired
+    @Resource
     private CscCustomerEdasService cscCustomerEdasService;
+    @Resource
+    private UamGroupEdasService uamGroupEdasService;
 
 
     @RequestMapping(value="/ofc/orderPlace")
-    public ModelAndView index(Model model,Map<String,Object> map , HttpServletRequest request, HttpServletResponse response){
-        List<RmcWarehouseRespDto> rmcWarehouseByCustCode = null;
+    public ModelAndView index(Model model,Map<String,Object> map){
+        List<RmcWarehouseRespDto> rmcWarehouseByCustCode;
         List<CscStorevo> cscStoreListResult = null;
         setDefaultModel(model);
         try{
@@ -60,7 +66,7 @@ public class OfcJumpontroller extends BaseController{
             QueryStoreDto queryStoreDto = new QueryStoreDto();
             String customerCode = authResDtoByToken.getGroupRefCode();
             queryStoreDto.setCustomerCode(customerCode);
-            Wrapper<List<CscStorevo>> storeByCustomerId = (Wrapper<List<CscStorevo>>)cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
+            Wrapper<List<CscStorevo>> storeByCustomerId = cscStoreEdasService.getStoreByCustomerId(queryStoreDto);
             cscStoreListResult = storeByCustomerId.getResult();
             rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(customerCode);
 
@@ -69,7 +75,6 @@ public class OfcJumpontroller extends BaseController{
             rmcWarehouseByCustCode = new ArrayList<>();
         }catch (Exception ex){
             logger.error("订单中心跳转下单页面出现异常:{}", ex.getMessage(), ex);
-            //rmcWarehouseByCustCode = new ArrayList<RmcWarehouse>();
             rmcWarehouseByCustCode = new ArrayList<>();
         }
         map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
@@ -78,12 +83,12 @@ public class OfcJumpontroller extends BaseController{
 
     }
      @RequestMapping(value = "/ofc/orderManage")
-    public String orderManage(Model model){
+    public String orderManage(){
         return "order_manage";
     }
 
     @RequestMapping(value = "/ofc/orderScreen")
-    public String orderScreen(Model model){
+    public String orderScreen(){
         return "order_screen";
     }
 
@@ -94,10 +99,20 @@ public class OfcJumpontroller extends BaseController{
     })
 
     @RequestMapping(value="/ofc/orderFollow",method = RequestMethod.GET)
-    public String orderFollow(Model model, String code, String followTag, Map<String,Object> map){
-        logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
-        logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
+    public String orderFollow(String code, String followTag){
+        logger.info("==>订单中心订单追踪条件筛选code code={}", code);
+        logger.info("==>订单中心订单追踪条件标志位 followTag={}", followTag);
         return "order_follow";
+    }
+
+    /**
+     * 进入主页
+     * @return
+     */
+    @RequestMapping(value = "/index")
+    public String toIndex(){
+
+        return "index";
     }
 
     /**
@@ -105,14 +120,20 @@ public class OfcJumpontroller extends BaseController{
      * @param model
      * @return
      */
-    @RequestMapping(value = "/index")
-    public String toIndex(Model model){
+    @RequestMapping(value = "/ofc/warehouse/in")
+    public String whOpen(Model model){
 
-        return "index";
+        return "vue/whopen";
+    }
+    @RequestMapping(value = "/ofc/warehouse/in1")
+    public String whOpen1(Model model){
+
+        return "vue/whopen1";
     }
 
+
     @RequestMapping(value = "/ofc/planAllocation")
-    public String planAllocation(Model model,Map<String,Object> map){
+    public String planAllocation(Model model){
         try{
             Date now = new Date();
             Calendar c = Calendar.getInstance();
@@ -126,8 +147,6 @@ public class OfcJumpontroller extends BaseController{
         return "plan_allocation";
     }
 
-    @Autowired
-    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
     /**
      * 城配开单
      * @param model
@@ -335,4 +354,102 @@ public class OfcJumpontroller extends BaseController{
     public String excelAdditions(){
         return "oper_distri_excel_additions";
     }
+
+    /**
+     * 跳转运营中心→入库开单
+     * @return
+     */
+    @RequestMapping(value = "/ofc/orderStorageIn")
+    public ModelAndView orderStorageIn(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in");
+        logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
+        model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
+    /**
+     * 跳转运营中心→出库开单
+     * @return
+     */
+    @RequestMapping(value = "/ofc/orderStorageOut")
+    public ModelAndView orderStorageOut(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out");
+        logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
+        model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
+        setDefaultModel(model);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageOutManager")
+    public ModelAndView orderStorageOutManager(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out_manager");
+        UamGroupDto uamGroupDto=new UamGroupDto();
+        uamGroupDto.setSerialNo(getAuthResDtoByToken().getGroupRefCode());
+        Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
+        UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
+        String groupType=uamGroupDtoResult.getType();
+        if(StringUtils.equals(groupType,"1")) {
+            //鲜易供应链身份
+            if (StringUtils.equals("GD1625000003", uamGroupDtoResult.getSerialNo())) {
+                model.addAttribute("isSuper", "Y");
+            }
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageOutEdit")
+    public ModelAndView orderStorageOutEdit(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out_edit");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageOutDetails")
+    public ModelAndView orderStorageOutDetails(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_out_details");
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/ofc/orderStorageInManager")
+    public ModelAndView orderStorageInManager(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in_manager");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageInEdit")
+    public ModelAndView orderStorageInEdit(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in_edit");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/ofc/orderStorageInDetails")
+    public ModelAndView orderStorageInDetail(Model model) {
+        ModelAndView modelAndView = new ModelAndView("order_storage_in_details");
+        return modelAndView;
+    }
+
+
+
+    /**
+     * 运营中心--跳转导入模板配置
+     */
+    @RequestMapping(value = "/ofc/storage/template")
+    public String storageTemplate(Model model){
+        setDefaultModel(model);
+        return "storage/template/template_manage";
+    }
+
+    /**
+     * 仓储模板配置跳转添加页面
+     */
+    @RequestMapping(value = "/ofc/storage/template_add")
+    public String storageTemplateAdd(Model model){
+        AuthResDto authResDto = getAuthResDtoByToken();
+        model.addAttribute("userName", authResDto.getUserName());
+        model.addAttribute("orderTime", DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE2));
+        setDefaultModel(model);
+        return "/storage/template/template_design";
+    }
+
 }

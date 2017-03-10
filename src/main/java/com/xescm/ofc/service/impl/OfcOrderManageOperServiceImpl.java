@@ -10,13 +10,13 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 运营中心订单管理
  * Created by hiyond on 2016/11/24.
  */
 @Service
@@ -33,12 +34,95 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     @Resource
     private UamGroupEdasService uamGroupEdasService;
-    @Autowired
+    @Resource
     private OfcOrderScreenMapper ofcOrderScreenMapper;
-    @Autowired
+    @Resource
     private OfcOrderOperMapper ofcOrderOperMapper;
-    @Autowired
+    @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
+
+    @Override
+    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OrderStorageOperForm form, String tag) {
+        if(tag.equals("in")){
+                List<String> businessTypes=new ArrayList<>();
+                businessTypes.add("620");
+                businessTypes.add("621");
+                businessTypes.add("622");
+                businessTypes.add("623");
+                businessTypes.add("624");
+                businessTypes.add("625");
+                businessTypes.add("626");
+                form.setBusinessTypes(businessTypes);
+        }else if(tag.equals("out")){
+                List<String> businessTypes=new ArrayList<>();
+                businessTypes.add("610");
+                businessTypes.add("611");
+                businessTypes.add("612");
+                businessTypes.add("613");
+                businessTypes.add("614");
+                form.setBusinessTypes(businessTypes);
+        }
+        return queryStorageOrderList(authResDto,form);
+    }
+
+
+    public List<OrderSearchOperResult> queryStorageOrderList(AuthResDto authResDto,OrderStorageOperForm form) {
+        //订单管理筛选后端权限校验
+        if(null == authResDto || null == form){
+            throw new BusinessException("订单管理筛选后端权限校验入参有误");
+        }
+        List<OrderSearchOperResult> orderSearchOperResults = new ArrayList<>();
+        UamGroupDto uamGroupDto = new UamGroupDto();
+        uamGroupDto.setSerialNo(authResDto.getGroupRefCode());
+        Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
+        ofcOrderManageOperService.checkUamGroupEdasResultNullOrError(allGroupByType);
+        if(CollectionUtils.isEmpty(allGroupByType.getResult()) || allGroupByType.getResult().size() > 1){
+            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果为空或有误");
+        }
+        UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
+        if(null == uamGroupDtoResult || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getType())){
+            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果有误");
+        }
+        if(PubUtils.isSEmptyOrNull(uamGroupDtoResult.getSerialNo())){
+            throw new BusinessException("当前登录的用户没有流水号!");
+        }
+        String groupType = uamGroupDtoResult.getType();
+        if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+            throw new BusinessException("基地所属大区未选择!");
+        }
+        if(StringUtils.equals(groupType,"1")){
+            //鲜易供应链身份
+            if(StringUtils.equals("GD1625000003",uamGroupDtoResult.getSerialNo())){
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form);
+                //大区身份
+            }else{
+                if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo())){
+                    throw new BusinessException("运营中心订单管理筛选入参:大区为空!");
+                }
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form);
+            }
+            //基地身份
+        }else if(StringUtils.equals(groupType,"3")){
+            if(PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+                throw new BusinessException("运营中心订单管理筛选入参: 基地为空!");
+            }
+            orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form);
+            //仓库身份, 其他身份
+        }else{
+            throw new BusinessException("运营中心订单管理筛选入参: 权限不足!");
+        }
+        if(PubUtils.isSEmptyOrNull(form.getAreaSerialNo()) && !PubUtils.isSEmptyOrNull(form.getBaseSerialNo())){
+            throw new BusinessException("运营中心订单管理筛选入参: 基地所属大区为空");
+        }
+        return orderSearchOperResults;
+    }
+
+
+
+
+
+
+
 
     @Override
     public List<OrderScreenResult> queryOrderOper(OrderOperForm form) {
@@ -46,18 +130,17 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     }
 
     /**
-     *
-     * @param authResDto
-     * @param form
+     * 订单管理筛选，以及后端权限校验
+     * @param authResDto 当前登录用户信息
+     * @param form 查询条件
      * @return
      */
     @Override
     public List<OrderSearchOperResult> queryOrderList(AuthResDto authResDto,OrderOperForm form) {
-        //订单管理筛选后端权限校验
         if(null == authResDto || null == form){
             throw new BusinessException("订单管理筛选后端权限校验入参有误");
         }
-        List<OrderSearchOperResult> orderSearchOperResults = new ArrayList<>();
+        List<OrderSearchOperResult> orderSearchOperResults;
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(authResDto.getGroupRefCode());
         Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
@@ -103,11 +186,22 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         return orderSearchOperResults;
     }
 
+    /**
+     * 根据订单批次号查询订单
+     * @param orderBatchNumber 订单批次号
+     * @return
+     */
     @Override
     public List<OrderSearchOperResult> queryOrderByOrderBatchNumber(String orderBatchNumber) {
         return ofcOrderOperMapper.queryOrderByOrderBatchNumber(orderBatchNumber);
     }
 
+    /**
+     * 订单跟踪根据不同方式查询订单
+     * @param code 编码
+     * @param searchType 类型
+     * @return
+     */
     @Override
     public List<OrderFollowOperResult> queryOrder(String code, String searchType) {
         return ofcOrderOperMapper.queryOrder(code, searchType);
@@ -115,7 +209,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 根据当前登录用户, 加载大区基地
-     * @param authResDto
+     * @param authResDto 当前登录用户
      * @return
      */
     @Override
@@ -137,7 +231,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if(PubUtils.isSEmptyOrNull(uamGroupDtoResult.getSerialNo())){
             throw new BusinessException("当前登录的用户没有流水号!");
         }
-        Map<String, List<OfcGroupVo>> resultMap = new HashMap<>();
+        Map<String, List<OfcGroupVo>> resultMap;
         String groupType = uamGroupDtoResult.getType();
         if(StringUtils.equals(groupType,"1")){
             //鲜易供应链身份
@@ -164,8 +258,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 根据登录用户获取大区, 基地
-     * @param uamGroupDto
-     * @param identity
+     * @param uamGroupDto 组织实体对象
+     * @param identity 身份标志位
      * @return
      */
     private Map<String, List<OfcGroupVo>> getGroupMsg(UamGroupDto uamGroupDto, String identity){
@@ -245,7 +339,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 获取当前大区下的所有基地
-     * @param uamGroupDto
+     * @param uamGroupDto 组织实体对象
      */
     public List<OfcGroupVo> getBaseListByCurArea(UamGroupDto uamGroupDto) {
         if(null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())){
@@ -273,7 +367,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 根据所选基地反查大区
-     * @param uamGroupDto
+     * @param uamGroupDto 组织实体对象
      * @return
      */
     @Override
@@ -299,7 +393,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     /**
      * 校验UamGroupEdas返回结果
-     * @param allGroupByType
+     * @param allGroupByType 查询当前登录用户组织信息UamGroupEdas返回结果
      */
     public void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType) {
         if(null == allGroupByType){

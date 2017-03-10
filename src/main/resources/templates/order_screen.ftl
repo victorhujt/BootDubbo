@@ -387,75 +387,8 @@
 //        xescm.common.loadPage(url);
     }
 
-    // 查询
-    $("#screenOrderFormBtn").click(function () {
 
-        var jsonStr={};
-        var orderTimePre = $dp.$('orderTimePre').value;
-        jsonStr.orderTimePre=orderTimePre;
-        var orderTimeSuf = $dp.$('orderTimeSuf').value;
-        jsonStr.orderTimeSuf=orderTimeSuf;
-        jsonStr.orderCode=$("#orderCode").val();
-        jsonStr.custOrderCode=$("#custOrderCode").val();
-        jsonStr.orderStatus=$("#orderStatus").val();
-        jsonStr.orderType=$("#orderType").val();
-        jsonStr.businessType=$("#businessType").val();
-        var tag = "screen";
-        var orderScreenConditionJSON = JSON.stringify(jsonStr);
-        var currPage = "1";
-        var pageSize = "10";
-        var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageSize;
-        xescm.common.loadPage(url);
-    });
-    var time = 1;
-    $('#pageLimit').bootstrapPaginator({
-        currentPage: ${currPage!"1"},//当前页码
-        totalPages: ${totalPage!"1"}, //总页数
-        size:"normal",
-        bootstrapMajorVersion: 3,
-        alignment:"right",
-        numberOfPages:10,//每页显示多少
-        itemTexts: function (type, page, current) {
-            switch (type) {
-                case "first":
-                    return "首页";
-                case "prev":
-                    return "上一页";
-                case "next":
-                    return "下一页";
-                case "last":
-                    return "末页";
-                case "page":
-                    return page;
-            }
-        },shouldShowPage:function(type,page,current){
-            if(page == 1 && time == 1){
-                return false;
-            }else if(current == 1){
-                return true;
-            }else{
-                return true;
-            }
-        },onPageClicked:function (event, originalEvent, type, page) {//异步刷新页面
-            var jsonStr={};
-            var orderTimePre = $dp.$('orderTimePre').value;
-            jsonStr.orderTimePre=orderTimePre;
-            var orderTimeSuf = $dp.$('orderTimeSuf').value;
-            jsonStr.orderTimeSuf=orderTimeSuf;
-            jsonStr.orderCode=$("#orderCode").val();
-            jsonStr.custOrderCode=$("#custOrderCode").val();
-            jsonStr.orderStatus=$("#orderStatus").val();
-            jsonStr.orderType=$("#orderType").val();
-            jsonStr.businessType=$("#businessType").val();
-            var tag = "screen";
-            var orderScreenConditionJSON = JSON.stringify(jsonStr);
-            var currPage = page;
-            var pageNum = "10";
-            var url = "/ofc/orderScreenByCondition/" + orderScreenConditionJSON + "/" + tag + "/" + currPage + "/" + pageNum;
-            xescm.common.loadPage(url);
 
-        }
-    });
 </script>
 <link rel="stylesheet" href="../components/chosen/chosen.css" />
 <script src="../components/chosen/chosen.jquery.js"></script>

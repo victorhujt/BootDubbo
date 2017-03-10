@@ -46,11 +46,23 @@
   <!--订单最新状态-->
   <select id="orderStatusSelect" parameterType="java.util.Map" resultMap="BaseResultMap">
     SELECT
-    oos.*
+    oos.order_code,
+    oos.order_status,
+    oos.status_desc,
+    oos.lasted_oper_time,
+    oos.notes,
+    oos.operator,
+    oos.creation_time
     FROM
     (
     SELECT
-    s.*
+    s.order_code,
+    s.order_status,
+    s.status_desc,
+    s.lasted_oper_time,
+    s.notes,
+    s.operator,
+    s.creation_time
     FROM
     ofc_order_status s,
     (
@@ -72,7 +84,7 @@
     LEFT JOIN ofc_distribution_basic_info odbi ON oos.order_code = odbi.order_code
     <where>
       <if test="orderCode!=null and orderCode!=''">
-         OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
+        OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
       </if>
       <if test="custOrderCode!=null and custOrderCode!=''">
         OR ofi.cust_order_code =#{custOrderCode}
@@ -84,9 +96,32 @@
     GROUP BY ofi.order_code
   </select>
 
+  <!--订单最新状态-->
+  <select id="orderStatusSelectNew" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+    oons.order_code,
+    oons.order_latest_status,
+    oons.status_update_time,
+    oons.status_create_time
+    FROM
+    ofc_order_newstatus oons
+    LEFT JOIN ofc_fundamental_information ofi ON oons.order_code = ofi.order_code
+    LEFT JOIN ofc_distribution_basic_info odbi ON oons.order_code = odbi.order_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
+      </if>
+      <if test="custOrderCode!=null and custOrderCode!=''">
+        OR ofi.cust_order_code =#{custOrderCode}
+      </if>
+      <if test="transCode!=null and transCode!=''">
+        OR odbi.trans_code =#{transCode}
+      </if>
+    </where>
+  </select>
 
   <select id="queryOrderStateByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
-    SELECT *
+    SELECT oos.order_code,oos.order_status,oos.status_desc,oos.lasted_oper_time,oos.notes,oos.operator
     FROM ofc_order_status oos
     WHERE oos.order_code = #{orderCode}
   </select>
@@ -103,7 +138,7 @@
 
   <select id="queryOrderStatus" resultMap="BaseResultMap">
     SELECT
-    oos.*
+    oos.notes
     FROM
     ofc_order_status oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -119,9 +154,6 @@
         <when test="'transCode'.toString() == searchType">
           AND odbi.trans_code = #{code}
         </when>
-        <when test=" 'planCode'.toString() == searchType">
-          and ofi.order_code = (SELECT order_code from ofc_transplan_info where plan_code = #{code})
-        </when>
         <otherwise></otherwise>
       </choose>
     </where>
@@ -131,7 +163,7 @@
   <!--获取最新状态-->
   <select id="queryLastUpdateOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
      SELECT
-        id,order_code,order_status,status_desc,lasted_oper_time,notes,operator
+        id, order_code,order_status,status_desc,lasted_oper_time,notes,operator
     FROM
         ofc_order_status
     WHERE
@@ -150,7 +182,7 @@
   <!--获取最新状态-->
   <select id="queryLastTimeOrderByOrderCode" resultType="com.xescm.ofc.domain.OfcOrderStatus">
     SELECT
-    order_code,order_status,status_desc,lasted_oper_time,notes,operator
+    id, order_code,order_status,status_desc,lasted_oper_time,notes,operator
     FROM
     ofc_order_status
     WHERE
@@ -166,9 +198,11 @@
   </select>
 
   <!-- 批量插入订单状态主键id -->
-  <insert id="batchInsertOrderStatusId" parameterType="com.xescm.ofc.domain.OfcOrderStatus">
+  <insert id="batchInsertOrderStatusId" parameterType="java.util.List">
     INSERT INTO ofc_order_status_copy (id, order_code, order_status, status_desc, lasted_oper_time, notes, operator, creation_time)
     VALUES
+    <foreach collection="statusList" item="status" index="index" separator=",">
       (#{status.id}, #{status.orderCode}, #{status.orderStatus}, #{status.statusDesc}, #{status.lastedOperTime}, #{status.notes}, #{status.operator}, #{status.creationTime})
+    </foreach>
   </insert>
 </mapper>

@@ -6,25 +6,29 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcTransplanInfoMapper;
 import com.xescm.ofc.model.vo.ofc.OfcTransplanInfoVo;
 import com.xescm.ofc.service.OfcTransplanInfoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * 运输计划单
  * Created by lyh on 2016/10/10.
  */
 @Service
 @Transactional
 public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> implements OfcTransplanInfoService {
-    private static final Logger logger = LoggerFactory.getLogger(OfcTransplanInfoServiceImpl.class);
-    @Autowired
+    @Resource
     private OfcTransplanInfoMapper ofcTransplanInfoMapper;
+
+    /**
+     * 根据订单号查询计划单
+     * @param orderCode 订单编号
+     * @return
+     */
     @Override
     public List<OfcTransplanInfo> ofcTransplanInfoScreenList(String orderCode) {
         if(!"".equals(PubUtils.trimAndNullAsEmpty(orderCode))){
@@ -36,6 +40,11 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         }
     }
 
+    /**
+     * 运输计划单查询
+     * @param planCode 计划单号
+     * @return
+     */
     @Override
     public List<OfcTransplanInfoVo> ofcTransplanInfoVoList(String planCode) {
         if(!"".equals(PubUtils.trimAndNullAsEmpty(planCode))){
@@ -47,16 +56,20 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
         }
     }
 
+    /**
+     * 查询有效且未完成的运输计划单
+     * @param orderCode 订单编号
+     * @return
+     */
     @Override
     public int queryNotInvalidAndNotCompleteTransOrder(String orderCode) {
-        int result = ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
-        return result;
+        return ofcTransplanInfoMapper.queryNotInvalidAndNotCompleteTransOrder(orderCode);
     }
 
     /**
      * 根据订单编号查询计划单编号列表
-     * @param orderCode
-     * @return
+     * @param orderCode     订单编号
+     * @return     List
      */
     @Override
     public List<String> queryPlanCodesByOrderCode(String orderCode) {
@@ -65,8 +78,8 @@ public class OfcTransplanInfoServiceImpl extends BaseService<OfcTransplanInfo> i
 
     /**
      * 根据订单编号查询未完成运输计划单编号列表
-     * @param orderCode
-     * @return
+     * @param orderCode     订单编号
+     * @return      List
      */
     @Override
     public List<String> queryUncompletedPlanCodesByOrderCode(String orderCode) {
