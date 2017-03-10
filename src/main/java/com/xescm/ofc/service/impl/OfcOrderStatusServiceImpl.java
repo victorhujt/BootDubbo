@@ -325,6 +325,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     +" "+"订单号"+orderCode+"已完成");
             status.setOrderCode(orderCode);
             save(status);
+
+            //更新订单完成时间
+            ofcFundamentalInformation.setFinishedTime(new Date());
+            ofcFundamentalInformationService.update(ofcFundamentalInformation);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

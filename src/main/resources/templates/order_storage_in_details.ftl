@@ -381,7 +381,7 @@
                                 vueObj.finishedTime=DateUtil.parse(ofcFundamentalInformation.finishedTime);
                                 vueObj.abolishTime=DateUtil.parse(ofcFundamentalInformation.abolishTime);
                                 vueObj.creator=ofcFundamentalInformation.creatorName;
-                                vueObj.abolisher=ofcFundamentalInformation.abolisher;
+                                vueObj.abolisher=ofcFundamentalInformation.abolisherName;
                                 if(ofcWarehouseInformation!=null){
                                     vueObj.wareHouseName=ofcWarehouseInformation.warehouseName;
                                     vueObj.supplierName=ofcWarehouseInformation.supportName;
@@ -400,7 +400,7 @@
                                         //发货方
                                         vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
                                         vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
-                                        vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
+                                        vueObj.consignorContactPhone=ofcDistributionBasicInfo.consignorContactPhone;
 
                                         vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
                                         vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity+ofcDistributionBasicInfo.destinationDistrict;

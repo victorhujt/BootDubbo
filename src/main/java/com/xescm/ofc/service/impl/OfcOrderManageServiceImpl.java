@@ -987,9 +987,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 boolean result = cancelAcOrder(ofcFundamentalInformation.getOrderCode());
                 logger.info("订单中心取消订单，调用结算中心取消订单接口,返回结果：{}", result);
             } else if (StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
+                String type="";
                 OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
                 ofcWarehouse.setOrderCode(orderCode);
                 OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
+                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
+                    //出库
+                    type="RK";
+                }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
+                    //入库
+                    type="CK";
+                }
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     try {
                         orderCancelToTfc(orderCode);
@@ -999,7 +1007,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }
                 try {
-                    orderCancelToWhc(orderCode);
+                    orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
                 } catch (Exception e) {
                     logger.info("取消订单，调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                     throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
@@ -1018,8 +1026,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param orderCode 订单编号
      * @return void
      */
-    private void orderCancelToWhc(String orderCode) {
+    private void orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode) {
         logger.info("调用仓储中心取消接口, 订单号:{}", orderCode);
+        logger.info("调用仓储中心取消接口, 订单号:{}",orderCode);
+        OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
+        cancelOrderDTO.setOrderNo(orderCode);
+        cancelOrderDTO.setBillType(type);
+        cancelOrderDTO.setWarehouseID(warehouseCode);
+        cancelOrderDTO.setCustomerID(customerCode);
+        whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
     }
 
     /**

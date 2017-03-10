@@ -148,6 +148,9 @@
                 <el-form-item label="" :label-width="formLabelWidth">
                     <el-button type="primary" @click="selectGoods">筛选</el-button>
                 </el-form-item>
+                <el-form-item label="" :label-width="formLabelWidth20">
+                    <el-button @click="reSetCondition">重置</el-button>
+                </el-form-item>
             </el-form>
 
             <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
@@ -1374,7 +1377,14 @@
             if(val.productionTime!=null) {
               val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
             }
-          }
+          },
+          reSetCondition:function(){
+                this.goodDataInfo.goodsForm.goodsName="";
+                this.goodDataInfo.goodsForm.barCode="";
+                this.goodDataInfo.goodsForm.goodsCode="";
+                this.goodDataInfo.goodsForm.goodsTypeSonId="";
+                this.goodDataInfo.goodsForm.goodsTypeId="";
+            }
         }
     });
 </script>

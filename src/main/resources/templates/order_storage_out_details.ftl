@@ -373,7 +373,7 @@
                                 vueObj.finishedTime=DateUtil.parse(ofcFundamentalInformation.finishedTime);
                                 vueObj.abolishTime=DateUtil.parse(ofcFundamentalInformation.abolishTime);
                                 vueObj.creator=ofcFundamentalInformation.creatorName;
-                                vueObj.abolisher=ofcFundamentalInformation.abolisher;
+                                vueObj.abolisher=ofcFundamentalInformation.abolisherName;
                                 if(ofcWarehouseInformation!=null){
                                     vueObj.wareHouseName=ofcWarehouseInformation.warehouseName;
                                     vueObj.supplierName=ofcWarehouseInformation.supportName;
