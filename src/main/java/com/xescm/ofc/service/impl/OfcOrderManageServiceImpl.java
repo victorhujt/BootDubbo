@@ -3289,7 +3289,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("推送WHC的最终JSON为{}", json);
             defaultMqProducer.toSendWhc(json, ofcFundamentalInformation.getOrderCode(), ofcFundamentalInformation.getBusinessType());
         } catch (Exception e) {
-            logger.error("订单信息推到仓储中心, 转换异常");
+            logger.error("订单信息推到仓储中心, 转换异常 {}", e.getMessage());
             throw new BusinessException(e.getMessage());
         }
     }

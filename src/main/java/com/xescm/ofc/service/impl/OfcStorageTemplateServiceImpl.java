@@ -906,7 +906,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             continue;
                         }
                         if(allWarehouseByRmc.containsKey(forWarehouseName.getColDefaultVal())){
-                            ofcStorageTemplateDto.setWarehouseName(forWarehouseName.getColDefaultVal());
+                            RmcWarehouseRespDto rmcWarehouseRespDto = allWarehouseByRmc.get(forWarehouseName.getColDefaultVal());
+                            ofcStorageTemplateDto.setWarehouseName(rmcWarehouseRespDto.getWarehouseName());
+                            ofcStorageTemplateDto.setWarehouseCode(rmcWarehouseRespDto.getWarehouseCode());
                         }else {
                             logger.error("当前行:{},仓库名称校验失败,模板配置中仓库名称默认值{}校验失败, 请维护", rowNum + 1, forWarehouseName.getColDefaultVal());
                             xlsErrorMsg.add("行" + (rowNum + 1) + "模板配置中仓库名称默认值【" + forWarehouseName.getColDefaultVal() + "】校验失败！该客户下没有该仓库!");
@@ -1514,7 +1516,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation
                         , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), "review", authResDto);
             } catch (Exception e) {
-                logger.error("仓储开单批量导单审核, 当前订单审核失败, 直接跳过该订单, 订单号: {}", orderCode);
+                logger.error("仓储开单批量导单审核, 当前订单审核失败" +
+                        ", 直接跳过该订单, 订单号: {}, 错误信息: {}", orderCode, e);
                 continue;
             }
             logger.info("仓储开单批量导单审核, 订单号:{}审核结果:{}", orderCode, review);
