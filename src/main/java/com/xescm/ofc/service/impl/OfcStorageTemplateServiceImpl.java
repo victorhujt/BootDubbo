@@ -730,7 +730,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 cscSupplierInfoDto.setCustomerCode(ofcStorageTemplate.getCustCode());
                                 Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
-                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
+                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
                                     xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
@@ -740,7 +740,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 if(null == result || result.size() == 0){
                                     logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
 //                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称【" + cellValue + "】无效！");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称【" + cellValue + "】无效！或当前客户下没有该供应商!");
                                     checkPass = false;
                                     continue;
                                     //校验通过
@@ -1347,6 +1347,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             orderListByCustOrderCode.add(ofcStorageTemplateDto);
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
+        String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
 
         for (String orderMapKey : orderMap.keySet()) {
 
@@ -1362,7 +1363,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
-            String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
+
             orderBatchNumberList.add(orderBatchNumber);
             ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
             ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
@@ -1480,6 +1481,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcGoodsDetailsInfo.setChargingQuantity(ofcStorageTemplateDto.getQuantity()); // 计费数量默认为货品数量
         if(!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())){
             ofcGoodsDetailsInfo.setUnitPrice(new BigDecimal(cscGoodsApiVo.getUnitPrice()));
+        }
+        String productionTime = ofcStorageTemplateDto.getProductionTime();
+        String invalidTime = ofcStorageTemplateDto.getInvalidTime();
+        if(!PubUtils.isSEmptyOrNull(productionTime)){
+            ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
+        }
+        if(!PubUtils.isSEmptyOrNull(invalidTime)){
+            ofcGoodsDetailsInfo.setInvalidTime(DateUtils.String2Date(invalidTime, DateUtils.DateFormatType.TYPE2));
         }
         logger.info("转换客户中心货品 ofcGoodsDetailsInfo:{}", ofcGoodsDetailsInfo);
         return ofcGoodsDetailsInfo;

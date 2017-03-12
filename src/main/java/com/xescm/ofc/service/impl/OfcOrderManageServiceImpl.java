@@ -3265,8 +3265,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
                         inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
                         inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());
-                        inventoryDTO.setLotatt01(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE2));
-                        inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
+                        Date productionTime = ofcGoodsDetailsInfo.getProductionTime();
+                        Date invalidTime = ofcGoodsDetailsInfo.getInvalidTime();
+                        if(null != productionTime){
+                            inventoryDTO.setLotatt01(DateUtils.Date2String(productionTime, DateUtils.DateFormatType.TYPE2));
+                        }
+                        if(null != invalidTime){
+                            inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
+                        }
                         inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
                         inventoryGoods.add(inventoryDTO);
                     }
