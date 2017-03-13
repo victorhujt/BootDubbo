@@ -503,28 +503,36 @@
                 }
             },
             cancelOrder:function(){
+                var vueObj=this;
                 if(this.valiateSelectOrder()){
-                    var order=this.multipleSelection[0];
-                    var vueObj=this;
-                    if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
-                        CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
-                            if (result == undefined || result == null ) {
-                                vueObj.promptInfo("取消订单出现异常","error");
-                                return;
-                            }else if(result.code==200){
-                                vueObj.promptInfo(result.message,"success");
-                                vueObj.selectOrder();
-                            }else{
-                                if(result.message==null||result.message==""){
-                                    vueObj.promptInfo("订单取消失败","error");
+                    var orders=this.multipleSelection;
+                    var flag=false;
+                    for(var i=0;i<orders.length;i++){
+                        var order=orders[i];
+                        if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
+                            CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
+                                if (result == undefined || result == null ) {
+                                    // vueObj.promptInfo("取消订单出现异常","error");
+                                    //  return;
+                                }else if(result.code==200){
+                                    // vueObj.promptInfo(result.message,"success");
+                                    //  vueObj.selectOrder();
+                                    flag=true;
                                 }else{
-                                    vueObj.promptInfo(result.message,"error");
+                                    if(result.message==null||result.message==""){
+                                        //    vueObj.promptInfo("订单取消失败","error");
+                                    }else{
+                                        //    vueObj.promptInfo(result.message,"error");
+                                    }
                                 }
-                            }
-                        });
-                    }else{
-                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行取消，仅能对订单状态为【已审核】或【执行中】的订单执行取消操作！","error");
-                        return;
+                            });
+                        }else{
+                            //vueObj.promptInfo("订单编号"+order.orderCode+"不能执行取消，仅能对订单状态为【已审核】或【执行中】的订单执行取消操作！","error");
+                            // return;
+                        }
+                    }
+                    if(flag){
+                        vueObj.promptInfo("订单取消成功","success");
                     }
                 }
             },
@@ -537,21 +545,30 @@
             },
             auditOrderOrNotAuditOper:function (orderCode,tag) {
                 var vueObj=this;
+                var flag=false;
                 CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
                     if (result == undefined || result == null ) {
-                        vueObj.promptInfo("审核或者反审核出现异常","error");
-                        return;
+                        //vueObj.promptInfo("审核或者反审核出现异常","error");
+                        // return;
                     }else if(result.code==200){
-                        vueObj.promptInfo(result.message,"success");
-                        vueObj.selectOrder();
+                        flag=true;
+                        //vueObj.promptInfo(result.message,"success");
+                        //  vueObj.selectOrder();
                     }else{
                         if(result.message==null||result.message==""){
-                            vueObj.promptInfo("审核或者反审核出现异常","error");
+                            //  vueObj.promptInfo("审核或者反审核出现异常","error");
                         }else{
-                            vueObj.promptInfo(result.message,"error");
+                            // vueObj.promptInfo(result.message,"error");
                         }
                     }
                 });
+                if(flag){
+                    if(tag=="rereview"){
+                        vueObj.promptInfo("订单反审核成功","success");
+                    }else if(tag=="review"){
+                        vueObj.promptInfo("订单审核成功","success");
+                    }
+                }
             },
             valiateSelectOrder:function(){
                 if(this.multipleSelection.length<1){

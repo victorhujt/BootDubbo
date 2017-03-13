@@ -185,7 +185,7 @@
                         <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="quantity" label="入库数量">
+                <el-table-column property="quantity" label="出库数量">
                     <template scope="scope">
                         <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>

@@ -852,7 +852,6 @@
                 this.goodDataInfo.goodsCodeData=[];
                 var vueObj=this;
                 var cscGoods = {};
-                debugger;
                 var customerCode = vueObj.orderForm.custCode;
                 cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
                 cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
@@ -1266,7 +1265,6 @@
                 this.goodDataInfo.goodsForm.goodsTypeId="";
             },
             goodsCategoryNameByValue:function(val){
-                debugger;
                 for(var i=0;i<this.goodsCategoryOptions.length;i++){
                     var option=this.goodsCategoryOptions[i];
                     if(option.label==val){
