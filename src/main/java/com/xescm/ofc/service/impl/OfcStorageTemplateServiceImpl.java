@@ -735,15 +735,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
                                 cscSupplierInfoDto.setSupplierName(cellValue);
                                 cscSupplierInfoDto.setCustomerCode(ofcStorageTemplate.getCustCode());
-                                Wrapper<PageInfo<CscSupplierInfoDto>> pageInfoWrapper = cscSupplierEdasService.querySupplierByAttributePageList(cscSupplierInfoDto);
-                                if(Wrapper.ERROR_CODE == pageInfoWrapper.getCode()){
-                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, pageInfoWrapper.getMessage());
+                                Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
+
+                                if(Wrapper.ERROR_CODE == listWrapper.getCode()){
+                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
                                     xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
-                                PageInfo<CscSupplierInfoDto> pageInfoWrapperResult = pageInfoWrapper.getResult();
-                                List<CscSupplierInfoDto> result = pageInfoWrapperResult.getList();
+                                List<CscSupplierInfoDto> result = listWrapper.getResult();
                                 //没有校验通过
                                 if(null == result || result.size() == 0){
                                     logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
