@@ -1005,7 +1005,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         response= orderCancelToTfc(orderCode);
                         logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
                         if(response!=null&&response.getCode()==Wrapper.SUCCESS_CODE){
-                            whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
+                            whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType());
                             logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
                         }
                     } catch (Exception e) {
@@ -1014,7 +1014,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }else{
                     try {
-                        whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
+                        whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType());
                         logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
 
                     } catch (Exception e) {
@@ -1060,12 +1060,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param orderCode 订单编号
      * @return void
      */
-    private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode) {
-        logger.info("调用仓储中心取消接口, 订单号:{}，参数type:{},仓库编码：{}，客户编码:{}", orderCode,type,warehouseCode,customerCode);
+    private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode,String orderType) {
+        logger.info("调用仓储中心取消接口, 订单号:{}，参数type:{},仓库编码:{}，客户编码:{},业务类型:{}", orderCode,type,warehouseCode,customerCode,orderType);
         OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
         cancelOrderDTO.setOrderNo(orderCode);
         cancelOrderDTO.setBillType(type);
         cancelOrderDTO.setWarehouseID(warehouseCode);
+        cancelOrderDTO.setOrderType(orderType);
         cancelOrderDTO.setCustomerID(customerCode);
         Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
         logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
@@ -3256,7 +3257,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo dinfo) {
         String json;
         try {
-            logger.info("订单信息推送仓储中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
             OfcOrderDTO ofOrderDto = modelMapper.map(ofcFundamentalInformation, OfcOrderDTO.class);
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
@@ -3318,6 +3318,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setSupportCode(ofcWarehouseInformation.getSupportCode());
             ofOrderDto.setGoodsList(goodsDetailsList);
             json = JacksonUtil.toJson(ofOrderDto);
+            logger.info("订单信息推送仓储中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
             logger.info("推送WHC的最终JSON为{}", json);
             defaultMqProducer.toSendWhc(json, ofcFundamentalInformation.getOrderCode(), ofcFundamentalInformation.getBusinessType());
         } catch (Exception e) {
