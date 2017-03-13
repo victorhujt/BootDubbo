@@ -3047,6 +3047,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
 
         //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
+        logger.info("自动审核. 订单批次号信息:{}", ofcFundamentalInformation.getOrderBatchNumber());
         if (isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
             //调用自动审核
             this.orderAutoAudit(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcWarehouseInformation
@@ -3054,7 +3055,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
-
 
     /**
      * 订单的复制

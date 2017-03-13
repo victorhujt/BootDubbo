@@ -1343,7 +1343,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     public Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception{
         logger.info("orderList ==> {}", orderList);
         logger.info("authResDto ==> {}", authResDto);
-        List<String> orderBatchNumberList = new ArrayList<>();
+//        List<String> orderBatchNumberList = new ArrayList<>();
         if(PubUtils.isSEmptyOrNull(orderList) || null == authResDto){
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
             throw new BusinessException("仓储开单批量导单确认下单失败!");
@@ -1387,7 +1387,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
 
-            orderBatchNumberList.add(orderBatchNumber);
+//            orderBatchNumberList.add(orderBatchNumber);
             ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
             ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
             if(ofcOrderDTO.getProvideTransport() == null){
@@ -1423,7 +1423,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 return save;
             }
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumberList);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
 
     private void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
@@ -1531,11 +1531,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.error("仓储开单批量导单审核失败, 入参有误");
             throw new BusinessException("仓储开单批量导单审核失败!");
         }
-        List<String> orderBatchNumber = (List<String>) result;
-        List<OfcFundamentalInformation> ofcFundamentalInformationList = new ArrayList<>();
-        for (String batchNum : orderBatchNumber) {
-            ofcFundamentalInformationList.addAll(ofcFundamentalInformationService.queryFundamentalByBatchNumber(batchNum));
-        }
+        String orderBatchNumber = (String) result;
+        List<OfcFundamentalInformation> ofcFundamentalInformationList = ofcFundamentalInformationService.queryFundamentalByBatchNumber(orderBatchNumber);
         logger.info("============>仓储开单批量导单需要审核的订单:{}", ofcFundamentalInformationList);
         for (OfcFundamentalInformation ofcFundamentalInformation : ofcFundamentalInformationList) {
             String orderCode = ofcFundamentalInformation.getOrderCode();
