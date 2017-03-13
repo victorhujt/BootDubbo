@@ -671,7 +671,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 }
                             }else{
                                 checkPass = false;
-                                xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值不符合规范!该货品数量格式不正确!");
+                                xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值【" + cellValue +"】不符合规范!该货品数量格式不正确! 最大支持3位小数!");
                             }
                             //批次号
                         }else if(StringUtils.equals(StorageImportInEnum.PRODUCTION_BATCH.getStandardColCode(), standardColCode)){
@@ -961,7 +961,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
         //基本校验通过后检查客户订单编号是否重复
         Set<String> custOrderCodeSet = new HashSet<>();
+        BigDecimal countImportNum = new BigDecimal(0);
+        MathContext mathContext = new MathContext(3);
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
+//            countImportNum.add(ofcStorageTemplateDto.getQuantity(), mathContext);
+            countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity(), mathContext);
             custOrderCodeSet.add(ofcStorageTemplateDto.getCustOrderCode());
         }
         for (String custOrderCode : custOrderCodeSet) {
@@ -988,6 +992,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         List<Object> succeedResult = new ArrayList<>();
         succeedResult.add(usefulCol);
         succeedResult.add(ofcStorageTemplateDtoList);
+        succeedResult.add(countImportNum);
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
     }
 

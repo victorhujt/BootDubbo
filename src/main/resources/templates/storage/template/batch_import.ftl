@@ -78,8 +78,10 @@
                     :label="item.propertyName">
 
             </el-table-column>
+
         </el-table>
         <div class="xe-block">
+            <span v-if="orderMsgShow" style="margin-right: 300px">货品导入数量合计: {{countImportNum}}</span>
             <el-button type="primary"  v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
         </div>
 
@@ -149,6 +151,7 @@
     var Main = {
         data() {
             return {
+                countImportNum:'0',
                 headers: {
                     Authorization: 'Bearer ' + window.localStorage.getItem('token')
                 },
@@ -228,6 +231,8 @@
                     vm.errorMsgShow = false;
                     var tableHeadMsg = response.result[0];
                     var orderMsg = response.result[1];
+                    vm.countImportNum = response.result[2];
+
                     var headData = vm.orderTableHeads = [];
                     vm.orderMsgShow = true;
                     $.each(tableHeadMsg, function (index, itemIn) {
