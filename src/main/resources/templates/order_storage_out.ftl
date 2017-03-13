@@ -1,5 +1,21 @@
 <head>
     <title>出库开单</title>
+  <style>
+    .el-dialog{
+      top:50%!important;
+      margin-top:-300px;
+      margin-bottom:0!important;
+    }
+    .el-dialog__body{
+      padding:10px 20px 30px;
+    }
+    .el-dialog__footer{
+      padding:15px 20px;
+    }
+    .el-dialog--small .el-table{
+      min-height:350px;
+    }
+  </style>
 </head>
 <body>
 <div id="app">
@@ -15,7 +31,7 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+            <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="custCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
@@ -47,7 +63,7 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="consigneeDataInfo.consigneeData" highlight-current-row @current-change="consigneeHandleCurrentChange" border style="width: 100%">
+            <el-table :data="consigneeDataInfo.consigneeData" highlight-current-row @current-change="consigneeHandleCurrentChange" border style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="consigneeName" label="名称"></el-table-column>
                 <el-table-column property="consigneeContactName" label="联系人"></el-table-column>
@@ -82,7 +98,7 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange" style="width: 100%">
+            <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange" style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="supportName" label="名称"></el-table-column>
                 <el-table-column property="contactName" label="联系人"></el-table-column>
@@ -103,7 +119,7 @@
 
         <el-dialog title="货品列表" v-model="goodDataInfo.chosenGoodCode" size="small">
             <el-form :model="goodDataInfo.goodsForm">
-                <el-form-item label="货品种类" :label-width="formLabelWidth" class="xe-col-3">
+                <el-form-item label="货品种类" :label-width="formLabelWidth" class="xe-col-4">
                     <template scope="scope">
                         <el-select size="small" v-model="goodDataInfo.goodsForm.goodsTypeId"  @change="getGoodsCategory" placeholder="请选择" >
                             <el-option
@@ -115,7 +131,7 @@
                         </el-select>
                     </template>
                 </el-form-item>
-                <el-form-item label="货品小类" :label-width="formLabelWidth" class="xe-col-3">
+                <el-form-item label="货品小类" :label-width="formLabelWidth" class="xe-col-4">
                     <template scope="scope">
                         <el-select  size="small" v-model="goodDataInfo.goodsForm.goodsTypeSonId"   placeholder="请选择">
                             <el-option
@@ -128,13 +144,13 @@
                         </el-select>
                     </template>
                 </el-form-item>
-                <el-form-item label="货品名称" :label-width="formLabelWidth" class="xe-col-3">
+                <el-form-item label="货品名称" :label-width="formLabelWidth" class="xe-col-4">
                     <el-input v-model="goodDataInfo.goodsForm.goodsName" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="条形码" :label-width="formLabelWidth" class="xe-col-3">
+                <el-form-item label="条形码" :label-width="formLabelWidth" class="xe-col-4">
                     <el-input v-model="goodDataInfo.goodsForm.barCode" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="货品编码" :label-width="formLabelWidth" class="xe-col-3">
+                <el-form-item label="货品编码" :label-width="formLabelWidth" class="xe-col-4">
                     <el-input v-model="goodDataInfo.goodsForm.goodsCode" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth">
@@ -145,7 +161,7 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%">
+            <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%"  max-height="350">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>

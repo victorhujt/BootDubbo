@@ -4,6 +4,17 @@
         .block {
             margin: 20px 0;
         }
+        .el-dialog{
+          top:50%!important;
+          margin-top:-300px;
+          margin-bottom:0!important;
+        }
+        .el-dialog__body{
+          padding:10px 20px 30px;
+        }
+        .el-dialog__footer{
+          padding:15px 20px;
+        }
     </style>
 </head>
 <body>
@@ -14,12 +25,12 @@
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                   <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
-            <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange" style="width: 100%">
-                <el-table-column type="index"></el-table-column>
+            <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange" style="width: 100%" max-height="400">
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="customerCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
                 <el-table-column property="customerName" label="公司名称"></el-table-column>
@@ -179,6 +190,7 @@
             currentCustomerRow:'',
             currentPage:1,
             formLabelWidth: '100px',
+            formLabelWidth20: '20px',
             pageSize:10,
             total:0,
             wareHouseOptions:[],
