@@ -841,15 +841,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
 
 //                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //发货方名称//必填列名
+                            //收货方名称//必填列名
                         }else if(StringUtils.equals(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
-                                logger.error("当前行:{},列:{} 没有发货方名称", rowNum + 1, cellNum);
+                                logger.error("当前行:{},列:{} 没有收货方名称", rowNum + 1, cellNum);
                                 xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
                                 checkPass = false;
                                 continue;
                             }
-                            //对发货方名称进行校验
+                            //对收货方名称进行校验
                             //去接口查该收货方名称是否在客户中心维护
                             if(!consigneeCheck.containsKey(cellValue)){
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
@@ -867,9 +867,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
                                 //即在客户中心没有找到该收货方
                                 if(null == result || result.size() == 0){
-                                    logger.error("当前行:{},列:{} 发货方名称校验失败, 请维护", rowNum + 1, cellNum);
-//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "发货方名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "发货方名称【" + cellValue + "】无效！");
+                                    logger.error("当前行:{},列:{} 收货方名称校验失败, 请维护", rowNum + 1, cellNum);
+//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "收货方名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "收货方名称【" + cellValue + "】无效！");
                                     checkPass = false;
                                     continue;
                                     //找到该收货方了
@@ -965,7 +965,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             custOrderCodeSet.add(ofcStorageTemplateDto.getCustOrderCode());
         }
         for (String custOrderCode : custOrderCodeSet) {
-            int repeat = ofcFundamentalInformationService.checkCustOrderCodeRepeat(custOrderCode);
+            OfcFundamentalInformation ofc = new OfcFundamentalInformation();
+            ofc.setCustCode(ofcStorageTemplate.getCustCode());
+            ofc.setCustOrderCode(custOrderCode);
+            int repeat = ofcFundamentalInformationService.checkCustOrderCode(ofc);
             if(repeat > 0) {
                 logger.error("客户订单号【{}】已经在系统中存在，无法重复导入，请检查处理!", custOrderCode);
                 xlsErrorMsg.add("客户订单号【" + custOrderCode + "】已经在系统中存在，无法重复导入，请检查处理!");
@@ -997,9 +1000,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     /**
      * 处理过长的数字
-     * @param cellValue
-     * @param commonCell
-     * @return
+     * @param cellValue 单元格值
+     * @param commonCell 单元格
+     * @return 处理结果
      */
     private String resolveTooLangNum(String cellValue, Cell commonCell) {
         String cellValuePhone;
@@ -1459,13 +1462,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     /**
-     * 转换客户中心DTO发货方
-     * @param cscConsigneeDto 发货方
-     * @return 转换后的发货方
+     * 转换客户中心DTO收货方
+     * @param cscConsigneeDto 收货方
+     * @return 转换后的收货方
      * @throws Exception 异常
      */
     private CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) throws Exception{
-        logger.info("转换客户中心DTO发货方 cscConsigneeDto:{}", cscConsigneeDto);
+        logger.info("转换客户中心DTO收货方 cscConsigneeDto:{}", cscConsigneeDto);
         CscContantAndCompanyDto cscContactAndCompanyDto = new CscContantAndCompanyDto();
         CscContactDto cscContactDto = new CscContactDto();
         CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
@@ -1473,7 +1476,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         BeanUtils.copyProperties(cscConsigneeDto, cscContactCompanyDto);
         cscContactAndCompanyDto.setCscContactDto(cscContactDto);
         cscContactAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-        logger.info("转换客户中心DTO发货方 cscContactAndCompanyDto:{}", cscContactAndCompanyDto);
+        logger.info("转换客户中心DTO收货方 cscContactAndCompanyDto:{}", cscContactAndCompanyDto);
         return cscContactAndCompanyDto;
     }
 
