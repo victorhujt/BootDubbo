@@ -269,35 +269,35 @@
                         <el-input v-model="orderForm.contactNumber"  placeholder="请输入内容"></el-input>
                       </el-form-item>
                     </div>
-                    <div class="xe-pageHeader">
-                      &nbsp;&nbsp;收货方信息
-                    </div>
-                    <div class="xe-block">
-                      <el-form-item label="名称" class="xe-col-3">
-                        <el-input
-                                placeholder="请选择"
-                                icon="search"
-                                v-model="orderForm.consigneeName"
-                                v-bind:disabled = "isDisabled"
-                                :readOnly="true"
-                                @click="openConsignee">
-                        </el-input>
-                      </el-form-item>
-                      <el-form-item label="联系人" class="xe-col-3">
-                        <el-input v-model="orderForm.consigneeContactName" :readOnly="true"></el-input>
-                      </el-form-item>
-                      <el-form-item label="联系电话" class="xe-col-3">
-                        <el-input v-model="orderForm.consigneeContactPhone" :readOnly="true"></el-input>
-                      </el-form-item>
-                    </div>
-                    <div class="xe-block">
-                      <el-form-item label="地址" class="xe-col-3">
-                        <el-input v-model="orderForm.destination" :readOnly="true"></el-input>
-                      </el-form-item>
-                    </div>
                 </el-collapse-item>
               </el-collapse>
             </div>
+          <div class="xe-pageHeader">
+            收货方信息
+          </div>
+          <div class="xe-block">
+            <el-form-item label="名称" prop="consigneeName" class="xe-col-3">
+              <el-input
+                      placeholder="请选择"
+                      icon="search"
+                      v-model="orderForm.consigneeName"
+                      v-bind:disabled = "isDisabled"
+                      :readOnly="true"
+                      @click="openConsignee">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="联系人" class="xe-col-3">
+              <el-input v-model="orderForm.consigneeContactName" :readOnly="true"></el-input>
+            </el-form-item>
+            <el-form-item label="联系电话" class="xe-col-3">
+              <el-input v-model="orderForm.consigneeContactPhone" :readOnly="true"></el-input>
+            </el-form-item>
+          </div>
+          <div class="xe-block">
+            <el-form-item label="地址" class="xe-col-3">
+              <el-input v-model="orderForm.destination" :readOnly="true"></el-input>
+            </el-form-item>
+          </div>
             <div class="xe-pageHeader">
                 货品信息
             </div>
@@ -598,6 +598,9 @@
                   contactNumber:[
                   {validator: checkPhoneOrMobile, trigger: 'blur'},
                   { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                ],
+                consigneeName:[
+                  { required: true, message: '请输入收货方名称', trigger: 'change' }
                 ]
               }
             };
