@@ -35,7 +35,7 @@
                 </el-form-item>
             </div>
             <div class="xe-block" style="margin-left:100px;">
-                <el-upload  :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
+                <el-upload  :action="uploadAction" type="drag" :headers="headers" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
                               :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
                               :on-error="handleError" :default-file-list="fileList">
                     <i class="el-icon-upload"></i>
@@ -149,6 +149,9 @@
     var Main = {
         data() {
             return {
+                headers: {
+                    Authorization: 'Bearer ' + window.localStorage.getItem('token')
+                },
                 loading2:false,
                 templateType:'${templateType!}',
                 titleName:'${templateType!}' == 'storageIn' ? '入库开单_批量导入' : '出库开单_批量导入',

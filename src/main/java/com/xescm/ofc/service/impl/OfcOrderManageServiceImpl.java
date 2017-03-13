@@ -3294,6 +3294,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         if(null != invalidTime){
                             inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
                         }
+                        BigDecimal quantity = ofcGoodsDetailsInfo.getQuantity();
+                        if(null == quantity){
+                            logger.error("{}的商品{}数量为空", ofcFundamentalInformation.getOrderCode(), ofcGoodsDetailsInfo.getGoodsCode());
+                            throw new BusinessException(ofcFundamentalInformation.getOrderCode() + "的商品" + ofcGoodsDetailsInfo.getGoodsCode() + "数量为空");
+                        }
                         inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
                         inventoryGoods.add(inventoryDTO);
                     }

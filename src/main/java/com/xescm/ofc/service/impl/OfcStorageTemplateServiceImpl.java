@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -687,6 +688,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
                             //校验是不是日期类型
                             //yyyy-MM-dd || yyyy-MM-dd hh:mm:ss
+                            if(checkNullOrEmpty(cellValue)){
+                                continue;
+                            }
                             String[] split = cellValue.split(" ");
 
                             //正则还需要修正
@@ -701,6 +705,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.INVALID_TIME.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有失效日期", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+                            if(checkNullOrEmpty(cellValue)){
                                 continue;
                             }
                             //校验是不是日期类型
@@ -728,14 +735,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
                                 cscSupplierInfoDto.setSupplierName(cellValue);
                                 cscSupplierInfoDto.setCustomerCode(ofcStorageTemplate.getCustCode());
-                                Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
-                                if(Wrapper.ERROR_CODE == listWrapper.getCode()){
-                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
+                                Wrapper<PageInfo<CscSupplierInfoDto>> pageInfoWrapper = cscSupplierEdasService.querySupplierByAttributePageList(cscSupplierInfoDto);
+                                if(Wrapper.ERROR_CODE == pageInfoWrapper.getCode()){
+                                    logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, pageInfoWrapper.getMessage());
                                     xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
-                                List<CscSupplierInfoDto> result = listWrapper.getResult();
+                                PageInfo<CscSupplierInfoDto> pageInfoWrapperResult = pageInfoWrapper.getResult();
+                                List<CscSupplierInfoDto> result = pageInfoWrapperResult.getList();
                                 //没有校验通过
                                 if(null == result || result.size() == 0){
                                     logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护", rowNum + 1, cellNum + 1);
@@ -978,6 +986,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         succeedResult.add(usefulCol);
         succeedResult.add(ofcStorageTemplateDtoList);
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
+    }
+
+    private boolean checkNullOrEmpty(String cellValue) {
+        if(PubUtils.isSEmptyOrNull(PubUtils.trimAndNullAsEmpty(cellValue))){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -1519,7 +1534,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
             OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.queryByOrderCode(orderCode);
-            OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryOrderStateByOrderCode(orderCode);
+            OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
             String review;
             try {
                 review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation
