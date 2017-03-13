@@ -304,6 +304,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:infos) {
                         if(feedBackOrderDetailDto.getGoodsCode().equals(ofcGoodsDetailsInfo.getGoodsCode())){
                             ofcGoodsDetailsInfo.setRealQuantity(feedBackOrderDetailDto.getRealQuantity());
+                            ofcGoodsDetailsInfo.setProductionBatch(feedBackOrderDetailDto.getProductionBatch());
                             ofcGoodsDetailsInfoService.updateByOrderCode(ofcGoodsDetailsInfo);
                             isExist=true;
                             break;
