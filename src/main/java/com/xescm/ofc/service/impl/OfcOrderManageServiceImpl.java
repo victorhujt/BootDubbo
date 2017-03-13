@@ -971,7 +971,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("订单取消失败,查不到该订单!");
         }
         String orderType = ofcFundamentalInformation.getOrderType();
+        OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
+        ofcWarehouse.setOrderCode(orderCode);
+        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
         Wrapper response=null;
+        Wrapper whcresponse=null;
         try {
             if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
                 Wrapper<Integer> cancelStatus = acOrderEdasService.queryOrderCancelStatus(ofcFundamentalInformation.getOrderCode());
@@ -989,9 +993,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 logger.info("订单中心取消订单，调用结算中心取消订单接口,返回结果：{}", result);
             } else if (StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
                 String type="";
-                OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
-                ofcWarehouse.setOrderCode(orderCode);
-                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                     //出库
                     type="RK";
@@ -1004,8 +1005,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         response= orderCancelToTfc(orderCode);
                         logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
                         if(response!=null&&response.getCode()==Wrapper.SUCCESS_CODE){
-                            response= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
-                            logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
+                            whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
+                            logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
                         }
                     } catch (Exception e) {
                         logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
@@ -1013,8 +1014,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }else{
                     try {
-                        response= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
-                        logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
+                        whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode());
+                        logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
 
                     } catch (Exception e) {
                         logger.info("取消订单，调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
@@ -1027,10 +1028,30 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
             throw new BusinessException("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
         }
-        if(response!=null&&response.getCode()==Wrapper.SUCCESS_CODE){
-            logger.info("订单取消成功!");
+
+        if(StringUtils.equals(orderType, TRANSPORT_ORDER)){
+            if(response!=null&&response.getCode()==Wrapper.SUCCESS_CODE){
+                logger.info("运输订单号{}取消成功!",orderCode);
+            }else{
+                throw new BusinessException("运输订单取消失败");
+            }
         }
 
+        if(StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)){
+            if(Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)){
+                if(whcresponse!=null&&whcresponse.getCode()==Wrapper.SUCCESS_CODE){
+                    logger.info("仓储订单提供运输时{}取消成功!",orderCode);
+                }else{
+                    throw new BusinessException("仓储订单取消失败");
+                }
+            }else{
+                if(response!=null&&response.getCode()==Wrapper.SUCCESS_CODE){
+                    logger.info("仓储订单不提供运输时{}订单取消成功!",orderCode);
+                }else{
+                    throw new BusinessException("仓储订单取消失败");
+                }
+            }
+        }
     }
 
     /**
