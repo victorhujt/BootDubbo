@@ -69,6 +69,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -84,9 +85,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
-import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
-import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
-import static com.xescm.ofc.constant.GenCodePreffixConstant.SILOPROGRAMINFO_PRE;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.*;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -3278,6 +3277,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo dinfo) {
         String json;
         try {
+            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
             OfcOrderDTO ofOrderDto = modelMapper.map(ofcFundamentalInformation, OfcOrderDTO.class);
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
