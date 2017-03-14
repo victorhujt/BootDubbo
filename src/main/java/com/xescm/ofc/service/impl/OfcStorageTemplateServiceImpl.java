@@ -48,7 +48,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -636,8 +635,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有单价", rowNum + 1, cellNum + 1);
                                 continue;
                             }
-                            boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
-                            boolean matchesInt = cellValue.matches("\\d{1,6}");
+                            boolean matchesPot = cellValue.matches(SIX_POT_THREE);
+                            boolean matchesInt = cellValue.matches(INTEGER_SIX);
                             if(!matchesPot && !matchesInt){
                                 xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "单价【" + cellValue + "】格式错误！");
                                 checkPass = false;
@@ -661,8 +660,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.info("【{}】列第{}行数据为空，请检查文件！", ofcStorageTemplateForCheck.getReflectColName(), (rowNum + 1));
                                 cellValue = "0";
                             }
-                            boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
-                            boolean matchesInt = cellValue.matches("\\d{1,6}");
+                            boolean matchesPot = cellValue.matches(SIX_POT_THREE);
+                            boolean matchesInt = cellValue.matches(INTEGER_SIX);
                             //如果校验成功,就往结果集里堆
                             if(matchesPot || matchesInt){
                                 BigDecimal bigDecimal = new BigDecimal(cellValue);
