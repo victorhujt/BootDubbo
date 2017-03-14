@@ -29,9 +29,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 
 /**
  *
@@ -237,7 +237,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
             //运输开单自动审核
             String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
-                    null, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+                    null, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
 
             if(!PubUtils.isSEmptyOrNull(code) && code.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
                 return orderCode;

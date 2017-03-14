@@ -55,6 +55,8 @@ import java.util.*;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.STO_TEMP_PRE;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_STOCK_IMPORT;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 import static com.xescm.ofc.constant.StorageTemplateConstant.*;
 
 /**
@@ -428,6 +430,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
                         }
                     }
+
+                    //再去空格
+                    cellValue = PubUtils.trim(cellValue);
+
                     //至此, 已经能拿到每一列的值
                     if(rowNum == 0){//第一行, 将所有表格中固定的字段名称和位置固定
                         if(PubUtils.isSEmptyOrNull(cellValue)){
@@ -566,6 +572,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             //货品编码不空,判断是否已经校验过
                             //如果没校验过就调用CSC接口进行校验
+                            //再去空格
+                            cellValue = PubUtils.trim(cellValue);
                             if(!goodsCheck.containsKey(cellValue)){
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(cellValue);
@@ -730,6 +738,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                             //供应商名称不空,判断是否已经校验过
                             //如果没校验过就调用CSC接口进行校验
+                            //再去空格
+                            cellValue = PubUtils.trim(cellValue);
+
                             if(!supplierCheck.containsKey(cellValue)){
                                 CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
                                 cscSupplierInfoDto.setSupplierName(cellValue);
@@ -850,6 +861,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
                             //对收货方名称进行校验
                             //去接口查该收货方名称是否在客户中心维护
+                            //再去空格
+                            cellValue = PubUtils.trim(cellValue);
                             if(!consigneeCheck.containsKey(cellValue)){
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
@@ -969,10 +982,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         //基本校验通过后检查客户订单编号是否重复
         Set<String> custOrderCodeSet = new HashSet<>();
         BigDecimal countImportNum = new BigDecimal(0);
-        MathContext mathContext = new MathContext(3);
         logger.info("数量初始化: {}", countImportNum.intValue());
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
-//            countImportNum.add(ofcStorageTemplateDto.getQuantity(), mathContext);
             logger.info("数量 : {}", ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之前: {}", countImportNum.intValue());
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
@@ -1009,10 +1020,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     private boolean checkNullOrEmpty(String cellValue) {
-        if(PubUtils.isSEmptyOrNull(PubUtils.trimAndNullAsEmpty(cellValue))){
-            return true;
-        }
-        return false;
+        return PubUtils.isSEmptyOrNull(PubUtils.trimAndNullAsEmpty(cellValue));
     }
 
     /**
@@ -1439,7 +1447,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
-            Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, detailsInfos, "batchSave"
+            Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
                     , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
             if(save.getCode() == Wrapper.ERROR_CODE){
                 logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
@@ -1566,7 +1574,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             String review;
             try {
                 review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation
-                        , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), "review", authResDto);
+                        , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), REVIEW, authResDto);
             } catch (Exception e) {
                 logger.error("仓储开单批量导单审核, 当前订单审核失败" +
                         ", 直接跳过该订单, 订单号: {}, 错误信息: {}", orderCode, e);
