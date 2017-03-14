@@ -1,6 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -1297,11 +1296,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<String, OfcStorageTemplate> map = new HashMap<>();
         Map<String, OfcStorageTemplate> mapForDefaultButNotRequire = new HashMap<>();
         Map<String, OfcStorageTemplate> mapForDefaultButNotRequireName = new HashMap<>();
-        //增加特殊字段:发货波次号 consignmentBatchNumber
-        OfcStorageTemplate forCBN = new OfcStorageTemplate();
-        forCBN.setStandardColCode("consignmentBatchNumber");
-        forCBN.setStandardColName("发货波次号");
-        forCBN.setReflectColName("订单文件名");
+
         for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplateListForConvert) {
             String reflectColName = ofcStorageTemplate.getReflectColName();
             if(!PubUtils.isSEmptyOrNull(reflectColName)){
@@ -1310,9 +1305,16 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             mapForDefaultButNotRequire.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);
             mapForDefaultButNotRequireName.put(ofcStorageTemplate.getStandardColName(), ofcStorageTemplate);
         }
-        map.put(forCBN.getReflectColName(), forCBN);
-        mapForDefaultButNotRequire.put(forCBN.getStandardColCode(), forCBN);
-        mapForDefaultButNotRequireName.put(forCBN.getStandardColName(), forCBN);
+        if(StringUtils.equals(STORAGE_OUT, templateType)){
+            //增加特殊字段:发货波次号 consignmentBatchNumber
+            OfcStorageTemplate forCBN = new OfcStorageTemplate();
+            forCBN.setStandardColCode("consignmentBatchNumber");
+            forCBN.setStandardColName("发货波次号");
+            forCBN.setReflectColName("订单文件名");
+            map.put(forCBN.getReflectColName(), forCBN);
+            mapForDefaultButNotRequire.put(forCBN.getStandardColCode(), forCBN);
+            mapForDefaultButNotRequireName.put(forCBN.getStandardColName(), forCBN);
+        }
 
         List<Object> result = new ArrayList<>();
         result.add(map);
