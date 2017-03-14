@@ -3279,7 +3279,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 //分拨出库不进行库存的校验
-                if (!"614".equals(ofcFundamentalInformation.getBusinessType())) {
+                if (!("614".equals(ofcFundamentalInformation.getBusinessType())||"626".equals(ofcFundamentalInformation.getBusinessType()))) {
                     //出库
                     ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
                     if (dinfo != null) {
