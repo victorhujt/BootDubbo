@@ -40,6 +40,8 @@
     <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
     <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
     <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+    <result column="consignment_batch_number" property="consignmentBatchNumber" jdbcType="VARCHAR" />
+
 
 
 

@@ -279,9 +279,22 @@ public class OfcFundamentalInformation {
     @Column(name ="exception_reason")
     private String exceptionReason;
 
-    public String getExceptionReason() {
-        return exceptionReason;
+
+    /**
+     * 发货拨次号
+     */
+    @Column(name = "consignment_batch_number")
+    private String consignmentBatchNumber;
+
+    public void setConsignmentBatchNumber(String consignmentBatchNumber) {
+        this.consignmentBatchNumber = consignmentBatchNumber;
     }
+
+    public String getConsignmentBatchNumber() {
+        return consignmentBatchNumber;
+    }
+
+
 
     public void setExceptionReason(String exceptionReason) {
         this.exceptionReason = exceptionReason;
