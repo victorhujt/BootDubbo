@@ -990,7 +990,7 @@
           },
             saveStorage:function(){
                 if(this.orderForm.businessType=="614"){
-                    if(StringUtil.isEmpty(this.supplierName)){
+                    if(StringUtil.isEmpty(this.orderForm.supportName)){
                         this.promptInfo("业务名称为分拨出库时，供应商必须选择!",'warning');
                         return;
                     }
