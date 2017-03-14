@@ -1298,7 +1298,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     /**
      * 取消的订单推送到结算中心进行结算取消
      *
-     * @param orderCode
+     * @param orderCode 订单编号
      * @return
      */
     @Transactional
@@ -1306,6 +1306,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("订单中心取消订单，调用结算中心取消订单接口==>订单编号:{}", orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
         ofcDistributionBasicInfo.setOrderCode(orderCode);
+//        ModelMapper modelMapper = new ModelMapper();
         CancelAcOrderDto cancelOfcOrderDto = new CancelAcOrderDto();
         cancelOfcOrderDto.setOrderCode(orderCode);
         ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
@@ -2753,8 +2754,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param cscContantAndCompanyDtoConsignor 发货方信息
      * @param cscContantAndCompanyDtoConsignee 收货方信息
      * @param cscSupplierInfoDto               供应商信息
-     * @param authResDtoByToken
-     * @return
+     * @param authResDtoByToken 登录用户
+     * @return 操作结果
      */
     @Override
     public Wrapper<?> saveStorageOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> goodsDetailsList, String reviewTag
@@ -2767,7 +2768,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
         OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
-        if (null == ofcFundamentalInformation || null == ofcWarehouseInformation || null == ofcDistributionBasicInfo) {
+        if (null == ofcFundamentalInformation || null == ofcWarehouseInformation) {
             logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
                             ", ofcFundamentalInformation:{}, ofcWarehouseInformation:{},ofcDistributionBasicInfo:{}"
                     , ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
@@ -2847,7 +2848,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 goodInfo.put(goodCode,ofcGoodsDetails);
             }else{
                 OfcGoodsDetailsInfo info=goodInfo.get(goodCode);
-                info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity(), new MathContext(3)));
+                info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
             }
         }
 

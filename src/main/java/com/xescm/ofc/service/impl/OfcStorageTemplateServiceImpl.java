@@ -1427,7 +1427,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
 //            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
             Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
-            MathContext mathContext = new MathContext(3);
+//            MathContext mathContext = new MathContext(3);
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = convertCscGoods(ofcStorageTemplateDto);
                 String goodsCode = ofcGoodsDetailsInfo.getGoodsCode();
@@ -1437,7 +1437,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         logger.error("货品数量出错!");
                         throw new BusinessException("货品数量出错!");
                     }
-                    info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity(), mathContext));
+                    info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
                     ofcGoodsDetailsInfoMap.put(goodsCode, info);
                 }else {
                     ofcGoodsDetailsInfoMap.put(goodsCode, ofcGoodsDetailsInfo);
