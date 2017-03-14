@@ -15,6 +15,12 @@
         .el-dialog__footer{
           padding:15px 20px;
         }
+        .el-dialog--small .el-table{
+          min-height:350px;
+        }
+        .el-dialog--small .el-table tr{
+          cursor:pointer;
+        }
     </style>
 </head>
 <body>
@@ -29,7 +35,8 @@
                   <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
-            <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange" style="width: 100%" max-height="400">
+            <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange"
+                      @row-dblclick="setCurrentCustInfo(currentCustomerRow)" style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="customerCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>

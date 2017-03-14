@@ -1,21 +1,24 @@
 <head>
     <title>入库开单</title>
-  <style>
-    .el-dialog{
-      top:50%!important;
-      margin-top:-300px;
-      margin-bottom:0!important;
-    }
-    .el-dialog__body{
-      padding:10px 20px 30px;
-    }
-    .el-dialog__footer{
-      padding:15px 20px;
-    }
-    .el-dialog--small .el-table{
-      min-height:350px;
-    }
-  </style>
+    <style>
+        .el-dialog{
+          top:50%!important;
+          margin-top:-300px;
+          margin-bottom:0!important;
+        }
+        .el-dialog__body{
+          padding:10px 20px 30px;
+        }
+        .el-dialog__footer{
+          padding:15px 20px;
+        }
+        .el-dialog--small .el-table{
+          min-height:350px;
+        }
+        .el-dialog--small .el-table tr{
+          cursor:pointer;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -30,7 +33,8 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%"  max-height="400">
+            <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange"
+                      @row-dblclick="setCurrentCustInfo(customerDataInfo.currentRow)" style="width: 100%"  max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="custCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
@@ -62,7 +66,8 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="consignorDataInfo.consignorData" highlight-current-row @current-change="consignorHandleCurrentChange" border style="width: 100%" max-height="400">
+            <el-table :data="consignorDataInfo.consignorData" highlight-current-row @current-change="consignorHandleCurrentChange"
+                      @row-dblclick="setCurrentConsignorInfo(consignorDataInfo.consignorCurrentRow)" border style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="consignorName" label="名称"></el-table-column>
                 <el-table-column property="consignorContactName" label="联系人"></el-table-column>
@@ -97,7 +102,8 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange" style="width: 100%" max-height="400">
+            <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange"
+                      @row-dblclick="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)" style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="supportName" label="名称"></el-table-column>
                 <el-table-column property="contactName" label="联系人"></el-table-column>
@@ -159,7 +165,8 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange" style="width: 100%" max-height="350">
+            <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange"
+                      @row-dblclick="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)" style="width: 100%" max-height="350">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
