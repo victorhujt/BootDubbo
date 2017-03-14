@@ -78,7 +78,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -1306,7 +1305,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("订单中心取消订单，调用结算中心取消订单接口==>订单编号:{}", orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
         ofcDistributionBasicInfo.setOrderCode(orderCode);
-//        ModelMapper modelMapper = new ModelMapper();
         CancelAcOrderDto cancelOfcOrderDto = new CancelAcOrderDto();
         cancelOfcOrderDto.setOrderCode(orderCode);
         ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
@@ -2842,6 +2840,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
         //相同货品编码数量相加
         Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
+        List<OfcGoodsDetailsInfo> ofcGoodsDetail=new ArrayList<>();
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
             String goodCode=ofcGoodsDetails.getGoodsCode();
             if(!goodInfo.containsKey(goodCode)){
@@ -2866,6 +2865,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
+            ofcGoodsDetail.add(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
      }
 
@@ -3054,7 +3054,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("自动审核. 订单批次号信息:{}", ofcFundamentalInformation.getOrderBatchNumber());
         if (isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
             //调用自动审核
-            this.orderAutoAudit(ofcFundamentalInformation, goodsDetailsList, ofcDistributionBasicInfo, ofcWarehouseInformation
+            this.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetail, ofcDistributionBasicInfo, ofcWarehouseInformation
                     , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
