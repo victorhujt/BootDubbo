@@ -430,6 +430,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
                         }
                     }
+
+                    //再去空格
+                    cellValue = PubUtils.trim(cellValue);
+
                     //至此, 已经能拿到每一列的值
                     if(rowNum == 0){//第一行, 将所有表格中固定的字段名称和位置固定
                         if(PubUtils.isSEmptyOrNull(cellValue)){
@@ -568,6 +572,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             //货品编码不空,判断是否已经校验过
                             //如果没校验过就调用CSC接口进行校验
+                            //再去空格
+                            cellValue = PubUtils.trim(cellValue);
                             if(!goodsCheck.containsKey(cellValue)){
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(cellValue);
@@ -732,6 +738,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                             //供应商名称不空,判断是否已经校验过
                             //如果没校验过就调用CSC接口进行校验
+                            //再去空格
+                            cellValue = PubUtils.trim(cellValue);
+
                             if(!supplierCheck.containsKey(cellValue)){
                                 CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
                                 cscSupplierInfoDto.setSupplierName(cellValue);
@@ -852,6 +861,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
                             //对收货方名称进行校验
                             //去接口查该收货方名称是否在客户中心维护
+                            //再去空格
+                            cellValue = PubUtils.trim(cellValue);
                             if(!consigneeCheck.containsKey(cellValue)){
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
                                 CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
