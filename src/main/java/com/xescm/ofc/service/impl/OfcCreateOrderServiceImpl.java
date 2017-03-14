@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 
 @Service
 public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
@@ -308,7 +309,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
 //        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
-        String auditResult = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
+        String auditResult = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo
+                , ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, REVIEW, authResDto);
         logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
         logger.info("自动审核操作：" + auditResult);
     }

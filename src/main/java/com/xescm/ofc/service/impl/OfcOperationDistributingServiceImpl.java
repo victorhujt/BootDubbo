@@ -35,6 +35,7 @@ import java.util.List;
 
 import static com.xescm.ofc.constant.ExcelCheckConstant.XLSX_EXCEL;
 import static com.xescm.ofc.constant.ExcelCheckConstant.XLS_EXCEL;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_OPER_DISTRI;
 
 /**
  * 城配开单
@@ -266,7 +267,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             if (ofcOrderDTO != null) {
                 ofcOrderDTO.setOrderBatchNumber(batchNumber);
             }
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO, ofcGoodsDetailsInfos, "distributionPlace", authResDtoByToken, ofcOrderDTO != null ? ofcOrderDTO.getCustCode() : new OfcOrderDTO().toString()
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO, ofcGoodsDetailsInfos, ORDER_TAG_OPER_DISTRI, authResDtoByToken, ofcOrderDTO != null ? ofcOrderDTO.getCustCode() : new OfcOrderDTO().toString()
                     , consignor, consignee, new CscSupplierInfoDto());
             if (ResultCodeEnum.ERROROPER.getName().equals(resultMessage)) {
                 return resultMessage;
