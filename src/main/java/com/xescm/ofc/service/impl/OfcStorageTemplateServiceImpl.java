@@ -1,6 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -441,7 +440,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         modelNameStr.put(cellNum + 1,ofcStorageTemplateForReflect);
                         String usefulColName = cellValue;
                         String usefulColCode = ofcStorageTemplateForReflect.getStandardColCode();
-                         usefulCol.add(usefulColName + "@" + usefulColCode);
+                        usefulCol.add(usefulColName + "@" + usefulColCode);
                     }else if(rowNum > 0) { // 表格的数据体
                         OfcStorageTemplate ofcStorageTemplateForCheck = modelNameStr.get(cellNum + 1);
                         if(null == ofcStorageTemplateForCheck){
@@ -884,6 +883,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
 
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                        }else if(StringUtils.equals("consignmentBatchNumber", standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有订单波次号", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                         }
                     }
                 }
@@ -959,13 +965,18 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
         }
 
+
         //基本校验通过后检查客户订单编号是否重复
         Set<String> custOrderCodeSet = new HashSet<>();
         BigDecimal countImportNum = new BigDecimal(0);
         MathContext mathContext = new MathContext(3);
+        logger.info("数量初始化: {}", countImportNum.intValue());
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
 //            countImportNum.add(ofcStorageTemplateDto.getQuantity(), mathContext);
-            countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity(), mathContext);
+            logger.info("数量 : {}", ofcStorageTemplateDto.getQuantity());
+            logger.info("数量 加之前: {}", countImportNum.intValue());
+            countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
+            logger.info("数量 加之后: {}", countImportNum.intValue());
             custOrderCodeSet.add(ofcStorageTemplateDto.getCustOrderCode());
         }
         for (String custOrderCode : custOrderCodeSet) {
@@ -985,6 +996,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.error("当前Excel校验出错!");
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "当前Excel校验出错", xlsErrorMsg);
         }
+
         logger.info("当前Excel校验成功!");
         //校验成功!
         //ofcStorageTemplateDtoList 用来下单用的
@@ -1284,6 +1296,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<String, OfcStorageTemplate> map = new HashMap<>();
         Map<String, OfcStorageTemplate> mapForDefaultButNotRequire = new HashMap<>();
         Map<String, OfcStorageTemplate> mapForDefaultButNotRequireName = new HashMap<>();
+
         for (OfcStorageTemplate ofcStorageTemplate : ofcStorageTemplateListForConvert) {
             String reflectColName = ofcStorageTemplate.getReflectColName();
             if(!PubUtils.isSEmptyOrNull(reflectColName)){
@@ -1292,6 +1305,17 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             mapForDefaultButNotRequire.put(ofcStorageTemplate.getStandardColCode(), ofcStorageTemplate);
             mapForDefaultButNotRequireName.put(ofcStorageTemplate.getStandardColName(), ofcStorageTemplate);
         }
+        if(StringUtils.equals(STORAGE_OUT, templateType)){
+            //增加特殊字段:发货波次号 consignmentBatchNumber
+            OfcStorageTemplate forCBN = new OfcStorageTemplate();
+            forCBN.setStandardColCode("consignmentBatchNumber");
+            forCBN.setStandardColName("发货波次号");
+            forCBN.setReflectColName("订单文件名");
+            map.put(forCBN.getReflectColName(), forCBN);
+            mapForDefaultButNotRequire.put(forCBN.getStandardColCode(), forCBN);
+            mapForDefaultButNotRequireName.put(forCBN.getStandardColName(), forCBN);
+        }
+
         List<Object> result = new ArrayList<>();
         result.add(map);
         result.add(mapForDefaultButNotRequire);
@@ -1365,7 +1389,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             if(!orderMap.containsKey(custOrderCode) && orderListByCustOrderCode == null){
                 logger.info("初始化");
                 orderListByCustOrderCode = new ArrayList<>();
-                orderMap.put(custOrderCode, orderListByCustOrderCode);
+//                orderMap.put(custOrderCode, orderListByCustOrderCode);
             }
             orderListByCustOrderCode.add(ofcStorageTemplateDto);
             orderMap.put(custOrderCode, orderListByCustOrderCode);
@@ -1412,7 +1436,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 }
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
-            ofcGoodsDetailsInfoMap.values();
             CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
