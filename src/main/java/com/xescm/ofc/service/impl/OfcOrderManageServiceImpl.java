@@ -995,10 +995,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 String type="";
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                     //出库
-                    type="RK";
+                    type="CK";
                 }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
                     //入库
-                    type="CK";
+                    type="RK";
                 }
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     try {
@@ -3283,33 +3283,33 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+                //出库
+                ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
+                if (dinfo != null) {
+                    StringBuilder address=new StringBuilder();
+                    ofOrderDto.setConsigneeCode(dinfo.getConsigneeName());//收货方编码
+                    ofOrderDto.setConsigneeContactCode(dinfo.getConsigneeContactCode());//收货方联系人编码
+                    ofOrderDto.setConsigneeContactName(dinfo.getConsigneeContactName());//收货方联系名称
+                    ofOrderDto.setConsigneeContactPhone(dinfo.getConsigneeContactPhone());//收货方联系电话
+                    if(!StringUtils.isEmpty(dinfo.getDestinationProvince())){
+                        address.append(dinfo.getDestinationProvince());
+                    }
+                    if(!StringUtils.isEmpty(dinfo.getDestinationCity())){
+                        address.append(dinfo.getDestinationCity());
+                    }
+                    if(!StringUtils.isEmpty(dinfo.getDestinationDistrict())){
+                        address.append(dinfo.getDestinationDistrict());
+                    }
+                    if(!StringUtils.isEmpty(dinfo.getDestinationTowns())){
+                        address.append(dinfo.getDestinationTowns());
+                    }
+                    if(!StringUtils.isEmpty(dinfo.getDestination())){
+                        address.append(dinfo.getDestination());
+                    }
+                    ofOrderDto.setDestination(address.toString());//收货人地址
+                }
                 //分拨出库不进行库存的校验
                 if (!("614".equals(ofcFundamentalInformation.getBusinessType())||"613".equals(ofcFundamentalInformation.getBusinessType()))) {
-                    //出库
-                    ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
-                    if (dinfo != null) {
-                        StringBuilder address=new StringBuilder();
-                        ofOrderDto.setConsigneeCode(dinfo.getConsigneeName());//收货方编码
-                        ofOrderDto.setConsigneeContactCode(dinfo.getConsigneeContactCode());//收货方联系人编码
-                        ofOrderDto.setConsigneeContactName(dinfo.getConsigneeContactName());//收货方联系名称
-                        ofOrderDto.setConsigneeContactPhone(dinfo.getConsigneeContactPhone());//收货方联系电话
-                        if(!StringUtils.isEmpty(dinfo.getDestinationProvince())){
-                            address.append(dinfo.getDestinationProvince());
-                        }
-                        if(!StringUtils.isEmpty(dinfo.getDestinationCity())){
-                            address.append(dinfo.getDestinationCity());
-                        }
-                        if(!StringUtils.isEmpty(dinfo.getDestinationDistrict())){
-                            address.append(dinfo.getDestinationDistrict());
-                        }
-                        if(!StringUtils.isEmpty(dinfo.getDestinationTowns())){
-                            address.append(dinfo.getDestinationTowns());
-                        }
-                        if(!StringUtils.isEmpty(dinfo.getDestination())){
-                            address.append(dinfo.getDestination());
-                        }
-                        ofOrderDto.setDestination(address.toString());//收货人地址
-                    }
                     //校验出库商品的库存
                     List<InventoryDTO> inventoryGoods = new ArrayList<>();
                     int count = 0;
