@@ -687,7 +687,9 @@
                                     vueObj.orderForm.shipmentTime=DateUtil.parse(ofcWarehouseInformation.shipmentTime);
                                     vueObj.orderForm.plateNumber=ofcWarehouseInformation.plateNumber;
                                     vueObj.orderForm.driverName=ofcWarehouseInformation.driverName;
-                                    vueObj.orderForm.contactNumber=ofcWarehouseInformation.contactNumber;
+                                    if(ofcWarehouseInformation.contactNumber!=null){
+                                        vueObj.orderForm.contactNumber=ofcWarehouseInformation.contactNumber;
+                                    }
                                     if(ofcWarehouseInformation.provideTransport=="1"){
                                         vueObj.orderForm.isNeedTransport=true;
                                     }else{
@@ -702,18 +704,23 @@
                                         vueObj.orderForm.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
                                         if(ofcDistributionBasicInfo.destinationProvince!=null){
                                             vueObj.orderForm.destinationDetailAddress=ofcDistributionBasicInfo.destinationProvince;
+                                            vueObj.orderForm.destinationProvince=ofcDistributionBasicInfo.destinationProvince;
                                         }
                                         if(ofcDistributionBasicInfo.destinationCity!=null){
                                             vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationCity;
+                                            vueObj.orderForm.destinationCity=ofcDistributionBasicInfo.destinationCity;
                                         }
                                         if(ofcDistributionBasicInfo.destinationDistrict!=null){
                                             vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationDistrict;
+                                            vueObj.orderForm.destinationDistrict=ofcDistributionBasicInfo.destinationDistrict;
                                         }
                                         if(ofcDistributionBasicInfo.destinationTowns!=null){
                                             vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationTowns;
+                                            vueObj.orderForm.destinationTowns=ofcDistributionBasicInfo.destinationTowns;
                                         }
                                         if(ofcDistributionBasicInfo.destination!=null){
                                             vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destination;
+                                            vueObj.orderForm.destination=ofcDistributionBasicInfo.destination;
                                         }
                                         vueObj.orderForm.destinationCode=ofcDistributionBasicInfo.destinationCode;
                                     }
@@ -958,7 +965,6 @@
                 this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignee:function(){
-                debugger;
                 this.consigneeDataInfo.consigneeData=[];
                 var vueObj=this;
                 var cscContactDto = {};
@@ -985,7 +991,6 @@
                             }else{
                                 CscContantAndCompanyDto.consigneeType="个人";
                             }
-                            debugger;
                             consignee.consigneeName=CscContantAndCompanyDto.contactCompanyName;
                             consignee.consigneeContactName=CscContantAndCompanyDto.contactName;
                             consignee.consigneeContactPhone=CscContantAndCompanyDto.phone;
@@ -1029,7 +1034,6 @@
                 this.consigneeDataInfo.chosenSend=false;
             },
             setCurrentConsigneeInfo:function(val){
-                debugger;
                 this.orderForm.consigneeName="";
                 this.orderForm.destination="";
                 this.orderForm.consigneeContactName="";
@@ -1290,7 +1294,6 @@
                         });
             },
             getCscContantAndCompanyDtoConsigneeStr:function(){
-                debugger;
                 var paramConsignee = {};
                 var cscContactDto = {};
                 var cscContactCompanyDto = {};

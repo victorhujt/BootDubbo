@@ -643,7 +643,6 @@
                         vueObj.supplierDataInfo.supplierData = [];    // 供应商列表清空
                         vueObj.orderForm.supportName = '';    // 清空供应商
                         var data=result.result;
-                        debugger;
                         if (data == undefined || data == null || data.length ==0) {
                             layer.msg("暂时未查询到该客户下的仓库信息！！");
                         } else if (result.code == 200) {
@@ -799,7 +798,6 @@
                 this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignee:function(){
-                debugger;
                 this.consigneeDataInfo.consigneeData=[];
                 var vueObj=this;
                 var cscContactDto = {};
@@ -868,7 +866,6 @@
                 this.consigneeDataInfo.chosenSend=false;
             },
             setCurrentConsigneeInfo:function(val){
-                debugger;
                 this.orderForm.consigneeName="";
                 this.orderForm.destination="";
                 this.orderForm.consigneeContactName="";
@@ -1147,7 +1144,6 @@
                         });
             },
             getCscContantAndCompanyDtoConsigneeStr:function(){
-                debugger;
                 var paramConsignee = {};
                 var cscContactDto = {};
                 var cscContactCompanyDto = {};

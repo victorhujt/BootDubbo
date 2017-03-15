@@ -396,7 +396,6 @@
                                         vueObj.isNeedTransport=false;
                                         vueObj.needTransport="否";
                                     }
-                                    debugger;
                                     if(ofcDistributionBasicInfo!=null){
                                         //发货方
                                         vueObj.consignorName=ofcDistributionBasicInfo.consignorName;

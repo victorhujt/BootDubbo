@@ -556,7 +556,6 @@
                 vueObj.isDisabledCancel=true;
                 for(var i=0;i<orders.length;i++){
                     var order=orders[i];
-                    debugger;
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
                             if (result == undefined || result == null ) {
