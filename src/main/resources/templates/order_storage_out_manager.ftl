@@ -537,6 +537,8 @@
                     }
                     if(flag){
                         vueObj.promptInfo("订单取消成功","success");
+                    }else{
+                        vueObj.promptInfo("订单取消失败","error");
                     }
                 }
             },
