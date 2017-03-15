@@ -61,6 +61,7 @@
                             v-model="beginDate"
                             type="date"
                             :clearable="false"
+                            :editable="false"
                             placeholder="选择起始日期">
                     </el-date-picker>
                     <label for="" style="width:15px;">至</label>
@@ -69,6 +70,7 @@
                             v-model="endDate"
                             type="date"
                             :clearable="false"
+                            :editable="false"
                             placeholder="选择结束日期">
                     </el-date-picker>
                 </el-form-item>
@@ -476,6 +478,26 @@
                             }
                         }
                     });
+                }
+            },
+            resetCondition:function(){
+                this.beginDate=new Date()- 3600 * 1000 * 24 * 2;
+                this.endDate=new Date();
+                this.orderCode="";
+                this.customerOrderCode="";
+                this.customerName="";
+                this.customerCode="";
+                this.orderStatus="";
+                this.businessType="";
+                this.baseName="";
+                this.areaName="";
+                this.wareHouseName="";
+                if(this.baseNameOptions.length==1&&this.areaNameOptions.length==1){
+                    this.areaName=this.areaNameOptions[0].value;
+                    this.baseName=this.baseNameOptions[0].value;
+                }
+                if(this.baseNameOptions.length>1&&this.areaNameOptions.length==1){
+                    this.areaName=this.areaNameOptions[0].value;
                 }
             },
             auditOrder:function(){

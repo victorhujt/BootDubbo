@@ -62,6 +62,7 @@
                       v-model="beginDate"
                       type="date"
                      :clearable="false"
+                     :editable="false"
                       placeholder="选择起始日期">
               </el-date-picker>
               <label for="" style="width:15px;">至</label>
@@ -70,6 +71,7 @@
                       v-model="endDate"
                       type="date"
                       :clearable="false"
+                      :editable="false"
                       placeholder="选择结束日期">
               </el-date-picker>
             </el-form-item>
