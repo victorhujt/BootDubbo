@@ -405,6 +405,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
             OfcOrderStatus s=new OfcOrderStatus();
             s.setOrderStatus(IMPLEMENTATION_IN);
+            s.setOrderCode(orderCode);
             s.setStatusDesc("执行中");
             s.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单开始执行");
             s.setOperator(authResDtoByToken.getUserName());
