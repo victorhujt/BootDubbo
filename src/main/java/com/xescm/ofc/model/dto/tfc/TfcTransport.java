@@ -181,6 +181,48 @@ public class TfcTransport implements Serializable {
 
     private String transportType;
 
+    //基地编码
+    private String baseCode;
+    //基地名称
+    private String baseDesignation;
+    //大区编码
+    private String areaCode;
+    //大区名称
+    private String areaName;
+
+
+    public String getBaseCode() {
+        return baseCode;
+    }
+
+    public void setBaseCode(String baseCode) {
+        this.baseCode = baseCode;
+    }
+
+    public String getBaseDesignation() {
+        return baseDesignation;
+    }
+
+    public void setBaseDesignation(String baseDesignation) {
+        this.baseDesignation = baseDesignation;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
     public String getCustomerOrderCode() {
         return customerOrderCode;
     }

@@ -3445,7 +3445,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcDistributionBasicInfo 运输信息
      * @param tfcTransport TFC实体
      */
-    private void convertOrderToTfcOfBaseInfo(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, TfcTransport tfcTransport) {
+    private void convertOrderToTfcOfBaseInfo(OfcFundamentalInformation ofcFundamentalInformation
+            , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, TfcTransport tfcTransport) {
         tfcTransport.setCustomerOrderCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustOrderCode()));
 //        tfcTransport.setBaseName();
 //        tfcTransport.setInterfaceStatus();
@@ -3464,6 +3465,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setItemType(trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsType()));
         tfcTransport.setCustomerCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()));
         tfcTransport.setCustomerName(trimAndNullAsEmpty(ofcFundamentalInformation.getCustName()));
+        tfcTransport.setBaseCode(ofcFundamentalInformation.getBaseCode());
+        tfcTransport.setBaseDesignation(ofcFundamentalInformation.getBaseName());
+        tfcTransport.setAreaCode(ofcFundamentalInformation.getAreaCode());
+        tfcTransport.setAreaName(ofcFundamentalInformation.getAreaName());
 //        tfcTransport.setCustomerTel();
         tfcTransport.setFromTransportName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getBaseId()));
         if (null != ofcFundamentalInformation.getCreationTime()) {
