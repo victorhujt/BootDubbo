@@ -3286,10 +3286,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     public void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
             , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo dinfo) {
+        logger.info("订单信息推送仓储中心 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
         String json;
         try {
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
             OfcOrderDTO ofOrderDto = modelMapper.map(ofcFundamentalInformation, OfcOrderDTO.class);
+            logger.info("订单信息推送仓储中心 ==> ofOrderDto:{}", ofOrderDto);
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
@@ -3366,6 +3368,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setSupportName(ofcWarehouseInformation.getSupportName());
             ofOrderDto.setSupportCode(ofcWarehouseInformation.getSupportCode());
             ofOrderDto.setGoodsList(goodsDetailsList);
+            logger.info("订单信息推送仓储中心 ==> ofOrderDto:{}", ofOrderDto);
             json = JacksonUtil.toJson(ofOrderDto);
             logger.info("订单信息推送仓储中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
             logger.info("推送WHC的最终JSON为{}", json);
