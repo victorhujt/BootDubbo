@@ -1055,7 +1055,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     throw new BusinessException("仓储订单取消失败");
                 }
             }else{
-                if(response!=null&&response.getCode()==Wrapper.SUCCESS_CODE){
+                if(whcresponse!=null&&whcresponse.getCode()==Wrapper.SUCCESS_CODE){
                     logger.info("仓储订单不提供运输时{}订单取消成功!",orderCode);
                 }else{
                     throw new BusinessException("仓储订单取消失败");
