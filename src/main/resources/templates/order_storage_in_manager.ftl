@@ -556,6 +556,7 @@
                 }
                 if(flag){
                     vueObj.promptInfo("订单取消成功","success");
+                    vueObj.selectOrder();
                 }else{
                     vueObj.promptInfo("订单取消失败","error");
                 }
@@ -589,8 +590,10 @@
                 if(flag){
                     if(tag=="rereview"){
                         vueObj.promptInfo("订单反审核成功","success");
+                        vueObj.selectOrder();
                     }else if(tag=="review"){
                         vueObj.promptInfo("订单审核成功","success");
+                        vueObj.selectOrder();
                     }
                 }
             },

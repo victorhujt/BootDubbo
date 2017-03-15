@@ -377,6 +377,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单审核完成");
                 ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
                 ofcOrderStatus.setLastedOperTime(new Date());
+                ofcOrderStatusService.save(ofcOrderStatus);
 
                 OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
@@ -401,8 +402,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             } else {
                 throw new BusinessException("订单编号[" + orderCode + "]不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！");
             }
+
+            OfcOrderStatus s=new OfcOrderStatus();
+            s.setOrderStatus(IMPLEMENTATION_IN);
+            s.setStatusDesc("执行中");
+            s.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单开始执行");
+            s.setOperator(authResDtoByToken.getUserName());
+            s.setLastedOperTime(new Date());
+            ofcOrderStatusService.save(s);
         }
-        ofcOrderStatusService.save(ofcOrderStatus);
+
         return String.valueOf(Wrapper.SUCCESS_CODE);
     }
 
