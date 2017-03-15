@@ -396,12 +396,18 @@
                                         vueObj.isNeedTransport=false;
                                         vueObj.needTransport="否";
                                     }
+                                    debugger;
                                     if(ofcDistributionBasicInfo!=null){
                                         //发货方
                                         vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
                                         vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
                                         vueObj.consignorContactPhone=ofcDistributionBasicInfo.consignorContactPhone;
-                                        vueObj.consignorAddress=ofcDistributionBasicInfo.departureProvince+ofcDistributionBasicInfo.departureCity;
+                                        if(ofcDistributionBasicInfo.departureProvince!=null){
+                                            vueObj.consignorAddress=ofcDistributionBasicInfo.departureProvince;
+                                        }
+                                        if(ofcDistributionBasicInfo.departureCity!=null){
+                                            vueObj.consignorAddress=vueObj.consignorAddress+ofcDistributionBasicInfo.departureCity;
+                                        }
                                         if(ofcDistributionBasicInfo.departureDistrict!=null){
                                             vueObj.consignorAddress=vueObj.consignorAddress+ofcDistributionBasicInfo.departureDistrict;
                                         }
@@ -411,7 +417,12 @@
                                         if(ofcDistributionBasicInfo.departurePlace!=null){
                                             vueObj.consignorAddress=vueObj.consignorAddress+ofcDistributionBasicInfo.departurePlace;
                                         }
-                                        vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity;
+                                        if(ofcDistributionBasicInfo.destinationProvince!=null){
+                                            vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationCity!=null){
+                                            vueObj.destinationAddress=vueObj.destinationAddress+ofcDistributionBasicInfo.destinationCity;
+                                        }
                                         if(ofcDistributionBasicInfo.destinationDistrict!=null){
                                             vueObj.destinationAddress=vueObj.destinationAddress+ofcDistributionBasicInfo.destinationDistrict;
                                         }

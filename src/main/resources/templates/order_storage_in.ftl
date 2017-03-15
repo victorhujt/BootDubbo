@@ -813,6 +813,7 @@
                             consignor.cityName=CscContantAndCompanyDto.cityName;
                             consignor.areaName=CscContantAndCompanyDto.areaName;
                             consignor.streetName=CscContantAndCompanyDto.streetName;
+                            consignor.departurePlace=CscContantAndCompanyDto.address;
                             consignor.consignorContactCode=CscContantAndCompanyDto.contactCode;
                             consignor.consignorCode=CscContantAndCompanyDto.contactCompanyCode;
                             consignor.departurePlaceCode=CscContantAndCompanyDto.province+","+CscContantAndCompanyDto.city;

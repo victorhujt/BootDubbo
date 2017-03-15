@@ -72,18 +72,22 @@
                     <el-button type="primary" @click="selectConsignee">筛选</el-button>
                 </el-form-item>
             </el-form>
-
             <el-table :data="consigneeDataInfo.consigneeData" highlight-current-row @current-change="consigneeHandleCurrentChange"
                       @row-dblclick="setCurrentConsigneeInfo(consigneeDataInfo.consigneeCurrentRow)" border style="width: 100%" max-height="400">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="consigneeName" label="名称"></el-table-column>
                 <el-table-column property="consigneeContactName" label="联系人"></el-table-column>
                 <el-table-column property="consigneeContactPhone" label="联系电话"></el-table-column>
-                <el-table-column property="destination" label="地址"></el-table-column>
+                <el-table-column property="destination" v-if="false" label="地址"></el-table-column>
                 <el-table-column property="consigneeCode"  v-if="false" label="收货方编码"></el-table-column>
                 <el-table-column property="consigneeType"  v-if="false" label="收货方类型"></el-table-column>
                 <el-table-column property="consigneeContactCode"  v-if="false" label="收货方联系人编码"></el-table-column>
                 <el-table-column property="destinationCode"  v-if="false" label="收货方地址编码"></el-table-column>
+                <el-table-column property="destinationDetailAddress" label="收货方地址"></el-table-column>
+                <el-table-column property="provinceName" v-if="false" label="省"></el-table-column>
+                <el-table-column property="cityName" v-if="false" label="城市"></el-table-column>
+                <el-table-column property="areaName" v-if="false" label="区"></el-table-column>
+                <el-table-column property="streetName" v-if="false" label="街道"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleConsigneeSizeChange" @current-change="handleConsigneeCurrentPage" :current-page="consigneeDataInfo.currentConsigneePage" :page-sizes="pageSizes" :page-size="consigneeDataInfo.consigneePageSize" layout="total, sizes, prev, pager, next, jumper" :total="consigneeDataInfo.totalConsignee">
             </el-pagination>
@@ -306,7 +310,7 @@
                         </div>
                         <div class="xe-block">
                             <el-form-item label="地址" class="xe-col-3">
-                                <el-input v-model="orderForm.destination" :readOnly="true"></el-input>
+                                <el-input v-model="orderForm.destinationDetailAddress" :readOnly="true"></el-input>
                             </el-form-item>
                         </div>
                     </el-collapse-item>
@@ -432,7 +436,6 @@
             return {
                 activeNames:'',
                 wareHouseObj:'',
-                recievedAddress:'',
                 goodsCode:'',
                 goodsName:'',
                 goodsSpec:'',
@@ -590,7 +593,12 @@
                     consigneeType:'',
                     consigneeContactCode:'',
                     consigneeContactName:'',
-                    destinationCode:''
+                    destinationCode:'',
+                    destinationDetailAddress:'',
+                    destinationProvince:'',
+                    destinationCity:'',
+                    destinationDistrict:'',
+                    destinationTowns:''
                 },
                 rules:{
                     orderDate:[
@@ -692,15 +700,20 @@
                                         vueObj.orderForm.consigneeContactCode=ofcDistributionBasicInfo.consigneeContactCode;
                                         vueObj.orderForm.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
                                         vueObj.orderForm.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
-                                        vueObj.recievedAddress=ofcDistributionBasicInfo.destination;
+                                        if(ofcDistributionBasicInfo.destinationProvince!=null){
+                                            vueObj.orderForm.destinationDetailAddress=ofcDistributionBasicInfo.destinationProvince;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationCity!=null){
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationCity;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationDistrict!=null){
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationDistrict;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationTowns!=null){
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationTowns;
+                                        }
                                         if(ofcDistributionBasicInfo.destination!=null){
-                                            var array=[];
-                                            array=ofcDistributionBasicInfo.destination.split(",");
-                                            if(array.length>0){
-                                                for(var i=0;i<array.length;i++){
-                                                    vueObj.orderForm.destination+=array[i];
-                                                }
-                                            }
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destination;
                                         }
                                         vueObj.orderForm.destinationCode=ofcDistributionBasicInfo.destinationCode;
                                     }
@@ -945,6 +958,7 @@
                 this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignee:function(){
+                debugger;
                 this.consigneeDataInfo.consigneeData=[];
                 var vueObj=this;
                 var cscContactDto = {};
@@ -971,16 +985,16 @@
                             }else{
                                 CscContantAndCompanyDto.consigneeType="个人";
                             }
+                            debugger;
                             consignee.consigneeName=CscContantAndCompanyDto.contactCompanyName;
                             consignee.consigneeContactName=CscContantAndCompanyDto.contactName;
                             consignee.consigneeContactPhone=CscContantAndCompanyDto.phone;
-                            consignee.destination=CscContantAndCompanyDto.provinceName+""+CscContantAndCompanyDto.cityName;
-                            if(CscContantAndCompanyDto.areaName!=null){
-                                consignee.destination=consignee.destination+""+CscContantAndCompanyDto.areaName;
-                            }
-                            if(CscContantAndCompanyDto.streetName!=null){
-                                consignee.destination=consignee.destination+""+CscContantAndCompanyDto.streetName;
-                            }
+                            consignee.provinceName=CscContantAndCompanyDto.provinceName;
+                            consignee.cityName=CscContantAndCompanyDto.cityName;
+                            consignee.areaName=CscContantAndCompanyDto.areaName;
+                            consignee.streetName=CscContantAndCompanyDto.streetName;
+                            consignee.destination=CscContantAndCompanyDto.address;
+                            consignee.destinationDetailAddress=CscContantAndCompanyDto.detailAddress;
                             consignee.consigneeContactCode=CscContantAndCompanyDto.contactCode;
                             consignee.consigneeCode=CscContantAndCompanyDto.contactCompanyCode;
                             consignee.destinationCode=CscContantAndCompanyDto.province+","+CscContantAndCompanyDto.city+","+CscContantAndCompanyDto.area;
@@ -1015,6 +1029,7 @@
                 this.consigneeDataInfo.chosenSend=false;
             },
             setCurrentConsigneeInfo:function(val){
+                debugger;
                 this.orderForm.consigneeName="";
                 this.orderForm.destination="";
                 this.orderForm.consigneeContactName="";
@@ -1022,13 +1037,11 @@
                 this.orderForm.consigneeName=val.consigneeName;
                 this.orderForm.consigneeContactPhone=val.consigneeContactPhone;
                 this.orderForm.consigneeContactName=val.consigneeContactName;
-                this.recievedAddress=val.destination;
-                var array=val.destination.split(",");
-                if(array!=undefined&&array.length>0){
-                    for(var i=0;i<array.length;i++){
-                        this.orderForm.destination+=array[i];
-                    }
-                }
+                this.orderForm.destinationProvince=val.provinceName;
+                this.orderForm.destinationCity=val.cityName;
+                this.orderForm.destinationDistrict=val.areaName;
+                this.orderForm.destinationTowns=val.areaName;
+                this.orderForm.destinationDetailAddress=val.destinationDetailAddress;
                 this.orderForm.consigneeType=val.type;
                 this.orderForm.consigneeCode=val.consigneeCode;
                 this.orderForm.consigneeContactCode=val.consigneeContactCode;
@@ -1174,7 +1187,6 @@
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
                 }
-              ofcOrderDTOStr.destination=this.recievedAddress;
                 //订单基本信息
                 ofcOrderDTOStr.orderCode=this.orderCode;
                 if(this.orderForm.orderDate){
@@ -1189,14 +1201,6 @@
                     ofcOrderDTOStr.shipmentTime= DateUtil.format(this.orderForm.shipmentTime, "yyyy-MM-dd HH:mm:ss");
                 }
                 cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr();
-                //目的地
-                var consigneeAddressNameMessage =this.recievedAddress.split(',');
-                ofcOrderDTOStr.destinationProvince=consigneeAddressNameMessage[0];
-                ofcOrderDTOStr.destinationCity=consigneeAddressNameMessage[1];
-                ofcOrderDTOStr.destinationDistrict=consigneeAddressNameMessage[2];
-                if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-                    ofcOrderDTOStr.destinationTowns=consigneeAddressNameMessage[3];
-                }
                 var goodsTable =this.goodsData;
                 var goodDetail=[];
                 if(goodsTable.length <1){
@@ -1286,6 +1290,7 @@
                         });
             },
             getCscContantAndCompanyDtoConsigneeStr:function(){
+                debugger;
                 var paramConsignee = {};
                 var cscContactDto = {};
                 var cscContactCompanyDto = {};
@@ -1295,20 +1300,17 @@
                 cscContactDto.phone =this.orderForm.consigneeContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consigneeName;
                 var consigneeAddressCodeMessage = this.orderForm.destinationCode.split(',');
-                var consigneeAddressNameMessage =this.recievedAddress.split(',');
                 cscContactDto.province = consigneeAddressCodeMessage[0];
                 cscContactDto.city = consigneeAddressCodeMessage[1];
                 cscContactDto.area = consigneeAddressCodeMessage[2];
                 if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3])){
                     cscContactDto.street = consigneeAddressCodeMessage[3];
                 }
-                cscContactDto.provinceName = consigneeAddressNameMessage[0];
-                cscContactDto.cityName = consigneeAddressNameMessage[1];
-                cscContactDto.areaName = consigneeAddressNameMessage[2];
-                if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-                    cscContactDto.streetName = consigneeAddressNameMessage[3];
-                }
-                cscContactDto.address=this.destination;
+                cscContactDto.provinceName = this.orderForm.destinationProvince;
+                cscContactDto.cityName = this.orderForm.destinationCity;
+                cscContactDto.areaName = this.orderForm.destinationDistrict;
+                cscContactDto.streetName = this.orderForm.destinationTowns;
+                cscContactDto.address=this.orderForm.destination;
                 paramConsignee.cscContactDto = cscContactDto;
                 paramConsignee.cscContactCompanyDto = cscContactCompanyDto;
                 var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
