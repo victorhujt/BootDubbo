@@ -1,7 +1,8 @@
+<title>入库开单</title>
 <!--suppress ALL -->
 <head>
     <style lang="css">
-        .block {
+        .ofc-block {
             margin: 20px 0;
         }
         .el-dialog{
@@ -157,11 +158,11 @@
             <el-button size="small" @click="deleteOrder">删除</el-button>
             <el-button size="small" @click="copyOrder" v-bind:disabled = "isDisabledCopy">复制</el-button>
             <el-button size="small" @click="auditOrder" v-bind:disabled = "isDisabledAudit">审核</el-button>
-            <el-button size="small" @click="repeatAuditOrder" v-bind:disabled = "isDisabledAudit">反审核</el-button>
+            <el-button size="small" @click="repeatAuditOrder" v-bind:disabled = "isDisabledRepeatAudit">反审核</el-button>
             <el-button size="small" @click="cancelOrder"  v-bind:disabled = "isDisabledCancel">取消</el-button>
             <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
-        <div class="block">
+        <div class="ofc-block">
             <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column type="selection">
@@ -198,6 +199,7 @@
             isDisabledCancel:false,
             isDisabledCopy:false,
             isDisabledAudit:false,
+            isDisabledRepeatAudit:false,
             currentRow:'',
             currentCustomerRow:'',
             currentPage:1,
@@ -531,13 +533,13 @@
                     return false;
                 }
                 var vueObj=this;
-                vueObj.isDisabledAudit=true;
+                vueObj.isDisabledRepeatAudit=true;
                 var orders=vueObj.multipleSelection;
                 for(var i=0;i<orders.length;i++){
                     var order=orders[i];
                     if(order.orderStatusName!="已审核"){
                         vueObj.promptInfo("订单编号"+order.orderCode+"不能执行反审核，仅能对订单状态为【已审核】的订单执行反审核操作！","warning");
-                        vueObj.isDisabledAudit=false;
+                        vueObj.isDisabledRepeatAudit=false;
                         return;
                     }
                 }
@@ -554,21 +556,14 @@
                 vueObj.isDisabledCancel=true;
                 for(var i=0;i<orders.length;i++){
                     var order=orders[i];
-                    debugger;
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
                             if (result == undefined || result == null ) {
-                               // vueObj.promptInfo("取消订单出现异常","error");
-                              //  return;
                             }else if(result.code==200){
-                               // vueObj.promptInfo(result.message,"success");
-                              //  vueObj.selectOrder();
                                 flag=true;
                             }else{
                                 if(result.message==null||result.message==""){
-                                //    vueObj.promptInfo("订单取消失败","error");
                                 }else{
-                                //    vueObj.promptInfo(result.message,"error");
                                 }
                             }
                         });
@@ -599,24 +594,18 @@
                 var flag=false;
                 CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
                     if (result == undefined || result == null ) {
-                         //vueObj.promptInfo("审核或者反审核出现异常","error");
-                       // return;
                     }else if(result.code==200){
                         flag=true;
-                        //vueObj.promptInfo(result.message,"success");
-                      //  vueObj.selectOrder();
                     }else{
                         if(result.message==null||result.message==""){
-                          //  vueObj.promptInfo("审核或者反审核出现异常","error");
                         }else{
-                           // vueObj.promptInfo(result.message,"error");
                         }
                     }
                 });
                 if(flag){
                     if(tag=="rereview"){
                         vueObj.promptInfo("订单反审核成功","success");
-                        vueObj.isDisabledAudit=false;
+                        vueObj.isDisabledRepeatAudit=false;
                         vueObj.selectOrder();
                     }else if(tag=="review"){
                         vueObj.promptInfo("订单审核成功","success");

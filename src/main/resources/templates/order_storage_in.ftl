@@ -813,6 +813,7 @@
                             consignor.cityName=CscContantAndCompanyDto.cityName;
                             consignor.areaName=CscContantAndCompanyDto.areaName;
                             consignor.streetName=CscContantAndCompanyDto.streetName;
+                            consignor.departurePlace=CscContantAndCompanyDto.address;
                             consignor.consignorContactCode=CscContantAndCompanyDto.contactCode;
                             consignor.consignorCode=CscContantAndCompanyDto.contactCompanyCode;
                             consignor.departurePlaceCode=CscContantAndCompanyDto.province+","+CscContantAndCompanyDto.city;
@@ -892,7 +893,11 @@
                             goodCode.goodsSpec=cscGoodsVo.specification;
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
-                            goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
+                                goodCode.expiryDate==0;
+                            }else{
+                                goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            }
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
                         vueObj.goodDataInfo.totalGoods=data.result.total;
@@ -1256,6 +1261,7 @@
                 });
             },
             accountInvalidTime:function(val){
+                debugger;
                 if(val.productionTime!=null) {
                     console.log(val);
                     val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
@@ -1267,14 +1273,6 @@
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
-            },
-            goodsCategoryNameByValue:function(val){
-                for(var i=0;i<this.goodsCategoryOptions.length;i++){
-                    var option=this.goodsCategoryOptions[i];
-                    if(option.label==val){
-                        return option.value;
-                    }
-                }
             }
         }
     })

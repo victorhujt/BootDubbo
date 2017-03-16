@@ -396,9 +396,21 @@
                                     vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
                                     vueObj.isNeedTransport=true;
                                     vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
-                                    vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity+ofcDistributionBasicInfo.destinationDistrict;
-                                    if(ofcDistributionBasicInfo.destinationTowns){
-                                        vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns+ofcDistributionBasicInfo.destination;
+                                    if(ofcDistributionBasicInfo.destinationProvince!=null){
+                                        vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince;
+                                    }
+                                    if(ofcDistributionBasicInfo.destinationCity!=null){
+                                        vueObj.destinationAddress=vueObj.destinationAddress+ofcDistributionBasicInfo.destinationCity;
+                                    }
+
+                                    if(ofcDistributionBasicInfo.destinationDistrict!=null){
+                                        vueObj.destinationAddress=vueObj.destinationAddress+ofcDistributionBasicInfo.destinationDistrict;
+                                    }
+                                    if(ofcDistributionBasicInfo.destinationTowns!=null){
+                                        vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns;
+                                    }
+                                    if(ofcDistributionBasicInfo.destination!=null){
+                                        vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destination;
                                     }
                                     vueObj.consigneeName=ofcDistributionBasicInfo.consigneeName;
                                     vueObj.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;

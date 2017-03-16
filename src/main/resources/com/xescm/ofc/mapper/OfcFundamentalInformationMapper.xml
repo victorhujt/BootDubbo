@@ -211,6 +211,7 @@
       ofi.base_name,
       ofi.area_code,
       ofi.area_name,
+      ofi.consignment_batch_number,
     odb.consignee_name,owi.warehouse_name,oos.order_status FROM ofc_fundamental_information ofi
       LEFT JOIN (SELECT
         temp.order_code,
