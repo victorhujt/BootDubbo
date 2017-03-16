@@ -3525,12 +3525,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("没有收货方地址编码");
         }
         tfcTransport.setToCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()));// 收货方编码
-        tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方联系人
+        tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方
         tfcTransport.setToCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactCode()));//收货方联系人编码
         if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
             tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
         }
-        tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方
+        tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方联系人
         tfcTransport.setToCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()));
         tfcTransport.setToProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()));
         tfcTransport.setToCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()));
