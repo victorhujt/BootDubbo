@@ -17,3 +17,4 @@ TRUNCATE TABLE `ofc_transplan_newstatus`;
 TRUNCATE TABLE `ofc_transplan_status`;
 TRUNCATE TABLE `ofc_traplan_source_status`;
 TRUNCATE TABLE `ofc_warehouse_information`;
+TRUNCATE TABLE `ofc_storage_template`;
