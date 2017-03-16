@@ -25,6 +25,16 @@
         .el-dialog--small .el-table tr{
           cursor:pointer;
         }
+        .xe-block{
+            overflow:visible;
+        }
+        .xe-block:after{
+            content:".";
+            display:block;
+            height:0;
+            clear:both;
+            visibility:hidden;
+        }
     </style>
 </head>
 <body>
@@ -283,34 +293,40 @@
                                 <el-input v-model="orderForm.contactNumber"  placeholder="请输入内容"></el-input>
                             </el-form-item>
                         </div>
-                        <div class="xe-pageHeader">
-                            &nbsp;&nbsp;收货方信息
-                        </div>
-                        <div class="xe-block">
-                            <el-form-item label="名称" class="xe-col-3">
-                                <el-input
-                                        placeholder="请选择"
-                                        icon="search"
-                                        v-model="orderForm.consigneeName"
-                                        v-bind:disabled = "isDisabled"
-                                        :readOnly="true"
-                                        @click="openConsignee">
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item label="联系人" class="xe-col-3">
-                                <el-input v-model="orderForm.consigneeContactName" :readOnly="true"></el-input>
-                            </el-form-item>
-                            <el-form-item label="联系电话" class="xe-col-3">
-                                <el-input v-model="orderForm.consigneeContactPhone" :readOnly="true"></el-input>
-                            </el-form-item>
-                        </div>
-                        <div class="xe-block">
-                            <el-form-item label="地址" class="xe-col-3">
-                                <el-input v-model="orderForm.destination" :readOnly="true"></el-input>
-                            </el-form-item>
-                        </div>
                     </el-collapse-item>
                 </el-collapse>
+            </div>
+            <div class="xe-pageHeader">
+                收货方信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="名称" prop="consigneeName" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="orderForm.consigneeName"
+                            v-bind:readOnly="!orderForm.isEditable"
+                            @click="openConsignee">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="编辑">
+                    <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="联系人" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeContactName" v-bind:readOnly="!orderForm.isEditable"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeContactPhone" v-bind:readOnly="!orderForm.isEditable"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" class="xe-col-3">
+                    <el-input v-model="orderForm.destination"  v-bind:readOnly="!orderForm.isEditable"></el-input>
+                    <city-picker style="position:relative;z-index:5;" class = "cp"
+                                 :url = "cityUrl" :readonly = !orderForm.isEditable
+                                 :default-data = "defaultData"
+                                 :success-callback = "addressCallback"></city-picker>
+                </el-form-item>
             </div>
             <div class="xe-pageHeader">
                 货品信息
@@ -430,6 +446,29 @@
             }
           };
             return {
+                cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
+                defaultData: {
+                    province: {
+                        code: "110000",
+                        keyword: "province",
+                        title: "北京市"
+                    },
+                    city: {
+                        code: "610900",
+                        keyword: "city",
+                        title: "安康市"
+                    },
+                    district: {
+                        code: "610116",
+                        keyword: "district",
+                        title: "长安区"
+                    },
+                    street: {
+                        code: "610102004",
+                        keyword: "street",
+                        title: "韩森寨街道"
+                    },
+                },
                 activeNames:'',
                 wareHouseObj:'',
                 recievedAddress:'',
@@ -580,6 +619,7 @@
                     supportCode:'',
                     shipmentTime:'',
                     isNeedTransport:false,
+                    isEditable:false,
                     plateNumber:'',
                     driverName:'',
                     contactNumber:'',
@@ -1338,6 +1378,12 @@
                 this.customerDataInfo.total=0;
                 this.customerDataInfo.chosenCus=true;
             },
+            emptyConsigneeInfo:function(){
+                this.orderForm.consigneeName="";
+                this.orderForm.destination="";
+                this.orderForm.consigneeContactName="";
+                this.orderForm.consigneeContactPhone="";
+            },
             openConsignee:function(){
                 if(StringUtil.isEmpty(this.orderForm.custName)){
                     this.promptInfo("请选择客户",'warning');
@@ -1393,18 +1439,23 @@
                     _this.orderForm.supportName="";
                 });
             },
-          accountInvalidTime:function(val){
-            console.log(val);
-            if(val.productionTime!=null) {
-              val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
-            }
-          },
+            accountInvalidTime:function(val){
+                if(!val.expiryDate){
+                    val.expiryDate = null;
+                    if(val.productionTime!=null) {
+                        val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
+                    }
+                }
+            },
           reSetCondition:function(){
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
+            },
+            addressCallback:function(val){
+              console.log(val)
             }
         }
     });
