@@ -1,7 +1,7 @@
 <title>出库开单</title>
 <head>
     <style lang="css">
-        .block {
+        .ofc-block {
             margin: 20px 0;
         }
         .el-dialog{
@@ -161,7 +161,7 @@
             <el-button size="small" @click="cancelOrder"  v-bind:disabled = "isDisabledCancel">取消</el-button>
             <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
-        <div class="block">
+        <div class="ofc-block">
             <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column type="selection">

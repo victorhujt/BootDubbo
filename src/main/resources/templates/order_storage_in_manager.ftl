@@ -2,7 +2,7 @@
 <!--suppress ALL -->
 <head>
     <style lang="css">
-        .block {
+        .ofc-block {
             margin: 20px 0;
         }
         .el-dialog{
@@ -162,7 +162,7 @@
             <el-button size="small" @click="cancelOrder"  v-bind:disabled = "isDisabledCancel">取消</el-button>
             <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
-        <div class="block">
+        <div class="ofc-block">
             <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column type="selection">
@@ -559,17 +559,11 @@
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
                             if (result == undefined || result == null ) {
-                               // vueObj.promptInfo("取消订单出现异常","error");
-                              //  return;
                             }else if(result.code==200){
-                               // vueObj.promptInfo(result.message,"success");
-                              //  vueObj.selectOrder();
                                 flag=true;
                             }else{
                                 if(result.message==null||result.message==""){
-                                //    vueObj.promptInfo("订单取消失败","error");
                                 }else{
-                                //    vueObj.promptInfo(result.message,"error");
                                 }
                             }
                         });
