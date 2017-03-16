@@ -312,19 +312,18 @@
                       @click="openConsignee">
               </el-input>
             </el-form-item>
-              <el-form-item label="编辑">
-                  <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
-              </el-form-item>
-
-          </div>
-          <div class="xe-block">
               <el-form-item label="联系人" class="xe-col-3">
                   <el-input v-model="orderForm.consigneeContactName"  v-bind:readOnly="!orderForm.isEditable"></el-input>
               </el-form-item>
+              <el-form-item label="编辑" class="xe-col-3">
+                  <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
+              </el-form-item>
+          </div>
+          <div class="xe-block">
               <el-form-item label="联系电话" class="xe-col-3">
                   <el-input v-model="orderForm.consigneeContactPhone" v-bind:readOnly="!orderForm.isEditable"></el-input>
               </el-form-item>
-            <el-form-item label="地址" class="xe-col-3">
+            <el-form-item label="地址" class="xe-col-2">
               <#--<el-input v-model="orderForm.destinationDetailAddress"  v-bind:readOnly="!orderForm.isEditable"></el-input>-->
                 <city-picker class = "cp cityPicker"
                              :url = "cityUrl" :readonly = !orderForm.isEditable

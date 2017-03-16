@@ -35,6 +35,11 @@
             clear:both;
             visibility:hidden;
         }
+        .cityPicker{
+            position:relative;
+            z-index:5;
+            width:100%;
+        }
     </style>
 </head>
 <body>
@@ -313,20 +318,20 @@
                             @click="openConsignee">
                     </el-input>
                 </el-form-item>
+                <el-form-item label="联系人" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeContactName" v-bind:readOnly="!orderForm.isEditable"></el-input>
+                </el-form-item>
                 <el-form-item label="编辑">
                     <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-form-item label="联系人" class="xe-col-3">
-                    <el-input v-model="orderForm.consigneeContactName" v-bind:readOnly="!orderForm.isEditable"></el-input>
-                </el-form-item>
                 <el-form-item label="联系电话" class="xe-col-3">
                     <el-input v-model="orderForm.consigneeContactPhone" v-bind:readOnly="!orderForm.isEditable"></el-input>
                 </el-form-item>
-                <el-form-item label="地址" class="xe-col-3">
+                <el-form-item label="地址" class="xe-col-2">
                     <el-input v-model="orderForm.destinationDetailAddress"  v-bind:readOnly="!orderForm.isEditable"></el-input>
-                    <city-picker style="position:relative;z-index:5;" class = "cp"
+                    <city-picker style="position:relative;z-index:5;" class = "cp cityPicker"
                                  :url = "cityUrl" :readonly = !orderForm.isEditable
                                  :default-data = "defaultData"
                                  :success-callback = "addressCallback"></city-picker>
