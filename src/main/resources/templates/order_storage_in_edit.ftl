@@ -970,6 +970,7 @@
                             consignor.cityName=CscContantAndCompanyDto.cityName;
                             consignor.areaName=CscContantAndCompanyDto.areaName;
                             consignor.streetName=CscContantAndCompanyDto.streetName;
+                            consignor.departurePlace=CscContantAndCompanyDto.address;
                             consignor.consignorContactCode=CscContantAndCompanyDto.contactCode;
                             consignor.consignorCode=CscContantAndCompanyDto.contactCompanyCode;
                             consignor.departurePlaceCode=CscContantAndCompanyDto.province+","+CscContantAndCompanyDto.city;
@@ -1050,7 +1051,11 @@
                             goodCode.goodsSpec=cscGoodsVo.specification;
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
-                            goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
+                                goodCode.expiryDate==0;
+                            }else{
+                                goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            }
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
                         vueObj.goodDataInfo.totalGoods=data.result.total;

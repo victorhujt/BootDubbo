@@ -25,6 +25,16 @@
         .el-dialog--small .el-table tr{
           cursor:pointer;
         }
+        .xe-block{
+            overflow:visible;
+        }
+        .xe-block:after{
+            content:".";
+            display:block;
+            height:0;
+            clear:both;
+            visibility:hidden;
+        }
     </style>
 </head>
 <body>
@@ -72,18 +82,22 @@
                     <el-button type="primary" @click="selectConsignee">筛选</el-button>
                 </el-form-item>
             </el-form>
-
             <el-table :data="consigneeDataInfo.consigneeData" highlight-current-row @current-change="consigneeHandleCurrentChange"
                       @row-dblclick="setCurrentConsigneeInfo(consigneeDataInfo.consigneeCurrentRow)" border style="width: 100%" max-height="400">
-                <el-table-column type="index"></el-table-column>
+                <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="consigneeName" label="名称"></el-table-column>
                 <el-table-column property="consigneeContactName" label="联系人"></el-table-column>
                 <el-table-column property="consigneeContactPhone" label="联系电话"></el-table-column>
-                <el-table-column property="destination" label="地址"></el-table-column>
+                <el-table-column property="destination" v-if="false" label="地址"></el-table-column>
                 <el-table-column property="consigneeCode"  v-if="false" label="收货方编码"></el-table-column>
                 <el-table-column property="consigneeType"  v-if="false" label="收货方类型"></el-table-column>
                 <el-table-column property="consigneeContactCode"  v-if="false" label="收货方联系人编码"></el-table-column>
                 <el-table-column property="destinationCode"  v-if="false" label="收货方地址编码"></el-table-column>
+                <el-table-column property="destinationDetailAddress" label="收货方地址"></el-table-column>
+                <el-table-column property="provinceName" v-if="false" label="省"></el-table-column>
+                <el-table-column property="cityName" v-if="false" label="城市"></el-table-column>
+                <el-table-column property="areaName" v-if="false" label="区"></el-table-column>
+                <el-table-column property="streetName" v-if="false" label="街道"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleConsigneeSizeChange" @current-change="handleConsigneeCurrentPage" :current-page="consigneeDataInfo.currentConsigneePage" :page-sizes="pageSizes" :page-size="consigneeDataInfo.consigneePageSize" layout="total, sizes, prev, pager, next, jumper" :total="consigneeDataInfo.totalConsignee">
             </el-pagination>
@@ -283,34 +297,43 @@
                                 <el-input v-model="orderForm.contactNumber"  placeholder="请输入内容"></el-input>
                             </el-form-item>
                         </div>
-                        <div class="xe-pageHeader">
-                            &nbsp;&nbsp;收货方信息
-                        </div>
-                        <div class="xe-block">
-                            <el-form-item label="名称" class="xe-col-3">
-                                <el-input
-                                        placeholder="请选择"
-                                        icon="search"
-                                        v-model="orderForm.consigneeName"
-                                        v-bind:disabled = "isDisabled"
-                                        :readOnly="true"
-                                        @click="openConsignee">
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item label="联系人" class="xe-col-3">
-                                <el-input v-model="orderForm.consigneeContactName" :readOnly="true"></el-input>
-                            </el-form-item>
-                            <el-form-item label="联系电话" class="xe-col-3">
-                                <el-input v-model="orderForm.consigneeContactPhone" :readOnly="true"></el-input>
-                            </el-form-item>
-                        </div>
-                        <div class="xe-block">
-                            <el-form-item label="地址" class="xe-col-3">
-                                <el-input v-model="orderForm.destination" :readOnly="true"></el-input>
-                            </el-form-item>
-                        </div>
                     </el-collapse-item>
                 </el-collapse>
+            </div>
+            <div class="xe-pageHeader">
+                收货方信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="名称" prop="consigneeName" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="orderForm.consigneeName"
+                            v-bind:readOnly="!orderForm.isEditable"
+                            @click="openConsignee">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="联系人" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeContactName" v-bind:readOnly="!orderForm.isEditable"></el-input>
+                </el-form-item>
+                <el-form-item label="编辑">
+                    <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="联系电话" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeContactPhone" v-bind:readOnly="!orderForm.isEditable"></el-input>
+                </el-form-item>
+                <el-form-item label="地址选择" class="xe-col-3"  v-if="orderForm.isEditable">
+                    <city-picker class = "cp cityPicker"
+                                 :url = "cityUrl" :readonly = !orderForm.isEditable
+                                 :default-data = "defaultData"
+                                 :success-callback = "addressCallback"></city-picker>
+                </el-form-item>
+                <el-form-item label="详细地址" class="xe-col-3">
+                    <el-input v-if="!orderForm.isEditable" v-model="orderForm.destinationDetailAddress" v-bind:readOnly="!orderForm.isEditable"></el-input>
+                    <el-input v-if="orderForm.isEditable" v-model="orderForm.destination"></el-input>
+                </el-form-item>
             </div>
             <div class="xe-pageHeader">
                 货品信息
@@ -430,9 +453,32 @@
             }
           };
             return {
+                cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
+                defaultData: {
+                    province: {
+                        code: "",
+                        keyword: "province",
+                        title: "请选择省"
+                    },
+                    city: {
+                        code: "",
+                        keyword: "city",
+                        title: "市"
+                    },
+                    district: {
+                        code: "",
+                        keyword: "district",
+                        title: "区"
+                    },
+                    street: {
+                        code: "",
+                        keyword: "street",
+                        title: "街道"
+                    }
+                },
                 activeNames:'',
                 wareHouseObj:'',
-                recievedAddress:'',
+                thirdLevelAddress:'',
                 goodsCode:'',
                 goodsName:'',
                 goodsSpec:'',
@@ -580,6 +626,7 @@
                     supportCode:'',
                     shipmentTime:'',
                     isNeedTransport:false,
+                    isEditable:false,
                     plateNumber:'',
                     driverName:'',
                     contactNumber:'',
@@ -590,7 +637,12 @@
                     consigneeType:'',
                     consigneeContactCode:'',
                     consigneeContactName:'',
-                    destinationCode:''
+                    destinationCode:'',
+                    destinationDetailAddress:'',
+                    destinationProvince:'',
+                    destinationCity:'',
+                    destinationDistrict:'',
+                    destinationTowns:''
                 },
                 rules:{
                     orderDate:[
@@ -679,7 +731,9 @@
                                     vueObj.orderForm.shipmentTime=DateUtil.parse(ofcWarehouseInformation.shipmentTime);
                                     vueObj.orderForm.plateNumber=ofcWarehouseInformation.plateNumber;
                                     vueObj.orderForm.driverName=ofcWarehouseInformation.driverName;
-                                    vueObj.orderForm.contactNumber=ofcWarehouseInformation.contactNumber;
+                                    if(ofcWarehouseInformation.contactNumber!=null){
+                                        vueObj.orderForm.contactNumber=ofcWarehouseInformation.contactNumber;
+                                    }
                                     if(ofcWarehouseInformation.provideTransport=="1"){
                                         vueObj.orderForm.isNeedTransport=true;
                                     }else{
@@ -692,15 +746,25 @@
                                         vueObj.orderForm.consigneeContactCode=ofcDistributionBasicInfo.consigneeContactCode;
                                         vueObj.orderForm.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
                                         vueObj.orderForm.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
-                                        vueObj.recievedAddress=ofcDistributionBasicInfo.destination;
+                                        if(ofcDistributionBasicInfo.destinationProvince!=null){
+                                            vueObj.orderForm.destinationDetailAddress=ofcDistributionBasicInfo.destinationProvince;
+                                            vueObj.orderForm.destinationProvince=ofcDistributionBasicInfo.destinationProvince;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationCity!=null){
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationCity;
+                                            vueObj.orderForm.destinationCity=ofcDistributionBasicInfo.destinationCity;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationDistrict!=null){
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationDistrict;
+                                            vueObj.orderForm.destinationDistrict=ofcDistributionBasicInfo.destinationDistrict;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationTowns!=null){
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destinationTowns;
+                                            vueObj.orderForm.destinationTowns=ofcDistributionBasicInfo.destinationTowns;
+                                        }
                                         if(ofcDistributionBasicInfo.destination!=null){
-                                            var array=[];
-                                            array=ofcDistributionBasicInfo.destination.split(",");
-                                            if(array.length>0){
-                                                for(var i=0;i<array.length;i++){
-                                                    vueObj.orderForm.destination+=array[i];
-                                                }
-                                            }
+                                            vueObj.orderForm.destinationDetailAddress=vueObj.orderForm.destinationDetailAddress+ofcDistributionBasicInfo.destination;
+                                            vueObj.orderForm.destination=ofcDistributionBasicInfo.destination;
                                         }
                                         vueObj.orderForm.destinationCode=ofcDistributionBasicInfo.destinationCode;
                                     }
@@ -974,13 +1038,12 @@
                             consignee.consigneeName=CscContantAndCompanyDto.contactCompanyName;
                             consignee.consigneeContactName=CscContantAndCompanyDto.contactName;
                             consignee.consigneeContactPhone=CscContantAndCompanyDto.phone;
-                            consignee.destination=CscContantAndCompanyDto.provinceName+""+CscContantAndCompanyDto.cityName;
-                            if(CscContantAndCompanyDto.areaName!=null){
-                                consignee.destination=consignee.destination+""+CscContantAndCompanyDto.areaName;
-                            }
-                            if(CscContantAndCompanyDto.streetName!=null){
-                                consignee.destination=consignee.destination+""+CscContantAndCompanyDto.streetName;
-                            }
+                            consignee.provinceName=CscContantAndCompanyDto.provinceName;
+                            consignee.cityName=CscContantAndCompanyDto.cityName;
+                            consignee.areaName=CscContantAndCompanyDto.areaName;
+                            consignee.streetName=CscContantAndCompanyDto.streetName;
+                            consignee.destination=CscContantAndCompanyDto.address;
+                            consignee.destinationDetailAddress=CscContantAndCompanyDto.detailAddress;
                             consignee.consigneeContactCode=CscContantAndCompanyDto.contactCode;
                             consignee.consigneeCode=CscContantAndCompanyDto.contactCompanyCode;
                             consignee.destinationCode=CscContantAndCompanyDto.province+","+CscContantAndCompanyDto.city+","+CscContantAndCompanyDto.area;
@@ -1022,13 +1085,11 @@
                 this.orderForm.consigneeName=val.consigneeName;
                 this.orderForm.consigneeContactPhone=val.consigneeContactPhone;
                 this.orderForm.consigneeContactName=val.consigneeContactName;
-                this.recievedAddress=val.destination;
-                var array=val.destination.split(",");
-                if(array!=undefined&&array.length>0){
-                    for(var i=0;i<array.length;i++){
-                        this.orderForm.destination+=array[i];
-                    }
-                }
+                this.orderForm.destinationProvince=val.provinceName;
+                this.orderForm.destinationCity=val.cityName;
+                this.orderForm.destinationDistrict=val.areaName;
+                this.orderForm.destinationTowns=val.areaName;
+                this.orderForm.destinationDetailAddress=val.destinationDetailAddress;
                 this.orderForm.consigneeType=val.type;
                 this.orderForm.consigneeCode=val.consigneeCode;
                 this.orderForm.consigneeContactCode=val.consigneeContactCode;
@@ -1062,7 +1123,11 @@
                             goodCode.goodsSpec=cscGoodsVo.specification;
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
-                            goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
+                                goodCode.expiryDate==0;
+                            }else{
+                                goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            }
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
                         vueObj.goodDataInfo.totalGoods=data.result.total;
@@ -1153,6 +1218,13 @@
                     }
                 }
 
+              if(this.orderForm.isEditable){
+                  if(StringUtil.isEmpty(this.thirdLevelAddress)){
+                      this.promptInfo("编辑收货方时，请选择三级地址!",'warning');
+                      return;
+                  }
+              }
+
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -1174,7 +1246,6 @@
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
                 }
-              ofcOrderDTOStr.destination=this.recievedAddress;
                 //订单基本信息
                 ofcOrderDTOStr.orderCode=this.orderCode;
                 if(this.orderForm.orderDate){
@@ -1189,14 +1260,6 @@
                     ofcOrderDTOStr.shipmentTime= DateUtil.format(this.orderForm.shipmentTime, "yyyy-MM-dd HH:mm:ss");
                 }
                 cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsigneeStr();
-                //目的地
-                var consigneeAddressNameMessage =this.recievedAddress.split(',');
-                ofcOrderDTOStr.destinationProvince=consigneeAddressNameMessage[0];
-                ofcOrderDTOStr.destinationCity=consigneeAddressNameMessage[1];
-                ofcOrderDTOStr.destinationDistrict=consigneeAddressNameMessage[2];
-                if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-                    ofcOrderDTOStr.destinationTowns=consigneeAddressNameMessage[3];
-                }
                 var goodsTable =this.goodsData;
                 var goodDetail=[];
                 if(goodsTable.length <1){
@@ -1295,20 +1358,17 @@
                 cscContactDto.phone =this.orderForm.consigneeContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consigneeName;
                 var consigneeAddressCodeMessage = this.orderForm.destinationCode.split(',');
-                var consigneeAddressNameMessage =this.recievedAddress.split(',');
                 cscContactDto.province = consigneeAddressCodeMessage[0];
                 cscContactDto.city = consigneeAddressCodeMessage[1];
                 cscContactDto.area = consigneeAddressCodeMessage[2];
                 if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3])){
                     cscContactDto.street = consigneeAddressCodeMessage[3];
                 }
-                cscContactDto.provinceName = consigneeAddressNameMessage[0];
-                cscContactDto.cityName = consigneeAddressNameMessage[1];
-                cscContactDto.areaName = consigneeAddressNameMessage[2];
-                if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
-                    cscContactDto.streetName = consigneeAddressNameMessage[3];
-                }
-                cscContactDto.address=this.destination;
+                cscContactDto.provinceName = this.orderForm.destinationProvince;
+                cscContactDto.cityName = this.orderForm.destinationCity;
+                cscContactDto.areaName = this.orderForm.destinationDistrict;
+                cscContactDto.streetName = this.orderForm.destinationTowns;
+                cscContactDto.address=this.orderForm.destination;
                 paramConsignee.cscContactDto = cscContactDto;
                 paramConsignee.cscContactCompanyDto = cscContactCompanyDto;
                 var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
@@ -1337,6 +1397,18 @@
                 this.customerDataInfo.customerPageSize=10;
                 this.customerDataInfo.total=0;
                 this.customerDataInfo.chosenCus=true;
+            },
+            emptyConsigneeInfo:function(event){
+                debugger;
+                this.orderForm.consigneeName="";
+                this.orderForm.destination="";
+                this.orderForm.consigneeContactName="";
+                this.orderForm.consigneeContactPhone="";
+                if(event.target.checked){
+                    this.orderForm.isEditable=true;
+                }else{
+                    this.orderForm.isEditable=false;
+                }
             },
             openConsignee:function(){
                 if(StringUtil.isEmpty(this.orderForm.custName)){
@@ -1393,18 +1465,41 @@
                     _this.orderForm.supportName="";
                 });
             },
-          accountInvalidTime:function(val){
-            console.log(val);
-            if(val.productionTime!=null) {
-              val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
-            }
-          },
+            accountInvalidTime:function(val){
+                if(!val.expiryDate){
+                    val.expiryDate = null;
+                    if(val.productionTime!=null) {
+                        val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
+                    }
+                }
+            },
           reSetCondition:function(){
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
+            },
+            addressCallback:function(val){
+                if(val!=null&&val.length>0){
+                    for(var i=0;i<val.length;i++){
+                        var addr=val[i];
+                        if(addr.keyword=="province"){
+                            this.orderForm.destinationProvince=addr.title;
+                            this.orderForm.destinationCode=addr.code;
+                        }else if(addr.keyword=="city"){
+                            this.orderForm.destinationCity=addr.title;
+                            this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
+                        }else if(addr.keyword=="district"){
+                            this.orderForm.destinationDistrict=addr.title;
+                            this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
+                        }else if(addr.keyword=="street"){
+                            this.orderForm.destinationTowns=addr.title;
+                            this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
+                        }
+                    }
+                    this.thirdLevelAddress=this.orderForm.destinationCode;
+                }
             }
         }
     });
