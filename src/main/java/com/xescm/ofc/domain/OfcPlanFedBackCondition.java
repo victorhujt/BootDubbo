@@ -19,5 +19,6 @@ public class OfcPlanFedBackCondition {
     private Date traceTime;//跟踪时间
     private String status;//跟踪状态
     private String notes;//备注
+    private String description;//状态描述
 
 }
