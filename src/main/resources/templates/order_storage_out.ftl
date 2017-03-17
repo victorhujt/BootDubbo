@@ -315,21 +315,25 @@
               <el-form-item label="联系人" class="xe-col-3">
                   <el-input v-model="orderForm.consigneeContactName"  v-bind:readOnly="!orderForm.isEditable"></el-input>
               </el-form-item>
-              <el-form-item label="编辑" class="xe-col-3">
+              <el-form-item label="编辑">
                   <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
               </el-form-item>
+
           </div>
           <div class="xe-block">
               <el-form-item label="联系电话" class="xe-col-3">
                   <el-input v-model="orderForm.consigneeContactPhone" v-bind:readOnly="!orderForm.isEditable"></el-input>
               </el-form-item>
-            <el-form-item label="地址" class="xe-col-2">
-              <#--<el-input v-model="orderForm.destinationDetailAddress"  v-bind:readOnly="!orderForm.isEditable"></el-input>-->
+            <el-form-item label="地址选择" class="xe-col-3"  v-if="orderForm.isEditable">
                 <city-picker class = "cp cityPicker"
                              :url = "cityUrl" :readonly = !orderForm.isEditable
                              :default-data = "defaultData"
                              :success-callback = "addressCallback"></city-picker>
             </el-form-item>
+            <el-form-item label="详细地址" class="xe-col-3">
+              <el-input v-if="!orderForm.isEditable" v-model="orderForm.destinationDetailAddress" v-bind:readOnly="!orderForm.isEditable"></el-input>
+              <el-input v-if="orderForm.isEditable" v-model="orderForm.destination"></el-input>
+          </el-form-item>
           </div>
             <div class="xe-pageHeader">
                 货品信息
@@ -450,28 +454,29 @@
               cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
               defaultData: {
                   province: {
-                      code: "110000",
+                      code: "",
                       keyword: "province",
-                      title: "北京市"
+                      title: "请选择省"
                   },
                   city: {
-                      code: "610900",
+                      code: "",
                       keyword: "city",
-                      title: "安康市"
+                      title: "市"
                   },
                   district: {
-                      code: "610116",
+                      code: "",
                       keyword: "district",
-                      title: "长安区"
+                      title: "区"
                   },
                   street: {
-                      code: "610102004",
+                      code: "",
                       keyword: "street",
-                      title: "韩森寨街道"
+                      title: "街道"
                   }
               },
               activeNames:'',
               wareHouseObj:'',
+              thirdLevelAddress:'',
               goodsCategoryOptions:[],
               customerDataInfo:{
                   currentCustomerPage:1,
@@ -1050,6 +1055,12 @@
                         return;
                     }
                 }
+                if(this.orderForm.isEditable){
+                    if(StringUtil.isEmpty(this.thirdLevelAddress)){
+                        this.promptInfo("编辑收货方时，请选择三级地址!",'warning');
+                        return;
+                    }
+                }
 
                 //订单基本信息
                 var ofcOrderDTOStr = {};
@@ -1261,11 +1272,17 @@
                 this.customerDataInfo.total=0;
                 this.customerDataInfo.chosenCus=true;
             },
-            emptyConsigneeInfo:function(){
+            emptyConsigneeInfo:function(event){
+                debugger;
                 this.orderForm.consigneeName="";
                 this.orderForm.destination="";
                 this.orderForm.consigneeContactName="";
                 this.orderForm.consigneeContactPhone="";
+                if(event.target.checked){
+                    this.orderForm.isEditable=true;
+                }else{
+                    this.orderForm.isEditable=false;
+                }
             },
             openConsignee:function(){
                 if(StringUtil.isEmpty(this.orderForm.custName)){
@@ -1335,9 +1352,26 @@
                 this.goodDataInfo.goodsForm.goodsTypeId="";
             },
             addressCallback:function(val){
-                console.log(val)
+                if(val!=null&&val.length>0){
+                    for(var i=0;i<val.length;i++){
+                        var addr=val[i];
+                        if(addr.keyword=="province"){
+                            this.orderForm.destinationProvince=addr.title;
+                            this.orderForm.destinationCode=addr.code;
+                        }else if(addr.keyword=="city"){
+                            this.orderForm.destinationCity=addr.title;
+                            this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
+                        }else if(addr.keyword=="district"){
+                            this.orderForm.destinationDistrict=addr.title;
+                            this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
+                        }else if(addr.keyword=="street"){
+                            this.orderForm.destinationTowns=addr.title;
+                            this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
+                        }
+                    }
+                    this.thirdLevelAddress=this.orderForm.destinationCode;
+                }
             }
-
         }
     });
 </script>
