@@ -12,6 +12,7 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
 import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
@@ -238,6 +239,40 @@ public class OfcOperationDistributing extends BaseController {
         } catch (Exception ex) {
             logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
+        }
+        return result;
+    }
+
+    /**
+     * 根据客户编码查询客户
+     *
+     * @param custCode 客户编码
+     * @return
+     */
+    @RequestMapping(value = "/queryCustomerByCustCode", method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryCustomerByCode(String custCode) {
+        logger.info("城配开单根据客户编码查询客户==> custCode={}", custCode);
+        Wrapper<CscCustomerVo> result;
+        try {
+            if(PubUtils.isSEmptyOrNull(custCode)){
+                logger.error("城配开单根据客户编码查询客户有误! 入参为空!");
+                throw new BusinessException("城配开单根据客户编码查询客户有误!");
+            }
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(custCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+            if (customerVoWrapper.getResult() == null || customerVoWrapper.getCode() == Wrapper.ERROR_CODE) {
+                logger.error("获取客戶信息失败：custCode:{}，{}", custCode, customerVoWrapper.getMessage());
+                throw new BusinessException(customerVoWrapper.getMessage());
+            }
+            result = customerVoWrapper;
+        } catch (BusinessException ex) {
+            logger.error("==>城配开单根据客户编码查询客户发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==>城配开单根据客户编码查询客户发生异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户编码查询客户发生异常！");
         }
         return result;
     }
