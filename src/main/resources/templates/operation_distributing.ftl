@@ -732,18 +732,24 @@
 
       var custName = $("#custNameFromExcelImport").html();
       //重新从接口里查一遍
-      CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", {"custName":custName,"pageNum":1, "pageSize":1}, function(data) {
-        if (data != null && data != '' && data != undefined && data.result != null && data.result.list != null  && data.result.list.length > 0) {
-//                    data=eval(data);
-          $.each(data.result.list,function (index,cscCustomerVo) {
-            if(index == 0){//只显示第一条
-              $("#custName").val(cscCustomerVo.customerName);
-              $("#customerCode").val(cscCustomerVo.customerCode);
-              $("#customerCodeForGoods").val(cscCustomerVo.customerCode);
-            }
-          });
-        }
-      })
+      CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByCustCode"
+              , {"custCode":customerCode},  function(data) {
+          if (data != null && data != '' && data != undefined && data.result != null) {
+              var cscCustomerVo = data.result;
+              var custCodeCheck = cscCustomerVo.customerCode;
+              var custNameCheck = cscCustomerVo.customerName;
+              if(customerCode != custCodeCheck || custName != custNameCheck){
+                  layer.msg("查询客户出错!");
+                  return;
+              }
+              $("#custName").val(custNameCheck);
+              $("#customerCode").val(custCodeCheck);
+              $("#customerCodeForGoods").val(custCodeCheck);
+          } else {
+              layer.msg("查询客户出错!");
+              return;
+          }
+      });
       //加载完客户后自动加载仓库列表, 和货品种类
       //加载仓库列表
       $("#warehouseCode option").remove();
