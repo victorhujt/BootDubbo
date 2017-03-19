@@ -302,8 +302,28 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 List<OfcGoodsDetailsInfo>  infos=ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
                 if(infos!=null&&infos.size()>0){
                     for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:infos) {
-                        String feedkey=feedBackOrderDetailDto.getGoodsCode()+feedBackOrderDetailDto.getProductionBatch()+DateUtils.Date2String(feedBackOrderDetailDto.getProductionTime(), DateUtils.DateFormatType.TYPE1)+DateUtils.Date2String(feedBackOrderDetailDto.getInvalidTime(),DateUtils.DateFormatType.TYPE1);
-                        String key=ofcGoodsDetailsInfo.getGoodsCode()+ofcGoodsDetailsInfo.getProductionBatch()+DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE1)+DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(),DateUtils.DateFormatType.TYPE1);
+                        StringBuilder feedkey=new StringBuilder();
+                        feedkey.append(feedBackOrderDetailDto.getGoodsCode());
+                        if(!StringUtils.isEmpty(feedBackOrderDetailDto.getProductionBatch())){
+                            feedkey.append(feedBackOrderDetailDto.getProductionBatch());
+                        }
+                        if(feedBackOrderDetailDto.getProductionTime()!=null){
+                            feedkey.append(DateUtils.Date2String(feedBackOrderDetailDto.getProductionTime(), DateUtils.DateFormatType.TYPE1));
+                        }
+                        if(feedBackOrderDetailDto.getInvalidTime()!=null){
+                            feedkey.append(DateUtils.Date2String(feedBackOrderDetailDto.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+                        }
+                        StringBuilder key=new StringBuilder();
+                        key.append(ofcGoodsDetailsInfo.getGoodsCode());
+                        if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
+                            key.append(ofcGoodsDetailsInfo.getProductionBatch());
+                        }
+                        if(ofcGoodsDetailsInfo.getProductionTime()!=null){
+                            key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE1));
+                        }
+                        if(ofcGoodsDetailsInfo.getInvalidTime()!=null){
+                            key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+                        }
                         if(feedkey.equals(key)){
                             ofcGoodsDetailsInfo.setRealQuantity(feedBackOrderDetailDto.getRealQuantity());
                             ofcGoodsDetailsInfo.setProductionBatch(feedBackOrderDetailDto.getProductionBatch());
