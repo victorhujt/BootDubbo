@@ -2853,10 +2853,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         List<OfcGoodsDetailsInfo> ofcGoodsDetail=new ArrayList<>();
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
             String goodCode=ofcGoodsDetails.getGoodsCode();
-            if(!goodInfo.containsKey(goodCode)){
-                goodInfo.put(goodCode,ofcGoodsDetails);
+            String batchNo=ofcGoodsDetails.getProductionBatch();
+            String createTime= DateUtils.Date2String(ofcGoodsDetails.getCreationTime(), DateUtils.DateFormatType.TYPE1);
+            String inValidTime=DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1);
+            String key=goodCode+batchNo+createTime+inValidTime;
+            if(!goodInfo.containsKey(key)){
+                goodInfo.put(key,ofcGoodsDetails);
             }else{
-                OfcGoodsDetailsInfo info=goodInfo.get(goodCode);
+                OfcGoodsDetailsInfo info=goodInfo.get(key);
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
             }
         }

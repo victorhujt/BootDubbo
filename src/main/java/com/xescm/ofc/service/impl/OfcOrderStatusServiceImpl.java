@@ -302,7 +302,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 List<OfcGoodsDetailsInfo>  infos=ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
                 if(infos!=null&&infos.size()>0){
                     for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:infos) {
-                        if(feedBackOrderDetailDto.getGoodsCode().equals(ofcGoodsDetailsInfo.getGoodsCode())){
+                        String feedkey=feedBackOrderDetailDto.getGoodsCode()+feedBackOrderDetailDto.getProductionBatch()+DateUtils.Date2String(feedBackOrderDetailDto.getProductionTime(), DateUtils.DateFormatType.TYPE1)+DateUtils.Date2String(feedBackOrderDetailDto.getInvalidTime(),DateUtils.DateFormatType.TYPE1);
+                        String key=ofcGoodsDetailsInfo.getGoodsCode()+ofcGoodsDetailsInfo.getProductionBatch()+DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE1)+DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(),DateUtils.DateFormatType.TYPE1);
+                        if(feedkey.equals(key)){
                             ofcGoodsDetailsInfo.setRealQuantity(feedBackOrderDetailDto.getRealQuantity());
                             ofcGoodsDetailsInfo.setProductionBatch(feedBackOrderDetailDto.getProductionBatch());
                             ofcGoodsDetailsInfoService.updateByOrderCode(ofcGoodsDetailsInfo);
