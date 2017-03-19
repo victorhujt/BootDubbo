@@ -2851,14 +2851,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //相同货品编码数量相加
         Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
         List<OfcGoodsDetailsInfo> ofcGoodsDetail=new ArrayList<>();
+        StringBuilder key=new StringBuilder();
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
-            String goodCode=ofcGoodsDetails.getGoodsCode();
-            String batchNo=ofcGoodsDetails.getProductionBatch();
-            String createTime= DateUtils.Date2String(ofcGoodsDetails.getCreationTime(), DateUtils.DateFormatType.TYPE1);
-            String inValidTime=DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1);
-            String key=goodCode+batchNo+createTime+inValidTime;
+            key.append(ofcGoodsDetails.getGoodsCode());
+            if(!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())){
+                key.append(ofcGoodsDetails.getProductionBatch());
+            }
+            if(ofcGoodsDetails.getCreationTime()!=null){
+                key.append(DateUtils.Date2String(ofcGoodsDetails.getCreationTime(), DateUtils.DateFormatType.TYPE1));
+            }
+            if(ofcGoodsDetails.getInvalidTime()!=null){
+                key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+            }
             if(!goodInfo.containsKey(key)){
-                goodInfo.put(key,ofcGoodsDetails);
+                goodInfo.put(key.toString(),ofcGoodsDetails);
             }else{
                 OfcGoodsDetailsInfo info=goodInfo.get(key);
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));

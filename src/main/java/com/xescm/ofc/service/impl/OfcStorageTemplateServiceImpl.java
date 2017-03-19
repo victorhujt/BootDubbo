@@ -1429,21 +1429,27 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 //            MathContext mathContext = new MathContext(3);
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = convertCscGoods(ofcStorageTemplateDto);
-                String goodCode=ofcGoodsDetailsInfo.getGoodsCode();
-                String batchNo=ofcGoodsDetailsInfo.getProductionBatch();
-                String createTime= DateUtils.Date2String(ofcGoodsDetailsInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1);
-                String inValidTime=DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1);
-                String key=goodCode+batchNo+createTime+inValidTime;
-                if(ofcGoodsDetailsInfoMap.containsKey(key)){
-                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(key);
+                StringBuilder key=new StringBuilder();
+                key.append(ofcGoodsDetailsInfo.getGoodsCode());
+                if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
+                    key.append(ofcGoodsDetailsInfo.getProductionBatch());
+                }
+                if(ofcGoodsDetailsInfo.getCreationTime()!=null){
+                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1));
+                }
+                if(ofcGoodsDetailsInfo.getInvalidTime()!=null){
+                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+                }
+                if(ofcGoodsDetailsInfoMap.containsKey(key.toString())){
+                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(key.toString());
                     if(null == info.getQuantity() || null == ofcGoodsDetailsInfo.getQuantity()){
                         logger.error("货品数量出错!");
                         throw new BusinessException("货品数量出错!");
                     }
                     info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
-                    ofcGoodsDetailsInfoMap.put(key, info);
+                    ofcGoodsDetailsInfoMap.put(key.toString(), info);
                 }else {
-                    ofcGoodsDetailsInfoMap.put(key, ofcGoodsDetailsInfo);
+                    ofcGoodsDetailsInfoMap.put(key.toString(), ofcGoodsDetailsInfo);
                 }
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
