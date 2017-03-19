@@ -1429,17 +1429,21 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 //            MathContext mathContext = new MathContext(3);
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = convertCscGoods(ofcStorageTemplateDto);
-                String goodsCode = ofcGoodsDetailsInfo.getGoodsCode();
-                if(ofcGoodsDetailsInfoMap.containsKey(goodsCode)){
-                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(goodsCode);
+                String goodCode=ofcGoodsDetailsInfo.getGoodsCode();
+                String batchNo=ofcGoodsDetailsInfo.getProductionBatch();
+                String createTime= DateUtils.Date2String(ofcGoodsDetailsInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1);
+                String inValidTime=DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1);
+                String key=goodCode+batchNo+createTime+inValidTime;
+                if(ofcGoodsDetailsInfoMap.containsKey(key)){
+                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(key);
                     if(null == info.getQuantity() || null == ofcGoodsDetailsInfo.getQuantity()){
                         logger.error("货品数量出错!");
                         throw new BusinessException("货品数量出错!");
                     }
                     info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
-                    ofcGoodsDetailsInfoMap.put(goodsCode, info);
+                    ofcGoodsDetailsInfoMap.put(key, info);
                 }else {
-                    ofcGoodsDetailsInfoMap.put(goodsCode, ofcGoodsDetailsInfo);
+                    ofcGoodsDetailsInfoMap.put(key, ofcGoodsDetailsInfo);
                 }
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
