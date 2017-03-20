@@ -647,13 +647,13 @@
       var value = "";
 
       var newStatus = "<a id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\" class=\"blue\">审核</a>"
-              + "<a id=\"delete\" " + index + " onclick=\"deleteOrder('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"red\">删除</a>";
+              + "<a id=\"edit\" " + index + " onclick=\"editOrder('" + order.orderCode + "')\"  class=\"red\">编辑</a>";
 
       var unApproveStatus = "<a id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">反审核</a>";
       var cancelStatus = "<a id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "')\"  class=\"blue\">取消</a>";
 
       if (order.orderStatus == "10") {
-        value = newStatus;
+        value = newStatus + cancelStatus;
       }
       if (order.orderStatus == "20" || order.orderStatus == "30") {
         value = unApproveStatus + cancelStatus;
@@ -664,14 +664,11 @@
       return value;
     }
 
-    //删除订单
-    function deleteOrder(ordercode, orderStatus) {
-      xescm.common.submit("/ofc/orderDeleteOper", {
-        "orderCode": ordercode,
-        "orderStatus": orderStatus
-      }, "您确定要删除此订单?", function () {
-        xescm.common.loadPage("/ofc/orderManageOpera");
-      });
+    //编辑订单
+    function editOrder(ordercode) {
+      /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
+        var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
+        xescm.common.loadPage(url);
     }
     //订单详情
     function orderDetailOper(orderCode) {
