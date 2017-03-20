@@ -554,8 +554,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.NOTES.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有备注", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                checkPass = false;
+//                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+//                                checkPass = false;
                                 continue;
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
@@ -695,6 +695,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //校验是不是日期类型
                             //yyyy-MM-dd || yyyy-MM-dd hh:mm:ss
                             if(checkNullOrEmpty(cellValue)){
+                                logger.error("当前行:{},列:{} 没有生产日期", rowNum + 1, cellNum + 1);
                                 continue;
                             }
                             String[] split = cellValue.split(" ");
@@ -714,6 +715,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             if(checkNullOrEmpty(cellValue)){
+                                logger.error("当前行:{},列:{} 没有失效日期", rowNum + 1, cellNum + 1);
                                 continue;
                             }
                             //校验是不是日期类型
@@ -795,11 +797,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.PROVIDE_TRANSPORT.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
-                                    cellValue = StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_IN) ? "0" : colDefaultVal.equals("是") ? "1" : "0";
+                                    cellValue =  colDefaultVal.equals("是") ? "1" : "0";
                                 }else {
                                     logger.error("当前行:{},列:{} 没有是否提供运输服务, 默认为0", rowNum + 1, cellNum + 1);
                                     cellValue = "0";
                                 }
+                                setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                                continue;
                             }
                             //只接受:是/否
                             if(!StringUtils.equals("是", cellValue) && !StringUtils.equals("否", cellValue)){
