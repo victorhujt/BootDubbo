@@ -304,7 +304,7 @@
                 收货方信息
             </div>
             <div class="xe-block">
-                <el-form-item label="名称" prop="consigneeName" class="xe-col-3">
+                <el-form-item label="名称"  v-if="!orderForm.isEditable" prop="consigneeName" class="xe-col-3">
                     <el-input
                             placeholder="请选择"
                             icon="search"
@@ -313,7 +313,10 @@
                             @click="openConsignee">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="联系人" class="xe-col-3">
+                <el-form-item label="名称" v-if="orderForm.isEditable" required prop="consigneeName" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeName"></el-input>
+                </el-form-item>
+                <el-form-item label="联系人" class="xe-col-3" required prop="consigneeContactName">
                     <el-input v-model="orderForm.consigneeContactName" v-bind:readOnly="!orderForm.isEditable"></el-input>
                 </el-form-item>
                 <el-form-item label="编辑">
@@ -321,7 +324,7 @@
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-form-item label="联系电话" class="xe-col-3">
+                <el-form-item label="联系电话" class="xe-col-3" required prop="consigneeContactPhone">
                     <el-input v-model="orderForm.consigneeContactPhone" v-bind:readOnly="!orderForm.isEditable"></el-input>
                 </el-form-item>
                 <el-form-item label="地址选择" class="xe-col-3"  v-if="orderForm.isEditable">
@@ -678,6 +681,19 @@
                     contactNumber:[
                         {validator: checkPhoneOrMobile, trigger: 'blur'},
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    consigneeName:[
+                        { required: true, message: '请输入收货方名称', trigger: 'change' },
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    consigneeContactName:[
+                        { required: true, message: '请输入收货方联系人名称', trigger: 'change' },
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    consigneeContactPhone:[
+                        { required: true, message: '请输入联系电话', trigger: 'change' },
+                        {validator: checkPhoneOrMobile, trigger: 'blur'},
+                        {min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ]
                 }
             };
@@ -1224,6 +1240,9 @@
                       return;
                   }
               }
+              if(StringUtil.isEmpty(this.orderForm.consigneeContactCode)){
+                  this.orderForm.consigneeContactCode="XE";
+              }
 
                 //订单基本信息
                 var ofcOrderDTOStr = {};
@@ -1399,11 +1418,14 @@
                 this.customerDataInfo.chosenCus=true;
             },
             emptyConsigneeInfo:function(event){
-                debugger;
                 this.orderForm.consigneeName="";
                 this.orderForm.destination="";
                 this.orderForm.consigneeContactName="";
                 this.orderForm.consigneeContactPhone="";
+                this.orderForm.consigneeCode="";
+                this.orderForm.destinationCode="";
+                this.orderForm.consigneeContactCode="";
+                this.orderForm.destinationDetailAddress="";
                 if(event.target.checked){
                     this.orderForm.isEditable=true;
                 }else{
@@ -1480,21 +1502,25 @@
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
             },
-            addressCallback:function(val){
+           addressCallback:function(val){
                 if(val!=null&&val.length>0){
                     for(var i=0;i<val.length;i++){
                         var addr=val[i];
                         if(addr.keyword=="province"){
                             this.orderForm.destinationProvince=addr.title;
+                            this.orderForm.destinationDetailAddress=addr.title;
                             this.orderForm.destinationCode=addr.code;
                         }else if(addr.keyword=="city"){
                             this.orderForm.destinationCity=addr.title;
+                            this.orderForm.destinationDetailAddress=this.orderForm.destinationDetailAddress+addr.title;
                             this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
                         }else if(addr.keyword=="district"){
                             this.orderForm.destinationDistrict=addr.title;
+                            this.orderForm.destinationDetailAddress=this.orderForm.destinationDetailAddress+addr.title;
                             this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
                         }else if(addr.keyword=="street"){
                             this.orderForm.destinationTowns=addr.title;
+                            this.orderForm.destinationDetailAddress=this.orderForm.destinationDetailAddress+addr.title;
                             this.orderForm.destinationCode=this.orderForm.destinationCode+","+addr.code;
                         }
                     }

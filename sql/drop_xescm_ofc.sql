@@ -17,3 +17,4 @@ DROP TABLE IF EXISTS `ofc_transplan_newstatus`;
 DROP TABLE IF EXISTS `ofc_transplan_status`;
 DROP TABLE IF EXISTS `ofc_traplan_source_status`;
 DROP TABLE IF EXISTS `ofc_warehouse_information`;
+DROP TABLE IF EXISTS `ofc_storage_template`;
