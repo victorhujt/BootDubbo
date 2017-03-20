@@ -466,22 +466,30 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     }
                     break;
                 case "32":
+                    if(trimAndNullAsEmpty(ofcPlanFedBackCondition.getDescription()).equals("")){
+                        logger.info("跟踪状态已回单");
+                        throw new BusinessException("中转入时状态描述信息不能为空");
+                    }
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
-                            + " " + "客户已中转入");
+                            + " " + ofcPlanFedBackCondition.getDescription());
                     if (!flag) {
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
-                                + " " + "客户已中转入");
+                                + " " + ofcPlanFedBackCondition.getDescription());
                         logger.info("跟踪状态中转入");
                     }
                     break;
                 case "34":
+                    if(trimAndNullAsEmpty(ofcPlanFedBackCondition.getDescription()).equals("")){
+                        logger.info("跟踪状态已回单");
+                        throw new BusinessException("中转出时状态描述信息不能为空");
+                    }
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
-                            + " " + "客户已中转出");
+                            + " " + ofcPlanFedBackCondition.getDescription());
                     if (!flag) {
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
-                                + " " + "客户已中转出");
+                                + " " + ofcPlanFedBackCondition.getDescription());
                         logger.info("跟踪状态中转出");
                     }
                     break;
