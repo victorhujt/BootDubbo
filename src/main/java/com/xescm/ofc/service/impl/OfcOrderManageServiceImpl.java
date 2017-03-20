@@ -82,8 +82,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
-import static com.xescm.ofc.constant.GenCodePreffixConstant.PLAN_PRE;
-import static com.xescm.ofc.constant.GenCodePreffixConstant.SILOPROGRAMINFO_PRE;
+import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
+import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.*;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -3283,13 +3284,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         this.convertOrderToTfcOfBaseInfo(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, tfcTransport);
         List<TfcTransportDetail> tfcTransportDetails = new ArrayList<>();
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
-            if(ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0 ){
+            if (ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0) {
                 if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
                     continue;
                 }
             }
             TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
-            tfcTransportDetail.setStandard(ofcGoodsDetailsInfo.getGoodsSpec());
+            tfcTransportDetail.setStandard(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsSpec()));
 //            tfcTransportDetail.setPono();
 //            tfcTransportDetail.setQtyPicked();
 //            tfcTransportDetail.setMarketUnitl();
@@ -3302,24 +3303,30 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //            tfcTransportDetail.setTransportId();
 //            tfcTransportDetail.setTfcBillNo();
 //            tfcTransportDetail.setFromSystem();
-            tfcTransportDetail.setTransportNo(ofcDistributionBasicInfo.getTransCode());
-            tfcTransportDetail.setItemCode(ofcGoodsDetailsInfo.getGoodsCode());
-            tfcTransportDetail.setItemName(ofcGoodsDetailsInfo.getGoodsName());
+            tfcTransportDetail.setTransportNo(trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()));
+            tfcTransportDetail.setItemCode(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsCode()));
+            tfcTransportDetail.setItemName(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsName()));
             tfcTransportDetail.setQty(ofcGoodsDetailsInfo.getQuantity() == null ? null : ofcGoodsDetailsInfo.getQuantity().doubleValue());
             tfcTransportDetail.setWeight(ofcGoodsDetailsInfo.getWeight() == null ? null : ofcGoodsDetailsInfo.getWeight().doubleValue());
             tfcTransportDetail.setVolume(ofcGoodsDetailsInfo.getCubage() == null ? null : ofcGoodsDetailsInfo.getCubage().doubleValue());
             tfcTransportDetail.setPrice(ofcGoodsDetailsInfo.getUnitPrice() == null ? null : ofcGoodsDetailsInfo.getUnitPrice().doubleValue());
 //            tfcTransportDetail.setMoney();
-            tfcTransportDetail.setUom(ofcGoodsDetailsInfo.getUnit());
+            tfcTransportDetail.setUom(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getUnit()));
 //            tfcTransportDetail.setContainerQty();
-            tfcTransportDetail.setProductionBatch(ofcGoodsDetailsInfo.getProductionBatch());
-            tfcTransportDetail.setProductionTime(ofcGoodsDetailsInfo.getProductionTime());
-            tfcTransportDetail.setInvalidTime(ofcGoodsDetailsInfo.getInvalidTime());
-            tfcTransportDetail.setTotalBox(ofcGoodsDetailsInfo.getTotalBox());
-            tfcTransportDetail.setGoodsType(ofcGoodsDetailsInfo.getGoodsType());
-            tfcTransportDetail.setGoodsCategory(ofcGoodsDetailsInfo.getGoodsCategory());
-            tfcTransportDetail.setPack(ofcGoodsDetailsInfo.getPack());
-            tfcTransportDetail.setChargingWays(ofcGoodsDetailsInfo.getChargingWays());
+            tfcTransportDetail.setProductionBatch(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getProductionBatch()));
+            if (null != ofcGoodsDetailsInfo.getProductionTime()) {
+                tfcTransportDetail.setProductionTime(ofcGoodsDetailsInfo.getProductionTime());
+            }
+            if (null != ofcGoodsDetailsInfo.getInvalidTime()) {
+                tfcTransportDetail.setInvalidTime(ofcGoodsDetailsInfo.getInvalidTime());
+            }
+            if (null != ofcGoodsDetailsInfo.getTotalBox()) {
+                tfcTransportDetail.setTotalBox(ofcGoodsDetailsInfo.getTotalBox());
+            }
+            tfcTransportDetail.setGoodsType(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsType()));
+            tfcTransportDetail.setGoodsCategory(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsCategory()));
+            tfcTransportDetail.setPack(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getPack()));
+            tfcTransportDetail.setChargingWays(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getChargingWays()));
             tfcTransportDetails.add(tfcTransportDetail);
         }
         tfcTransport.setProductDetail(tfcTransportDetails);
@@ -3335,47 +3342,53 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      */
     private void convertOrderToTfcOfBaseInfo(OfcFundamentalInformation ofcFundamentalInformation
             , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, TfcTransport tfcTransport) {
-        tfcTransport.setCustomerOrderCode(ofcFundamentalInformation.getCustOrderCode());
+        tfcTransport.setCustomerOrderCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustOrderCode()));
 //        tfcTransport.setBaseName();
 //        tfcTransport.setInterfaceStatus();
-        tfcTransport.setMarketOrg(ofcFundamentalInformation.getSaleOrganization());
-        tfcTransport.setProductTeam(ofcFundamentalInformation.getProductGroup());
-        tfcTransport.setMarketDep(ofcFundamentalInformation.getSaleDepartment());
-        tfcTransport.setMarketTeam(ofcFundamentalInformation.getSaleGroup());
-        tfcTransport.setMarketDepDes(ofcFundamentalInformation.getSaleDepartmentDesc());
-        tfcTransport.setMarketTeamDes(ofcFundamentalInformation.getSaleGroupDesc());
-        tfcTransport.setTransportSource(ofcFundamentalInformation.getOrderSource());// ??
+        tfcTransport.setMarketOrg(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleOrganization()));
+        tfcTransport.setProductTeam(trimAndNullAsEmpty(ofcFundamentalInformation.getProductGroup()));
+        tfcTransport.setMarketDep(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleDepartment()));
+        tfcTransport.setMarketTeam(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleGroup()));
+        tfcTransport.setMarketDepDes(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleDepartmentDesc()));
+        tfcTransport.setMarketTeamDes(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleGroupDesc()));
+        tfcTransport.setTransportSource(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderSource()));// ??
 //        tfcTransport.setTfcBillNo();
-        tfcTransport.setFromSystem(ofcFundamentalInformation.getOrderSource());
-        tfcTransport.setTransportNo(ofcDistributionBasicInfo.getTransCode());
+        tfcTransport.setFromSystem(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderSource()));
+        tfcTransport.setTransportNo(trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()));
 //        tfcTransport.setStatus();
-        tfcTransport.setBillType(ofcFundamentalInformation.getBusinessType());
-        tfcTransport.setItemType(ofcDistributionBasicInfo.getGoodsType());
-        tfcTransport.setCustomerCode(ofcFundamentalInformation.getCustCode());
-        tfcTransport.setCustomerName(ofcFundamentalInformation.getCustName());
+        tfcTransport.setBillType(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()));
+        tfcTransport.setItemType(trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsType()));
+        tfcTransport.setCustomerCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()));
+        tfcTransport.setCustomerName(trimAndNullAsEmpty(ofcFundamentalInformation.getCustName()));
 //        tfcTransport.setCustomerTel();
-        tfcTransport.setFromTransportName(ofcDistributionBasicInfo.getBaseId());
-        tfcTransport.setCreateTime(ofcFundamentalInformation.getCreationTime());
-        tfcTransport.setExpectedShipmentTime(ofcDistributionBasicInfo.getPickupTime());
-        tfcTransport.setExpectedArriveTime(ofcDistributionBasicInfo.getExpectedArrivedTime());
+        tfcTransport.setFromTransportName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getBaseId()));
+        if (null != ofcFundamentalInformation.getCreationTime()) {
+            tfcTransport.setCreateTime(ofcFundamentalInformation.getCreationTime());
+        }
+        if (null != ofcDistributionBasicInfo.getPickupTime()) {
+            tfcTransport.setExpectedShipmentTime(ofcDistributionBasicInfo.getPickupTime());
+        }
+        if (null != ofcDistributionBasicInfo.getExpectedArrivedTime()) {
+            tfcTransport.setExpectedArriveTime(ofcDistributionBasicInfo.getExpectedArrivedTime());
+        }
         tfcTransport.setWeight(ofcDistributionBasicInfo.getWeight() == null ? null : ofcDistributionBasicInfo.getWeight().doubleValue());
         tfcTransport.setQty(ofcDistributionBasicInfo.getQuantity() == null ? null : ofcDistributionBasicInfo.getQuantity().doubleValue());
         tfcTransport.setVolume(ofcDistributionBasicInfo.getCubage() == null ? null : Double.valueOf(ofcDistributionBasicInfo.getCubage()));
 //        tfcTransport.setMoney();// ??
-        tfcTransport.setFromCustomerCode(ofcDistributionBasicInfo.getConsignorCode());
-        tfcTransport.setFromCustomerName(ofcDistributionBasicInfo.getConsignorContactName());
-        tfcTransport.setFromCustomerNameCode(ofcDistributionBasicInfo.getConsignorContactCode());
-        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlace())) {
+        tfcTransport.setFromCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorCode()));
+        tfcTransport.setFromCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorName()));
+        tfcTransport.setFromCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactCode()));
+        if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlace())) {
             tfcTransport.setFromCustomerAddress(ofcDistributionBasicInfo.getDeparturePlace());
         }
 
-        tfcTransport.setFromCustomer(ofcDistributionBasicInfo.getConsignorName());// ??
-        tfcTransport.setFromCustomerTle(ofcDistributionBasicInfo.getConsignorContactPhone());
-        tfcTransport.setFromProvince(ofcDistributionBasicInfo.getDepartureProvince());
-        tfcTransport.setFromCity(ofcDistributionBasicInfo.getDepartureCity());
-        tfcTransport.setFromDistrict(ofcDistributionBasicInfo.getDepartureDistrict());
-        tfcTransport.setFromTown(ofcDistributionBasicInfo.getDepartureTowns());
-        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())){
+        tfcTransport.setFromCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactName()));// ??
+        tfcTransport.setFromCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsignorContactPhone()));
+        tfcTransport.setFromProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureProvince()));
+        tfcTransport.setFromCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureCity()));
+        tfcTransport.setFromDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureDistrict()));
+        tfcTransport.setFromTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDepartureTowns()));
+        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())) {
             String[] departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
             if (departurePlaceCode.length > 0) {
                 tfcTransport.setFromProvinceCode(departurePlaceCode[0]);
@@ -3386,23 +3399,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }
             }
-        }else {
+        } else {
             logger.error("没有收货方地址编码");
         }
-
-        tfcTransport.setToCustomerCode(ofcDistributionBasicInfo.getConsigneeCode());// 收货方编码
-        tfcTransport.setToCustomerName(ofcDistributionBasicInfo.getConsigneeContactName());// 收货方联系人
-        tfcTransport.setToCustomerNameCode(ofcDistributionBasicInfo.getConsigneeContactCode());//收货方联系人编码
-        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
+        tfcTransport.setToCustomerCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeCode()));// 收货方编码
+        tfcTransport.setToCustomerName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeName()));// 收货方
+        tfcTransport.setToCustomerNameCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactCode()));//收货方联系人编码
+        if (!isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())) {
             tfcTransport.setToCustomerAddress(ofcDistributionBasicInfo.getDestination());
         }
-        tfcTransport.setToCustomer(ofcDistributionBasicInfo.getConsigneeName());// 收货方
-        tfcTransport.setToCustomerTle(ofcDistributionBasicInfo.getConsigneeContactPhone());
-        tfcTransport.setToProvince(ofcDistributionBasicInfo.getDestinationProvince());
-        tfcTransport.setToCity(ofcDistributionBasicInfo.getDestinationCity());
-        tfcTransport.setToDistrict(ofcDistributionBasicInfo.getDestinationDistrict());
-        tfcTransport.setToTown(ofcDistributionBasicInfo.getDestinationTowns());
-        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())){
+        tfcTransport.setToCustomer(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactName()));// 收货方联系人
+        tfcTransport.setToCustomerTle(trimAndNullAsEmpty(ofcDistributionBasicInfo.getConsigneeContactPhone()));
+        tfcTransport.setToProvince(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationProvince()));
+        tfcTransport.setToCity(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCity()));
+        tfcTransport.setToDistrict(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationDistrict()));
+        tfcTransport.setToTown(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationTowns()));
+        if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())) {
             String[] destinationPlaceCode = ofcDistributionBasicInfo.getDestinationCode().split(",");
             if (destinationPlaceCode.length > 0) {
                 tfcTransport.setToProvinceCode(destinationPlaceCode[0]);
@@ -3413,38 +3425,45 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }
             }
-        }else {
+        } else {
             logger.error("没有收货方地址编码");
         }
 //        tfcTransport.setToLon();// ??
 //        tfcTransport.setToLat();// ??
 //        tfcTransport.setWareHouesCode();// ??
 //        tfcTransport.setDeliveryNo();
-        tfcTransport.setNotes(ofcFundamentalInformation.getNotes());
-        tfcTransport.setOrderCode(ofcFundamentalInformation.getOrderCode());
-        tfcTransport.setOrderBatchNumber(ofcFundamentalInformation.getOrderBatchNumber());
+        tfcTransport.setNotes(trimAndNullAsEmpty(ofcFundamentalInformation.getNotes()));
+        tfcTransport.setOrderCode(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderCode()));
+        tfcTransport.setOrderBatchNumber(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderBatchNumber()));
 //        tfcTransport.setProgramSerialNumber();
-        tfcTransport.setDestinationCode(ofcDistributionBasicInfo.getDestinationCode());
+        tfcTransport.setDestinationCode(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDestinationCode()));
         tfcTransport.setServiceCharge(ofcFinanceInformation.getServiceCharge() == null ? null : ofcFinanceInformation.getServiceCharge());
-        tfcTransport.setOrderTime(ofcFundamentalInformation.getOrderTime());
-        tfcTransport.setCreatePersonnel(ofcFundamentalInformation.getCreatorName());
-        tfcTransport.setVoidPersonnel(ofcFundamentalInformation.getAbolisherName());
-        tfcTransport.setVoidTime(ofcFundamentalInformation.getAbolishTime());
-        tfcTransport.setMerchandiser(ofcFundamentalInformation.getMerchandiser());
-        tfcTransport.setBusinessType(ofcFundamentalInformation.getBusinessType());
-        tfcTransport.setGoodsTypeName(ofcDistributionBasicInfo.getGoodsTypeName());
+        if (null != ofcFundamentalInformation.getOrderTime()) {
+            tfcTransport.setOrderTime(ofcFundamentalInformation.getOrderTime());
+        }
+        tfcTransport.setCreatePersonnel(trimAndNullAsEmpty(ofcFundamentalInformation.getCreatorName()));
+        tfcTransport.setVoidPersonnel(trimAndNullAsEmpty(ofcFundamentalInformation.getAbolisherName()));
+        if (null != ofcFundamentalInformation.getAbolishTime()) {
+            tfcTransport.setVoidTime(ofcFundamentalInformation.getAbolishTime());
+        }
+        tfcTransport.setMerchandiser(trimAndNullAsEmpty(ofcFundamentalInformation.getMerchandiser()));
+        tfcTransport.setBusinessType(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()));
+        tfcTransport.setGoodsTypeName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsTypeName()));
         tfcTransport.setTwoDistribution(ofcFinanceInformation.getTwoDistribution() == null ? null : ofcFinanceInformation.getTwoDistribution());
-        tfcTransport.setFaceOrder(ofcDistributionBasicInfo.getTransCode());//面单号
-        tfcTransport.setCollectServiceCharge(ofcFinanceInformation.getCollectLoanAmount());
-        tfcTransport.setLuggage(ofcFinanceInformation.getLuggage());
-        tfcTransport.setTransportType(ofcFundamentalInformation.getTransportType());
+        tfcTransport.setFaceOrder(trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()));//面单号
+        if (null != ofcFinanceInformation.getCollectLoanAmount()) {
+            tfcTransport.setCollectServiceCharge(ofcFinanceInformation.getCollectLoanAmount());
+        }
+        if (null != ofcFinanceInformation.getLuggage()) {
+            tfcTransport.setLuggage(ofcFinanceInformation.getLuggage());
+        }
+
+        tfcTransport.setTransportType(trimAndNullAsEmpty(ofcFundamentalInformation.getTransportType()));
 //        tfcTransport.setTransportPool();//
 //        tfcTransport.setMatchingMode();//
 //        tfcTransport.setSchedulingState();//
 //        tfcTransport.setTransportPoolName();//
     }
-
-
 
     /**
      * 校验收发货方信息
