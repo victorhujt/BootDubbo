@@ -392,7 +392,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 throw new BusinessException("跟踪时间不可以为空");
             }
 
-            logger.info("跟踪状态{}",status);
+            logger.info("序号：1 ===== 订单号{}=> 跟踪状态{}", transPortNo,status);
             OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(transPortNo);
             OfcDistributionBasicInfo ofcDistributionBasicInfo=ofcDistributionBasicInfoService.distributionBasicInfoSelect(transPortNo);
             if(ofcFundamentalInformation==null || ofcDistributionBasicInfo==null){
@@ -413,26 +413,29 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             boolean flag;
             switch (status) {
                 case "20":
+                    logger.info("序号：2 ===== 订单号{}=> 跟踪状态{}", transPortNo, "20-[已发运]");
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "车辆已发运，发往目的地：");
                     if (!flag) {
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + "车辆已发运，发往目的地：" + destination);
-                        logger.info("跟踪状态已发运");
+                        logger.info("序号：2-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }
                     break;
                 case "30":
+                    logger.info("序号：3 ===== 订单号{}=> 跟踪状态{}", transPortNo, "30-[已到达]");
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "车辆已到达目的地：");
                     if (!flag) {
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + "车辆已到达目的地：" + destination);
-                        logger.info("跟踪状态已到达");
+                        logger.info("序号：3-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }
                     break;
                 case "40":
+                    logger.info("序号：4 ===== 订单号{}=> 跟踪状态{}", transPortNo, "40-[已签收]");
                     Date now = new Date();
                     flag = checkStatus(false, statusList, "end", "客户已签收");
                     if (!flag) {
@@ -440,6 +443,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1) + " " + "客户已签收");
                         logger.info("跟踪状态已签收");
                         ofcOrderStatusService.save(orderStatus);
+                        logger.info("序号：4-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
+
                         //签收后标记为已完成
                         orderStatus = new OfcOrderStatus();
                         orderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
@@ -452,20 +457,22 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             ofcFundamentalInformation.setFinishedTime(now);
                         }
                         ofcFundamentalInformationService.update(ofcFundamentalInformation);
-                        logger.info("跟踪状态已完成");
+                        logger.info("序号：4-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }
                     break;
                 case "50":
+                    logger.info("序号：5 ===== 订单号{}=> 跟踪状态{}", transPortNo, "50-[已回单]");
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "客户已回单");
                     if (!flag) {
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + "客户已回单");
-                        logger.info("跟踪状态已回单");
+                        logger.info("序号：5-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }
                     break;
                 case "32":
+                    logger.info("序号：6 ===== 订单号{}=> 跟踪状态{}", transPortNo, "32-[中转入]");
                     if(trimAndNullAsEmpty(ofcPlanFedBackCondition.getDescription()).equals("")){
                         logger.info("跟踪状态已回单");
                         throw new BusinessException("中转入时状态描述信息不能为空");
@@ -476,10 +483,11 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + ofcPlanFedBackCondition.getDescription());
-                        logger.info("跟踪状态中转入");
+                        logger.info("序号：6-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }
                     break;
                 case "34":
+                    logger.info("序号：7 ===== 订单号{}=> 跟踪状态{}", transPortNo, "34-[中转出]");
                     if(trimAndNullAsEmpty(ofcPlanFedBackCondition.getDescription()).equals("")){
                         logger.info("跟踪状态已回单");
                         throw new BusinessException("中转出时状态描述信息不能为空");
@@ -490,7 +498,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + ofcPlanFedBackCondition.getDescription());
-                        logger.info("跟踪状态中转出");
+                        logger.info("序号：7-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }
                     break;
                 case "36":
