@@ -933,6 +933,7 @@
                 this.orderForm.destination="";
                 this.orderForm.consigneeContactName="";
                 this.orderForm.consigneeContactPhone="";
+                this.orderForm.consigneeContactCode="";
                 this.orderForm.consigneeName=val.consigneeName;
                 this.orderForm.consigneeContactPhone=val.consigneeContactPhone;
                 this.orderForm.consigneeContactName=val.consigneeContactName;
@@ -1329,6 +1330,7 @@
                     _this.orderForm.destination="";
                     _this.orderForm.consigneeContactName="";
                     _this.orderForm.consigneeContactPhone="";
+                    this.orderForm.consigneeContactCode="";
                 });
             },
             openSupplier:function(){
