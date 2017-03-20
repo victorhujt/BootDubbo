@@ -665,10 +665,11 @@
     }
 
     //编辑订单
-    function editOrder(ordercode) {
+    function editOrder(orderCode) {
       /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
-        var url = "/ofc/getOrderDetailByCode/" + orderCode + "/orderCode";
-        xescm.common.loadPage(url);
+      var url = "/ofc/getTransOrderDetailByCode/" + orderCode;
+      xescm.common.loadPage(url);
+      window.
     }
     //订单详情
     function orderDetailOper(orderCode) {

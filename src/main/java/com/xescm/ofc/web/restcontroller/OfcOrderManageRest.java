@@ -451,5 +451,41 @@ public class OfcOrderManageRest extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
     }
 
+    /**
+     * 进入运输订单编辑
+     * @param orderCode    订单编号
+     * @return  String
+     */
+    @RequestMapping(value = "/getTransOrderDetailByCode/{orderCode}")
+    public String getTransOrderDetailByCode(Model model, @PathVariable String orderCode,Map<String,Object> map){
+        logger.info("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
+        setDefaultModel(model);
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        String customerCode = authResDtoByToken.getGroupRefCode();
+        OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsList = null;
+        CscContantAndCompanyResponseDto consignorMessage = null;
+        CscContantAndCompanyResponseDto consigneeMessage = null;
+        try{
+            ofcOrderDTO = ofcOrderDtoService.transOrderDotSelect(orderCode);
+            ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
+            //如果是运输订单,就去找收发货方联系人的信息
+            if(OrderConstant.TRANSPORT_ORDER.equals(ofcOrderDTO.getOrderType())){
+                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNOR,customerCode,authResDtoByToken);
+                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
+            }
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
+        }
+        if (ofcOrderDTO!=null){
+            map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
+            map.put("orderInfo", ofcOrderDTO);
+            map.put("consignorMessage",consignorMessage);
+            map.put("consigneeMessage", consigneeMessage);
+            return "/order_edit_tranload";
+        }
+        return "order_manage_opera";
+    }
+
 
 }
