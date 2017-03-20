@@ -1,7 +1,25 @@
+<title>出库开单</title>
 <head>
     <style lang="css">
-        .block {
+        .ofc-block {
             margin: 20px 0;
+        }
+        .el-dialog{
+          top:50%!important;
+          margin-top:-300px;
+          margin-bottom:0!important;
+        }
+        .el-dialog__body{
+          padding:10px 20px 30px;
+        }
+        .el-dialog__footer{
+          padding:15px 20px;
+        }
+        .el-dialog--small .el-table{
+          min-height:350px;
+        }
+        .el-dialog--small .el-table tr{
+          cursor:pointer;
         }
     </style>
 </head>
@@ -13,11 +31,12 @@
                 <el-form-item label="名称" :label-width="formLabelWidth">
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="" :label-width="formLabelWidth">
+                <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
-            <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange" style="width: 100%">
+            <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange"
+                      @row-dblclick="setCurrentCustInfo(currentCustomerRow)" style="width: 100%" max-height="400">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column property="customerCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
@@ -43,6 +62,7 @@
                             v-model="beginDate"
                             type="date"
                             :clearable="false"
+                            :editable="false"
                             placeholder="选择起始日期">
                     </el-date-picker>
                     <label for="" style="width:15px;">至</label>
@@ -51,6 +71,7 @@
                             v-model="endDate"
                             type="date"
                             :clearable="false"
+                            :editable="false"
                             placeholder="选择结束日期">
                     </el-date-picker>
                 </el-form-item>
@@ -134,13 +155,13 @@
             <el-button size="small" @click="addOrder">添加</el-button>
             <el-button size="small" @click="editOrder">编辑</el-button>
             <el-button size="small" @click="deleteOrder">删除</el-button>
-            <el-button size="small" @click="copyOrder">复制</el-button>
-            <el-button size="small" @click="auditOrder">审核</el-button>
-            <el-button size="small" @click="repeatAuditOrder">反审核</el-button>
-            <el-button size="small" @click="cancelOrder">取消</el-button>
+            <el-button size="small" @click="copyOrder" v-bind:disabled = "isDisabledCopy">复制</el-button>
+            <el-button size="small" @click="auditOrder" v-bind:disabled = "isDisabledAudit">审核</el-button>
+            <el-button size="small" @click="repeatAuditOrder" v-bind:disabled = "isDisabledRepeatAudit">反审核</el-button>
+            <el-button size="small" @click="cancelOrder"  v-bind:disabled = "isDisabledCancel">取消</el-button>
             <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
-        <div class="block">
+        <div class="ofc-block">
             <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column type="selection">
@@ -175,10 +196,15 @@
             beginDate:new Date().getTime() - 3600 * 1000 * 24 * 2,
             endDate:new Date(),
             chosenCus:false,
+            isDisabledCancel:false,
+            isDisabledCopy:false,
+            isDisabledAudit:false,
+            isDisabledRepeatAudit:false,
             currentRow:'',
             currentCustomerRow:'',
             currentPage:1,
             formLabelWidth: '100px',
+            formLabelWidth20: '20px',
             pageSize:10,
             wareHouseOptions:[],
             pageSizes:[10, 20, 30, 40,50],
@@ -434,18 +460,23 @@
                 if(this.valiateSelectOrder()){
                     var order=this.multipleSelection[0];
                     var vueObj=this;
-                    CommonClient.post(sys.rootPath + "/ofc/copyOrderOper", {"orderCode":order.orderCode,"orderStatus":this.getOrderStatusName(order.orderStatusName)}, function(result) {
-                        if (result == undefined || result == null ) {
+                    vueObj.isDisabledCopy=true;
+                    CommonClient.post(sys.rootPath + "/ofc/copyOrderOper", {"orderCode":order.orderCode}, function(result) {
+                        if (result == undefined || result == null||result.result==null ) {
                             vueObj.promptInfo(" 复制订单出现异常","error");
+                            vueObj.isDisabledCopy=false;
                             return;
                         }else if(result.code==200&&result.result!=null){
                             vueObj.promptInfo("订单复制成功！订单编号:"+result.result,"success");
+                            vueObj.isDisabledCopy=false;
                             vueObj.selectOrder();
                         }else{
                             if(result.message==null||result.message==""){
                                 vueObj.promptInfo("复制订单出现异常","error");
+                                vueObj.isDisabledCopy=false;
                             }else{
                                 vueObj.promptInfo(result.message,"error");
+                                vueObj.isDisabledCopy=false;
                             }
                         }
                     });
@@ -472,45 +503,82 @@
                 }
             },
             auditOrder:function(){
-                if(this.valiateSelectOrder()){
-                    var order=this.multipleSelection[0];
+                if(this.multipleSelection.length<1){
+                    this.promptInfo("请至少选中一行","warning");
+                    return false;
+                }
+                var vueObj=this;
+                var orders=vueObj.multipleSelection;
+                vueObj.isDisabledAudit=true;
+                for(var i=0;i<orders.length;i++){
+                    var order=orders[i];
                     if(order.orderStatusName!="待审核"){
-                        this.promptInfo("只有待审核的可以审核","error");
+                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！","warning");
+                        vueObj.isDisabledAudit=false;
                         return;
                     }
-                    this.auditOrderOrNotAuditOper(order.orderCode,"review");
                 }
+                this.auditOrderOrNotAuditOper(order.orderCode,"review");
             },
             repeatAuditOrder:function(){
-                if(this.valiateSelectOrder()){
-                    var order=this.multipleSelection[0];
-                    this.auditOrderOrNotAuditOper(order.orderCode,"rereview");
+                if(this.multipleSelection.length<1){
+                    this.promptInfo("请至少选中一行","warning");
+                    return false;
                 }
+                var vueObj=this;
+                vueObj.isDisabledRepeatAudit=true;
+                var orders=vueObj.multipleSelection;
+                for(var i=0;i<orders.length;i++){
+                    var order=orders[i];
+                    if(order.orderStatusName!="已审核"){
+                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行反审核，仅能对订单状态为【已审核】的订单执行反审核操作！","warning");
+                        vueObj.isDisabledRepeatAudit=false;
+                        return;
+                    }
+                }
+                this.auditOrderOrNotAuditOper(order.orderCode,"rereview");
             },
             cancelOrder:function(){
-                if(this.valiateSelectOrder()){
-                    var order=this.multipleSelection[0];
-                    var vueObj=this;
+                var vueObj=this;
+                if(this.multipleSelection.length<1){
+                    this.promptInfo("请至少选中一行","warning");
+                    return false;
+                }
+                var orders=this.multipleSelection;
+                var flag=false;
+                vueObj.isDisabledCancel=true;
+                for(var i=0;i<orders.length;i++){
+                    var order=orders[i];
                     if(order.orderStatusName=="执行中"||order.orderStatusName=="已审核"){
                         CommonClient.syncpost(sys.rootPath + "/ofc/orderCancelOper", {"orderCode":order.orderCode}, function(result) {
                             if (result == undefined || result == null ) {
-                                vueObj.promptInfo("取消订单出现异常","error");
-                                return;
+                                // vueObj.promptInfo("取消订单出现异常","error");
+                                //  return;
                             }else if(result.code==200){
-                                vueObj.promptInfo(result.message,"success");
-                                vueObj.selectOrder();
+                                // vueObj.promptInfo(result.message,"success");
+                                //  vueObj.selectOrder();
+                                flag=true;
                             }else{
                                 if(result.message==null||result.message==""){
-                                    vueObj.promptInfo("订单取消失败","error");
+                                    //    vueObj.promptInfo("订单取消失败","error");
                                 }else{
-                                    vueObj.promptInfo(result.message,"error");
+                                    //    vueObj.promptInfo(result.message,"error");
                                 }
                             }
                         });
                     }else{
-                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行取消，仅能对订单状态为【已审核】或【执行中】的订单执行取消操作！","error");
+                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行取消，仅能对订单状态为【已审核】或【执行中】的订单执行取消操作！","warning");
+                        vueObj.isDisabledCancel=false;
                         return;
                     }
+                }
+                if(flag){
+                    vueObj.promptInfo("订单取消成功","success");
+                    vueObj.isDisabledCancel=false;
+                    vueObj.selectOrder();
+                }else{
+                    vueObj.isDisabledCancel=false;
+                    vueObj.promptInfo("订单取消失败","error");
                 }
             },
             batchImport:function(){
@@ -522,21 +590,28 @@
             },
             auditOrderOrNotAuditOper:function (orderCode,tag) {
                 var vueObj=this;
+                var flag=false;
                 CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
                     if (result == undefined || result == null ) {
-                        vueObj.promptInfo("审核或者反审核出现异常","error");
-                        return;
                     }else if(result.code==200){
-                        vueObj.promptInfo(result.message,"success");
-                        vueObj.selectOrder();
+                        flag=true;
                     }else{
                         if(result.message==null||result.message==""){
-                            vueObj.promptInfo("审核或者反审核出现异常","error");
                         }else{
-                            vueObj.promptInfo(result.message,"error");
                         }
                     }
                 });
+                if(flag){
+                    if(tag=="rereview"){
+                        vueObj.promptInfo("订单反审核成功","success");
+                        vueObj.isDisabledRepeatAudit=false;
+                        vueObj.selectOrder();
+                    }else if(tag=="review"){
+                        vueObj.promptInfo("订单审核成功","success");
+                        vueObj.isDisabledAudit=false;
+                        vueObj.selectOrder();
+                    }
+                }
             },
             valiateSelectOrder:function(){
                 if(this.multipleSelection.length<1){

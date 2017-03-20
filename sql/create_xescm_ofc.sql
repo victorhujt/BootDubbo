@@ -277,4 +277,25 @@ CREATE TABLE `ofc_warehouse_information` (
   KEY `index_order_code` (`order_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓配信息表';
 
+CREATE TABLE `ofc_storage_template` (
+  `id` varchar(50) NOT NULL COMMENT '主键',
+  `template_code` varchar(50) NOT NULL COMMENT '模板编码',
+  `template_type` varchar(20) NOT NULL COMMENT '模板类型',
+  `template_name` varchar(100) NOT NULL COMMENT '模板名称',
+  `cust_code` varchar(50) NOT NULL COMMENT '客户编码',
+  `cust_name` varchar(50) NOT NULL COMMENT '客户名称',
+  `standard_col_code` varchar(30) DEFAULT NULL COMMENT '平台标准列编码',
+  `standard_col_name` varchar(30) DEFAULT NULL COMMENT '平台标准列名',
+  `reflect_col_name` varchar(30) DEFAULT NULL COMMENT '映射模板名称',
+  `col_default_val` varchar(50) DEFAULT NULL COMMENT '列默认值',
+  `creat_time` datetime NOT NULL COMMENT '创建时间',
+  `creator` varchar(50) NOT NULL COMMENT '创建人编码',
+  `creator_name` varchar(50) NOT NULL COMMENT '创建人名称',
+  `oper_time` datetime NOT NULL COMMENT '操作时间',
+  `operator` varchar(50) NOT NULL COMMENT '操作人编码',
+  `operator_name` varchar(50) NOT NULL COMMENT '操作人名称',
+  `index_num` int(50) NOT NULL COMMENT '序号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓储开单批量导入模板配置';
+
 SET FOREIGN_KEY_CHECKS = 1;

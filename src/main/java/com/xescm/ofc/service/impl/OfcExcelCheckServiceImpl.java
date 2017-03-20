@@ -41,6 +41,9 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import static com.xescm.ofc.constant.StorageTemplateConstant.INTEGER_SIX;
+import static com.xescm.ofc.constant.StorageTemplateConstant.SIX_POT_THREE;
+
 /**
  * 城配开单Excel导入校验
  * Created by lyh on 2016/12/16.
@@ -303,8 +306,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     }
                                 }
                                 //使用正则对数字进行校验
-                                boolean matches = goodsAndConsigneeNum.toString().matches("\\d{1,6}\\.\\d{1,3}");
-                                boolean matchesInt = goodsAndConsigneeNum.toString().matches("\\d{1,6}");
+                                boolean matches = goodsAndConsigneeNum.toString().matches(SIX_POT_THREE);
+                                boolean matchesInt = goodsAndConsigneeNum.toString().matches(INTEGER_SIX);
                                 //如果校验成功,就往结果集里堆
                                 if(matches || matchesInt){
                                     if((cellNum - staticCell) >= consigneeNameList.size()){
@@ -489,8 +492,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 if(null == commonCell || Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                     cellValue = "0";
                                 }
-                                boolean matchesPot = cellValue.matches("\\d{1,6}\\.\\d{1,3}");
-                                boolean matchesInt = cellValue.matches("\\d{1,6}");
+                                boolean matchesPot = cellValue.matches(SIX_POT_THREE);
+                                boolean matchesInt = cellValue.matches(INTEGER_SIX);
                                 //如果校验成功,就往结果集里堆
                                 if(matchesPot || matchesInt){
                                     BigDecimal bigDecimal = new BigDecimal(cellValue);

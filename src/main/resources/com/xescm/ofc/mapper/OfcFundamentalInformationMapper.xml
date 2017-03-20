@@ -40,6 +40,8 @@
     <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
     <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
     <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+    <result column="consignment_batch_number" property="consignmentBatchNumber" jdbcType="VARCHAR" />
+
 
 
 
@@ -209,6 +211,7 @@
       ofi.base_name,
       ofi.area_code,
       ofi.area_name,
+      ofi.consignment_batch_number,
     odb.consignee_name,owi.warehouse_name,oos.order_status FROM ofc_fundamental_information ofi
       LEFT JOIN (SELECT
         temp.order_code,

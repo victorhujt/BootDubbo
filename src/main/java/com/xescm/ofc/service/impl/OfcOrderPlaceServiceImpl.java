@@ -40,6 +40,7 @@ import java.util.Objects;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
 
 /**
  * 订单下单相关处理Service
@@ -119,7 +120,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity(), new MathContext(3));
+            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
         return goodsAmountCount;
@@ -160,25 +161,25 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
 
-        if (PubUtils.trimAndNullAsEmpty(tag).equals("place")){//下单
+        if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)){//下单
             orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcMerchandiser, ofcOrderStatus);
-        }else if (PubUtils.trimAndNullAsEmpty(tag).equals("manage")){ //编辑
+        }else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_EDIT)){ //编辑
             orderPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
-        }else if(PubUtils.trimAndNullAsEmpty(tag).equals("tranplace")){// 运输开单
+        }else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANS)){// 运输开单
             orderPlaceTagTransPlace(ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcMerchandiser, ofcOrderStatus);
-        } else if(PubUtils.trimAndNullAsEmpty(tag).equals("distributionPlace")){ //城配开单
+        } else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_DISTRI)){ //城配开单
             distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                     ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
                     ,ofcOrderStatus,ofcMerchandiser);
         } else {
             throw new BusinessException("未知操作!系统无法识别!");
         }
-        if("place".equals(tag) || "tranplace".equals(tag) || "distributionPlace".equals(tag)){
+        if(ORDER_TAG_NORMAL_PLACE.equals(tag) || ORDER_TAG_OPER_TRANS.equals(tag) || ORDER_TAG_OPER_DISTRI.equals(tag)){
             return "您已成功下单!";
-        }else if("manage".equals(tag)){
+        }else if(ORDER_TAG_NORMAL_EDIT.equals(tag)){
             return "您的订单修改成功!";
         }else {
             return ResultCodeEnum.ERROROPER.getName();
@@ -278,7 +279,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         //推结算
         ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
         String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
-                null, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+                null, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
         if(StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)){
             throw new BusinessException("自动审核操作失败!");
         }
@@ -486,7 +487,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())){
                 //进行自动审核
                 String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
-                        ofcWarehouseInformation, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+                        ofcWarehouseInformation, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
                 if(StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)){
                     throw new BusinessException("自动审核操作失败!");
                 }
@@ -776,7 +777,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
                 //进行自动审核
                 String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
-                    ofcWarehouseInformation, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), "review", authResDtoByToken);
+                    ofcWarehouseInformation, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
                 if(StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)){
                     throw new BusinessException("自动审核操作失败!");
                 }

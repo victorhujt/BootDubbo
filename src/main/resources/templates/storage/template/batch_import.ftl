@@ -35,7 +35,7 @@
                 </el-form-item>
             </div>
             <div class="xe-block" style="margin-left:100px;">
-                <el-upload  :action="uploadAction" type="drag" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
+                <el-upload  :action="uploadAction" type="drag" :headers="headers" :data="uploadParam" :accept="fileTypeAccept" :on-change="uploadChange" :on-progress="uploading"
                               :multiple="false" :before-upload="beforeUpload" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
                               :on-error="handleError" :default-file-list="fileList">
                     <i class="el-icon-upload"></i>
@@ -78,8 +78,10 @@
                     :label="item.propertyName">
 
             </el-table-column>
+
         </el-table>
         <div class="xe-block">
+            <span v-if="orderMsgShow" style="margin-right: 300px">货品导入数量合计: {{countImportNum}}</span>
             <el-button type="primary"  v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
         </div>
 
@@ -149,6 +151,10 @@
     var Main = {
         data() {
             return {
+                countImportNum:'0',
+                headers: {
+                    Authorization: 'Bearer ' + window.localStorage.getItem('token')
+                },
                 loading2:false,
                 templateType:'${templateType!}',
                 titleName:'${templateType!}' == 'storageIn' ? '入库开单_批量导入' : '出库开单_批量导入',
@@ -225,6 +231,8 @@
                     vm.errorMsgShow = false;
                     var tableHeadMsg = response.result[0];
                     var orderMsg = response.result[1];
+                    vm.countImportNum = response.result[2];
+
                     var headData = vm.orderTableHeads = [];
                     vm.orderMsgShow = true;
                     $.each(tableHeadMsg, function (index, itemIn) {

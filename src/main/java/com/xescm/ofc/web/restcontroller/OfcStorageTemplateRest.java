@@ -322,6 +322,7 @@ public class OfcStorageTemplateRest extends BaseController{
             if(Wrapper.ERROR_CODE == placeOrderResult.getCode()){
                 return placeOrderResult;
             }
+            logger.info("批量下单成功,开始进行批量审核");
             //审核
             Wrapper auditOrderResult = ofcStorageTemplateService.storageTemplateAudit(placeOrderResult.getResult(), authResDto);
             if(Wrapper.ERROR_CODE == auditOrderResult.getCode()){

@@ -1,6 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
@@ -241,7 +240,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
                  type=OFC_WHC_OUT_TYPE;
             }
-
             String statusDesc=translateStatusToDesc(traceStatus,type);
             if(orderStatus.getStatusDesc().indexOf(statusDesc)<0){
                 status.setLastedOperTime(new Date());
@@ -304,8 +302,31 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 List<OfcGoodsDetailsInfo>  infos=ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
                 if(infos!=null&&infos.size()>0){
                     for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:infos) {
-                        if(feedBackOrderDetailDto.getGoodsCode().equals(ofcGoodsDetailsInfo.getGoodsCode())){
+                        StringBuilder feedkey=new StringBuilder();
+                        feedkey.append(feedBackOrderDetailDto.getGoodsCode());
+                        if(!StringUtils.isEmpty(feedBackOrderDetailDto.getProductionBatch())){
+                            feedkey.append(feedBackOrderDetailDto.getProductionBatch());
+                        }
+                        if(feedBackOrderDetailDto.getProductionTime()!=null){
+                            feedkey.append(DateUtils.Date2String(feedBackOrderDetailDto.getProductionTime(), DateUtils.DateFormatType.TYPE1));
+                        }
+                        if(feedBackOrderDetailDto.getInvalidTime()!=null){
+                            feedkey.append(DateUtils.Date2String(feedBackOrderDetailDto.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+                        }
+                        StringBuilder key=new StringBuilder();
+                        key.append(ofcGoodsDetailsInfo.getGoodsCode());
+                        if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
+                            key.append(ofcGoodsDetailsInfo.getProductionBatch());
+                        }
+                        if(ofcGoodsDetailsInfo.getProductionTime()!=null){
+                            key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE1));
+                        }
+                        if(ofcGoodsDetailsInfo.getInvalidTime()!=null){
+                            key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+                        }
+                        if(feedkey.equals(key)){
                             ofcGoodsDetailsInfo.setRealQuantity(feedBackOrderDetailDto.getRealQuantity());
+                            ofcGoodsDetailsInfo.setProductionBatch(feedBackOrderDetailDto.getProductionBatch());
                             ofcGoodsDetailsInfoService.updateByOrderCode(ofcGoodsDetailsInfo);
                             isExist=true;
                             break;
@@ -327,6 +348,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     +" "+"订单号"+orderCode+"已完成");
             status.setOrderCode(orderCode);
             save(status);
+
+            //更新订单完成时间
+            ofcFundamentalInformation.setFinishedTime(new Date());
+            ofcFundamentalInformationService.update(ofcFundamentalInformation);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

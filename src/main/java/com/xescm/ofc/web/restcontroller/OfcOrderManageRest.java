@@ -26,6 +26,7 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -430,11 +431,19 @@ public class OfcOrderManageRest extends BaseController{
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,consignor,consignee,cscSupplierInfoDto,authResDtoByToken);
             if(result.getCode()!=Wrapper.SUCCESS_CODE){
-                throw new BusinessException(result.getMessage());
+                if(!StringUtils.isEmpty(result.getMessage())){
+                    throw new BusinessException(result.getMessage());
+                }else{
+                    throw new BusinessException(Wrapper.ERROR_MESSAGE);
+                }
             }
         } catch (BusinessException ex){
             logger.error("仓储订单下单或编辑出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            if(!StringUtils.isEmpty(ex.getMessage())){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            }else{
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+            }
         } catch (Exception ex) {
                 logger.error("仓储订单下单或编辑出现未知异常:{}", ex.getMessage(), ex);
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);

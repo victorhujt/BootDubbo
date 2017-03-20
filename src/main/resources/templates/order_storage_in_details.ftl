@@ -119,7 +119,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="目的地" class="xe-col-3">
-                    <el-input v-model="consignorAddress"  :readOnly="true"></el-input>
+                    <el-input v-model="destinationAddress"  :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
@@ -381,7 +381,7 @@
                                 vueObj.finishedTime=DateUtil.parse(ofcFundamentalInformation.finishedTime);
                                 vueObj.abolishTime=DateUtil.parse(ofcFundamentalInformation.abolishTime);
                                 vueObj.creator=ofcFundamentalInformation.creatorName;
-                                vueObj.abolisher=ofcFundamentalInformation.abolisher;
+                                vueObj.abolisher=ofcFundamentalInformation.abolisherName;
                                 if(ofcWarehouseInformation!=null){
                                     vueObj.wareHouseName=ofcWarehouseInformation.warehouseName;
                                     vueObj.supplierName=ofcWarehouseInformation.supportName;
@@ -400,12 +400,36 @@
                                         //发货方
                                         vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
                                         vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
-                                        vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
-
-                                        vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
-                                        vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince+ofcDistributionBasicInfo.destinationCity+ofcDistributionBasicInfo.destinationDistrict;
-                                        if(ofcDistributionBasicInfo.destinationTowns){
-                                            vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns+ofcDistributionBasicInfo.destination;
+                                        vueObj.consignorContactPhone=ofcDistributionBasicInfo.consignorContactPhone;
+                                        if(ofcDistributionBasicInfo.departureProvince!=null){
+                                            vueObj.consignorAddress=ofcDistributionBasicInfo.departureProvince;
+                                        }
+                                        if(ofcDistributionBasicInfo.departureCity!=null){
+                                            vueObj.consignorAddress=vueObj.consignorAddress+ofcDistributionBasicInfo.departureCity;
+                                        }
+                                        if(ofcDistributionBasicInfo.departureDistrict!=null){
+                                            vueObj.consignorAddress=vueObj.consignorAddress+ofcDistributionBasicInfo.departureDistrict;
+                                        }
+                                        if(ofcDistributionBasicInfo.departureTowns!=null){
+                                            vueObj.consignorAddress=vueObj.consignorAddress+ofcDistributionBasicInfo.departureTowns;
+                                        }
+                                        if(ofcDistributionBasicInfo.departurePlace!=null){
+                                            vueObj.consignorAddress=vueObj.consignorAddress+ofcDistributionBasicInfo.departurePlace;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationProvince!=null){
+                                            vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationCity!=null){
+                                            vueObj.destinationAddress=vueObj.destinationAddress+ofcDistributionBasicInfo.destinationCity;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationDistrict!=null){
+                                            vueObj.destinationAddress=vueObj.destinationAddress+ofcDistributionBasicInfo.destinationDistrict;
+                                        }
+                                        if(ofcDistributionBasicInfo.destinationTowns!=null){
+                                            vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destinationTowns;
+                                        }
+                                        if(ofcDistributionBasicInfo.destination!=null){
+                                            vueObj.destinationAddress= vueObj.destinationAddress+ofcDistributionBasicInfo.destination;
                                         }
                                         vueObj.consigneeName=ofcDistributionBasicInfo.consigneeName;
                                         vueObj.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;

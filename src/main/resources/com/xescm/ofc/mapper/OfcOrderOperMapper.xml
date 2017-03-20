@@ -325,6 +325,9 @@
       <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
         AND ofi.base_code = #{form.baseSerialNo}
       </if>
+      <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+        AND ofi.area_code = #{form.areaSerialNo}
+      </if>
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>
@@ -388,6 +391,9 @@
       </if>
       <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
         AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+      <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+        AND ofi.area_code = #{form.areaSerialNo}
       </if>
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
@@ -460,40 +466,35 @@
   <!--订单追踪-->
   <select id="queryOrder" resultMap="Order_Follow_Oper_Map">
     SELECT
-    ofi.order_code,
-    ofi.cust_order_code,
-    ofi.order_batch_number,
-    ofi.order_time,
-    ofi.cust_name,
-    oos.order_status,
-    ofi.order_type,
-    ofi.business_type,
-    ofi.transport_type,
-    ofd.departure_place,
-    ofd.destination,
-    ofd.trans_code,
-    ofd.plate_number,
-    ofd.driver_name,
-    ofd.contact_number,
-    ofd.destination_province,
-    ofd.destination_city,
-    ofd.destination_district,
-    ofd.destination_towns,
-    ofd.departure_province,
-    ofd.departure_city,
-    ofd.departure_district,
-    ofd.departure_towns
+      ofi.order_code,
+      ofi.cust_order_code,
+      ofi.order_batch_number,
+      ofi.order_time,
+      ofi.cust_name,
+      oos.order_latest_status AS order_status,
+      ofi.order_type,
+      ofi.business_type,
+      ofi.transport_type,
+      ofd.departure_place,
+      ofd.destination,
+      ofd.trans_code,
+      ofd.plate_number,
+      ofd.driver_name,
+      ofd.contact_number,
+      ofd.destination_province,
+      ofd.destination_city,
+      ofd.destination_district,
+      ofd.destination_towns,
+      ofd.departure_province,
+      ofd.departure_city,
+      ofd.departure_district,
+      ofd.departure_towns
     FROM
-    ofc_fundamental_information ofi
-    LEFT JOIN ofc_distribution_basic_info ofd
-    ON ofi.order_code = ofd.order_code
-    LEFT JOIN (SELECT temp.lasted_oper_time,temp.order_code,temp.order_status FROM ofc_order_status temp
-    WHERE temp.lasted_oper_time = (
-    SELECT MAX(lasted_oper_time) FROM ofc_order_status
-    WHERE temp.order_code = order_code
-    ) ORDER BY temp.lasted_oper_time DESC) oos
-    ON ofi.order_code = oos.order_code
-    WHERE 1= 1
+      ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info ofd ON ofi.order_code = ofd.order_code
+    LEFT JOIN ofc_order_newstatus oos ON ofi.order_code = oos.order_code
+    WHERE
+      1 = 1
     <choose>
       <when test=" 'orderCode'.toString() == searchType ">
         AND ofi.order_code = #{code}
