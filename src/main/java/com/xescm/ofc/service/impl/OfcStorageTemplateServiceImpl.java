@@ -1486,8 +1486,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             return;
         }
         logger.info("==========> cscConsigneeDto:{} ", ToStringBuilder.reflectionToString(cscConsigneeDto));
-        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanySerialNo());
-        ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactSerialNo());
+        //modify by wangst 2017年03月21日 修改为收货方编码存收货方名称,收货方联系人编码存收货方联系人编码
+        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanyName());
+        ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactCode());
+        //modify end
         ofcOrderDTO.setConsigneeName(cscConsigneeDto.getContactCompanyName());
         ofcOrderDTO.setConsigneeContactName(cscConsigneeDto.getContactName());
         ofcOrderDTO.setConsigneeType(cscConsigneeDto.getType());
