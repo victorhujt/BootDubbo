@@ -902,6 +902,23 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
 
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            //2017年3月21日 追加字段:收货人编码(收货方联系人编码), 供应商编码
+                        }else if(StringUtils.equals(StorageImportOutEnum.CONSIGNEE_CONTACT_CODE.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有收货人编码", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            //供应商编码
+                        }else if(StringUtils.equals(StorageImportOutEnum.SUPPORT_CODE.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有供应商编码", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            //单价
                         }
                     }
                 }
@@ -1482,7 +1499,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             return;
         }
         logger.info("==========> cscConsigneeDto:{} ", ToStringBuilder.reflectionToString(cscConsigneeDto));
-        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanyCode());
+        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanyName());//特别的,这里就是传NAME
         ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactCode());
         ofcOrderDTO.setConsigneeName(cscConsigneeDto.getContactCompanyName());
         ofcOrderDTO.setConsigneeContactName(cscConsigneeDto.getContactName());

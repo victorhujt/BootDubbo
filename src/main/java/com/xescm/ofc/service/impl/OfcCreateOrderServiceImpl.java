@@ -319,45 +319,50 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param ofcDistributionBasicInfo 运输信息
      */
     private void fixOrEeAddress(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
-        //调用EPC接口进行
-        String departurePlace = epcBaiduAddrService.showLocationStr(ofcDistributionBasicInfo.getDeparturePlace());
-        String destination = epcBaiduAddrService.showLocationStr(ofcDistributionBasicInfo.getDestination());
-        com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject(departurePlace);
-        com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject(destination);
-        Object departureProvince = departurePlaceObj.get("province");
-        Object departureCity = departurePlaceObj.get("city");
-        Object departureDistrict = departurePlaceObj.get("district");
-        if(null != departureProvince){
-            String depProvince = (String) departureProvince;
-            if(null != departureCity){
-                String depCity = (String) departureCity;
-                if(null != departureDistrict){
-                    String depDistrict = (String) departureDistrict;
-                    ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
-                    //调用RMC接口, 查询省市区名称对应的编码, 并赋值
-                    this.explainAddressByRmc(depProvince, depCity, depDistrict, ofcDistributionBasicInfo);
+        logger.info("调用EPC接口解析完整地址 ofcDistributionBasicInfo ==> {}", ofcDistributionBasicInfo);
+        //调用EPC接口进行解析
+        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlace())){
+            String departurePlace = epcBaiduAddrService.showLocationStr(ofcDistributionBasicInfo.getDeparturePlace());
+            com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject(departurePlace);
+            Object departureProvince = departurePlaceObj.get("province");
+            Object departureCity = departurePlaceObj.get("city");
+            Object departureDistrict = departurePlaceObj.get("district");
+            if(null != departureProvince){
+                String depProvince = (String) departureProvince;
+                if(null != departureCity){
+                    String depCity = (String) departureCity;
+                    if(null != departureDistrict){
+                        String depDistrict = (String) departureDistrict;
+                        ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
+                        //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                        this.explainAddressByRmc(depProvince, depCity, depDistrict, ofcDistributionBasicInfo);
+                    }
+                    ofcDistributionBasicInfo.setDepartureCity(depCity);
                 }
-                ofcDistributionBasicInfo.setDepartureCity(depCity);
-            }
-            ofcDistributionBasicInfo.setDepartureProvince(depProvince);
+                ofcDistributionBasicInfo.setDepartureProvince(depProvince);
 
-        }
-        Object destinationProvince = destinationObj.get("province");
-        Object destinationCity = destinationObj.get("city");
-        Object destinationDistrict = destinationObj.get("district");
-        if(null != destinationProvince){
-            String desProvince = (String) destinationProvince;
-            if(null != destinationCity){
-                String desCity = (String) destinationCity;
-                if(null != destinationDistrict){
-                    String desDistrict = (String) destinationDistrict;
-                    ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
-                    //调用RMC接口, 查询省市区名称对应的编码, 并赋值
-                    this.explainAddressByRmc(desProvince, desCity, desDistrict, ofcDistributionBasicInfo);
-                }
-                ofcDistributionBasicInfo.setDestinationCity(desCity);
             }
-            ofcDistributionBasicInfo.setDestinationProvince(desProvince);
+        }
+        if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestination())){
+            String destination = epcBaiduAddrService.showLocationStr(ofcDistributionBasicInfo.getDestination());
+            com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject(destination);
+            Object destinationProvince = destinationObj.get("province");
+            Object destinationCity = destinationObj.get("city");
+            Object destinationDistrict = destinationObj.get("district");
+            if(null != destinationProvince){
+                String desProvince = (String) destinationProvince;
+                if(null != destinationCity){
+                    String desCity = (String) destinationCity;
+                    if(null != destinationDistrict){
+                        String desDistrict = (String) destinationDistrict;
+                        ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
+                        //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                        this.explainAddressByRmc(desProvince, desCity, desDistrict, ofcDistributionBasicInfo);
+                    }
+                    ofcDistributionBasicInfo.setDestinationCity(desCity);
+                }
+                ofcDistributionBasicInfo.setDestinationProvince(desProvince);
+            }
         }
     }
 
@@ -369,6 +374,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param ofcDistributionBasicInfo
      */
     private void explainAddressByRmc(String depProvince, String depCity, String depDistrict, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 depProvince ==> {}", depProvince);
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 depCity ==> {}", depCity);
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 depDistrict ==> {}", depDistrict);
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 ofcDistributionBasicInfo ==> {}", ofcDistributionBasicInfo);
         RmcAddressNameVo rmcAddressNameVo = new RmcAddressNameVo();
         rmcAddressNameVo.setProvinceName(depProvince);
         rmcAddressNameVo.setCityName(depCity);
