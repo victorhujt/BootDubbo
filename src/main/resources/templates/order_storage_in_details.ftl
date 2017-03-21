@@ -9,6 +9,67 @@
 <body>
 <div id="app">
     <div class="list-mian-01">
+        <el-dialog title="货品实收详情" v-model="chosenRealGood" size="small">
+            <el-table :data="realGoodsData"  style="width: 100%">
+                <el-table-column property="goodsCode" label="货品编码">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsName" label="货品名称">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsSpec" label="规格">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsSpec" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unit" label="单位">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="quantity" label="实收数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.realQuantity" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unitPrice" label="单价">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionBatch" label="批次号">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionTime" label="生产日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.productionTime"
+                                align="right"
+                                type="date"
+                                placeholder="选择日期"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="invalidTime" label="失效日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.invalidTime"
+                                align="right"
+                                type="date"
+                                placeholder="选择日期"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
         <div class="xe-pageHeader">
             订单信息
         </div>
@@ -155,6 +216,9 @@
             <div class="xe-pageHeader">
                 货品信息
             </div>
+            <div>
+                <el-button type="primary" @click="realGood">实收详情</el-button>
+            </div>
             <el-table :data="goodsData" border highlight-current-row  style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
@@ -191,11 +255,11 @@
                         <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="realQuantity" label="实际数量">
-                    <template scope="scope">
-                        <el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>
-                    </template>
-                </el-table-column>
+                <#--<el-table-column property="realQuantity" label="实际数量">-->
+                    <#--<template scope="scope">-->
+                        <#--<el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>-->
+                    <#--</template>-->
+                <#--</el-table-column>-->
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
                         <el-input v-model="scope.row.unitPrice" :readOnly="true"></el-input>
@@ -236,7 +300,7 @@
                         </template>
                     </el-table-column>
             </el-table>
-            <div class="block">
+            <div>
                 <el-button type="primary" @click="goBack">返回</el-button>
             </div>
         </el-form>
@@ -333,6 +397,8 @@
                 isDisabled: false,
                 isDisabled11: false,
                 goodsData:[],
+                realGoodsData:[],
+                chosenRealGood:false,
                 orderStatusData:[]
             };
         },
@@ -350,10 +416,32 @@
                     vueObj.goodsMsgOptions.push(good);
                 });
             });
+
             if(url.indexOf("?")!=-1){
                 var param=url.split("?")[1].split("=");
                 if(param[0]=="orderCode"){
                     var orderCode=param[1];
+                    CommonClient.syncpost(sys.rootPath + "/ofc/queryRealGood",{"orderCode":orderCode,"businessType":"RK"},function(result) {
+                        if(result==undefined||result==null||result.result==null){
+                            return;
+                        }else if(result.code == 200) {
+                            var data = eval(result.result);
+                            vueObj.realGoodsData = [];
+                            $.each(data, function (index, wmsDetailsValueDTO) {
+                                var good = {};
+                                good.goodsCode = wmsDetailsValueDTO.itemCode;
+                                good.goodsName = wmsDetailsValueDTO.itemName;
+                                good.goodsSpec = wmsDetailsValueDTO.standard;
+                                good.unit = wmsDetailsValueDTO.uom;
+                                good.realQuantity = wmsDetailsValueDTO.receivedQty;//
+                                good.unitPrice = wmsDetailsValueDTO.price;
+                                good.productionBatch = wmsDetailsValueDTO.lotatt05;//批次号
+                                good.productionTime = DateUtil.parse(wmsDetailsValueDTO.lotatt01);//生产日期
+                                good.invalidTime = DateUtil.parse(wmsDetailsValueDTO.lotatt02);//失效日期
+                                vueObj.realGoodsData.push(good);
+                            });
+                        }
+                    });
                     CommonClient.post(sys.rootPath + "/ofc/orderStorageDetails", {"orderCode":orderCode}, function(result) {
                         if(result==undefined||result==null||result.result==null){
                             layer.msg("订单详情查询失败");
@@ -445,7 +533,7 @@
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
-                                            good.realQuantity=goodDetail.realQuantity;
+                                           // good.realQuantity=goodDetail.realQuantity;
                                             good.unitPrice=goodDetail.unitPrice;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
@@ -490,6 +578,12 @@
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0,index) + "/index#" + newurl);
+            },
+            realGood:function(){
+                var _this=this;
+               // _this.realGoodsData=[];
+                _this.chosenRealGood=true;
+
             }
         }
     });
