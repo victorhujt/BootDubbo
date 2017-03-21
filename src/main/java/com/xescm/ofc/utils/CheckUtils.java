@@ -124,8 +124,8 @@ public class CheckUtils {
         String consignor_contact = createOrderEntity.getConsignorContact();
         String consignor_phone = createOrderEntity.getConsignorPhone();
         String consignor_address = createOrderEntity.getConsignorAddress();
-        String consignor_province_code = createOrderEntity.getConsignorProvinceCode();
-        String consignor_city_code = createOrderEntity.getConsignorCityCode();
+//        String consignor_province_code = createOrderEntity.getConsignorProvinceCode();
+//        String consignor_city_code = createOrderEntity.getConsignorCityCode();
         String consignor_country_code = createOrderEntity.getConsignorCountyCode();
         String consignor_town_code = createOrderEntity.getConsignorTownCode();
         String consignee_name = createOrderEntity.getConsigneeName();
@@ -151,11 +151,11 @@ public class CheckUtils {
                 return new ResultModel("1000", "发货方联系电话信息不能为空");
             } else if (StringUtils.isBlank(consignor_address)) {
                 return new ResultModel("1000", "发货方地址信息不能为空");
-            } else if (StringUtils.isBlank(consignor_province_code)) {
+            }/* else if (StringUtils.isBlank(consignor_province_code)) {
                 return new ResultModel("1000", "发货方地址信息省编码不能为空");
             } else if (StringUtils.isBlank(consignor_city_code)) {
                 return new ResultModel("1000", "发货方地址信息市编码不能为空");
-            } else if (StringUtils.isBlank(consignee_name)) {
+            }*/ else if (StringUtils.isBlank(consignee_name)) {
                 return new ResultModel("1000", "收货方名称信息不能为空");
             } else if (StringUtils.isBlank(consignee_contact)) {
                 return new ResultModel("1000", "收货方联系人信息不能为空");

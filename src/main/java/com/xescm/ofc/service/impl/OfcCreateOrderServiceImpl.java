@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
@@ -15,6 +16,7 @@ import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.csc.provider.CscWarehouseEdasService;
+import com.xescm.epc.edas.service.EpcBaiduAddrService;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -69,12 +71,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private CscWarehouseEdasService cscWarehouseEdasService;
     @Resource
     private CscStoreEdasService cscStoreEdasService;
-//    @Resource
-//    private CscSupplierEdasService cscSupplierEdasService;
     @Resource
     private CscGoodsEdasService cscGoodsEdasService;
     @Resource
     private RmcAddressEdasService rmcAddressEdasService;
+    @Resource
+    private EpcBaiduAddrService epcBaiduAddrService;
     @Resource
     private OfcCreateOrderMapper createOrdersMapper;
 
@@ -151,7 +153,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         createOrderEntity.setStoreCode(storeCode);
 
-        //校验：【发货方】与【收货方】
+        //校验：【发货方】与【收货方】//2017年3月20日 追加逻辑:收发货方地址没有细化到二级,也能过,订单状态为待审核,不进行自动审核,对地址进行匹配
         resultModel = CheckUtils.checkWaresDist(createOrderEntity);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
@@ -196,6 +198,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
         OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
+        //调用创建订单方法
         resultModel = createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
         if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             //操作成功
@@ -237,6 +240,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = ofcFundamentalInformation.getCustCode();
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+        String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
+        boolean sEmptyOrNull = PubUtils.isSEmptyOrNull(departurePlaceCode);
         if (information != null) {
             String orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
@@ -260,7 +265,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 //            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList,ofcOrderStatus);
+                if(!sEmptyOrNull){
+                    //自动审核通过 review:审核；rereview:反审核
+                    this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                } else {
+                    this.fixOrEeAddress(ofcDistributionBasicInfo);
+                    //然后再更新运输信息
+                    ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
+                }
                 logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
                 //推结算
                // ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
@@ -270,8 +282,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         } else {
+
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
-            ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+            if(!sEmptyOrNull){
+                ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+            }
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
             ofcFinanceInformationService.save(ofcFinanceInformation);
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
@@ -279,8 +294,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             ofcOrderStatusService.save(ofcOrderStatus);
             try {
-                //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                //地址编码不为空才走自动审核, 为空的状态还是待审核, 并调用EPC端口补齐
+                if(!sEmptyOrNull){
+                    //自动审核通过 review:审核；rereview:反审核
+                    this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                } else {
+                    this.fixOrEeAddress(ofcDistributionBasicInfo);
+                    //然后再保存运输信息
+                    ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                }
                 logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
                 //推结算
                // ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
@@ -289,6 +311,85 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 throw new BusinessException("自动审核异常", ex);
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        }
+    }
+
+    /**
+     * 调用EPC接口解析完整地址
+     * @param ofcDistributionBasicInfo 运输信息
+     */
+    private void fixOrEeAddress(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        //调用EPC接口进行
+        String departurePlace = epcBaiduAddrService.showLocationStr(ofcDistributionBasicInfo.getDeparturePlace());
+        String destination = epcBaiduAddrService.showLocationStr(ofcDistributionBasicInfo.getDestination());
+        com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject(departurePlace);
+        com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject(destination);
+        Object departureProvince = departurePlaceObj.get("province");
+        Object departureCity = departurePlaceObj.get("city");
+        Object departureDistrict = departurePlaceObj.get("district");
+        if(null != departureProvince){
+            String depProvince = (String) departureProvince;
+            if(null != departureCity){
+                String depCity = (String) departureCity;
+                if(null != departureDistrict){
+                    String depDistrict = (String) departureDistrict;
+                    ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
+                    //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                    this.explainAddressByRmc(depProvince, depCity, depDistrict, ofcDistributionBasicInfo);
+                }
+                ofcDistributionBasicInfo.setDepartureCity(depCity);
+            }
+            ofcDistributionBasicInfo.setDepartureProvince(depProvince);
+
+        }
+        Object destinationProvince = destinationObj.get("province");
+        Object destinationCity = destinationObj.get("city");
+        Object destinationDistrict = destinationObj.get("district");
+        if(null != destinationProvince){
+            String desProvince = (String) destinationProvince;
+            if(null != destinationCity){
+                String desCity = (String) destinationCity;
+                if(null != destinationDistrict){
+                    String desDistrict = (String) destinationDistrict;
+                    ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
+                    //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                    this.explainAddressByRmc(desProvince, desCity, desDistrict, ofcDistributionBasicInfo);
+                }
+                ofcDistributionBasicInfo.setDestinationCity(desCity);
+            }
+            ofcDistributionBasicInfo.setDestinationProvince(desProvince);
+        }
+    }
+
+    /**
+     * 调用RMC接口, 通过省市区名称取得对应编码
+     * @param depProvince 省名称
+     * @param depCity 市名称
+     * @param depDistrict 区名称
+     * @param ofcDistributionBasicInfo
+     */
+    private void explainAddressByRmc(String depProvince, String depCity, String depDistrict, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        RmcAddressNameVo rmcAddressNameVo = new RmcAddressNameVo();
+        rmcAddressNameVo.setProvinceName(depProvince);
+        rmcAddressNameVo.setCityName(depCity);
+        rmcAddressNameVo.setDistrictName(depDistrict);
+        Wrapper<RmcAddressCodeVo> codeByName = rmcAddressEdasService.findCodeByName(rmcAddressNameVo);
+        if(codeByName.getCode() == Wrapper.ERROR_CODE || codeByName.getResult() == null){
+            throw new BusinessException(codeByName.getMessage());
+        }
+        RmcAddressCodeVo rmcAddressCodeVo = codeByName.getResult();
+        String provinceCode = rmcAddressCodeVo.getProvinceCode();
+        String cityCode = rmcAddressCodeVo.getCityCode();
+        String districtCode = rmcAddressCodeVo.getDistrictCode();
+        if(!PubUtils.isSEmptyOrNull(provinceCode)){
+            StringBuilder sb = new StringBuilder(provinceCode);
+            if(!PubUtils.isSEmptyOrNull(cityCode)){
+                sb.append(",").append(cityCode);
+                if(!PubUtils.isSEmptyOrNull(districtCode)){
+                    sb.append(",").append(districtCode);
+                }
+            }
+            ofcDistributionBasicInfo.setDestinationCode(sb.toString());
         }
     }
 

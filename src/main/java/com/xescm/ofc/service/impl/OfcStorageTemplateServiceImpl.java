@@ -1482,8 +1482,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             return;
         }
         logger.info("==========> cscConsigneeDto:{} ", ToStringBuilder.reflectionToString(cscConsigneeDto));
-        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanySerialNo());
-        ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactSerialNo());
+        ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanyCode());
+        ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactCode());
         ofcOrderDTO.setConsigneeName(cscConsigneeDto.getContactCompanyName());
         ofcOrderDTO.setConsigneeContactName(cscConsigneeDto.getContactName());
         ofcOrderDTO.setConsigneeType(cscConsigneeDto.getType());

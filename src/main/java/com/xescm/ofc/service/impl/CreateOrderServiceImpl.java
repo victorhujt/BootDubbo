@@ -101,6 +101,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                 }
                             }
                             String orderCode = codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE, 6);
+                            //调用创建方法
                             resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                             if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                                 addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
