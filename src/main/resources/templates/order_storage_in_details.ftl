@@ -409,6 +409,7 @@
             CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                 var data=eval(result);
                 vueObj.goodsMsgOptions=[];
+                vueObj.realGoodsData = [];
                 $.each(data,function (index,CscGoodsTypeVo) {
                     var good={};
                     good.label=CscGoodsTypeVo.goodsTypeName;
@@ -426,7 +427,6 @@
                             return;
                         }else if(result.code == 200) {
                             var data = eval(result.result);
-                            vueObj.realGoodsData = [];
                             $.each(data, function (index, wmsDetailsValueDTO) {
                                 var good = {};
                                 good.goodsCode = wmsDetailsValueDTO.itemCode;

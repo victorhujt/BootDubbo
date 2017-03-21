@@ -821,7 +821,7 @@
                 if(this.valiateSelectOrder()){
                     this.chosenRealGood=true;
                     var _this=this;
-                    var order=this.multipleSelection[0];
+                    _this.realGoodsData=[];
                     var orderCode=this.multipleSelection[0].orderCode;
                     CommonClient.syncpost(sys.rootPath + "/ofc/queryRealGood",{"orderCode":orderCode,"businessType":"RK"},function(result) {
                         if(result==undefined||result==null||result.result==null){
