@@ -735,9 +735,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有供应商名称", rowNum + 1, cellNum + 1);
                                 continue;
                             }
-
-                            if(null != ofcStorageTemplateDto.getCscSupplierInfoDto()){
+                            if(!PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getCscSupplierInfoDto().getSupplierCode())){
                                 logger.info("当前供应商名称不需进行校验, 已经校验过供应商编码!");
+                                setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                                 continue;
                             }
                             //对供应商名称进行校验// supplierCheck
@@ -865,8 +865,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 checkPass = false;
                                 continue;
                             }
-                            if(null != ofcStorageTemplateDto.getCscConsigneeDto()){
+                            if(!PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getCscConsigneeDto().getContactCode())){
                                 logger.info("当前收货方名称不需进行校验, 已经校验过收货方联系人编码!");
+                                setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                                 continue;
                             }
                             //对收货方名称进行校验
