@@ -51,17 +51,17 @@
                 </el-table-column>
                 <el-table-column property="quantity" label="实收数量">
                     <template scope="scope">
-                        <el-input v-model="scope.row.realQuantity" placeholder="请输入内容"></el-input>
+                        <el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
-                        <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
+                        <el-input v-model="scope.row.unitPrice" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="productionBatch" label="批次号">
                     <template scope="scope">
-                        <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
+                        <el-input v-model="scope.row.productionBatch"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="productionTime" label="生产日期">
@@ -70,7 +70,7 @@
                                 v-model="scope.row.productionTime"
                                 align="right"
                                 type="date"
-                                placeholder="选择日期"
+                                :readOnly="true"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                     </template>
@@ -81,7 +81,7 @@
                                 v-model="scope.row.invalidTime"
                                 align="right"
                                 type="date"
-                                placeholder="选择日期"
+                                :readOnly="true"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                     </template>
