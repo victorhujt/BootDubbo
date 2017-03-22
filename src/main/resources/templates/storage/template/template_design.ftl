@@ -308,7 +308,9 @@
                         {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
                         {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
                         {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
-                        {indexNum:'22', standardColName:'收货方名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'consigneeName'}
+                        {indexNum:'22', standardColName:'收货方名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'consigneeName'},
+                        {indexNum:'23', standardColName:'收货人编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'consigneeContactCode'},
+                        {indexNum:'24', standardColName:'供应商编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportCode'}
                     ];
                     vm.businessTypeList=[
                         {value:'销售出库',label:'销售出库'},
