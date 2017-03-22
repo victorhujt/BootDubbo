@@ -30,7 +30,9 @@ public enum  StorageImportOutEnum {
     PLATE_NUMBER("plateNumber","车牌号"),
     DRIVER_NAME("driverName","司机姓名"),
     CONTACT_NUMBER("contactNumber","联系电话"),
-    CONSIGNEE_NAME("consigneeName","收货方名称");
+    CONSIGNEE_NAME("consigneeName","收货方名称"),
+    CONSIGNEE_CONTACT_CODE("consigneeContactCode","收货人编码"),
+    SUPPORT_CODE("supportCode","供应商编码");
 
 
     private String standardColCode;
