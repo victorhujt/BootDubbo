@@ -956,7 +956,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     consigneeContactCodeCheck.put(cellValue, cscContantAndCompanyResponseDto);
                                 }
                             }else {
-                                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeCheck.get(cellValue);
+                                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeContactCodeCheck.get(cellValue);
                                 ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
                             }
 
@@ -1614,6 +1614,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     private CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) throws Exception{
         logger.info("转换客户中心DTO收货方 cscConsigneeDto:{}", cscConsigneeDto);
+        if(null == cscConsigneeDto){
+            logger.error("转换客户中心DTO收货方出错! 入参为空! ");
+            throw new BusinessException("转换客户中心DTO收货方出错!");
+        }
         CscContantAndCompanyDto cscContactAndCompanyDto = new CscContantAndCompanyDto();
         CscContactDto cscContactDto = new CscContactDto();
         CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
