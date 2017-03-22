@@ -433,7 +433,7 @@
                                 good.goodsName = wmsDetailsValueDTO.itemName;
                                 good.goodsSpec = wmsDetailsValueDTO.standard;
                                 good.unit = wmsDetailsValueDTO.uom;
-                                good.realQuantity = wmsDetailsValueDTO.receivedQty;//
+                                good.realQuantity = wmsDetailsValueDTO.sendQty;//
                                 good.unitPrice = wmsDetailsValueDTO.price;
                                 good.productionBatch = wmsDetailsValueDTO.lotatt05;//批次号
                                 good.productionTime = DateUtil.parse(wmsDetailsValueDTO.lotatt01);//生产日期
