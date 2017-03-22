@@ -63,7 +63,7 @@ import static com.xescm.ofc.constant.StorageTemplateConstant.*;
  * Created by lyh on 2017/2/18.
  */
 @Service
-public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplate> implements OfcStorageTemplateService{
+public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplate> implements OfcStorageTemplateService {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -311,7 +311,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 校验结果
      */
     @Override
-    public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
+    public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto, OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
 
         //根据模板编码和类型拿到用户保存的配置模板的映射 key是用户表头列名
         //这里是用户进行模板配置了的, 下面还有(在第一行校验表头列名的时候, 如果用户的列名能与标准列名对应上, 那么依然进行可以映射)
@@ -416,7 +416,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         break;
                     }
                     //如果非必填列为空则跳过
-                     if (null == commonCell) {
+                    if (null == commonCell) {
                         //标记当前列出错, 并跳过当前循环
                         continue;
                     }
@@ -556,8 +556,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.NOTES.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有备注", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                checkPass = false;
+//                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "缺少必填字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+//                                checkPass = false;
                                 continue;
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
@@ -697,6 +697,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //校验是不是日期类型
                             //yyyy-MM-dd || yyyy-MM-dd hh:mm:ss
                             if(checkNullOrEmpty(cellValue)){
+                                logger.error("当前行:{},列:{} 没有生产日期", rowNum + 1, cellNum + 1);
                                 continue;
                             }
                             String[] split = cellValue.split(" ");
@@ -716,6 +717,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             if(checkNullOrEmpty(cellValue)){
+                                logger.error("当前行:{},列:{} 没有失效日期", rowNum + 1, cellNum + 1);
                                 continue;
                             }
                             //校验是不是日期类型
@@ -802,12 +804,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.PROVIDE_TRANSPORT.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
-                                    cellValue = StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_IN) ? "0" : colDefaultVal.equals("是") ? "1" : "0";
+                                    cellValue =  colDefaultVal.equals("是") ? "1" : "0";
                                 }else {
                                     logger.error("当前行:{},列:{} 没有是否提供运输服务, 默认为0", rowNum + 1, cellNum + 1);
                                     cellValue = "0";
                                 }
+                                setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                                continue;
                             }
+
                             //只接受:是/否
                             if(!StringUtils.equals("是", cellValue) && !StringUtils.equals("否", cellValue)){
                                 logger.error("当前行:{},列:{} 校验失败,是否提供运输服务字段只接受:是/否, 用户表中数据为:{}", rowNum + 1, cellNum + 1, cellValue);
@@ -951,7 +956,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     consigneeContactCodeCheck.put(cellValue, cscContantAndCompanyResponseDto);
                                 }
                             }else {
-                                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeCheck.get(cellValue);
+                                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeContactCodeCheck.get(cellValue);
                                 ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
                             }
 
@@ -1609,6 +1614,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     private CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) throws Exception{
         logger.info("转换客户中心DTO收货方 cscConsigneeDto:{}", cscConsigneeDto);
+        if(null == cscConsigneeDto){
+            logger.error("转换客户中心DTO收货方出错! 入参为空! ");
+            throw new BusinessException("转换客户中心DTO收货方出错!");
+        }
         CscContantAndCompanyDto cscContactAndCompanyDto = new CscContantAndCompanyDto();
         CscContactDto cscContactDto = new CscContactDto();
         CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();

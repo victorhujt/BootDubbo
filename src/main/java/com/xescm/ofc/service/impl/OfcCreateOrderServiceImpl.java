@@ -241,7 +241,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
         String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
-        boolean sEmptyOrNull = PubUtils.isSEmptyOrNull(departurePlaceCode);
+        String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
+        String departureCity = ofcDistributionBasicInfo.getDepartureCity();
+
+        boolean sEmptyOrNull = PubUtils.isSEmptyOrNull(departurePlaceCode)
+                || (PubUtils.isSEmptyOrNull(departureProvince) && PubUtils.isSEmptyOrNull(departureCity));
         if (information != null) {
             String orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
@@ -371,7 +375,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param depProvince 省名称
      * @param depCity 市名称
      * @param depDistrict 区名称
-     * @param ofcDistributionBasicInfo
+     * @param ofcDistributionBasicInfo 运输信息
      */
     private void explainAddressByRmc(String depProvince, String depCity, String depDistrict, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         logger.info("调用RMC接口, 通过省市区名称取得对应编码 depProvince ==> {}", depProvince);
