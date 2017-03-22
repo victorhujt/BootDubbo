@@ -245,7 +245,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String departureCity = ofcDistributionBasicInfo.getDepartureCity();
 
         boolean sEmptyOrNull = PubUtils.isSEmptyOrNull(departurePlaceCode)
-                || (PubUtils.isSEmptyOrNull(departureProvince) && PubUtils.isSEmptyOrNull(departureCity));
+                || PubUtils.isSEmptyOrNull(departureProvince) || PubUtils.isSEmptyOrNull(departureCity);
+        this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
             String orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
@@ -270,6 +271,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             try {
                 //自动审核通过 review:审核；rereview:反审核
                 if(!sEmptyOrNull){
+
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                 } else {
@@ -300,6 +302,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             try {
                 //地址编码不为空才走自动审核, 为空的状态还是待审核, 并调用EPC端口补齐
                 if(!sEmptyOrNull){
+
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                 } else {
@@ -316,6 +319,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
+    }
+
+    private void fixOrEeAddrCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        this.explainAddressByRmc(ofcDistributionBasicInfo.getDepartureProvince()
+                , ofcDistributionBasicInfo.getDepartureCity(), ofcDistributionBasicInfo.getDepartureDistrict(), ofcDistributionBasicInfo);
+        this.explainAddressByRmc(ofcDistributionBasicInfo.getDestinationProvince()
+                , ofcDistributionBasicInfo.getDepartureCity(), ofcDistributionBasicInfo.getDestinationDistrict(), ofcDistributionBasicInfo);
     }
 
     /**
@@ -372,20 +382,25 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     /**
      * 调用RMC接口, 通过省市区名称取得对应编码
-     * @param depProvince 省名称
-     * @param depCity 市名称
-     * @param depDistrict 区名称
+     * @param province 省名称
+     * @param city 市名称
+     * @param district 区名称
      * @param ofcDistributionBasicInfo 运输信息
      */
-    private void explainAddressByRmc(String depProvince, String depCity, String depDistrict, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
-        logger.info("调用RMC接口, 通过省市区名称取得对应编码 depProvince ==> {}", depProvince);
-        logger.info("调用RMC接口, 通过省市区名称取得对应编码 depCity ==> {}", depCity);
-        logger.info("调用RMC接口, 通过省市区名称取得对应编码 depDistrict ==> {}", depDistrict);
+    private void explainAddressByRmc(String province, String city, String district, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 province ==> {}", province);
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 city ==> {}", city);
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 district ==> {}", district);
         logger.info("调用RMC接口, 通过省市区名称取得对应编码 ofcDistributionBasicInfo ==> {}", ofcDistributionBasicInfo);
         RmcAddressNameVo rmcAddressNameVo = new RmcAddressNameVo();
-        rmcAddressNameVo.setProvinceName(depProvince);
-        rmcAddressNameVo.setCityName(depCity);
-        rmcAddressNameVo.setDistrictName(depDistrict);
+        rmcAddressNameVo.setProvinceName(province);
+        rmcAddressNameVo.setCityName(city);
+        rmcAddressNameVo.setDistrictName(district);
+        if(PubUtils.isSEmptyOrNull(province) && PubUtils.isSEmptyOrNull(city) && PubUtils.isSEmptyOrNull(district)){
+            logger.error("调用RMC接口, 通过省市区名称取得对应编码, 省市区名称三者必填!");
+            return;
+//            throw new BusinessException("调用RMC接口, 通过省市区名称取得对应编码, 省市区名称三者必填!");
+        }
         Wrapper<RmcAddressCodeVo> codeByName = rmcAddressEdasService.findCodeByName(rmcAddressNameVo);
         if(codeByName.getCode() == Wrapper.ERROR_CODE || codeByName.getResult() == null){
             throw new BusinessException(codeByName.getMessage());
