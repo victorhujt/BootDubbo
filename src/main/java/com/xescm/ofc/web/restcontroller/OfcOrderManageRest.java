@@ -5,7 +5,6 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
-import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
@@ -14,6 +13,7 @@ import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.constant.OrderConstant;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
@@ -42,6 +42,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
+import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
+import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
+
 /**
  * <p>Title:    .客户中心 订单管理 </p>
  * <p>Description TODO </p>
@@ -67,6 +72,8 @@ public class OfcOrderManageRest extends BaseController{
     private CscStoreEdasService cscStoreEdasService;
     @Resource
     private OfcTransplanInfoService ofcTransplanInfoService;
+    @Resource
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
 
     /**
      * 订单审核/反审核
@@ -180,7 +187,7 @@ public class OfcOrderManageRest extends BaseController{
                 consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
             }
             //仓配订单
-            if(OrderConstant.WAREHOUSE_DIST_ORDER.equals(ofcOrderDTO.getOrderType())){
+            if(WAREHOUSE_DIST_ORDER.equals(ofcOrderDTO.getOrderType())){
 
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
                 //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
@@ -243,8 +250,8 @@ public class OfcOrderManageRest extends BaseController{
     public void companySelByApi(RmcCompanyLineQO rmcCompanyLineQO, HttpServletResponse response){
         //调用外部接口,最低传CustomerCode
         try{
-            if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
-                    && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
+            if(!trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
+                    && !trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
                     && rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/").length>=2){
 
                 String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/");
@@ -252,8 +259,8 @@ public class OfcOrderManageRest extends BaseController{
             }else{
                 rmcCompanyLineQO.setBeginCityName(null);
             }
-            if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
-                    && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
+            if(!trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
+                    && !trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
                     && rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/").length>=2){
                 String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/");
                 rmcCompanyLineQO.setArriveCityName(arriveCity[1]);
@@ -341,8 +348,8 @@ public class OfcOrderManageRest extends BaseController{
             logger.error("订单中心筛选服务商出现异常:{}");
             return;
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
-                && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
+        if(!trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
+                && !trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
                 && rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/").length>=2){
 
             String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/");
@@ -350,8 +357,8 @@ public class OfcOrderManageRest extends BaseController{
         }else{
             rmcCompanyLineQO.setBeginCityName(null);
         }
-        if(!PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
-                && !PubUtils.trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
+        if(!trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
+                && !trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
                 && rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/").length>=2){
             String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/");
             rmcCompanyLineQO.setArriveCityName(arriveCity[1]);
@@ -385,10 +392,10 @@ public class OfcOrderManageRest extends BaseController{
         logger.info("==>仓储开单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
         logger.info("==>仓储开单或编辑标志位 tag={}", tag);
         try {
-            if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
+            if(isSEmptyOrNull(ofcOrderDTOStr)){
                throw new BusinessException("订单的基本信息不能为空");
             }
-            if(PubUtils.isSEmptyOrNull(orderGoodsListStr)){
+            if(isSEmptyOrNull(orderGoodsListStr)){
                 throw new BusinessException("请至少添加一条货品信息");
             }
             //订单基本信息
@@ -399,26 +406,26 @@ public class OfcOrderManageRest extends BaseController{
             CscContantAndCompanyDto consignor=null;
             CscContantAndCompanyDto consignee=null;
             if(ofcOrderDTO.getProvideTransport()==1) {
-                if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("61")) {
-                    if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
+                if (trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("61")) {
+                    if (isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
                         throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
                     }
-                } else if (PubUtils.trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("62")) {
-                    if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
+                } else if (trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("62")) {
+                    if (isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
                         throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
                     }
                 }
             }
 
             //发货方信息
-            if((PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr))){
+            if((isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr))){
                 consignor=new CscContantAndCompanyDto();
             }else{
                 logger.info(cscContantAndCompanyDtoConsignorStr);
                 consignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             }
 
-            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
+            if (isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
                 consignee=new CscContantAndCompanyDto();
             }else{
                 //收货方信息
@@ -469,23 +476,31 @@ public class OfcOrderManageRest extends BaseController{
         try{
             ofcOrderDTO = ofcOrderDtoService.transOrderDotSelect(orderCode);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");
-            //如果是运输订单,就去找收发货方联系人的信息
-            if(OrderConstant.TRANSPORT_ORDER.equals(ofcOrderDTO.getOrderType())){
-                consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNOR,customerCode,authResDtoByToken);
-                consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
-            }
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单编辑出现异常:{}", ex.getMessage(), ex);
         }
         if (ofcOrderDTO!=null){
             map.put("ofcGoodsDetailsList",ofcGoodsDetailsList);
             map.put("orderInfo", ofcOrderDTO);
-            map.put("consignorMessage",consignorMessage);
-            map.put("consigneeMessage", consigneeMessage);
             return "/order_edit_tranload";
         }
         return "order_manage_opera";
     }
 
-
+    /**
+     * 进入订单编辑
+     * @param orderCode    订单编号
+     * @return  String
+     */
+    @RequestMapping(value = "/getOrderEditByCode/{orderCode}")
+    public String getOrderEditByCode(Model model, @PathVariable String orderCode,Map<String,Object> map){
+        logger.info("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        if (null!=ofcFundamentalInformation){
+            if(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(TRANSPORT_ORDER)){
+                return getTransOrderDetailByCode(model,orderCode,map);
+            }
+        }
+        return "order_manage_opera";
+    }
 }

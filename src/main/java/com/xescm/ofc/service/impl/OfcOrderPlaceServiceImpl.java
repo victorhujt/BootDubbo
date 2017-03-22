@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -174,12 +173,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                     ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
                     ,ofcOrderStatus,ofcMerchandiser);
-        } else {
+        } else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANEDIT)){// 运输开单编辑
+            orderTransPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+                    , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
+        }else {
             throw new BusinessException("未知操作!系统无法识别!");
         }
         if(ORDER_TAG_NORMAL_PLACE.equals(tag) || ORDER_TAG_OPER_TRANS.equals(tag) || ORDER_TAG_OPER_DISTRI.equals(tag)){
             return "您已成功下单!";
-        }else if(ORDER_TAG_NORMAL_EDIT.equals(tag)){
+        }else if(ORDER_TAG_NORMAL_EDIT.equals(tag)  || ORDER_TAG_OPER_TRANEDIT.equals(tag)){
             return "您的订单修改成功!";
         }else {
             return ResultCodeEnum.ERROROPER.getName();
@@ -785,5 +787,43 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             //城配开单订单推结算中心
             ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos);
         }
+    }
+
+    /**
+     * 运输开单编辑
+     * @param ofcOrderDTO 订单实体
+     * @param ofcGoodsDetailsInfos 货品信息
+     * @param authResDtoByToken 登录用户
+     * @param cscContantAndCompanyDtoConsignor 收货方
+     * @param cscContantAndCompanyDtoConsignee 发货方
+     * @param ofcFundamentalInformation 基本信息
+     * @param ofcDistributionBasicInfo 运输信息
+     * @param ofcWarehouseInformation 仓库信息
+     * @param ofcOrderStatus 订单状态
+     */
+    private void orderTransPlaceTagManage(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation, OfcOrderStatus ofcOrderStatus) {
+        String orderType = ofcFundamentalInformation.getOrderType();
+        if(TRANSPORT_ORDER.equals(orderType)){
+            Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+            if(Wrapper.ERROR_CODE == wrapper.getCode()){
+                throw new BusinessException(wrapper.getMessage());
+            }
+            OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
+            ofcDist.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
+            if(select.size() > 0){//有运输信息
+                ofcDistributionBasicInfoService.updateAddressByOrderCode(ofcDistributionBasicInfo);
+            }
+        }else{
+            throw new BusinessException("您的订单类型系统无法识别!");
+        }
+        OfcFundamentalInformation fundamentalInformation = new OfcFundamentalInformation();
+        fundamentalInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        fundamentalInformation.setOperator(authResDtoByToken.getUserId());
+        fundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
+        fundamentalInformation.setOperTime(new Date());
+        ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) +" "+"订单已更新");
+        upOrderStatus(ofcOrderStatus,fundamentalInformation,authResDtoByToken);
+        ofcFundamentalInformationService.update(fundamentalInformation);
     }
 }

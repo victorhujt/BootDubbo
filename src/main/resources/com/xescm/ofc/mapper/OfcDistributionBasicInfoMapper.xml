@@ -441,5 +441,49 @@
     LIMIT 1
   </select>
 
-
+    <update id="updateAddressByOrderCode" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" >
+        <!--
+          根据订单号进行修改
+        -->
+        update ofc_distribution_basic_info
+        <set >
+            <if test="departurePlace != null" >
+                departure_place = #{departurePlace,jdbcType=INTEGER},
+            </if>
+            <if test="departureProvince != null" >
+                departure_province = #{departureProvince,jdbcType=INTEGER},
+            </if>
+            <if test="departureCity != null" >
+                departure_city = #{departureCity,jdbcType=INTEGER},
+            </if>
+            <if test="departureDistrict != null" >
+                departure_district = #{departureDistrict,jdbcType=INTEGER},
+            </if>
+            <if test="departureTowns != null" >
+                departure_towns = #{departureTowns,jdbcType=INTEGER},
+            </if>
+            <if test="departurePlaceCode != null" >
+                departure_place_code = #{departurePlaceCode,jdbcType=INTEGER},
+            </if>
+            <if test="destination != null" >
+                destination = #{destination,jdbcType=INTEGER},
+            </if>
+            <if test="destinationProvince != null" >
+                destination_province = #{destinationProvince,jdbcType=INTEGER},
+            </if>
+            <if test="destinationCity != null" >
+                destination_city = #{destinationCity,jdbcType=INTEGER},
+            </if>
+            <if test="destinationDistrict != null" >
+                destination_district = #{destinationDistrict,jdbcType=INTEGER},
+            </if>
+            <if test="destinationTowns != null" >
+                destination_towns = #{destinationTowns,jdbcType=INTEGER},
+            </if>
+            <if test="destinationCode != null" >
+                destination_code = #{destinationCode,jdbcType=INTEGER},
+            </if>
+        </set>
+        where order_code = #{orderCode,jdbcType=VARCHAR}
+    </update>
 </mapper>
