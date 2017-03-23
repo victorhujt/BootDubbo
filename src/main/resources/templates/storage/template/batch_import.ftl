@@ -16,8 +16,7 @@
 
         <el-dialog title="库存校验失败信息" v-model="checkStockFalse" size="small">
             <el-table
-                    :data="tableData"
-                    v-if="checkStockShow"
+                    :data="checkStockData"
                     highlight-current-row
                     border
                     style="width: 100%">
@@ -194,14 +193,8 @@
     var Main = {
         data() {
             return {
-                checkStockShow:false,
-                checkStockFalse:{
-                    goodsCode:'',
-                    goodsName:'',
-                    currStock:'',
-                    importStock:'',
-                    missingStock:''
-                },
+                checkStockData:[],
+                checkStockFalse:false,
                 countImportNum:'0',
                 headers: {
                     Authorization: 'Bearer ' + window.localStorage.getItem('token')
@@ -360,7 +353,7 @@
                     var resultCode = result.code;
                     if(resultCode == 503){
                         vm.$message.error(result.message);
-                        vm.checkStockShow = true;
+                        vm.checkStockFalse = true;
                         $.each(result.result, function (index, item) {
                             var checkStock = {};
                             checkStock.goodsCode = '';
@@ -368,7 +361,7 @@
                             checkStock.currStock = '';
                             checkStock.importStock = '';
                             checkStock.missingStock = '';
-                            vm.checkStockFalse.push(checkStock);
+                            vm.checkStockData.push(checkStock);
                         });
 
                     } else if (resultCode == 500){
@@ -382,7 +375,7 @@
             },
             closeCheckDialog(){
                 var vm = this;
-                vm.checkStockShow = false;
+                vm.checkStockFalse = false;
             },
             orderSaveBtn(){
                 var vm = this;
