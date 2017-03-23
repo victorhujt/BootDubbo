@@ -175,8 +175,8 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange"
-                      @row-dblclick="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)" style="width: 100%" max-height="350">
+            <el-table :data="goodDataInfo.goodsCodeData" @selection-change="handleSelectionChange" style="width: 100%" max-height="350">
+                <el-table-column type="selection"></el-table-column>
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
@@ -192,7 +192,7 @@
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectGood">取 消</el-button>
-                <el-button type="primary" @click="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)">确 定</el-button>
+                <el-button type="primary" @click="setCurrentGoodsInfo">确 定</el-button>
             </div>
         </el-dialog>
           <div class="xe-pageHeader">
@@ -398,7 +398,7 @@
                   </template>
               </el-table-column>
           </el-table>
-        <div class="block">
+        <div class="xe-block">
           <el-button @click="addGoods">添加货品</el-button>
           <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </div>
@@ -740,9 +740,6 @@
             handlSuppliereCurrentChange:function(val) {
                 this.supplierDataInfo.supplierCurrentRow = val;
             },
-            handlGoodCurrentChange:function(val) {
-                this.goodDataInfo.goodCurrentRow = val;
-            },
             setCurrentCustInfo:function(val) {
                 var vueObj=this;
                 if (val != null) {
@@ -808,6 +805,9 @@
             consignorHandleCurrentChange:function(val) {
                 this.consignorDataInfo.consignorCurrentRow=val;
             },
+            handleSelectionChange:function(val){
+                this.multipleSelection = val;
+            },
             handleCustomerSizeChange:function(val) {
                 this.customerDataInfo.customerPageSize=val;
                 this.selectCustomer();
@@ -823,6 +823,8 @@
                 }
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
+                vueObj.multipleSelection=[];
+                vueObj.goodDataInfo.goodsCodeData=[];
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                     var data=eval(result);
                     vueObj.goodsMsgOptions=[];
@@ -912,24 +914,33 @@
                     this.promptInfo("请选择供应商!",'warning');
                 }
             },
-            setCurrentGoodsInfo:function(val){
+            setCurrentGoodsInfo:function(){
+                debugger;
+                console.log(this.multipleSelection);
+                if(this.multipleSelection.length<1){
+                    this.promptInfo("请至少选择一条货品明细!",'warning');
+                    return;
+                }
                 this.goodDataInfo.chosenGoodCode = false;
-                var newData = {
-                    goodsType: val.goodsType,
-                    goodsCategory: val.goodsCategory,
-                    goodsCategory: val.goodsCategory,
-                    goodsCode: val.goodsCode,
-                    goodsName: val.goodsName,
-                    goodsSpec: val.goodsSpec,
-                    unit: val.unit,
-                    quantity: '',
-                    unitPrice:'',
-                    productionBatch:'',
-                    expiryDate:val.expiryDate,
-                    productionTime:'',
-                    invalidTime:''
-                };
-                this.goodsData.push(newData);
+                for(var i=0;i<this.multipleSelection.length;i++){
+                    var val=this.multipleSelection[i];
+                    var newData = {
+                        goodsType: val.goodsType,
+                        goodsCategory: val.goodsCategory,
+                        goodsCategory: val.goodsCategory,
+                        goodsCode: val.goodsCode,
+                        goodsName: val.goodsName,
+                        goodsSpec: val.goodsSpec,
+                        unit: val.unit,
+                        quantity: '',
+                        unitPrice:'',
+                        productionBatch:'',
+                        expiryDate:val.expiryDate,
+                        productionTime:'',
+                        invalidTime:''
+                    };
+                    this.goodsData.push(newData);
+                }
             },
             cancelSelectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];

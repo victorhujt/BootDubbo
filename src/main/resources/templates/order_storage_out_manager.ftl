@@ -406,7 +406,7 @@
                 var url = "/ofc/orderStorageOut/"+"?tag=manager";
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
-                window.open(html.substring(0,index) + "/index#" + url);
+                window.open(html.substring(0,index) + "/index#" + url,"_self");
             },
             editOrder:function(){
                 if(this.valiateSelectOrder()){
@@ -418,7 +418,7 @@
                     var url = "/ofc/orderStorageOutEdit/"+"?orderCode="+order.orderCode;
                     var html = window.location.href;
                     var index = html.indexOf("/index#");
-                    window.open(html.substring(0,index) + "/index#" + url);
+                    window.open(html.substring(0,index) + "/index#" + url,"_self");
                 }
             },
             deleteOrder:function(){
@@ -586,7 +586,7 @@
                 var url = "/ofc/storage_template/batch_import/" + templateType;
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
-                window.open(html.substring(0,index) + "/index#" + url);
+                window.open(html.substring(0,index) + "/index#" + url,"_self");
             },
             auditOrderOrNotAuditOper:function (orderCode,tag) {
                 var vueObj=this;
