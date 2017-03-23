@@ -63,11 +63,13 @@ import com.xescm.tfc.edas.service.CancelOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.whc.edas.dto.InventoryDTO;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
+import com.xescm.whc.edas.dto.ResponseMsg;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.jackson.type.TypeReference;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
@@ -2753,6 +2755,49 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
     }
 
+    @Override
+    public Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList, String custCode, String warehouseCode) {
+        int count = 0;
+        List<InventoryDTO> inventoryGoods = new ArrayList<>();
+        //相同货品编码数量相加
+        Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
+        for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
+            String goodsCode=ofcGoodsDetails.getGoodsCode();
+            if(goodInfo.containsKey(goodsCode)){
+                OfcGoodsDetailsInfo info=goodInfo.get(goodsCode);
+                info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
+            }else{
+                goodInfo.put(goodsCode,ofcGoodsDetails);
+            }
+        }
+
+        Iterator iter = goodInfo.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo=entry.getValue();
+            if (ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0) {
+                continue;
+            }
+            InventoryDTO inventoryDTO = new InventoryDTO();
+            inventoryDTO.setLineNo(String.valueOf(++count));
+            inventoryDTO.setCustomerCode(custCode);
+            inventoryDTO.setWarehouseCode(warehouseCode);
+            inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
+            inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());
+            Date productionTime = ofcGoodsDetailsInfo.getProductionTime();
+            Date invalidTime = ofcGoodsDetailsInfo.getInvalidTime();
+            if(null != productionTime){
+                inventoryDTO.setLotatt01(DateUtils.Date2String(productionTime, DateUtils.DateFormatType.TYPE2));
+            }
+            if(null != invalidTime){
+                inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
+            }
+            inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
+            inventoryGoods.add(inventoryDTO);
+        }
+        return whcOrderCancelEdasService.validateStockCount(inventoryGoods);
+    }
+
     /**
      * 生成仓储订单
      *
@@ -3333,39 +3378,23 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 //分拨出库不进行库存的校验
                 if (!("614".equals(ofcFundamentalInformation.getBusinessType())||"613".equals(ofcFundamentalInformation.getBusinessType()))) {
                     //校验出库商品的库存
-                    List<InventoryDTO> inventoryGoods = new ArrayList<>();
-                    int count = 0;
-                    for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsList) {
-                        if (ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0) {
-                            if ((ofcGoodsDetailsInfo.getWeight() == null || ofcGoodsDetailsInfo.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetailsInfo.getCubage() == null || ofcGoodsDetailsInfo.getCubage().compareTo(new BigDecimal(0)) == 0)) {
-                                continue;
-                            }
-                        }
-                        InventoryDTO inventoryDTO = new InventoryDTO();
-                        inventoryDTO.setLineNo(String.valueOf(++count));
-                        inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
-                        inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
-                        inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
-                        inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());
-                        Date productionTime = ofcGoodsDetailsInfo.getProductionTime();
-                        Date invalidTime = ofcGoodsDetailsInfo.getInvalidTime();
-                        if(null != productionTime){
-                            inventoryDTO.setLotatt01(DateUtils.Date2String(productionTime, DateUtils.DateFormatType.TYPE2));
-                        }
-                        if(null != invalidTime){
-                            inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
-                        }
-                        BigDecimal quantity = ofcGoodsDetailsInfo.getQuantity();
-                        if(null == quantity){
-                            logger.error("{}的商品{}数量为空", ofcFundamentalInformation.getOrderCode(), ofcGoodsDetailsInfo.getGoodsCode());
-                            throw new BusinessException(ofcFundamentalInformation.getOrderCode() + "的商品" + ofcGoodsDetailsInfo.getGoodsCode() + "数量为空");
-                        }
-                        inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
-                        inventoryGoods.add(inventoryDTO);
-                    }
-                    Wrapper wrapper = whcOrderCancelEdasService.validateStockCount(inventoryGoods);
+                    Wrapper wrapper =validateStockCount(goodsDetailsList,ofcFundamentalInformation.getCustCode(),ofcWarehouseInformation.getWarehouseCode());
                     if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
-                        throw new BusinessException(wrapper.getMessage());
+                        List<ResponseMsg> msgs = null;
+                        StringBuilder message=new StringBuilder();
+                        TypeReference<List<ResponseMsg>> ResponseMsgsRef = new TypeReference<List<ResponseMsg>>() {};
+                        msgs= JacksonUtil.parseJsonWithFormat(wrapper.getMessage(),ResponseMsgsRef);
+                        if(!CollectionUtils.isEmpty(msgs)){
+                           for(int i=0;i<msgs.size();i++){
+                               ResponseMsg msg=msgs.get(i);
+                               if(i==msgs.size()-1){
+                                   message.append(msg.getMessage());
+                               }else{
+                                   message.append(",").append(msg.getMessage());
+                               }
+                           }
+                        }
+                        throw new BusinessException(message.toString());
                     }
                 }
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
