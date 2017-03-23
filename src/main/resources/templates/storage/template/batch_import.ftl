@@ -305,6 +305,9 @@
                         $.each(tableHeadMsg, function (indexIn, itemIn) {
                             var items = itemIn.split('@');
                             var propertyCode = items[1];
+                            if(propertyCode == 'businessType'){
+                                itemOut[propertyCode] = vm.convertCodeToName(itemOut[propertyCode])
+                            }
                             tableRow[propertyCode] = itemOut[propertyCode];
                         });
                         tableData.push(tableRow);
@@ -407,6 +410,17 @@
                 vm.fileList = [];
                 vm.tableData = [];
                 vm.orderMsgShow = false;
+            },convertCodeToName(businessType){
+                switch (businessType) {
+                    //出库
+                    case '610': businessType = '销售出库'; break; case '611': businessType = '调拨出库'; break; case '612': businessType = '报损出库'; break;
+                    case '613': businessType = '其他出库'; break; case '614': businessType = '分拨出库'; break;
+                    //入库
+                    case '620': businessType = '采购入库'; break; case '621': businessType = '调拨入库'; break; case '622': businessType = '退货入库'; break;
+                    case '623': businessType = '加工入库'; break;  case '624': businessType = '盘盈入库'; break; case '625': businessType = '流通入库'; break;
+                    case '626': businessType = '其他入库'; break;  case '627': businessType = '分拨入库'; break;
+                }
+                return businessType;
             }
         }
     };
