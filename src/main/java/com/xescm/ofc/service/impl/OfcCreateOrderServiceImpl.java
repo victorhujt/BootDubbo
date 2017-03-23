@@ -242,10 +242,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
         String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
         String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
+        String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
         String departureCity = ofcDistributionBasicInfo.getDepartureCity();
+        String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
 
-        boolean sEmptyOrNull = PubUtils.isSEmptyOrNull(departurePlaceCode)
-                || PubUtils.isSEmptyOrNull(departureProvince) || PubUtils.isSEmptyOrNull(departureCity);
+        boolean sEmptyOrNull = !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
+                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
         this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
             String orderCode = information.getOrderCode();
@@ -270,7 +272,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 //            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                if(!sEmptyOrNull){
+                if(sEmptyOrNull){
 
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
@@ -290,7 +292,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         } else {
 
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
-            if(!sEmptyOrNull){
+            if(sEmptyOrNull){
                 ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
             }
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
@@ -301,7 +303,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //地址编码不为空才走自动审核, 为空的状态还是待审核, 并调用EPC端口补齐
-                if(!sEmptyOrNull){
+                if(sEmptyOrNull){
 
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
