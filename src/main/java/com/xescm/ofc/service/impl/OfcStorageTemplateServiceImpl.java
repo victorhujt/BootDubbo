@@ -1528,7 +1528,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
 //            MathContext mathContext = new MathContext(3);
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = convertCscGoods(ofcStorageTemplateDto);
+                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = this.convertCscGoods(ofcStorageTemplateDto);
                 StringBuilder key=new StringBuilder();
                 key.append(ofcGoodsDetailsInfo.getGoodsCode());
                 if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
@@ -1738,6 +1738,52 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
         }
         logger.info("校验模板必填成功!");
+    }
+
+    /**
+     * 出库批量导单确认下单之前, 校验当前库存
+     * @param orderList 订单列表
+     * @return 校验结果
+     */
+    @Override
+    public Wrapper checkStock(String orderList) throws Exception {
+        logger.info("出库批量导单确认下单之前, 校验当前库存 orderList ==> {}", orderList);
+        if(PubUtils.isSEmptyOrNull(orderList)){
+            logger.error("仓储开单出库批量导单校验当前库存失败, checkStock入参有误");
+            throw new BusinessException("仓储出库开单批量导单校验当前库存失败!");
+        }
+        TypeReference<List<OfcStorageTemplateDto>> typeReference = new TypeReference<List<OfcStorageTemplateDto>>() {
+        };
+        List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = JacksonUtil.parseJsonWithFormat(orderList, typeReference);
+        if(CollectionUtils.isEmpty(ofcStorageTemplateDtoList)){
+            logger.error("仓储开单出库批量导单校验当前库存失败! 订单列表为空!");
+            throw new BusinessException("仓储开单出库批量导单校验当前库存失败! 订单列表为空!");
+        }
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
+        Set<String> warehouseCodeSet = new HashSet<>();
+        for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = this.convertCscGoods(ofcStorageTemplateDto);
+            String warehouseCode = ofcStorageTemplateDto.getWarehouseCode();
+            ofcGoodsDetailsInfoList.add(ofcGoodsDetailsInfo);
+            if(PubUtils.isSEmptyOrNull(warehouseCode)){
+                String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
+                logger.error("仓储开单出库批量导单校验当前库存失败! 客户订单号【{}】的仓库为空!", custOrderCode);
+                throw new BusinessException("仓储开单出库批量导单校验当前库存失败! 客户订单号【" + custOrderCode + "】的仓库为空!");
+            }
+            warehouseCodeSet.add(warehouseCode);
+        }
+        if(warehouseCodeSet.size() > 1){
+            logger.error("仓储开单出库批量导单校验当前库存失败! 本批次订单存在多个仓库! 单个仓库才能校验库存!");
+            throw new BusinessException("仓储开单出库批量导单校验当前库存失败! 本批次订单存在多个仓库! 单个仓库才能校验库存!");
+        }
+        String custCode = ofcStorageTemplateDtoList.get(0).getOfcOrderDTO().getCustCode();
+        String warehouseCode = warehouseCodeSet.iterator().next();
+        Wrapper<?> wrapper = ofcOrderManageService.validateStockCount(ofcGoodsDetailsInfoList, custCode, warehouseCode);
+        if(wrapper.getCode() != Wrapper.SUCCESS_CODE){
+            logger.error("仓储开单出库批量导单校验当前库存失败! 库存数量不足! 失败信息: {}", wrapper.getMessage());
+            return wrapper;
+        }
+        return WrapMapper.ok();
     }
 
 }

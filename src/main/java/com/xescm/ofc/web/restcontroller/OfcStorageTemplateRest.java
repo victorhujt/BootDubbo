@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_CUST;
+import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_STOCK;
 import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_TEMPLATE;
 
 /**
@@ -336,6 +337,29 @@ public class OfcStorageTemplateRest extends BaseController{
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+    /**
+     * 出库批量导单确认下单之前, 校验当前库存
+     * @param orderList 订单列表
+     * @return 校验结果
+     */
+    @RequestMapping(value = "/check_stock")
+    @ResponseBody
+    public Wrapper checkStock(String orderList){
+        try {
+            Wrapper checkResult = ofcStorageTemplateService.checkStock(orderList);
+            if(checkResult.getCode() != Wrapper.SUCCESS_CODE){
+                return WrapMapper.wrap(ERROR_STOCK, "出库校验库存失败", checkResult.getResult());
+            }
+        }catch (BusinessException e) {
+            logger.error("仓储开单出库批量导单校验当前库存出错, 错误信息:{},{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        }catch (Exception e) {
+            logger.error("仓储开单出库批量导单校验当前库存出错, 错误信息:{},{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "当前库存满足订货需求");
     }
 
 

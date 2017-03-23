@@ -13,6 +13,46 @@
 <div id="app">
     <title>{{titleName}}</title>
     <div class="list-mian-01">
+
+        <el-dialog title="库存校验失败信息" v-model="checkStockFalse" size="small">
+            <el-table
+                    :data="tableData"
+                    v-if="checkStockShow"
+                    highlight-current-row
+                    border
+                    style="width: 100%">
+                <el-table-column
+                        type="index"
+                        label="序号">
+                </el-table-column>
+                <el-table-column
+                        property="goodsCode"
+                        label="货品编码">
+                </el-table-column>
+                <el-table-column
+                        property="goodsName"
+                        label="货品名称">
+                </el-table-column>
+                <el-table-column
+                        property="currStock"
+                        label="当前库存量">
+                </el-table-column>
+                <el-table-column
+                        property="importStock"
+                        label="导入货品总量">
+                </el-table-column>
+                <el-table-column
+                        property="missingStock"
+                        label="差异量">
+                </el-table-column>
+            </el-table>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeCheckDialog">关 闭</el-button>
+            </div>
+
+        </el-dialog>
+
+
         <el-form :model="templateBatchIn"  label-width="100px" class="demo-ruleForm" v-loading="loading2"
                  element-loading-text="拼命加载中">
             <div class="xe-block" >
@@ -62,6 +102,9 @@
             </el-table-column>
         </el-table>
 
+        <div class="xe-block" style="margin-left: 300px" v-if="orderMsgShow">
+            <el-button type="primary"  v-if="orderMsgShow && inOrOut" v-on:click="checkStock">校验当前库存</el-button>
+        </div>
         <el-table
                 :data="orderTableData"
                 v-if="orderMsgShow"
@@ -151,12 +194,21 @@
     var Main = {
         data() {
             return {
+                checkStockShow:false,
+                checkStockFalse:{
+                    goodsCode:'',
+                    goodsName:'',
+                    currStock:'',
+                    importStock:'',
+                    missingStock:''
+                },
                 countImportNum:'0',
                 headers: {
                     Authorization: 'Bearer ' + window.localStorage.getItem('token')
                 },
                 loading2:false,
                 templateType:'${templateType!}',
+                inOrOut:'${templateType!}' == 'storageOut',
                 titleName:'${templateType!}' == 'storageIn' ? '入库开单_批量导入' : '出库开单_批量导入',
                 <#--standardTemplteTitle:'${templateType!}' == 'storageIn' ? '入库单导入标准模板.xls' : '出库单导入标准模板.xls',-->
                 orderList:'',
@@ -298,6 +350,39 @@
                     vm.$message.error("请先选择客户!")
                     return;
                 }*/
+            },
+            checkStock(){
+                var vm = this;
+                var param = {};
+                param.orderList = JSON.stringify(vm.orderList);
+                var url = "/ofc/storage_template/check_stock";
+                CommonClient.post(url, param, function (result) {
+                    var resultCode = result.code;
+                    if(resultCode == 503){
+                        vm.$message.error(result.message);
+                        vm.checkStockShow = true;
+                        $.each(result.result, function (index, item) {
+                            var checkStock = {};
+                            checkStock.goodsCode = '';
+                            checkStock.goodsName = '';
+                            checkStock.currStock = '';
+                            checkStock.importStock = '';
+                            checkStock.missingStock = '';
+                            vm.checkStockFalse.push(checkStock);
+                        });
+
+                    } else if (resultCode == 500){
+                        vm.$message.error("库存校验出现异常!");
+                    } else if (resultCode == 200) {
+                        vm.$message(result.message);
+                    } else {
+                        vm.$message.error("库存校验出现异常!");
+                    }
+                });
+            },
+            closeCheckDialog(){
+                var vm = this;
+                vm.checkStockShow = false;
             },
             orderSaveBtn(){
                 var vm = this;
