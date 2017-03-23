@@ -1089,6 +1089,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.info("数量 加之后: {}", countImportNum.intValue());
             custOrderCodeSet.add(ofcStorageTemplateDto.getCustOrderCode());
         }
+        Integer importOrderNum = custOrderCodeSet.size();
         for (String custOrderCode : custOrderCodeSet) {
             OfcFundamentalInformation ofc = new OfcFundamentalInformation();
             ofc.setCustCode(ofcStorageTemplate.getCustCode());
@@ -1115,6 +1116,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         succeedResult.add(usefulCol);
         succeedResult.add(ofcStorageTemplateDtoList);
         succeedResult.add(countImportNum);
+        succeedResult.add(importOrderNum);
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
     }
 

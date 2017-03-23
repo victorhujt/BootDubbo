@@ -101,8 +101,12 @@
             </el-table-column>
         </el-table>
 
-        <div class="xe-block" style="margin-left: 300px" v-if="orderMsgShow">
-            <el-button type="primary"  v-if="orderMsgShow && inOrOut" v-on:click="checkStock">校验当前库存</el-button>
+        <div class="xe-block" >
+            <span v-if="orderMsgShow" style="margin-right: 100px">订单导入数量合计: {{countImportOrderNum}}</span>
+            <span v-if="orderMsgShow" style="margin-right: 100px">货品导入数量合计: {{countImportNum}}</span>
+            <el-button type="primary" style="margin-right: 100px" v-if="orderMsgShow && inOrOut" v-on:click="checkStock">校验当前库存</el-button>
+            <el-button type="primary" style="margin-right: 100px" v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
+            <el-button type="primary"  v-if="orderMsgShow" v-on:click="cancelOrderSaveBtn" icon="save">取消批量执行</el-button>
         </div>
         <el-table
                 :data="orderTableData"
@@ -122,9 +126,12 @@
             </el-table-column>
 
         </el-table>
-        <div class="xe-block">
-            <span v-if="orderMsgShow" style="margin-right: 300px">货品导入数量合计: {{countImportNum}}</span>
-            <el-button type="primary"  v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
+        <div class="xe-block" v-if="orderMsgShow && showButtomBtn">
+            <span style="margin-right: 100px">订单导入数量合计: {{countImportOrderNum}}</span>
+            <span style="margin-right: 100px">货品导入数量合计: {{countImportNum}}</span>
+            <el-button type="primary" style="margin-right: 100px" v-if="inOrOut" v-on:click="checkStock">校验当前库存</el-button>
+            <el-button type="primary" style="margin-right: 100px"  v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
+            <el-button type="primary"   v-on:click="cancelOrderSaveBtn" icon="save">取消批量执行</el-button>
         </div>
 
     </div>
@@ -193,6 +200,8 @@
     var Main = {
         data() {
             return {
+                showButtomBtn: false,
+                countImportOrderNum:0,
                 checkStockData:[],
                 checkStockFalse:false,
                 countImportNum:'0',
@@ -277,6 +286,7 @@
                     var tableHeadMsg = response.result[0];
                     var orderMsg = response.result[1];
                     vm.countImportNum = response.result[2];
+                    vm.countImportOrderNum = response.result[3];
 
                     var headData = vm.orderTableHeads = [];
                     vm.orderMsgShow = true;
@@ -299,6 +309,9 @@
                         });
                         tableData.push(tableRow);
                     });
+                    if(tableData.length >= 20){
+                        vm.showButtomBtn = true;
+                    }
                     vm.orderList = orderMsg;
                 }
             },
@@ -387,6 +400,13 @@
                     var url = vm.templateType == "storageIn" ? "/ofc/orderStorageInManager" : "/ofc/orderStorageOutManager";
                     xescm.common.loadPage(url);
                 });
+            },
+            cancelOrderSaveBtn(){
+                var vm = this;
+                vm.errorMsgShow = false;
+                vm.fileList = [];
+                vm.tableData = [];
+                vm.orderMsgShow = false;
             }
         }
     };
