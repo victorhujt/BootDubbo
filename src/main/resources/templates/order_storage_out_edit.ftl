@@ -1190,7 +1190,7 @@
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
                             if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
-                                goodCode.expiryDate==0;
+                                goodCode.expiryDate=0;
                             }else{
                                 goodCode.expiryDate=cscGoodsVo.expiryDate;
                             }

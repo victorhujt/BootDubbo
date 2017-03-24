@@ -898,6 +898,7 @@
                         layer.msg("暂时未查询到货品信息！！");
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,cscGoodsVo) {
+                            debugger;
                             var goodCode={};
                             goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
                             goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
@@ -908,7 +909,7 @@
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
                             if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
-                                goodCode.expiryDate==0;
+                                goodCode.expiryDate=0;
                             }else{
                                 goodCode.expiryDate=cscGoodsVo.expiryDate;
                             }
@@ -1278,7 +1279,6 @@
             },
             accountInvalidTime:function(val){
                 if(val.productionTime!=null) {
-                    console.log(val);
                     val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
                 }
             },
