@@ -28,6 +28,7 @@ import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.whc.edas.dto.ResponseMsg;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -1780,10 +1781,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         String custCode = ofcStorageTemplateDtoList.get(0).getOfcOrderDTO().getCustCode();
         String warehouseCode = warehouseCodeSet.iterator().next();
-        Wrapper<?> wrapper = ofcOrderManageService.validateStockCount(ofcGoodsDetailsInfoList, custCode, warehouseCode);
+        Wrapper wrapper = ofcOrderManageService.validateStockCount(ofcGoodsDetailsInfoList, custCode, warehouseCode);
         if(wrapper.getCode() != Wrapper.SUCCESS_CODE){
+            TypeReference<List<ResponseMsg>> typeReferenceRespMsg = new TypeReference<List<ResponseMsg>>() {
+            };
+            List<ResponseMsg> responseMsgs = JacksonUtil.parseJson(wrapper.getMessage(), typeReferenceRespMsg);
             logger.error("仓储开单出库批量导单校验当前库存失败! 库存数量不足! 失败信息: {}", wrapper.getMessage());
-            return wrapper;
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, wrapper.getMessage(), responseMsgs);
         }
         return WrapMapper.ok();
     }

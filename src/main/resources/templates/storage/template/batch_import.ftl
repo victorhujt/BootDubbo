@@ -372,11 +372,11 @@
                         vm.checkStockFalse = true;
                         $.each(result.result, function (index, item) {
                             var checkStock = {};
-                            checkStock.goodsCode = '';
-                            checkStock.goodsName = '';
-                            checkStock.currStock = '';
-                            checkStock.importStock = '';
-                            checkStock.missingStock = '';
+                            checkStock.goodsCode = item.skuCode;
+                            checkStock.goodsName = item.skuName;
+                            checkStock.currStock = item.stockQty;
+                            checkStock.importStock = item.deliveryQty;
+                            checkStock.missingStock = item.resultQty;
                             vm.checkStockData.push(checkStock);
                         });
 

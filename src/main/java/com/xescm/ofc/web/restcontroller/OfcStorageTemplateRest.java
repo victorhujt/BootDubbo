@@ -29,9 +29,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_CUST;
-import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_STOCK;
-import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_TEMPLATE;
+import static com.xescm.ofc.constant.StorageTemplateConstant.*;
 
 /**
  *
@@ -350,7 +348,7 @@ public class OfcStorageTemplateRest extends BaseController{
         try {
             Wrapper checkResult = ofcStorageTemplateService.checkStock(orderList);
             if(checkResult.getCode() != Wrapper.SUCCESS_CODE){
-                return WrapMapper.wrap(ERROR_STOCK, "出库校验库存失败", checkResult.getResult());
+                return WrapMapper.wrap(ERROR_STOCK, "校验库存失败! 库存不足!", checkResult.getResult());
             }
         }catch (BusinessException e) {
             logger.error("仓储开单出库批量导单校验当前库存出错, 错误信息:{},{}", e.getMessage(), e);
