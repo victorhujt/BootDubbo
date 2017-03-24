@@ -23,7 +23,6 @@ import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -194,5 +193,33 @@ public class OfcMobileOrderRest extends BaseController {
             }
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
+    }
+
+    /**
+     * 拍照开单-自动受理订单
+     * @return
+     */
+    @RequestMapping(value = "/autoAcceptMobileOrderDetail")
+    @ResponseBody
+    public Wrapper<OfcMobileOrderVo> autoAcceptMobileOrderDetail(String orderCode) {
+        logger.debug("==>拍照开单-自动受理订单 orderCode={}", orderCode);
+        Wrapper<OfcMobileOrderVo> result;
+        try {
+            OfcMobileOrder params = new OfcMobileOrder();
+            params.setMobileOrderCode(orderCode);
+            OfcMobileOrderVo mobileOrderVo = ofcMobileOrderService.selectOneOfcMobileOrder(params);
+            if (PubUtils.isNull(mobileOrderVo)) {
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "暂无待受理订单！");
+            } else {
+                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, mobileOrderVo);
+            }
+        } catch (BusinessException e) {
+            logger.error("拍照开单-自动受理订单发生错误: {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("拍照开单-自动受理订单发生错误: {}", e);
+            result = WrapMapper.error();
+        }
+        return result;
     }
 }

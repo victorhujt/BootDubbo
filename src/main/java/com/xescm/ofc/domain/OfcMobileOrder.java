@@ -57,7 +57,7 @@ public class OfcMobileOrder {
     private String tranCode;
 
     /**
-     * 订单状态 0:未受理 1:已受理 默认值未受理
+     * 订单状态 0:未受理 1:已受理 2: 受理中 默认值未受理
      */
     @Column(name = "mobile_order_status")
     private String mobileOrderStatus;
