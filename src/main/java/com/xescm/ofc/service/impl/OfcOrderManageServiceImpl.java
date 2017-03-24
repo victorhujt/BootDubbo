@@ -3343,7 +3343,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         }
                         InventoryDTO inventoryDTO = new InventoryDTO();
                         inventoryDTO.setLineNo(String.valueOf(++count));
-                        inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
+                        inventoryDTO.setCustomerCode(ofcFundamentalInformation.getCustCode());
                         inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
                         inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
                         inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());

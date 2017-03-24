@@ -246,14 +246,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = ofcFundamentalInformation.getCustCode();
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
-        String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
-        String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
-        String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
-        String departureCity = ofcDistributionBasicInfo.getDepartureCity();
-        String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
 
-        boolean sEmptyOrNull = !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
-                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
+
+        boolean sEmptyOrNull = checkAddressPass(ofcDistributionBasicInfo);
         this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
             String orderCode = information.getOrderCode();
@@ -287,6 +282,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     //然后再更新运输信息
                     ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
                     //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
+                    sEmptyOrNull = checkAddressPass(ofcDistributionBasicInfo);
                     if(sEmptyOrNull){
                         this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                     }
@@ -322,6 +318,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     //然后再保存运输信息
                     ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
                     //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
+                    sEmptyOrNull = checkAddressPass(ofcDistributionBasicInfo);
                     if(sEmptyOrNull){
                         this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                     }
@@ -335,6 +332,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
+    }
+
+    private boolean checkAddressPass(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
+        String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
+        String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
+        String departureCity = ofcDistributionBasicInfo.getDepartureCity();
+        String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
+        return !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
+                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
     }
 
     private void fixOrEeAddrCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
@@ -374,8 +381,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     Object departureDistrict = departurePlaceObj.get("district");
                     if(null != departureProvince){
                         String depProvince = (String) departureProvince;
+                        ofcDistributionBasicInfo.setDepartureProvince(depProvince);
                         if(null != departureCity){
                             String depCity = (String) departureCity;
+                            ofcDistributionBasicInfo.setDepartureCity(depCity);
                             if(null != departureDistrict){
                                 String depDistrict = (String) departureDistrict;
                                 ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
@@ -393,9 +402,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     throw new BusinessException("存储明细地址映射失败!");
                                 }
                             }
-                            ofcDistributionBasicInfo.setDepartureCity(depCity);
+
                         }
-                        ofcDistributionBasicInfo.setDepartureProvince(depProvince);
+
                     }
                 }
             }
@@ -416,8 +425,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     Object destinationDistrict = destinationObj.get("district");
                     if(null != destinationProvince){
                         String desProvince = (String) destinationProvince;
+                        ofcDistributionBasicInfo.setDestinationProvince(desProvince);
                         if(null != destinationCity){
                             String desCity = (String) destinationCity;
+                            ofcDistributionBasicInfo.setDestinationCity(desCity);
                             if(null != destinationDistrict){
                                 String desDistrict = (String) destinationDistrict;
                                 ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
@@ -435,9 +446,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     throw new BusinessException("存储明细地址映射失败!");
                                 }
                             }
-                            ofcDistributionBasicInfo.setDestinationCity(desCity);
+
                         }
-                        ofcDistributionBasicInfo.setDestinationProvince(desProvince);
+
                     }
                 }
             }
