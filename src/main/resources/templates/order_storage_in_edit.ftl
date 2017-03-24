@@ -392,6 +392,11 @@
                       </el-date-picker>
                   </template>
               </el-table-column>
+              <el-table-column property="supportBatch" label="供应商批次">
+                  <template scope="scope">
+                      <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
               <el-table-column property="goodsOperation" label="操作">
                   <template scope="scope">
                       <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
@@ -723,6 +728,7 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                            good.supportName=goodDetail.supportName;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -937,7 +943,8 @@
                         productionBatch:'',
                         expiryDate:val.expiryDate,
                         productionTime:'',
-                        invalidTime:''
+                        invalidTime:'',
+                        supportBatch:this.orderForm.supportName
                     };
                     this.goodsData.push(newData);
                 }

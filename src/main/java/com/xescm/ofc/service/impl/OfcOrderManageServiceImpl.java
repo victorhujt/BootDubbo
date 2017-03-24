@@ -2783,6 +2783,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             inventoryDTO.setCustomerCode(custCode);
             inventoryDTO.setWarehouseCode(warehouseCode);
             inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
+            inventoryDTO.setSkuName(ofcGoodsDetailsInfo.getGoodsName());
             inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());
             Date productionTime = ofcGoodsDetailsInfo.getProductionTime();
             Date invalidTime = ofcGoodsDetailsInfo.getInvalidTime();

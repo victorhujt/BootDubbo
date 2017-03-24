@@ -227,6 +227,11 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
+                <el-table-column property="supportBatch" label="供应商批次号">
+                    <template scope="scope">
+                        <el-input v-model="supplierName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
             </el-table>
             <el-table :data="orderStatusData" border highlight-current-row >
                 <el-table-column property="notes" label="跟踪信息">

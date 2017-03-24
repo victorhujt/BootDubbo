@@ -255,11 +255,6 @@
                         <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
-                <#--<el-table-column property="realQuantity" label="实际数量">-->
-                    <#--<template scope="scope">-->
-                        <#--<el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>-->
-                    <#--</template>-->
-                <#--</el-table-column>-->
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
                         <el-input v-model="scope.row.unitPrice" :readOnly="true"></el-input>
@@ -290,6 +285,11 @@
                                 :readOnly="true"
                                 placeholder="选择日期">
                         </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="supportBatch" label="供应商批次号">
+                    <template scope="scope">
+                        <el-input v-model="supplierName"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -533,7 +533,6 @@
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
-                                           // good.realQuantity=goodDetail.realQuantity;
                                             good.unitPrice=goodDetail.unitPrice;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);

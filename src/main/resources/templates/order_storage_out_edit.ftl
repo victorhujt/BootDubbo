@@ -445,6 +445,11 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
+                <el-table-column property="supportBatch" label="供应商批次">
+                    <template scope="scope">
+                        <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
                     <template scope="scope">
                         <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
@@ -835,6 +840,7 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                            good.supportBatch=goodDetail.supportName;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -1037,7 +1043,7 @@
                 }
             },
             setCurrentGoodsInfo:function(){
-                debugger;
+                
                 if(this.multipleSelection.length<1){
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
@@ -1048,7 +1054,6 @@
                     var newData = {
                         goodsType: val.goodsType,
                         goodsCategory: val.goodsCategory,
-                        goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
@@ -1058,7 +1063,8 @@
                         productionBatch:'',
                         expiryDate:val.expiryDate,
                         productionTime:'',
-                        invalidTime:''
+                        invalidTime:'',
+                        supportBatch:this.orderForm.supportName
                     };
                     this.goodsData.push(newData);
                 }
@@ -1573,7 +1579,7 @@
                 }
             },
             validateStockCount:function(){
-                debugger;
+                
                 var _this=this;
                 _this.goodsStockData=[];
                 if(StringUtil.isEmpty(_this.orderForm.custCode)){
@@ -1588,15 +1594,16 @@
                     _this.promptInfo("请至少选择一条货品",'warning');
                     return;
                 }
-
-                CommonClient.post(sys.rootPath + "/ofc/validateStockCount", {"goodsDetailsList":_this.goodsData,"custCode":_this.orderForm.custCode,"warehouseCode":_this.orderForm.wareHouse}, function(data) {
-                    if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
-                    } else if (data.code == 200) {
-                    } else if (data.code == 403) {
+                var orderGoodsListStr = JSON.stringify(_this.goodsData);
+                CommonClient.syncpost(sys.rootPath + "/ofc/validateStockCount", {"orderGoodsListStr":orderGoodsListStr,"custCode":_this.orderForm.custCode,"warehouseCode":_this.orderForm.wareHouse}, function(result) {
+                    if (result == undefined || result == null) {
+                    } else if (result.code == 200) {
+                        _this.promptInfo("货品库存充足！","success");
+                    } else if (result.code == 403) {
                         _this.promptInfo("没有权限",'error');
-                    } else if (data.code == 500) {
-                        if(data.result!=null&&data.result.size>0){
-                            $.each(data.result.list,function (index,responseMsg) {
+                    } else if (result.code == 500) {
+                        if(result.result!=null&&result.result.length>0){
+                            $.each(result.result,function (index,responseMsg) {
                                 var stock={};
                                 stock.goodsCode=responseMsg.skuCode;
                                 stock.goodsName=responseMsg.skuName;
@@ -1606,6 +1613,7 @@
                                 _this.goodsStockData.push(stock);
                             });
                         }
+                        _this.chosenGoodStock=true;
                     }
                 },"json");
             }

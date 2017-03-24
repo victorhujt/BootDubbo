@@ -387,6 +387,11 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
+                <el-table-column property="supportBatch" label="供应商批次">
+                <template scope="scope">
+                    <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                </template>
+            </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
                     <template scope="scope">
                         <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
@@ -768,7 +773,6 @@
                     var newData = {
                         goodsType: val.goodsType,
                         goodsCategory: val.goodsCategory,
-                        goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
@@ -778,7 +782,8 @@
                         productionBatch:'',
                         expiryDate:val.expiryDate,
                         productionTime:'',
-                        invalidTime:''
+                        invalidTime:'',
+                        supportBatch:this.orderForm.supportName
                     };
                     this.goodsData.push(newData);
                 }
@@ -1112,7 +1117,7 @@
                                 var newurl = "/ofc/orderStorageInManager";
                                 var html = window.location.href;
                                 var index = html.indexOf("/index#");
-                                window.open(html.substring(0,index) + "/index#" + newurl);
+                                window.open(html.substring(0,index) + "/index#" + newurl,"_self");
                             }
                         });
             },

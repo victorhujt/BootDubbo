@@ -30,6 +30,7 @@
     <result column="quantity_unit_price" property="quantityUnitPrice" jdbcType="DECIMAL" />
     <result column="weight_unit_price" property="weightUnitPrice" jdbcType="DECIMAL" />
     <result column="volume_unit_price" property="volumeUnitPrice" jdbcType="DECIMAL" />
+    <result column="support_batch" property="supportBatch" jdbcType="VARCHAR" />
   </resultMap>
 
   <!--订单货品列表查询-->
@@ -64,7 +65,8 @@
     oos.goods_type,
     oos.charging_ways,
     oos.charging_quantity,
-    oos.charging_unit_price
+    oos.charging_unit_price,
+    oos.support_batch
     FROM
     ofc_goods_details_info oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
