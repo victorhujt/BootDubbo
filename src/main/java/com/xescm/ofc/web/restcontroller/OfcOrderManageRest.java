@@ -467,12 +467,8 @@ public class OfcOrderManageRest extends BaseController{
     public String getTransOrderDetailByCode(Model model, @PathVariable String orderCode,Map<String,Object> map){
         logger.info("==>订单中心订单管理订单orderCode orderCode={}", orderCode);
         setDefaultModel(model);
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        String customerCode = authResDtoByToken.getGroupRefCode();
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsList = null;
-        CscContantAndCompanyResponseDto consignorMessage = null;
-        CscContantAndCompanyResponseDto consigneeMessage = null;
         try{
             ofcOrderDTO = ofcOrderDtoService.transOrderDotSelect(orderCode);
             ofcGoodsDetailsList= ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode,"orderCode");

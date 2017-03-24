@@ -130,12 +130,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcOrderDTO 订单实体
      * @param ofcGoodsDetailsInfos 货品信息
      * @param tag 标记位 : place 普通下单 , manage 编辑 , tranplace 运输开单,  distributionPlace 城配开单
-     * @param authResDtoByToken
-     * @param custId
-     * @param cscContantAndCompanyDtoConsignor
-     * @param cscContantAndCompanyDtoConsignee
-     * @param cscSupplierInfoDto
-     * @return
+     * @param authResDtoByToken   token
+     * @param custId    客户ID
+     * @param cscContantAndCompanyDtoConsignor   发货方信息
+     * @param cscContantAndCompanyDtoConsignee   收货方信息
+     * @param cscSupplierInfoDto    供应商信息
+     * @return  String
      */
     @Override
     public String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken, String custId
@@ -252,7 +252,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setNotes(notes.toString());
         upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
         //添加该订单的货品信息
-        List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<>();
         for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
             String orderCode = ofcFundamentalInformation.getOrderCode();
             ofcGoodsDetails.setOrderCode(orderCode);
@@ -261,7 +260,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
-            goodsDetailsList.add(ofcGoodsDetails);
         }
         try {
             //添加基本信息
