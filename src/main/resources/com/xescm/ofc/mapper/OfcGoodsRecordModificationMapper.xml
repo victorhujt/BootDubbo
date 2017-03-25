@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcGoodsRecordModificationMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcGoodsRecordModification" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="value_before_modify_qty" property="valueBeforeModifyQty" jdbcType="VARCHAR" />
+    <result column="value_after_modify_qty" property="valueAfterModifyQty" jdbcType="VARCHAR" />
+    <result column="value_before_modify_wet" property="valueBeforeModifyWet" jdbcType="VARCHAR" />
+    <result column="value_after_modify_wet" property="valueAfterModifyWet" jdbcType="VARCHAR" />
+    <result column="value_before_modify_vol" property="valueBeforeModifyVol" jdbcType="VARCHAR" />
+    <result column="value_after_modify_vol" property="valueAfterModifyVol" jdbcType="VARCHAR" />
+    <result column="modification_desc" property="modificationDesc" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>

@@ -3,6 +3,7 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.OfcGoodsRecordModification;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.GoodsAmountSyncService;
@@ -57,20 +58,75 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         for (OfcFundamentalInformation anOfcFundamentalInformationList : ofcFundamentalInformationList) {
             OfcOrderNewstatus ofcOrderNewstatus = ofcOrderNewstatusService.selectByKey(anOfcFundamentalInformationList.getOrderCode());
             if (null != ofcOrderNewstatus && !trimAndNullAsEmpty(ofcOrderNewstatus.getOrderLatestStatus()).equals("")) {
-                if(!trimAndNullAsEmpty(ofcOrderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED))
-                    if(!trimAndNullAsEmpty(ofcOrderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED)){
-                        for (GoodsAmountDetailDto goodsAmountDetailDto:goodsAmountSyncDto.getGoodsAmountDetailDtoList()) {
-                            if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsName()).equals("")){
-                                throw new BusinessException("货品名称不能为空");
-                            }else if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsCode()).equals("")){
-                                throw new BusinessException("货品编号不能为空");
+                if(trimAndNullAsEmpty(ofcOrderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)
+                        || trimAndNullAsEmpty(ofcOrderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED)){
+                    for (GoodsAmountDetailDto goodsAmountDetailDto:goodsAmountSyncDto.getGoodsAmountDetailDtoList()) {
+                        if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsName()).equals("")){
+                            throw new BusinessException("货品名称不能为空");
+                        }else if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsCode()).equals("")){
+                            throw new BusinessException("货品编号不能为空");
+                        }
+                        try {
+                            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+                            ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
+                            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
+                            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
+                            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+                            if(null!=ofcGoodsDetailsInfoList &&
+                                    ofcGoodsDetailsInfoList.size()>0){
+                                OfcGoodsRecordModification ofcGoodsRecordModification = new OfcGoodsRecordModification();
+                                ofcGoodsRecordModification.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                                if(null == ofcGoodsDetailsInfoList.get(0).getQuantity()){
+                                    ofcGoodsRecordModification.setValueBeforeModifyQty("");
+                                }else {
+                                    ofcGoodsRecordModification.setValueBeforeModifyQty(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getQuantity().toString()));
+                                }
+                                if(null == goodsAmountDetailDto.getQty()){
+                                    ofcGoodsRecordModification.setValueAfterModifyQty("");
+                                }else {
+                                    ofcGoodsRecordModification.setValueAfterModifyQty(trimAndNullAsEmpty(goodsAmountDetailDto.getQty()));
+                                }
+                                if(null == ofcGoodsDetailsInfoList.get(0).getWeight()){
+                                    ofcGoodsRecordModification.setValueBeforeModifyWet("");
+                                }else {
+                                    ofcGoodsRecordModification.setValueBeforeModifyWet(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getWeight().toString()));
+                                }
+                                if(null == goodsAmountDetailDto.getWeight()){
+                                    ofcGoodsRecordModification.setValueAfterModifyWet("");
+                                }else {
+                                    ofcGoodsRecordModification.setValueAfterModifyWet(trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()));
+                                }
+                                if(null == ofcGoodsDetailsInfoList.get(0).getCubage()){
+                                    ofcGoodsRecordModification.setValueBeforeModifyVol("");
+                                }else {
+                                    ofcGoodsRecordModification.setValueBeforeModifyVol(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getCubage().toString()));
+                                }
+                                if(null == goodsAmountDetailDto.getVolume()){
+                                    ofcGoodsRecordModification.setValueAfterModifyVol("");
+                                }else {
+                                    ofcGoodsRecordModification.setValueAfterModifyVol(trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()));
+                                }
                             }
-                            try {
-                                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-                                ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
-                                ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-                                ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
-                                List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+                        } catch (Exception e) {
+                            logger.error("订单中心记录需要更新货品信息失败",e.getMessage(),e);
+                            throw new BusinessException("订单中心记录需要更新货品信息失败",e.getMessage(),e);
+                        }
+                    }
+                }else {
+                    for (GoodsAmountDetailDto goodsAmountDetailDto:goodsAmountSyncDto.getGoodsAmountDetailDtoList()) {
+                        if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsName()).equals("")){
+                            throw new BusinessException("货品名称不能为空");
+                        }else if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsCode()).equals("")){
+                            throw new BusinessException("货品编号不能为空");
+                        }
+                        try {
+                            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+                            ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
+                            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
+                            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
+                            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+                            if(null!=ofcGoodsDetailsInfoList &&
+                                    ofcGoodsDetailsInfoList.size()>0){
                                 ofcGoodsDetailsInfo=ofcGoodsDetailsInfoList.get(0);
                                 if(!trimAndNullAsEmpty(goodsAmountDetailDto.getQty()).equals("")){
                                     ofcGoodsDetailsInfo.setQuantity(new BigDecimal(goodsAmountDetailDto.getQty()));
@@ -80,15 +136,16 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                                     ofcGoodsDetailsInfo.setCubage(new BigDecimal(goodsAmountDetailDto.getVolume()));
                                 }
                                 ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
-                            } catch (Exception e) {
-                                logger.error("订单中心更新货品信息失败",e.getMessage(),e);
-                                throw new BusinessException("订单中心更新货品信息失败",e.getMessage(),e);
                             }
+                        } catch (Exception e) {
+                            logger.error("订单中心更新货品信息失败",e.getMessage(),e);
+                            throw new BusinessException("订单中心更新货品信息失败",e.getMessage(),e);
                         }
-                        //调结算中心接口并推送AC
-                        //再次推送TFC
-                        tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
                     }
+                    //调结算中心接口并推送AC
+                    //再次推送TFC
+                    tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+                }
             }
         }
         return null;
