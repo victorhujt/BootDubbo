@@ -2793,7 +2793,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if(null != invalidTime){
                 inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
             }
-            inventoryDTO.setAvailableQty(ofcGoodsDetailsInfo.getQuantity().doubleValue());
+            inventoryDTO.setQuantity(ofcGoodsDetailsInfo.getQuantity().doubleValue());
             inventoryGoods.add(inventoryDTO);
         }
         return whcOrderCancelEdasService.validateStockCount(inventoryGoods);
