@@ -285,6 +285,7 @@
                     vm.errorMsgShow = false;
                     var tableHeadMsg = response.result[0];
                     var orderMsg = response.result[1];
+                    var orderMsgForSave = response.result[1];
                     vm.countImportNum = response.result[2];
                     vm.countImportOrderNum = response.result[3];
 
@@ -306,7 +307,7 @@
                             var items = itemIn.split('@');
                             var propertyCode = items[1];
                             if(propertyCode == 'businessType'){
-                                itemOut[propertyCode] = vm.convertCodeToName(itemOut[propertyCode])
+                                itemOut[propertyCode] = vm.convertCodeToName(itemOut[propertyCode]);
                             }
                             tableRow[propertyCode] = itemOut[propertyCode];
                         });
@@ -315,7 +316,7 @@
                     if(tableData.length >= 20){
                         vm.showButtomBtn = true;
                     }
-                    vm.orderList = orderMsg;
+                    vm.orderList = orderMsgForSave;
                 }
             },
             handleError(err, response, file) {
