@@ -362,6 +362,7 @@
             },
             checkStock(){
                 var vm = this;
+                vm.checkStockData = [];
                 var param = {};
                 param.orderList = JSON.stringify(vm.orderList);
                 var url = "/ofc/storage_template/check_stock";
