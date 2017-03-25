@@ -6,10 +6,7 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcGoodsRecordModification;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.service.GoodsAmountSyncService;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
-import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
-import com.xescm.ofc.service.OfcOrderNewstatusService;
+import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
@@ -40,6 +37,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Resource
     private TfcUpdateOrderEdasService tfcUpdateOrderEdasService;
+    @Resource
+    private OfcGoodsRecordModificationService ofcGoodsRecordModificationService;
 
     public Wrapper<?> GoodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto){
         if(trimAndNullAsEmpty(goodsAmountSyncDto.getCustCode()).equals("")){
@@ -66,51 +65,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                         }else if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsCode()).equals("")){
                             throw new BusinessException("货品编号不能为空");
                         }
-                        try {
-                            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-                            ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
-                            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-                            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
-                            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
-                            if(null!=ofcGoodsDetailsInfoList &&
-                                    ofcGoodsDetailsInfoList.size()>0){
-                                OfcGoodsRecordModification ofcGoodsRecordModification = new OfcGoodsRecordModification();
-                                ofcGoodsRecordModification.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                                if(null == ofcGoodsDetailsInfoList.get(0).getQuantity()){
-                                    ofcGoodsRecordModification.setValueBeforeModifyQty("");
-                                }else {
-                                    ofcGoodsRecordModification.setValueBeforeModifyQty(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getQuantity().toString()));
-                                }
-                                if(null == goodsAmountDetailDto.getQty()){
-                                    ofcGoodsRecordModification.setValueAfterModifyQty("");
-                                }else {
-                                    ofcGoodsRecordModification.setValueAfterModifyQty(trimAndNullAsEmpty(goodsAmountDetailDto.getQty()));
-                                }
-                                if(null == ofcGoodsDetailsInfoList.get(0).getWeight()){
-                                    ofcGoodsRecordModification.setValueBeforeModifyWet("");
-                                }else {
-                                    ofcGoodsRecordModification.setValueBeforeModifyWet(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getWeight().toString()));
-                                }
-                                if(null == goodsAmountDetailDto.getWeight()){
-                                    ofcGoodsRecordModification.setValueAfterModifyWet("");
-                                }else {
-                                    ofcGoodsRecordModification.setValueAfterModifyWet(trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()));
-                                }
-                                if(null == ofcGoodsDetailsInfoList.get(0).getCubage()){
-                                    ofcGoodsRecordModification.setValueBeforeModifyVol("");
-                                }else {
-                                    ofcGoodsRecordModification.setValueBeforeModifyVol(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getCubage().toString()));
-                                }
-                                if(null == goodsAmountDetailDto.getVolume()){
-                                    ofcGoodsRecordModification.setValueAfterModifyVol("");
-                                }else {
-                                    ofcGoodsRecordModification.setValueAfterModifyVol(trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()));
-                                }
-                            }
-                        } catch (Exception e) {
-                            logger.error("订单中心记录需要更新货品信息失败",e.getMessage(),e);
-                            throw new BusinessException("订单中心记录需要更新货品信息失败",e.getMessage(),e);
-                        }
+                        //增加记录到货品修改记录表
+                        addGoodsModifyRecord(goodsAmountDetailDto,ofcFundamentalInformation);
                     }
                 }else {
                     for (GoodsAmountDetailDto goodsAmountDetailDto:goodsAmountSyncDto.getGoodsAmountDetailDtoList()) {
@@ -119,28 +75,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                         }else if(trimAndNullAsEmpty(goodsAmountDetailDto.getGoodsCode()).equals("")){
                             throw new BusinessException("货品编号不能为空");
                         }
-                        try {
-                            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
-                            ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
-                            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-                            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
-                            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
-                            if(null!=ofcGoodsDetailsInfoList &&
-                                    ofcGoodsDetailsInfoList.size()>0){
-                                ofcGoodsDetailsInfo=ofcGoodsDetailsInfoList.get(0);
-                                if(!trimAndNullAsEmpty(goodsAmountDetailDto.getQty()).equals("")){
-                                    ofcGoodsDetailsInfo.setQuantity(new BigDecimal(goodsAmountDetailDto.getQty()));
-                                }else if(!trimAndNullAsEmpty(goodsAmountDetailDto.getWeight()).equals("")){
-                                    ofcGoodsDetailsInfo.setWeight(new BigDecimal(goodsAmountDetailDto.getWeight()));
-                                }else if(!trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()).equals("")){
-                                    ofcGoodsDetailsInfo.setCubage(new BigDecimal(goodsAmountDetailDto.getVolume()));
-                                }
-                                ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
-                            }
-                        } catch (Exception e) {
-                            logger.error("订单中心更新货品信息失败",e.getMessage(),e);
-                            throw new BusinessException("订单中心更新货品信息失败",e.getMessage(),e);
-                        }
+                        //修改货品信息
+                        editGoodsDetailInfo(goodsAmountDetailDto);
                     }
                     //调结算中心接口并推送AC
                     //再次推送TFC
@@ -149,5 +85,79 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             }
         }
         return null;
+    }
+
+    private void editGoodsDetailInfo(GoodsAmountDetailDto goodsAmountDetailDto){
+        try {
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
+            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
+            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+            if(null!=ofcGoodsDetailsInfoList &&
+                    ofcGoodsDetailsInfoList.size()>0){
+                ofcGoodsDetailsInfo=ofcGoodsDetailsInfoList.get(0);
+                if(!trimAndNullAsEmpty(goodsAmountDetailDto.getQty()).equals("")){
+                    ofcGoodsDetailsInfo.setQuantity(new BigDecimal(goodsAmountDetailDto.getQty()));
+                }else if(!trimAndNullAsEmpty(goodsAmountDetailDto.getWeight()).equals("")){
+                    ofcGoodsDetailsInfo.setWeight(new BigDecimal(goodsAmountDetailDto.getWeight()));
+                }else if(!trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()).equals("")){
+                    ofcGoodsDetailsInfo.setCubage(new BigDecimal(goodsAmountDetailDto.getVolume()));
+                }
+                ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
+            }
+        } catch (Exception e) {
+            logger.error("订单中心更新货品信息失败",e.getMessage(),e);
+            throw new BusinessException("订单中心更新货品信息失败",e.getMessage(),e);
+        }
+    }
+
+    private void addGoodsModifyRecord(GoodsAmountDetailDto goodsAmountDetailDto,OfcFundamentalInformation ofcFundamentalInformation){
+        try {
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
+            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
+            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+            if(null!=ofcGoodsDetailsInfoList &&
+                    ofcGoodsDetailsInfoList.size()>0){
+                OfcGoodsRecordModification ofcGoodsRecordModification = new OfcGoodsRecordModification();
+                ofcGoodsRecordModification.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                if(null == ofcGoodsDetailsInfoList.get(0).getQuantity()){
+                    ofcGoodsRecordModification.setValueBeforeModifyQty("");
+                }else {
+                    ofcGoodsRecordModification.setValueBeforeModifyQty(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getQuantity().toString()));
+                }
+                if(null == goodsAmountDetailDto.getQty()){
+                    ofcGoodsRecordModification.setValueAfterModifyQty("");
+                }else {
+                    ofcGoodsRecordModification.setValueAfterModifyQty(trimAndNullAsEmpty(goodsAmountDetailDto.getQty()));
+                }
+                if(null == ofcGoodsDetailsInfoList.get(0).getWeight()){
+                    ofcGoodsRecordModification.setValueBeforeModifyWet("");
+                }else {
+                    ofcGoodsRecordModification.setValueBeforeModifyWet(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getWeight().toString()));
+                }
+                if(null == goodsAmountDetailDto.getWeight()){
+                    ofcGoodsRecordModification.setValueAfterModifyWet("");
+                }else {
+                    ofcGoodsRecordModification.setValueAfterModifyWet(trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()));
+                }
+                if(null == ofcGoodsDetailsInfoList.get(0).getCubage()){
+                    ofcGoodsRecordModification.setValueBeforeModifyVol("");
+                }else {
+                    ofcGoodsRecordModification.setValueBeforeModifyVol(trimAndNullAsEmpty(ofcGoodsDetailsInfoList.get(0).getCubage().toString()));
+                }
+                if(null == goodsAmountDetailDto.getVolume()){
+                    ofcGoodsRecordModification.setValueAfterModifyVol("");
+                }else {
+                    ofcGoodsRecordModification.setValueAfterModifyVol(trimAndNullAsEmpty(goodsAmountDetailDto.getVolume()));
+                }
+                ofcGoodsRecordModificationService.save(ofcGoodsRecordModification);
+            }
+        } catch (Exception e) {
+            logger.error("订单中心记录需要更新货品信息失败",e.getMessage(),e);
+            throw new BusinessException("订单中心记录需要更新货品信息失败",e.getMessage(),e);
+        }
     }
 }
