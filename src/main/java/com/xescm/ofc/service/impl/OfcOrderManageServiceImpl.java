@@ -3005,7 +3005,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         }
 
-        //2017年3月25日 modified by lyh  编辑时, 需要修正四级地址的订单进行修正
+        //2017年3月25日 modified by lyh 编辑后将之前无法识别的地址信息匹配表补充完整
         this.fixAddressWhenEdit(reviewTag, ofcDistributionBasicInfo);
 
         //配送基本信息
@@ -3089,7 +3089,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param reviewTag 标志位
      * @param ofcDistributionBasicInfo 运输信息
      */
-    private void fixAddressWhenEdit(String reviewTag, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+    public void fixAddressWhenEdit(String reviewTag, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
             String departurePlace = ofcDistributionBasicInfo.getDeparturePlace();
             String destination = ofcDistributionBasicInfo.getDestination();

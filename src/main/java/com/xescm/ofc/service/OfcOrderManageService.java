@@ -67,4 +67,6 @@ public interface OfcOrderManageService {
     void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus);
 
     void pullOfcOrderPlanCode(AcPlanDto acPlanDto);
+
+    void fixAddressWhenEdit(String orderTagStockEdit, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 }

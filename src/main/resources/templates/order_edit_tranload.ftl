@@ -2231,7 +2231,6 @@
     });
 
     $("#orderPlaceConTableBtn").click(function () {
-      debugger;
       /*$("#goodsInfoListDiv tr td input").css("border-color","#cacaca");
       $("#goodsInfoListDiv tr td div.has-error").remove();
 
