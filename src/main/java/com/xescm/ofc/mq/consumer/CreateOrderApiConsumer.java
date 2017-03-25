@@ -15,10 +15,8 @@ import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
-import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.service.OfcDmsCallbackStatusService;
-import com.xescm.ofc.service.OfcOrderStatusService;
-import com.xescm.ofc.service.OfcPlanFedBackService;
+import com.xescm.ofc.service.*;
+import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -52,6 +50,9 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     @Autowired
     private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
+
+    @Autowired
+    private GoodsAmountSyncService goodsAmountSyncService;
 
     @Autowired
     private MqConfig mqConfig;
@@ -109,6 +110,22 @@ public class CreateOrderApiConsumer implements MessageListener {
                 }catch (Exception ex){
                     logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage(),ex);
                 }
+            }else if(message.getTag().equals("goodsAmountSync")){//众品对接同步发货单
+                //接收分拣中心回传的状态
+                logger.info("对接中心同步运输单消息体:{}",messageBody);
+                logger.info("订单中心消费对接中心同步运输单开始消费topic:{},tag:{},key{}",topicName,tag,key);
+                GoodsAmountSyncDto goodsAmountSyncDto;
+                try {
+                    goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
+                    if(!keyList.contains(key)){
+                        goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
+                    }else{
+                        keyList.add(key);
+                    }
+                } catch (Exception e) {
+                    logger.error("订单中心消费对接中心同步运输单出错:{}",e.getMessage(),e);
+                }
+
             }
 
         }else if(StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())){
