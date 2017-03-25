@@ -34,6 +34,7 @@ import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.enums.OrderSourceEnum;
 import com.xescm.ofc.enums.PlatformTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.tfc.TfcTransport;
 import com.xescm.ofc.model.dto.tfc.TfcTransportDetail;
@@ -141,6 +142,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private RmcServiceCoverageEdasService rmcServiceCoverageEdasService;
     @Resource
+    private OfcAddressReflectService ofcAddressReflectService;
+    @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
     @Resource
     private CodeGenUtils codeGenUtils;
@@ -169,10 +172,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private CancelOrderEdasService cancelOrderEdasService;
     @Resource
     private OfcOrderStatusService ofcOrdertatusService;
-
     @Resource
-    private OfcOrderNewstatusService ofcOrderNewstatusService;
-
+    private OfcAddressReflectMapper ofcAddressReflectMapper;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -3004,6 +3005,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         }
 
+        //2017年3月25日 modified by lyh 编辑后将之前无法识别的地址信息匹配表补充完整
+        this.fixAddressWhenEdit(reviewTag, ofcDistributionBasicInfo);
+
         //配送基本信息
         ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
         ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
@@ -3081,9 +3085,43 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     }
 
     /**
+     * 编辑后将地址不完整的订单的地址信息补充完整
+     * @param reviewTag 标志位
+     * @param ofcDistributionBasicInfo 运输信息
+     */
+    public void fixAddressWhenEdit(String reviewTag, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
+            String departurePlace = ofcDistributionBasicInfo.getDeparturePlace();
+            String destination = ofcDistributionBasicInfo.getDestination();
+            if(!PubUtils.isSEmptyOrNull(departurePlace)){
+                OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
+                if(null != ofcAddressReflect && PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
+                    ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
+                    int update = ofcAddressReflectMapper.updateByAddress(ofcAddressReflect);
+                    if(update < 1){
+                        logger.error("更新出发明细地址映射失败!");
+//                        throw new BusinessException("更新出发明细地址映射失败!");
+                    }
+                }
+            }
+            if(!PubUtils.isSEmptyOrNull(destination)){
+                OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
+                if(null != ofcAddressReflect && PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
+                    ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
+                    int update = ofcAddressReflectMapper.updateByAddress(ofcAddressReflect);
+                    if(update < 1){
+                        logger.error("更新到达明细地址映射失败!");
+//                        throw new BusinessException("更新到达明细地址映射失败!");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 订单的复制
      *
-     * @param orderCode
+     * @param orderCode 订单编号
      * @return
      */
     @Override
@@ -3343,7 +3381,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         }
                         InventoryDTO inventoryDTO = new InventoryDTO();
                         inventoryDTO.setLineNo(String.valueOf(++count));
-                        inventoryDTO.setConsigneeCode(ofcFundamentalInformation.getCustCode());
+                        inventoryDTO.setCustomerCode(ofcFundamentalInformation.getCustCode());
                         inventoryDTO.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
                         inventoryDTO.setSkuCode(ofcGoodsDetailsInfo.getGoodsCode());
                         inventoryDTO.setLotatt05(ofcGoodsDetailsInfo.getProductionBatch());

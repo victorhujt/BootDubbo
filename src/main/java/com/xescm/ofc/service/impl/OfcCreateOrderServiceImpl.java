@@ -246,14 +246,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = ofcFundamentalInformation.getCustCode();
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
-        String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
-        String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
-        String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
-        String departureCity = ofcDistributionBasicInfo.getDepartureCity();
-        String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
 
-        boolean sEmptyOrNull = !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
-                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
+
+        boolean sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
         this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
             String orderCode = information.getOrderCode();
@@ -287,6 +282,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     //然后再更新运输信息
                     ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
                     //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
+                    sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
                     if(sEmptyOrNull){
                         this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                     }
@@ -322,6 +318,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     //然后再保存运输信息
                     ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
                     //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
+                    sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
                     if(sEmptyOrNull){
                         this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                     }
@@ -335,6 +332,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
+    }
+
+    private boolean checkAddressPass(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
+        String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
+        String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
+        String departureCity = ofcDistributionBasicInfo.getDepartureCity();
+        String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
+        return !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
+                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
     }
 
     private void fixOrEeAddrCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
@@ -361,12 +368,19 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //调用EPC接口进行解析
         if(!PubUtils.isSEmptyOrNull(departurePlace)){
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
-            if(null != ofcAddressReflect){
+            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
             } else {
                 Wrapper departurePlaceResult = epcBaiduAddrService.showLocationStr(departurePlace);
                 if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || null == departurePlaceResult.getResult()){
                     logger.error("出发完整地址调用EPC接口解析完整地址失败! ");
+                    ofcAddressReflect = new OfcAddressReflect();
+                    ofcAddressReflect.setAddress(departurePlace);
+                    int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
+                    if(insert < 1){
+                        logger.error("存储出发完整地址映射失败!");
+                        throw new BusinessException("存储出发完整地址映射失败!");
+                    }
                 } else {
                     com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject((String) departurePlaceResult.getResult());
                     Object departureProvince = departurePlaceObj.get("province");
@@ -374,28 +388,30 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     Object departureDistrict = departurePlaceObj.get("district");
                     if(null != departureProvince){
                         String depProvince = (String) departureProvince;
+                        ofcDistributionBasicInfo.setDepartureProvince(depProvince);
                         if(null != departureCity){
                             String depCity = (String) departureCity;
+                            ofcDistributionBasicInfo.setDepartureCity(depCity);
                             if(null != departureDistrict){
                                 String depDistrict = (String) departureDistrict;
                                 ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
                                 //调用RMC接口, 查询省市区名称对应的编码, 并赋值
                                 String departuePlaceCode = this.explainAddressByRmc(depProvince, depCity, depDistrict);
                                 if(PubUtils.isSEmptyOrNull(departuePlaceCode)){
-                                    logger.error("调用RMC接口, 查询省市区名称对应的编码失败! ");
+                                    logger.error("调用RMC接口, 查询出发省市区名称对应的编码失败! ");
                                 }
                                 ofcDistributionBasicInfo.setDeparturePlaceCode(departuePlaceCode);
-                                ofcAddressReflect = new OfcAddressReflect();
+                                /*ofcAddressReflect = new OfcAddressReflect();
                                 ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
                                 int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
                                 if(insert < 1){
                                     logger.error("存储明细地址映射失败!");
                                     throw new BusinessException("存储明细地址映射失败!");
-                                }
+                                }*/
                             }
-                            ofcDistributionBasicInfo.setDepartureCity(depCity);
+
                         }
-                        ofcDistributionBasicInfo.setDepartureProvince(depProvince);
+
                     }
                 }
             }
@@ -403,12 +419,19 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         if(!PubUtils.isSEmptyOrNull(destination)){
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
-            if(null != ofcAddressReflect){
+            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
             } else {
                 Wrapper destinationResult = epcBaiduAddrService.showLocationStr(destination);
                 if(destinationResult.getCode() == Wrapper.ERROR_CODE || null == destinationResult.getResult()){
-                    logger.error("出发完整地址调用EPC接口解析完整地址失败! ");
+                    logger.error("到达完整地址调用EPC接口解析完整地址失败! ");
+                    ofcAddressReflect = new OfcAddressReflect();
+                    ofcAddressReflect.setAddress(destination);
+                    int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
+                    if(insert < 1){
+                        logger.error("存储到达完整地址映射失败!");
+                        throw new BusinessException("存储到达完整地址映射失败!");
+                    }
                 } else {
                     com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject((String) destinationResult.getResult());
                     Object destinationProvince = destinationObj.get("province");
@@ -416,28 +439,30 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     Object destinationDistrict = destinationObj.get("district");
                     if(null != destinationProvince){
                         String desProvince = (String) destinationProvince;
+                        ofcDistributionBasicInfo.setDestinationProvince(desProvince);
                         if(null != destinationCity){
                             String desCity = (String) destinationCity;
+                            ofcDistributionBasicInfo.setDestinationCity(desCity);
                             if(null != destinationDistrict){
                                 String desDistrict = (String) destinationDistrict;
                                 ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
                                 //调用RMC接口, 查询省市区名称对应的编码, 并赋值
                                 String destinationCode = this.explainAddressByRmc(desProvince, desCity, desDistrict);
                                 if(PubUtils.isSEmptyOrNull(destinationCode)){
-                                    logger.error("调用RMC接口, 查询省市区名称对应的编码失败! ");
+                                    logger.error("调用RMC接口, 查询到达省市区名称对应的编码失败! ");
                                 }
                                 ofcDistributionBasicInfo.setDeparturePlaceCode(destinationCode);
-                                ofcAddressReflect = new OfcAddressReflect();
+                                /*ofcAddressReflect = new OfcAddressReflect();
                                 ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
                                 int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
                                 if(insert < 1){
                                     logger.error("存储明细地址映射失败!");
                                     throw new BusinessException("存储明细地址映射失败!");
-                                }
+                                }*/
                             }
-                            ofcDistributionBasicInfo.setDestinationCity(desCity);
+
                         }
-                        ofcDistributionBasicInfo.setDestinationProvince(desProvince);
+
                     }
                 }
             }

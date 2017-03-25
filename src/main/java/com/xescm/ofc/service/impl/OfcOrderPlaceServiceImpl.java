@@ -812,6 +812,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if(select.size() > 0){//有运输信息
                 ofcDistributionBasicInfoService.updateAddressByOrderCode(ofcDistributionBasicInfo);
             }
+            //2017年3月25日 modified by lyh 增加逻辑: 编辑后将之前无法识别的地址信息匹配表补充完整
+            ofcOrderManageService.fixAddressWhenEdit(ORDER_TAG_STOCK_EDIT, ofcDistributionBasicInfo);
         }else{
             throw new BusinessException("您的订单类型系统无法识别!");
         }

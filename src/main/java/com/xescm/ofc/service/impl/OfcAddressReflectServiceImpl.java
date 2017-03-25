@@ -87,6 +87,7 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
             ofcAddressReflect.setCity(ofcDistributionBasicInfo.getDepartureCity());
             ofcAddressReflect.setDistrict(ofcDistributionBasicInfo.getDepartureDistrict());
             ofcAddressReflect.setStreet(ofcDistributionBasicInfo.getDepartureTowns());
+            ofcAddressReflect.setAddress(ofcDistributionBasicInfo.getDeparturePlace());
             if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())){
                 split = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
             }
@@ -96,6 +97,7 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
             ofcAddressReflect.setCity(ofcDistributionBasicInfo.getDestinationCity());
             ofcAddressReflect.setDistrict(ofcDistributionBasicInfo.getDestinationDistrict());
             ofcAddressReflect.setStreet(ofcDistributionBasicInfo.getDestinationTowns());
+            ofcAddressReflect.setAddress(ofcDistributionBasicInfo.getDestination());
             if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())){
                 split = ofcDistributionBasicInfo.getDestinationCode().split(",");
             }

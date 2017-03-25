@@ -8,7 +8,7 @@ public class OfcAddressReflect {
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
     private String id;
 
     /**
