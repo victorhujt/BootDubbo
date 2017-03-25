@@ -306,10 +306,13 @@
                         $.each(tableHeadMsg, function (indexIn, itemIn) {
                             var items = itemIn.split('@');
                             var propertyCode = items[1];
+                            var businessName = '';
                             if(propertyCode == 'businessType'){
-                                itemOut[propertyCode] = vm.convertCodeToName(itemOut[propertyCode]);
+                                businessName = vm.convertCodeToName(itemOut[propertyCode]);
+                                tableRow[propertyCode] = businessName;
+                            } else {
+                                tableRow[propertyCode] = itemOut[propertyCode];
                             }
-                            tableRow[propertyCode] = itemOut[propertyCode];
                         });
                         tableData.push(tableRow);
                     });
@@ -413,16 +416,17 @@
                 vm.tableData = [];
                 vm.orderMsgShow = false;
             },convertCodeToName(businessType){
-                switch (businessType) {
+                var businessName = businessType;
+                switch (businessName) {
                     //出库
-                    case '610': businessType = '销售出库'; break; case '611': businessType = '调拨出库'; break; case '612': businessType = '报损出库'; break;
-                    case '613': businessType = '其他出库'; break; case '614': businessType = '分拨出库'; break;
+                    case '610': businessName = '销售出库'; break; case '611': businessName = '调拨出库'; break; case '612': businessName = '报损出库'; break;
+                    case '613': businessName = '其他出库'; break; case '614': businessName = '分拨出库'; break;
                     //入库
-                    case '620': businessType = '采购入库'; break; case '621': businessType = '调拨入库'; break; case '622': businessType = '退货入库'; break;
-                    case '623': businessType = '加工入库'; break;  case '624': businessType = '盘盈入库'; break; case '625': businessType = '流通入库'; break;
-                    case '626': businessType = '其他入库'; break;  case '627': businessType = '分拨入库'; break;
+                    case '620': businessName = '采购入库'; break; case '621': businessName = '调拨入库'; break; case '622': businessName = '退货入库'; break;
+                    case '623': businessName = '加工入库'; break;  case '624': businessName = '盘盈入库'; break; case '625': businessName = '流通入库'; break;
+                    case '626': businessName = '其他入库'; break;  case '627': businessName = '分拨入库'; break;
                 }
-                return businessType;
+                return businessName;
             }
         }
     };
