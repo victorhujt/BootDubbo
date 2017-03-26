@@ -16,7 +16,7 @@ import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.csc.provider.CscWarehouseEdasService;
-import com.xescm.epc.edas.service.EpcBaiduAddrService;
+import com.xescm.epc.edas.service.EpcBaiDuEdasService;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -80,7 +80,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Resource
     private RmcAddressEdasService rmcAddressEdasService;
     @Resource
-    private EpcBaiduAddrService epcBaiduAddrService;
+    private EpcBaiDuEdasService epcBaiDuEdasService;
     @Resource
     private OfcCreateOrderMapper createOrdersMapper;
     @Resource
@@ -371,7 +371,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
             } else {
-                Wrapper departurePlaceResult = epcBaiduAddrService.showLocationStr(departurePlace);
+                Wrapper departurePlaceResult = epcBaiDuEdasService.showLocationStr(departurePlace);
                 if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || null == departurePlaceResult.getResult()){
                     logger.error("出发完整地址调用EPC接口解析完整地址失败! ");
                     ofcAddressReflect = new OfcAddressReflect();
@@ -422,7 +422,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
             } else {
-                Wrapper destinationResult = epcBaiduAddrService.showLocationStr(destination);
+                Wrapper destinationResult = epcBaiDuEdasService.showLocationStr(destination);
                 if(destinationResult.getCode() == Wrapper.ERROR_CODE || null == destinationResult.getResult()){
                     logger.error("到达完整地址调用EPC接口解析完整地址失败! ");
                     ofcAddressReflect = new OfcAddressReflect();

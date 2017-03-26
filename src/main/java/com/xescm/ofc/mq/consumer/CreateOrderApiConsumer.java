@@ -82,7 +82,6 @@ public class CreateOrderApiConsumer implements MessageListener {
                 try {
                     if(!keyList.contains(key)) {
                         result = createOrderService.createOrder(messageBody);
-                    } else {
                         keyList.add(key);
                     }
                 } catch (Exception ex) {
@@ -110,10 +109,10 @@ public class CreateOrderApiConsumer implements MessageListener {
                 }catch (Exception ex){
                     logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage(),ex);
                 }
-            }else if(message.getTag().equals("goodsAmountSync")){//众品对接同步发货单
+            }else if(message.getTag().equals("goodsAmountSync")){//众品订单交货量同步接口
                 //接收分拣中心回传的状态
-                logger.info("对接中心同步运输单消息体:{}",messageBody);
-                logger.info("订单中心消费对接中心同步运输单开始消费topic:{},tag:{},key{}",topicName,tag,key);
+                logger.info("对接中心订单交货量调整消息体:{}",messageBody);
+                logger.info("订单中心消费对接中心同步交货量开始消费topic:{},tag:{},key{}",topicName,tag,key);
                 GoodsAmountSyncDto goodsAmountSyncDto;
                 try {
                     goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
@@ -123,7 +122,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                         keyList.add(key);
                     }
                 } catch (Exception e) {
-                    logger.error("订单中心消费对接中心同步运输单出错:{}",e.getMessage(),e);
+                    logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
                 }
 
             }
