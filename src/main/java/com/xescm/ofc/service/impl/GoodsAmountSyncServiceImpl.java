@@ -87,7 +87,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                                 result = WrapMapper.ok();
                             } else {
                                 result = WrapMapper.wrap(Wrapper.ERROR_CODE, "客户订单"+custOrderCode+"已经结算，无法调整数量.");
-                                logger.error("订单{}查询不到当前状态.", orderCode);
+                                logger.error("订单{}已经结算，无法调整数量.", orderCode);
                             }
                         }
                     } else {
