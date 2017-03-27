@@ -919,7 +919,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有订单波次号", rowNum + 1, cellNum + 1);
                                 continue;
                             }
-
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //2017年3月21日 追加字段: 收货人编码(收货方联系人编码), 供应商编码
                             //收货人编码
@@ -928,6 +928,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有收货人编码", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             cellValue = PubUtils.trim(cellValue);
                             if(!consigneeContactCodeCheck.containsKey(cellValue)){
                                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
@@ -968,6 +969,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有供应商编码", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             cellValue = PubUtils.trim(cellValue);
 
                             if(!supplierCodeCheck.containsKey(cellValue)){
@@ -1003,11 +1005,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            //供应商批次
                         }else if(StringUtils.equals(StorageImportOutEnum.SUPPORT_BATCH.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.error("当前行:{},列:{} 没有供应商批次", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             cellValue = PubUtils.trim(cellValue);
 
                             if(!supplierCodeCheck.containsKey(cellValue)){
