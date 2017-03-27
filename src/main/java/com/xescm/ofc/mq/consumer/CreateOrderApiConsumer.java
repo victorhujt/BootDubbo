@@ -103,7 +103,6 @@ public class CreateOrderApiConsumer implements MessageListener {
                     dmsTransferStatusDto = JSON.parseObject(messageBody,DmsTransferStatusDto.class);
                     if(!keyList.contains(key)){
                         ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferStatusDto);
-                    }else{
                         keyList.add(key);
                     }
                 }catch (Exception ex){
@@ -118,7 +117,6 @@ public class CreateOrderApiConsumer implements MessageListener {
                     goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
                     if(!keyList.contains(key)){
                         goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
-                    }else{
                         keyList.add(key);
                     }
                 } catch (Exception e) {
