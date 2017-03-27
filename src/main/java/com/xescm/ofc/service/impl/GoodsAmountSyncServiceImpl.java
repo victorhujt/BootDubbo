@@ -1,12 +1,10 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ac.provider.AcModifyOrderEdasService;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcGoodsRecordModification;
-import com.xescm.ofc.domain.OfcOrderNewstatus;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
@@ -15,6 +13,7 @@ import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -36,12 +35,21 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Resource
+    private OfcFinanceInformationService ofcFinanceInformationService;
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Resource
     private TfcUpdateOrderEdasService tfcUpdateOrderEdasService;
     @Resource
     private OfcGoodsRecordModificationService ofcGoodsRecordModificationService;
+    @Resource
+    private OfcOrderManageService ofcOrderManageService;
+    @Resource
+    private AcModifyOrderEdasService acModifyOrderEdasService;
 
+    @Transactional
     public Wrapper<?> GoodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto){
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();
@@ -73,27 +81,21 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                             logger.info("订单{}当前状态为{},不允许调整数量!", orderCode, orderStatus);
                             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "订单已经完成或取消,不允许调整数量!");
                         } else if (!PubUtils.isOEmptyOrNull(orderStatus)) {
-                            //调结算中心接口并推送AC
-
-                            for (GoodsAmountDetailDto goodsDetail : details) {
-                                if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsName())) {
-                                    throw new BusinessException("货品名称不能为空");
-                                } else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
-                                    throw new BusinessException("货品编号不能为空");
-                                }
-                                //修改货品信息
-                                editGoodsDetailInfo(ofcOrder.getOrderCode(), goodsDetail);
+                            Wrapper<Boolean> acStatus = acModifyOrderEdasService.queryOrderIncomeStatus(orderCode);
+                            if (!PubUtils.isNull(acStatus) && Wrapper.SUCCESS_CODE == acStatus.getCode()) {
+                                modifyGoodsDetails(goodsAmountSyncDto, details, orderCode);
+                                result = WrapMapper.ok();
+                            } else {
+                                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "客户订单"+custOrderCode+"已经结算，无法调整数量.");
+                                logger.error("订单{}查询不到当前状态.", orderCode);
                             }
-                            //再次推送TFC
-                            tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
-                            result = WrapMapper.ok();
                         }
                     } else {
-                        logger.error("订单{}查询不到当前状态.", ofcOrder.getOrderCode());
+                        logger.error("订单{}查询不到当前状态.", orderCode);
                     }
                 }
             } else {
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "未查询到客户订单{}信息.");
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "未查询到客户订单"+custOrderCode+"信息.");
                 logger.error("未查询到客户订单{}信息.", custOrderCode);
             }
         } catch (BusinessException e) {
@@ -106,6 +108,41 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         return result;
     }
 
+    /**
+     *
+     * @param goodsAmountSyncDto
+     * @param details
+     * @param orderCode
+     */
+    private void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode) {
+        for (GoodsAmountDetailDto goodsDetail : details) {
+            if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsName())) {
+                throw new BusinessException("货品名称不能为空");
+            } else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
+                throw new BusinessException("货品编号不能为空");
+            }
+            // 修改货品信息
+            editGoodsDetailInfo(orderCode, goodsDetail);
+            // 添加修改记录
+            this.addGoodsModifyRecord(orderCode, goodsDetail);
+        }
+        // 调结算中心接口并推送AC
+        OfcFundamentalInformation orderInfo = ofcFundamentalInformationService.selectByKey(orderCode);
+        OfcDistributionBasicInfo orderDistInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+        OfcFinanceInformation orderFinanceInfo = ofcFinanceInformationService.selectByKey(orderCode);
+        List<OfcGoodsDetailsInfo> detailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+        if (!PubUtils.isNull(orderInfo) && !PubUtils.isNull(orderInfo) && !PubUtils.isNull(orderFinanceInfo) && !PubUtils.isNull(detailsInfos)) {
+            ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos);
+        }
+        //再次推送TFC
+        tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+    }
+
+    /**
+     * 修改商品数量、重量、体积
+     * @param orderCode
+     * @param goodsAmountDetailDto
+     */
     private void editGoodsDetailInfo(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
         try {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
@@ -136,9 +173,13 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         }
     }
 
-    private void addGoodsModifyRecord(GoodsAmountDetailDto goodsAmountDetailDto,OfcFundamentalInformation ofcFundamentalInformation){
+    /**
+     * 新增商品数量、重量、体积修改记录
+     * @param orderCode
+     * @param goodsAmountDetailDto
+     */
+    private void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
         try {
-            String orderCode = ofcFundamentalInformation.getOrderCode();
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
@@ -177,6 +218,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                     desc.append("商品").append(goodsAmountDetailDto.getGoodsCode()).append("体积由")
                         .append(oldVolume).append("调整为").append(modifyVolume).append(";");
                 }
+                ofcGoodsRecordModification.setModificationDesc(desc.toString());
                 ofcGoodsRecordModificationService.save(ofcGoodsRecordModification);
             }
         } catch (Exception e) {
