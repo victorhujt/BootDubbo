@@ -387,7 +387,7 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportBatch" label="供应商批次">
+                <el-table-column property="supportName" label="供应商批次">
                 <template scope="scope">
                     <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
                 </template>
@@ -783,7 +783,8 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:this.orderForm.supportName
+                        supportName:this.orderForm.supportName,
+                        supportBatch:this.orderForm.supportCode
                     };
                     this.goodsData.push(newData);
                 }
@@ -898,7 +899,6 @@
                         layer.msg("暂时未查询到货品信息！！");
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,cscGoodsVo) {
-                            debugger;
                             var goodCode={};
                             goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
                             goodCode.goodsCategory=cscGoodsVo.goodsTypeName;

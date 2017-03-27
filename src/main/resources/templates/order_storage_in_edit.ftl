@@ -392,9 +392,14 @@
                       </el-date-picker>
                   </template>
               </el-table-column>
-              <el-table-column property="supportBatch" label="供应商批次">
+              <el-table-column property="supportName" label="供应商批次">
                   <template scope="scope">
                       <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                  </template>
+              </el-table-column>
+              <el-table-column property="supportBatch"  v-if="false" label="供应商编码">
+                  <template scope="scope">
+                      <el-input v-model="orderForm.supportCode" :readOnly="true"></el-input>
                   </template>
               </el-table-column>
               <el-table-column property="goodsOperation" label="操作">
@@ -728,7 +733,9 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
-                                            good.supportName=goodDetail.supportName;
+                                            good.supportName=ofcWarehouseInformation.supportName;
+                                            good.supportBatch=ofcWarehouseInformation.supportBatch;
+                                            vueObj.orderForm.supportCode=goodDetail.supportBatch;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -916,13 +923,12 @@
                     this.orderForm.supportName=val.supportName;
                     this.orderForm.supportCode=val.supportCode;
                     this.supplierDataInfo.chosenSupplier=false;
+
                 } else {
                     this.promptInfo("请选择供应商!",'warning');
                 }
             },
             setCurrentGoodsInfo:function(){
-                debugger;
-                console.log(this.multipleSelection);
                 if(this.multipleSelection.length<1){
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
@@ -932,7 +938,6 @@
                     var val=this.multipleSelection[i];
                     var newData = {
                         goodsType: val.goodsType,
-                        goodsCategory: val.goodsCategory,
                         goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
@@ -944,7 +949,8 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:this.orderForm.supportName
+                        supportBatch:this.orderForm.supportCode,
+                        supportName:this.orderForm.supportName
                     };
                     this.goodsData.push(newData);
                 }
@@ -1205,6 +1211,11 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
+                    if(StringUtil.isEmpty(good.supportBatch)){
+                        if(!StringUtil.isEmpty(this.orderForm.supportCode)){
+                            good.supportBatch=this.orderForm.supportCode;
+                        }
+                    }
 
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){

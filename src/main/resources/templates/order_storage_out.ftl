@@ -447,9 +447,14 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportBatch" label="供应商批次">
+                <el-table-column property="supportName" label="供应商批次">
                     <template scope="scope">
                         <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="supporBatch" v-if="false" label="供应商编码">
+                    <template scope="scope">
+                        <el-input v-model="orderForm.supportCode" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
@@ -900,7 +905,8 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:this.orderForm.supportName
+                        supportBatch:this.orderForm.supportCode,
+                        supportName:this.orderForm.supportName
                     };
                     this.goodsData.push(newData);
                 }
@@ -1446,7 +1452,6 @@
                 }
             },
             validateStockCount:function(){
-                debugger;
                 var _this=this;
                 _this.goodsStockData=[];
                 if(StringUtil.isEmpty(_this.orderForm.custCode)){

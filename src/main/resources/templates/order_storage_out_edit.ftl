@@ -445,9 +445,14 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportBatch" label="供应商批次">
+                <el-table-column property="supportName" label="供应商批次">
                     <template scope="scope">
                         <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="supportBatch" v-if="false" label="供应商编码">
+                    <template scope="scope">
+                        <el-input v-model="orderForm.supporCode" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
@@ -840,7 +845,9 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
-                                            good.supportBatch=goodDetail.supportName;
+                                            good.supportName=ofcWarehouseInformation.supportName;
+                                            good.supportBatch=goodDetail.supportBatch;
+                                            vueObj.orderForm.supportCode=goodDetail.supportBatch;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -1064,7 +1071,8 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:this.orderForm.supportName
+                        supportName:this.orderForm.supportName,
+                        supportBatch:this.orderForm.supportCode
                     };
                     this.goodsData.push(newData);
                 }
@@ -1339,6 +1347,11 @@
               for(var i=0;i<goodsTable.length;i++){
                   var good=goodsTable[i];
 
+                  if(StringUtil.isEmpty(good.supportBatch)){
+                      if(!StringUtil.isEmpty(this.orderForm.supportCode)){
+                          good.supportBatch=this.orderForm.supportCode;
+                      }
+                  }
                   if(!StringUtil.isEmpty(good.unitPrice)){
                       if(isNaN(good.unitPrice)){
                           this.promptInfo("货品单价必须为数字",'error');
