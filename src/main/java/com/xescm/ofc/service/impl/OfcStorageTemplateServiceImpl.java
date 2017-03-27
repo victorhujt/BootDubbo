@@ -316,7 +316,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
         //根据模板编码和类型拿到用户保存的配置模板的映射 key是用户表头列名
         //这里是用户进行模板配置了的, 下面还有(在第一行校验表头列名的时候, 如果用户的列名能与标准列名对应上, 那么依然进行可以映射)
-        List<Object> templateReflect = getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
+        List<Object> templateReflect = this.getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
         //这里拿到的模板配置是不带同名校验的
         Map<String,OfcStorageTemplate> templateDetilMap = (Map<String, OfcStorageTemplate>) templateReflect.get(0);//key是用户表头列名  //有映射列名的
         Map<String,OfcStorageTemplate> forDefaultButNotRequired = (Map<String, OfcStorageTemplate>) templateReflect.get(1);//key是用户表头列标准编码 // 没有映射列名的
@@ -1003,6 +1003,46 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                        }else if(StringUtils.equals(StorageImportOutEnum.SUPPORT_BATCH.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有供应商批次", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+                            cellValue = PubUtils.trim(cellValue);
+
+                            if(!supplierCodeCheck.containsKey(cellValue)){
+                                CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
+                                cscSupplierInfoDto.setSupplierCode(cellValue);
+                                cscSupplierInfoDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+                                Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
+
+                                if(Wrapper.ERROR_CODE == listWrapper.getCode()){
+                                    logger.error("当前行:{},列:{} 供应商批次校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    checkPass = false;
+                                    continue;
+                                }
+                                List<CscSupplierInfoDto> result = listWrapper.getResult();
+                                //没有校验通过
+                                if(null == result || result.size() == 0){
+                                    logger.error("当前行:{},列:{} 供应商批次校验失败, 请维护", rowNum + 1, cellNum + 1);
+//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商编码【" + cellValue + "】无效！或当前客户下没有该供应商批次!");
+                                    checkPass = false;
+                                    continue;
+                                    //校验通过
+                                }else {
+                                    logger.info("当前供应商批次:{},校验通过", cellValue);
+                                    supplierCodeCheck.put(cellValue, result.get(0));
+//                                    ofcStorageTemplateDto.setCscSupplierInfoDto(result.get(0));
+                                }
+                            }else {
+                                logger.info("当前供应商批次:{},已经校验过, 不用校验", cellValue);
+                                //不用校验, 直接堆
+//                                CscSupplierInfoDto cscSupplierInfoDto = supplierCodeCheck.get(cellValue);
+//                                ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
+                            }
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                         }
                     }
                 }
@@ -1652,8 +1692,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         if(!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())){
             ofcGoodsDetailsInfo.setUnitPrice(new BigDecimal(cscGoodsApiVo.getUnitPrice()));
         }
+        String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();
         String invalidTime = ofcStorageTemplateDto.getInvalidTime();
+        ofcGoodsDetailsInfo.setSupportBatch(supportBatch);
         if(!PubUtils.isSEmptyOrNull(productionTime)){
             ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
         }
