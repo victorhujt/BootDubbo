@@ -1736,8 +1736,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }else if(indexNum == 12 && PubUtils.isSEmptyOrNull(reflectColName)){
                 throw new BusinessException(storageIn ? StorageImportInEnum.QUANTITY.getStandardColName()
                         : StorageImportOutEnum.QUANTITY.getStandardColName()  + "的模板列名不能为空!");
-            }else if(indexNum == 22 && PubUtils.isSEmptyOrNull(reflectColName)){
-                throw new BusinessException(StorageImportOutEnum.CONSIGNEE_NAME  + "的模板列名不能为空!");
+            }else if(indexNum == 22 && PubUtils.isSEmptyOrNull(reflectColName) && !storageIn){
+                throw new BusinessException(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColName()  + "的模板列名不能为空!");
             }
         }
         logger.info("校验模板必填成功!");
