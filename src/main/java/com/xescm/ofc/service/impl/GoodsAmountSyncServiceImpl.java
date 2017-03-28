@@ -159,7 +159,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos);
         }
         //再次推送TFC
-        //tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+        tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
     }
 
     /**
