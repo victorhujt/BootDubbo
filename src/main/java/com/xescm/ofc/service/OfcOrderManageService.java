@@ -67,4 +67,7 @@ public interface OfcOrderManageService {
     void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus);
 
     void pullOfcOrderPlanCode(AcPlanDto acPlanDto);
+
+    Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList,String custCode,String warehouseCode);
+
 }

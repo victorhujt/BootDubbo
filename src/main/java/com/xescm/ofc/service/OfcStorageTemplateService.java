@@ -37,4 +37,6 @@ public interface OfcStorageTemplateService {
     Wrapper storageTemplateAudit(Object result, AuthResDto authResDto);
 
     void checkTemplateListRequired(List<OfcStorageTemplate> ofcStorageTemplates);
+
+    Wrapper checkStock(String orderList) throws Exception;
 }

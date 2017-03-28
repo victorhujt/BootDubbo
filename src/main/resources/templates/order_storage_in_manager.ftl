@@ -478,7 +478,7 @@
                 var url = "/ofc/orderStorageIn/"+"?tag=manager";
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
-                window.open(html.substring(0,index) + "/index#" + url);
+                window.open(html.substring(0,index) + "/index#" + url,"_self");
             },
             editOrder:function(){
                 if(this.valiateSelectOrder()){
@@ -490,7 +490,7 @@
                     var url = "/ofc/orderStorageInEdit/"+"?orderCode="+order.orderCode;
                     var html = window.location.href;
                     var index = html.indexOf("/index#");
-                    window.open(html.substring(0,index) + "/index#" + url);
+                    window.open(html.substring(0,index) + "/index#" + url,"_self");
                 }
             },
             deleteOrder:function(){
