@@ -658,7 +658,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
                             //入库数量 or  出库数量//必填列名
                         }else if(StringUtils.equals(StorageImportInEnum.QUANTITY.getStandardColCode(), standardColCode)){
-
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 logger.info("【{}】列第{}行数据为空，请检查文件！", ofcStorageTemplateForCheck.getReflectColName(), (rowNum + 1));
                                 cellValue = "0";
