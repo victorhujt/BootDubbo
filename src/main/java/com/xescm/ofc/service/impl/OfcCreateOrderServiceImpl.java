@@ -379,7 +379,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
                     if(insert < 1){
                         logger.error("存储出发完整地址映射失败!");
-                        throw new BusinessException("存储出发完整地址映射失败!");
+//                        throw new BusinessException("存储出发完整地址映射失败!");
                     }
                 } else {
                     com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject((String) departurePlaceResult.getResult());
@@ -430,7 +430,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
                     if(insert < 1){
                         logger.error("存储到达完整地址映射失败!");
-                        throw new BusinessException("存储到达完整地址映射失败!");
+//                        throw new BusinessException("存储到达完整地址映射失败!");
                     }
                 } else {
                     com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject((String) destinationResult.getResult());
