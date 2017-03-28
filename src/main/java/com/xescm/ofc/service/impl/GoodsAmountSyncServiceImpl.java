@@ -1,5 +1,10 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.ac.domain.AcDistributionBasicInfo;
+import com.xescm.ac.domain.AcFinanceInformation;
+import com.xescm.ac.domain.AcFundamentalInformation;
+import com.xescm.ac.domain.AcGoodsDetailsInfo;
+import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.ac.provider.AcModifyOrderEdasService;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -10,6 +15,7 @@ import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,8 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
@@ -115,6 +123,9 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param orderCode
      */
     private void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode) {
+        BigDecimal quantityCount = new BigDecimal(0);
+        BigDecimal weightCount = new BigDecimal(0);
+        BigDecimal cubageCount = new BigDecimal(0);
         for (GoodsAmountDetailDto goodsDetail : details) {
             if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsName())) {
                 throw new BusinessException("货品名称不能为空");
@@ -131,11 +142,24 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         OfcDistributionBasicInfo orderDistInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
         OfcFinanceInformation orderFinanceInfo = ofcFinanceInformationService.selectByKey(orderCode);
         List<OfcGoodsDetailsInfo> detailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-        if (!PubUtils.isNull(orderInfo) && !PubUtils.isNull(orderInfo) && !PubUtils.isNull(orderFinanceInfo) && !PubUtils.isNull(detailsInfos)) {
+        for(OfcGoodsDetailsInfo detailsInfo:detailsInfos){
+            quantityCount=quantityCount.add(detailsInfo.getQuantity());
+            weightCount=quantityCount.add(detailsInfo.getWeight());
+            cubageCount=quantityCount.add(detailsInfo.getCubage());
+        }
+        orderDistInfo.setQuantity(quantityCount);
+        orderDistInfo.setWeight(weightCount);
+        orderDistInfo.setCubage(cubageCount.toString());
+        ofcDistributionBasicInfoService.update(orderDistInfo);
+        if (!PubUtils.isNull(orderInfo)
+                && !PubUtils.isNull(orderDistInfo)
+                && !PubUtils.isNull(orderFinanceInfo)
+                //&& !PubUtils.isNull(detailsInfos)
+                ) {
             ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos);
         }
         //再次推送TFC
-        tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+        //tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
     }
 
     /**
@@ -149,8 +173,9 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
             ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
+            //ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+
             if(PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)){
                 ofcGoodsDetailsInfo=ofcGoodsDetailsInfoList.get(0);
                 String quantity = goodsAmountDetailDto.getQty();
@@ -224,6 +249,51 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         } catch (Exception e) {
             logger.error("订单中心记录需要更新货品信息失败",e.getMessage(),e);
             throw new BusinessException("订单中心记录需要更新货品信息失败",e.getMessage(),e);
+        }
+    }
+
+    /**
+     * 订单信息推送结算中心
+     *
+     * @param ofcFundamentalInformation 订单基本信息
+     * @param ofcFinanceInformation     费用基本信息
+     * @param ofcDistributionBasicInfo  运输基本信息
+     * @param ofcGoodsDetailsInfos      货品明细
+     */
+    public void modifyOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
+            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+        AcOrderDto acOrderDto = new AcOrderDto();
+        try {
+            AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
+            BeanUtils.copyProperties(acFinanceInformation, ofcFinanceInformation);
+
+            AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
+            BeanUtils.copyProperties(acFundamentalInformation, ofcFundamentalInformation);
+
+            AcDistributionBasicInfo acDistributionBasicInfo = new AcDistributionBasicInfo();
+            BeanUtils.copyProperties(acDistributionBasicInfo, ofcDistributionBasicInfo);
+
+            List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
+            for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
+                AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
+                BeanUtils.copyProperties(acGoodsDetailsInfo, ofcGoodsDetailsInfo);
+                acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
+            }
+            if (acGoodsDetailsInfoList.size() < 1) {
+                throw new BusinessException("订单货品明细不能为空!");
+            }
+            acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
+            acOrderDto.setAcFinanceInformation(acFinanceInformation);
+            acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
+            acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
+
+        } catch (Exception e) {
+            logger.error("订单信息推送结算中心 转换异常, {}", e);
+        }
+        Wrapper<?> wrapper = acModifyOrderEdasService.modifyOfcOrder(acOrderDto);
+        if (ERROR_CODE == wrapper.getCode()) {
+            logger.error(wrapper.getMessage());
+            throw new BusinessException(wrapper.getMessage());
         }
     }
 }

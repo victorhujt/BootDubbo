@@ -22,6 +22,7 @@
     <hsf:consumer id="cscWarehouseEdasService" interface="com.xescm.csc.provider.CscWarehouseEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
     <!-- 结算中心 -->
     <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="acModifyOrderEdasService" interface="com.xescm.ac.provider.AcModifyOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
 
     <!-- 资源中心 -->
     <hsf:consumer id="rmcAddressEdasService" interface="com.xescm.rmc.edas.service.RmcAddressEdasService" group="xescm-rmc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
