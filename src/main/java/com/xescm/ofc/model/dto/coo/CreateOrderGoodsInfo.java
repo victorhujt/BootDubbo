@@ -1,49 +1,63 @@
 package com.xescm.ofc.model.dto.coo;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+import java.io.Serializable;
+
 /**
  * 订单中心创建订单（鲜易网）
  * 订单货品明细信息
  * Created by hiyond on 2016/11/14.
  */
-public class CreateOrderGoodsInfo {
+@XStreamAlias("orderDetail")
+public class CreateOrderGoodsInfo implements Serializable {
 
+    private static final long serialVersionUID = 7909253575176134994L;
     /**
-     * 货品代码 Y
+     * 货品代码 (必填)
      */
     private String goodsCode;
 
     /**
-     * 货品名称 Y
+     * 货品名称 (必填)
      */
     private String goodsName;
 
     /**
-     * 货品规格
+     * 货品规格(必填)
      */
     private String goodsSpec;
 
     /**
-     * 单位
+     * 单位(必填)
      */
     private String unit;
 
     /**
-     * 数量 Y
+     * 数量
      */
     private String quantity;
+    /**
+     * 重量
+     */
+    private String weight;
+    /**
+     * 体积
+     */
+    private String cubage;
 
     /**
-     * 单价
+     * 销售单价 (必填)
      */
     private String unitPrice;
 
     /**
-     * 生产批次
+     * 生产批次(必填)
      */
     private String productionBatch;
 
     /**
-     * 生产日期
+     * 生产日期(必填)
      */
     private String productionTime;
 
@@ -124,18 +138,19 @@ public class CreateOrderGoodsInfo {
         this.invalidTime = invalidTime;
     }
 
-    @Override
-    public String toString() {
-        return "CreateOrderGoodsInfo{" +
-                "goodsCode='" + goodsCode + '\'' +
-                ", goodsName='" + goodsName + '\'' +
-                ", goodsSpec='" + goodsSpec + '\'' +
-                ", unit='" + unit + '\'' +
-                ", quantity='" + quantity + '\'' +
-                ", unitPrice='" + unitPrice + '\'' +
-                ", productionBatch='" + productionBatch + '\'' +
-                ", productionTime='" + productionTime + '\'' +
-                ", invalidTime='" + invalidTime + '\'' +
-                '}';
+    public String getWeight() {
+        return weight;
+    }
+
+    public String getCubage() {
+        return cubage;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public void setCubage(String cubage) {
+        this.cubage = cubage;
     }
 }

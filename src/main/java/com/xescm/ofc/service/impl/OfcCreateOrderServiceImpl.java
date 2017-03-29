@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,11 +136,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //check 数量、重量、体积 三选一不能为空
-        resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验数据{}失败：{}", "数量、重量、体积 三选一不能为空", resultModel.getCode());
-            return resultModel;
-        }
+//        resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
+//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+//            logger.error("校验数据{}失败：{}", "数量、重量、体积 三选一不能为空", resultModel.getCode());
+//            return resultModel;
+//        }
+
+
+
         //校验：店铺编码，获取该客户下的店铺编码
         String storeCode;
         //店铺名称
@@ -181,18 +185,19 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //checkSupport(createOrderEntity, custCode);
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
-        if (!StringUtils.equals("60", orderType)) {
-            List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
-            for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
-                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-                cscGoods.setCustomerCode(custCode);
-                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
-                resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
-                if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
-                    return resultModel;
-                }
+        List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+        for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
+            CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+            cscGoods.setCustomerCode(custCode);
+            cscGoods.setGoodsCode(createOrderGoodsInfo.getGoodsCode());
+            Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
+            resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
+                return resultModel;
             }
+            //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
+            this.fixOrderGoodsMsg(createOrderEntity, createOrderGoodsInfo);
         }
 
         //转换 dto → do
@@ -213,9 +218,54 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return resultModel;
     }
 
-
-
-
+    /**
+     *  2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
+     * @param createOrderEntity 表头
+     * @param createOrderGoodsInfo 货品
+     */
+    private void fixOrderGoodsMsg(CreateOrderEntity createOrderEntity, CreateOrderGoodsInfo createOrderGoodsInfo) {
+        logger.info("表头体积重量数量计算 == > 表头 createOrderEntity :{}", createOrderEntity);
+        logger.info("表头体积重量数量计算 == > 货品 createOrderGoodsInfo :{}", createOrderGoodsInfo);
+        //货品信息
+        String quantityDetail = createOrderGoodsInfo.getQuantity();
+        String cubageDetail = createOrderGoodsInfo.getCubage();
+        String weightDetail = createOrderGoodsInfo.getWeight();
+        if(!PubUtils.isSEmptyOrNull(quantityDetail)){
+            String quantityHead = createOrderEntity.getQuantity();
+            if(PubUtils.isSEmptyOrNull(quantityHead)){
+                createOrderEntity.setQuantity("0");
+            } else {
+                BigDecimal quan = new BigDecimal(quantityDetail);
+                BigDecimal quantityResult = new BigDecimal(quantityHead);
+                quantityResult = quantityResult.add(quan);
+                createOrderEntity.setQuantity(quantityResult.toString());
+            }
+        }
+        if(!PubUtils.isSEmptyOrNull(weightDetail)){
+            String weightHead = createOrderEntity.getWeight();
+            if(PubUtils.isSEmptyOrNull(weightHead)){
+                createOrderEntity.setWeight("0");
+            } else {
+                BigDecimal weig = new BigDecimal(weightDetail);
+                BigDecimal weightHeadResult = new BigDecimal(weightHead);
+                weightHeadResult = weightHeadResult.add(weig);
+                createOrderEntity.setWeight(weightHeadResult.toString());
+            }
+        }
+        if(!PubUtils.isSEmptyOrNull(cubageDetail)){
+            String cubageHead = createOrderEntity.getCubage();
+            if(PubUtils.isSEmptyOrNull(cubageHead)){
+                createOrderEntity.setCubage("0");
+            } else {
+                BigDecimal cuba = new BigDecimal(cubageDetail);
+                BigDecimal cubageHeadResult = new BigDecimal(cubageHead);
+                cubageHeadResult = cubageHeadResult.add(cuba);
+                createOrderEntity.setCubage(cubageHeadResult.toString());
+            }
+        }
+        logger.info("表头体积重量数量计算结束 == > 表头 createOrderEntity :{}", createOrderEntity);
+        logger.info("表头体积重量数量计算结束 == > 货品 createOrderGoodsInfo :{}", createOrderGoodsInfo);
+    }
 
 
     /**
