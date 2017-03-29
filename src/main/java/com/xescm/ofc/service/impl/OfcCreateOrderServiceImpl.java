@@ -185,21 +185,21 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //checkSupport(createOrderEntity, custCode);
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
-        List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
-        for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
-            CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-            cscGoods.setCustomerCode(custCode);
-            cscGoods.setGoodsCode(createOrderGoodsInfo.getGoodsCode());
-            Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
-            resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
-            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
-                return resultModel;
+        if (!StringUtils.equals("60", orderType)) {
+            List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+            for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
+                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                cscGoods.setCustomerCode(custCode);
+                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
+                resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
+                if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
+                    return resultModel;
+                }
+                //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
+                this.fixOrderGoodsMsg(createOrderEntity, createOrderGoodsInfo);
             }
-            //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
-            this.fixOrderGoodsMsg(createOrderEntity, createOrderGoodsInfo);
         }
-
         //转换 dto → do
         CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
