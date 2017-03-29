@@ -427,12 +427,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //调用EPC接口进行解析
         if(!PubUtils.isSEmptyOrNull(departurePlace)){
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
+            logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
             if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
+                logger.info("映射成功!");
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
             } else {
+                logger.info("映射失败!");
+                logger.info("开始调用Epc接口进行解析!");
                 Wrapper departurePlaceResult = epcBaiDuEdasService.showLocationStr(departurePlace);
                 if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || null == departurePlaceResult.getResult()){
-                    logger.error("出发完整地址调用EPC接口解析完整地址失败! ");
+                    logger.error("出发完整地址调用EPC接口解析完整地址失败! destinationResult :{}", departurePlaceResult);
                     ofcAddressReflect = new OfcAddressReflect();
                     ofcAddressReflect.setAddress(departurePlace);
                     int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
@@ -455,6 +459,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                 String depDistrict = (String) departureDistrict;
                                 ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
                                 //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                                logger.info("调用RMC接口, 查询省市区名称对应的编码, 并赋值");
                                 String departuePlaceCode = this.explainAddressByRmc(depProvince, depCity, depDistrict);
                                 if(PubUtils.isSEmptyOrNull(departuePlaceCode)){
                                     logger.error("调用RMC接口, 查询出发省市区名称对应的编码失败! ");
@@ -478,12 +483,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         if(!PubUtils.isSEmptyOrNull(destination)){
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
+            logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
             if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
+                logger.info("映射成功!");
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
             } else {
+                logger.info("映射失败!");
+                logger.error("开始调用Epc接口进行解析! ");
                 Wrapper destinationResult = epcBaiDuEdasService.showLocationStr(destination);
-                if(destinationResult.getCode() == Wrapper.ERROR_CODE || null == destinationResult.getResult()){
-                    logger.error("到达完整地址调用EPC接口解析完整地址失败! ");
+                if(destinationResult == null || destinationResult.getCode() == Wrapper.ERROR_CODE || null == destinationResult.getResult()){
+                    logger.error("到达完整地址调用EPC接口解析完整地址失败! destinationResult :{}", destinationResult);
                     ofcAddressReflect = new OfcAddressReflect();
                     ofcAddressReflect.setAddress(destination);
                     int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
@@ -506,6 +515,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                 String desDistrict = (String) destinationDistrict;
                                 ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
                                 //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                                logger.info("调用RMC接口, 查询省市区名称对应的编码, 并赋值");
                                 String destinationCode = this.explainAddressByRmc(desProvince, desCity, desDistrict);
                                 if(PubUtils.isSEmptyOrNull(destinationCode)){
                                     logger.error("调用RMC接口, 查询到达省市区名称对应的编码失败! ");

@@ -35,7 +35,9 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
      */
     @Override
     public void reflectAddressToDis(OfcAddressReflect ofcAddressReflect, OfcDistributionBasicInfo ofcDistributionBasicInfo, String tag) {
-
+        logger.info("将保存的地址映射信息映射到运输信息表: ofcAddressReflect {}", ofcAddressReflect);
+        logger.info("将保存的地址映射信息映射到运输信息表: ofcDistributionBasicInfo {}", ofcDistributionBasicInfo);
+        logger.info("将保存的地址映射信息映射到运输信息表: tag{}", tag);
         String province = ofcAddressReflect.getProvince();
         String provinceCode = ofcAddressReflect.getProvinceCode();
         String city = ofcAddressReflect.getCity();

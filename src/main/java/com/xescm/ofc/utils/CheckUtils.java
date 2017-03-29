@@ -260,9 +260,6 @@ public class CheckUtils {
         if(PubUtils.isSEmptyOrNull(orderTime)) {
             return new ResultModel(CODE_0011.getCode(), CODE_0011.getDesc());
         }
-        if(!ExcelCheckUtils.checkDateTimeFormat(orderTime)){
-            return new ResultModel(CODE_0011.getCode(), CODE_0011.getDesc());
-        }
         return new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 }
