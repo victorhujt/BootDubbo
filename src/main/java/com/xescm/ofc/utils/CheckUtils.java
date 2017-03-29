@@ -232,7 +232,7 @@ public class CheckUtils {
      */
     public static ResultModel checkGoodsInfo(Wrapper<List<CscGoodsApiVo>> listWrapper, CreateOrderGoodsInfo createOrderGoodsInfo) {
         if (listWrapper.getCode() == Wrapper.ERROR_CODE) {
-            return new ResultModel(ResultModel.ResultEnum.CODE_0004);
+            return new ResultModel(ResultModel.ResultEnum.CODE_2001);
         }
         for (CscGoodsApiVo c : listWrapper.getResult()) {
             if (StringUtils.equals(c.getGoodsCode(), createOrderGoodsInfo.getGoodsCode())) {
