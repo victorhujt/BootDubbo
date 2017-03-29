@@ -95,6 +95,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Transactional
     public ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException {
         ResultModel resultModel;
+
+        //校验订单日期
+        String orderTime = createOrderEntity.getOrderTime();
+        resultModel = CheckUtils.checkOrderTime(orderTime);
+        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+            logger.error("校验订单日期【{}】失败：错误信息:{}, {}", orderTime, resultModel.getCode(), resultModel.getDesc());
+            return resultModel;
+        }
+
         //校验数据：货主编码 对应客户中心的custId
         String custCode = createOrderEntity.getCustCode();
         String custName = createOrderEntity.getCustName();

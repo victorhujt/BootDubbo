@@ -1,6 +1,7 @@
 package com.xescm.ofc.utils;
 
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
@@ -14,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.xescm.ofc.constant.ResultModel.ResultEnum.CODE_0011;
 
 /**
  * 校验
@@ -253,4 +256,13 @@ public class CheckUtils {
         return (StringUtils.isBlank(quantity) && StringUtils.isBlank(weight) && StringUtils.isBlank(cubage)) ? new ResultModel(ResultModel.ResultEnum.CODE_0007) : new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 
+    public static ResultModel checkOrderTime(String orderTime) {
+        if(PubUtils.isSEmptyOrNull(orderTime)) {
+            return new ResultModel(CODE_0011.getCode(), CODE_0011.getDesc());
+        }
+        if(!ExcelCheckUtils.checkDateTimeFormat(orderTime)){
+            return new ResultModel(CODE_0011.getCode(), CODE_0011.getDesc());
+        }
+        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+    }
 }
