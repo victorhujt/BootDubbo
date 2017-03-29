@@ -342,8 +342,8 @@ public class OfcStorageTemplateRest extends BaseController{
      * @param orderList 订单列表
      * @return 校验结果
      */
-    @RequestMapping(value = "/check_stock")
-    @ResponseBody
+//    @RequestMapping(value = "/check_stock")
+//    @ResponseBody
     public Wrapper checkStock(String orderList){
         try {
             Wrapper checkResult = ofcStorageTemplateService.checkStock(orderList);

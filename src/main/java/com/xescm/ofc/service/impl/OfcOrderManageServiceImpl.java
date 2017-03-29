@@ -163,7 +163,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private OfcOrderManageOperService ofcOrderManageOperService;
     @Resource
     private OfcOrderPlaceService ofcOrderPlaceService;
-
     @Resource
     private CscCustomerEdasService cscCustomerEdasService;
     @Resource
@@ -2901,8 +2900,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //相同货品编码数量相加
         Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
         List<OfcGoodsDetailsInfo> ofcGoodsDetail=new ArrayList<>();
-        StringBuilder key=new StringBuilder();
+
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
+            StringBuilder key=new StringBuilder();
             key.append(ofcGoodsDetails.getGoodsCode());
             if(!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())){
                 key.append(ofcGoodsDetails.getProductionBatch());
@@ -2913,10 +2913,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if(ofcGoodsDetails.getInvalidTime()!=null){
                 key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
             }
-            if(!goodInfo.containsKey(key)){
+            if(!goodInfo.containsKey(key.toString())){
                 goodInfo.put(key.toString(),ofcGoodsDetails);
             }else{
-                OfcGoodsDetailsInfo info=goodInfo.get(key);
+                OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
             }
         }
@@ -3417,28 +3417,28 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                     ofOrderDto.setDestination(address.toString());//收货人地址
                 }
-                //分拨出库不进行库存的校验
-                if (!("614".equals(ofcFundamentalInformation.getBusinessType())||"613".equals(ofcFundamentalInformation.getBusinessType()))) {
-                    //校验出库商品的库存
-                    Wrapper wrapper =validateStockCount(goodsDetailsList,ofcFundamentalInformation.getCustCode(),ofcWarehouseInformation.getWarehouseCode());
-                    if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
-                        List<ResponseMsg> msgs = null;
-                        StringBuilder message=new StringBuilder();
-                        TypeReference<List<ResponseMsg>> ResponseMsgsRef = new TypeReference<List<ResponseMsg>>() {};
-                        msgs= JacksonUtil.parseJsonWithFormat(wrapper.getMessage(),ResponseMsgsRef);
-                        if(!CollectionUtils.isEmpty(msgs)){
-                            for(int i=0;i<msgs.size();i++){
-                                ResponseMsg msg=msgs.get(i);
-                                if(i==msgs.size()-1){
-                                    message.append(msg.getMessage());
-                                }else{
-                                    message.append(",").append(msg.getMessage());
-                                }
-                            }
-                        }
-                        throw new BusinessException(message.toString());
-                    }
-                }
+//                //分拨出库不进行库存的校验
+//                if (!("614".equals(ofcFundamentalInformation.getBusinessType())||"613".equals(ofcFundamentalInformation.getBusinessType()))) {
+//                    //校验出库商品的库存
+//                    Wrapper wrapper =validateStockCount(goodsDetailsList,ofcFundamentalInformation.getCustCode(),ofcWarehouseInformation.getWarehouseCode());
+//                    if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
+//                        List<ResponseMsg> msgs = null;
+//                        StringBuilder message=new StringBuilder();
+//                        TypeReference<List<ResponseMsg>> ResponseMsgsRef = new TypeReference<List<ResponseMsg>>() {};
+//                        msgs= JacksonUtil.parseJsonWithFormat(wrapper.getMessage(),ResponseMsgsRef);
+//                        if(!CollectionUtils.isEmpty(msgs)){
+//                           for(int i=0;i<msgs.size();i++){
+//                               ResponseMsg msg=msgs.get(i);
+//                               if(i==msgs.size()-1){
+//                                   message.append(msg.getMessage());
+//                               }else{
+//                                   message.append(",").append(msg.getMessage());
+//                               }
+//                           }
+//                        }
+//                        throw new BusinessException(message.toString());
+//                    }
+//                }
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
                 //入库
                 ofOrderDto.setArriveTime(ofcWarehouseInformation.getArriveTime());

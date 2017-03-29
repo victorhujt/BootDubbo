@@ -463,7 +463,7 @@
             </el-table>
             <el-button @click="addGoods">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
-            <el-button type="primary" @click="validateStockCount">校验当前库存</el-button>
+            <#--<el-button type="primary" @click="validateStockCount">校验当前库存</el-button>-->
         </el-form>
     </div>
 </div>
