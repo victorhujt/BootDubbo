@@ -3,23 +3,23 @@ package com.xescm.ofc.service.impl;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
+import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackInventoryDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderNewstatusService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.xescm.ofc.service.OfcOrderStatusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
-import static com.xescm.ofc.constant.OrderConstConstant.ISEXCEPTION;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 @Service
 @Transactional
@@ -28,6 +28,8 @@ public class OfcOrderNewstatusServiceImpl extends BaseService<OfcOrderNewstatus>
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
     private OfcOrderNewstatusMapper ofcOrderNewstatusMapper;
+    @Resource
+   private OfcOrderStatusService ofcOrderStatusService;
 
     /**
      * 仓储中心反馈仓储订单的异常原因
@@ -44,6 +46,14 @@ public class OfcOrderNewstatusServiceImpl extends BaseService<OfcOrderNewstatus>
         ofcFundamentalInformation.setExceptionReason(feedBackInventoryDto.getReason());
         ofcFundamentalInformation.setOrderCode(orderCode);
         ofcFundamentalInformationService.update(ofcFundamentalInformation);
+
+        //将订单状态置为待审核
+        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(orderCode);
+        ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
+        ofcOrderStatus.setStatusDesc("待审核");
+        ofcOrderStatus.setLastedOperTime(new Date());
+        ofcOrderStatusService.save(ofcOrderStatus);
     }
 
     @Override

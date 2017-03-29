@@ -187,8 +187,8 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange"
-                      @row-dblclick="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)" style="width: 100%" max-height="350">
+            <el-table :data="goodDataInfo.goodsCodeData" @selection-change="handleSelectionChange" style="width: 100%" max-height="350">
+                <el-table-column type="selection"></el-table-column>
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
@@ -204,8 +204,38 @@
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectGood">取 消</el-button>
-                <el-button type="primary" @click="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)">确 定</el-button>
+                <el-button type="primary" @click="setCurrentGoodsInfo">确 定</el-button>
             </div>
+        </el-dialog>
+        <el-dialog title="货品当前库存" v-model="chosenGoodStock" size="small">
+            <el-table :data="goodsStockData"  style="width: 100%">
+                <el-table-column type="index" label="序号"></el-table-column>
+                <el-table-column property="goodsCode" label="货品编码">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsName" label="货品名称">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="stockQty" label="当前库存量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.stockQty" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="deliveryQty" label="导入货品总量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.deliveryQty" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="resultQty" label="差异量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.resultQty" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+            </el-table>
         </el-dialog>
 
         <el-form :model="orderForm" :rules="rules" ref="orderForm" label-width="100px" class="demo-ruleForm">
@@ -415,6 +445,16 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
+                <el-table-column property="supportName" label="供应商批次">
+                    <template scope="scope">
+                        <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="supportBatch" v-if="false" label="供应商编码">
+                    <template scope="scope">
+                        <el-input v-model="orderForm.supporCode" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
                     <template scope="scope">
                         <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
@@ -423,6 +463,7 @@
             </el-table>
             <el-button @click="addGoods">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
+            <el-button type="primary" @click="validateStockCount">校验当前库存</el-button>
         </el-form>
     </div>
 </div>
@@ -482,6 +523,8 @@
                 activeNames:'',
                 wareHouseObj:'',
                 thirdLevelAddress:'',
+                goodsStockData:[],
+                chosenGoodStock:false,
                 goodsCode:'',
                 goodsName:'',
                 goodsSpec:'',
@@ -802,6 +845,9 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                            good.supportName=ofcWarehouseInformation.supportName;
+                                            good.supportBatch=goodDetail.supportBatch;
+                                            vueObj.orderForm.supportCode=goodDetail.supportBatch;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -820,8 +866,8 @@
             handlSuppliereCurrentChange:function(val) {
                 this.supplierDataInfo.supplierCurrentRow = val;
             },
-            handlGoodCurrentChange:function(val) {
-                this.goodDataInfo.goodCurrentRow = val;
+            handleSelectionChange:function(val){
+                this.multipleSelection = val;
             },
             setCurrentCustInfo:function(val) {
                 var vueObj=this;
@@ -906,6 +952,8 @@
                 }
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
+                vueObj.multipleSelection=[];
+                vueObj.goodDataInfo.goodsCodeData=[];
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                     var data=eval(result);
                     vueObj.goodsMsgOptions=[];
@@ -1001,24 +1049,33 @@
                     this.promptInfo("请选择供应商!",'warning');
                 }
             },
-            setCurrentGoodsInfo:function(val){
+            setCurrentGoodsInfo:function(){
+                
+                if(this.multipleSelection.length<1){
+                    this.promptInfo("请至少选择一条货品明细!",'warning');
+                    return;
+                }
                 this.goodDataInfo.chosenGoodCode = false;
-                var newData = {
-                    goodsType: val.goodsType,
-                    goodsCategory: val.goodsCategory,
-                    goodsCategory: val.goodsCategory,
-                    goodsCode: val.goodsCode,
-                    goodsName: val.goodsName,
-                    goodsSpec: val.goodsSpec,
-                    unit: val.unit,
-                    quantity: '',
-                    unitPrice:'',
-                    productionBatch:'',
-                    expiryDate:val.expiryDate,
-                    productionTime:'',
-                    invalidTime:''
-                };
-                this.goodsData.push(newData);
+                for(var i=0;i<this.multipleSelection.length;i++){
+                    var val=this.multipleSelection[i];
+                    var newData = {
+                        goodsType: val.goodsType,
+                        goodsCategory: val.goodsCategory,
+                        goodsCode: val.goodsCode,
+                        goodsName: val.goodsName,
+                        goodsSpec: val.goodsSpec,
+                        unit: val.unit,
+                        quantity: '',
+                        unitPrice:'',
+                        productionBatch:'',
+                        expiryDate:val.expiryDate,
+                        productionTime:'',
+                        invalidTime:'',
+                        supportName:this.orderForm.supportName,
+                        supportBatch:this.orderForm.supportCode
+                    };
+                    this.goodsData.push(newData);
+                }
             },
             cancelSelectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];
@@ -1141,7 +1198,7 @@
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
                             if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
-                                goodCode.expiryDate==0;
+                                goodCode.expiryDate=0;
                             }else{
                                 goodCode.expiryDate=cscGoodsVo.expiryDate;
                             }
@@ -1290,6 +1347,11 @@
               for(var i=0;i<goodsTable.length;i++){
                   var good=goodsTable[i];
 
+                  if(StringUtil.isEmpty(good.supportBatch)){
+                      if(!StringUtil.isEmpty(this.orderForm.supportCode)){
+                          good.supportBatch=this.orderForm.supportCode;
+                      }
+                  }
                   if(!StringUtil.isEmpty(good.unitPrice)){
                       if(isNaN(good.unitPrice)){
                           this.promptInfo("货品单价必须为数字",'error');
@@ -1528,6 +1590,45 @@
                     }
                     this.thirdLevelAddress=this.orderForm.destinationCode;
                 }
+            },
+            validateStockCount:function(){
+                
+                var _this=this;
+                _this.goodsStockData=[];
+                if(StringUtil.isEmpty(_this.orderForm.custCode)){
+                    _this.promptInfo("请选择客户",'warning');
+                    return;
+                }
+                if(StringUtil.isEmpty(_this.orderForm.wareHouse)){
+                    _this.promptInfo("请选择仓库",'warning');
+                    return;
+                }
+                if(_this.goodsData.length<1){
+                    _this.promptInfo("请至少选择一条货品",'warning');
+                    return;
+                }
+                var orderGoodsListStr = JSON.stringify(_this.goodsData);
+                CommonClient.syncpost(sys.rootPath + "/ofc/validateStockCount", {"orderGoodsListStr":orderGoodsListStr,"custCode":_this.orderForm.custCode,"warehouseCode":_this.orderForm.wareHouse}, function(result) {
+                    if (result == undefined || result == null) {
+                    } else if (result.code == 200) {
+                        _this.promptInfo("货品库存充足！","success");
+                    } else if (result.code == 403) {
+                        _this.promptInfo("没有权限",'error');
+                    } else if (result.code == 500) {
+                        if(result.result!=null&&result.result.length>0){
+                            $.each(result.result,function (index,responseMsg) {
+                                var stock={};
+                                stock.goodsCode=responseMsg.skuCode;
+                                stock.goodsName=responseMsg.skuName;
+                                stock.stockQty=responseMsg.stockQty;
+                                stock.deliveryQty=responseMsg.deliveryQty;
+                                stock.resultQty=responseMsg.resultQty;
+                                _this.goodsStockData.push(stock);
+                            });
+                        }
+                        _this.chosenGoodStock=true;
+                    }
+                },"json");
             }
         }
     });

@@ -155,6 +155,7 @@
             return{
                 <#--orderTime:'${orderTime!}',-->
                 warehouseName:'',
+                typeOfTemplate:'storageIn',
                 businessType:'',
                 custNameShow:false,
                 templateTypeNotNull:false,
@@ -215,7 +216,8 @@
                     {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
                     {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
                     {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
-                    {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'}
+                    {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                    {indexNum:'22', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                 ]
             }
         } ,
@@ -274,7 +276,8 @@
                         {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
                         {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
                         {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
-                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'}
+                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                        {indexNum:'22', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                     ];
                     vm.businessTypeList=[
                         {value:'采购入库',label:'采购入库'},
@@ -285,6 +288,7 @@
                         {value:'流通入库',label:'流通入库'},
                         {value:'其他入库',label:'其他入库'}
                     ];
+                    vm.typeOfTemplate = 'storageIn';
                 }else if(val == 'storageOut'){
                     vm.tableData = [
                         {indexNum:'1', standardColName:'客户订单号', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'custOrderCode'},
@@ -310,7 +314,8 @@
                         {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
                         {indexNum:'22', standardColName:'收货方名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'consigneeName'},
                         {indexNum:'23', standardColName:'收货人编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'consigneeContactCode'},
-                        {indexNum:'24', standardColName:'供应商编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportCode'}
+                        {indexNum:'24', standardColName:'供应商编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportCode'},
+                        {indexNum:'25', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                     ];
                     vm.businessTypeList=[
                         {value:'销售出库',label:'销售出库'},
@@ -319,6 +324,7 @@
                         {value:'其他出库',label:'其他出库'},
                         {value:'分拨出库',label:'分拨出库'}
                     ];
+                    vm.typeOfTemplate = 'storageOut';
                 }
             },
             templateNameChange:function (val) {
@@ -401,9 +407,9 @@
                         vm.$message.error('货品编码模板列名必填!');
                         return;
                     } else if(index == 12 && StringUtil.isEmpty(reflectColName)){
-                        designData.length == 21 ? vm.$message.error('入库数量模板列名必填!') : vm.$message.error('出库数量模板列名必填!');
+                        vm.typeOfTemplate == 'storageIn' ? vm.$message.error('入库数量模板列名必填!') : vm.$message.error('出库数量模板列名必填!');
                         return;
-                    } else if(index == 22 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 22 && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageOut'){
                         vm.$message.error('收货方名称模板列名必填!');
                         return;
                     }
