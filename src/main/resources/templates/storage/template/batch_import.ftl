@@ -104,7 +104,7 @@
         <div class="xe-block" >
             <span v-if="orderMsgShow" style="margin-right: 100px">订单导入数量合计: {{countImportOrderNum}}</span>
             <span v-if="orderMsgShow" style="margin-right: 100px">货品导入数量合计: {{countImportNum}}</span>
-            <el-button type="primary" style="margin-right: 100px" v-if="orderMsgShow && inOrOut" v-on:click="checkStock">校验当前库存</el-button>
+            <#--<el-button type="primary" style="margin-right: 100px" v-if="orderMsgShow && inOrOut" v-on:click="checkStock">校验当前库存</el-button>-->
             <el-button type="primary" style="margin-right: 100px" v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
             <el-button type="primary"  v-if="orderMsgShow" v-on:click="cancelOrderSaveBtn" icon="save">取消批量执行</el-button>
         </div>
@@ -129,7 +129,7 @@
         <div class="xe-block" v-if="orderMsgShow && showButtomBtn">
             <span style="margin-right: 100px">订单导入数量合计: {{countImportOrderNum}}</span>
             <span style="margin-right: 100px">货品导入数量合计: {{countImportNum}}</span>
-            <el-button type="primary" style="margin-right: 100px" v-if="inOrOut" v-on:click="checkStock">校验当前库存</el-button>
+            <#--<el-button type="primary" style="margin-right: 100px" v-if="inOrOut" v-on:click="checkStock">校验当前库存</el-button>-->
             <el-button type="primary" style="margin-right: 100px"  v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
             <el-button type="primary"   v-on:click="cancelOrderSaveBtn" icon="save">取消批量执行</el-button>
         </div>
