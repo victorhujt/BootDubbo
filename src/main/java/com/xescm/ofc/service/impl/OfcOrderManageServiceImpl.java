@@ -173,6 +173,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private OfcOrderStatusService ofcOrdertatusService;
     @Resource
+    private OfcAddressReflectService ofcAddressReflectService;
+    @Resource
     private OfcAddressReflectMapper ofcAddressReflectMapper;
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
@@ -2795,7 +2797,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if(null != invalidTime){
                 inventoryDTO.setLotatt02(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE2));
             }
-            inventoryDTO.setQuantity(ofcGoodsDetailsInfo.getQuantity().doubleValue());
+            inventoryDTO.setQuantity(ofcGoodsDetailsInfo.getQuantity());
             inventoryGoods.add(inventoryDTO);
         }
         return whcOrderCancelEdasService.validateStockCount(inventoryGoods);
