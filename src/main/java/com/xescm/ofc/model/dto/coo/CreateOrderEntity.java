@@ -71,6 +71,11 @@ public class CreateOrderEntity {
     private String businessType;
 
     /**
+     * 运输类型
+     */
+    private String transportType;
+
+    /**
      * 备注 Y
      */
     private String notes;
@@ -1203,5 +1208,13 @@ public class CreateOrderEntity {
 
     public void setCreateOrderGoodsInfos(List<CreateOrderGoodsInfo> createOrderGoodsInfos) {
         this.createOrderGoodsInfos = createOrderGoodsInfos;
+    }
+
+    public String getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(String transportType) {
+        this.transportType = transportType;
     }
 }
