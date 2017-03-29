@@ -45,6 +45,12 @@ public class OfcStorageTemplateDto {
     private OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
     //字段追加: 发货波次号
     private String consignmentBatchNumber;
+    //收货人编码
+    private String consigneeContactCode;
+    //供应商编码
+    private String supportCode;
+    //供应商批次
+    private String supportBatch;
 
 
 }

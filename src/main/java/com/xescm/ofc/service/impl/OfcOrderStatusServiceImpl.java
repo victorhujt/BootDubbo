@@ -9,7 +9,6 @@ import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +32,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     private OfcOrderNewstatusMapper ofcOrderNewstatusMapper;
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
-
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-
     @Resource
-    private OfcWarehouseInformationService ofcWarehouseInformationService;
-    @Resource
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+   private OfcWarehouseInformationService ofcWarehouseInformationService;
+   @Resource
+   private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
 
 
@@ -265,7 +262,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 			if(StringUtils.isEmpty(orderCode)){
 				throw new BusinessException("订单号不可以为空");
 			}
-			if(detailDtos==null||detailDtos!=null&&detailDtos.size()==0){
+			if(detailDtos==null||(detailDtos!=null&&detailDtos.size()==0)){
                 throw new BusinessException("货品详情不能为空");
             }
             OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
@@ -297,48 +294,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
 
-            for (FeedBackOrderDetailDto feedBackOrderDetailDto : detailDtos) {
-                boolean isExist=false;
-                List<OfcGoodsDetailsInfo>  infos=ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-                if(infos!=null&&infos.size()>0){
-                    for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:infos) {
-                        StringBuilder feedkey=new StringBuilder();
-                        feedkey.append(feedBackOrderDetailDto.getGoodsCode());
-                        if(!StringUtils.isEmpty(feedBackOrderDetailDto.getProductionBatch())){
-                            feedkey.append(feedBackOrderDetailDto.getProductionBatch());
-                        }
-                        if(feedBackOrderDetailDto.getProductionTime()!=null){
-                            feedkey.append(DateUtils.Date2String(feedBackOrderDetailDto.getProductionTime(), DateUtils.DateFormatType.TYPE1));
-                        }
-                        if(feedBackOrderDetailDto.getInvalidTime()!=null){
-                            feedkey.append(DateUtils.Date2String(feedBackOrderDetailDto.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
-                        }
-                        StringBuilder key=new StringBuilder();
-                        key.append(ofcGoodsDetailsInfo.getGoodsCode());
-                        if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
-                            key.append(ofcGoodsDetailsInfo.getProductionBatch());
-                        }
-                        if(ofcGoodsDetailsInfo.getProductionTime()!=null){
-                            key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getProductionTime(), DateUtils.DateFormatType.TYPE1));
-                        }
-                        if(ofcGoodsDetailsInfo.getInvalidTime()!=null){
-                            key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
-                        }
-                        if(feedkey.equals(key)){
-                            ofcGoodsDetailsInfo.setRealQuantity(feedBackOrderDetailDto.getRealQuantity());
-                            ofcGoodsDetailsInfo.setProductionBatch(feedBackOrderDetailDto.getProductionBatch());
-                            ofcGoodsDetailsInfoService.updateByOrderCode(ofcGoodsDetailsInfo);
-                            isExist=true;
-                            break;
-                        }
-                    }
-                }
-                if(!isExist){
-                    OfcGoodsDetailsInfo newInfo=new OfcGoodsDetailsInfo();
-                    BeanUtils.copyProperties(newInfo,feedBackOrderDetailDto);
-                    ofcGoodsDetailsInfoService.save(newInfo);
-                }
-            }
             status.setLastedOperTime(new Date());
             status.setStatusDesc("订单号"+orderCode+"已完成");
             status.setOrderCode(orderCode);

@@ -63,7 +63,7 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
      * @return
      */
     @Override
-    public Wrapper<?> FeedBackInventory(FeedBackInventoryDto feedBackInventoryDto) {
+    public Wrapper<?> feedBackInventory(FeedBackInventoryDto feedBackInventoryDto) {
         try{
             if(feedBackInventoryDto==null){
                 throw new IllegalArgumentException("反馈库存异常Dto不能为空");

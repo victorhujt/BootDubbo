@@ -5,14 +5,14 @@ package com.xescm.ofc.constant;
  */
 public class StorageTemplateConstant {
 
-    //请选择客户
+    //未选客户错误
     public static final Integer ERROR_CUST = 501;
 
-    //请选择模板
+    //未选模板错误
     public static final Integer ERROR_TEMPLATE = 502;
 
-    //验证token失败
-    public static final Integer ERROR_AUTH = 503;
+    //校验当前库存失败
+    public static final Integer ERROR_STOCK = 503;
 
     //入库
     public static final String STORAGE_IN = "storageIn";
