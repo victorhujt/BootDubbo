@@ -7,7 +7,7 @@ import java.util.List;
  *
  * Created by lyh on 2017/2/27.
  */
-public enum  StorageImportOutEnum {
+public enum StorageImportOutEnum {
 
     CUST_ORDER_CODE("custOrderCode","客户订单号"),
     ORDER_TIME("orderTime","订单日期"),
@@ -32,7 +32,8 @@ public enum  StorageImportOutEnum {
     CONTACT_NUMBER("contactNumber","联系电话"),
     CONSIGNEE_NAME("consigneeName","收货方名称"),
     CONSIGNEE_CONTACT_CODE("consigneeContactCode","收货人编码"),
-    SUPPORT_CODE("supportCode","供应商编码");
+    SUPPORT_CODE("supportCode","供应商编码"),
+    SUPPORT_BATCH("supportBatch","供应商批次");
 
 
     private String standardColCode;

@@ -5,6 +5,7 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
@@ -24,9 +25,11 @@ import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
+import com.xescm.whc.edas.dto.ResponseMsg;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -459,6 +462,49 @@ public class OfcOrderManageRest extends BaseController{
     }
 
     /**
+     *
+     * @param orderGoodsListStr 货品明细
+     * @param custCode  客户编码
+     * @param warehouseCode 仓库编码
+     * @return
+     */
+    @RequestMapping(value ="validateStockCount", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<?> validateStockCount(String orderGoodsListStr,String custCode,String warehouseCode){
+        try{
+            if(PubUtils.isSEmptyOrNull(orderGoodsListStr)){
+                throw new BusinessException("货品详情不能为空");
+            }
+            if(PubUtils.isSEmptyOrNull(custCode)){
+                throw new BusinessException("客户编码不能为空");
+            }
+            if(PubUtils.isSEmptyOrNull(warehouseCode)){
+                throw new BusinessException("仓库编码不能为空");
+            }
+
+            logger.info("收货方编码为:{},仓库编码为:{}",custCode,warehouseCode);
+            List<OfcGoodsDetailsInfo>   ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
+            Wrapper wrapper=ofcOrderManageService.validateStockCount(ofcGoodsDetailsInfos,custCode,warehouseCode);
+            if(wrapper==null){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"货品校验库存异常");
+            }
+            logger.info("出库单校验库存的响应code为:{}",wrapper.getCode());
+            if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
+                String message=wrapper.getMessage();
+                logger.info("货品库存校验信息为:{}",message);
+                List<ResponseMsg> msgs = null;
+                TypeReference<List<ResponseMsg>> responseMsgsRef = new TypeReference<List<ResponseMsg>>() {};
+                msgs= JacksonUtil.parseJsonWithFormat(message,responseMsgsRef);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"货品库存不足",msgs);
+            }
+        }catch (Exception ex){
+            logger.error("货品明细校验库存异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"库存充足");
+    }
+
+    /**
      * 进入运输订单编辑
      * @param orderCode    订单编号
      * @return  String
@@ -499,4 +545,5 @@ public class OfcOrderManageRest extends BaseController{
         }
         return "order_manage_opera";
     }
+
 }

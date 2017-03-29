@@ -27,6 +27,68 @@
 <body>
     <div id="app">
     <div class="list-mian-01">
+        <el-dialog title="货品实收详情" v-model="chosenRealGood" size="small">
+            <el-table :data="realGoodsData"  style="width: 100%">
+                <el-table-column property="goodsCode" label="货品编码">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsName" label="货品名称">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsSpec" label="规格">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsSpec" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unit" label="单位">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="quantity" label="实收数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unitPrice" label="单价">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unitPrice" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionBatch" label="批次号">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.productionBatch"  :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionTime" label="生产日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.productionTime"
+                                align="right"
+                                type="date"
+                                :readOnly="true"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="invalidTime" label="失效日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.invalidTime"
+                                align="right"
+                                type="date"
+                                :readOnly="true"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
+
         <el-dialog title="选择客户" v-model="chosenCus" size="small">
             <el-form :model="chosenCusForm">
                 <el-form-item label="名称" :label-width="formLabelWidth">
@@ -160,6 +222,7 @@
             <el-button size="small" @click="auditOrder" v-bind:disabled = "isDisabledAudit">审核</el-button>
             <el-button size="small" @click="repeatAuditOrder" v-bind:disabled = "isDisabledRepeatAudit">反审核</el-button>
             <el-button size="small" @click="cancelOrder"  v-bind:disabled = "isDisabledCancel">取消</el-button>
+            <el-button size="small" @click="realGood">实收详情</el-button>
             <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
         <div class="ofc-block">
@@ -200,6 +263,8 @@
             isDisabledCopy:false,
             isDisabledAudit:false,
             isDisabledRepeatAudit:false,
+            chosenRealGood:false,
+            realGoodsData:[],
             currentRow:'',
             currentCustomerRow:'',
             currentPage:1,
@@ -413,7 +478,7 @@
                 var url = "/ofc/orderStorageIn/"+"?tag=manager";
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
-                window.open(html.substring(0,index) + "/index#" + url);
+                window.open(html.substring(0,index) + "/index#" + url,"_self");
             },
             editOrder:function(){
                 if(this.valiateSelectOrder()){
@@ -425,7 +490,7 @@
                     var url = "/ofc/orderStorageInEdit/"+"?orderCode="+order.orderCode;
                     var html = window.location.href;
                     var index = html.indexOf("/index#");
-                    window.open(html.substring(0,index) + "/index#" + url);
+                    window.open(html.substring(0,index) + "/index#" + url,"_self");
                 }
             },
             deleteOrder:function(){
@@ -751,6 +816,36 @@
                 this.customerPageSize=10;
                 this.total=0;
                 this.chosenCus=true;
+            },
+            realGood:function(){
+                if(this.valiateSelectOrder()){
+                    this.chosenRealGood=true;
+                    var _this=this;
+                    _this.realGoodsData=[];
+                    var orderCode=this.multipleSelection[0].orderCode;
+                    CommonClient.syncpost(sys.rootPath + "/ofc/queryRealGood",{"orderCode":orderCode,"businessType":"RK"},function(result) {
+                        if(result==undefined||result==null||result.result==null){
+                            return;
+                        }else if(result.code == 200) {
+                            var data = eval(result.result);
+                            _this.realGoodsData = [];
+                            $.each(data, function (index, wmsDetailsValueDTO) {
+                                var good = {};
+                                good.goodsCode = wmsDetailsValueDTO.itemCode;
+                                good.goodsName = wmsDetailsValueDTO.itemName;
+                                good.goodsSpec = wmsDetailsValueDTO.standard;
+                                good.unit = wmsDetailsValueDTO.uom;
+                                good.realQuantity = wmsDetailsValueDTO.sendQty;//
+                                good.unitPrice = wmsDetailsValueDTO.price;
+                                good.productionBatch = wmsDetailsValueDTO.lotatt05;//批次号
+                                good.productionTime = DateUtil.parse(wmsDetailsValueDTO.lotatt01);//生产日期
+                                good.invalidTime = DateUtil.parse(wmsDetailsValueDTO.lotatt02);//失效日期
+                                _this.realGoodsData.push(good);
+                            });
+                        }
+                    });
+
+                }
             }
         }
     });
