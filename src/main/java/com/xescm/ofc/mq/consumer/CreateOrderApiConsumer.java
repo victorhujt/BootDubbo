@@ -115,10 +115,10 @@ public class CreateOrderApiConsumer implements MessageListener {
                 GoodsAmountSyncDto goodsAmountSyncDto;
                 try {
                     goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
-                    if(!keyList.contains(key)){
+//                    if(!keyList.contains(key)){
                         goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
-                        keyList.add(key);
-                    }
+//                        keyList.add(key);
+//                    }
                 } catch (Exception e) {
                     logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
                 }

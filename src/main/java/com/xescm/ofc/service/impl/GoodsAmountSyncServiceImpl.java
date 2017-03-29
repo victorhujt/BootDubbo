@@ -73,7 +73,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         // 查询订单
         OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
         ofcFundamentalInfo.setCustCode(custCode);
-        ofcFundamentalInfo.setCustName(goodsAmountSyncDto.getCustName());
+//        ofcFundamentalInfo.setCustName(goodsAmountSyncDto.getCustName());
         ofcFundamentalInfo.setCustOrderCode(custOrderCode);
         try {
             List<OfcFundamentalInformation> orderList = ofcFundamentalInformationService.select(ofcFundamentalInfo);
