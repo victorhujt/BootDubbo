@@ -72,7 +72,6 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         // 查询订单
         OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
         ofcFundamentalInfo.setCustCode(custCode);
-//        ofcFundamentalInfo.setCustName(goodsAmountSyncDto.getCustName());
         ofcFundamentalInfo.setCustOrderCode(custOrderCode);
         try {
             List<OfcFundamentalInformation> orderList = ofcFundamentalInformationService.select(ofcFundamentalInfo);
@@ -174,8 +173,6 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
-//            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-//            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
 
             if(PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)){
@@ -215,8 +212,6 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsCode);
-//            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-//            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             if(PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)){
                 OfcGoodsRecordModification ofcGoodsRecordModification = new OfcGoodsRecordModification();
@@ -230,21 +225,21 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 String modifyVolume = goodsAmountDetailDto.getVolume();
                 // 调整数量
                 if(!PubUtils.isOEmptyOrNull(modifyQuantity)){
-                    String oldQuantity = !PubUtils.isOEmptyOrNull(goodsDetail.getQuantity()) ? goodsDetail.getQuantity().toString() : "";
+                    String oldQuantity = !PubUtils.isOEmptyOrNull(goodsDetail.getQuantity()) ? goodsDetail.getQuantity().toString() : " ";
                     ofcGoodsRecordModification.setValueBeforeModifyQty(oldQuantity);
                     ofcGoodsRecordModification.setValueAfterModifyQty(modifyQuantity);
                     desc.append("商品").append(goodsCode).append("数量由").append(oldQuantity).append("调整为").append(modifyQuantity).append(";");
                 }
                 // 调整重量
                 if(!PubUtils.isOEmptyOrNull(modifyWeight)){
-                    String oldWeight = !PubUtils.isOEmptyOrNull(goodsDetail.getWeight()) ? goodsDetail.getWeight().toString() : "";
+                    String oldWeight = !PubUtils.isOEmptyOrNull(goodsDetail.getWeight()) ? goodsDetail.getWeight().toString() : " ";
                     ofcGoodsRecordModification.setValueBeforeModifyWet(oldWeight);
                     ofcGoodsRecordModification.setValueAfterModifyWet(modifyWeight);
                     desc.append("商品").append(goodsCode).append("重量由").append(oldWeight).append("调整为").append(modifyWeight).append(";");
                 }
                 // 调整体积
                 if(!PubUtils.isOEmptyOrNull(modifyVolume)){
-                    String oldVolume = !PubUtils.isOEmptyOrNull(goodsDetail.getCubage()) ? goodsDetail.getCubage().toString() : "";
+                    String oldVolume = !PubUtils.isOEmptyOrNull(goodsDetail.getCubage()) ? goodsDetail.getCubage().toString() : " ";
                     ofcGoodsRecordModification.setValueBeforeModifyVol(oldVolume);
                     ofcGoodsRecordModification.setValueAfterModifyVol(modifyVolume);
                     desc.append("商品").append(goodsCode).append("体积由").append(oldVolume).append("调整为").append(modifyVolume).append(";");
