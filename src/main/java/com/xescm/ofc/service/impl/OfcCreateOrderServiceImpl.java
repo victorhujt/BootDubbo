@@ -154,9 +154,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
 
         //校验：店铺编码，获取该客户下的店铺编码
-        String storeCode;
+        String storeCode = null;
         //店铺名称
-        String storeName;
+        String storeName = null;
         QueryStoreDto storeDto = new QueryStoreDto();
         storeDto.setCustomerCode(custCode);
         Wrapper<List<CscStorevo>> cscStoreVoList = cscStoreEdasService.getStoreByCustomerId(storeDto);
@@ -165,11 +165,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
             storeCode = cscStorevo.getStoreCode();
             storeName = cscStorevo.getStoreName();
-        } else {
+        }/* else {
             logger.error("获取该客户下的店铺编码接口返回失败，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0003);
             return resultModel;
-        }
+        }*/
         createOrderEntity.setStoreCode(storeCode);
 
         //校验：【发货方】与【收货方】//2017年3月20日 追加逻辑:收发货方地址没有细化到二级,也能过,订单状态为待审核,不进行自动审核,对地址进行匹配
