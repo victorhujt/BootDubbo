@@ -10,7 +10,7 @@
 <div id="app">
     <div class="list-mian-01">
         <el-dialog title="货品实收详情" v-model="chosenRealGood" size="small">
-            <el-table :data="realGoodsData"  style="width: 100%">
+            <el-table :data="realGoodsData" border style="width: 100%">
                 <el-table-column property="goodsCode" label="货品编码">
                     <template scope="scope">
                         <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
@@ -92,7 +92,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="客户名称" class="xe-col-3">
-                    <el-input v-model="customerName">
+                    <el-input v-model="customerName" :readOnly="true">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="订单状态" class="xe-col-3">
