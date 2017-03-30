@@ -7,6 +7,7 @@ import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
@@ -67,4 +68,8 @@ public interface OfcOrderManageService {
     void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus);
 
     void pullOfcOrderPlanCode(AcPlanDto acPlanDto);
+
+     Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList, String custCode, String warehouseCode);
+
+     List<OfcOrderAccountDTO>  dailyAccount();
 }
