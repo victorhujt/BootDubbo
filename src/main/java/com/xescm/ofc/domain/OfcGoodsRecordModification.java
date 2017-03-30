@@ -1,8 +1,11 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Table(name = "ofc_goods_record_modification")
@@ -11,8 +14,26 @@ public class OfcGoodsRecordModification {
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
     private String id;
+
+    /**
+     * 订单编号
+     */
+    @Column(name = "order_code")
+    private String orderCode;
+
+    /**
+     * 商品编码
+     */
+    @Column(name = "goods_code")
+    private String goodsCode;
+
+    /**
+     * 商品名称
+     */
+    @Column(name = "goods_name")
+    private String goodsName;
 
     /**
      * 数量修改之前的值
@@ -56,9 +77,8 @@ public class OfcGoodsRecordModification {
     @Column(name = "modification_desc")
     private String modificationDesc;
 
-    /**
-     * 订单编号
-     */
-    @Column(name = "order_code")
-    private String orderCode;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @Column(name = "creation_time")
+    private Date creationTime = new Date();
 }

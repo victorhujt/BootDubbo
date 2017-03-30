@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
-import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
 
@@ -143,9 +142,12 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         OfcFinanceInformation orderFinanceInfo = ofcFinanceInformationService.selectByKey(orderCode);
         List<OfcGoodsDetailsInfo> detailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
         for(OfcGoodsDetailsInfo detailsInfo:detailsInfos){
-            quantityCount=quantityCount.add(detailsInfo.getQuantity());
-            weightCount=quantityCount.add(detailsInfo.getWeight());
-            cubageCount=quantityCount.add(detailsInfo.getCubage());
+            BigDecimal quantity = detailsInfo.getQuantity();
+            BigDecimal weight = detailsInfo.getWeight();
+            BigDecimal cubage = detailsInfo.getCubage();
+            quantityCount = quantityCount.add(PubUtils.isNull(quantity) ? new BigDecimal(0) : quantity);
+            weightCount = weightCount.add(PubUtils.isNull(weight) ? new BigDecimal(0) : weight);
+            cubageCount = cubageCount.add(PubUtils.isNull(cubage) ? new BigDecimal(0) : cubage);
         }
         orderDistInfo.setQuantity(quantityCount);
         orderDistInfo.setWeight(weightCount);
@@ -172,8 +174,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
-            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-            //ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
+//            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
+//            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
 
             if(PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)){
@@ -183,9 +185,11 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 String volume = goodsAmountDetailDto.getVolume();
                 if(!PubUtils.isOEmptyOrNull(quantity)){
                     ofcGoodsDetailsInfo.setQuantity(new BigDecimal(quantity));
-                }else if(!PubUtils.isOEmptyOrNull(weight)){
+                }
+                if(!PubUtils.isOEmptyOrNull(weight)){
                     ofcGoodsDetailsInfo.setWeight(new BigDecimal(weight));
-                }else if(!PubUtils.isOEmptyOrNull(volume)){
+                }
+                if(!PubUtils.isOEmptyOrNull(volume)){
                     ofcGoodsDetailsInfo.setCubage(new BigDecimal(volume));
                 }
                 ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
@@ -205,15 +209,20 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      */
     private void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
         try {
+
+            String goodsCode = goodsAmountDetailDto.getGoodsCode();
+            String goodsName = goodsAmountDetailDto.getGoodsName();
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
-            ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
-            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
-            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
+            ofcGoodsDetailsInfo.setGoodsCode(goodsCode);
+//            ofcGoodsDetailsInfo.setGoodsName(goodsAmountDetailDto.getGoodsName());
+//            ofcGoodsDetailsInfo.setUnit(trimAndNullAsEmpty(goodsAmountDetailDto.getUnit()));
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             if(PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)){
                 OfcGoodsRecordModification ofcGoodsRecordModification = new OfcGoodsRecordModification();
                 ofcGoodsRecordModification.setOrderCode(orderCode);
+                ofcGoodsRecordModification.setGoodsCode(goodsCode);
+                ofcGoodsRecordModification.setGoodsName(goodsName);
                 OfcGoodsDetailsInfo goodsDetail = ofcGoodsDetailsInfoList.get(0);
                 StringBuffer desc = new StringBuffer();
                 String modifyQuantity = goodsAmountDetailDto.getQty();
@@ -221,27 +230,24 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 String modifyVolume = goodsAmountDetailDto.getVolume();
                 // 调整数量
                 if(!PubUtils.isOEmptyOrNull(modifyQuantity)){
-                    String oldQuantity = goodsDetail.getQuantity().toString();
+                    String oldQuantity = !PubUtils.isOEmptyOrNull(goodsDetail.getQuantity()) ? goodsDetail.getQuantity().toString() : "";
                     ofcGoodsRecordModification.setValueBeforeModifyQty(oldQuantity);
                     ofcGoodsRecordModification.setValueAfterModifyQty(modifyQuantity);
-                    desc.append("商品").append(goodsAmountDetailDto.getGoodsCode()).append("数量由")
-                        .append(oldQuantity).append("调整为").append(modifyQuantity).append(";");
+                    desc.append("商品").append(goodsCode).append("数量由").append(oldQuantity).append("调整为").append(modifyQuantity).append(";");
                 }
                 // 调整重量
                 if(!PubUtils.isOEmptyOrNull(modifyWeight)){
-                    String oldWeight = goodsDetail.getWeight().toString();
+                    String oldWeight = !PubUtils.isOEmptyOrNull(goodsDetail.getWeight()) ? goodsDetail.getWeight().toString() : "";
                     ofcGoodsRecordModification.setValueBeforeModifyWet(oldWeight);
                     ofcGoodsRecordModification.setValueAfterModifyWet(modifyWeight);
-                    desc.append("商品").append(goodsAmountDetailDto.getGoodsCode()).append("重量由")
-                        .append(oldWeight).append("调整为").append(modifyWeight).append(";");
+                    desc.append("商品").append(goodsCode).append("重量由").append(oldWeight).append("调整为").append(modifyWeight).append(";");
                 }
                 // 调整体积
                 if(!PubUtils.isOEmptyOrNull(modifyVolume)){
-                    String oldVolume = goodsDetail.getCubage().toString();
+                    String oldVolume = !PubUtils.isOEmptyOrNull(goodsDetail.getCubage()) ? goodsDetail.getCubage().toString() : "";
                     ofcGoodsRecordModification.setValueBeforeModifyVol(oldVolume);
                     ofcGoodsRecordModification.setValueAfterModifyVol(modifyVolume);
-                    desc.append("商品").append(goodsAmountDetailDto.getGoodsCode()).append("体积由")
-                        .append(oldVolume).append("调整为").append(modifyVolume).append(";");
+                    desc.append("商品").append(goodsCode).append("体积由").append(oldVolume).append("调整为").append(modifyVolume).append(";");
                 }
                 ofcGoodsRecordModification.setModificationDesc(desc.toString());
                 ofcGoodsRecordModificationService.save(ofcGoodsRecordModification);

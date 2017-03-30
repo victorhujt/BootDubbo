@@ -6,6 +6,9 @@
       WARNING - @mbg.generated
     -->
     <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
     <result column="value_before_modify_qty" property="valueBeforeModifyQty" jdbcType="VARCHAR" />
     <result column="value_after_modify_qty" property="valueAfterModifyQty" jdbcType="VARCHAR" />
     <result column="value_before_modify_wet" property="valueBeforeModifyWet" jdbcType="VARCHAR" />
@@ -13,6 +16,6 @@
     <result column="value_before_modify_vol" property="valueBeforeModifyVol" jdbcType="VARCHAR" />
     <result column="value_after_modify_vol" property="valueAfterModifyVol" jdbcType="VARCHAR" />
     <result column="modification_desc" property="modificationDesc" jdbcType="VARCHAR" />
-    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
   </resultMap>
 </mapper>
