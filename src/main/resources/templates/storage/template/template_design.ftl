@@ -243,7 +243,6 @@
                     vm.warehouseNameList.push(warehouseName);
                 })
             })
-                typeOfTemplate:'storageIn',
 
         },
         methods:{
