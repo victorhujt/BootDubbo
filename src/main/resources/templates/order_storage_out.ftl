@@ -49,7 +49,7 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange"
+            <el-table border :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange"
                       @row-dblclick="setCurrentCustInfo(customerDataInfo.currentRow)" style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="custCode" label="客户编码"></el-table-column>
@@ -123,7 +123,7 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange"
+            <el-table border :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange"
                       @row-dblclick="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)" style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="supportName" label="名称"></el-table-column>
@@ -187,7 +187,7 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="goodDataInfo.goodsCodeData" @selection-change="handleSelectionChange" style="width: 100%"  max-height="350">
+            <el-table border :data="goodDataInfo.goodsCodeData" @selection-change="handleSelectionChange" style="width: 100%"  max-height="350">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品种类"></el-table-column>
@@ -209,7 +209,7 @@
         </el-dialog>
 
         <el-dialog title="货品当前库存" v-model="chosenGoodStock" size="small">
-            <el-table :data="goodsStockData"  style="width: 100%">
+            <el-table border :data="goodsStockData"  style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsCode" label="货品编码">
                     <template scope="scope">
