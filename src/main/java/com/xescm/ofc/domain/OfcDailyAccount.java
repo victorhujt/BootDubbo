@@ -58,9 +58,8 @@ public class OfcDailyAccount {
     /**
      * 应付确认车的数量(数据来源于结算中心)
      */
-    @Column(name = "` payable_vehicle_account`")
+    @Column(name = "payable_vehicle_account")
     private BigDecimal payableVehicleAccount;
-
     /**
      * 外部车辆发运的数量(数据来源于运输中心)
      */
@@ -82,6 +81,79 @@ public class OfcDailyAccount {
      */
     @Column(name = "receivable_percent")
     private String receivablePercent;
+
+    public String getTotalPercent() {
+        return totalPercent;
+    }
+
+    public void setTotalPercent(String totalPercent) {
+        this.totalPercent = totalPercent;
+    }
+
+    /**
+     * 应收确认日清 + 应付确认日清 - 事后补录订单
+
+     */
+    @Column(name = "total_percent")
+    private String totalPercent;
+    /**
+     * 事后补录订单 小数
+     */
+    @Column(name = "additional_order")
+    private BigDecimal additionalOrder;
+
+    /**
+     * 应收确认日清 小数
+     */
+    @Column(name = "receivable")
+    private BigDecimal receivable;
+    /**
+     * 应付确认日清  小数
+     */
+    @Column(name = "payable")
+    private BigDecimal payable;
+
+    public BigDecimal getAdditionalOrder() {
+        return additionalOrder;
+    }
+
+    public void setAdditionalOrder(BigDecimal additionalOrder) {
+        this.additionalOrder = additionalOrder;
+    }
+
+    public BigDecimal getReceivable() {
+        return receivable;
+    }
+
+    public void setReceivable(BigDecimal receivable) {
+        this.receivable = receivable;
+    }
+
+    public BigDecimal getPayable() {
+        return payable;
+    }
+
+    public void setPayable(BigDecimal payable) {
+        this.payable = payable;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    /**
+     * 应收确认日清 + 应付确认日清 - 事后补录订单 小数
+
+     */
+    @Column(name = "total")
+    private BigDecimal total;
+
+
+
 
     public String getAdditionalOrderPercent() {
         return additionalOrderPercent;

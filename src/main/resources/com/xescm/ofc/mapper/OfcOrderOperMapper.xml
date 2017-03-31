@@ -242,68 +242,6 @@
   </resultMap>
 
 
-  <resultMap id="orderCount" type="com.xescm.ofc.domain.OrderCountResult">
-    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
-    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
-    <result column="base_name" property="baseName" jdbcType="VARCHAR" />
-    <result column="base_code" property="baseCode" jdbcType="VARCHAR" />
-    <result column="order_count" property="orderCount" jdbcType="DECIMAL" />
-  </resultMap>
-
-
-  <select id="countTwoHoursOrder"  resultMap="orderCount">
-    SELECT
-    ofi.area_name,
-    ofi.area_code,
-    ofi.base_name,
-    ofi.base_code,
-    count(ofi.order_code) AS order_count
-    FROM
-    ofc_fundamental_information ofi
-    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
-    <where>
-      1 = 1
-      AND ns.order_latest_status = '40'
-      AND ofi.business_type IN ('600', '601', '602')
-      AND TIMESTAMPDIFF(MINUTE,ofi.creation_time,ofi.finished_time)<![CDATA[ <= ]]> 120
-      <if test="form.startDate!=null and form.startDate!=''">
-        AND ofi.creation_time <![CDATA[ >= ]]>  #{form.startDate}
-      </if>
-      <if test="form.endDate!=null and form.endDate!=''">
-        AND ofi.creation_time <![CDATA[ < ]]>  #{form.endDate}
-      </if>
-    </where>
-    GROUP BY
-    ofi.area_name,
-    ofi.base_name
-  </select>
-
-
-  <select id="yesterdayOrderCount"  resultMap="orderCount">
-    SELECT
-    ofi.area_name,
-    ofi.area_code,
-    ofi.base_name,
-    ofi.base_code,
-    count(ofi.order_code) AS order_count
-    FROM
-    ofc_fundamental_information ofi
-    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
-    <where>
-      1 = 1
-      AND ns.order_latest_status <![CDATA[ <> ]]> '50'
-      AND ofi.business_type IN ('600', '601', '602')
-      <if test="form.startDate!=null and form.startDate!=''">
-        AND ofi.creation_time <![CDATA[ >= ]]>  #{form.startDate}
-      </if>
-      <if test="form.endDate!=null and form.endDate!=''">
-        AND ofi.creation_time <![CDATA[ < ]]>  #{form.endDate}
-      </if>
-    </where>
-    GROUP BY
-    ofi.area_name,
-    ofi.base_name
-  </select>
 
   <sql id="Base_Column_List_Fundamental" >
     order_code, order_batch_number, order_time, cust_code, cust_name, sec_cust_code, 

@@ -2826,10 +2826,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)-1);
         form.setStartDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
         String beginTime=DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2);
+       // form.setStartDate("2016-12-29");
+       // form.setEndDate("2017-03-29");
         //两小时完成的订单统计
-        List<OrderCountResult>  twoHourOrderCount=ofcOrderManageOperService.countTwoHoursOrder(form);
+        List<OrderCountResult>  twoHourOrderCount=ofcDailyAccountsService.countTwoHoursOrder(form);
         //前一天的订单统计
-        List<OrderCountResult>  yesterdayOrderCount=ofcOrderManageOperService.yesterdayOrderCount(form);
+        List<OrderCountResult>  yesterdayOrderCount=ofcDailyAccountsService.yesterdayOrderCount(form);
 
         if(CollectionUtils.isEmpty(twoHourOrderCount)){
             logger.info("两小时完成的订单为零");
@@ -2878,8 +2880,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     ofcDailyAccount.setGmtCreate(new Date());
                     BigDecimal p=twoHourOrderCountResult.getOrderCount().divide(yesterdayOrderCountResult.getOrderCount(),2, RoundingMode.HALF_UP);
                     //事后补录订单：2小时订单/开单合计
-                    ofcOrderAccountDTO.setAdditionalOrder(p);
+                    ofcDailyAccount.setAdditionalOrder(p.setScale(2));
                     ofcDailyAccount.setAdditionalOrderPercent(percent.format(p.doubleValue()));
+                    ofcOrderAccountDTO.setAdditionalOrder(p.setScale(2));
                     ofcOrderAccountDTO.setAdditionalOrderPercent(percent.format(p.doubleValue()));
                     if(!PubUtils.isSEmptyOrNull(key.toString())){
                         if(!accountDailyResult.containsKey(key.toString())){
@@ -2916,7 +2919,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()));
                         BigDecimal p=ofcDailyAccount.getHaveIncomeOrderAccount().divide(ofcDailyAccount.getYesterdayAccount(),2, RoundingMode.HALF_UP);
                         //应收确认日清：收入确认的订单/开单合计
+                        ofcDailyAccount.setReceivable(p.setScale(2));
                         ofcDailyAccount.setReceivablePercent(percent.format(p.doubleValue()));
+                        ofcOrderAccountDTO.setReceivable(p.setScale(2));
                         ofcOrderAccountDTO.setReceivablePercent(percent.format(p.doubleValue()));
                     }
                 }
@@ -2947,8 +2952,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         ofcDailyAccount.setExternalVehicleAccount(BigDecimal.valueOf(deliverEveryRunDTO.getNum()));
                         BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
                         //应付确认日清 应付确认车数量/外部车辆发运数量
-                        ofcOrderAccountDTO.setPayable(p);
+                        ofcDailyAccount.setPayable(p.setScale(2));
                         ofcDailyAccount.setPayablePercent(percent.format(p.doubleValue()));
+                        ofcOrderAccountDTO.setPayable(p.setScale(2));
                         ofcOrderAccountDTO.setPayablePercent(percent.format(p.doubleValue()));
                     }
                  }
@@ -2962,35 +2968,49 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         while (iter.hasNext()) {
             Map.Entry<String, OfcDailyAccount> entry = (Map.Entry<String, OfcDailyAccount>) iter.next();
             OfcDailyAccount ofcDailyAccount=entry.getValue();
+            if(ofcDailyAccount.getAdditionalOrder()==null){
+                ofcDailyAccount.setAdditionalOrder(new BigDecimal(0.0));
+            }
+            if(ofcDailyAccount.getReceivable()==null){
+                ofcDailyAccount.setReceivable(new BigDecimal(0.0));
+            }
+            if(ofcDailyAccount.getPayable()==null){
+                ofcDailyAccount.setPayable(new BigDecimal(0.0));
+            }
+            BigDecimal total=ofcDailyAccount.getReceivable().add(ofcDailyAccount.getPayable()).subtract(ofcDailyAccount.getAdditionalOrder());
+
+            ofcDailyAccount.setTotal(total.setScale(2));
+            ofcDailyAccount.setTotalPercent(percent.format(total.doubleValue()));
             ofcDailyAccountsService.save(ofcDailyAccount);
         }
         Iterator itera = account.entrySet().iterator();
         while (itera.hasNext()) {
             Map.Entry<String, OfcOrderAccountDTO> entry = (Map.Entry<String, OfcOrderAccountDTO>) itera.next();
             OfcOrderAccountDTO ofcOrderAccountDTO=entry.getValue();
+            if(ofcOrderAccountDTO.getAdditionalOrder()==null){
+                ofcOrderAccountDTO.setAdditionalOrder(new BigDecimal(0.0));
+            }
+            if(ofcOrderAccountDTO.getReceivable()==null){
+                ofcOrderAccountDTO.setReceivable(new BigDecimal(0.0));
+            }
+            if(ofcOrderAccountDTO.getPayable()==null){
+                ofcOrderAccountDTO.setPayable(new BigDecimal(0.0));
+            }
+            BigDecimal total=ofcOrderAccountDTO.getReceivable().add(ofcOrderAccountDTO.getPayable()).subtract(ofcOrderAccountDTO.getAdditionalOrder());
+            ofcOrderAccountDTO.setTotal(total.setScale(2));
+            ofcOrderAccountDTO.setTotalPercent(percent.format(total.doubleValue()));
+
             dailyAccountInfo.add(ofcOrderAccountDTO);
         }
 
         Collections.sort(dailyAccountInfo,new Comparator<OfcOrderAccountDTO>(){
             public int compare(OfcOrderAccountDTO o1, OfcOrderAccountDTO o2) {
-                if(o1.getAdditionalOrder().doubleValue()<o2.getAdditionalOrder().doubleValue()){
+                if(o1.getTotal().doubleValue()<o2.getTotal().doubleValue()){
                     return 1;
-                }else if(o1.getAdditionalOrder().doubleValue()>o2.getAdditionalOrder().doubleValue()){
+                }else if(o1.getTotal().doubleValue()>o2.getTotal().doubleValue()){
                     return -1;
                 }else{
-                    if(o1.getReceivable().doubleValue()<o2.getReceivable().doubleValue()){
-                        return 1;
-                    }else if(o1.getReceivable().doubleValue()>o2.getReceivable().doubleValue()){
-                        return -1;
-                    }else {
-                        if(o1.getPayable().doubleValue()<o2.getPayable().doubleValue()){
-                            return 1;
-                        }else if(o1.getPayable().doubleValue()>o2.getPayable().doubleValue()){
-                            return -1;
-                        }else{
-                            return 0;
-                        }
-                    }
+                  return 0;
                 }
             }
         });

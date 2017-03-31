@@ -2,12 +2,10 @@ package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
-import com.xescm.ofc.domain.OrderCountResult;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailInfoDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderInfoDto;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
-import com.xescm.ofc.model.dto.form.OrderCountForm;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -53,17 +51,5 @@ public interface OfcOrderOperMapper {
      */
     List<OfcOrderDetailInfoDto> getOrderDetailInfoByQrderCode(@Param("orderCode") String orderCode);
 
-    /**
-     * 统计前一天两小时内完成的订单
-     * @param form
-     * @return
-     */
-    List<OrderCountResult> countTwoHoursOrder(@Param("form") OrderCountForm form);
 
-    /**
-     * 统计前一天的订单数量
-     * @param form
-     * @return
-     */
-    List<OrderCountResult> yesterdayOrderCount(@Param("form") OrderCountForm form);
 }

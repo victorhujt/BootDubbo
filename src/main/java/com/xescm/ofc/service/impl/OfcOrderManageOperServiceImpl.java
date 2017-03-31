@@ -3,7 +3,6 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.domain.OrderCountResult;
 import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
@@ -11,7 +10,6 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcDailyAccountMapper;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
-import com.xescm.ofc.model.dto.form.OrderCountForm;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
@@ -411,25 +409,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         }
     }
 
-    /**
-     * 统计两小时内完成的订单
-     * @param form
-     * @return
-     */
-    @Override
-    public List<OrderCountResult> countTwoHoursOrder(OrderCountForm form) {
-        return ofcOrderOperMapper.countTwoHoursOrder(form);
-    }
 
-    /**
-     * 统计前一天的订单总数
-     * @param form
-     * @return
-     */
-    @Override
-
-    public List<OrderCountResult> yesterdayOrderCount(OrderCountForm form) {
-        return ofcOrderOperMapper.yesterdayOrderCount(form);
-    }
 
 }

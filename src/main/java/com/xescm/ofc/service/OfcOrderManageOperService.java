@@ -5,10 +5,8 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
-import com.xescm.ofc.domain.OrderCountResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
-import com.xescm.ofc.model.dto.form.OrderCountForm;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 
@@ -68,8 +66,6 @@ public interface OfcOrderManageOperService {
 
     void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType);
 
-    List<OrderCountResult> countTwoHoursOrder(OrderCountForm form);
 
-    List<OrderCountResult> yesterdayOrderCount(OrderCountForm form);
 
 }

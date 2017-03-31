@@ -8,6 +8,7 @@ import com.xescm.dingtalk.dto.robot.MarkdownDto;
 import com.xescm.dingtalk.enums.robot.MsgTypeEnum;
 import com.xescm.ofc.config.DingDingRobotConfig;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
+import com.xescm.ofc.service.OfcDailyAccountsService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.uam.provider.ChatRobotEdasService;
 import freemarker.template.Configuration;
@@ -44,11 +45,13 @@ public class OfcOrderManageApiRest {
     private DingDingRobotConfig dingDingRobotConfig;
     @Resource
     private Configuration configuration;
+    @Resource
+    private OfcDailyAccountsService ofcDailyAccountsService;
 
     @ResponseBody
     @RequestMapping(value = "/dailyAccount", method = RequestMethod.POST)
     public void  dailyAccount() {
-        logger.info("平台使用情况日报统计开始");
+        logger.info("平台使用情况日报统计开始......");
         List<OfcOrderAccountDTO> accountDaily=ofcOrderManageService.dailyAccount();
         if(CollectionUtils.isEmpty(accountDaily)){
             logger.info("平台使用情况日报统计为空");
@@ -95,4 +98,6 @@ public class OfcOrderManageApiRest {
             logger.info("钉钉机器人发送失败");
         }
     }
+
+
 }
