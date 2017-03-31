@@ -28,7 +28,7 @@
     <div id="app">
     <div class="list-mian-01">
         <el-dialog title="货品实收详情" v-model="chosenRealGood" size="small">
-            <el-table :data="realGoodsData"  style="width: 100%">
+            <el-table :data="realGoodsData" border style="width: 100%">
                 <el-table-column property="goodsCode" label="货品编码">
                     <template scope="scope">
                         <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
@@ -98,7 +98,7 @@
                   <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
-            <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange"
+            <el-table :data="customerData" border highlight-current-row @current-change="handleCustomerCurrentChange"
                       @row-dblclick="setCurrentCustInfo(currentCustomerRow)" style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="customerCode" label="客户编码"></el-table-column>
@@ -226,7 +226,7 @@
             <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
         <div class="ofc-block">
-            <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
+            <el-table :data="orderData" border @selection-change="handleSelectionChange" style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column type="selection">
                 </el-table-column>

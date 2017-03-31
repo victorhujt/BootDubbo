@@ -534,7 +534,6 @@
                                                                 <#--货品明细-->
                                                                 <#list ofcGoodsDetailsList! as goodsDetails>
                                                                 <tr role="row" class="odd" align="center">
-
                                                                     <td>${(goodsDetails.goodsCode)!""}</td>
                                                                     <td>${(goodsDetails.goodsName)!""}</td>
                                                                     <td class="hidden-480">${(goodsDetails.goodsSpec)!""}</td>

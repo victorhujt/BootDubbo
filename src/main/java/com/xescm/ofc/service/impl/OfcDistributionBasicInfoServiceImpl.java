@@ -34,7 +34,6 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public int updateByOrderCode(Object key) {
-
         return ofcDistributionBasicInfoMapper.updateByOrderCode(key);
     }
 
@@ -149,5 +148,10 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
     @Override
     public OfcDistributionBasicInfo queryByOrderCode(String orderCode) {
         return ofcDistributionBasicInfoMapper.queryByOrderCode(orderCode);
+    }
+
+    @Override
+    public int updateAddressByOrderCode(Object key) {
+        return ofcDistributionBasicInfoMapper.updateAddressByOrderCode(key);
     }
 }

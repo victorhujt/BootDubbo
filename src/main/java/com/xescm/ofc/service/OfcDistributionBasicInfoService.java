@@ -21,5 +21,7 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     String getLastedKabanOrderCodeByTransCode(String transCode);
 
 
-     Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee);
-    }
+    Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee);
+
+    int updateAddressByOrderCode(Object key);
+}

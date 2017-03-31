@@ -70,4 +70,5 @@ public interface OfcOrderManageService {
 
     Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList,String custCode,String warehouseCode);
 
+    void fixAddressWhenEdit(String orderTagStockEdit, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 }

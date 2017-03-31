@@ -15,7 +15,7 @@
             <el-form :model="colDefaultValModel" label-width="120px">
                 <div class="xe-block">
                     <el-form-item label="订单日期" class="xe-col-2">当前日期
-                        <#--{{colDefaultValModel.orderTime}}-->
+                    <#--{{colDefaultValModel.orderTime}}-->
                     </el-form-item>
                 </div>
                 <div class="xe-block">
@@ -165,7 +165,7 @@
                 typeOfTemplate:'',
                 lastTemplateType:'',
                 templateCodeShow:'${templateCode!}',
-                <#--orderTime:'${orderTime!}',-->
+            <#--orderTime:'${orderTime!}',-->
                 warehouseName:'',
                 businessType:'',
                 custNameShow:false,

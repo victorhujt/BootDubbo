@@ -31,7 +31,7 @@
     <div class="form-horizontal">
       <div class="form-group">
         <label class="control-label col-label no-padding-right" for="name">客户名称</label>
-        <input type="hidden" value="${(OFC_URL)!""}">
+        <input type="hidden" value="${(OFC_URL)!}">
         <div style="width:380px;margin-right:15px;" class="padding-12 y-float position-relative">
           <input readonly="readonly" id="custName" class="y-float" style="width:335px;" name="custName" type="search" placeholder=""
                  aria-controls="dynamic-table">
@@ -647,13 +647,13 @@
       var value = "";
 
       var newStatus = "<a id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\" class=\"blue\">审核</a>"
-              + "<a id=\"delete\" " + index + " onclick=\"deleteOrder('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"red\">删除</a>";
+              + "<a id=\"edit\" " + index + " onclick=\"editOrder('" + order.orderCode + "','" + order.orderType + "','" + order.businessType + "')\"  class=\"red\">编辑</a>";
 
       var unApproveStatus = "<a id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">反审核</a>";
       var cancelStatus = "<a id=\"cancel\" " + index + " onclick=\"cancelOrderOper('" + order.orderCode + "')\"  class=\"blue\">取消</a>";
 
       if (order.orderStatus == "10") {
-        value = newStatus;
+        value = newStatus + cancelStatus;
       }
       if (order.orderStatus == "20" || order.orderStatus == "30") {
         value = unApproveStatus + cancelStatus;
@@ -664,14 +664,27 @@
       return value;
     }
 
-    //删除订单
-    function deleteOrder(ordercode, orderStatus) {
-      xescm.common.submit("/ofc/orderDeleteOper", {
-        "orderCode": ordercode,
-        "orderStatus": orderStatus
-      }, "您确定要删除此订单?", function () {
-        xescm.common.loadPage("/ofc/orderManageOpera");
-      });
+    //编辑订单
+    function editOrder(orderCode,orderType,businessType) {
+      /*跳转到订单的可编辑页(跟下单页面一样!), 并回显该订单数据*/
+      if(orderType == "61"){
+          if(StringUtil.startWith(businessType,"62")){
+              var url = "/ofc/orderStorageInEdit/"+"?orderCode="+orderCode;
+              var html = window.location.href;
+              var index = html.indexOf("/index#");
+              window.open(html.substring(0,index) + "/index#" + url,'_self');
+          }else if(StringUtil.startWith(businessType,"61")){
+              var url = "/ofc/orderStorageOutEdit/"+"?orderCode="+orderCode;
+              var html = window.location.href;
+              var index = html.indexOf("/index#");
+              window.open(html.substring(0,index) + "/index#" + url,'_self');
+          }
+      }else{
+          var url = "/ofc/getOrderEditByCode/" + orderCode;
+          var html = window.location.href;
+          var index = html.indexOf("/index#");
+          window.open(html.substring(0,index) + "/index#" + url,'_self');
+      }
     }
     //订单详情
     function orderDetailOper(orderCode) {

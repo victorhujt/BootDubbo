@@ -52,5 +52,4 @@ public class OfcStorageTemplateDto {
     //供应商批次
     private String supportBatch;
 
-
 }
