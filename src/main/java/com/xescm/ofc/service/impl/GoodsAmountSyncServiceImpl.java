@@ -130,10 +130,10 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             } else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
                 throw new BusinessException("货品编号不能为空");
             }
-            // 修改货品信息
-            editGoodsDetailInfo(orderCode, goodsDetail);
             // 添加修改记录
             this.addGoodsModifyRecord(orderCode, goodsDetail);
+            // 修改货品信息
+            editGoodsDetailInfo(orderCode, goodsDetail);
         }
         // 调结算中心接口并推送AC
         OfcFundamentalInformation orderInfo = ofcFundamentalInformationService.selectByKey(orderCode);
