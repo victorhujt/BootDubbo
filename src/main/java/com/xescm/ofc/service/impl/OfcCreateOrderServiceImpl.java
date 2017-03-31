@@ -106,7 +106,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         //校验数据：货主编码 对应客户中心的custId
         String custCode = createOrderEntity.getCustCode();
-        String custName = createOrderEntity.getCustName();
+
         //校验货主编码
         resultModel = CheckUtils.checkCustCode(custCode);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
@@ -114,10 +114,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             return resultModel;
         }
         //校验货主名称
-        if (StringUtils.isBlank(custName)) {
-            logger.error("校验数据{}失败：{}", "货主名称", custName);
-            return new ResultModel(ResultModel.ResultEnum.CODE_0008);
-        }
+//        if (StringUtils.isBlank(custName)) {
+//            logger.error("校验数据{}失败：{}", "货主名称", custName);
+//            return new ResultModel(ResultModel.ResultEnum.CODE_0008);
+//        }
 
         QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
         queryCustomerCodeDto.setCustomerCode(custCode);
@@ -125,6 +125,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         if (customerVoWrapper.getResult() == null) {
             logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
+        } else {
+            createOrderEntity.setCustName(customerVoWrapper.getResult().getCustomerName());
         }
 
 
