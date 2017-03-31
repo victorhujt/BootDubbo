@@ -2826,8 +2826,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)-1);
         form.setStartDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
         String beginTime=DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2);
-       // form.setStartDate("2016-12-29");
-       // form.setEndDate("2017-03-29");
         //两小时完成的订单统计
         List<OrderCountResult>  twoHourOrderCount=ofcDailyAccountsService.countTwoHoursOrder(form);
         //前一天的订单统计
@@ -2912,9 +2910,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }else{
                         key.append("ALL");
                     }
-                    if(accountDailyResult.containsKey(key)){
-                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key);
-                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key);
+                    if(accountDailyResult.containsKey(key.toString())){
+                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
+                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
                         ofcDailyAccount.setHaveIncomeOrderAccount(BigDecimal.valueOf(acIncomeSettleDTO.getReceivableOrderNumber()));
                         ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()));
                         BigDecimal p=ofcDailyAccount.getHaveIncomeOrderAccount().divide(ofcDailyAccount.getYesterdayAccount(),2, RoundingMode.HALF_UP);
@@ -2946,9 +2944,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }else{
                         key.append("ALL");
                     }
-                    if(accountDailyResult.containsKey(key)){
-                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key);
-                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key);
+                    if(accountDailyResult.containsKey(key.toString())){
+                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
+                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
                         ofcDailyAccount.setExternalVehicleAccount(BigDecimal.valueOf(deliverEveryRunDTO.getNum()));
                         BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
                         //应付确认日清 应付确认车数量/外部车辆发运数量
@@ -3002,7 +3000,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
             dailyAccountInfo.add(ofcOrderAccountDTO);
         }
-
+        //按 应收确认日清 + 应付确认日清 - 事后补录订单 排序
         Collections.sort(dailyAccountInfo,new Comparator<OfcOrderAccountDTO>(){
             public int compare(OfcOrderAccountDTO o1, OfcOrderAccountDTO o2) {
                 if(o1.getTotal().doubleValue()<o2.getTotal().doubleValue()){
