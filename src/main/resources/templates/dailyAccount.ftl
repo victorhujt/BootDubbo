@@ -77,9 +77,9 @@
 </#list>
 ![image](http://ued.xianyiscm.com:8083/nby/xian.png)
 
-[了解规则](http://baidu.com/ "Title")
+[了解规则](${(ofcUrl)!}/ofc/rule "Title")
 
-[显示全部](http://baidu.com/ "Title")
+[显示全部](${ofcUrl!}/ofc/platformDaily "Title")
 
 
 

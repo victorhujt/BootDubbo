@@ -2826,6 +2826,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)-1);
         form.setStartDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
         String beginTime=DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2);
+        form.setStartDate("2016-12-29");
+        form.setEndDate("2017-03-29");
+        beginTime="2016-12-29";
         //两小时完成的订单统计
         List<OrderCountResult>  twoHourOrderCount=ofcDailyAccountsService.countTwoHoursOrder(form);
         //前一天的订单统计

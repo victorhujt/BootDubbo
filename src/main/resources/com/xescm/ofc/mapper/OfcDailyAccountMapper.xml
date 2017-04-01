@@ -98,7 +98,7 @@
   <select id="queryDailyAccount" resultMap="BaseResultMap">
     SELECT omo.area_name,omo.area_code,omo.base_name,omo.base_code,omo.two_hour_account,omo.yesterday_account,
     omo.have_income_order_account,omo.payable_vehicle_account,omo.external_vehicle_account,omo.gmt_create,
-    omo.gmt_modified,omo.additional_order_percent,omo.receivable_percent,omo.payable_percent,omo,total_percent,
+    omo.gmt_modified,omo.additional_order_percent,omo.receivable_percent,omo.payable_percent,omo.total_percent,
     omo.additional_order,omo.receivable,omo.payable,omo.total
     FROM ofc_daily_account omo
     <where>

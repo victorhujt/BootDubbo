@@ -18,7 +18,9 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
@@ -37,10 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>Title:    .客户中心 订单管理 </p>
@@ -67,6 +66,8 @@ public class OfcOrderManageRest extends BaseController{
     private CscStoreEdasService cscStoreEdasService;
     @Resource
     private OfcTransplanInfoService ofcTransplanInfoService;
+    @Resource
+    private  OfcDailyAccountsService ofcDailyAccountsService;
 
     /**
      * 订单审核/反审核
@@ -450,5 +451,20 @@ public class OfcOrderManageRest extends BaseController{
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
     }
+
+    @RequestMapping(value ="queryDailyAccount", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<?> queryDailyAccount(){
+        List<OfcDailyAccountVo> OfcDailyAccountVos;
+        try{
+            OfcDailyAccountVos=ofcDailyAccountsService.queryDailyAccount(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE2));
+            logger.info("查询平台日报数据为:{}",OfcDailyAccountVos);
+        }catch (Exception e){
+            logger.error("查询平台日报数据异常:{}",e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"查询平台日报数据异常");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"查询平台日报数据成功",OfcDailyAccountVos);
+    }
+
 
 }

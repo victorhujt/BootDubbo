@@ -7,8 +7,8 @@ import com.xescm.dingtalk.dto.robot.ChatRobotMsgDto;
 import com.xescm.dingtalk.dto.robot.MarkdownDto;
 import com.xescm.dingtalk.enums.robot.MsgTypeEnum;
 import com.xescm.ofc.config.DingDingRobotConfig;
+import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
-import com.xescm.ofc.service.OfcDailyAccountsService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.uam.provider.ChatRobotEdasService;
 import freemarker.template.Configuration;
@@ -44,10 +44,9 @@ public class OfcOrderManageApiRest {
     @Resource
     private DingDingRobotConfig dingDingRobotConfig;
     @Resource
-    private Configuration configuration;
+    private RestConfig restConfig;
     @Resource
-    private OfcDailyAccountsService ofcDailyAccountsService;
-
+    private Configuration configuration;
     @ResponseBody
     @RequestMapping(value = "/dailyAccount", method = RequestMethod.POST)
     public void  dailyAccount() {
@@ -59,6 +58,7 @@ public class OfcOrderManageApiRest {
         }
         Map<String, Object> model = new HashMap<>();
         model.put("dailyAccountInfo",accountDaily);
+        model.put("ofcUrl",restConfig.getOfcWebUrl());
         String content="";
         try {
             Template t = configuration.getTemplate("dailyAccount.ftl");

@@ -429,7 +429,17 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
+    @RequestMapping(value = "/ofc/platformDaily")
+    public ModelAndView platformDaily(Model model) {
+        ModelAndView modelAndView = new ModelAndView("platform_daily");
+        return modelAndView;
+    }
 
+    @RequestMapping(value = "/ofc/rule")
+    public ModelAndView platformDailyrRule(Model model) {
+        ModelAndView modelAndView = new ModelAndView("rule");
+        return modelAndView;
+    }
 
     /**
      * 运营中心--跳转导入模板配置
