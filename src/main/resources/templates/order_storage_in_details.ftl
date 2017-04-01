@@ -129,7 +129,7 @@
                 </div>
             <div class="xe-block">
                 <el-form-item label="备注" class="xe-col-3">
-                    <el-input type="textarea" v-model="notes" :readOnly="true">
+                    <el-input type="textarea" v-model="notes" :disabled="true">
                 </el-form-item>
             </div>
             <div class="xe-block">
