@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -108,16 +109,16 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     @Override
     public OfcMobileOrderVo selectOneOfcMobileOrder(OfcMobileOrder ofcMobileOrder) throws UnsupportedEncodingException {
-        OfcMobileOrder order=selectOne(ofcMobileOrder);
+        OfcMobileOrder order = super.selectOne(ofcMobileOrder);
         OfcMobileOrderVo vo;
         List<String> urls;
-       if(order!=null&& StringUtils.isNotEmpty(order.getSerialNo())){
-            String serialNo=order.getSerialNo();
+       if(order != null && StringUtils.isNotEmpty(order.getSerialNo())){
+           String serialNo = order.getSerialNo();
            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
-           vo=modelMapper.map(order, OfcMobileOrderVo.class);
-           String[] serialNos=serialNo.split(",");
-           if(serialNos.length>0){
-            urls=getOssUrls(serialNos);
+           vo = modelMapper.map(order, OfcMobileOrderVo.class);
+           String[] serialNos = serialNo.split(",");
+           if(serialNos.length > 0){
+            urls = this.getOssUrls(serialNos);
             vo.setUrls(urls);
            }
        }else{
@@ -287,6 +288,32 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         String key = "MobilePendingOrderList";
         ListOperations<String, String> listOps = redisTemplate.opsForList();
         listOps.rightPush(key, orderCode);
+    }
+
+    @Override
+    public void dealDingdingOrder() {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.MINUTE, -5);
+        Date time = now.getTime();
+        OfcMobileOrder ofcMobileOrder = new OfcMobileOrder();
+        ofcMobileOrder.setAppcetDate(time);
+        ofcMobileOrder.setMobileOrderStatus("2");
+        logger.info("ofcMobileOrder :{}", ofcMobileOrder);
+        List<OfcMobileOrder> mobileOrders = ofcMobileOrderMapper.queryNeedDeal(ofcMobileOrder);
+        if(mobileOrders.size() < 1){
+            logger.info("没有待处理订单...");
+            return;
+        }
+        for (OfcMobileOrder mobileOrder : mobileOrders) {
+            String mobileOrderCode = mobileOrder.getMobileOrderCode();
+            mobileOrder.setMobileOrderStatus("0");
+            int update = ofcMobileOrderMapper.updateByMobileCode(mobileOrder);
+            if(update < 1){
+                logger.error("钉钉录单重新更新为未处理失败! 订单号: {}", mobileOrderCode);
+                continue;
+            }
+            this.pushOrderToCache(mobileOrderCode);
+        }
     }
 
     /**

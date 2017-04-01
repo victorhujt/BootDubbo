@@ -41,4 +41,7 @@ public interface OfcMobileOrderService extends IService<OfcMobileOrder>{
     OfcMobileOrderVo autoAcceptPendingOrder(String user);
 
     void pushOrderToCache(String orderCode);
+
+    void dealDingdingOrder();
+
 }
