@@ -441,4 +441,35 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选基地反查大区查询成功", ofcGroupVo);
     }
+
+    /**
+     * 审核与反审核订单
+     *
+     * @param orderCode     订单编号
+     * @param orderStatus       订单状态
+     * @param reviewTag     审核标记
+     * @return      Wrapper
+     */
+    @RequestMapping(value = "/orderOrNotAuditForTran", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> orderAuditOperForTran(String orderCode, String orderStatus, String reviewTag) {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }else if (StringUtils.isBlank(orderStatus)) {
+                throw new Exception("订单状态不能为空！");
+            }else if (StringUtils.isBlank(reviewTag)) {
+                throw new Exception("订单标识不能为空！");
+            }
+            String result = ofcOrderManageService.orderAutoAuditForTran(orderCode, orderStatus, reviewTag, authResDtoByToken);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
 }
