@@ -3727,4 +3727,76 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
+    /**
+     * 众品订单审核
+     *
+     * @param orderStatus               订单状态
+     * @param reviewTag                 审核标志位
+     * @param authResDtoByToken         当前登录用户
+     * @return String
+     */
+    @Override
+    public String orderAutoAuditForTran(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(orderCode);
+        ofcOrderStatus.setOrderStatus(orderStatus);
+        logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", orderCode, ofcOrderStatus.toString());
+        if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals(REVIEW)) {
+            String userName = authResDtoByToken.getUserName();
+            ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
+            ofcOrderStatus.setStatusDesc("已审核");
+            ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单审核完成");
+            ofcOrderStatus.setOperator(userName);
+            ofcOrderStatus.setLastedOperTime(new Date());
+            int save = ofcOrderStatusService.save(ofcOrderStatus);
+            if (save == 0) {
+                logger.error("自动审核出错, 更新订单状态为已审核失败");
+                throw new BusinessException("自动审核出错!");
+            }
+            OfcFundamentalInformation ofcFundamentalInformation= ofcFundamentalInformationService.selectByKey(orderCode);
+            if(null==ofcFundamentalInformation){
+                throw new BusinessException("该订单不存在或者已删除");
+            }
+            OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setOrderCode(orderCode);
+            List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+            String orderType = ofcFundamentalInformation.getOrderType();
+            if (trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
+                pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
+            } else if (trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
+                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectByKey(orderCode);
+                //仓储订单推仓储中心
+                pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
+                //仓储带运输订单推仓储中心和运输中心
+                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+                    pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
+                }
+            } else {
+                logger.error("订单类型有误");
+                throw new BusinessException("订单类型有误");
+            }
+            //订单状态变为执行中
+            ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
+            ofcOrderStatus.setStatusDesc("执行中");
+            ofcOrderStatus.setNotes(new StringBuilder()
+                    .append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1))
+                    .append(" ").append("订单开始执行").toString());
+            ofcOrderStatus.setOperator(userName);
+            ofcOrderStatus.setLastedOperTime(new Date());
+            int saveOrderStatus = ofcOrderStatusService.save(ofcOrderStatus);
+            if (saveOrderStatus == 0) {
+                logger.error("自动审核出错, 更新订单状态为执行中失败");
+                throw new BusinessException("自动审核出错!");
+            }
+            logger.info("=====>订单中心--订单状态推结算中心");
+            this.pullOfcOrderStatus(ofcOrderStatus);
+        } else {
+            logger.error("订单状态错误或缺少审核标志位");
+            throw new BusinessException("订单状态错误或缺少审核标志位");
+        }
+
+        return String.valueOf(Wrapper.SUCCESS_CODE);
+    }
 }

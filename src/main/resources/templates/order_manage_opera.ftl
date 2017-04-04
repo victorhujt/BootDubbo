@@ -656,7 +656,7 @@
         value = newStatus + cancelStatus;
       }
       if (order.orderStatus == "20" || order.orderStatus == "30") {
-        value = unApproveStatus + cancelStatus;
+        value = cancelStatus;
       }
       if (order.orderStatus == "30") {
         value = cancelStatus;
@@ -705,7 +705,7 @@
 
     //订单审核、反审核
     function reviewOrderOper(ordercode, orderStatus) {
-      xescm.common.submit("/ofc/orderOrNotAuditOper", {
+      xescm.common.submit("/ofc/orderOrNotAuditForTran", {
         "orderCode": ordercode,
         "orderStatus": orderStatus,
         "reviewTag": "review"
