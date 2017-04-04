@@ -413,9 +413,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
         String departureCity = ofcDistributionBasicInfo.getDepartureCity();
         String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
-//        return !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
-//                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
-        return !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
+        return !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
+                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
     }
 
     private void fixOrEeAddrCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
