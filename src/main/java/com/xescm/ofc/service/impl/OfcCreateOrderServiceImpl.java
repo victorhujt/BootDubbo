@@ -17,6 +17,7 @@ import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.epc.edas.service.EpcBaiDuEdasService;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
@@ -196,21 +197,32 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //checkSupport(createOrderEntity, custCode);
 
         //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
-        if (!StringUtils.equals("60", orderType)) {
-            List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
-            for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
-                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-                cscGoods.setCustomerCode(custCode);
-                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
-                resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
+//        if (!StringUtils.equals("60", orderType)) {
+        List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+        for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
+            String goodsCode = goodsInfo.getGoodsCode();
+            CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+            cscGoods.setCustomerCode(custCode);
+            cscGoods.setGoodsCode(goodsCode);
+            Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
+            if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
+                if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
+                    for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
+                        goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
+                        goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
+                    }
+                }
+            } else {    // 仓储订单 - 货品必须存在
+                resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
+                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
                     return resultModel;
                 }
-                //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
-                this.fixOrderGoodsMsg(createOrderEntity, createOrderGoodsInfo);
             }
+            //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
+            this.fixOrderGoodsMsg(createOrderEntity, goodsInfo);
         }
+//        }
         //转换 dto → do
         CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
@@ -401,8 +413,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
         String departureCity = ofcDistributionBasicInfo.getDepartureCity();
         String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
-        return !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
-                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
+//        return !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
+//                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
+        return !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
     }
 
     private void fixOrEeAddrCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
