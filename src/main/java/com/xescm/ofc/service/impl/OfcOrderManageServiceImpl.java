@@ -2654,6 +2654,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @CreateDate 2017/2/3
      */
     private void updateOrderAreaAndBase(RmcServiceCoverageForOrderVo rmcPickup, OfcFundamentalInformation ofcFundamentalInformation) {
+        logger.info("更新订单的大区和基地 rmcPickup :{}", rmcPickup);
+        logger.info("更新订单的大区和基地 ofcFundamentalInformation :{}", ofcFundamentalInformation);
+        if (null == rmcPickup) {
+            logger.error("区域覆盖结果rmcPickup为空");
+            return;
+        }
         OfcFundamentalInformation ofcInfo = new OfcFundamentalInformation();
         UamGroupDto dto = new UamGroupDto();
         dto.setSerialNo(rmcPickup.getSerialNo());

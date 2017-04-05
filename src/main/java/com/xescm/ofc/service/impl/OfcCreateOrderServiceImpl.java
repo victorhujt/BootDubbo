@@ -8,14 +8,15 @@ import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
-import com.xescm.csc.provider.CscCustomerEdasService;
-import com.xescm.csc.provider.CscGoodsEdasService;
-import com.xescm.csc.provider.CscStoreEdasService;
-import com.xescm.csc.provider.CscWarehouseEdasService;
+import com.xescm.csc.provider.*;
 import com.xescm.epc.edas.service.EpcBaiDuEdasService;
 import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.constant.ResultModel;
@@ -87,6 +88,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private OfcCreateOrderMapper createOrdersMapper;
     @Resource
     private OfcAddressReflectMapper ofcAddressReflectMapper;
+    @Resource
+    private CscContactEdasService cscContactEdasService;
 
     @Override
     public int queryCountByOrderStatus(String orderCode, String orderStatus) {
@@ -181,6 +184,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
             return resultModel;
         }
+
+        // 校验收发货方，如果收发货方编码不为空，则查询收发货方信息；否则校验传入收发货方字段
+//        resultModel = checkContactInfo(createOrderEntity);
+//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+//            logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
+//            return resultModel;
+//        }
 
         //仓库编码
         String warehouseCode = createOrderEntity.getWarehouseCode();
@@ -698,4 +708,168 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return resuteMap;
     }
 
+
+    /**
+     * 校验收发货方信息
+     * @param createOrderEntity
+     * @return
+     */
+    public ResultModel checkContactInfo(CreateOrderEntity createOrderEntity) {
+        ResultModel resultModel;
+        ResultModel restConsignor = checkConsignorInfo(createOrderEntity);
+        if (ResultModel.ResultEnum.CODE_0000.equals(restConsignor.getCode())) {
+            ResultModel restConsignee = checkConsigneeInfo(createOrderEntity);
+            if (ResultModel.ResultEnum.CODE_0000.equals(restConsignee.getCode())) {
+                resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0000);
+            } else {
+                resultModel = restConsignee;
+            }
+        } else {
+            resultModel = restConsignor;
+        }
+        return resultModel;
+    }
+
+    // 发货方校验
+    public ResultModel checkConsignorInfo(CreateOrderEntity createOrderEntity) {
+        // 发货方编码
+        String consignorCode = createOrderEntity.getConsignorCode();
+        String custCode = createOrderEntity.getCustCode();
+        if (!PubUtils.isOEmptyOrNull(consignorCode)) {
+            return queryContactAndSet(createOrderEntity, custCode,"2", "");
+        } else {
+            String orderType = createOrderEntity.getOrderType();
+            String consignor_name = createOrderEntity.getConsignorName();
+            String consignor_contact = createOrderEntity.getConsignorContact();
+            String consignor_phone = createOrderEntity.getConsignorPhone();
+            String consignor_address = createOrderEntity.getConsignorAddress();
+            String provide_transport = createOrderEntity.getProvideTransport();
+            if ("60".equals(orderType) || "61".equals(orderType)) {
+                if ("61".equals(orderType)) {
+                    if (!StringUtils.equals(provide_transport, "1")) {
+                        return new ResultModel("1000", "是否需要运输信息不能为空");
+                    }
+                }
+                if (StringUtils.isBlank(consignor_name)) {
+                    return new ResultModel("1000", "发货方名称信息不能为空");
+                } else if (StringUtils.isBlank(consignor_contact)) {
+                    return new ResultModel("1000", "发货方联系人信息不能为空");
+                } else if (StringUtils.isBlank(consignor_phone)) {
+                    return new ResultModel("1000", "发货方联系电话信息不能为空");
+                } else if (StringUtils.isBlank(consignor_address)) {
+                    return new ResultModel("1000", "发货方地址信息不能为空");
+                }
+            }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        }
+    }
+
+    // 收货方校验
+    public ResultModel checkConsigneeInfo(CreateOrderEntity createOrderEntity) {
+        // 收货方编码
+        String consigneeCode = createOrderEntity.getConsigneeCode();
+        String custCode = createOrderEntity.getCustCode();
+        if (!PubUtils.isOEmptyOrNull(consigneeCode)) {
+            return queryContactAndSet(createOrderEntity, custCode,"1", "");
+        } else {
+            String orderType = createOrderEntity.getOrderType();
+            String consignee_name = createOrderEntity.getConsigneeName();
+            String consignee_contact = createOrderEntity.getConsigneeContact();
+            String consignee_phone = createOrderEntity.getConsigneePhone();
+            String consignee_address = createOrderEntity.getConsigneeAddress();
+            String provide_transport = createOrderEntity.getProvideTransport();
+            if ("60".equals(orderType) || "61".equals(orderType)) {
+                if ("61".equals(orderType)) {
+                    if (!StringUtils.equals(provide_transport, "1")) {
+                        return new ResultModel("1000", "是否需要运输信息不能为空");
+                    }
+                }
+                if (StringUtils.isBlank(consignee_name)) {
+                    return new ResultModel("1000", "收货方名称信息不能为空");
+                } else if (StringUtils.isBlank(consignee_contact)) {
+                    return new ResultModel("1000", "收货方联系人信息不能为空");
+                } else if (StringUtils.isBlank(consignee_phone)) {
+                    return new ResultModel("1000", "收货方联系电话信息不能为空");
+                } else if (StringUtils.isBlank(consignee_address)) {
+                    return new ResultModel("1000", "收货方地址信息不能为空");
+                }
+            }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        }
+    }
+
+    private ResultModel queryContactAndSet(CreateOrderEntity createOrderEntity, String companyCode, String purpose, String storeCode) {
+        String custCode = createOrderEntity.getCustCode();
+        CscContantAndCompanyDto param = new CscContantAndCompanyDto();
+//        param.setSotreCode(storeCode);
+        param.setCustomerCode(custCode);
+        CscContactDto contactDto = new CscContactDto();
+        contactDto.setPurpose(purpose);
+        CscContactCompanyDto companyDto = new CscContactCompanyDto();
+        companyDto.setContactCompanyCode(companyCode);
+        Wrapper<List<CscContantAndCompanyResponseDto>> result = cscContactEdasService.queryCscReceivingInfoList(param);
+        if (Wrapper.SUCCESS_CODE == result.getCode() && PubUtils.isNotNullAndBiggerSize(result.getResult(), 0)) {
+            CscContantAndCompanyResponseDto contactInfo = result.getResult().get(0);
+            String provinceCode = contactInfo.getProvince();
+            String provinceName = contactInfo.getProvinceName();
+            String cityCode = contactInfo.getCity();
+            String cityName = contactInfo.getCityName();
+            String countyCode = contactInfo.getArea();
+            String countyName = contactInfo.getAreaName();
+            String townCode = contactInfo.getStreet();
+            String townName = contactInfo.getStreetName();
+            String address = contactInfo.getDetailAddress();
+            String contactCompanyCode = contactInfo.getContactCompanyCode();
+            String contactCompanyName = contactInfo.getContactCompanyName();
+            String contactName = contactInfo.getContactName();
+            String phone = contactInfo.getPhone();
+            String fax = contactInfo.getFax();
+            String email = contactInfo.getEmail();
+            String zip = contactInfo.getPostCode();
+            if ("1".equals(purpose)) {
+                createOrderEntity.setConsigneeProvinceCode(provinceCode);
+                createOrderEntity.setConsigneeProvince(provinceName);
+                createOrderEntity.setConsigneeCityCode(cityCode);
+                createOrderEntity.setConsigneeCity(cityName);
+                createOrderEntity.setConsigneeCountyCode(countyCode);
+                createOrderEntity.setConsigneeCounty(countyName);
+                createOrderEntity.setConsigneeTownCode(townCode);
+                createOrderEntity.setConsigneeTownCode(townName);
+                createOrderEntity.setConsigneeAddress(address);
+                createOrderEntity.setConsigneeCode(contactCompanyCode);
+                createOrderEntity.setConsigneeName(contactCompanyName);
+                createOrderEntity.setConsigneeContact(contactName);
+                createOrderEntity.setConsigneePhone(phone);
+                createOrderEntity.setConsigneeFax(fax);
+                createOrderEntity.setConsigneeEmail(email);
+                createOrderEntity.setConsigneeZip(zip);
+            } else if ("2".equals(purpose)) {
+                createOrderEntity.setConsignorProvinceCode(provinceCode);
+                createOrderEntity.setConsignorProvince(provinceName);
+                createOrderEntity.setConsignorCityCode(cityCode);
+                createOrderEntity.setConsignorCity(cityName);
+                createOrderEntity.setConsignorCountyCode(countyCode);
+                createOrderEntity.setConsignorCounty(countyName);
+                createOrderEntity.setConsignorTownCode(townCode);
+                createOrderEntity.setConsignorTownCode(townName);
+                createOrderEntity.setConsignorAddress(address);
+                createOrderEntity.setConsignorCode(contactCompanyCode);
+                createOrderEntity.setConsignorName(contactCompanyName);
+                createOrderEntity.setConsignorContact(contactName);
+                createOrderEntity.setConsignorPhone(phone);
+                createOrderEntity.setConsignorFax(fax);
+                createOrderEntity.setConsignorEmail(email);
+                createOrderEntity.setConsignorZip(zip);
+            }
+        } else {
+            if ("1".equals(purpose)) {
+                logger.error("==>客户 {} 查询不到收货方 {}", custCode, storeCode);
+                return new ResultModel("3001", "客户 "+custCode+" 找不到收货方 ");
+            } else {
+                logger.error("==>客户 {} 查询不到发货方 {}", custCode, storeCode);
+                return new ResultModel("3001", "客户 "+custCode+" 找不到发货方 ");
+            }
+        }
+        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+    }
 }

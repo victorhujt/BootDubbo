@@ -61,6 +61,7 @@ public class ResultModel {
         CODE_1000("1000", "自动审核异常"),
         CODE_1001("1001", "订单已经审核"),
         CODE_2001("2001", "货品编码不存在"),
+        CODE_3001("3001", "收发货方信息错误"),
         CODE_9999("9999", "系统异常！");
 
         private String code;
