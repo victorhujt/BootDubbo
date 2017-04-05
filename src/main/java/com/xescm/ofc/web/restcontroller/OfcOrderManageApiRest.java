@@ -87,6 +87,7 @@ public class OfcOrderManageApiRest {
         markdownDto.setTitle("平台日报红黑榜");
         chatRobotMsgDto.setMarkdown(markdownDto);
         logger.info("发送到钉钉机器人");
+        logger.info("发送到钉钉机器人的参数为:{}",chatRobotMsgDto);
         Wrapper<Boolean> success=chatRobotEdasService.sendChatRobotMsg(chatRobotMsgDto);
         if(success.getCode()==Wrapper.SUCCESS_CODE){
             if(success.getResult()){
@@ -98,6 +99,4 @@ public class OfcOrderManageApiRest {
             logger.info("钉钉机器人发送失败");
         }
     }
-
-
 }
