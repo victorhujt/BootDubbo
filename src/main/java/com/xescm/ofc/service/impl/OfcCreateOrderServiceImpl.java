@@ -233,7 +233,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
         //调用创建订单方法
-        resultModel = createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+        resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
         if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             //操作成功
             logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
@@ -347,7 +347,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             try {
                 //自动审核通过 review:审核；rereview:反审核
                 if(sEmptyOrNull){
-
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                 } else {
@@ -534,7 +533,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                 if(PubUtils.isSEmptyOrNull(destinationCode)){
                                     logger.error("调用RMC接口, 查询到达省市区名称对应的编码失败! ");
                                 }
-                                ofcDistributionBasicInfo.setDeparturePlaceCode(destinationCode);
+                                ofcDistributionBasicInfo.setDestinationCode(destinationCode);
                                 /*ofcAddressReflect = new OfcAddressReflect();
                                 ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
                                 int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
@@ -611,7 +610,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-//        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
         String auditResult = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo
                 , ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, REVIEW, authResDto);
         logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));

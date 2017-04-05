@@ -70,7 +70,7 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
             ofcDistributionBasicInfo.setDestinationCity(city);
             ofcDistributionBasicInfo.setDestinationDistrict(district);
             ofcDistributionBasicInfo.setDestinationTowns(street);
-            ofcDistributionBasicInfo.setDeparturePlaceCode(sb.toString());
+            ofcDistributionBasicInfo.setDestinationCode(sb.toString());
         }
 
     }
