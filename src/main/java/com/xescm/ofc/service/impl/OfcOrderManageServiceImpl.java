@@ -3139,11 +3139,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcDistributionBasicInfo 运输信息
      */
     public void fixAddressWhenEdit(String reviewTag, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        logger.info("编辑后将地址不完整的订单的地址信息补充完整, reviewTag : {}", reviewTag);
+        logger.info("编辑后将地址不完整的订单的地址信息补充完整, ofcDistributionBasicInfo : {}", ofcDistributionBasicInfo);
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
             String departurePlace = ofcDistributionBasicInfo.getDeparturePlace();
             String destination = ofcDistributionBasicInfo.getDestination();
             if(!PubUtils.isSEmptyOrNull(departurePlace)){
                 OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
+                logger.info("编辑后将地址不完整的订单的地址信息补充完整, ofcAddressReflect : {}", ofcAddressReflect);
                 if(null != ofcAddressReflect && PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                     ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
                     int update = ofcAddressReflectMapper.updateByAddress(ofcAddressReflect);
@@ -3155,6 +3158,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
             if(!PubUtils.isSEmptyOrNull(destination)){
                 OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
+                logger.info("编辑后将地址不完整的订单的地址信息补充完整, ofcAddressReflect : {}", ofcAddressReflect);
                 if(null != ofcAddressReflect && PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                     ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
                     int update = ofcAddressReflectMapper.updateByAddress(ofcAddressReflect);

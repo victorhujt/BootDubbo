@@ -434,14 +434,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         if(!PubUtils.isSEmptyOrNull(departurePlace)){
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
             logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
-            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
+            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
+                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())){
                 logger.info("映射成功!");
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
             } else {
                 logger.info("映射失败!");
                 logger.info("开始调用Epc接口进行解析!");
                 Wrapper departurePlaceResult = epcBaiDuEdasService.showLocationStr(departurePlace);
-                if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || null == departurePlaceResult.getResult()){
+                logger.info("调用Epc接口进行解析结果: {}", departurePlaceResult);
+                Object result = departurePlaceResult.getResult();
+                boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
+                if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
                     logger.error("出发完整地址调用EPC接口解析完整地址失败! destinationResult :{}", departurePlaceResult);
                     ofcAddressReflect = new OfcAddressReflect();
                     ofcAddressReflect.setAddress(departurePlace);
@@ -490,14 +494,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         if(!PubUtils.isSEmptyOrNull(destination)){
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
             logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
-            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
+            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
+                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())){
                 logger.info("映射成功!");
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
             } else {
                 logger.info("映射失败!");
                 logger.error("开始调用Epc接口进行解析! ");
                 Wrapper destinationResult = epcBaiDuEdasService.showLocationStr(destination);
-                if(destinationResult == null || destinationResult.getCode() == Wrapper.ERROR_CODE || null == destinationResult.getResult()){
+                logger.info("调用Epc接口进行解析结果: {}", destinationResult);
+                Object result = destinationResult.getResult();
+                boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
+                if(destinationResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
                     logger.error("到达完整地址调用EPC接口解析完整地址失败! destinationResult :{}", destinationResult);
                     ofcAddressReflect = new OfcAddressReflect();
                     ofcAddressReflect.setAddress(destination);
@@ -537,11 +545,36 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                             }
 
                         }
-
                     }
                 }
             }
         }
+    }
+
+    /**
+     * 校验Epc地址解析结果是否成功
+     * @param result
+     * @return
+     */
+    private boolean checkEpcAddrPass(Object result) {
+        if (null == result || PubUtils.isSEmptyOrNull((String) result)) {
+            logger.info("校验Epc地址解析结果失败! result为空");
+            return false;
+        }
+        String addr = (String) result;
+        logger.info("校验Epc地址解析结果是否成功 addr : {}", addr);
+        com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject(addr);
+        Object province = departurePlaceObj.get("province");
+        Object city = departurePlaceObj.get("city");
+        Object district = departurePlaceObj.get("district");
+        if (null == province || PubUtils.isSEmptyOrNull((String) province)
+                || null == city || PubUtils.isSEmptyOrNull((String) city)
+                || null == district || PubUtils.isSEmptyOrNull((String) district)) {
+            logger.info("校验Epc地址解析结果失败!");
+            return false;
+        }
+        logger.info("校验Epc地址解析结果成功!");
+        return true;
     }
 
 
