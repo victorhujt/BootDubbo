@@ -196,8 +196,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //供应商
         //checkSupport(createOrderEntity, custCode);
 
-        //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
-//        if (!StringUtils.equals("60", orderType)) {
+        //校验：货品档案信息，校验货品明细
         List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
         for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
             String goodsCode = goodsInfo.getGoodsCode();
@@ -222,7 +221,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
             this.fixOrderGoodsMsg(createOrderEntity, goodsInfo);
         }
-//        }
+
         //转换 dto → do
         CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
@@ -255,9 +254,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String weightDetail = createOrderGoodsInfo.getWeight();
         if(!PubUtils.isSEmptyOrNull(quantityDetail)){
             String quantityHead = createOrderEntity.getQuantity();
-            if(PubUtils.isSEmptyOrNull(quantityHead)){
-                createOrderEntity.setQuantity("0");
-            } else {
+            if(!PubUtils.isSEmptyOrNull(quantityHead)){
                 BigDecimal quan = new BigDecimal(quantityDetail);
                 BigDecimal quantityResult = new BigDecimal(quantityHead);
                 quantityResult = quantityResult.add(quan);
@@ -266,9 +263,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         if(!PubUtils.isSEmptyOrNull(weightDetail)){
             String weightHead = createOrderEntity.getWeight();
-            if(PubUtils.isSEmptyOrNull(weightHead)){
-                createOrderEntity.setWeight("0");
-            } else {
+            if(!PubUtils.isSEmptyOrNull(weightHead)){
                 BigDecimal weig = new BigDecimal(weightDetail);
                 BigDecimal weightHeadResult = new BigDecimal(weightHead);
                 weightHeadResult = weightHeadResult.add(weig);
@@ -277,17 +272,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         if(!PubUtils.isSEmptyOrNull(cubageDetail)){
             String cubageHead = createOrderEntity.getCubage();
-            if(PubUtils.isSEmptyOrNull(cubageHead)){
-                createOrderEntity.setCubage("0");
-            } else {
+            if(!PubUtils.isSEmptyOrNull(cubageHead)){
                 BigDecimal cuba = new BigDecimal(cubageDetail);
                 BigDecimal cubageHeadResult = new BigDecimal(cubageHead);
                 cubageHeadResult = cubageHeadResult.add(cuba);
                 createOrderEntity.setCubage(cubageHeadResult.toString());
             }
         }
-        logger.info("表头体积重量数量计算结束 == > 表头 createOrderEntity :{}", createOrderEntity);
-        logger.info("表头体积重量数量计算结束 == > 货品 createOrderGoodsInfo :{}", createOrderGoodsInfo);
+        logger.info("表头体积重量数量计算结束 == > 表头 quantity :{}", createOrderEntity.getQuantity() + " weight:{}" +
+            createOrderEntity.getWeight() + " cubage:{}" + createOrderEntity.getCubage());
     }
 
 
