@@ -1707,13 +1707,26 @@
       cscContactDto.street = consignorAddressCodeMessage[3];
     }
 
-    cscContactDto.provinceName = consignorAddressNameMessage[0];
-    cscContactDto.cityName = consignorAddressNameMessage[1];
-    cscContactDto.areaName = consignorAddressNameMessage[2];
+    if (!StringUtil.isEmpty(consignorAddressNameMessage[0])) {
+        cscContactDto.provinceName = consignorAddressNameMessage[0];
+    } else {
+        cscContactDto.provinceName = '';
+    }
+    if (!StringUtil.isEmpty(consignorAddressNameMessage[1])) {
+        cscContactDto.cityName = consignorAddressNameMessage[1];
+    } else {
+        cscContactDto.cityName = '';
+    }
+    if (!StringUtil.isEmpty(consignorAddressNameMessage[2])) {
+        cscContactDto.areaName = consignorAddressNameMessage[2];
+    } else {
+        cscContactDto.areaName = '';
+    }
     if(!StringUtil.isEmpty(consignorAddressNameMessage[3])){
       cscContactDto.streetName = consignorAddressNameMessage[3];
+    } else {
+        cscContactDto.streetName = '';
     }
-
     cscContactDto.address = $("#consignorAddress").val();
     paramConsignor.cscContactDto = cscContactDto;
     paramConsignor.cscContactCompanyDto = cscContactCompanyDto;
@@ -1745,9 +1758,21 @@
       cscContactDto.street = consigneeAddressCodeMessage[3];
     }
 
-    cscContactDto.provinceName = consigneeAddressNameMessage[0];
-    cscContactDto.cityName = consigneeAddressNameMessage[1];
-    cscContactDto.areaName = consigneeAddressNameMessage[2];
+    if (!StringUtil.isEmpty(consigneeAddressNameMessage[0])) {
+        cscContactDto.provinceName = consigneeAddressNameMessage[0];
+    } else {
+        cscContactDto.provinceName = '';
+    }
+    if (!StringUtil.isEmpty(consigneeAddressNameMessage[1])) {
+        cscContactDto.cityName = consigneeAddressNameMessage[1];
+    } else {
+        cscContactDto.cityName = '';
+    }
+    if (!StringUtil.isEmpty(consigneeAddressNameMessage[2])) {
+        cscContactDto.areaName = consigneeAddressNameMessage[2];
+    } else {
+        cscContactDto.areaName = '';
+    }
     if(!StringUtil.isEmpty(consigneeAddressNameMessage[3])){
       cscContactDto.streetName = consigneeAddressNameMessage[3];
     }
