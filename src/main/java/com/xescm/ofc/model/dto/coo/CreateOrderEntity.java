@@ -168,6 +168,11 @@ public class CreateOrderEntity {
     private String expectedArrivedTime;
 
     /**
+     * 发货方编码
+     */
+    private String consignorCode;
+
+    /**
      * 发货方名称
      */
     private String consignorName;
@@ -242,6 +247,10 @@ public class CreateOrderEntity {
      */
     private String consignorAddress;
 
+    /**
+     * 收货方编码
+     */
+    private String consigneeCode;
     /**
      * 收货方名称
      */
@@ -1216,5 +1225,21 @@ public class CreateOrderEntity {
 
     public void setTransportType(String transportType) {
         this.transportType = transportType;
+    }
+
+    public String getConsignorCode() {
+        return consignorCode;
+    }
+
+    public void setConsignorCode(String consignorCode) {
+        this.consignorCode = consignorCode;
+    }
+
+    public String getConsigneeCode() {
+        return consigneeCode;
+    }
+
+    public void setConsigneeCode(String consigneeCode) {
+        this.consigneeCode = consigneeCode;
     }
 }

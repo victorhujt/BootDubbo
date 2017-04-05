@@ -2372,15 +2372,11 @@
                 ,"tag":tag}
               ,"您确认保存订单吗?"
               ,function () {
-                // 更新开单员
-                //updateLastUserData(loginUser);
-             /* var url = "/ofc/orderManageOpera";
+              var url = "/ofc/orderManageOpera";
               var html = window.location.href;
               var index = html.indexOf("/index#");
-              window.open(html.substring(0,index) + "/index#" + url,'_self');*/
-              window.close();
-              });
-
+              window.open(html.substring(0,index) + "/index#" + url,'_self');
+            });
     });
 
     /* $("#custEnter").click(function () {
