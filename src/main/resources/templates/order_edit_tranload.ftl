@@ -2374,10 +2374,11 @@
               ,function () {
                 // 更新开单员
                 //updateLastUserData(loginUser);
-              var url = "/ofc/orderManageOpera";
+             /* var url = "/ofc/orderManageOpera";
               var html = window.location.href;
               var index = html.indexOf("/index#");
-              window.open(html.substring(0,index) + "/index#" + url,'_self');
+              window.open(html.substring(0,index) + "/index#" + url,'_self');*/
+              window.close();
               });
 
     });
