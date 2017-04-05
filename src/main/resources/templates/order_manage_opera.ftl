@@ -710,8 +710,8 @@
         "orderStatus": orderStatus,
         "reviewTag": "review"
       }, "您确定要审核此订单?", function () {
-
-        xescm.common.loadPage("/ofc/orderManageOpera");
+          $("#doSearch").click();
+        /*xescm.common.loadPage("/ofc/orderManageOpera");*/
       });
     }
     function reReviewOrderOper(ordercode, orderStatus) {
