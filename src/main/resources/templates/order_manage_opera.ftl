@@ -672,12 +672,12 @@
               var url = "/ofc/orderStorageInEdit/"+"?orderCode="+orderCode;
               var html = window.location.href;
               var index = html.indexOf("/index#");
-              window.open(html.substring(0,index) + "/index#" + url,'_self');
+              window.open(html.substring(0,index) + "/index#" + url);
           }else if(StringUtil.startWith(businessType,"61")){
               var url = "/ofc/orderStorageOutEdit/"+"?orderCode="+orderCode;
               var html = window.location.href;
               var index = html.indexOf("/index#");
-              window.open(html.substring(0,index) + "/index#" + url,'_self');
+              window.open(html.substring(0,index) + "/index#" + url);
           }
       }else{
           var url = "/ofc/getOrderEditByCode/" + orderCode;

@@ -196,8 +196,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //供应商
         //checkSupport(createOrderEntity, custCode);
 
-        //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
-//        if (!StringUtils.equals("60", orderType)) {
+        //校验：货品档案信息，校验货品明细
         List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
         for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
             String goodsCode = goodsInfo.getGoodsCode();
@@ -222,7 +221,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
             this.fixOrderGoodsMsg(createOrderEntity, goodsInfo);
         }
-//        }
+
         //转换 dto → do
         CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
@@ -233,7 +232,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
         //调用创建订单方法
-        resultModel = createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+        resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
         if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             //操作成功
             logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
@@ -255,9 +254,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String weightDetail = createOrderGoodsInfo.getWeight();
         if(!PubUtils.isSEmptyOrNull(quantityDetail)){
             String quantityHead = createOrderEntity.getQuantity();
-            if(PubUtils.isSEmptyOrNull(quantityHead)){
-                createOrderEntity.setQuantity("0");
-            } else {
+            if(!PubUtils.isSEmptyOrNull(quantityHead)){
                 BigDecimal quan = new BigDecimal(quantityDetail);
                 BigDecimal quantityResult = new BigDecimal(quantityHead);
                 quantityResult = quantityResult.add(quan);
@@ -266,9 +263,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         if(!PubUtils.isSEmptyOrNull(weightDetail)){
             String weightHead = createOrderEntity.getWeight();
-            if(PubUtils.isSEmptyOrNull(weightHead)){
-                createOrderEntity.setWeight("0");
-            } else {
+            if(!PubUtils.isSEmptyOrNull(weightHead)){
                 BigDecimal weig = new BigDecimal(weightDetail);
                 BigDecimal weightHeadResult = new BigDecimal(weightHead);
                 weightHeadResult = weightHeadResult.add(weig);
@@ -277,17 +272,15 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         if(!PubUtils.isSEmptyOrNull(cubageDetail)){
             String cubageHead = createOrderEntity.getCubage();
-            if(PubUtils.isSEmptyOrNull(cubageHead)){
-                createOrderEntity.setCubage("0");
-            } else {
+            if(!PubUtils.isSEmptyOrNull(cubageHead)){
                 BigDecimal cuba = new BigDecimal(cubageDetail);
                 BigDecimal cubageHeadResult = new BigDecimal(cubageHead);
                 cubageHeadResult = cubageHeadResult.add(cuba);
                 createOrderEntity.setCubage(cubageHeadResult.toString());
             }
         }
-        logger.info("表头体积重量数量计算结束 == > 表头 createOrderEntity :{}", createOrderEntity);
-        logger.info("表头体积重量数量计算结束 == > 货品 createOrderGoodsInfo :{}", createOrderGoodsInfo);
+        logger.info("表头体积重量数量计算结束 == > 表头 quantity :{}", createOrderEntity.getQuantity() + " weight:{}" +
+            createOrderEntity.getWeight() + " cubage:{}" + createOrderEntity.getCubage());
     }
 
 
@@ -347,7 +340,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             try {
                 //自动审核通过 review:审核；rereview:反审核
                 if(sEmptyOrNull){
-
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                 } else {
@@ -534,7 +526,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                 if(PubUtils.isSEmptyOrNull(destinationCode)){
                                     logger.error("调用RMC接口, 查询到达省市区名称对应的编码失败! ");
                                 }
-                                ofcDistributionBasicInfo.setDeparturePlaceCode(destinationCode);
+                                ofcDistributionBasicInfo.setDestinationCode(destinationCode);
                                 /*ofcAddressReflect = new OfcAddressReflect();
                                 ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
                                 int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
@@ -611,7 +603,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-//        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
         String auditResult = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo
                 , ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, REVIEW, authResDto);
         logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
