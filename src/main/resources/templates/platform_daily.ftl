@@ -58,9 +58,7 @@
             }
         },
         created:function(){
-            debugger;
             var _this = this;
-            debugger;
             CommonClient.post(_this.ofcUrl+"/ofc/queryDailyAccount",{},function(data){
                 if(data.result.length>0){
                     for(var i=0;i<data.result.length;i++){
