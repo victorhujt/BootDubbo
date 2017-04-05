@@ -61,7 +61,7 @@ public class OfcOrderManageApiRest {
         model.put("ofcUrl",restConfig.getOfcWebUrl());
         String content="";
         try {
-            Template t = configuration.getTemplate("dailyAccount.ftl");
+            Template t = configuration.getTemplate("daily_account.ftl");
             content = FreeMarkerTemplateUtils.processTemplateIntoString(t, model);
         } catch (IOException e) {
             logger.error("freeMark获取模板异常",e);

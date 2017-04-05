@@ -11,22 +11,21 @@
         <span><</span>
         <span>平台使用情况日报<span>
     </nav>
-    <img class='bg1' src='img/background-image-1.png'>
-    <img class='bg2' src='img/background-image-2.png'>
-    <img class='theme' src='img/theme.png'>
-    <img class='transitionOne' src='img/transtion-1.png'>
-    <img class='transitionTwo' src='img/transtion-2.png'>
+    <img class='bg1' src='${(OFC_WEB_URL)!}/img/background-image-1.png'>
+    <img class='bg2' src='${(OFC_WEB_URL)!}/img/background-image-2.png'>
+    <img class='theme' src='${(OFC_WEB_URL)!}/img/theme.png'>
+    <img class='transitionOne' src='${(OFC_WEB_URL)!}/img/transtion-1.png'>
+    <img class='transitionTwo' src='${(OFC_WEB_URL)!}/img/transtion-2.png'>
     <div class='city'>
-        <img src="img/city-1.png">
-        <img src="img/city-2.png">
+        <img src="${(OFC_WEB_URL)!}/img/city-1.png">
+        <img src="${(OFC_WEB_URL)!}/img/city-2.png">
     </div>
     <div class="warehouseCotent">
-        <div v-for="(content,index) in even(jsonData)" class="warehouses height">
+        <div v-for="(index,content) in jsonData" class="warehouses height">
             <p>
                 <span class="warehouseName">{{content.baseName==null?"":content.baseName}}</span>
                 <span class="custom">
 							<span class="one borderColor"></span>
-							<span class="two">{{achievement(content)}}</span>
 							<span class="three borderColor"></span>
 						</span>
                 <span class="ranking">目前排名为第 <i>{{index+1}}</i> 位</span>
@@ -40,35 +39,39 @@
     </div>
 </div>
 </body>
-<link rel="stylesheet" type="text/css" href="css/platformDaily.css">
+<link rel="stylesheet" type="text/css" href="${(OFC_WEB_URL)!}/css/platformDaily.css">
+<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/vue.js"></script>
+<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/common/common-client.js"></script>
+<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/jquery.js"></script>
+<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/common/jquery.blockUI.js"></script>
+<script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
 <script type="text/javascript">
     document.documentElement.style.fontSize=document.documentElement.clientWidth/6.4+'px';
     //通过resize事件 监听当前窗口大小变化
     window.addEventListener("resize",function(){document.documentElement.style.fontSize=document.documentElement.clientWidth/6.4+'px';});
     var me=new Vue({
         el:'#app',
-        data() {
+        data:function() {
             return {
-                jsonData:[]
+                jsonData:[],
+                ofcUrl:'${ofcUrl!}'
             }
         },
-        mounted(){
-            let that = this;
+        created:function(){
             debugger;
-            CommonClient.post(sys.rootPath+"/ofc/queryDailyAccount",{},function(data){
-                that.jsonData =data.result;
+            var _this = this;
+            debugger;
+            CommonClient.post(_this.ofcUrl+"/ofc/queryDailyAccount",{},function(data){
+                if(data.result.length>0){
+                    for(var i=0;i<data.result.length;i++){
+                        if(data.result[i].baseCode!=""){
+                            _this.jsonData.push(data.result[i]);
+                        }
+                    }
+                }
             },"json");
         },
         methods:{
-            even(jsonData){
-                return jsonData.filter(function (base) {
-                   // console.log(base.baseCode);
-                    return base.baseCode != ""
-                })
-            },
-            achievement(){
-
-            }
         }
     })
 </script>

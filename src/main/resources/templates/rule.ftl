@@ -12,14 +12,14 @@
         <span><</span>
         <span>平台使用情况日报<span>
     </nav>
-    <img class='bg1' src='img/background-image-1.png'></img>
-    <img class='bg2' src='img/background-image-2.png'></img>
-    <img class='theme' src='img/theme.png'></img>
-    <img class='transitionOne' src='img/transtion-1.png'></img>
-    <img class='transitionTwo' src='img/transtion-2.png'></img>
+    <img class='bg1' src='${(OFC_WEB_URL)!}/img/background-image-1.png'></img>
+    <img class='bg2' src='${(OFC_WEB_URL)!}/img/background-image-2.png'></img>
+    <img class='theme' src='${(OFC_WEB_URL)!}/img/theme.png'></img>
+    <img class='transitionOne' src='${(OFC_WEB_URL)!}/img/transtion-1.png'></img>
+    <img class='transitionTwo' src='${(OFC_WEB_URL)!}/img/transtion-2.png'></img>
     <div class='city'>
-        <img src="img/city-1.png">
-        <img src="img/city-2.png">
+        <img src="${(OFC_WEB_URL)!}/img/city-1.png">
+        <img src="${(OFC_WEB_URL)!}/img/city-2.png">
     </div>
     <div class="warehouseCotent">
         <div class="warehouses rules">
@@ -30,7 +30,10 @@
     </div>
 </div>
 </body>
-<link rel="stylesheet" type="text/css" href="css/platformDaily.css">
+<link rel="stylesheet" type="text/css" href="${(OFC_WEB_URL)!}/css/platformDaily.css">
+<#--<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/vue.js"></script>-->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
 <script type="text/javascript">
     document.documentElement.style.fontSize=document.documentElement.clientWidth/6.4+'px';
     //通过resize事件 监听当前窗口大小变化
