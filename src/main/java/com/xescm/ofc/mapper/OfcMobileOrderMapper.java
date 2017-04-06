@@ -33,4 +33,7 @@ public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {
 
 
     int updateByMobileCode(Object key);
+
+    List<OfcMobileOrder> queryNeedDeal(OfcMobileOrder ofcMobileOrder);
+
 }
