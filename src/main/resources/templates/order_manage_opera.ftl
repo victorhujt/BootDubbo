@@ -116,6 +116,11 @@
           </#list>
           </select>
         </div>
+        <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+        <div class="col-width-168" style="margin:0 12px;">
+          <input id="custOrderCode" class="col-width-168" name="" type="search" placeholder=""
+                 aria-controls="dynamic-table">
+        </div>
       </div>
       <div class="form-group">
         <label class="control-label col-label no-padding-right" for="name"></label>
@@ -495,6 +500,7 @@
       param.businessType = $("#businessType").val();
       param.areaSerialNo = areaName;
       param.baseSerialNo = baseName;
+      param.custOrderCode = $("#custOrderCode").val();
       CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
         if ( result == undefined || result == null || result.code == 500 || result.result == null || result.result.size == 0 || result.result.list == null) {
@@ -646,7 +652,7 @@
     function getOperatorByStatusOper(order, index) {
       var value = "";
 
-      var newStatus = "<a id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\" class=\"blue\">审核</a>"
+      var newStatus = "<a id=\"review\" " + index + " onclick=\"reviewOrderOper('" + order.orderCode + "','" +order.orderType + "','"+ order.orderStatus + "')\" class=\"blue\">审核</a>"
               + "<a id=\"edit\" " + index + " onclick=\"editOrder('" + order.orderCode + "','" + order.orderType + "','" + order.businessType + "')\"  class=\"red\">编辑</a>";
 
       var unApproveStatus = "<a id=\"rereview\" " + index + " onclick=\"reReviewOrderOper('" + order.orderCode + "','" + order.orderStatus + "')\"  class=\"blue\">反审核</a>";
@@ -655,8 +661,12 @@
       if (order.orderStatus == "10") {
         value = newStatus + cancelStatus;
       }
-      if (order.orderStatus == "20" || order.orderStatus == "30") {
-        value = cancelStatus;
+      if (order.orderStatus == "20") {
+        if(order.orderType == "61"){
+            value = unApproveStatus+cancelStatus;
+        }else {
+            value = cancelStatus;
+        }
       }
       if (order.orderStatus == "30") {
         value = cancelStatus;
@@ -672,18 +682,18 @@
               var url = "/ofc/orderStorageInEdit/"+"?orderCode="+orderCode;
               var html = window.location.href;
               var index = html.indexOf("/index#");
-              window.open(html.substring(0,index) + "/index#" + url,'_self');
+              window.open(html.substring(0,index) + "/index#" + url);
           }else if(StringUtil.startWith(businessType,"61")){
               var url = "/ofc/orderStorageOutEdit/"+"?orderCode="+orderCode;
               var html = window.location.href;
               var index = html.indexOf("/index#");
-              window.open(html.substring(0,index) + "/index#" + url,'_self');
+              window.open(html.substring(0,index) + "/index#" + url);
           }
       }else{
           var url = "/ofc/getOrderEditByCode/" + orderCode;
           var html = window.location.href;
           var index = html.indexOf("/index#");
-          window.open(html.substring(0,index) + "/index#" + url,'_self');
+          window.open(html.substring(0,index) + "/index#" + url);
       }
     }
     //订单详情
@@ -704,24 +714,59 @@
     }
 
     //订单审核、反审核
-    function reviewOrderOper(ordercode, orderStatus) {
-      xescm.common.submit("/ofc/orderOrNotAuditForTran", {
-        "orderCode": ordercode,
-        "orderStatus": orderStatus,
-        "reviewTag": "review"
-      }, "您确定要审核此订单?", function () {
+    function reviewOrderOper(ordercode,orderType,orderStatus) {
+      if(orderType == "60"){
+          xescm.common.submit("/ofc/orderOrNotAuditForTran", {
+              "orderCode": ordercode,
+              "orderStatus": orderStatus,
+              "reviewTag": "review"
+          }, "您确定要审核此订单?", function () {
+              $("#doSearch").click();
+            /*xescm.common.loadPage("/ofc/orderManageOpera");*/
+          });
+      }else if(orderType == "61"){
+          var tag = "review";
+          CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":ordercode,"reviewTag":tag}, function(result) {
+              if (result == undefined || result == null ) {
+              }else if(result.code==200){
+                  flag=true;
+              }else{
+                  if(result.message==null||result.message==""){
+                  }else{
+                  }
+              }
+          });
+          if(flag){
+              if(tag=="review"){
+                  layer.msg("订单审核成功",{
+                      icon:1
+                  });
+                  $("#doSearch").click();
+              }
+          }
+      }
 
-        xescm.common.loadPage("/ofc/orderManageOpera");
-      });
     }
     function reReviewOrderOper(ordercode, orderStatus) {
-      xescm.common.submit("/ofc/orderOrNotAuditOper", {
-        "orderCode": ordercode,
-        "orderStatus": orderStatus,
-        "reviewTag": "rereview"
-      }, "您确定要反审核此订单?", function () {
-        xescm.common.loadPage("/ofc/orderManageOpera");
-      });
+        var tag = "rereview";
+        CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":ordercode,"reviewTag":tag}, function(result) {
+            if (result == undefined || result == null ) {
+            }else if(result.code==200){
+                flag=true;
+            }else{
+                if(result.message==null||result.message==""){
+                }else{
+                }
+            }
+        });
+        if(flag){
+            if(tag=="rereview"){
+                layer.msg("订单反审核成功",{
+                    icon:1
+                });
+                $("#doSearch").click();
+            }
+        }
     }
     //订单取消
     function cancelOrderOper(ordercode) {

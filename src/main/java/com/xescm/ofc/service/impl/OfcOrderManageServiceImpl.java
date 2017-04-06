@@ -2204,10 +2204,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      *
      * @param ofcFundamentalInformation 订单基本信息
      */
-    private void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+    public void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
-        rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
-        RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+        rmcServiceCoverageForOrderVo = this.copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+        RmcServiceCoverageForOrderVo rmcPickup = this.rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
         updateOrderAreaAndBase(rmcPickup, ofcFundamentalInformation);
     }
 
@@ -2666,6 +2666,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @CreateDate 2017/2/3
      */
     private void updateOrderAreaAndBase(RmcServiceCoverageForOrderVo rmcPickup, OfcFundamentalInformation ofcFundamentalInformation) {
+        logger.info("更新订单的大区和基地 rmcPickup :{}", rmcPickup);
+        logger.info("更新订单的大区和基地 ofcFundamentalInformation :{}", ofcFundamentalInformation);
+        if (null == rmcPickup) {
+            logger.error("区域覆盖结果rmcPickup为空");
+            return;
+        }
         OfcFundamentalInformation ofcInfo = new OfcFundamentalInformation();
         UamGroupDto dto = new UamGroupDto();
         dto.setSerialNo(rmcPickup.getSerialNo());
@@ -3356,11 +3362,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcDistributionBasicInfo 运输信息
      */
     public void fixAddressWhenEdit(String reviewTag, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        logger.info("编辑后将地址不完整的订单的地址信息补充完整, reviewTag : {}", reviewTag);
+        logger.info("编辑后将地址不完整的订单的地址信息补充完整, ofcDistributionBasicInfo : {}", ofcDistributionBasicInfo);
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
             String departurePlace = ofcDistributionBasicInfo.getDeparturePlace();
             String destination = ofcDistributionBasicInfo.getDestination();
             if(!PubUtils.isSEmptyOrNull(departurePlace)){
                 OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
+                logger.info("编辑后将地址不完整的订单的地址信息补充完整, ofcAddressReflect : {}", ofcAddressReflect);
                 if(null != ofcAddressReflect && PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                     ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
                     int update = ofcAddressReflectMapper.updateByAddress(ofcAddressReflect);
@@ -3372,6 +3381,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
             if(!PubUtils.isSEmptyOrNull(destination)){
                 OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
+                logger.info("编辑后将地址不完整的订单的地址信息补充完整, ofcAddressReflect : {}", ofcAddressReflect);
                 if(null != ofcAddressReflect && PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())){
                     ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
                     int update = ofcAddressReflectMapper.updateByAddress(ofcAddressReflect);
@@ -3503,7 +3513,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             //创单接口订单和钉钉录单补充大区基地信息
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
                     || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
-                this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                // 大区、基地都为空则更新大区基地
+                String baseCode = ofcFundamentalInformation.getBaseCode();
+                String areaCode = ofcFundamentalInformation.getAreaCode();
+                if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode)) {
+                    this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                }
                 this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             }
             String userName = authResDtoByToken.getUserName();
@@ -3980,6 +3995,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             String orderType = ofcFundamentalInformation.getOrderType();
+
+
+            this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             if (trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单

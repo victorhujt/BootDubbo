@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -799,7 +798,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcWarehouseInformation 仓库信息
      * @param ofcOrderStatus 订单状态
      */
-    private void orderTransPlaceTagManage(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation, OfcOrderStatus ofcOrderStatus) {
+    private void orderTransPlaceTagManage(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken,
+                                          CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,
+                                          OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo,
+                                          OfcWarehouseInformation ofcWarehouseInformation, OfcOrderStatus ofcOrderStatus) {
         String orderType = ofcFundamentalInformation.getOrderType();
         if(TRANSPORT_ORDER.equals(orderType)){
             Wrapper<?> wrapper = ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
@@ -825,5 +827,38 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) +" "+"订单已更新");
         upOrderStatus(ofcOrderStatus,fundamentalInformation,authResDtoByToken);
         ofcFundamentalInformationService.update(fundamentalInformation);
+
+        // 更新大区基地
+        updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo, fundamentalInformation);
+
+    }
+
+    /**
+     * 更新大区基地
+     * @param ofcFundamentalInformation
+     * @param ofcDistributionBasicInfo
+     * @param fundamentalInformation
+     */
+    private void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation fundamentalInformation) {
+        // 更新大区基地
+        String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
+        String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
+        String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
+        String departureCity = ofcDistributionBasicInfo.getDepartureCity();
+        String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
+        logger.info("=-=========================== 订单编辑: departurePlaceCode = {}, departureProvince = {}, departureCity = {}, destinationProvince = {}, destinationCity = {}",
+            departurePlaceCode, departureProvince, departureCity, destinationProvince, destinationCity);
+        // 如果大区基地为空则更新
+        if (!PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
+            && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity)) {
+            String baseCode = fundamentalInformation.getBaseCode();
+            String areaCode = fundamentalInformation.getAreaCode();
+            logger.info("================================ 更新大区基地: baseCode = {}, areaCode = {}", baseCode, areaCode);
+            if (PubUtils.isOEmptyOrNull(baseCode) || PubUtils.isOEmptyOrNull(areaCode)) {
+                ofcOrderManageService.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+            }
+        } else {
+            throw new BusinessException("发货方地址不能为空!");
+        }
     }
 }

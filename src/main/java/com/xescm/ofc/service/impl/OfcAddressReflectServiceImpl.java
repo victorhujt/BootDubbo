@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  *
@@ -24,7 +25,12 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
     public OfcAddressReflect selectByAddress(String address) {
         OfcAddressReflect forSearch = new OfcAddressReflect();
         forSearch.setAddress(address);
-        return ofcAddressReflectMapper.selectOne(forSearch);
+        List<OfcAddressReflect> result = ofcAddressReflectMapper.select(forSearch);
+        if (PubUtils.isNotNullAndBiggerSize(result, 0)) {
+            return result.get(0);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -48,29 +54,33 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
         String streetCode = ofcAddressReflect.getStreetCode();
         StringBuilder sb = new StringBuilder();
         if(!PubUtils.isSEmptyOrNull(provinceCode)){
-            sb.append(provinceCode);
+            sb.append(provinceCode).append(",");
             if(!PubUtils.isSEmptyOrNull(cityCode)){
-                sb.append(cityCode);
+                sb.append(cityCode).append(",");
                 if(!PubUtils.isSEmptyOrNull(districtCode)){
-                    sb.append(districtCode);
+                    sb.append(districtCode).append(",");
                     if(!PubUtils.isSEmptyOrNull(streetCode)){
                         sb.append(streetCode);
                     }
                 }
             }
         }
+        String code = sb.toString();
+        if (code.endsWith(",")) {
+            code = code.substring(0, code.length());
+        }
         if(StringUtils.equals(tag, "departure")){
             ofcDistributionBasicInfo.setDepartureProvince(province);
             ofcDistributionBasicInfo.setDepartureCity(city);
             ofcDistributionBasicInfo.setDepartureDistrict(district);
             ofcDistributionBasicInfo.setDepartureTowns(street);
-            ofcDistributionBasicInfo.setDeparturePlaceCode(sb.toString());
+            ofcDistributionBasicInfo.setDeparturePlaceCode(code);
         } else if (StringUtils.equals(tag, "destination")) {
             ofcDistributionBasicInfo.setDestinationProvince(province);
             ofcDistributionBasicInfo.setDestinationCity(city);
             ofcDistributionBasicInfo.setDestinationDistrict(district);
             ofcDistributionBasicInfo.setDestinationTowns(street);
-            ofcDistributionBasicInfo.setDeparturePlaceCode(sb.toString());
+            ofcDistributionBasicInfo.setDestinationCode(code);
         }
 
     }

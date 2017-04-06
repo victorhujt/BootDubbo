@@ -172,8 +172,10 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setOrderCode(this.orderCode);
             ofcDistributionBasicInfo.setPickupTime(DateUtils.String2Date(createOrderEntity.getPickupTime(), DateUtils.DateFormatType.TYPE1));
             ofcDistributionBasicInfo.setExpectedArrivedTime(DateUtils.String2Date(createOrderEntity.getExpectedArrivedTime(), DateUtils.DateFormatType.TYPE1));
-            ofcDistributionBasicInfo.setConsignorContactName(createOrderEntity.getConsignorName());
+            ofcDistributionBasicInfo.setConsignorContactName(createOrderEntity.getConsignorContact());
             ofcDistributionBasicInfo.setConsignorContactPhone(createOrderEntity.getConsignorPhone());
+            ofcDistributionBasicInfo.setConsignorName(createOrderEntity.getConsignorName());
+            ofcDistributionBasicInfo.setConsignorCode(createOrderEntity.getConsignorCode());
             ofcDistributionBasicInfo.setConsignorType("2");
             //发货方传真、发货方Email、发货方邮编 数据库暂无字段
             ofcDistributionBasicInfo.setDepartureProvince(createOrderEntity.getConsignorProvince());
@@ -200,6 +202,8 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setConsigneeContactName(createOrderEntity.getConsigneeContact());
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());
             ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsigneePhone());
+            ofcDistributionBasicInfo.setConsigneeName(createOrderEntity.getConsigneeName());
+            ofcDistributionBasicInfo.setConsigneeCode(createOrderEntity.getConsigneeCode());
             ofcDistributionBasicInfo.setConsigneeType("2");
             //收货方传真、收货方Email、收货方邮编 暂无字段
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());

@@ -167,4 +167,18 @@
         </where>
     </select>
 
+    <select id="searchOverallOrder" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+        ofi.order_code
+        FROM
+        ofc_fundamental_information ofi
+        LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+        WHERE
+        <if test="code != '' and code != null">
+            ofi.order_code = #{code,jdbcType=VARCHAR}
+            OR ofi.cust_order_code = #{code,jdbcType=VARCHAR}
+            OR odbi.trans_code = #{code,jdbcType=VARCHAR}
+        </if>
+    </select>
+
 </mapper>

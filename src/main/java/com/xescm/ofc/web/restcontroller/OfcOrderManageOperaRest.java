@@ -463,7 +463,7 @@ public class OfcOrderManageOperaRest extends BaseController {
                 throw new Exception("订单标识不能为空！");
             }
             String result = ofcOrderManageService.orderAutoAuditForTran(orderCode, orderStatus, reviewTag, authResDtoByToken);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单审核成功", result);
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
