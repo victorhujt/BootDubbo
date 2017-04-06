@@ -490,6 +490,16 @@ public class CreateOrderEntity {
     private String baseName;
 
     /**
+     * 大区编码
+     */
+    private String areaCode;
+
+    /**
+     * 大区名称
+     */
+    private String areaName;
+
+    /**
      * API订单货品明细
      */
     private List<CreateOrderGoodsInfo> createOrderGoodsInfos;
@@ -1241,5 +1251,21 @@ public class CreateOrderEntity {
 
     public void setConsigneeCode(String consigneeCode) {
         this.consigneeCode = consigneeCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 }

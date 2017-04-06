@@ -829,7 +829,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 String countyName = contactInfo.getAreaName();
                 String townCode = contactInfo.getStreet();
                 String townName = contactInfo.getStreetName();
-                String address = contactInfo.getDetailAddress();
+                String address = contactInfo.getAddress();
                 String contactCompanyCode = contactInfo.getContactCompanyCode();
                 String contactCompanyName = contactInfo.getContactCompanyName();
                 String contactName = contactInfo.getContactName();
