@@ -10,7 +10,7 @@
 <div id="app">
     <div class="list-mian-01">
         <el-dialog title="货品实收详情" v-model="chosenRealGood" size="small">
-            <el-table :data="realGoodsData"  style="width: 100%">
+            <el-table :data="realGoodsData" border style="width: 100%">
                 <el-table-column property="goodsCode" label="货品编码">
                     <template scope="scope">
                         <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
@@ -92,7 +92,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="客户名称" class="xe-col-3">
-                    <el-input v-model="customerName">
+                    <el-input v-model="customerName" :readOnly="true">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="订单状态" class="xe-col-3">
@@ -255,11 +255,6 @@
                         <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
-                <#--<el-table-column property="realQuantity" label="实际数量">-->
-                    <#--<template scope="scope">-->
-                        <#--<el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>-->
-                    <#--</template>-->
-                <#--</el-table-column>-->
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
                         <el-input v-model="scope.row.unitPrice" :readOnly="true"></el-input>
@@ -290,6 +285,11 @@
                                 :readOnly="true"
                                 placeholder="选择日期">
                         </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="supportBatch" label="供应商批次号">
+                    <template scope="scope">
+                        <el-input v-model="supplierName"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -533,7 +533,6 @@
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
-                                           // good.realQuantity=goodDetail.realQuantity;
                                             good.unitPrice=goodDetail.unitPrice;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);

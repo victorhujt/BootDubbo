@@ -62,6 +62,7 @@
         data:function () {
             return{
                 selectData:{},
+                typeOfTemplate:false,
                 templateCodeShow:'${templateCode!}',
                 templateForm:{
                     templateType:'',
@@ -107,11 +108,12 @@
                 $.each(result.result,function (index, item) {
                     if(index == 0) {
                         itemOut = item;
+                        vm.typeOfTemplate = itemOut.templateType == 'storageOut';
                     }
                     var tableItem = {};
                     var indexNum = item.indexNum;
                     if(indexNum == 1 || indexNum == 3 || indexNum == 4
-                            || indexNum == 5 || indexNum == 7 || indexNum == 12 || indexNum == 22){
+                            || indexNum == 5 || indexNum == 7 || indexNum == 12 || (indexNum == 22 && vm.typeOfTemplate)){
                         tableItem.isRequired = true;
                     }
                     tableItem.standardColName = item.standardColName;
@@ -125,6 +127,7 @@
                 });
                 var templateType = itemOut.templateType;
                 var templateTypeName = itemOut.templateType == 'storageIn' ? '入库单' : '出库单';
+
                 vm.templatesTypeList = [
                     {label:templateType,value:templateTypeName}
                 ];

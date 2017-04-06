@@ -294,36 +294,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
 
-            //合并相同货品编码的问题
-//            Map<String,FeedBackOrderDetailDto> goodInfo=new HashMap<>();
-//            for (FeedBackOrderDetailDto feedBackOrderDetailDto : detailDtos) {
-//                String goodsCode=feedBackOrderDetailDto.getGoodsCode();
-//                if(!goodInfo.containsKey(goodsCode)){
-//                    goodInfo.put(feedBackOrderDetailDto.getGoodsCode(),feedBackOrderDetailDto);
-//                }else{
-//                    FeedBackOrderDetailDto info=goodInfo.get(goodsCode);
-//                    info.setRealQuantity(info.getRealQuantity().add(feedBackOrderDetailDto.getRealQuantity()));
-//                }
-//            }
-
-         //   List<OfcGoodsDetailsInfo>  infos=ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-
-            //根据货品编码更新实收数量
-//            Iterator iter = goodInfo.entrySet().iterator();
-//            while (iter.hasNext()) {
-//                Map.Entry<String,FeedBackOrderDetailDto> entry= (Map.Entry<String, FeedBackOrderDetailDto>) iter.next();
-//                FeedBackOrderDetailDto feedBackOrderDetailDto=entry.getValue();
-//                if(infos!=null&&infos.size()>0){
-//                    for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo:infos) {
-//                        if(feedBackOrderDetailDto.getGoodsCode().equals(ofcGoodsDetailsInfo.getGoodsCode())){
-//                            ofcGoodsDetailsInfo.setRealQuantity(feedBackOrderDetailDto.getRealQuantity());
-//                            ofcGoodsDetailsInfoService.updateByOrderCode(ofcGoodsDetailsInfo);
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-
             status.setLastedOperTime(new Date());
             status.setStatusDesc("订单号"+orderCode+"已完成");
             status.setOrderCode(orderCode);

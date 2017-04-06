@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcAddressReflectMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcAddressReflect" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="district_code" property="districtCode" jdbcType="VARCHAR" />
+    <result column="street" property="street" jdbcType="VARCHAR" />
+    <result column="street_code" property="streetCode" jdbcType="VARCHAR" />
+  </resultMap>
+
+    <update id="updateByAddress" parameterType="com.xescm.ofc.domain.OfcAddressReflect">
+      UPDATE
+      ofc_address_reflect oar
+      <set>
+        <if test="province != null and province != ''">
+          oar.province = #{province},
+        </if>
+        <if test="provinceCode != null and provinceCode != ''">
+          oar.province_code = #{provinceCode},
+        </if>
+        <if test="city != null and city != ''">
+          oar.city = #{city},
+        </if>
+        <if test="cityCode != null and cityCode != ''">
+          oar.city_code = #{cityCode},
+        </if>
+        <if test="district != null and district != ''">
+          oar.district = #{district},
+        </if>
+        <if test="districtCode != null and districtCode != ''">
+          oar.district_code = #{districtCode},
+        </if>
+        <if test="street != null and street != ''">
+          oar.street = #{street},
+        </if>
+        <if test="streetCode != null and streetCode != ''">
+          oar.street_code = #{streetCode}
+        </if>
+        WHERE
+        oar.address = #{address}
+      </set>
+    </update>
+</mapper>

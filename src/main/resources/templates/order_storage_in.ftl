@@ -34,7 +34,7 @@
             </el-form>
 
             <el-table :data="customerDataInfo.customerData" highlight-current-row @current-change="handleCurrentChange"
-                      @row-dblclick="setCurrentCustInfo(customerDataInfo.currentRow)" style="width: 100%"  max-height="400">
+                      @row-dblclick="setCurrentCustInfo(customerDataInfo.currentRow)" style="width: 100%" border  max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="custCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
@@ -108,7 +108,7 @@
             </el-form>
 
             <el-table :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange"
-                      @row-dblclick="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)" style="width: 100%" max-height="400">
+                      @row-dblclick="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)" border style="width: 100%" max-height="400">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="supportName" label="名称"></el-table-column>
                 <el-table-column property="contactName" label="联系人"></el-table-column>
@@ -170,8 +170,8 @@
                 </el-form-item>
             </el-form>
 
-            <el-table :data="goodDataInfo.goodsCodeData" highlight-current-row @current-change="handlGoodCurrentChange"
-                      @row-dblclick="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)" style="width: 100%" max-height="350">
+            <el-table :data="goodDataInfo.goodsCodeData" @selection-change="handleSelectionChange" border style="width: 100%" max-height="350">
+                <el-table-column type="selection"></el-table-column>
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
@@ -187,9 +187,11 @@
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectGood">取 消</el-button>
-                <el-button type="primary" @click="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)">确 定</el-button>
+                <el-button type="primary" @click="setCurrentGoodsInfo">确 定</el-button>
             </div>
         </el-dialog>
+
+
 
         <el-form :model="orderForm"   :rules="rules" ref="orderForm" label-width="100px" class="demo-ruleForm">
             <div class="xe-pageHeader">
@@ -385,6 +387,11 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
+                <el-table-column property="supportName" label="供应商批次">
+                <template scope="scope">
+                    <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                </template>
+            </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
                     <template scope="scope">
                         <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
@@ -631,9 +638,6 @@
             handlSuppliereCurrentChange:function(val) {
                 this.supplierDataInfo.supplierCurrentRow = val;
             },
-            handlGoodCurrentChange:function(val) {
-                this.goodDataInfo.goodCurrentRow = val;
-            },
             setCurrentCustInfo:function(val) {
                 var vueObj=this;
                 if (val != null) {
@@ -675,6 +679,9 @@
             handleCustomerSizeChange:function(val) {
                 this.customerDataInfo.customerPageSize=val;
                 this.selectCustomer();
+            },
+            handleSelectionChange:function(val){
+                this.multipleSelection = val;
             },
             handleCustomerCurrentPage:function(val) {
                 this.customerDataInfo.currentCustomerPage = val;
@@ -755,24 +762,32 @@
                     this.promptInfo("请选择供应商!",'warning');
                 }
             },
-            setCurrentGoodsInfo:function(val){
+            setCurrentGoodsInfo:function(){
+                if(this.multipleSelection.length<1){
+                    this.promptInfo("请至少选择一条货品明细!",'warning');
+                    return;
+                }
                 this.goodDataInfo.chosenGoodCode = false;
-                var newData = {
-                    goodsType: val.goodsType,
-                    goodsCategory: val.goodsCategory,
-                    goodsCategory: val.goodsCategory,
-                    goodsCode: val.goodsCode,
-                    goodsName: val.goodsName,
-                    goodsSpec: val.goodsSpec,
-                    unit: val.unit,
-                    quantity: '',
-                    unitPrice:'',
-                    productionBatch:'',
-                    expiryDate:val.expiryDate,
-                    productionTime:'',
-                    invalidTime:''
-                };
-                this.goodsData.push(newData);
+                for(var i=0;i<this.multipleSelection.length;i++){
+                    var val=this.multipleSelection[i];
+                    var newData = {
+                        goodsType: val.goodsType,
+                        goodsCategory: val.goodsCategory,
+                        goodsCode: val.goodsCode,
+                        goodsName: val.goodsName,
+                        goodsSpec: val.goodsSpec,
+                        unit: val.unit,
+                        quantity: '',
+                        unitPrice:'',
+                        productionBatch:'',
+                        expiryDate:val.expiryDate,
+                        productionTime:'',
+                        invalidTime:'',
+                        supportName:this.orderForm.supportName,
+                        supportBatch:this.orderForm.supportCode
+                    };
+                    this.goodsData.push(newData);
+                }
             },
             cancelSelectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];
@@ -894,7 +909,7 @@
                             goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
                             if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
-                                goodCode.expiryDate==0;
+                                goodCode.expiryDate=0;
                             }else{
                                 goodCode.expiryDate=cscGoodsVo.expiryDate;
                             }
@@ -1103,7 +1118,7 @@
                                 var newurl = "/ofc/orderStorageInManager";
                                 var html = window.location.href;
                                 var index = html.indexOf("/index#");
-                                window.open(html.substring(0,index) + "/index#" + newurl);
+                                window.open(html.substring(0,index) + "/index#" + newurl,"_self");
                             }
                         });
             },
@@ -1182,6 +1197,8 @@
                 }
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
+                vueObj.multipleSelection=[];
+                vueObj.goodDataInfo.goodsCodeData=[];
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                     var data=eval(result);
                     vueObj.goodsMsgOptions=[];
@@ -1261,9 +1278,7 @@
                 });
             },
             accountInvalidTime:function(val){
-                debugger;
                 if(val.productionTime!=null) {
-                    console.log(val);
                     val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
                 }
             },
@@ -1273,7 +1288,7 @@
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
-            }
+            },
         }
     })
 

@@ -13,6 +13,45 @@
 <div id="app">
     <title>{{titleName}}</title>
     <div class="list-mian-01">
+
+        <el-dialog title="库存校验失败信息" v-model="checkStockFalse" size="small">
+            <el-table
+                    :data="checkStockData"
+                    highlight-current-row
+                    border
+                    style="width: 100%">
+                <el-table-column
+                        type="index"
+                        label="序号">
+                </el-table-column>
+                <el-table-column
+                        property="goodsCode"
+                        label="货品编码">
+                </el-table-column>
+                <el-table-column
+                        property="goodsName"
+                        label="货品名称">
+                </el-table-column>
+                <el-table-column
+                        property="currStock"
+                        label="当前库存量">
+                </el-table-column>
+                <el-table-column
+                        property="importStock"
+                        label="导入货品总量">
+                </el-table-column>
+                <el-table-column
+                        property="missingStock"
+                        label="差异量">
+                </el-table-column>
+            </el-table>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="closeCheckDialog">关 闭</el-button>
+            </div>
+
+        </el-dialog>
+
+
         <el-form :model="templateBatchIn"  label-width="100px" class="demo-ruleForm" v-loading="loading2"
                  element-loading-text="拼命加载中">
             <div class="xe-block" >
@@ -62,6 +101,13 @@
             </el-table-column>
         </el-table>
 
+        <div class="xe-block" >
+            <span v-if="orderMsgShow" style="margin-right: 100px">订单导入数量合计: {{countImportOrderNum}}</span>
+            <span v-if="orderMsgShow" style="margin-right: 100px">货品导入数量合计: {{countImportNum}}</span>
+            <#--<el-button type="primary" style="margin-right: 100px" v-if="orderMsgShow && inOrOut" v-on:click="checkStock">校验当前库存</el-button>-->
+            <el-button type="primary" style="margin-right: 100px" v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
+            <el-button type="primary"  v-if="orderMsgShow" v-on:click="cancelOrderSaveBtn" icon="save">取消批量执行</el-button>
+        </div>
         <el-table
                 :data="orderTableData"
                 v-if="orderMsgShow"
@@ -80,9 +126,12 @@
             </el-table-column>
 
         </el-table>
-        <div class="xe-block">
-            <span v-if="orderMsgShow" style="margin-right: 300px">货品导入数量合计: {{countImportNum}}</span>
-            <el-button type="primary"  v-if="orderMsgShow" v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
+        <div class="xe-block" v-if="orderMsgShow && showButtomBtn">
+            <span style="margin-right: 100px">订单导入数量合计: {{countImportOrderNum}}</span>
+            <span style="margin-right: 100px">货品导入数量合计: {{countImportNum}}</span>
+            <#--<el-button type="primary" style="margin-right: 100px" v-if="inOrOut" v-on:click="checkStock">校验当前库存</el-button>-->
+            <el-button type="primary" style="margin-right: 100px"  v-on:click="orderSaveBtn" icon="save">执行批量导入</el-button>
+            <el-button type="primary"   v-on:click="cancelOrderSaveBtn" icon="save">取消批量执行</el-button>
         </div>
 
     </div>
@@ -151,12 +200,17 @@
     var Main = {
         data() {
             return {
+                showButtomBtn: false,
+                countImportOrderNum:0,
+                checkStockData:[],
+                checkStockFalse:false,
                 countImportNum:'0',
                 headers: {
                     Authorization: 'Bearer ' + window.localStorage.getItem('token')
                 },
                 loading2:false,
                 templateType:'${templateType!}',
+                inOrOut:'${templateType!}' == 'storageOut',
                 titleName:'${templateType!}' == 'storageIn' ? '入库开单_批量导入' : '出库开单_批量导入',
                 <#--standardTemplteTitle:'${templateType!}' == 'storageIn' ? '入库单导入标准模板.xls' : '出库单导入标准模板.xls',-->
                 orderList:'',
@@ -231,7 +285,9 @@
                     vm.errorMsgShow = false;
                     var tableHeadMsg = response.result[0];
                     var orderMsg = response.result[1];
+                    var orderMsgForSave = response.result[1];
                     vm.countImportNum = response.result[2];
+                    vm.countImportOrderNum = response.result[3];
 
                     var headData = vm.orderTableHeads = [];
                     vm.orderMsgShow = true;
@@ -250,11 +306,20 @@
                         $.each(tableHeadMsg, function (indexIn, itemIn) {
                             var items = itemIn.split('@');
                             var propertyCode = items[1];
-                            tableRow[propertyCode] = itemOut[propertyCode];
+                            var businessName = '';
+                            if(propertyCode == 'businessType'){
+                                businessName = vm.convertCodeToName(itemOut[propertyCode]);
+                                tableRow[propertyCode] = businessName;
+                            } else {
+                                tableRow[propertyCode] = itemOut[propertyCode];
+                            }
                         });
                         tableData.push(tableRow);
                     });
-                    vm.orderList = orderMsg;
+                    if(tableData.length >= 20){
+                        vm.showButtomBtn = true;
+                    }
+                    vm.orderList = orderMsgForSave;
                 }
             },
             handleError(err, response, file) {
@@ -299,6 +364,40 @@
                     return;
                 }*/
             },
+            checkStock(){
+                var vm = this;
+                vm.checkStockData = [];
+                var param = {};
+                param.orderList = JSON.stringify(vm.orderList);
+                var url = "/ofc/storage_template/check_stock";
+                CommonClient.post(url, param, function (result) {
+                    var resultCode = result.code;
+                    if(resultCode == 503){
+                        vm.$message.error(result.message);
+                        vm.checkStockFalse = true;
+                        $.each(result.result, function (index, item) {
+                            var checkStock = {};
+                            checkStock.goodsCode = item.skuCode;
+                            checkStock.goodsName = item.skuName;
+                            checkStock.currStock = item.stockQty;
+                            checkStock.importStock = item.deliveryQty;
+                            checkStock.missingStock = item.resultQty;
+                            vm.checkStockData.push(checkStock);
+                        });
+
+                    } else if (resultCode == 500){
+                        vm.$message.error("库存校验出现异常!");
+                    } else if (resultCode == 200) {
+                        vm.$message(result.message);
+                    } else {
+                        vm.$message.error("库存校验出现异常!");
+                    }
+                });
+            },
+            closeCheckDialog(){
+                var vm = this;
+                vm.checkStockFalse = false;
+            },
             orderSaveBtn(){
                 var vm = this;
                 var param = {};
@@ -309,6 +408,25 @@
                     var url = vm.templateType == "storageIn" ? "/ofc/orderStorageInManager" : "/ofc/orderStorageOutManager";
                     xescm.common.loadPage(url);
                 });
+            },
+            cancelOrderSaveBtn(){
+                var vm = this;
+                vm.errorMsgShow = false;
+                vm.fileList = [];
+                vm.tableData = [];
+                vm.orderMsgShow = false;
+            },convertCodeToName(businessType){
+                var businessName = businessType;
+                switch (businessName) {
+                    //出库
+                    case '610': businessName = '销售出库'; break; case '611': businessName = '调拨出库'; break; case '612': businessName = '报损出库'; break;
+                    case '613': businessName = '其他出库'; break; case '614': businessName = '分拨出库'; break;
+                    //入库
+                    case '620': businessName = '采购入库'; break; case '621': businessName = '调拨入库'; break; case '622': businessName = '退货入库'; break;
+                    case '623': businessName = '加工入库'; break;  case '624': businessName = '盘盈入库'; break; case '625': businessName = '流通入库'; break;
+                    case '626': businessName = '其他入库'; break;  case '627': businessName = '分拨入库'; break;
+                }
+                return businessName;
             }
         }
     };

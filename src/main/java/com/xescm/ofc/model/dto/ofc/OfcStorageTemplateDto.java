@@ -49,6 +49,7 @@ public class OfcStorageTemplateDto {
     private String consigneeContactCode;
     //供应商编码
     private String supportCode;
-
+    //供应商批次
+    private String supportBatch;
 
 }

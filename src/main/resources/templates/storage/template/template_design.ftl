@@ -12,42 +12,42 @@
     <div class="list-mian-01">
 
         <el-dialog title="设置列默认值" v-model="colDefaultValDia" size="small">
-           <el-form :model="colDefaultValModel" label-width="120px">
-             <div class="xe-block">
-               <el-form-item label="订单日期" class="xe-col-2">当前日期
-                   <#--{{colDefaultValModel.orderTime}}-->
-               </el-form-item>
-             </div>
-             <div class="xe-block">
-               <el-form-item label="开单员" class="xe-col-2">
-                 <el-input v-model="colDefaultValModel.merchandiser"  placeholder="请输入内容"></el-input>
-               </el-form-item>
-             </div>
-             <div class="xe-block">
-               <el-form-item label="仓库名称" class="xe-col-2">
-                 <el-select placeholder="请选择" v-model="colDefaultValModel.warehouseName">
-                   <el-option  v-for="item in warehouseNameList" :label="item.label" :value="item.value"></el-option>
-                 </el-select>
-               </el-form-item>
-             </div>
-             <div class="xe-block">
-               <el-form-item label="业务类型" class="xe-col-2">
-                 <el-select placeholder="请选择" v-model="colDefaultValModel.businessType">
-                   <el-option  v-for="item in businessTypeList" :label="item.label" :value="item.value"></el-option>
-                 </el-select>
-               </el-form-item>
-             </div>
-             <div class="xe-block">
-               <el-form-item label="是否提供运输服务" class="xe-col-2">
-                 <el-checkbox v-model="colDefaultValModel.provideTransport" ></el-checkbox>
-               </el-form-item>
-             </div>
+            <el-form :model="colDefaultValModel" label-width="120px">
+                <div class="xe-block">
+                    <el-form-item label="订单日期" class="xe-col-2">当前日期
+                    <#--{{colDefaultValModel.orderTime}}-->
+                    </el-form-item>
+                </div>
+                <div class="xe-block">
+                    <el-form-item label="开单员" class="xe-col-2">
+                        <el-input v-model="colDefaultValModel.merchandiser"  placeholder="请输入内容"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="xe-block">
+                    <el-form-item label="仓库名称" class="xe-col-2">
+                        <el-select placeholder="请选择" v-model="colDefaultValModel.warehouseName">
+                            <el-option  v-for="item in warehouseNameList" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="xe-block">
+                    <el-form-item label="业务类型" class="xe-col-2">
+                        <el-select placeholder="请选择" v-model="colDefaultValModel.businessType">
+                            <el-option  v-for="item in businessTypeList" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="xe-block">
+                    <el-form-item label="是否提供运输服务" class="xe-col-2">
+                        <el-checkbox v-model="colDefaultValModel.provideTransport" ></el-checkbox>
+                    </el-form-item>
+                </div>
 
-           </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelSetDefault">取 消</el-button>
-            <el-button type="primary" @click="confirmSetDefault">确 定</el-button>
-          </div>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="cancelSetDefault">取 消</el-button>
+                <el-button type="primary" @click="confirmSetDefault">确 定</el-button>
+            </div>
 
         </el-dialog>
 
@@ -76,7 +76,7 @@
                 <el-form-item label="客户编码"  class="xe-col-2">
                     <el-input v-model="templateForm.custCode"  :disabled="true" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>
                     <input  name="custCode" id="custCode" hidden placeholder="请输入客户编码"/>
-                    <#--<el-input v-model="templateForm.custCode" :disabled="true" id="custName" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>-->
+                <#--<el-input v-model="templateForm.custCode" :disabled="true" id="custName" placeholder="请输入客户编码" v-on:change="custCodeChange"></el-input>-->
                     <div  v-if="custCodeNotNull"><p style="color: red">客户编码不能为空</p></div>
                 </el-form-item>
             </div>
@@ -88,8 +88,8 @@
             <el-table
                     :data="tableData"
                     highlight-current-row
-                    <#--@current-change="handleCurrentChange"-->
-                    <#--v-html="tableData.reflectColName"-->
+            <#--@current-change="handleCurrentChange"-->
+            <#--v-html="tableData.reflectColName"-->
                     :model="tableData.colDefaultVal"
                     border
                     style="width: 100%">
@@ -153,8 +153,9 @@
         el:'#vm',
         data:function () {
             return{
-                <#--orderTime:'${orderTime!}',-->
+            <#--orderTime:'${orderTime!}',-->
                 warehouseName:'',
+                typeOfTemplate:'storageIn',
                 businessType:'',
                 custNameShow:false,
                 templateTypeNotNull:false,
@@ -215,32 +216,33 @@
                     {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
                     {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
                     {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
-                    {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'}
+                    {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                    {indexNum:'22', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                 ]
             }
         } ,
         beforeMount:function () {
-          var vm = this;
-          vm.colDefaultValModel = {
+            var vm = this;
+            vm.colDefaultValModel = {
 //              orderTime:vm.orderTime,
-              merchandiser:'${userName!}',
-              warehouseName:'',
-              businessType:'',
-              provideTransport:''
-          };
-          CommonClient.post("/ofc/storage_template/warehouse",{},function (result) {
-              vm.warehouseNameList = [];
-              if(result.code != 200){
-                  vm.$message.error("加载所有仓库失败!");
-                  return;
-              }
-              $.each(result.result, function (index, item) {
-                  var warehouseName = {};
-                  warehouseName.lable = item.warehouseName;
-                  warehouseName.value = item.warehouseName;
-                  vm.warehouseNameList.push(warehouseName);
-              })
-          })
+                merchandiser:'${userName!}',
+                warehouseName:'',
+                businessType:'',
+                provideTransport:''
+            };
+            CommonClient.post("/ofc/storage_template/warehouse",{},function (result) {
+                vm.warehouseNameList = [];
+                if(result.code != 200){
+                    vm.$message.error("加载所有仓库失败!");
+                    return;
+                }
+                $.each(result.result, function (index, item) {
+                    var warehouseName = {};
+                    warehouseName.lable = item.warehouseName;
+                    warehouseName.value = item.warehouseName;
+                    vm.warehouseNameList.push(warehouseName);
+                })
+            })
 
         },
         methods:{
@@ -274,7 +276,8 @@
                         {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
                         {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
                         {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
-                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'}
+                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                        {indexNum:'22', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                     ];
                     vm.businessTypeList=[
                         {value:'采购入库',label:'采购入库'},
@@ -285,6 +288,7 @@
                         {value:'流通入库',label:'流通入库'},
                         {value:'其他入库',label:'其他入库'}
                     ];
+                    vm.typeOfTemplate = 'storageIn';
                 }else if(val == 'storageOut'){
                     vm.tableData = [
                         {indexNum:'1', standardColName:'客户订单号', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'custOrderCode'},
@@ -310,7 +314,8 @@
                         {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
                         {indexNum:'22', standardColName:'收货方名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'consigneeName'},
                         {indexNum:'23', standardColName:'收货人编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'consigneeContactCode'},
-                        {indexNum:'24', standardColName:'供应商编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportCode'}
+                        {indexNum:'24', standardColName:'供应商编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportCode'},
+                        {indexNum:'25', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                     ];
                     vm.businessTypeList=[
                         {value:'销售出库',label:'销售出库'},
@@ -319,6 +324,7 @@
                         {value:'其他出库',label:'其他出库'},
                         {value:'分拨出库',label:'分拨出库'}
                     ];
+                    vm.typeOfTemplate = 'storageOut';
                 }
             },
             templateNameChange:function (val) {
@@ -401,9 +407,9 @@
                         vm.$message.error('货品编码模板列名必填!');
                         return;
                     } else if(index == 12 && StringUtil.isEmpty(reflectColName)){
-                        designData.length == 21 ? vm.$message.error('入库数量模板列名必填!') : vm.$message.error('出库数量模板列名必填!');
+                        vm.typeOfTemplate == 'storageIn' ? vm.$message.error('入库数量模板列名必填!') : vm.$message.error('出库数量模板列名必填!');
                         return;
-                    } else if(index == 22 && StringUtil.isEmpty(reflectColName)){
+                    } else if(index == 22 && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageOut'){
                         vm.$message.error('收货方名称模板列名必填!');
                         return;
                     }

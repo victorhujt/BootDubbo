@@ -1,6 +1,7 @@
 package com.xescm.ofc.utils;
 
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
@@ -14,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.xescm.ofc.constant.ResultModel.ResultEnum.CODE_0011;
 
 /**
  * 校验
@@ -124,8 +127,8 @@ public class CheckUtils {
         String consignor_contact = createOrderEntity.getConsignorContact();
         String consignor_phone = createOrderEntity.getConsignorPhone();
         String consignor_address = createOrderEntity.getConsignorAddress();
-        String consignor_province_code = createOrderEntity.getConsignorProvinceCode();
-        String consignor_city_code = createOrderEntity.getConsignorCityCode();
+//        String consignor_province_code = createOrderEntity.getConsignorProvinceCode();
+//        String consignor_city_code = createOrderEntity.getConsignorCityCode();
         String consignor_country_code = createOrderEntity.getConsignorCountyCode();
         String consignor_town_code = createOrderEntity.getConsignorTownCode();
         String consignee_name = createOrderEntity.getConsigneeName();
@@ -151,11 +154,11 @@ public class CheckUtils {
                 return new ResultModel("1000", "发货方联系电话信息不能为空");
             } else if (StringUtils.isBlank(consignor_address)) {
                 return new ResultModel("1000", "发货方地址信息不能为空");
-            } else if (StringUtils.isBlank(consignor_province_code)) {
+            }/* else if (StringUtils.isBlank(consignor_province_code)) {
                 return new ResultModel("1000", "发货方地址信息省编码不能为空");
             } else if (StringUtils.isBlank(consignor_city_code)) {
                 return new ResultModel("1000", "发货方地址信息市编码不能为空");
-            } else if (StringUtils.isBlank(consignee_name)) {
+            }*/ else if (StringUtils.isBlank(consignee_name)) {
                 return new ResultModel("1000", "收货方名称信息不能为空");
             } else if (StringUtils.isBlank(consignee_contact)) {
                 return new ResultModel("1000", "收货方联系人信息不能为空");
@@ -232,7 +235,7 @@ public class CheckUtils {
      */
     public static ResultModel checkGoodsInfo(Wrapper<List<CscGoodsApiVo>> listWrapper, CreateOrderGoodsInfo createOrderGoodsInfo) {
         if (listWrapper.getCode() == Wrapper.ERROR_CODE) {
-            return new ResultModel(ResultModel.ResultEnum.CODE_0004);
+            return new ResultModel(ResultModel.ResultEnum.CODE_2001);
         }
         for (CscGoodsApiVo c : listWrapper.getResult()) {
             if (StringUtils.equals(c.getGoodsCode(), createOrderGoodsInfo.getGoodsCode())) {
@@ -253,4 +256,10 @@ public class CheckUtils {
         return (StringUtils.isBlank(quantity) && StringUtils.isBlank(weight) && StringUtils.isBlank(cubage)) ? new ResultModel(ResultModel.ResultEnum.CODE_0007) : new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 
+    public static ResultModel checkOrderTime(String orderTime) {
+        if(PubUtils.isSEmptyOrNull(orderTime)) {
+            return new ResultModel(CODE_0011.getCode(), CODE_0011.getDesc());
+        }
+        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+    }
 }

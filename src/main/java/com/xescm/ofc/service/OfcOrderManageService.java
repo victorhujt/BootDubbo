@@ -72,4 +72,8 @@ public interface OfcOrderManageService {
      Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList, String custCode, String warehouseCode);
 
      List<OfcOrderAccountDTO>  dailyAccount();
+
+    void fixAddressWhenEdit(String orderTagStockEdit, OfcDistributionBasicInfo ofcDistributionBasicInfo);
+
+    public String orderAutoAuditForTran(String orderCode,String orderStatus,String reviewTag, AuthResDto authResDtoByToken);
 }

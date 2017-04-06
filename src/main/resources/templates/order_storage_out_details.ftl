@@ -30,7 +30,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="客户名称" class="xe-col-3">
-                    <el-input v-model="customerName">
+                    <el-input v-model="customerName" :readOnly="true">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="订单状态" class="xe-col-3">
@@ -225,6 +225,11 @@
                                 :readOnly="true"
                                 placeholder="选择日期">
                         </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="supportBatch" label="供应商批次号">
+                    <template scope="scope">
+                        <el-input v-model="supplierName" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>

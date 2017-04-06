@@ -156,7 +156,7 @@ public class CreateOrderTrans {
      * @return
      * @throws Exception
      */
-    public OfcDistributionBasicInfo getOfcDistributionBasicInfo() throws BusinessException {
+    public OfcDistributionBasicInfo   getOfcDistributionBasicInfo() throws BusinessException {
         if (createOrderEntity != null) {
             ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
             modelMapper.addMappings(new PropertyMap<CreateOrderEntity, OfcDistributionBasicInfo>() {
@@ -181,23 +181,21 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setDepartureDistrict(createOrderEntity.getConsignorCounty());
             ofcDistributionBasicInfo.setDepartureTowns(createOrderEntity.getConsignorTown());
             ofcDistributionBasicInfo.setDeparturePlace(createOrderEntity.getConsignorAddress());
-            if(PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorProvinceCode())){
-                throw new BusinessException("发货地省编码为空!");
-            }
-            StringBuilder departureCode = new StringBuilder(createOrderEntity.getConsignorProvinceCode());
-            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorCityCode())){
-                departureCode.append(",").append(createOrderEntity.getConsignorCityCode());
-            }else {
-                throw new BusinessException("发货地市编码为空!");
-            }
-            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorCountyCode())){
-                departureCode.append(",").append(createOrderEntity.getConsignorCountyCode());
-            }
-            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorTownCode())){
-                departureCode.append(",").append(createOrderEntity.getConsignorTownCode());
-            }
-            ofcDistributionBasicInfo.setDeparturePlaceCode(departureCode.toString());
 
+            String consignorProvinceCode = createOrderEntity.getConsignorProvinceCode();
+            if(!PubUtils.isSEmptyOrNull(consignorProvinceCode)){
+                StringBuilder departureCode = new StringBuilder(createOrderEntity.getConsignorProvinceCode());
+                if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorCityCode())){
+                    departureCode.append(",").append(createOrderEntity.getConsignorCityCode());
+                }
+                if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorCountyCode())){
+                    departureCode.append(",").append(createOrderEntity.getConsignorCountyCode());
+                }
+                if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsignorTownCode())){
+                    departureCode.append(",").append(createOrderEntity.getConsignorTownCode());
+                }
+                ofcDistributionBasicInfo.setDeparturePlaceCode(departureCode.toString());
+            }
             //收货方
             ofcDistributionBasicInfo.setConsigneeContactName(createOrderEntity.getConsigneeContact());
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());
