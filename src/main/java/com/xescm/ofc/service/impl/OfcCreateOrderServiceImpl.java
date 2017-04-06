@@ -456,12 +456,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
                 if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
                     logger.error("出发完整地址调用EPC接口解析完整地址失败! destinationResult :{}", departurePlaceResult);
-                    ofcAddressReflect = new OfcAddressReflect();
-                    ofcAddressReflect.setAddress(departurePlace);
-                    int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
-                    if(insert < 1){
-                        logger.error("存储出发完整地址映射失败!");
-//                        throw new BusinessException("存储出发完整地址映射失败!");
+                    if (null == ofcAddressReflect) {
+                        ofcAddressReflect = new OfcAddressReflect();
+                        ofcAddressReflect.setAddress(departurePlace);
+                        if(ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                            logger.error("存储出发完整地址映射失败!");
                     }
                 } else {
                     com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject((String) departurePlaceResult.getResult());
@@ -516,12 +515,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
                 if(destinationResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
                     logger.error("到达完整地址调用EPC接口解析完整地址失败! destinationResult :{}", destinationResult);
-                    ofcAddressReflect = new OfcAddressReflect();
-                    ofcAddressReflect.setAddress(destination);
-                    int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
-                    if(insert < 1){
-                        logger.error("存储到达完整地址映射失败!");
-//                        throw new BusinessException("存储到达完整地址映射失败!");
+                    if (null == ofcAddressReflect) {
+                        ofcAddressReflect = new OfcAddressReflect();
+                        ofcAddressReflect.setAddress(destination);
+                        if(ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                            logger.error("存储到达完整地址映射失败!");
                     }
                 } else {
                     com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject((String) destinationResult.getResult());
@@ -831,7 +829,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 String countyName = contactInfo.getAreaName();
                 String townCode = contactInfo.getStreet();
                 String townName = contactInfo.getStreetName();
-                String address = contactInfo.getDetailAddress();
+                String address = contactInfo.getAddress();
                 String contactCompanyCode = contactInfo.getContactCompanyCode();
                 String contactCompanyName = contactInfo.getContactCompanyName();
                 String contactName = contactInfo.getContactName();

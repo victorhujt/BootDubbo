@@ -2194,8 +2194,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      */
     public void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
-        rmcServiceCoverageForOrderVo = copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
-        RmcServiceCoverageForOrderVo rmcPickup = rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+        rmcServiceCoverageForOrderVo = this.copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
+        RmcServiceCoverageForOrderVo rmcPickup = this.rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
         updateOrderAreaAndBase(rmcPickup, ofcFundamentalInformation);
     }
 
@@ -3296,7 +3296,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             //创单接口订单和钉钉录单补充大区基地信息
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
                     || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
-                this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                // 大区、基地都为空则更新大区基地
+                String baseCode = ofcFundamentalInformation.getBaseCode();
+                String areaCode = ofcFundamentalInformation.getAreaCode();
+                if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode)) {
+                    this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                }
                 this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             }
             String userName = authResDtoByToken.getUserName();
