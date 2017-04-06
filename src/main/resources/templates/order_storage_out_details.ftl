@@ -30,7 +30,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="客户名称" class="xe-col-3">
-                    <el-input v-model="customerName">
+                    <el-input v-model="customerName" :readOnly="true">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="订单状态" class="xe-col-3">

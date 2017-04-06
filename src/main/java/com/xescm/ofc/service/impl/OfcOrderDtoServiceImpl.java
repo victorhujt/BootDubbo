@@ -1,10 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.domain.OfcDistributionBasicInfo;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
@@ -31,6 +28,10 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
+    @Resource
+    private OfcFinanceInformationService ofcFinanceInformationService;
 
     @Override
     public OfcOrderDTO orderDtoSelect(String code, String dtoTag) {
@@ -84,6 +85,38 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
             }
         }else{
             throw new BusinessException("订单编号为空");
+        }
+    }
+
+    @Override
+    public OfcOrderDTO transOrderDotSelect(String orderCode) throws InvocationTargetException {
+        if(PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.
+            throw new BusinessException("找不到该订单编号");
+        }else{
+            OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
+            try {
+                OfcFundamentalInformation ofcFundamentalInformation =  ofcFundamentalInformationService.selectByKey(orderCode);
+                OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+                OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
+                OfcOrderNewstatus ofcOrderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
+                if(null!=ofcFinanceInformation){
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcFinanceInformation);
+                }
+                if(null!=ofcFundamentalInformation){
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                }
+                if(null!=ofcDistributionBasicInfo){
+                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
+                }
+                ofcOrderDTO.setOrderStatus(ofcOrderNewstatus.getOrderLatestStatus());
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new BusinessException("实体转换失败", e);
+            } catch (BusinessException ex){
+                throw new BusinessException("查询订单失败", ex);
+            }catch (Exception ex){
+                throw new BusinessException(ex.getMessage(), ex);
+            }
+            return ofcOrderDTO;
         }
     }
 }

@@ -1,23 +1,27 @@
 package com.xescm.ofc.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.edas.company.CscQueryStoreCodeReqDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
-import com.xescm.csc.provider.CscCustomerEdasService;
-import com.xescm.csc.provider.CscGoodsEdasService;
-import com.xescm.csc.provider.CscStoreEdasService;
-import com.xescm.csc.provider.CscWarehouseEdasService;
+import com.xescm.csc.provider.*;
+import com.xescm.epc.edas.service.EpcBaiDuEdasService;
+import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
@@ -37,11 +41,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstConstant.CREATE_ORDER_BYAPI;
+import static com.xescm.ofc.constant.OrderConstConstant.PENDING_AUDIT;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 
 @Service
@@ -66,17 +72,23 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Resource
+    private OfcAddressReflectService ofcAddressReflectService;
+    @Resource
     private CscWarehouseEdasService cscWarehouseEdasService;
     @Resource
     private CscStoreEdasService cscStoreEdasService;
-//    @Resource
-//    private CscSupplierEdasService cscSupplierEdasService;
     @Resource
     private CscGoodsEdasService cscGoodsEdasService;
     @Resource
     private RmcAddressEdasService rmcAddressEdasService;
     @Resource
+    private EpcBaiDuEdasService epcBaiDuEdasService;
+    @Resource
     private OfcCreateOrderMapper createOrdersMapper;
+    @Resource
+    private OfcAddressReflectMapper ofcAddressReflectMapper;
+    @Resource
+    private CscContactCompanyEdasService cscContactCompanyEdasService;
 
     @Override
     public int queryCountByOrderStatus(String orderCode, String orderStatus) {
@@ -86,9 +98,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Transactional
     public ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException {
         ResultModel resultModel;
+
+        //校验订单日期
+        String orderTime = createOrderEntity.getOrderTime();
+        resultModel = CheckUtils.checkOrderTime(orderTime);
+        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+            logger.error("校验订单日期【{}】失败：错误信息:{}, {}", orderTime, resultModel.getCode(), resultModel.getDesc());
+            return resultModel;
+        }
+
         //校验数据：货主编码 对应客户中心的custId
         String custCode = createOrderEntity.getCustCode();
-        String custName = createOrderEntity.getCustName();
+
         //校验货主编码
         resultModel = CheckUtils.checkCustCode(custCode);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
@@ -96,10 +117,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             return resultModel;
         }
         //校验货主名称
-        if (StringUtils.isBlank(custName)) {
-            logger.error("校验数据{}失败：{}", "货主名称", custName);
-            return new ResultModel(ResultModel.ResultEnum.CODE_0008);
-        }
+//        if (StringUtils.isBlank(custName)) {
+//            logger.error("校验数据{}失败：{}", "货主名称", custName);
+//            return new ResultModel(ResultModel.ResultEnum.CODE_0008);
+//        }
 
         QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
         queryCustomerCodeDto.setCustomerCode(custCode);
@@ -107,6 +128,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         if (customerVoWrapper.getResult() == null) {
             logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
             return new ResultModel(ResultModel.ResultEnum.CODE_0009);
+        } else {
+            createOrderEntity.setCustName(customerVoWrapper.getResult().getCustomerName());
         }
 
 
@@ -127,15 +150,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
 
         //check 数量、重量、体积 三选一不能为空
-        resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验数据{}失败：{}", "数量、重量、体积 三选一不能为空", resultModel.getCode());
-            return resultModel;
-        }
+//        resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
+//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+//            logger.error("校验数据{}失败：{}", "数量、重量、体积 三选一不能为空", resultModel.getCode());
+//            return resultModel;
+//        }
+
+
+
         //校验：店铺编码，获取该客户下的店铺编码
-        String storeCode;
+        String storeCode = null;
         //店铺名称
-        String storeName;
+        String storeName = null;
         QueryStoreDto storeDto = new QueryStoreDto();
         storeDto.setCustomerCode(custCode);
         Wrapper<List<CscStorevo>> cscStoreVoList = cscStoreEdasService.getStoreByCustomerId(storeDto);
@@ -144,15 +170,22 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
             storeCode = cscStorevo.getStoreCode();
             storeName = cscStorevo.getStoreName();
-        } else {
+        }/* else {
             logger.error("获取该客户下的店铺编码接口返回失败，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0003);
             return resultModel;
-        }
+        }*/
         createOrderEntity.setStoreCode(storeCode);
 
-        //校验：【发货方】与【收货方】
-        resultModel = CheckUtils.checkWaresDist(createOrderEntity);
+        //校验：【发货方】与【收货方】//2017年3月20日 追加逻辑:收发货方地址没有细化到二级,也能过,订单状态为待审核,不进行自动审核,对地址进行匹配
+//        resultModel = CheckUtils.checkWaresDist(createOrderEntity);
+//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+//            logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
+//            return resultModel;
+//        }
+
+        // 校验收发货方，如果收发货方编码不为空，则查询收发货方信息；否则校验传入收发货方字段
+        resultModel = checkContactInfo(createOrderEntity);
         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
             return resultModel;
@@ -172,19 +205,30 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //供应商
         //checkSupport(createOrderEntity, custCode);
 
-        //校验：货品档案信息  如果是不是运输类型（60），校验货品明细
-        if (!StringUtils.equals("60", orderType)) {
-            List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
-            for (CreateOrderGoodsInfo createOrderGoodsInfo : createOrderGoodsInfos) {
-                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-                cscGoods.setCustomerCode(custCode);
-                Wrapper<List<CscGoodsApiVo>> cscGoodsVoWrapper = cscGoodsEdasService.queryCscGoodsList(cscGoods);
-                resultModel = CheckUtils.checkGoodsInfo(cscGoodsVoWrapper, createOrderGoodsInfo);
+        //校验：货品档案信息，校验货品明细
+        List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+        for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
+            String goodsCode = goodsInfo.getGoodsCode();
+            CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+            cscGoods.setCustomerCode(custCode);
+            cscGoods.setGoodsCode(goodsCode);
+            Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
+            if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
+                if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
+                    for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
+                        goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
+                        goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
+                    }
+                }
+            } else {    // 仓储订单 - 货品必须存在
+                resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", createOrderGoodsInfo.getGoodsCode(), resultModel.getCode());
+                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
                     return resultModel;
                 }
             }
+            //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
+            this.fixOrderGoodsMsg(createOrderEntity, goodsInfo);
         }
 
         //转换 dto → do
@@ -196,7 +240,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
         OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
         List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
-        resultModel = createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+        //调用创建订单方法
+        resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
         if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
             //操作成功
             logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
@@ -204,9 +249,51 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return resultModel;
     }
 
-
-
-
+    /**
+     *  2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
+     * @param createOrderEntity 表头
+     * @param createOrderGoodsInfo 货品
+     */
+    private void fixOrderGoodsMsg(CreateOrderEntity createOrderEntity, CreateOrderGoodsInfo createOrderGoodsInfo) {
+        logger.info("表头体积重量数量计算 == > 表头 createOrderEntity :{}", createOrderEntity);
+        logger.info("表头体积重量数量计算 == > 货品 createOrderGoodsInfo :{}", createOrderGoodsInfo);
+        //货品信息
+        String quantityDetail = createOrderGoodsInfo.getQuantity();
+        String cubageDetail = createOrderGoodsInfo.getCubage();
+        String weightDetail = createOrderGoodsInfo.getWeight();
+        if(!PubUtils.isSEmptyOrNull(quantityDetail)){
+            String quantityHead = createOrderEntity.getQuantity();
+            if (PubUtils.isSEmptyOrNull(quantityHead)) {
+                quantityHead = "0";
+            }
+            BigDecimal quan = new BigDecimal(quantityDetail);
+            BigDecimal quantityResult = new BigDecimal(quantityHead);
+            quantityResult = quantityResult.add(quan);
+            createOrderEntity.setQuantity(quantityResult.toString());
+        }
+        if(!PubUtils.isSEmptyOrNull(weightDetail)){
+            String weightHead = createOrderEntity.getWeight();
+            if (PubUtils.isSEmptyOrNull(weightHead)) {
+                weightHead = "0";
+            }
+            BigDecimal weig = new BigDecimal(weightDetail);
+            BigDecimal weightHeadResult = new BigDecimal(weightHead);
+            weightHeadResult = weightHeadResult.add(weig);
+            createOrderEntity.setWeight(weightHeadResult.toString());
+        }
+        if(!PubUtils.isSEmptyOrNull(cubageDetail)){
+            String cubageHead = createOrderEntity.getCubage();
+            if(PubUtils.isSEmptyOrNull(cubageHead)){
+                cubageHead = "0";
+            }
+            BigDecimal cuba = new BigDecimal(cubageDetail);
+            BigDecimal cubageHeadResult = new BigDecimal(cubageHead);
+            cubageHeadResult = cubageHeadResult.add(cuba);
+            createOrderEntity.setCubage(cubageHeadResult.toString());
+        }
+        logger.info("表头体积重量数量计算结束 == > 表头 quantity :{}", createOrderEntity.getQuantity() + " weight:{}" +
+            createOrderEntity.getWeight() + " cubage:{}" + createOrderEntity.getCubage());
+    }
 
 
     /**
@@ -237,6 +324,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = ofcFundamentalInformation.getCustCode();
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+
+
+        boolean sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
+        this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
             String orderCode = information.getOrderCode();
             OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
@@ -260,7 +351,19 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 //            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList,ofcOrderStatus);
+                if(sEmptyOrNull){
+                    //自动审核通过 review:审核；rereview:反审核
+                    this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                } else {
+                    this.fixOrEeAddress(ofcDistributionBasicInfo);
+                    //然后再更新运输信息
+                    ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
+                    //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
+                    sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
+                    if(sEmptyOrNull){
+                        this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                    }
+                }
                 logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
                 //推结算
                // ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
@@ -270,8 +373,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         } else {
+
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
-            ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+            if(sEmptyOrNull){
+                ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+            }
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
             ofcFinanceInformationService.save(ofcFinanceInformation);
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
@@ -279,8 +385,21 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             ofcOrderStatusService.save(ofcOrderStatus);
             try {
-                //自动审核通过 review:审核；rereview:反审核
-                orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                //地址编码不为空才走自动审核, 为空的状态还是待审核, 并调用EPC端口补齐
+                if(sEmptyOrNull){
+
+                    //自动审核通过 review:审核；rereview:反审核
+                    this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                } else {
+                    this.fixOrEeAddress(ofcDistributionBasicInfo);
+                    //然后再保存运输信息
+                    ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
+                    //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
+                    sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
+                    if(sEmptyOrNull){
+                        this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+                    }
+                }
                 logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
                 //推结算
                // ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
@@ -290,6 +409,227 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         }
+    }
+
+    private boolean checkAddressPass(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
+        String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
+        String destinationProvince = ofcDistributionBasicInfo.getDestinationProvince();
+        String departureCity = ofcDistributionBasicInfo.getDepartureCity();
+        String destinationCity = ofcDistributionBasicInfo.getDestinationCity();
+        return !PubUtils.isSEmptyOrNull(departurePlaceCode) && !PubUtils.isSEmptyOrNull(departureProvince)
+                && !PubUtils.isSEmptyOrNull(departureCity) && !PubUtils.isSEmptyOrNull(destinationProvince) && !PubUtils.isSEmptyOrNull(destinationCity);
+    }
+
+    private void fixOrEeAddrCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        String departuePlaceCode = this.explainAddressByRmc(ofcDistributionBasicInfo.getDepartureProvince()
+                , ofcDistributionBasicInfo.getDepartureCity(), ofcDistributionBasicInfo.getDepartureDistrict());
+        if(!PubUtils.isSEmptyOrNull(departuePlaceCode)){
+            ofcDistributionBasicInfo.setDeparturePlaceCode(departuePlaceCode);
+        }
+        String destinationCode = this.explainAddressByRmc(ofcDistributionBasicInfo.getDestinationProvince()
+                , ofcDistributionBasicInfo.getDepartureCity(), ofcDistributionBasicInfo.getDestinationDistrict());
+        if(!PubUtils.isSEmptyOrNull(destinationCode)){
+            ofcDistributionBasicInfo.setDestinationCode(destinationCode);
+        }
+    }
+
+    /**
+     * 调用EPC接口解析完整地址
+     * @param ofcDistributionBasicInfo 运输信息
+     */
+    private void fixOrEeAddress(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        logger.info("调用EPC接口解析完整地址 ofcDistributionBasicInfo ==> {}", ofcDistributionBasicInfo);
+        String departurePlace = ofcDistributionBasicInfo.getDeparturePlace();
+        String destination = ofcDistributionBasicInfo.getDestination();
+        //调用EPC接口进行解析
+        if(!PubUtils.isSEmptyOrNull(departurePlace)){
+            OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
+            logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
+            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
+                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())){
+                logger.info("映射成功!");
+                ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
+            } else {
+                logger.info("映射失败!");
+                logger.info("开始调用Epc接口进行解析!");
+                Wrapper departurePlaceResult = epcBaiDuEdasService.showLocationStr(departurePlace);
+                logger.info("调用Epc接口进行解析结果: {}", departurePlaceResult);
+                Object result = departurePlaceResult.getResult();
+                boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
+                if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
+                    logger.error("出发完整地址调用EPC接口解析完整地址失败! destinationResult :{}", departurePlaceResult);
+                    if (null == ofcAddressReflect) {
+                        ofcAddressReflect = new OfcAddressReflect();
+                        ofcAddressReflect.setAddress(departurePlace);
+                        if(ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                            logger.error("存储出发完整地址映射失败!");
+                    }
+                } else {
+                    com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject((String) departurePlaceResult.getResult());
+                    Object departureProvince = departurePlaceObj.get("province");
+                    Object departureCity = departurePlaceObj.get("city");
+                    Object departureDistrict = departurePlaceObj.get("district");
+                    if(null != departureProvince){
+                        String depProvince = (String) departureProvince;
+                        ofcDistributionBasicInfo.setDepartureProvince(depProvince);
+                        if(null != departureCity){
+                            String depCity = (String) departureCity;
+                            ofcDistributionBasicInfo.setDepartureCity(depCity);
+                            if(null != departureDistrict){
+                                String depDistrict = (String) departureDistrict;
+                                ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
+                                //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                                logger.info("调用RMC接口, 查询省市区名称对应的编码, 并赋值");
+                                String departuePlaceCode = this.explainAddressByRmc(depProvince, depCity, depDistrict);
+                                if(PubUtils.isSEmptyOrNull(departuePlaceCode)){
+                                    logger.error("调用RMC接口, 查询出发省市区名称对应的编码失败! ");
+                                }
+                                ofcDistributionBasicInfo.setDeparturePlaceCode(departuePlaceCode);
+                                /*ofcAddressReflect = new OfcAddressReflect();
+                                ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
+                                int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
+                                if(insert < 1){
+                                    logger.error("存储明细地址映射失败!");
+                                    throw new BusinessException("存储明细地址映射失败!");
+                                }*/
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        }
+
+        if(!PubUtils.isSEmptyOrNull(destination)){
+            OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
+            logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
+            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
+                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())){
+                logger.info("映射成功!");
+                ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
+            } else {
+                logger.info("映射失败!");
+                logger.error("开始调用Epc接口进行解析! ");
+                Wrapper destinationResult = epcBaiDuEdasService.showLocationStr(destination);
+                logger.info("调用Epc接口进行解析结果: {}", destinationResult);
+                Object result = destinationResult.getResult();
+                boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
+                if(destinationResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
+                    logger.error("到达完整地址调用EPC接口解析完整地址失败! destinationResult :{}", destinationResult);
+                    if (null == ofcAddressReflect) {
+                        ofcAddressReflect = new OfcAddressReflect();
+                        ofcAddressReflect.setAddress(destination);
+                        if(ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                            logger.error("存储到达完整地址映射失败!");
+                    }
+                } else {
+                    com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject((String) destinationResult.getResult());
+                    Object destinationProvince = destinationObj.get("province");
+                    Object destinationCity = destinationObj.get("city");
+                    Object destinationDistrict = destinationObj.get("district");
+                    if(null != destinationProvince){
+                        String desProvince = (String) destinationProvince;
+                        ofcDistributionBasicInfo.setDestinationProvince(desProvince);
+                        if(null != destinationCity){
+                            String desCity = (String) destinationCity;
+                            ofcDistributionBasicInfo.setDestinationCity(desCity);
+                            if(null != destinationDistrict){
+                                String desDistrict = (String) destinationDistrict;
+                                ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
+                                //调用RMC接口, 查询省市区名称对应的编码, 并赋值
+                                logger.info("调用RMC接口, 查询省市区名称对应的编码, 并赋值");
+                                String destinationCode = this.explainAddressByRmc(desProvince, desCity, desDistrict);
+                                if(PubUtils.isSEmptyOrNull(destinationCode)){
+                                    logger.error("调用RMC接口, 查询到达省市区名称对应的编码失败! ");
+                                }
+                                ofcDistributionBasicInfo.setDestinationCode(destinationCode);
+                                /*ofcAddressReflect = new OfcAddressReflect();
+                                ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
+                                int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
+                                if(insert < 1){
+                                    logger.error("存储明细地址映射失败!");
+                                    throw new BusinessException("存储明细地址映射失败!");
+                                }*/
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 校验Epc地址解析结果是否成功
+     * @param result
+     * @return
+     */
+    private boolean checkEpcAddrPass(Object result) {
+        if (null == result || PubUtils.isSEmptyOrNull((String) result)) {
+            logger.info("校验Epc地址解析结果失败! result为空");
+            return false;
+        }
+        String addr = (String) result;
+        logger.info("校验Epc地址解析结果是否成功 addr : {}", addr);
+        com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject(addr);
+        Object province = departurePlaceObj.get("province");
+        Object city = departurePlaceObj.get("city");
+        Object district = departurePlaceObj.get("district");
+        if (null == province || PubUtils.isSEmptyOrNull((String) province)
+                || null == city || PubUtils.isSEmptyOrNull((String) city)
+                || null == district || PubUtils.isSEmptyOrNull((String) district)) {
+            logger.info("校验Epc地址解析结果失败!");
+            return false;
+        }
+        logger.info("校验Epc地址解析结果成功!");
+        return true;
+    }
+
+
+    /**
+     * 调用RMC接口, 通过省市区名称取得对应编码
+     * @param province 省名称
+     * @param city 市名称
+     * @param district 区名称
+     */
+    private String explainAddressByRmc(String province, String city, String district) {
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 province ==> {}", province);
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 city ==> {}", city);
+        logger.info("调用RMC接口, 通过省市区名称取得对应编码 district ==> {}", district);
+        RmcAddressNameVo rmcAddressNameVo = new RmcAddressNameVo();
+        rmcAddressNameVo.setProvinceName(province);
+        rmcAddressNameVo.setCityName(city);
+        rmcAddressNameVo.setDistrictName(district);
+        if(PubUtils.isSEmptyOrNull(province) && PubUtils.isSEmptyOrNull(city) && PubUtils.isSEmptyOrNull(district)){
+            logger.error("调用RMC接口, 通过省市区名称取得对应编码, 省市区名称三者必填!");
+            return null;
+//            throw new BusinessException("调用RMC接口, 通过省市区名称取得对应编码, 省市区名称三者必填!");
+        }
+        Wrapper<RmcAddressCodeVo> codeByName = rmcAddressEdasService.findCodeByName(rmcAddressNameVo);
+        if(codeByName.getCode() == Wrapper.ERROR_CODE || codeByName.getResult() == null){
+            logger.error("调用RMC接口, 通过省市区名称取得对应编码,失败! 错误信息:{}", codeByName.getMessage());
+            return null;
+//            throw new BusinessException(codeByName.getMessage());
+        }
+        RmcAddressCodeVo rmcAddressCodeVo = codeByName.getResult();
+        String provinceCode = rmcAddressCodeVo.getProvinceCode();
+        String cityCode = rmcAddressCodeVo.getCityCode();
+        String districtCode = rmcAddressCodeVo.getDistrictCode();
+        if(!PubUtils.isSEmptyOrNull(provinceCode)){
+            StringBuilder sb = new StringBuilder(provinceCode);
+            if(!PubUtils.isSEmptyOrNull(cityCode)){
+                sb.append(",").append(cityCode);
+                if(!PubUtils.isSEmptyOrNull(districtCode)){
+                    sb.append(",").append(districtCode);
+                    return sb.toString();
+                }
+            }
+        }
+        logger.info("================ 通过省市区名称取得对应编码: province ==> {}, city ==> {}, district ==> {}  返回结果：{}, {}, {}",
+            province, city, district, provinceCode, cityCode, districtCode);
+        return null;
     }
 
     /**
@@ -308,7 +648,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //自动审核通过 review:审核；rereview:反审核
         AuthResDto authResDto = new AuthResDto();
         authResDto.setGroupRefName(CREATE_ORDER_BYAPI);
-//        Wrapper<?> wrapper = ofcOrderManageService.orderAutoAuditFromOperation(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, "review", authResDto);
         String auditResult = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo
                 , ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, REVIEW, authResDto);
         logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
@@ -342,6 +681,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         resuteMap.put("districtCode", districtCode);
         return resuteMap;
     }
+
     /**
      * 根据省市区名称获取编码
      * 补历史订单临时使用
@@ -370,4 +710,184 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return resuteMap;
     }
 
+
+    /**
+     * 校验收发货方信息
+     * @param createOrderEntity
+     * @return
+     */
+    public ResultModel checkContactInfo(CreateOrderEntity createOrderEntity) {
+        ResultModel resultModel;
+        ResultModel restConsignor = checkConsignorInfo(createOrderEntity);
+        if (ResultModel.ResultEnum.CODE_0000.getCode().equals(restConsignor.getCode())) {
+            ResultModel restConsignee = checkConsigneeInfo(createOrderEntity);
+            if (ResultModel.ResultEnum.CODE_0000.getCode().equals(restConsignee.getCode())) {
+                resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0000);
+            } else {
+                resultModel = restConsignee;
+            }
+        } else {
+            resultModel = restConsignor;
+        }
+        return resultModel;
+    }
+
+    // 发货方校验
+    public ResultModel checkConsignorInfo(CreateOrderEntity createOrderEntity) {
+        // 发货方编码
+        String consignorCode = createOrderEntity.getConsignorCode();
+        String custCode = createOrderEntity.getCustCode();
+        if (!PubUtils.isOEmptyOrNull(consignorCode)) {
+            ResultModel resultModel = queryContactAndSet(createOrderEntity, custCode, "2", consignorCode);
+            if (ResultModel.ResultEnum.CODE_3001.getCode().equals(resultModel.getCode())) {
+                createOrderEntity.setConsignorCode(null);
+                return checkConsignorInfo(createOrderEntity);
+            } else {
+                return resultModel;
+            }
+        } else {
+            String orderType = createOrderEntity.getOrderType();
+            String consignor_name = createOrderEntity.getConsignorName();
+            String consignor_contact = createOrderEntity.getConsignorContact();
+            String consignor_phone = createOrderEntity.getConsignorPhone();
+            String consignor_address = createOrderEntity.getConsignorAddress();
+            String provide_transport = createOrderEntity.getProvideTransport();
+            if ("60".equals(orderType) || "61".equals(orderType)) {
+                if ("61".equals(orderType)) {
+                    if (!StringUtils.equals(provide_transport, "1")) {
+                        return new ResultModel("1000", "是否需要运输信息不能为空");
+                    }
+                }
+                if (StringUtils.isBlank(consignor_name)) {
+                    return new ResultModel("1000", "发货方名称信息不能为空");
+                } else if (StringUtils.isBlank(consignor_contact)) {
+                    return new ResultModel("1000", "发货方联系人信息不能为空");
+                } else if (StringUtils.isBlank(consignor_phone)) {
+                    return new ResultModel("1000", "发货方联系电话信息不能为空");
+                } else if (StringUtils.isBlank(consignor_address)) {
+                    return new ResultModel("1000", "发货方地址信息不能为空");
+                }
+            }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        }
+    }
+
+    // 收货方校验
+    public ResultModel checkConsigneeInfo(CreateOrderEntity createOrderEntity) {
+        // 收货方编码
+        String consigneeCode = createOrderEntity.getConsigneeCode();
+        String custCode = createOrderEntity.getCustCode();
+        if (!PubUtils.isOEmptyOrNull(consigneeCode)) {
+            ResultModel resultModel = queryContactAndSet(createOrderEntity, custCode,"1", consigneeCode);
+            if (ResultModel.ResultEnum.CODE_3001.getCode().equals(resultModel.getCode())) {
+                createOrderEntity.setConsignorCode(null);
+                return checkConsigneeInfo(createOrderEntity);
+            } else {
+                return resultModel;
+            }
+        } else {
+            String orderType = createOrderEntity.getOrderType();
+            String consignee_name = createOrderEntity.getConsigneeName();
+            String consignee_contact = createOrderEntity.getConsigneeContact();
+            String consignee_phone = createOrderEntity.getConsigneePhone();
+            String consignee_address = createOrderEntity.getConsigneeAddress();
+            String provide_transport = createOrderEntity.getProvideTransport();
+            if ("60".equals(orderType) || "61".equals(orderType)) {
+                if ("61".equals(orderType)) {
+                    if (!StringUtils.equals(provide_transport, "1")) {
+                        return new ResultModel("1000", "是否需要运输信息不能为空");
+                    }
+                }
+                if (StringUtils.isBlank(consignee_name)) {
+                    return new ResultModel("1000", "收货方名称信息不能为空");
+                } else if (StringUtils.isBlank(consignee_contact)) {
+                    return new ResultModel("1000", "收货方联系人信息不能为空");
+                } else if (StringUtils.isBlank(consignee_phone)) {
+                    return new ResultModel("1000", "收货方联系电话信息不能为空");
+                } else if (StringUtils.isBlank(consignee_address)) {
+                    return new ResultModel("1000", "收货方地址信息不能为空");
+                }
+            }
+            return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+        }
+    }
+
+    private ResultModel queryContactAndSet(CreateOrderEntity createOrderEntity, String companyCode, String purpose, String storeCode) {
+        String custCode = createOrderEntity.getCustCode();
+        CscQueryStoreCodeReqDto param = new CscQueryStoreCodeReqDto();
+        param.setStoreCode(storeCode);
+        param.setCustomerCode(companyCode);
+        param.setPurpose(purpose);
+        try {
+            Wrapper<List<CscContantAndCompanyResponseDto>> result = cscContactCompanyEdasService.queryStoreCodeByCustomerAndStoreCode(param);
+            String json = JacksonUtil.toJson(result);
+            logger.info("=====================" + json);
+            if (Wrapper.SUCCESS_CODE == result.getCode() && PubUtils.isNotNullAndBiggerSize(result.getResult(), 0)) {
+                CscContantAndCompanyResponseDto contactInfo = result.getResult().get(0);
+                String provinceCode = contactInfo.getProvince();
+                String provinceName = contactInfo.getProvinceName();
+                String cityCode = contactInfo.getCity();
+                String cityName = contactInfo.getCityName();
+                String countyCode = contactInfo.getArea();
+                String countyName = contactInfo.getAreaName();
+                String townCode = contactInfo.getStreet();
+                String townName = contactInfo.getStreetName();
+                String address = contactInfo.getAddress();
+                String contactCompanyCode = contactInfo.getContactCompanyCode();
+                String contactCompanyName = contactInfo.getContactCompanyName();
+                String contactName = contactInfo.getContactName();
+                String phone = contactInfo.getPhone();
+                String fax = contactInfo.getFax();
+                String email = contactInfo.getEmail();
+                String zip = contactInfo.getPostCode();
+                if ("1".equals(purpose)) {
+                    createOrderEntity.setConsigneeProvinceCode(provinceCode);
+                    createOrderEntity.setConsigneeProvince(provinceName);
+                    createOrderEntity.setConsigneeCityCode(cityCode);
+                    createOrderEntity.setConsigneeCity(cityName);
+                    createOrderEntity.setConsigneeCountyCode(countyCode);
+                    createOrderEntity.setConsigneeCounty(countyName);
+                    createOrderEntity.setConsigneeTownCode(townCode);
+                    createOrderEntity.setConsigneeTown(townName);
+                    createOrderEntity.setConsigneeAddress(address);
+                    createOrderEntity.setConsigneeCode(contactCompanyCode);
+                    createOrderEntity.setConsigneeName(contactCompanyName);
+                    createOrderEntity.setConsigneeContact(contactName);
+                    createOrderEntity.setConsigneePhone(phone);
+                    createOrderEntity.setConsigneeFax(fax);
+                    createOrderEntity.setConsigneeEmail(email);
+                    createOrderEntity.setConsigneeZip(zip);
+                } else if ("2".equals(purpose)) {
+                    createOrderEntity.setConsignorProvinceCode(provinceCode);
+                    createOrderEntity.setConsignorProvince(provinceName);
+                    createOrderEntity.setConsignorCityCode(cityCode);
+                    createOrderEntity.setConsignorCity(cityName);
+                    createOrderEntity.setConsignorCountyCode(countyCode);
+                    createOrderEntity.setConsignorCounty(countyName);
+                    createOrderEntity.setConsignorTownCode(townCode);
+                    createOrderEntity.setConsignorTown(townName);
+                    createOrderEntity.setConsignorAddress(address);
+                    createOrderEntity.setConsignorCode(contactCompanyCode);
+                    createOrderEntity.setConsignorName(contactCompanyName);
+                    createOrderEntity.setConsignorContact(contactName);
+                    createOrderEntity.setConsignorPhone(phone);
+                    createOrderEntity.setConsignorFax(fax);
+                    createOrderEntity.setConsignorEmail(email);
+                    createOrderEntity.setConsignorZip(zip);
+                }
+            } else {
+                if ("1".equals(purpose)) {
+                    logger.error("==>客户 {} 查询不到收货方 {}", custCode, storeCode);
+                    return new ResultModel("3001", "客户 " + custCode + " 找不到收货方 ");
+                } else {
+                    logger.error("==>客户 {} 查询不到发货方 {}", custCode, storeCode);
+                    return new ResultModel("3001", "客户 " + custCode + " 找不到发货方 ");
+                }
+            }
+        } catch (Exception e) {
+            logger.error("查询收发货方发生错误 {}", e);
+            return new ResultModel(ResultModel.ResultEnum.CODE_1000);
+        }
+        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+    }
 }

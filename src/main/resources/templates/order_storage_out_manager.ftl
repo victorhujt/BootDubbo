@@ -36,7 +36,7 @@
                 </el-form-item>
             </el-form>
             <el-table :data="customerData" highlight-current-row @current-change="handleCustomerCurrentChange"
-                      @row-dblclick="setCurrentCustInfo(currentCustomerRow)" style="width: 100%" max-height="400">
+                      @row-dblclick="setCurrentCustInfo(currentCustomerRow)" border style="width: 100%" max-height="400">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column property="customerCode" label="客户编码"></el-table-column>
                 <el-table-column property="type" label="类型"></el-table-column>
@@ -162,7 +162,7 @@
             <el-button size="small" @click="batchImport">批量导入</el-button>
         </div>
         <div class="ofc-block">
-            <el-table :data="orderData"  @selection-change="handleSelectionChange" style="width: 100%">
+            <el-table :data="orderData"  @selection-change="handleSelectionChange" border style="width: 100%">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column type="selection">
                 </el-table-column>

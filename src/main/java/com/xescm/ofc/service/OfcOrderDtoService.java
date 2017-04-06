@@ -9,4 +9,5 @@ import java.lang.reflect.InvocationTargetException;
  */
 public interface OfcOrderDtoService {
     OfcOrderDTO orderDtoSelect(String code,String dtoTag) throws InvocationTargetException;
+    OfcOrderDTO transOrderDotSelect(String code) throws InvocationTargetException;
 }
