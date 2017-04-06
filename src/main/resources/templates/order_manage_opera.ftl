@@ -116,6 +116,11 @@
           </#list>
           </select>
         </div>
+        <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+        <div class="col-width-168" style="margin:0 12px;">
+          <input id="custOrderCode" class="col-width-168" name="" type="search" placeholder=""
+                 aria-controls="dynamic-table">
+        </div>
       </div>
       <div class="form-group">
         <label class="control-label col-label no-padding-right" for="name"></label>
@@ -495,6 +500,7 @@
       param.businessType = $("#businessType").val();
       param.areaSerialNo = areaName;
       param.baseSerialNo = baseName;
+      param.custOrderCode = $("#custOrderCode").val();
       CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
         if ( result == undefined || result == null || result.code == 500 || result.result == null || result.result.size == 0 || result.result.list == null) {
