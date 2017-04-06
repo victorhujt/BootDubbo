@@ -29,6 +29,16 @@ public class CreateOrderGoodsInfo implements Serializable {
     private String goodsSpec;
 
     /**
+     * 货品大类
+     */
+    private String goodsType;
+
+    /**
+     * 货品小类
+     */
+    private String goodsCategory;
+
+    /**
      * 单位(必填)
      */
     private String unit;
@@ -152,5 +162,21 @@ public class CreateOrderGoodsInfo implements Serializable {
 
     public void setCubage(String cubage) {
         this.cubage = cubage;
+    }
+
+    public String getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(String goodsType) {
+        this.goodsType = goodsType;
+    }
+
+    public String getGoodsCategory() {
+        return goodsCategory;
+    }
+
+    public void setGoodsCategory(String goodsCategory) {
+        this.goodsCategory = goodsCategory;
     }
 }
