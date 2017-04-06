@@ -263,30 +263,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String weightDetail = createOrderGoodsInfo.getWeight();
         if(!PubUtils.isSEmptyOrNull(quantityDetail)){
             String quantityHead = createOrderEntity.getQuantity();
-            if(!PubUtils.isSEmptyOrNull(quantityHead)){
-                BigDecimal quan = new BigDecimal(quantityDetail);
-                BigDecimal quantityResult = new BigDecimal(quantityHead);
-                quantityResult = quantityResult.add(quan);
-                createOrderEntity.setQuantity(quantityResult.toString());
+            if (PubUtils.isSEmptyOrNull(quantityHead)) {
+                quantityHead = "0";
             }
+            BigDecimal quan = new BigDecimal(quantityDetail);
+            BigDecimal quantityResult = new BigDecimal(quantityHead);
+            quantityResult = quantityResult.add(quan);
+            createOrderEntity.setQuantity(quantityResult.toString());
         }
         if(!PubUtils.isSEmptyOrNull(weightDetail)){
             String weightHead = createOrderEntity.getWeight();
-            if(!PubUtils.isSEmptyOrNull(weightHead)){
-                BigDecimal weig = new BigDecimal(weightDetail);
-                BigDecimal weightHeadResult = new BigDecimal(weightHead);
-                weightHeadResult = weightHeadResult.add(weig);
-                createOrderEntity.setWeight(weightHeadResult.toString());
+            if (PubUtils.isSEmptyOrNull(weightHead)) {
+                weightHead = "0";
             }
+            BigDecimal weig = new BigDecimal(weightDetail);
+            BigDecimal weightHeadResult = new BigDecimal(weightHead);
+            weightHeadResult = weightHeadResult.add(weig);
+            createOrderEntity.setWeight(weightHeadResult.toString());
         }
         if(!PubUtils.isSEmptyOrNull(cubageDetail)){
             String cubageHead = createOrderEntity.getCubage();
-            if(!PubUtils.isSEmptyOrNull(cubageHead)){
-                BigDecimal cuba = new BigDecimal(cubageDetail);
-                BigDecimal cubageHeadResult = new BigDecimal(cubageHead);
-                cubageHeadResult = cubageHeadResult.add(cuba);
-                createOrderEntity.setCubage(cubageHeadResult.toString());
+            if(PubUtils.isSEmptyOrNull(cubageHead)){
+                cubageHead = "0";
             }
+            BigDecimal cuba = new BigDecimal(cubageDetail);
+            BigDecimal cubageHeadResult = new BigDecimal(cubageHead);
+            cubageHeadResult = cubageHeadResult.add(cuba);
+            createOrderEntity.setCubage(cubageHeadResult.toString());
         }
         logger.info("表头体积重量数量计算结束 == > 表头 quantity :{}", createOrderEntity.getQuantity() + " weight:{}" +
             createOrderEntity.getWeight() + " cubage:{}" + createOrderEntity.getCubage());
