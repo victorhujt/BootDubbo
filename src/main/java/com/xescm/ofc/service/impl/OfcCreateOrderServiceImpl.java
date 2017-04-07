@@ -207,28 +207,32 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
         //校验：货品档案信息，校验货品明细
         List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
-        for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
-            String goodsCode = goodsInfo.getGoodsCode();
-            CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-            cscGoods.setCustomerCode(custCode);
-            cscGoods.setGoodsCode(goodsCode);
-            Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
-            if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
-                if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
-                    for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
-                        goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
-                        goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
+        if (PubUtils.isNotNullAndBiggerSize(createOrderGoodsInfos, 0)) {
+            for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
+                String goodsCode = goodsInfo.getGoodsCode();
+                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                cscGoods.setCustomerCode(custCode);
+                cscGoods.setGoodsCode(goodsCode);
+                Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
+                if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
+                    if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
+                        for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
+                            goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
+                            goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
+                        }
+                    }
+                } else {    // 仓储订单 - 货品必须存在
+                    resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
+                    if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                        logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
+                        return resultModel;
                     }
                 }
-            } else {    // 仓储订单 - 货品必须存在
-                resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
-                if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                    logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
-                    return resultModel;
-                }
+                //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
+                this.fixOrderGoodsMsg(createOrderEntity, goodsInfo);
             }
-            //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
-            this.fixOrderGoodsMsg(createOrderEntity, goodsInfo);
+        } else {
+            return new ResultModel(ResultModel.ResultEnum.CODE_2000);
         }
 
         //转换 dto → do
