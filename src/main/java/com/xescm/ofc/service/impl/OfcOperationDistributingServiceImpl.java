@@ -251,7 +251,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             } catch (Exception e) {
                 logger.error("城配开单批量下单循环入口, JSON转换异常, {}", e);
             }
-            validateOperationDistributingMsg(ofcOrderDTO);
+            //2017年4月7日 追加逻辑: 开单员即登录人
+            ofcOrderDTO.setMerchandiser(authResDtoByToken.getUserName());
+            this.validateOperationDistributingMsg(ofcOrderDTO);
             String orderGoodsListStr = null;
             try {
                 orderGoodsListStr = JacksonUtil.toJson(ofcOrderDTO != null ? ofcOrderDTO.getGoodsList() : new OfcOrderDTO());

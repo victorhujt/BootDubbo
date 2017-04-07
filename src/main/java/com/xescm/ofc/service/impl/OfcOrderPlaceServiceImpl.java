@@ -160,20 +160,20 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
 
         if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)){//下单
-            orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
+            this.orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcMerchandiser, ofcOrderStatus);
         }else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_EDIT)){ //编辑
-            orderPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+            this.orderPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
         }else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANS)){// 运输开单
-            orderPlaceTagTransPlace(ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+            this.orderPlaceTagTransPlace(ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcMerchandiser, ofcOrderStatus);
         } else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_DISTRI)){ //城配开单
-            distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
+            this.distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                     ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
                     ,ofcOrderStatus,ofcMerchandiser);
         } else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANEDIT)){// 运输开单编辑
-            orderTransPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+            this.orderTransPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
         }else {
             throw new BusinessException("未知操作!系统无法识别!");
@@ -224,8 +224,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("该运输单号号已经存在!您不能重复下单!");
             }
         }
+        //2017年4月7日 追加逻辑: 开单员即登录人
+        String userName = authResDtoByToken.getUserName();
+        ofcFundamentalInformation.setMerchandiser(userName);
+        ofcMerchandiser.setMerchandiser(userName);
         String orderType = TRANSPORT_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
+        //2017年4月7日 追加逻辑:运输开单城配干线订单运输单号若为空则赋值为订单号
+        if (!StringUtils.equals(ofcFundamentalInformation.getBusinessType(), WITH_THE_KABAN) && PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+        }
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         ofcFundamentalInformation.setOrderType(orderType);
         if(ofcFundamentalInformation.getOrderType().equals(orderType)){
@@ -696,6 +704,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         } else {
 
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
+            //2017年4月7日 追加逻辑:城配开单运输单号为订单号
+            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
             ofcFundamentalInformation.setCustCode(custId);
 
             if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())) {

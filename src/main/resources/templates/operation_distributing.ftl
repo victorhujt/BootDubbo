@@ -410,25 +410,32 @@
         </div></div>
 
 
-      <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>开单员</label>
+      <#--<div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>开单员</label>
         <div class="width-267">
           <div class="clearfix">
-            <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  id="merchandiser" type="text" placeholder="">
+            <select class="col-xs-10 col-xs-12 bk-1" name="merchandiser" onpaste="return false"
+                    onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  id="merchandiser" type="text" placeholder="">
             <#list merchandiserList! as merchandiser>
               <option>${(merchandiser.merchandiser)!""}</option>
             </#list>
             </select>
           </div>
-        </div></div>
-      <div><label class="control-label col-label no-padding-right l-bj" for="">预计发货时间</label>
+        </div></div>-->
+      <div><label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>取货时间</label>
         <div class="width-267">
           <div class="bk-1 position-relative">
-            <input class="col-xs-10 col-xs-12 bk-1 " name="pickupTime" id="pickupTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss',isclear: true,istoday: true,festival: true,start: laydate.now(0, 'YYYY/MM/DD hh:ss:00')})">
+            <input class="col-xs-10 col-xs-12 bk-1 " name="pickupTime" id="pickupTime" value="" type="text" placeholder="" aria-controls="dynamic-table" readonly class="laydate-icon" value="">
             <label class="btn btn-minier no-padding-right initBtn" id="" for="pickupTime">
               <i class="fa fa-calendar l-cor bigger-130"></i>
             </label>
           </div>
         </div></div>
+        <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
+            <div class="width-267">
+                <div class="clearfix">
+                    <input class="col-xs-10 col-xs-12 bk-1" name="notes" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder=""/>
+                </div>
+            </div></div>
     </div>
   </div>
   <div class="col-xs-12">
@@ -457,12 +464,7 @@
             </select>
           </div>
         </div></div>
-      <div><label class="control-label col-label no-padding-right l-bj" for="">备注</label>
-        <div class="width-267">
-          <div class="clearfix">
-            <input class="col-xs-10 col-xs-12 bk-1" name="notes" onpaste="return false" onkeydown="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')"  onkeyup="this.value=this.value.replace(/(^\s*)|(\s*$)/g, '')" id="notes" type="text" placeholder=""/>
-          </div>
-        </div></div>
+
     </div>
   </div>
   <br/>
@@ -703,6 +705,20 @@
 
     $("body").find(".es-list:last").prevAll("ul").remove();
   }
+
+  laydate({
+      elem: '#pickupTime',
+      istime: true,
+      format: 'YYYY-MM-DD hh:mm',
+      isclear: true,
+      istoday: true,
+      start:laydate.now(0, 'YYYY/MM/DD hh:ss'),
+      choose: function (dates) {
+          $("#pickupTime-error").remove();
+      }
+
+  });
+
   //链接到收发货方联系人档案
   $("#to_operation_csc_contact_manage").click(function () {
     /*var csc_url = $("#csc_url").html();
@@ -1646,7 +1662,7 @@
     }
   })
 
-  $("#merchandiser").editableSelect();
+//  $("#merchandiser").editableSelect();
 
 
   function distributingOrderPlaceCon() {
@@ -1683,10 +1699,8 @@
       orderInfo.returnList = "0";//是否签单返回 默认否
       orderInfo.insure = "0";//是否货物保险 默认否
       orderInfo.collectFlag = "0";//是否代收货款 默认否
-      orderInfo.merchandiser = $("#merchandiser").val();
-      if("" != $("#pickupTime").val()){
+//      orderInfo.merchandiser = $("#merchandiser").val();
         orderInfo.pickupTime = $('#pickupTime').val()+ ":00";
-      }
 
       orderInfo.custName = $("#custName").val();//后端需特别处理
       orderInfo.custCode = $("#customerCode").val();//后端需特别处理
@@ -2020,7 +2034,7 @@
         orderTime:{
           required:true
         },
-        merchandiser:{
+        pickupTime:{
           required:true
         },
         custName: {
@@ -2041,8 +2055,8 @@
         orderTime:{
           required:mistake+"请输入订单日期"
         },
-        merchandiser:{
-          required:mistake+"请选择开单员"
+        pickupTime:{
+          required:mistake+"请选择取货时间"
         },
         custName: {
           required:mistake+"请选择客户",
@@ -2113,7 +2127,7 @@
     }
     return value;
   }
-  $(".es-list").click(function(){
+  /*$(".es-list").click(function(){
     checkType();
   })
 
@@ -2123,10 +2137,10 @@
       $("#merchandiser-error").html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>请选择开单员");
     }else{
       $("#merchandiser-error").css("display","none")
-      /*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
-         $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*/
+      /!*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
+         $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*!/
     }
-  }
+  }*/
 
   function initChosen() {
     $('.chosen-select').chosen({allow_single_deselect: true});
