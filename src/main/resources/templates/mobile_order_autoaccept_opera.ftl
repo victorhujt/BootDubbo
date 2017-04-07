@@ -1,20 +1,6 @@
-<head>
-    <title>拍照开单</title>
-    <style>
-
-        /*.xe-block{*/
-            /*overflow: visible !important;*/
-        /*}*/
-
-    </style>
 </head>
 <body>
 <div id="app" class="col-xs-12">
-    <#--<div class="MaxImg">-->
-        <#--<div class="imgClass imgone" style="position: relative;" v-for="url in mobileOrderVo.urls">-->
-            <#--<img :src="url" class="dragAble" />-->
-        <#--</div>-->
-    <#--</div>-->
     <div class="xe-pageHeader">
         拍照开单信息
     </div>
@@ -33,7 +19,6 @@
             </#list>
         </#if>
     </div>
-    <input type="hidden" id="mobileOrderCode" value="${mobileOrderCode !""}" />
     <el-form :model="mobileOrderVo" ref="mobileOrderVo" label-width="100px" class="demo-ruleForm">
         <div class="xe-block">
             <el-form-item label="流水号" prop="mobileOrderCode" class="xe-col-1">
@@ -262,8 +247,8 @@
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-form-item label="订单日期" prop="orderTime" required class="xe-col-3">
-                    <el-date-picker type="date" v-model="orderForm.orderTime" :editable="false"></el-date-picker>
+                <el-form-item label="订单日期" prop="orderDate" required class="xe-col-3">
+                    <el-date-picker type="date" v-model="orderForm.orderDate" :editable="false"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="运输单号" prop="transCode" class="xe-col-3">
                     <el-input v-model="orderForm.transCode"></el-input>
@@ -369,45 +354,45 @@
                 服务项目及费用
             </div>
             <div class="xe-block">
-                <el-checkbox v-model="feeForm.pickUpGoods" class="xe-checkbox"></el-checkbox>
+                <el-checkbox v-model="feeForm.isPickUpGoods" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="上门提货:费用" prop="homeDeliveryFee" class="xe-col-4">
-                    <el-input v-model="feeForm.homeDeliveryFee" v-bind:disabled="!feeForm.pickUpGoods" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.homeDeliveryFee" v-bind:disabled="!feeForm.isPickUpGoods" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-checkbox v-model="feeForm.insure" class="xe-checkbox"></el-checkbox>
+                <el-checkbox v-model="feeForm.isInsure" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="货物保险:费用" prop="cargoInsuranceFee" class="xe-col-4">
-                    <el-input v-model="feeForm.cargoInsuranceFee" v-bind:disabled="!feeForm.insure" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.cargoInsuranceFee" v-bind:disabled="!feeForm.isInsure" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
                 <el-form-item label="声明价值" prop="insureValue" class="xe-col-4">
-                    <el-input v-model="feeForm.insureValue" v-bind:disabled="!feeForm.insure" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.insureValue" v-bind:disabled="!feeForm.isInsure" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-checkbox v-model="feeForm.twoDistribution" class="xe-checkbox"></el-checkbox>
+                <el-checkbox v-model="feeForm.isTwoDistribution" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="二次配送:费用" prop="twoDistributionFee" class="xe-col-4">
-                    <el-input v-model="feeForm.twoDistributionFee" v-bind:disabled="!feeForm.twoDistribution" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.twoDistributionFee" v-bind:disabled="!feeForm.isTwoDistribution" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-checkbox v-model="feeForm.collectFlag" class="xe-checkbox"></el-checkbox>
+                <el-checkbox v-model="feeForm.isCollectFlag" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="代收货款:费用" prop="collectServiceCharge" class="xe-col-4">
-                    <el-input v-model="feeForm.collectServiceCharge" v-bind:disabled="!feeForm.collectFlag" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.collectServiceCharge" v-bind:disabled="!feeForm.isCollectFlag" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
                 <el-form-item label="代收金额" prop="collectLoanAmount" class="xe-col-4">
-                    <el-input v-model="feeForm.collectLoanAmount" v-bind:disabled="!feeForm.collectFlag" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.collectLoanAmount" v-bind:disabled="!feeForm.isCollectFlag" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-checkbox v-model="feeForm.returnList" class="xe-checkbox"></el-checkbox>
+                <el-checkbox v-model="feeForm.isReturnList" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="签单返回:费用" prop="returnListFee" class="xe-col-4">
-                    <el-input v-model="feeForm.returnListFee" v-bind:disabled="!feeForm.returnList" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.returnListFee" v-bind:disabled="!feeForm.isReturnList" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
                 <el-form-item label="运费" prop="luggage" class="xe-col-4">
@@ -547,12 +532,12 @@
                 </el-table-column>
                 <el-table-column property="quantity" label="数量">
                     <template scope="scope">
-                        <el-input v-model="scope.row.quantity" @blur=""></el-input>
+                        <el-input v-model="scope.row.quantity" @blur="accountQuantity(scope.row)"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="weight" label="重量（KG）">
                     <template scope="scope">
-                        <el-input v-model="scope.row.weight" @blur=""></el-input>
+                        <el-input v-model="scope.row.weight" @blur="accountWeight(scope.row)"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="cubage" label="体积（m³）">
@@ -570,9 +555,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <#--<el-button type="primary" v-on:click="addGoods" style="margin-left: 20px;">添加一行</el-button>-->
             <el-button type="primary" @click="confirmPlaceOrder">确认下单</el-button>
-            <#--<el-button @click="resetForm('ruleForm')">重置</el-button>-->
         </el-form>
     </div>
     </div>
@@ -626,7 +609,7 @@
                     {value: '6860', label: '账户结算'}
                 ],
                 mobileOrderVo: {
-                    mobileOrderCode: '',
+                    mobileOrderCode: '${mobileOrderCode !}',
                     uploadDate: '',
                     dingdingAccountNo: '',
                     operator: '',
@@ -645,6 +628,7 @@
                     merchandiser: '',
                     transportType: '10',
                     orderTime: '',
+                    orderDate:'',
                     transCode: '',
                     custOrderCode: '',
                     custCode: '',
@@ -677,17 +661,17 @@
                     consigneeAddress: ''
                 },
                 feeForm: {
-                    pickUpGoods: false,
+                    isPickUpGoods: false,
                     homeDeliveryFee: 0,
-                    insure: false,
+                    isInsure: false,
                     cargoInsuranceFee: 0,
                     insureValue: 0,
-                    twoDistribution: false,
+                    isTwoDistribution: false,
                     twoDistributionFee: 0,
-                    collectFlag: false,
+                    isCollectFlag: false,
                     collectServiceCharge: 0,
                     collectLoanAmount: 0,
-                    returnList: false,
+                    isReturnList: false,
                     returnListFee: 0,
                     luggage: 0,
                     serviceCharge: 0,
@@ -704,7 +688,7 @@
                     merchandiser: [{required: true, message: '请输入开单员', trigger: 'blur'},
                         { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }],
                     transportType: [{required: true, message: '请选择运输类型', trigger: 'change'}],
-                    orderTime: [{type: 'date', required: true, validator: this.validateOrdeTime, trigger: 'change'}],
+                    orderDate: [{type: 'date', required: true, validator: this.validateOrdeTime, trigger: 'change'}],
                     transCode: [{min: 0, max: 20, validator: this.validateTransCode, trigger: 'blur'}],
                     custOrderCode:[{ min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }],
                     custName: [{required: true, message: '请选择客户', trigger: 'change'}],
@@ -839,7 +823,7 @@
         },
         mounted: function() {
             // 查询易录单信息
-            this.initOrder($('#mobileOrderCode').val());
+            this.initOrder(this.mobileOrderVo.mobileOrderCode);
         },
         methods: {
             initOrder: function (code) {
@@ -854,7 +838,7 @@
                             // 初始化基本信息
                             vm.orderForm.businessType = data.businessType;
                             vm.orderForm.merchandiser = data.operator;
-                            vm.orderForm.orderTime = new Date(data.uploadDate);
+                            vm.orderForm.orderDate = new Date(data.uploadDate);
                             vm.orderForm.transCode = data.tranCode;
                         }
                     } else if (code == 500) {
@@ -924,7 +908,6 @@
                 });
             },
             getGoodsCategoryWhenSelectGoods: function (typeId) {
-                debugger;
                 var vm = this;
                 vm.goodsCategoryOptions=[];
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(result) {
@@ -1442,7 +1425,7 @@
             },
             validateArrivedTime: function (rule, value, callback) {
                 if (value != undefined && value != '') {
-                    if (value.getTime() < this.orderForm.orderTime.getTime()) {
+                    if (value.getTime() < this.orderForm.orderDate.getTime()) {
                         callback(new Error("承诺到达时间不能大于订单日期！"));
                     } else {
                         callback();
@@ -1452,7 +1435,7 @@
                 }
             },
             validatePickGoods: function (rule, value, callback) {
-                var pickGoods = this.feeForm.pickUpGoods;   // 上门提货
+                var pickGoods = this.feeForm.isPickUpGoods;   // 上门提货
                 var homeDeliveryFee = this.feeForm.homeDeliveryFee;// 上门提货费
                 if (pickGoods) {
                     this.validateCustomField(homeDeliveryFee, '上门提货费用为0~999999.99', callback);
@@ -1462,7 +1445,7 @@
                 }
             },
             validateInsure: function (rule, value, callback) {
-                var insure = this.feeForm.insure;// 货物保险
+                var insure = this.feeForm.isInsure;// 货物保险
                 var cargoInsuranceFee = this.feeForm.cargoInsuranceFee;
                 if (insure) {
                     this.validateCustomField(cargoInsuranceFee, '货物保险费用为0~999999.99', callback);
@@ -1472,7 +1455,7 @@
                 }
             },
             validateInsureValue: function (rule, value, callback) {
-                var insure = this.feeForm.insure;// 货物保险
+                var insure = this.feeForm.isInsure;// 货物保险
                 var insureValue = this.feeForm.insureValue;// 声明价值
                 if (insure) {
                     this.validateCustomField(insureValue, '声明价值费用为0~999999.99', callback);
@@ -1482,7 +1465,7 @@
                 }
             },
             validateTwoDist: function (rule, value, callback) {
-                var twoDistribution = this.feeForm.twoDistribution;// 二次配送
+                var twoDistribution = this.feeForm.isTwoDistribution;// 二次配送
                 var twoDistributionFee = this.feeForm.twoDistributionFee;// 二次配送费
                 if (twoDistribution) {
                     this.validateCustomField(twoDistributionFee, '二次配送费用为0~999999.99', callback);
@@ -1492,7 +1475,7 @@
                 }
             },
             validateCollect: function (rule, value, callback) {
-                var collectFlag = this.feeForm.collectFlag;// 代收货款
+                var collectFlag = this.feeForm.isCollectFlag;// 代收货款
                 var collectServiceCharge = this.feeForm.collectServiceCharge;// 代收货款费
                 if (collectFlag) {
                     this.validateCustomField(collectServiceCharge, '代收货款费用为0~999999.99', callback);
@@ -1502,7 +1485,7 @@
                 }
             },
             validateCollectLoan: function (rule, value, callback) {
-                var collectFlag = this.feeForm.collectFlag;// 代收货款
+                var collectFlag = this.feeForm.isCollectFlag;// 代收货款
                 var collectLoanAmount = this.feeForm.collectLoanAmount;// 代收金额
                 if (collectFlag) {
                     this.validateCustomField(collectLoanAmount, '代收金额费用为0~999999.99', callback);
@@ -1512,7 +1495,7 @@
                 }
             },
             validateReturnList: function (rule, value, callback) {
-                var returnList = this.feeForm.returnList;// 签收返回
+                var returnList = this.feeForm.isReturnList;// 签收返回
                 var returnListFee = this.feeForm.returnListFee;// 签收返回费
                 if (returnList) {
                     this.validateCustomField(returnListFee, '签单返回费用为0~999999.99', callback);
@@ -1723,11 +1706,116 @@
                             }
                         }
                     }
-
-                    console.log(JSON.stringify(vm.orderForm));
-                    console.log(JSON.stringify(vm.feeForm));
-                    console.log(JSON.stringify(vm.goodsData));
-                    console.log('验证通过！');
+                    jsonStr =  Object.assign(vm.orderForm,vm.feeForm);
+                    jsonStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
+                    if(!StringUtil.isEmpty(this.orderForm.expectedArrivedTime)){
+                        jsonStr.expectedArrivedTime=DateUtil.format(this.orderForm.expectedArrivedTime, "yyyy-MM-dd HH:mm:ss");
+                    }
+                    if(this.feeForm.isCollectFlag){
+                        jsonStr.collectFlag="1";
+                    }else{
+                        jsonStr.collectFlag="0";
+                    }
+                    if(this.feeForm.isPickUpGoods){
+                        jsonStr.pickUpGoods="1";
+                    }else{
+                        jsonStr.pickUpGoods="0";
+                    }
+                    if(this.feeForm.insure){
+                        jsonStr.insure="1";
+                    }else{
+                        jsonStr.insure="0";
+                    }
+                    if(this.feeForm.isTwoDistribution){
+                        jsonStr.twoDistribution="1";
+                    }else{
+                        jsonStr.twoDistribution="0";
+                    }
+                    if(this.feeForm.isReturnList){
+                        jsonStr.returnList="1";
+                    }else{
+                        jsonStr.returnList="0";
+                    }
+                    var ofcOrderDTO=JSON.stringify(jsonStr);
+                    var cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStrOrConsigneeStr("consignor");
+                    var cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsignorStrOrConsigneeStr("consignee");
+                    var orderGoodsListStr=JSON.stringify(vm.goodsData);
+                    var mobileOrderCode=this.mobileOrderVo.mobileOrderCode;
+                    xescm.common.submit("/ofc/mobileorderPlaceCon"
+                            ,{"ofcOrderDTOStr":ofcOrderDTO
+                                ,"orderGoodsListStr":orderGoodsListStr+"~`"
+                                ,"cscContantAndCompanyDtoConsignorStr":cscContantAndCompanyDtoConsignorStr
+                                ,"cscContantAndCompanyDtoConsigneeStr":cscContantAndCompanyDtoConsigneeStr
+                                ,"cscSupplierInfoDtoStr":null
+                                ,"mobileOrderCode":mobileOrderCode
+                            }
+                            ,"您确认提交订单吗?"
+                            ,function () {
+                                location.reload();
+                            });
+                }
+            },
+            accountQuantity:function(val){
+                if(!StringUtil.isEmpty(val.quantity)){
+                    this.totalQuantity+=parseFloat(val.quantity);
+                }
+            },
+            accountWeight:function(val){
+                if(!StringUtil.isEmpty(val.weight)){
+                    this.totalWeight+=parseFloat(val.weight);
+                }
+            },
+            getCscContantAndCompanyDtoConsignorStrOrConsigneeStr:function(type){
+                if(type == "consignor"){
+                    var paramConsignor = {};
+                    var cscContactDto = {};
+                    var cscContactCompanyDto = {};
+                    cscContactCompanyDto.contactCompanyName = this.orderForm.consignorName;
+                    cscContactDto.contactName = this.orderForm.consignorContactName;
+                    cscContactDto.purpose = "2";
+                    cscContactDto.phone =this.orderForm.consignorContactPhone;
+                    cscContactDto.contactCompanyName = this.orderForm.consignorName;
+                    var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
+                    cscContactDto.province = consignorAddressCodeMessage[0];
+                    cscContactDto.city = consignorAddressCodeMessage[1];
+                    cscContactDto.area = consignorAddressCodeMessage[2];
+                    if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
+                        cscContactDto.street = consignorAddressCodeMessage[3];
+                    }
+                    cscContactDto.provinceName = this.orderForm.departureProvince;
+                    cscContactDto.cityName = this.orderForm.departureProvince;
+                    cscContactDto.areaName = this.orderForm.departureProvince;
+                    cscContactDto.streetName = this.orderForm.departureTowns;
+                    cscContactDto.address=this.orderForm.departurePlace;
+                    paramConsignor.cscContactDto = cscContactDto;
+                    paramConsignor.cscContactCompanyDto = cscContactCompanyDto;
+                    var cscContantAndCompanyDtoConsignorStr = JSON.stringify(paramConsignor);
+                    return cscContantAndCompanyDtoConsignorStr;
+                }else if(type == 'consignee'){
+                    var paramConsignee = {};
+                    var cscContactDto = {};
+                    var cscContactCompanyDto = {};
+                    cscContactCompanyDto.contactCompanyName = this.orderForm.consigneeName;
+                    cscContactDto.contactName = this.orderForm.consigneeContactName;
+                    cscContactDto.purpose = "1";
+                    cscContactDto.phone =this.orderForm.consigneeContactPhone;
+                    cscContactDto.contactCompanyName = this.orderForm.consigneeName;
+                    var consigneeAddressCodeMessage = this.orderForm.destinationCode.split(',');
+                    cscContactDto.province = consigneeAddressCodeMessage[0];
+                    cscContactDto.city = consigneeAddressCodeMessage[1];
+                    cscContactDto.area = consigneeAddressCodeMessage[2];
+                    if(!StringUtil.isEmpty(consigneeAddressCodeMessage[3])){
+                        cscContactDto.street = consigneeAddressCodeMessage[3];
+                    }
+                    cscContactDto.provinceName = this.orderForm.destinationProvince;
+                    cscContactDto.cityName = this.orderForm.destinationCity;
+                    cscContactDto.areaName = this.orderForm.destinationDistrict;
+                    cscContactDto.streetName = this.orderForm.destinationTowns;
+                    cscContactDto.address=this.orderForm.destination;
+                    paramConsignee.cscContactDto = cscContactDto;
+                    paramConsignee.cscContactCompanyDto = cscContactCompanyDto;
+                    var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
+                    return cscContantAndCompanyDtoConsigneeStr;
                 }
             }
         }
