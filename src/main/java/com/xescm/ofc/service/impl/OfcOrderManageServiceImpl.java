@@ -2880,9 +2880,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     ofcDailyAccount.setBaseName(yesterdayOrderCountResult.getBaseName());
                     ofcDailyAccount.setBaseCode(yesterdayOrderCountResult.getBaseCode());
                     ////两小时的订单总计
-                    ofcDailyAccount.setTwoHourAccount(twoHourOrderCountResult.getOrderCount());
+                    ofcDailyAccount.setTwoHourAccount(twoHourOrderCountResult.getOrderCount()==null?new BigDecimal(0.0):twoHourOrderCountResult.getOrderCount());
                     ////前一天的开单总计
-                    ofcDailyAccount.setYesterdayAccount(yesterdayOrderCountResult.getOrderCount());
+                    ofcDailyAccount.setYesterdayAccount(yesterdayOrderCountResult.getOrderCount()==null?new BigDecimal(0.0):yesterdayOrderCountResult.getOrderCount());
                     ofcDailyAccount.setGmtCreate(new Date());
                     BigDecimal p=twoHourOrderCountResult.getOrderCount().divide(yesterdayOrderCountResult.getOrderCount(),2, RoundingMode.HALF_UP);
                     //事后补录订单：2小时订单/开单合计
@@ -2922,8 +2922,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     if(accountDailyResult.containsKey(key.toString())){
                         OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
                         OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
-                        ofcDailyAccount.setHaveIncomeOrderAccount(BigDecimal.valueOf(acIncomeSettleDTO.getReceivableOrderNumber()));
-                        ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()));
+                        ofcDailyAccount.setHaveIncomeOrderAccount(BigDecimal.valueOf(acIncomeSettleDTO.getReceivableOrderNumber()==null?0:acIncomeSettleDTO.getReceivableOrderNumber()));
+                        ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()==null?0:acIncomeSettleDTO.getPayableCarNumber()));
                         BigDecimal p=ofcDailyAccount.getHaveIncomeOrderAccount().divide(ofcDailyAccount.getYesterdayAccount(),2, RoundingMode.HALF_UP);
                         //应收确认日清：收入确认的订单/开单合计
                         ofcDailyAccount.setReceivable(p.setScale(2));
@@ -2958,7 +2958,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
                         OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
                         ofcDailyAccount.setExternalVehicleAccount(BigDecimal.valueOf(deliverEveryRunDTO.getNum()));
-                        BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
+                        BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount()==null?new BigDecimal(0.0):ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
                         //应付确认日清 应付确认车数量/外部车辆发运数量
                         ofcDailyAccount.setPayable(p.setScale(2));
                         ofcDailyAccount.setPayablePercent(percent.format(p.doubleValue()));
