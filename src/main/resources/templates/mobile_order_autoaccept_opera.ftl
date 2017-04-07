@@ -323,8 +323,8 @@
                                          :success-callBack="consignorCallBack" style="position:relative;z-index: 200;"></city-picker>
                         </el-form-item>
                         <el-form-item label="详细地址" prop="consignorAddress" class="xe-col-2">
-                            <el-input v-model="orderForm.consignorAddress"></el-input>
-                        </el-form-item>
+                        <el-input v-model="orderForm.consignorAddress"></el-input>
+                    </el-form-item>
                     </div>
                 </div>
                 <div style="float:left;" class="xe-col-2">
@@ -710,7 +710,15 @@
                     custName: [{required: true, message: '请选择客户', trigger: 'change'}],
                     expectedArrivedTime: [{validator: this.validateArrivedTime, trigger: 'change'}],
                     notes: [{ min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'change' }],
-                    homeDeliveryFee: [{min: 0, max: 999999.99, validator: this.validatePickGoods, message: '上门提货费用为0~999999.99', trigger: 'blur'}],
+                    consignorName: [{required: true, min: 1, max: 100, message: '发货方名称必填，长度在 1 到 100 个字符', trigger: 'change'}],
+                    consignorContactName: [{required: true, min: 1, max: 50, message: '联系人长度在 1 到 50 个字符', trigger: 'change'}],
+                    consignorContactPhone: [{required: true, min: 11, max: 14, validator: this.validatePhone, message: '请输入正确手机号', trigger: 'change'}],
+                    consignorAddress: [{ min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'change'}],
+                    consigneeName: [{required: true, min: 1, max: 100, message: '收货方名称必填，长度在 1 到 100 个字符', trigger: 'change'}],
+                    consigneeContactName: [{required: true, min: 1, max: 50, message: '联系人长度在 1 到 50 个字符', trigger: 'change'}],
+                    consigneeContactPhone: [{required: true, min: 11, max: 14, validator: this.validatePhone, message: '请输入正确手机号', trigger: 'change'}],
+                    consigneeAddress: [{ min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'change'}],
+                    homeDeliveryFee: [{min: 0, max: 999999.99, validator: this.validatePickGoods, message: '上门提货费用为0~999999.99', trigger: 'change'}],
                     cargoInsuranceFee: [{min: 0, max: 999999.99, validator: this.validateInsure, message: '货物保险费用为0~999999.99', trigger: 'blur'}],
                     insureValue: [{min: 0, max: 999999.99, validator: this.validateInsureValue, message: '声明价值费用为0~999999.99', trigger: 'blur'}],
                     twoDistributionFee: [{min: 0, max: 999999.99, validator: this.validateTwoDist, message: '二次配送费用为0~999999.99', trigger: 'blur'}],
@@ -846,7 +854,7 @@
                             // 初始化基本信息
                             vm.orderForm.businessType = data.businessType;
                             vm.orderForm.merchandiser = data.operator;
-                            vm.orderForm.orderTime = data.uploadDate;
+                            vm.orderForm.orderTime = new Date(data.uploadDate);
                             vm.orderForm.transCode = data.tranCode;
                         }
                     } else if (code == 500) {
@@ -865,7 +873,9 @@
                 if (custCode != undefined && custCode != null && custCode != '') {
                     var newGoods = {
                         goodsType: '',
+                        goodsTypeId: '',
                         goodsCategory: '',
+                        goodsCategoryId: '',
                         goodsCode: '',
                         goodsName: '',
                         goodsSpec: '',
@@ -903,7 +913,20 @@
                 var vm = this;
                 vm.goodsCategoryOptions=[];
                 var typeId = row.goodsType;
-                this.goodsType=typeId;
+                CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(result) {
+                    var data=eval(result);
+                    $.each(data,function (index,CscGoodsTypeVo) {
+                        var goodsCategory={};
+                        goodsCategory.label=CscGoodsTypeVo.goodsTypeName;
+                        goodsCategory.value=CscGoodsTypeVo.goodsTypeName;
+                        vm.goodsCategoryOptions.push(goodsCategory);
+                    });
+                });
+            },
+            getGoodsCategoryWhenSelectGoods: function (typeId) {
+                debugger;
+                var vm = this;
+                vm.goodsCategoryOptions=[];
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(result) {
                     var data=eval(result);
                     $.each(data,function (index,CscGoodsTypeVo) {
@@ -1136,7 +1159,6 @@
                 this.queryCustomer();
             },
             cancelSelectCustomer: function () {
-//                
                 this.custDialog.currentPage = 1;
                 this.custDialog.pageSize = 10;
                 this.custDialog.total = 0;
@@ -1279,18 +1301,41 @@
                     this.$message({showClose: true, message: '请选择发货方！', type: 'error'});
                 }
             },
+            checkGoodsDataDupl: function (newGoodsCode) {
+                var result = true;
+                var vm = this;
+                $.each(this.goodsData, function (index, goods) {
+
+                    var goodsCode = goods.goodsCode;
+                    if (goodsCode == newGoodsCode) {
+                        result = false;
+                        return false;
+                    }
+                });
+                return result;
+            },
             setSelectGoodsInfo: function(row) {
-                this.currentEditGoodsData.goodsType = row.goodsType;
-                this.currentEditGoodsData.goodsCategory = row.goodsCategory;
-                this.currentEditGoodsData.goodsCode = row.goodsCode;
-                this.currentEditGoodsData.goodsName = row.goodsName;
-                this.currentEditGoodsData.goodsSpec = row.goodsSpec;
-                this.currentEditGoodsData.unit = row.unit;
-                this.currentEditGoodsData.pack = this.handelStrNull(row.pack) == '' ? '01' : this.handelStrNull(row.pack);
-                this.cancelSelectGoodsDialog();
+                var result = this.checkGoodsDataDupl(row.goodsCode);
+                if (result) {
+                    this.getGoodsCategoryWhenSelectGoods(row.goodsTypeId);
+                    this.currentEditGoodsData.goodsType = row.goodsType;
+                    this.currentEditGoodsData.goodsTypeId = row.goodsTypeId;
+                    this.currentEditGoodsData.goodsCategory = row.goodsCategory;
+                    this.currentEditGoodsData.goodsCategoryId = row.goodsCategoryId;
+                    this.currentEditGoodsData.goodsCode = row.goodsCode;
+                    this.currentEditGoodsData.goodsName = row.goodsName;
+                    this.currentEditGoodsData.goodsSpec = row.goodsSpec;
+                    this.currentEditGoodsData.unit = row.unit;
+                    this.currentEditGoodsData.pack = this.handelStrNull(row.pack) == '' ? '01' : this.handelStrNull(row.pack);
+                    this.cancelSelectGoodsDialog();
+                } else {
+                    this.promptInfo('已经存在相同商品', 'error');
+                }
             },
             consignorCallBack: function(address){
+                console.log(JSON.stringify(address))
                 var code = '', addr = '';
+                var vm = this;
                 $.each(address, function(index, area) {
                     if (index == address.length - 1) {
                         code += area.code;
@@ -1298,12 +1343,25 @@
                         code += area.code + ',';
                     }
                     addr += area.title;
+                    if (area.keyword == 'province') {
+                        vm.orderForm.departureProvince = area.title;
+                    }
+                    if (area.keyword == 'city') {
+                        vm.orderForm.departureCity = area.title;
+                    }
+                    if (area.keyword == 'district') {
+                        vm.orderForm.departureDistrict = area.title;
+                    }
+                    if (area.keyword == 'street') {
+                        vm.orderForm.departureTowns = area.title;
+                    }
                 });
                 this.orderForm.departurePlaceCode = code;
                 this.orderForm.departurePlace = addr;
             },
             consigneeCallBack: function(address){
                 var code = '', addr = '';
+                var vm = this;
                 $.each(address, function(index, area) {
                     if (index == address.length - 1) {
                         code += area.code;
@@ -1311,6 +1369,18 @@
                         code += area.code + ',';
                     }
                     addr += area.title;
+                    if (area.keyword == 'province') {
+                        vm.orderForm.destinationProvince = area.title;
+                    }
+                    if (area.keyword == 'city') {
+                        vm.orderForm.destinationCity = area.title;
+                    }
+                    if (area.keyword == 'district') {
+                        vm.orderForm.destinationDistrict = area.title;
+                    }
+                    if (area.keyword == 'street') {
+                        vm.orderForm.destinationTowns = area.title;
+                    }
                 });
                 this.orderForm.destinationCode = code;
                 this.orderForm.destination = addr;
@@ -1371,7 +1441,6 @@
                 }
             },
             validateArrivedTime: function (rule, value, callback) {
-                
                 if (value != undefined && value != '') {
                     if (value.getTime() < this.orderForm.orderTime.getTime()) {
                         callback(new Error("承诺到达时间不能大于订单日期！"));
@@ -1501,7 +1570,7 @@
                 }
             },
             validateTransCode: function(rule, value, callback) {
-                var transCode = this.orderForm.transCode;
+                var transCode =  this.orderForm.transCode;
                 var businessType = this.orderForm.businessType;
                 if (businessType != '' && businessType == '602') {
                     if (transCode == undefined || transCode == '') {
@@ -1512,7 +1581,7 @@
                             callback(new Error('运输单号只能输入20位数字和字母'));
                         } else {
                             // 验证运单号是否存在
-                            CommonClient.post(sys.rootPath + "/ofc/checkTransCode", {"transCode": transCode}, function(result) {
+                            CommonClient.syncpost(sys.rootPath + "/ofc/checkTransCode", {"transCode": transCode}, function(result) {
                                 if (result) {
                                     callback();
                                 } else {
@@ -1580,8 +1649,6 @@
                     if (quantity == '' || quantity > 50000) {
                         this.$notify.error({title: '第'+ line +'行错误', message: '件数计费：数量必填,最大值为50000.00', duration: 3000, offset: 500});
                         return false;
-                    } else if () {
-
                     }
                 } else if (chargingWays == '02') {
                     var weight = this.onlyNumber(row.weight);
@@ -1589,8 +1656,6 @@
                     if (weight == '' || weight > 50000) {
                         this.$notify.error({title: '第'+ line +'行错误', message: '重量计费：重量必填,最大值为50000.00', duration: 3000, offset: 500});
                         return false;
-                    } else if () {
-
                     }
                 } else if (chargingWays == '03') {
                     var cubage = this.onlyNumber(row.cubage);
@@ -1624,15 +1689,28 @@
                     }
                 }
             },
+            validatePhone: function (rule, value, callback) {
+                if (value != '') {
+                    var expr = /^((\+86)|(86))?(13|15|17|18)\d{9}$/;
+                    if (!expr.test(value)) {
+                        callback(new Error('请输入正确的手机号码'));
+                    } else {
+                        callback();
+                    }
+                } else {
+                    callback(new Error('请输入正确手机号'));
+                }
+            },
             confirmPlaceOrder: function() {
                 // 验证订单基础信息
                 var odrest = this.validateForm('orderForm');
                 // 使用表单验证费用，存在bug
                 var ferest = this.validateForm('feeForm');
+                console.log(odrest + "    " + ferest);
+                var vm = this;
                 if (odrest && ferest) {
                     // 验证商品明细
                     var goodsData = this.goodsData;
-                    var vm = this;
                     if (goodsData == null || goodsData == undefined || goodsData.length == 0) {
                         vm.promptInfo("请添加至少一条货品!",'error');
                         return;
@@ -1645,6 +1723,10 @@
                             }
                         }
                     }
+
+                    console.log(JSON.stringify(vm.orderForm));
+                    console.log(JSON.stringify(vm.feeForm));
+                    console.log(JSON.stringify(vm.goodsData));
                     console.log('验证通过！');
                 }
             }

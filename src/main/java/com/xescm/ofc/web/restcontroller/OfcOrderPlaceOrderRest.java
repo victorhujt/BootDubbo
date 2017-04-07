@@ -540,6 +540,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
                 cscGoodType.setPid(cscGoodsType);
             }
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
+            logger.info("===========================" + CscGoodsType);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
             logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
