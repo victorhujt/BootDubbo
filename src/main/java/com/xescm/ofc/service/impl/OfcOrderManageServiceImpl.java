@@ -3010,6 +3010,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
             dailyAccountInfo.add(ofcOrderAccountDTO);
         }
+
+        //排除基地和大区为空的数据
+        Iterator it=dailyAccountInfo.iterator();
+        while( it.hasNext()){
+            OfcOrderAccountDTO dto= (OfcOrderAccountDTO) it.next();
+            if(PubUtils.isSEmptyOrNull(dto.getBaseCode())&&PubUtils.isSEmptyOrNull(dto.getAreaCode())){
+                it.remove();
+            }
+        }
+
         //按 应收确认日清 + 应付确认日清 - 事后补录订单 排序
         Collections.sort(dailyAccountInfo,new Comparator<OfcOrderAccountDTO>(){
             public int compare(OfcOrderAccountDTO o1, OfcOrderAccountDTO o2) {
