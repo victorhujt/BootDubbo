@@ -11,8 +11,10 @@
     <img class='bg2' src='${(OFC_WEB_URL)!}/img/background-image-2.png'>
     <img class='theme' src='${(OFC_WEB_URL)!}/img/theme.png'>
     <div class='limit'>
-        <div class='transitionOne' style="background:url('${(OFC_WEB_URL)!}/img/transtion-1.png')"></div>
-        <div class='transitionTwo' style="background:url('${(OFC_WEB_URL)!}/img/transtion-2.png')"></div>
+        <img class='transitionOne' src='${(OFC_WEB_URL)!}/img/transtion-1.png'>
+        <img class='transitionTwo' src='${(OFC_WEB_URL)!}/img/transtion-2.png'>
+        <#--<div class='transitionOne' style="background:url('${(OFC_WEB_URL)!}/img/transtion-1.png')"></div>-->
+        <#--<div class='transitionTwo' style="background:url('${(OFC_WEB_URL)!}/img/transtion-2.png')"></div>-->
     </div>
     <div class='city'>
         <img src="${(OFC_WEB_URL)!}/img/city-1.png">
