@@ -263,7 +263,7 @@ public class OfcOrderManageOperaRest extends BaseController {
             modelAndView.addObject("ofcOrderStatus", ofcOrderStatus);
             setDefaultModel(model);
         }catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单详情出现异常orderCode：{},{}", orderCode, ex.getMessage(), ex);
         }
         return modelAndView;
     }
