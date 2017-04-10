@@ -98,11 +98,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
             OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusMapper.orderStatusSelectNew(mapperMap);
-            OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+            OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
             if(orderNewstatus==null
                     || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
                     || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
-                ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
                 OfcOrderNewstatus orderNewstatu=new OfcOrderNewstatus();
                 orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
                 orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
