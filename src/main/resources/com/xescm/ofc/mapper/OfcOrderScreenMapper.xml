@@ -15,7 +15,6 @@
         <result property="notes" column="notes"></result>
         <result property="storeName" column="store_name"></result>
         <result property="custName" column="cust_name"></result>
-        <result property="orderBatchNumber" column="order_batch_number"></result>
     </resultMap>
 
     <!--
