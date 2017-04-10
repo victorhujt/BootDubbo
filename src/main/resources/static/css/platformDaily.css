@@ -6,26 +6,20 @@ body{
 	font-size: 0.28rem;
 	font-family: '微软雅黑';
 	width:6.4rem;
-	overflow-x: hidden;
 }
-nav{
-	height: 0.75rem;
-	width: 6.4rem;
-	background-color: #008bca;
-	text-align: center;
-	line-height: 0.75rem;
-	color:#fff;
-}
-nav span:first-child{
-	position: relative;
-	left:-1.6rem;
+.limit{
+	position: absolute;
+	width:100%;
+	height:3.095rem;
+	top:0;
+	overflow: hidden;
 }
 .bg1{
 	width:6.4rem;
 	height:6.75rem;
 	position: absolute;
 	z-index: -10;
-	top:0.75rem;
+	top:0rem;
 	display: block;
 }
 .bg2{
@@ -33,7 +27,7 @@ nav span:first-child{
 	height:6.75rem;
 	position: absolute;
 	z-index: -10;
-	top:7.5rem;
+	top:6.75rem;
 	display: block;
 }
 .theme{
@@ -158,12 +152,13 @@ nav span:first-child{
     margin: -0.8rem 0 0 3.05rem;
 }
 .transitionOne{
+	background-size: cover;
 	position:absolute;
 	z-index: -1;
 	display: block;
 	width:2.6rem;
 	height:1.43rem;
-    top: -0.69rem;
+    top: -1.42rem;
     left:2.42rem;
     animation:myfirst 5s ease-in infinite 2s;
 	-moz-animation:myfirst 5s ease-in infinite 2s;
@@ -171,21 +166,22 @@ nav span:first-child{
 }
 @keyframes myfirst
 {
-	60%   {top: -0.69rem;left: 2.42rem;}
+	60%   {top: -1.42rem;left: 2.42rem;}
 	100% {top: 1.43rem;left: -3.2rem;}
 }
 @-moz-keyframes myfirst
 {
-	60%   {top: -0.69rem;left: 2.42rem;}
+	60%   {top: -1.42rem;left: 2.42rem;}
 	100% {top: 1.43rem;left: -3.2rem;}
 }
 @-webkit-keyframes myfirst
 {
-	60%   {top: -0.69rem;left: 2.42rem;}
+	60%   {top: -1.42rem;left: 2.42rem;}
 	100% {top: 1.43rem;left: -3.2rem;}
 }
 .transitionTwo{
 	position:absolute;
+	background-size: cover;
 	z-index: -1;
 	display: block;
 	width: 2.7rem;
@@ -224,17 +220,6 @@ nav span:first-child{
 	margin-bottom:0.45rem;
 	display: block;
 	font-size: 0.25rem;
-}
-.rules button{
-	height:0.67rem;
-	width:2.16rem;
-	background:#183150;
-	border:0.01rem solid #fff;
-	border-radius: 0.02rem;
-	color:#fff;
-	font-size: 0.26rem;
-	line-height: 0.67rem;
-	margin:0 0 0.1rem 1.82rem;
 }
 .custom{
 	padding:0.12rem 0 0 0.12rem;
