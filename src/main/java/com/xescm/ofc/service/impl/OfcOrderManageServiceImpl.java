@@ -2193,10 +2193,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcFundamentalInformation 订单基本信息
      */
     public void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        logger.info("更新创单接口订单和钉钉录单大区基地信息 ofcFundamentalInformation : {}", ofcFundamentalInformation);
+        logger.info("更新创单接口订单和钉钉录单大区基地信息 ofcDistributionBasicInfo : {}", ofcDistributionBasicInfo);
         RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
         rmcServiceCoverageForOrderVo = this.copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
         RmcServiceCoverageForOrderVo rmcPickup = this.rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
-        updateOrderAreaAndBase(rmcPickup, ofcFundamentalInformation);
+        this.updateOrderAreaAndBase(rmcPickup, ofcFundamentalInformation);
     }
 
 
@@ -2532,6 +2534,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      */
     @Override
     public RmcServiceCoverageForOrderVo copyDestinationPlace(String addressCode, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo) {
+        logger.info("拷贝方法，用于将四级地址编码split操作后分别存入区域覆盖VO中对应的字段 addressCode : {}", addressCode);
+        logger.info("拷贝方法，用于将四级地址编码split操作后分别存入区域覆盖VO中对应的字段 rmcServiceCoverageForOrderVo : {}", rmcServiceCoverageForOrderVo);
+        if (PubUtils.isSEmptyOrNull(addressCode)) {
+            logger.error("拷贝方法，用于将四级地址编码split操作后分别存入区域覆盖VO中对应的字段 addressCode 为空");
+            throw new BusinessException("四级地址编码为空");
+        }
         rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
         String address[] = addressCode.split(",");
         if (address.length >= 1) {
@@ -2857,7 +2865,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcFundamentalInformation.setOrderType(WAREHOUSE_DIST_ORDER);
 
         //校验当前登录用户的身份信息,并存放大区和基地信息
-        ofcFundamentalInformation = ofcOrderPlaceService.getAreaAndBaseMsg(authResDtoByToken, ofcFundamentalInformation);
+        ofcOrderPlaceService.orderAuthByConsignorAddr(ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -3225,7 +3233,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             newofcFundamentalInformation.setAbolisherName("");
             newofcFundamentalInformation.setOrderSource("手动录入");
             newofcFundamentalInformation.setCreator(authResDtoByToken.getUserName());
-            newofcFundamentalInformation = ofcOrderPlaceService.getAreaAndBaseMsg(authResDtoByToken, newofcFundamentalInformation);
+            newofcFundamentalInformation.setAreaCode(ofcFundamentalInformation.getAreaCode());
+            newofcFundamentalInformation.setAreaName(ofcFundamentalInformation.getAreaName());
+            newofcFundamentalInformation.setBaseCode(ofcFundamentalInformation.getBaseCode());
+            newofcFundamentalInformation.setBaseName(ofcFundamentalInformation.getBaseName());
             ofcFundamentalInformationService.save(newofcFundamentalInformation);
 
             //复制仓储的信息
