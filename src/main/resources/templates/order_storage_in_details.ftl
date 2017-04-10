@@ -4,6 +4,10 @@
 <head>
     <style lang="css">
         .borderNone .el-input__inner{border:none;}
+        .el-table__body-wrapper{
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>

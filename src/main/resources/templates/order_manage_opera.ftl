@@ -913,6 +913,7 @@
       $("#custName").val("");
       $("#custCode").val("");
       $("#orderCode").val("");
+      $("#custOrderCode").val("");
       $("#orderState").val("").trigger("chosen:updated");
       $("#orderType").val("").trigger("chosen:updated");
       $("#businessType").val("").trigger("chosen:updated");

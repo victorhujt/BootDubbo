@@ -555,7 +555,7 @@
             <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">上门提货:费用</label>
             <div style="width:140px;float:left;">
               <div class="col-width-100 margin-right-15">
-                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCostCheck()" value="${(orderInfo.homeDeliveryFee)!""}"  disabled="disabled"/>
+                <input class="col-width-100" id="homeDeliveryFee" disabled="true" style="color: #000" name="homeDeliveryFee" type="text" class="form-control input-sm " placeholder="" aria-controls="dynamic-table" onblur= "countCostCheck()" value="${((orderInfo.homeDeliveryFee)!"")?c}"  disabled="disabled"/>
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -570,7 +570,7 @@
             <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">货物保险:费用</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15" >
-                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${(orderInfo.cargoInsuranceFee)!""}"  disabled="disabled">
+                <input class="col-width-100"  id="cargoInsuranceFee" disabled="true" style="color: #000" name="cargoInsuranceFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${((orderInfo.cargoInsuranceFee)!"")?c}"  disabled="disabled">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -579,7 +579,7 @@
             <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">声明价值</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15">
-                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${(orderInfo.insureValue)!""}"  disabled="disabled">
+                <input class="col-width-100" id="insureValue" disabled="true" style="color: #000" name="insureValue" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${((orderInfo.insureValue)!"")?c}"  disabled="disabled">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -594,7 +594,7 @@
             <label class="control-label col-width-110" for="name" style="padding:0px 15px 0; 10px">二次配送:费用</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15">
-                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${(orderInfo.twoDistributionFee)!""}"  disabled="disabled">
+                <input class="col-width-100" id="twoDistributionFee" disabled="true" style="color: #000" name="twoDistributionFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${((orderInfo.twoDistributionFee)!"")?c}"  disabled="disabled">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -609,7 +609,7 @@
             <label class="control-label col-width-110" for="name" style="padding:0px 15px 0 10px;">代收货款:费用</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15" >
-                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${(orderInfo.collectServiceCharge)!""}"  disabled="disabled">
+                <input class="col-width-100" id="collectServiceCharge" disabled="true" style="color: #000" name="collectServiceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${((orderInfo.collectServiceCharge)!"")?c}"  disabled="disabled">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -618,7 +618,7 @@
             <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">代收金额</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15">
-                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${(orderInfo.collectLoanAmount)!""}"  disabled="disabled">
+                <input class="col-width-100" id="collectLoanAmount" disabled="true" style="color: #FF0000;" name="collectLoanAmount" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${((orderInfo.collectLoanAmount)!"")?c}"  disabled="disabled">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -633,7 +633,7 @@
             <label class="control-label col-width-110" for="name" style="padding:0px 15px 0; 10px">签单返回:费用</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15">
-                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${(orderInfo.returnListFee)!""}"  disabled="disabled">
+                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${((orderInfo.returnListFee)!"")?c}"  disabled="disabled">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -642,7 +642,7 @@
             <label class="control-label col-width-80" for="name" style="padding:0px 15px 0;">运费</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15">
-                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${(orderInfo.luggage)!""}"  disabled="disabled">
+                <input class="col-width-100" id="luggage" style="color: #000" name="luggage" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()" value="${((orderInfo.luggage)!"")?c}"  disabled="disabled">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -655,7 +655,7 @@
           <div style="width:242px;float:left;margin-left:45px;" >
             <label class="col-label" for="name" style="float:left;">费用总计</label>
             <div class="col-width-100 padding-15" style="width:130px">
-              <input id="serviceCharge" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" value="${(orderInfo.serviceCharge)!""}">
+              <input id="serviceCharge" disabled="true" style="color: #000;display:block;float:left;" name="serviceCharge" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" value="${((orderInfo.serviceCharge)!"")?c}">
             </div>
             <label class="" for="name" style="margin-bottom:0;" >元</label>
           </div>
@@ -707,7 +707,7 @@
             <label class=" col-label-50 col-float" for="name" style="width:45px;margin-left:0;margin-right:15px;">现结</label>
             <div style="float:left;width:130px;">
               <div class="col-float" style="width:100px;margin-right:15px;">
-                <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${(orderInfo.currentAmount)!""}"  disabled="disabled">
+                <input id="currentAmount"  style="color: #000" name="currentAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${((orderInfo.currentAmount)!"")?c}"  disabled="disabled">
               </div>
               <label class=" col-float" for="name">元</label></div>
           </div>
@@ -715,7 +715,7 @@
             <label class=" col-label-50 col-float" for="name" style="margin-left:25px;margin-right:15px;">到付</label>
             <div style="width:130px;float:left;">
               <div class="col-float" style="width:100px;margin-right:15px;">
-                <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${(orderInfo.toPayAmount)!""}"  disabled="disabled">
+                <input id="toPayAmount"  style="color: #000" name="toPayAmount" type="text" class="col-width-100 form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${((orderInfo.toPayAmount)!"")?c}"  disabled="disabled">
               </div>
               <label class=" col-float" for="name">元</label>
             </div>
@@ -724,7 +724,7 @@
             <label class=" col-label-50 col-float" for="name" style="margin-left:49px;margin-right:14px;">回付</label>
             <div style="width:130px;float:left;">
               <div class="col-float" style="width:100px;margin-right:15px;">
-                <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${(orderInfo.returnAmount)!""}"  disabled="disabled">
+                <input id="returnAmount"  style="color: #000" name="returnAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${((orderInfo.returnAmount)!"")?c}"  disabled="disabled">
               </div>
               <label class=" col-float" for="name">元</label>
             </div>
@@ -733,7 +733,7 @@
             <label class=" col-label-50" for="name" style="margin-right:15px;">月结</label>
             <div style="width:130px;float:left;">
               <div class="col-float" style="width:100px;margin-right:15px;">
-                <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${(orderInfo.monthlyAmount)!""}"  disabled="disabled">
+                <input id="monthlyAmount"  style="color: #000" name="monthlyAmount" type="text" class="col-float form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countSettlement()"  value="${((orderInfo.monthlyAmount)!"")?c}"  disabled="disabled">
               </div>
               <label class=" col-float" for="name">元</label>
             </div>
@@ -846,11 +846,11 @@
                 <option value='02' <#if goodsDetails.chargingWays?? ><#if ((goodsDetails.chargingWays)! == '02')>selected="selected"</#if></#if>>重量Kg</option>
                 <option value='03' <#if goodsDetails.chargingWays?? ><#if ((goodsDetails.chargingWays)! == '03')>selected="selected"</#if></#if>>体积m³</option>
               </select></td>
-              <td><input class='col-xs-12'  name='chargingUnitPrice' id='chargingUnitPrice' type='text' style='min-width:60px;' value="${(goodsDetails.chargingUnitPrice)!""}" disabled="disabled"></td>
-              <td><input class='col-xs-12'  name='quantity' id='quantity' type='text' style='min-width:60px;' value="${(goodsDetails.quantity)!""}" disabled="disabled"></td>
+              <td><input class='col-xs-12'  name='chargingUnitPrice' id='chargingUnitPrice' type='text' style='min-width:60px;' value="${((goodsDetails.chargingUnitPrice)!"")?c}" disabled="disabled"></td>
+              <td><input class='col-xs-12'  name='quantity' id='quantity' type='text' style='min-width:60px;' value="${((goodsDetails.quantity)!"")?c}" disabled="disabled"></td>
               <td style="display: none"><input class='col-xs-12'  name='billingWeight' id='billingWeight' type='text' style='min-width:60px;' value="${(goodsDetails.billingWeight)!""}" disabled="disabled"></td>
-              <td><input class='col-xs-12'  name='weight' id='weight' type='text' style='min-width:60px;' value="${(goodsDetails.weight)!""}" disabled="disabled"></td>
-              <td><input class='col-xs-12'  name='cubage' id='cubage' type='text' style='min-width:60px;' value="${(goodsDetails.cubage)!""}" disabled="disabled"></td>
+              <td><input class='col-xs-12'  name='weight' id='weight' type='text' style='min-width:60px;' value="${((goodsDetails.weight)!"")?c}" disabled="disabled"></td>
+              <td><input class='col-xs-12'  name='cubage' id='cubage' type='text' style='min-width:60px;' value="${((goodsDetails.cubage)!"")?c}" disabled="disabled"></td>
             </tr>
             </#list>
           </tbody>

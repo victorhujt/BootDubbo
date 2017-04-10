@@ -24,4 +24,9 @@ public class OfcOrderScreenServiceImpl extends BaseService<OrderScreenResult> im
     public List<OrderScreenResult> orderScreen(OrderScreenCondition orderScreenCondition) {
         return ofcOrderScreenMapper.orderScreen(orderScreenCondition);
     }
+
+    @Override
+    public List<String> searchOverallOrder(String code) {
+        return ofcOrderScreenMapper.searchOverallOrder(code);
+    }
 }

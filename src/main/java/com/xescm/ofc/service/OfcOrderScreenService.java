@@ -11,4 +11,6 @@ import java.util.List;
 public interface OfcOrderScreenService extends IService<OrderScreenResult>{
     /*订单查询条件筛选结果*/
     List<OrderScreenResult> orderScreen(OrderScreenCondition orderScreenCondition);
+
+    List<String> searchOverallOrder(String code);
 }
