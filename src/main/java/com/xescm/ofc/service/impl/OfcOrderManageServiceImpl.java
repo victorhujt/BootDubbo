@@ -2682,7 +2682,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcFundamentalInformation.setBaseCode(rmcPickup.getSerialNo());
         ofcInfo.setBaseName(rmcPickup.getBaseName());
         ofcFundamentalInformation.setBaseName(rmcPickup.getBaseName());
-        ofcInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        String orderCode = ofcFundamentalInformation.getOrderCode();
+        if (PubUtils.isSEmptyOrNull(orderCode)) {
+            logger.info("普通下单");
+            return;
+        }
+        ofcInfo.setOrderCode(orderCode);
         int update = ofcFundamentalInformationService.update(ofcInfo);
         if (update == 0) {
             logger.error("更新订单的大区和基地失败!");
