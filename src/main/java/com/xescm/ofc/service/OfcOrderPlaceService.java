@@ -20,5 +20,5 @@ public interface OfcOrderPlaceService{
     OfcFundamentalInformation getAreaAndBaseMsg(AuthResDto authResDtoByToken, OfcFundamentalInformation ofcFundamentalInformation);
 
 
-    void orderAuthByConsignorAddr(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation);
+    void orderAuthByConsignorAddr(AuthResDto authResDto, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation);
 }

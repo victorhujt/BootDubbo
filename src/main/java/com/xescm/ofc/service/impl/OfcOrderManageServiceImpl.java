@@ -2870,7 +2870,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcFundamentalInformation.setOrderType(WAREHOUSE_DIST_ORDER);
 
         //校验当前登录用户的身份信息,并存放大区和基地信息
-        ofcOrderPlaceService.orderAuthByConsignorAddr(ofcDistributionBasicInfo, ofcFundamentalInformation);
+        ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表

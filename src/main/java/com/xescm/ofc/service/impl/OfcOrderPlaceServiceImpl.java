@@ -156,7 +156,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
 
         //校验当前登录用户的身份信息,并存放大区和基地信息
-        this.orderAuthByConsignorAddr(ofcDistributionBasicInfo,ofcFundamentalInformation);
+        this.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -501,16 +501,14 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
 
     /**
-     * 使用发货地址匹配订单大区和基地信息
+     * 运输订单使用发货地址匹配订单大区和基地信息
      * @param ofcDistributionBasicInfo 运输信息
      * @param ofcFundamentalInformation 订单基本信息
      */
     @Override
-    public void orderAuthByConsignorAddr(OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation) {
-        //如果入库订单发货地址为空则不进行地址匹配
-        if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals(STOCK_OUT_ORDER)
-                && (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlace())
-                || PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()))) {
+    public void orderAuthByConsignorAddr(AuthResDto authResDto, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation) {
+        if (trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)) {
+            this.getAreaAndBaseMsg(authResDto, ofcFundamentalInformation);
             return;
         }
         if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())) {
