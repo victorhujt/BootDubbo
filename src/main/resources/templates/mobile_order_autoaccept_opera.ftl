@@ -450,6 +450,8 @@
                 <span>{{totalQuantity}}</span>
                 <label class="xe-label" style="margin-left: 20px;">重量合计:</label>
                 <span>{{totalWeight}}&nbsp;&nbsp;KG</span>
+                <label class="xe-label" style="margin-left: 20px;">体积合计:</label>
+                <span>{{totalCubage}}&nbsp;&nbsp;m³</span>
                 <el-button type="primary" v-on:click="addGoods" style="margin-left: 20px;">添加一行</el-button>
             </div>
             <el-table :data="goodsData" border highlight-current-row @current-change="">
@@ -542,7 +544,7 @@
                 </el-table-column>
                 <el-table-column property="cubage" label="体积（m³）">
                     <template scope="scope">
-                        <el-input v-model="scope.row.cubage"></el-input>
+                        <el-input v-model="scope.row.cubage" @blur="accountCubage(scope.row)"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作" width="45">
@@ -619,6 +621,7 @@
                 },
                 totalQuantity: 0,
                 totalWeight: 0,
+                totalCubage:0,
                 goodsData: [],
                 currentEditGoodsData:'',
                 goodsTypeOptions: [],
@@ -1736,6 +1739,9 @@
                     }else{
                         jsonStr.returnList="0";
                     }
+                    jsonStr.quantity=this.totalQuantity;
+                    jsonStr.weight=this.totalWeight;
+                    jsonStr.cubage=this.totalCubage;
                     var ofcOrderDTO=JSON.stringify(jsonStr);
                     var cscContantAndCompanyDtoConsignorStr=this.getCscContantAndCompanyDtoConsignorStrOrConsigneeStr("consignor");
                     var cscContantAndCompanyDtoConsigneeStr=this.getCscContantAndCompanyDtoConsignorStrOrConsigneeStr("consignee");
@@ -1763,6 +1769,11 @@
             accountWeight:function(val){
                 if(!StringUtil.isEmpty(val.weight)){
                     this.totalWeight+=parseFloat(val.weight);
+                }
+            },
+            accountCubage:function(val){
+                if(!StringUtil.isEmpty(val.cubage)){
+                    this.totalCubage+=parseFloat(val.cubage);
                 }
             },
             getCscContantAndCompanyDtoConsignorStrOrConsigneeStr:function(type){
