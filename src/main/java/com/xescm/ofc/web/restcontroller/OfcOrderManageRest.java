@@ -16,7 +16,6 @@ import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
@@ -40,9 +39,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
@@ -73,38 +74,7 @@ public class OfcOrderManageRest extends BaseController{
     @Resource
     private CscStoreEdasService cscStoreEdasService;
     @Resource
-    private OfcTransplanInfoService ofcTransplanInfoService;
-    @Resource
-    private  OfcDailyAccountsService ofcDailyAccountsService;
-    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-
-    /**
-     * 订单审核/反审核
-     * @param orderCode  订单编号
-     * @param orderStatus   订单状态
-     * @param reviewTag     审核标记
-     * @return      Wrapper
-     */
-    @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> orderAudit(String orderCode, String orderStatus, String reviewTag){
-        logger.info("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
-        logger.info("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
-        logger.info("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
-        String result;
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        try {
-            result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
-        }catch (BusinessException ex){
-            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        }catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现未知异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
-    }
 
     /**
      * 订单删除

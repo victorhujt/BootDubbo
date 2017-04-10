@@ -78,7 +78,7 @@ public class OfcOrderScreenRest extends BaseController {
             List<String> result = ofcOrderScreenService.searchOverallOrder(code);
             if (CollectionUtils.isEmpty(result)) {
                 logger.error("没有查询到该订单!");
-                throw new BusinessException("没有查询到该订单!");
+                throw new BusinessException("不存在符合条件的订单!");
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
         } catch (BusinessException ex) {
