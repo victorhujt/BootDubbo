@@ -22,6 +22,10 @@
         .el-dialog--small .el-table tr{
           cursor:pointer;
         }
+        .el-table__body-wrapper{
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
@@ -205,6 +209,8 @@
                       v-model="orderForm.orderDate"
                       align="right"
                       type="date"
+                      :clearable="false"
+                      :editable="false"
                       placeholder="选择日期"
                       :picker-options="pickerOptions">
               </el-date-picker>
@@ -270,6 +276,8 @@
                     v-model="orderForm.arriveTime"
                     align="right"
                     type="datetime"
+                    :clearable="false"
+                    :editable="false"
                     placeholder="选择日期"
                     :picker-options="pickerOptions1">
             </el-date-picker>
@@ -375,6 +383,8 @@
                               v-model="scope.row.productionTime"
                               align="right"
                               type="date"
+                              :clearable="false"
+                              :editable="false"
                               @change="accountInvalidTime(scope.row)"
                               placeholder="选择日期"
                               :picker-options="pickerOptions1">
@@ -387,6 +397,8 @@
                               v-model="scope.row.invalidTime"
                               align="right"
                               type="date"
+                              :clearable="false"
+                              :editable="false"
                               placeholder="选择日期"
                               :picker-options="pickerOptions1">
                       </el-date-picker>

@@ -21,6 +21,10 @@
         .el-dialog--small .el-table tr{
           cursor:pointer;
         }
+        .el-table__body-wrapper{
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
