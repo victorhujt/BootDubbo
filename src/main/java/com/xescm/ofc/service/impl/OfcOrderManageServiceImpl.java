@@ -274,10 +274,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         Wrapper whcresponse=null;
         try {
             if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
+                long start = System.currentTimeMillis();
                 Wrapper<Integer> cancelStatus = acOrderEdasService.queryOrderCancelStatus(ofcFundamentalInformation.getOrderCode());
+                logger.info("=============> 查询结算中心是否取消耗时：" + (System.currentTimeMillis() - start)/1000);
                 if (cancelStatus.getCode() == 200) {
                     try {
+                        long cancelStart = System.currentTimeMillis();
                         response= orderCancelToTfc(orderCode);
+                        logger.info("=============> 结算中心取消耗时：" + (System.currentTimeMillis() - cancelStart)/1000);
                     } catch (Exception e) {
                         logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                         throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
@@ -298,7 +302,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     try {
+                        long tfcStart = System.currentTimeMillis();
                         response= orderCancelToTfc(orderCode);
+                        logger.info("=============> TFC取消耗时：" + (System.currentTimeMillis() - tfcStart)/1000);
                         logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
                         if(response!=null&&response.getCode()==Wrapper.SUCCESS_CODE){
                             whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType());
