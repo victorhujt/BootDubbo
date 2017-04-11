@@ -312,20 +312,29 @@
               </div>
             </div></div>
 
-          <div><label class="control-label col-label no-padding-right" for="merchandiser"><span class="w-label-icon">*</span>开单员</label>
+          <#--<div><label class="control-label col-label no-padding-right" for="merchandiser"><span class="w-label-icon">*</span>开单员</label>
             <div class="col-width-168 padding-15" style="margin-left:3px;">
               <div class="col-width-168">
                 <div class="clearfix">
                   <select id="merchandiser" name="merchandiser" class="col-width-168" placeholder="开单员">
-                  <#--<#list merchandiserList! as merchandiser>-->
-                  <#--<option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>-->
-                  <#--</#list>-->
+                  &lt;#&ndash;<#list merchandiserList! as merchandiser>&ndash;&gt;
+                  &lt;#&ndash;<option <#if merchandiser.merchandiser?? ><#if ((merchandiser.merchandiser)! == (merchandiserLast))>selected="selected"</#if></#if>>${(merchandiser.merchandiser)!""}</option>&ndash;&gt;
+                  &lt;#&ndash;</#list>&ndash;&gt;
                   <#list merchandiserList! as merchandiser>
                     <option>${(merchandiser.merchandiser)!""}</option>
                   </#list>
                   </select></div>
               </div>
-            </div></div>
+            </div></div>-->
+          <div><label class="control-label col-label no-padding-right" for="orderTime"><span class="w-label-icon">*</span>订单日期</label>
+              <div class="col-width-168 padding-15">
+                  <div class="clearfix" >
+                      <div class="col-width-168 position-relative" style="height:34px;">
+                          <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}">
+                          <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                      </div>
+                  </div>
+              </div></div>
           <div><label class="control-label col-label" for="name" style="margin-right:18px;margin-left:52px;"><span class="w-label-icon">*</span>运输类型</label>
 
             <div class="radio y-float">
@@ -343,29 +352,50 @@
             <input id="transportType" type="hidden" name="transportType"/></div>
         </div>
         <div class="form-group">
-          <div><label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;"><span class="w-label-icon">*</span>订单日期</label>
-            <div class="col-width-168 padding-15">
-              <div class="clearfix" >
-                <div class="col-width-168 position-relative" style="height:34px;">
-                  <input class="col-width-168 es-input" name="orderTime" id="orderTime" type="text" placeholder="订单日期" aria-controls="dynamic-table" readonly class="laydate-icon" id="startDate" value="${(currentTime?string("yyyy-MM-dd"))!""}">
-                  <label for="orderTime" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
-                </div>
-              </div>
-            </div></div>
-          <div><label class="control-label col-label no-padding-right" for="transCode"><span class="w-label-icon toggle">*</span>运输单号</label>
+            <#--
+            <div><label class="control-label col-label no-padding-right" for="transCode"><span class="w-label-icon toggle">*</span>运输单号</label>
             <div class="col-width-168 padding-15" style="margin-left:3px;">
               <div class="col-width-168">
                 <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
               </div>
             </div></div>
+
+
+            -->
+
+          <#--<div><label class="control-label col-label no-padding-right" for="transCode" style="margin-right:8px;"><span class="w-label-icon">*</span>运输单号</label>
+              <div class="col-width-168 padding-15">
+                  <div class="clearfix col-width-168">
+                    <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
+                  </div>
+            </div></div>-->
+
+                <div><label class="control-label col-label no-padding-right" for="transCode"><span class="w-label-icon toggle">*</span>运输单号</label>
+                    <div class="col-width-168" style="padding-left: 21px;">
+                        <div class="col-width-168">
+                            <input class="col-width-168"  name="transCode" id="transCode" type="text" placeholder="运输单号" style="padding-left:8px;" />
+                        </div>
+                    </div></div>
           <div>
-            <label class="control-label col-label no-padding-right" style="margin-left:52px;" for="custOrderCode">客户订单号</label>
-            <div class="col-width-168 padding-15" style="margin-left:3px;">
-              <div class="col-width-168">
+              <label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-left: 26px;">客户订单号</label>
+              <div class="col-width-168 padding-15">
+                  <div class="clearfix col-width-168">
                 <input class="col-width-168"  name="custOrderCode" id="custOrderCode" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" type="text" placeholder="客户订单号" style="padding-left:8px;" />
               </div>
             </div>
           </div>
+            <div><label class="control-label col-label" for="name" style="margin-right:18px;margin-left:52px;"><span class="w-label-icon">*</span>取货时间</label>
+                <div class="col-width-168" style="padding-left:5px">
+                    <div class="clearfix  col-width-168" >
+                        <div class="col-width-168 position-relative" style="height:34px;">
+                            <input class="col-xs-10 col-xs-12 bk-1 " name="pickupTime" id="pickupTime" value="" type="text" placeholder="取货时间"
+                                   aria-controls="dynamic-table" readonly class="laydate-icon" value="">
+                            <label class="btn btn-minier no-padding-right initBtn" id="" for="pickupTime">
+                                <i class="fa fa-calendar l-cor bigger-130"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div></div>
         </div>
         <div class="form-group">
           <div style="float:left;">
@@ -885,13 +915,26 @@
     $("#weightCount").html("0");
     $("#quantityCount").html("0");
 
+
     // 上次选择的开单员
-    setLastUserData();
+//    setLastUserData();
     /*//$("#orderTime").val(new Date().toLocaleDateString());*/
-    $("body").find(".es-list:last").prevAll("ul").remove();
+//    $("body").find(".es-list:last").prevAll("ul").remove();
   }
 
 
+  laydate({
+      elem: '#pickupTime',
+      istime: true,
+      format: 'YYYY-MM-DD hh:mm',
+      isclear: true,
+      istoday: true,
+      start:laydate.now(0, 'YYYY/MM/DD hh:ss'),
+      choose: function (dates) {
+          $("#pickupTime-error").remove();
+      }
+
+  });
 
   /**
    *表单验证
@@ -905,7 +948,7 @@
       focusInvalid : false,
       ignore : "",
       rules : {
-        merchandiser:{
+        pickupTime:{
           required:true
         },
         orderTime:{
@@ -943,8 +986,8 @@
                 }*/
       },
       messages : {
-        merchandiser:{
-          required:mistake+"请填写开单员"
+          pickupTime:{
+          required:mistake+"请选择取货时间"
         },
         orderTime:{
           required:mistake+"请填写订单日期"
@@ -2252,7 +2295,7 @@
       var jsonStr = {};
       //订单基本信息
       jsonStr.businessType = $("#businessType").val();
-      jsonStr.merchandiser = $("#merchandiser").val();
+      jsonStr.pickupTime = $("#pickupTime").val() + ":00";//orderInfo.pickupTime = $('#pickupTime').val()+ ":00";
       jsonStr.transportType = $("#transportType").val();
       if($('#orderTime').val()!=""){
         jsonStr.orderTime = $('#orderTime').val()+" 00:00:00";
@@ -2334,7 +2377,7 @@
               ,"您确认提交订单吗?"
               ,function () {
                 // 更新开单员
-                updateLastUserData(loginUser);
+//                updateLastUserData(loginUser);
                 location.reload();
 //                        var getTimestamp  = new Date().getTime();
 //                        xescm.common.loadPage("/ofc/tranLoad"+"?timestamp="+getTimestamp);
@@ -2771,7 +2814,7 @@
        $("#custListDiv").fadeOut(0);//淡入淡出效果 隐藏div
    });*/
 
-  $("#merchandiser").editableSelect();
+//  $("#merchandiser").editableSelect();
 
   function initChosen() {
     $('.chosen-select').chosen({allow_single_deselect: true});
@@ -2875,20 +2918,20 @@
       }
   }
   //验证开单员不为空
-  $(".es-list").click(function(){
+  /*$(".es-list").click(function(){
     checkType();
-  })
+  })*/
 
-  function checkType() {
+  /*function checkType() {
     var type = $("#merchandiser").val();
     if(type == null || type == ""){
       $("#merchandiser-error").html("<i class='fa fa-times-circle w-error-icon bigger-130'></i>请选择开单员");
     }else{
       $("#merchandiser-error").css("display","none")
-      /*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
-         $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*/
+      /!*   $("#merchandiser-error").html("<i class='fa fa-check-circle-o w-error-icon bigger-130' style='color:#6bc827;'></i>");
+         $("#merchandiser").parent().parent().parent().removeClass('has-error').addClass("has-success");*!/
     }
-  }
+  }*/
   //验证临时客户
   $("#custEnter").click(function(){
     if( $("#custName").val()=="临时客户"){
