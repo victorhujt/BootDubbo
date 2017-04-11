@@ -18,6 +18,10 @@
         .el-dialog--small .el-table tr{
             cursor:pointer;
         }
+        .el-table__body-wrapper{
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
@@ -200,7 +204,7 @@
 
             <div class="xe-block">
                 <el-form-item label="订单日期" required class="xe-col-3" prop="orderDate">
-                    <el-date-picker type="date" v-model="orderForm.orderDate" :picker-options="pickerOptions"></el-date-picker>
+                    <el-date-picker type="date" :clearable="false" :editable="false" v-model="orderForm.orderDate" :picker-options="pickerOptions"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
                     <el-input v-model="orderForm.merchandiser" placeholder="请输入内容"></el-input>
@@ -261,6 +265,8 @@
                                 <el-date-picker
                                         v-model="orderForm.arriveTime"
                                         type="datetime"
+                                        :clearable="false"
+                                        :editable="false"
                                         placeholder="选择日期"
                                         :picker-options="pickerOptions1">
                                 </el-date-picker>
@@ -370,6 +376,8 @@
                                 v-model="scope.row.productionTime"
                                 align="right"
                                 type="date"
+                                :clearable="false"
+                                :editable="false"
                                 placeholder="选择日期"
                                 @change="accountInvalidTime(scope.row)"
                                 :picker-options="pickerOptions1">
@@ -382,6 +390,8 @@
                                 v-model="scope.row.invalidTime"
                                 align="right"
                                 type="date"
+                                :clearable="false"
+                                :editable="false"
                                 placeholder="选择日期"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
