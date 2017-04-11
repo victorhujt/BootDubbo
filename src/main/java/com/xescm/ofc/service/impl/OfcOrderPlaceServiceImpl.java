@@ -35,9 +35,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstant.STOCK_OUT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
+import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
 
 /**
@@ -153,7 +156,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
 
         //校验当前登录用户的身份信息,并存放大区和基地信息
-        ofcFundamentalInformation = getAreaAndBaseMsg(authResDtoByToken,ofcFundamentalInformation);
+        this.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -313,7 +316,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
         ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
         String orderType = ofcFundamentalInformation.getOrderType();
-        if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)){//编辑时仓配订单
+        if (WAREHOUSE_DIST_ORDER.equals(orderType)){//编辑时仓配订单
             if(null == ofcWarehouseInformation.getProvideTransport()){
                 ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
             }
@@ -441,7 +444,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (PubUtils.isOEmptyOrNull(orderType)) {
                 throw new BusinessException("您选择的订单类型编码为空!");
             }
-            if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)){
+            if (WAREHOUSE_DIST_ORDER.equals(orderType)){
                 if(null == ofcWarehouseInformation.getProvideTransport()){
                     ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                 }
@@ -504,6 +507,26 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
     }
 
+
+    /**
+     * 运输订单使用发货地址匹配订单大区和基地信息
+     * @param ofcDistributionBasicInfo 运输信息
+     * @param ofcFundamentalInformation 订单基本信息
+     */
+    @Override
+    public void orderAuthByConsignorAddr(AuthResDto authResDto, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation) {
+        if (trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)) {
+            this.getAreaAndBaseMsg(authResDto, ofcFundamentalInformation);
+            return;
+        }
+        if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())) {
+            logger.error("发货地址编码为空");
+            return;
+        }
+        ofcOrderManageService.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+    }
+
+
     /**
      * 校验当前登录用户的身份信息,并存放大区和基地信息
      * @param authResDtoByToken     token
@@ -555,6 +578,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
         return ofcFundamentalInformation;
     }
+
+
 
     /**
      * 根据客户编号和客户订单号校验重复
@@ -728,7 +753,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (PubUtils.isOEmptyOrNull(orderType)) {
                 throw new BusinessException("您选择的订单类型编码为空!");
             } else {
-                if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {
+                if (WAREHOUSE_DIST_ORDER.equals(orderType)) {
                     if (null == ofcWarehouseInformation.getProvideTransport()) {
                         ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                     }
