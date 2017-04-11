@@ -65,6 +65,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("612");
                 businessTypes.add("613");
                 businessTypes.add("614");
+                businessTypes.add("617");
                 form.setBusinessTypes(businessTypes);
         }
         return queryStorageOrderList(authResDto,form);

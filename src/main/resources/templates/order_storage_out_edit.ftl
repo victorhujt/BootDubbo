@@ -616,7 +616,12 @@
                 }, {
                     value: '614',
                     label: '分拨出库'
-                }],
+                },
+                {
+                    value: '617',
+                    label: '退车间'
+                }
+                ],
                 goodsMsgOptions: [],
                 pickerOptions1: {
                     shortcuts: [{
