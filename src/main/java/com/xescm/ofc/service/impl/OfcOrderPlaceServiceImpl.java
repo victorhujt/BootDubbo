@@ -35,9 +35,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstant.STOCK_OUT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
+import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
 
 /**
@@ -153,27 +156,27 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
 
         //校验当前登录用户的身份信息,并存放大区和基地信息
-        ofcFundamentalInformation = getAreaAndBaseMsg(authResDtoByToken,ofcFundamentalInformation);
+        this.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
 
         if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)){//下单
-            orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
+            this.orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcMerchandiser, ofcOrderStatus);
         }else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_EDIT)){ //编辑
-            orderPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+            this.orderPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
         }else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANS)){// 运输开单
-            orderPlaceTagTransPlace(ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+            this.orderPlaceTagTransPlace(ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcMerchandiser, ofcOrderStatus);
         } else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_DISTRI)){ //城配开单
-            distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
+            this.distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                     ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
                     ,ofcOrderStatus,ofcMerchandiser);
         } else if(PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANEDIT)){// 运输开单编辑
-            orderTransPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+            this.orderTransPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
         }else {
             throw new BusinessException("未知操作!系统无法识别!");
@@ -224,8 +227,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 throw new BusinessException("该运输单号号已经存在!您不能重复下单!");
             }
         }
+        //2017年4月7日 追加逻辑: 开单员即登录人
+        String userName = authResDtoByToken.getUserName();
+        ofcFundamentalInformation.setMerchandiser(userName);
+        ofcMerchandiser.setMerchandiser(userName);
         String orderType = TRANSPORT_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
+        //2017年4月7日 追加逻辑:运输开单城配干线订单运输单号若为空则赋值为订单号
+        if (!StringUtils.equals(ofcFundamentalInformation.getBusinessType(), WITH_THE_KABAN) && PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+        }
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         ofcFundamentalInformation.setOrderType(orderType);
         if(ofcFundamentalInformation.getOrderType().equals(orderType)){
@@ -305,7 +316,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         BigDecimal goodsAmountCount = saveDetails(ofcGoodsDetailsInfos,ofcFundamentalInformation);
         ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
         String orderType = ofcFundamentalInformation.getOrderType();
-        if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)){//编辑时仓配订单
+        if (WAREHOUSE_DIST_ORDER.equals(orderType)){//编辑时仓配订单
             if(null == ofcWarehouseInformation.getProvideTransport()){
                 ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
             }
@@ -433,7 +444,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (PubUtils.isOEmptyOrNull(orderType)) {
                 throw new BusinessException("您选择的订单类型编码为空!");
             }
-            if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)){
+            if (WAREHOUSE_DIST_ORDER.equals(orderType)){
                 if(null == ofcWarehouseInformation.getProvideTransport()){
                     ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                 }
@@ -496,6 +507,26 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
     }
 
+
+    /**
+     * 运输订单使用发货地址匹配订单大区和基地信息
+     * @param ofcDistributionBasicInfo 运输信息
+     * @param ofcFundamentalInformation 订单基本信息
+     */
+    @Override
+    public void orderAuthByConsignorAddr(AuthResDto authResDto, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation) {
+        if (trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)) {
+            this.getAreaAndBaseMsg(authResDto, ofcFundamentalInformation);
+            return;
+        }
+        if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())) {
+            logger.error("发货地址编码为空");
+            return;
+        }
+        ofcOrderManageService.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+    }
+
+
     /**
      * 校验当前登录用户的身份信息,并存放大区和基地信息
      * @param authResDtoByToken     token
@@ -547,6 +578,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
         return ofcFundamentalInformation;
     }
+
+
 
     /**
      * 根据客户编号和客户订单号校验重复
@@ -696,6 +729,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         } else {
 
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
+            //2017年4月7日 追加逻辑:城配开单运输单号为订单号
+            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
             ofcFundamentalInformation.setCustCode(custId);
 
             if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustName())) {
@@ -718,7 +753,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (PubUtils.isOEmptyOrNull(orderType)) {
                 throw new BusinessException("您选择的订单类型编码为空!");
             } else {
-                if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {
+                if (WAREHOUSE_DIST_ORDER.equals(orderType)) {
                     if (null == ofcWarehouseInformation.getProvideTransport()) {
                         ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
                     }
