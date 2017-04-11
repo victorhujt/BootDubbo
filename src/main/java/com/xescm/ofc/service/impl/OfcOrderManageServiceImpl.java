@@ -4,12 +4,14 @@ import com.xescm.ac.domain.AcDistributionBasicInfo;
 import com.xescm.ac.domain.AcFinanceInformation;
 import com.xescm.ac.domain.AcFundamentalInformation;
 import com.xescm.ac.domain.AcGoodsDetailsInfo;
+import com.xescm.ac.model.dto.AcIncomeSettleDTO;
 import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.ac.model.dto.ofc.AcOrderStatusDto;
 import com.xescm.ac.model.dto.ofc.AcPlanDto;
 import com.xescm.ac.model.dto.ofc.CancelAcOrderDto;
 import com.xescm.ac.model.dto.ofc.CancelAcOrderResultDto;
 import com.xescm.ac.provider.AcOrderEdasService;
+import com.xescm.ac.provider.AcSettleStatisticsEdasService;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -28,8 +30,13 @@ import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
+import com.xescm.ofc.enums.BusinessTypeEnum;
+import com.xescm.ofc.enums.OrderSourceEnum;
+import com.xescm.ofc.enums.PlatformTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
+import com.xescm.ofc.model.dto.form.OrderCountForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.tfc.TfcTransport;
 import com.xescm.ofc.model.dto.tfc.TfcTransportDetail;
@@ -47,7 +54,9 @@ import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.tfc.edas.model.dto.CancelOrderDTO;
+import com.xescm.tfc.edas.model.dto.DeliverEveryRunDTO;
 import com.xescm.tfc.edas.service.CancelOrderEdasService;
+import com.xescm.tfc.edas.service.TfcQueryEveryDeliveryService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.whc.edas.dto.InventoryDTO;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
@@ -65,6 +74,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.*;
 
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
@@ -142,6 +153,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
 
+    @Resource
+    private  OfcDailyAccountsService ofcDailyAccountsService;
+    @Resource
+    private AcSettleStatisticsEdasService acSettleStatisticsEdasService;
+    @Resource
+    private TfcQueryEveryDeliveryService tfcQueryEveryDeliveryService;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -901,6 +918,221 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             inventoryGoods.add(inventoryDTO);
         }
         return whcOrderCancelEdasService.validateStockCount(inventoryGoods);
+    }
+
+    /**
+     * 钉钉平台日报
+     */
+    @Override
+    public List<OfcOrderAccountDTO> dailyAccount() {
+
+        OrderCountForm form=new OrderCountForm();
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(2);
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date());
+        form.setEndDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)-1);
+        form.setStartDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
+        String beginTime=DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2);
+        //两小时完成的订单统计
+        List<OrderCountResult>  twoHourOrderCount=ofcDailyAccountsService.countTwoHoursOrder(form);
+        //前一天的订单统计
+        List<OrderCountResult>  yesterdayOrderCount=ofcDailyAccountsService.yesterdayOrderCount(form);
+        if(CollectionUtils.isEmpty(twoHourOrderCount)){
+            logger.info("两小时完成的订单为零");
+        }
+        if(CollectionUtils.isEmpty(yesterdayOrderCount)){
+            logger.info("前一天订单总计数为零");
+        }
+
+        //保存到数据库
+        Map<String,OfcDailyAccount> accountDailyResult=new HashMap<>();
+        //发送到钉钉机器人的数据
+        Map<String,OfcOrderAccountDTO> account=new HashMap<>();
+        if(!(CollectionUtils.isEmpty(twoHourOrderCount)&&CollectionUtils.isEmpty(yesterdayOrderCount))){
+            for(OrderCountResult twoHourOrderCountResult:twoHourOrderCount){
+                for(OrderCountResult yesterdayOrderCountResult:yesterdayOrderCount){
+                    StringBuilder key=new StringBuilder();
+                    if(!(PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getAreaCode())&&
+                            PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getBaseCode()))&&!(PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getAreaCode())&&PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getBaseCode()))){
+                        if(yesterdayOrderCountResult.getAreaCode().equals(twoHourOrderCountResult.getAreaCode())&&yesterdayOrderCountResult.getBaseCode().equals(twoHourOrderCountResult.getBaseCode())){
+                            key.append(yesterdayOrderCountResult.getAreaCode()).append(yesterdayOrderCountResult.getBaseCode());
+                        }
+                    }else if((!PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getAreaCode())&&PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getBaseCode()))&&(!PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getAreaCode())&&PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getBaseCode()))){
+                        if(yesterdayOrderCountResult.getAreaCode().equals(twoHourOrderCountResult.getAreaCode())){
+                            key.append(yesterdayOrderCountResult.getAreaCode());
+                        }
+                    }else{
+                        key.append("ALL");
+                    }
+                    //发送到钉钉机器人的数据
+                    OfcOrderAccountDTO  ofcOrderAccountDTO=new OfcOrderAccountDTO();
+                    ofcOrderAccountDTO.setAreaCode(yesterdayOrderCountResult.getAreaCode());
+                    ofcOrderAccountDTO.setAreaName(yesterdayOrderCountResult.getAreaName());
+                    ofcOrderAccountDTO.setBaseName(yesterdayOrderCountResult.getBaseName());
+                    ofcOrderAccountDTO.setBaseCode(yesterdayOrderCountResult.getBaseCode());
+
+                    //保存到数据库的数据
+                    OfcDailyAccount ofcDailyAccount=new OfcDailyAccount();
+                    ofcDailyAccount.setAreaCode(yesterdayOrderCountResult.getAreaCode());
+                    ofcDailyAccount.setAreaName(yesterdayOrderCountResult.getAreaName());
+                    ofcDailyAccount.setBaseName(yesterdayOrderCountResult.getBaseName());
+                    ofcDailyAccount.setBaseCode(yesterdayOrderCountResult.getBaseCode());
+                    ////两小时的订单总计
+                    ofcDailyAccount.setTwoHourAccount(twoHourOrderCountResult.getOrderCount()==null?new BigDecimal(0.0):twoHourOrderCountResult.getOrderCount());
+                    ////前一天的开单总计
+                    ofcDailyAccount.setYesterdayAccount(yesterdayOrderCountResult.getOrderCount()==null?new BigDecimal(0.0):yesterdayOrderCountResult.getOrderCount());
+                    ofcDailyAccount.setGmtCreate(new Date());
+                    BigDecimal p=twoHourOrderCountResult.getOrderCount().divide(yesterdayOrderCountResult.getOrderCount(),2, RoundingMode.HALF_UP);
+                    //事后补录订单：2小时订单/开单合计
+                    ofcDailyAccount.setAdditionalOrder(p.setScale(2));
+                    ofcDailyAccount.setAdditionalOrderPercent(percent.format(p.doubleValue()));
+                    ofcOrderAccountDTO.setAdditionalOrder(p.setScale(2));
+                    ofcOrderAccountDTO.setAdditionalOrderPercent(percent.format(p.doubleValue()));
+                    if(!PubUtils.isSEmptyOrNull(key.toString())){
+                        if(!accountDailyResult.containsKey(key.toString())){
+                            accountDailyResult.put(key.toString(),ofcDailyAccount);
+                        }
+                        if(!account.containsKey(key.toString())){
+                            account.put(key.toString(),ofcOrderAccountDTO);
+                        }
+                    }
+                }
+            }
+        }
+
+        //收入确认的订单 海洋提供
+        logger.info("调用结算中心的统计接口传的参数为:{}",beginTime);
+        Wrapper<List<AcIncomeSettleDTO>> acResult= acSettleStatisticsEdasService.acIncomeSettle(beginTime);
+        logger.info("调用结算中心的统计接口响应的code为:{}",acResult.getCode());
+        if(acResult.getCode()==Wrapper.SUCCESS_CODE){
+            if(!CollectionUtils.isEmpty(acResult.getResult())){
+                List<AcIncomeSettleDTO> AcIncomeSettleDTOList=acResult.getResult();
+                logger.info("调用结算中心的统计接口查询的结果为:{}",AcIncomeSettleDTOList);
+                for(AcIncomeSettleDTO acIncomeSettleDTO:AcIncomeSettleDTOList){
+                    StringBuilder key=new StringBuilder();
+                    if(!(PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getBaseCode()))){
+                         key.append(acIncomeSettleDTO.getAreaCode()).append(acIncomeSettleDTO.getBaseCode());
+                    }else if(!PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getBaseCode())){
+                        key.append(acIncomeSettleDTO.getAreaCode());
+                    }else{
+                        key.append("ALL");
+                    }
+                    if(accountDailyResult.containsKey(key.toString())){
+                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
+                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
+                        ofcDailyAccount.setHaveIncomeOrderAccount(BigDecimal.valueOf(acIncomeSettleDTO.getReceivableOrderNumber()==null?0:acIncomeSettleDTO.getReceivableOrderNumber()));
+                        ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()==null?0:acIncomeSettleDTO.getPayableCarNumber()));
+                        BigDecimal p=ofcDailyAccount.getHaveIncomeOrderAccount().divide(ofcDailyAccount.getYesterdayAccount(),2, RoundingMode.HALF_UP);
+                        //应收确认日清：收入确认的订单/开单合计
+                        ofcDailyAccount.setReceivable(p.setScale(2));
+                        ofcDailyAccount.setReceivablePercent(percent.format(p.doubleValue()));
+                        ofcOrderAccountDTO.setReceivable(p.setScale(2));
+                        ofcOrderAccountDTO.setReceivablePercent(percent.format(p.doubleValue()));
+                    }
+                }
+            }else{
+                logger.info("调用结算中心的统计结果为空");
+            }
+        }
+
+        //外部车辆数发运数量 铭涛提供
+        logger.info("调用运输中心的统计接口传的参数为:{}",beginTime);
+        Wrapper<List<DeliverEveryRunDTO>>  deliverResult=tfcQueryEveryDeliveryService.queryDeliverEveryRun(beginTime);
+        logger.info("调用运输中心的统计接口传的响应为:{}",deliverResult.getCode());
+        if(deliverResult.getCode()==Wrapper.SUCCESS_CODE){
+            List<DeliverEveryRunDTO> tfcDeliverEveryRunDTOList=deliverResult.getResult();
+            if(!CollectionUtils.isEmpty(tfcDeliverEveryRunDTOList)){
+                logger.info("调用运输中心的统计接口查询的结果为:{}",tfcDeliverEveryRunDTOList);
+                for (DeliverEveryRunDTO deliverEveryRunDTO:tfcDeliverEveryRunDTOList){
+                    StringBuilder key=new StringBuilder();
+                    if(!(PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getBaseCode()))){
+                        key.append(deliverEveryRunDTO.getAreaCode()).append(deliverEveryRunDTO.getBaseCode());
+                    }else if(!PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getBaseCode())){
+                        key.append(deliverEveryRunDTO.getAreaCode());
+                    }else{
+                        key.append("ALL");
+                    }
+                    if(accountDailyResult.containsKey(key.toString())){
+                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
+                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
+                        ofcDailyAccount.setExternalVehicleAccount(BigDecimal.valueOf(deliverEveryRunDTO.getNum()));
+                        BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount()==null?new BigDecimal(0.0):ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
+                        //应付确认日清 应付确认车数量/外部车辆发运数量
+                        ofcDailyAccount.setPayable(p.setScale(2));
+                        ofcDailyAccount.setPayablePercent(percent.format(p.doubleValue()));
+                        ofcOrderAccountDTO.setPayable(p.setScale(2));
+                        ofcOrderAccountDTO.setPayablePercent(percent.format(p.doubleValue()));
+                    }
+                 }
+            }else{
+                logger.info("调用运输中心统计外部车辆发运数量为空");
+            }
+        }
+
+        List<OfcOrderAccountDTO> dailyAccountInfo=new ArrayList<>();
+        Iterator iter = accountDailyResult.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String, OfcDailyAccount> entry = (Map.Entry<String, OfcDailyAccount>) iter.next();
+            OfcDailyAccount ofcDailyAccount=entry.getValue();
+            if(ofcDailyAccount.getAdditionalOrder()==null){
+                ofcDailyAccount.setAdditionalOrder(new BigDecimal(0.0));
+            }
+            if(ofcDailyAccount.getReceivable()==null){
+                ofcDailyAccount.setReceivable(new BigDecimal(0.0));
+            }
+            if(ofcDailyAccount.getPayable()==null){
+                ofcDailyAccount.setPayable(new BigDecimal(0.0));
+            }
+            BigDecimal total=ofcDailyAccount.getReceivable().add(ofcDailyAccount.getPayable()).subtract(ofcDailyAccount.getAdditionalOrder());
+
+            ofcDailyAccount.setTotal(total.setScale(2));
+            ofcDailyAccount.setTotalPercent(percent.format(total.doubleValue()));
+            ofcDailyAccountsService.save(ofcDailyAccount);
+        }
+        Iterator itera = account.entrySet().iterator();
+        while (itera.hasNext()) {
+            Map.Entry<String, OfcOrderAccountDTO> entry = (Map.Entry<String, OfcOrderAccountDTO>) itera.next();
+            OfcOrderAccountDTO ofcOrderAccountDTO=entry.getValue();
+            if(ofcOrderAccountDTO.getAdditionalOrder()==null){
+                ofcOrderAccountDTO.setAdditionalOrder(new BigDecimal(0.0));
+            }
+            if(ofcOrderAccountDTO.getReceivable()==null){
+                ofcOrderAccountDTO.setReceivable(new BigDecimal(0.0));
+            }
+            if(ofcOrderAccountDTO.getPayable()==null){
+                ofcOrderAccountDTO.setPayable(new BigDecimal(0.0));
+            }
+            BigDecimal total=ofcOrderAccountDTO.getReceivable().add(ofcOrderAccountDTO.getPayable()).subtract(ofcOrderAccountDTO.getAdditionalOrder());
+            ofcOrderAccountDTO.setTotal(total.setScale(2));
+            ofcOrderAccountDTO.setTotalPercent(percent.format(total.doubleValue()));
+
+            dailyAccountInfo.add(ofcOrderAccountDTO);
+        }
+
+        //排除基地和大区为空的数据
+        Iterator it=dailyAccountInfo.iterator();
+        while( it.hasNext()){
+            OfcOrderAccountDTO dto= (OfcOrderAccountDTO) it.next();
+            if(PubUtils.isSEmptyOrNull(dto.getBaseCode())&&PubUtils.isSEmptyOrNull(dto.getAreaCode())){
+                it.remove();
+            }
+        }
+
+        //按 应收确认日清 + 应付确认日清 - 事后补录订单 排序
+        Collections.sort(dailyAccountInfo,new Comparator<OfcOrderAccountDTO>(){
+            public int compare(OfcOrderAccountDTO o1, OfcOrderAccountDTO o2) {
+                if(o1.getTotal().doubleValue()<o2.getTotal().doubleValue()){
+                    return 1;
+                }else if(o1.getTotal().doubleValue()>o2.getTotal().doubleValue()){
+                    return -1;
+                }else{
+                  return 0;
+                }
+            }
+        });
+        return dailyAccountInfo;
     }
 
     /**

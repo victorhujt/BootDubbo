@@ -7,6 +7,7 @@ import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.mapper.OfcDailyAccountMapper;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
@@ -38,6 +39,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderScreenMapper ofcOrderScreenMapper;
     @Resource
     private OfcOrderOperMapper ofcOrderOperMapper;
+
+    @Resource
+    private OfcDailyAccountMapper ofcDailyAccountMapper;
+
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
 
@@ -403,5 +408,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             throw new BusinessException("查询当前登录用户组织信息出错:{}",allGroupByType.getMessage());
         }
     }
+
+
 
 }

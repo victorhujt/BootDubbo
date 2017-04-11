@@ -11,6 +11,8 @@
     <hsf:consumer id="uamAuthEdasService" interface="com.xescm.uam.provider.UamAuthEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="uamGroupEdasService" interface="com.xescm.uam.provider.UamGroupEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="uamUserEdasService" interface="com.xescm.uam.provider.UamUserEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="chatRobotEdasService" interface="com.xescm.uam.provider.ChatRobotEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+
 
     <!-- 客户中心 -->
     <hsf:consumer id="cscContactEdasService" interface="com.xescm.csc.provider.CscContactEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
@@ -23,6 +25,7 @@
     <hsf:consumer id="cscContactCompanyEdasService" interface="com.xescm.csc.provider.CscContactCompanyEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
     <!-- 结算中心 -->
     <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="acSettleStatisticsEdasService" interface="com.xescm.ac.provider.AcSettleStatisticsEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
     <hsf:consumer id="acModifyOrderEdasService" interface="com.xescm.ac.provider.AcModifyOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
 
     <!-- 资源中心 -->
@@ -46,6 +49,6 @@
 
     <!--运输中心-->
     <hsf:consumer id="cancelOrderEdasService" interface="com.xescm.tfc.edas.service.CancelOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="tfcQueryEveryDeliveryService" interface="com.xescm.tfc.edas.service.TfcQueryEveryDeliveryService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="tfcUpdateOrderEdasService" interface="com.xescm.tfc.edas.service.TfcUpdateOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-
 </beans>
