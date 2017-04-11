@@ -98,11 +98,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
             OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusMapper.orderStatusSelectNew(mapperMap);
-            OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+            OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
             if(orderNewstatus==null
                     || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
                     || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
-                ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
                 OfcOrderNewstatus orderNewstatu=new OfcOrderNewstatus();
                 orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
                 orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
@@ -144,6 +143,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
                 || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
             ofcOrderStatus = ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
+            if (null == ofcOrderStatus) {
+                logger.error("查不到该订单的状态, 订单号: {}", orderCode);
+                return new OfcOrderStatus();
+            }
             OfcOrderNewstatus orderNewstatu=new OfcOrderNewstatus();
             orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
             orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());

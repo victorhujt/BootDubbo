@@ -22,31 +22,30 @@
       ofc_address_reflect oar
       <set>
         <if test="province != null and province != ''">
-          oar.province = #{province},
+          oar.province = #{province, jdbcType=VARCHAR},
         </if>
         <if test="provinceCode != null and provinceCode != ''">
-          oar.province_code = #{provinceCode},
+          oar.province_code = #{provinceCode, jdbcType=VARCHAR},
         </if>
         <if test="city != null and city != ''">
-          oar.city = #{city},
+          oar.city = #{city, jdbcType=VARCHAR},
         </if>
         <if test="cityCode != null and cityCode != ''">
-          oar.city_code = #{cityCode},
+          oar.city_code = #{cityCode, jdbcType=VARCHAR},
         </if>
         <if test="district != null and district != ''">
-          oar.district = #{district},
+          oar.district = #{district, jdbcType=VARCHAR},
         </if>
         <if test="districtCode != null and districtCode != ''">
-          oar.district_code = #{districtCode},
+          oar.district_code = #{districtCode, jdbcType=VARCHAR},
         </if>
         <if test="street != null and street != ''">
-          oar.street = #{street},
+          oar.street = #{street, jdbcType=VARCHAR},
         </if>
         <if test="streetCode != null and streetCode != ''">
-          oar.street_code = #{streetCode}
+          oar.street_code = #{streetCode, jdbcType=VARCHAR},
         </if>
-        WHERE
-        oar.address = #{address}
       </set>
+      WHERE oar.address = #{address, jdbcType=VARCHAR}
     </update>
 </mapper>
