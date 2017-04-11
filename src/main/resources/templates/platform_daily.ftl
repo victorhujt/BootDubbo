@@ -6,15 +6,13 @@
     <title>平台使用情况日报</title>
 </head>
 <body>
-<div id="app">
+<div id="app" :class="normal">
     <img class='bg1' src='${(OFC_WEB_URL)!}/img/background-image-1.png'>
     <img class='bg2' src='${(OFC_WEB_URL)!}/img/background-image-2.png'>
     <img class='theme' src='${(OFC_WEB_URL)!}/img/theme.png'>
     <div class='limit'>
         <img class='transitionOne' src='${(OFC_WEB_URL)!}/img/transtion-1.png'>
         <img class='transitionTwo' src='${(OFC_WEB_URL)!}/img/transtion-2.png'>
-        <#--<div class='transitionOne' style="background:url('${(OFC_WEB_URL)!}/img/transtion-1.png')"></div>-->
-        <#--<div class='transitionTwo' style="background:url('${(OFC_WEB_URL)!}/img/transtion-2.png')"></div>-->
     </div>
     <div class='city'>
         <img src="${(OFC_WEB_URL)!}/img/city-1.png">
@@ -23,7 +21,7 @@
     <div class="warehouseCotent">
         <div v-for="(index,content) in jsonData" class="warehouses height">
             <p>
-                <span class="warehouseName">{{content.baseName==null?"":content.baseName}}</span>
+                <span class="warehouseName">{{content.baseName==null?"未命名":content.baseName}}</span>
                 <span class="custom">
 							<span class="one borderColor"></span>
 							<span class="three borderColor"></span>
@@ -31,10 +29,13 @@
                 <span class="ranking">目前排名为第 <i>{{index+1}}</i> 位</span>
             </p>
             <div class="externals">
-                <span class="external"><p>{{content.additionalOrderPercent==null?"0%":content.additionalOrderPercent}}</p>事后补录订单</span>
-                <span class="external"><p>{{content.receivablePercent==null?"0%":content.receivablePercent}}</p>应收确认日清</span>
-                <span class="external"><p>{{content.payablePercent==null?"0%":content.payablePercent}}</p>应付确认日清</span>
+                <span class="external"><p>{{content.additionalOrderPercent==null?"0%":content.additionalOrderPercent}}</p><p>事后补录订单</p></span>
+                <span class="external"><p>{{content.receivablePercent==null?"0%":content.receivablePercent}}</p><p>应收确认日清</p></span>
+                <span class="external"><p>{{content.payablePercent==null?"0%":content.payablePercent}}</p><p>应付确认日清</p></span>
             </div>
+        </div>
+        <div class="warehouses littleHeight" v-if="jsonMessage != null">
+            {{jsonMessage}}
         </div>
     </div>
 </div>
@@ -56,22 +57,30 @@
         data:function() {
             return {
                 jsonData:[],
-                ofcUrl:'${ofcUrl!}'
+                ofcUrl:'${ofcUrl!}',
+                jsonMessage:null,
+                normal:""
             }
         },
         created:function(){
             var _this = this;
             CommonClient.post(_this.ofcUrl+"/ofc/queryDailyAccount",{},function(data){
+                var number = 0;
                 if(data.result.length>0){
                     for(var i=0;i<data.result.length;i++){
                         if(data.result[i].baseCode!=""){
                             _this.jsonData.push(data.result[i]);
                         }
                     }
+                    if(number == 0){
+                        _this.jsonMessage = "今日的数据源还未生成";
+                        _this.normal="abnormal";
+                    }
+                }else{
+                    _this.jsonMessage = "今日的数据源还未生成";
+                    _this.normal="abnormal";
                 }
             },"json");
-        },
-        methods:{
         }
     })
 </script>

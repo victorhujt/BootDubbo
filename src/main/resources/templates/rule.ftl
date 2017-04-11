@@ -7,15 +7,13 @@
     <title>平台日报规则</title>
 </head>
 <body>
-<div id="app">
+<div id="app" class="abnormal">
     <img class='bg1' src='${(OFC_WEB_URL)!}/img/background-image-1.png'>
     <img class='bg2' src='${(OFC_WEB_URL)!}/img/background-image-2.png'>
     <img class='theme' src='${(OFC_WEB_URL)!}/img/theme.png'>
     <div class='limit'>
         <img class='transitionOne' src='${(OFC_WEB_URL)!}/img/transtion-1.png'>
         <img class='transitionTwo' src='${(OFC_WEB_URL)!}/img/transtion-2.png'>
-    <#--<div class='transitionOne' style="background:url('${(OFC_WEB_URL)!}/img/transtion-1.png')"></div>-->
-    <#--<div class='transitionTwo' style="background:url('${(OFC_WEB_URL)!}/img/transtion-2.png')"></div>-->
     </div>
     <div class='city'>
         <img src="${(OFC_WEB_URL)!}/img/city-1.png">
@@ -45,9 +43,6 @@
                     {content:'“鲜易供应链”致力于以电子商务和网络公共平台为依托，整合国内外温控供应链行业资源，推进“云仓网、运输网、共配网、信息网”的深度融合，打造统一、安全、高效、协同的国内最有影响力的一站式温控供应链服务平台。目前我国冷链信息化水平低，技术落后。由'}
                 ]
             }
-        },
-        methods:{
-
         }
     })
 </script>

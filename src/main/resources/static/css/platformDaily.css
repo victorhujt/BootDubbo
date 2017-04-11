@@ -65,6 +65,12 @@ body{
 .height{
 	height:2.4rem;
 }
+.littleHeight{
+	height:1.5rem;
+	line-height: 1.5rem;
+	color:#c1c1c1;
+	text-align: center;
+}
 .warehouseCotent div:last-child{
 	/*margin-bottom:0;*/
 }
@@ -100,27 +106,30 @@ body{
     margin: 0 auto;
 }
 .warehouses div span.external{
-    border-radius: 50%;
-    display: block;
-    float: left;
-    width: 20.3%;
-    height: 64%;
-    border: 0.05rem solid #cc6935;
-    background: #0f0c0b;
-    margin: 0.36rem;
-    box-sizing: border-box;
-    font-size: 0.16rem;
-    text-align: center;
-    color: #fff;
-    font-weight: 200;
+	border-radius: 50%;
+	display: block;
+	float: left;
+	width: 22.4%;
+	height: 69%;
+	border: 0.05rem solid #cc6935;
+	background: #0f0c0b;
+	margin: 0.3rem;
+	box-sizing: border-box;
 }
-.external p{
+.external p:first-child{
 	text-align: center;
     color: #228eeb;
     height: 63%;
     font-size: 0.32rem;
     line-height: 0.89rem;
     font-weight: 500;
+}
+.external P:last-child{
+	font-size: 0.13rem;
+	text-align: center;
+	color: #fff;
+	font-weight: 200;
+	line-height: 1.2;
 }
 .footer{
 	display: block;
@@ -252,4 +261,10 @@ body{
 	width:0;
 	border-left: 0.15rem solid #193659;
 	border-right: 0.15rem solid transparent;
+}
+.abnormal{
+	position:absolute;
+	top:0;
+	height:100%;
+	overflow: hidden;
 }
