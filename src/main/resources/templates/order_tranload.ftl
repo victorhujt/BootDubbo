@@ -377,7 +377,7 @@
                         </div>
                     </div></div>
           <div>
-              <label class="control-label col-label no-padding-right" for="custOrderCode">客户订单号</label>
+              <label class="control-label col-label no-padding-right" for="custOrderCode" style="margin-left: 26px;">客户订单号</label>
               <div class="col-width-168 padding-15">
                   <div class="clearfix col-width-168">
                 <input class="col-width-168"  name="custOrderCode" id="custOrderCode" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" type="text" placeholder="客户订单号" style="padding-left:8px;" />

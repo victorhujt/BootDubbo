@@ -455,7 +455,7 @@
                </button></span>-->
 
         </div></div>
-      <div> <label class="control-label col-label no-padding-right l-bj" for=""><span class="w-label-icon">*</span>配送仓库</label>
+      <div> <label class="control-label col-label no-padding-right l-bj" for="">配送仓库</label>
         <div class="width-267">
           <div class="clearfix" style="width:245px;">
             <select  id="warehouseCode" name="warehouseCode" onclick="warehouseByCust()" class="chosen-select">
