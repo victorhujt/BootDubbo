@@ -31,9 +31,6 @@ import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
 import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
-import com.xescm.ofc.enums.BusinessTypeEnum;
-import com.xescm.ofc.enums.OrderSourceEnum;
-import com.xescm.ofc.enums.PlatformTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
@@ -1224,6 +1221,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
             StringBuilder key=new StringBuilder();
             key.append(ofcGoodsDetails.getGoodsCode());
+            if(!StringUtils.isEmpty(ofcGoodsDetails.getSupportBatch())){
+                key.append(ofcGoodsDetails.getSupportBatch());
+            }
             if(!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())){
                 key.append(ofcGoodsDetails.getProductionBatch());
             }
@@ -1642,6 +1642,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 //仓储带运输订单推仓储中心和运输中心
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
+                    pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
                 }
             } else {
                 logger.error("订单类型有误");
