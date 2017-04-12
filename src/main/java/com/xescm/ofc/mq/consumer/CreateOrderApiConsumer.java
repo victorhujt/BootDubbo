@@ -13,17 +13,19 @@ import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
-import com.xescm.ofc.model.dto.dms.DmsTransferStatusDto;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.GoodsAmountSyncService;
+import com.xescm.ofc.service.OfcOrderStatusService;
+import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,25 +38,22 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     private Logger logger = LoggerFactory.getLogger(CreateOrderApiConsumer.class);
 
-    @Autowired
+    @Resource
     private CreateOrderService createOrderService;
 
-    @Autowired
+    @Resource
     private CreateOrderApiProducer createOrderApiProducer;
 
-    @Autowired
+    @Resource
     private OfcPlanFedBackService ofcPlanFedBackService;
     
-    @Autowired
+    @Resource
     private OfcOrderStatusService ofcOrderStatusService;
 
-    @Autowired
-    private OfcDmsCallbackStatusService ofcDmsCallbackStatusService;
-
-    @Autowired
+    @Resource
     private GoodsAmountSyncService goodsAmountSyncService;
 
-    @Autowired
+    @Resource
     private MqConfig mqConfig;
 
     private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
@@ -94,20 +93,6 @@ public class CreateOrderApiConsumer implements MessageListener {
                         createOrderApiProducer.sendCreateOrderResultMQ(result, code);
                     }
                 }
-            }else if(message.getTag().equals("DMS2OFC")){
-                //接收分拣中心回传的状态
-                logger.info("分拣中心状态反馈的消息体:{}",messageBody);
-                logger.info("订单中心消费分拣中心状态反馈开始消费topic:{},tag:{},key{}",topicName,tag,key);
-                DmsTransferStatusDto dmsTransferStatusDto = null;
-                try {
-                    dmsTransferStatusDto = JSON.parseObject(messageBody,DmsTransferStatusDto.class);
-                    if(!keyList.contains(key)){
-                        ofcDmsCallbackStatusService.receiveDmsCallbackStatus(dmsTransferStatusDto);
-                        keyList.add(key);
-                    }
-                }catch (Exception ex){
-                    logger.error("订单中心消费分拣中心状态反馈出错:{}",ex.getMessage(),ex);
-                }
             }else if(message.getTag().equals("goodsAmountSync")){//众品订单交货量同步接口
                 //接收分拣中心回传的状态
                 logger.info("对接中心订单交货量调整消息体:{}",messageBody);
@@ -115,14 +100,11 @@ public class CreateOrderApiConsumer implements MessageListener {
                 GoodsAmountSyncDto goodsAmountSyncDto;
                 try {
                     goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
-//                    if(!keyList.contains(key)){
-                        goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
-//                        keyList.add(key);
-//                    }
+                    goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
                 } catch (Exception e) {
                     logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
+                    return Action.ReconsumeLater;
                 }
-
             }
 
         }else if(StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())){

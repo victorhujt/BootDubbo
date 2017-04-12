@@ -10,6 +10,7 @@ import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
+import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
@@ -59,6 +60,9 @@ public class OfcJumpontroller extends BaseController{
     private UamGroupEdasService uamGroupEdasService;
     @Resource
     private OfcMobileOrderService ofcMobileOrderService;
+
+    @Resource
+    private RestConfig restConfig;
 
 
     @RequestMapping(value="/ofc/orderPlace")
@@ -434,7 +438,19 @@ public class OfcJumpontroller extends BaseController{
         return modelAndView;
     }
 
+    @RequestMapping(value = "/ofc/platformDaily")
+    public ModelAndView platformDaily(Model model) {
+        ModelAndView modelAndView = new ModelAndView("platform_daily");
+        model.addAttribute("ofcUrl",restConfig.getOfcWebUrl());
+        return modelAndView;
+    }
 
+    @RequestMapping(value = "/ofc/rule")
+    public ModelAndView platformDailyrRule(Model model) {
+        ModelAndView modelAndView = new ModelAndView("rule");
+        model.addAttribute("ofcUrl",restConfig.getOfcWebUrl());
+        return modelAndView;
+    }
 
     /**
      * 运营中心--跳转导入模板配置

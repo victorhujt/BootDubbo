@@ -652,9 +652,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 field.setAccessible(true);
                                 field.set(ofcStorageTemplateDto,bigDecimal);
                             } catch (Exception e) {
-                                logger.error("当前行:{},列:{} 单价校验失败", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                logger.error("当前行:{},列:{} 单价校验失败, 异常信息: {}", rowNum + 1, cellNum + 1, e);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getStandardColName());
+                                throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getStandardColName());
                             }
                             //入库数量 or  出库数量//必填列名
                         }else if(StringUtils.equals(StorageImportInEnum.QUANTITY.getStandardColCode(), standardColCode)){
@@ -674,9 +674,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     field.setAccessible(true);
                                     field.set(ofcStorageTemplateDto,bigDecimal);
                                 } catch (Exception e) {
-                                    logger.error("当前行:{},列:{} 入库数量 or  出库数量校验失败", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                    throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
+                                    logger.error("当前行:{},列:{} 入库数量 or  出库数量校验失败 异常信息: {}", rowNum + 1, cellNum + 1, e);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getStandardColName());
+                                    throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getStandardColName());
                                 }
                             }else{
                                 checkPass = false;
@@ -843,6 +843,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             //校验该电话格式是否正确
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
 
                             boolean matchesPot = PubUtils.isMobileNumber(cellValue);
                             if(!matchesPot){
@@ -850,19 +851,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 checkPass = false;
                                 continue;
                             }
-                            BigDecimal bigDecimal = new BigDecimal(cellValue);
-                            Field field;
-                            try {
-                                field = clazz.getDeclaredField(standardColCode);
-                                field.setAccessible(true);
-                                field.set(ofcStorageTemplateDto,bigDecimal);
-                            } catch (Exception e) {
-                                logger.error("当前行:{},列:{} 联系电话校验失败", rowNum + 1, cellNum + 1);
-                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getReflectColName());
-                            }
-
-//                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //收货方名称//必填列名
                         }else if(StringUtils.equals(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){

@@ -50,4 +50,6 @@ public interface OfcOrderOperMapper {
      * @return 订单商品明细
      */
     List<OfcOrderDetailInfoDto> getOrderDetailInfoByQrderCode(@Param("orderCode") String orderCode);
+
+
 }

@@ -71,7 +71,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="备注" class="xe-col-3">
-                    <el-input type="textarea" v-model="notes" :readOnly="true">
+                    <el-input type="textarea" v-model="notes" :disabled="true">
                 </el-form-item>
             </div>
             <div class="xe-block">
@@ -303,7 +303,12 @@
                 }, {
                     value: '614',
                     label: '分拨出库'
-                }],
+                },
+                {
+                    value: '617',
+                    label: '退车间'
+                }
+                ],
                 orderStatusOptions:[
                     {
                         value: '10',

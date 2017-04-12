@@ -16,10 +16,11 @@ import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.domain.OfcTransplanInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
@@ -38,9 +39,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -74,36 +74,9 @@ public class OfcOrderManageRest extends BaseController{
     @Resource
     private CscStoreEdasService cscStoreEdasService;
     @Resource
-    private OfcTransplanInfoService ofcTransplanInfoService;
-    @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-
-    /**
-     * 订单审核/反审核
-     * @param orderCode  订单编号
-     * @param orderStatus   订单状态
-     * @param reviewTag     审核标记
-     * @return      Wrapper
-     */
-    @RequestMapping(value = "/orderOrNotAudit", method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> orderAudit(String orderCode, String orderStatus, String reviewTag){
-        logger.info("==>订单中心订单管理订单审核反审核订单code orderCode={}", orderCode);
-        logger.info("==>订单中心订单管理订单审核反审核订单状态code orderStatus={}", orderStatus);
-        logger.info("==>订单中心订单管理订单审核反审核标志位 reviewTag={}", reviewTag);
-        String result;
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        try {
-            result = ofcOrderManageService.orderAudit(orderCode,orderStatus,reviewTag,authResDtoByToken);
-        }catch (BusinessException ex){
-            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        }catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现未知异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
-    }
+    @Resource
+    private  OfcDailyAccountsService ofcDailyAccountsService;
 
     /**
      * 订单删除
@@ -290,95 +263,6 @@ public class OfcOrderManageRest extends BaseController{
     }
 
     /**
-     * 计划单修改
-     * @param planCode  计划单编号
-     * @param planStatus    计划单状态
-     * @param serviceProviderName   服务商
-     * @param serviceProviderContact    服务商联系人
-     * @param serviceProviderContactPhone   服务商联系电话
-     * @return  Wrapper
-     */
-    @RequestMapping(value = "/planUpdate", method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> planUpdate(String planCode, String planStatus, String serviceProviderName
-            ,String serviceProviderContact,String serviceProviderContactPhone){
-        logger.info("==>计划单编号", planCode);
-        logger.info("==>计划单资源分配状态", planStatus);
-        logger.info("==>服务商名称", serviceProviderName);
-        String result;
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
-        String userName=authResDtoByToken.getUserName();
-
-        try {
-            result = ofcOrderManageService.planUpdate(planCode,planStatus,serviceProviderName,serviceProviderContact,serviceProviderContactPhone,userName);
-        } catch (BusinessException ex) {
-            logger.error("计划单状态更新出错:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("计划单状态更新出错:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-        }
-
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
-    }
-
-    /**
-     * 服务商筛选
-     * @param planCode 计划单编号
-     * @param response ServletResponse
-     */
-    @ApiOperation(value="服务商筛选", notes="根据查询条件筛选服务商")
-    @ApiImplicitParams({
-            //@ApiImplicitParam(name = "cscGoods", value = "服务商筛选条件", required = true, dataType = "CscGoods"),
-    })
-    @RequestMapping(value = "/planSeleForTime", method = RequestMethod.POST)
-    @ResponseBody
-    public void planSeleForTime( String planCode,ServletResponse response){
-        logger.info("==>订单中心订单管理订单审核反审核订单code orderCode={}", planCode);
-        OfcTransplanInfo ofcTransplanInfo= ofcTransplanInfoService.selectByKey(planCode);
-        RmcCompanyLineQO rmcCompanyLineQO=new RmcCompanyLineQO();
-        if(ofcTransplanInfo.getExpectedArrivedTime()!=null){
-            Calendar ca=Calendar.getInstance();
-            ca.setTime(ofcTransplanInfo.getExpectedArrivedTime());
-            ca.add(Calendar.HOUR_OF_DAY, 3);
-            rmcCompanyLineQO.setDepartureTime(ca.getTime());
-        }else if(ofcTransplanInfo.getOrderTime()!=null){
-            Calendar ca=Calendar.getInstance();
-            ca.setTime(ofcTransplanInfo.getOrderTime());
-            ca.add(Calendar.HOUR_OF_DAY, 3);
-            rmcCompanyLineQO.setDepartureTime(ca.getTime());
-        }else {
-            logger.error("订单中心筛选服务商出现异常:{}");
-            return;
-        }
-        if(!trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("")
-                && !trimAndNullAsEmpty(rmcCompanyLineQO.getBeginCityName()).equals("~")
-                && rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/").length>=2){
-
-            String beginCity[]=rmcCompanyLineQO.getBeginCityName().split("~")[0].split("/");
-            rmcCompanyLineQO.setBeginCityName(beginCity[1]);
-        }else{
-            rmcCompanyLineQO.setBeginCityName(null);
-        }
-        if(!trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("")
-                && !trimAndNullAsEmpty(rmcCompanyLineQO.getArriveCityName()).equals("~")
-                && rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/").length>=2){
-            String arriveCity[]=rmcCompanyLineQO.getArriveCityName().split("~")[0].split("/");
-            rmcCompanyLineQO.setArriveCityName(arriveCity[1]);
-        }else {
-            rmcCompanyLineQO.setArriveCityName(null);
-        }
-        Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = rmcCompanyInfoEdasService.queryCompanyLine(rmcCompanyLineQO);
-        try{
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcCompanyLists.getResult()));
-        }catch (Exception ex){
-            logger.error("订单中心筛选服务商出现异常:{}", ex.getMessage(), ex);
-        }
-
-    }
-
-    /**
      *
      * @param ofcOrderDTOStr 订单信息
      * @param orderGoodsListStr  货品信息
@@ -545,5 +429,21 @@ public class OfcOrderManageRest extends BaseController{
         }
         return "order_manage_opera";
     }
+
+    @RequestMapping(value ="queryDailyAccount", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<?> queryDailyAccount(){
+        List<OfcDailyAccountVo> OfcDailyAccountVos;
+        try{
+            OfcDailyAccountVos=ofcDailyAccountsService.queryDailyAccount(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE2));
+            logger.info("查询平台日报数据为:{}",OfcDailyAccountVos);
+        }catch (Exception e){
+            logger.error("查询平台日报数据异常:{}",e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"查询平台日报数据异常");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"查询平台日报数据成功",OfcDailyAccountVos);
+    }
+
+
 
 }

@@ -36,7 +36,7 @@ public class OfcStorageTemplateDto {
     private String provideTransport;
     private String plateNumber;
     private String driverName;
-    private String contactNumbe;
+    private String contactNumber;
     private String consigneeName;//收货方名称
     //上面部分字段是Excel表中的字段, 但是下单的话还需要其他字段的补充
     private CscContantAndCompanyResponseDto cscConsigneeDto = new CscContantAndCompanyResponseDto();
