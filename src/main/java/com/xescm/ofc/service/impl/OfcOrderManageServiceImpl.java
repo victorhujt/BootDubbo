@@ -738,7 +738,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      */
     @Override
     public void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
-            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, OfcWarehouseInformation ofcWarehouseInformation) {
         AcOrderDto acOrderDto = new AcOrderDto();
         try {
             AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
@@ -763,7 +763,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             acOrderDto.setAcFinanceInformation(acFinanceInformation);
             acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
             acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
-
+            if (null != ofcWarehouseInformation && null != ofcWarehouseInformation.getProvideTransport()) {
+                acOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport().toString());
+            }
         } catch (Exception e) {
             logger.error("订单信息推送结算中心 转换异常, {}", e);
         }
@@ -1634,7 +1636,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode)) {
                     this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
                 }
-                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
+                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
             }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
@@ -1660,7 +1662,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 //仓储带运输订单推仓储中心和运输中心
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
-                    pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList);
+                    pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsList, ofcWarehouseInformation);
                 }
             } else {
                 logger.error("订单类型有误");
@@ -2113,7 +2115,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             String orderType = ofcFundamentalInformation.getOrderType();
 
 
-            this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
+            this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, null);
             if (trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
