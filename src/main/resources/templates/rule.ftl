@@ -7,7 +7,7 @@
     <title>平台日报规则</title>
 </head>
 <body>
-<div id="app" class="abnormal">
+<div id="app" class="abnormal" v-cloak>
     <img class='bg1' src='${(OFC_WEB_URL)!}/img/background-image-1.png'>
     <img class='bg2' src='${(OFC_WEB_URL)!}/img/background-image-2.png'>
     <img class='theme' src='${(OFC_WEB_URL)!}/img/theme.png'>
@@ -22,18 +22,19 @@
     <div class="warehouseCotent">
         <div class="warehouses rules">
             <h2>{{theme}}</h2>
-            <span class="paragraph" v-for="(content,index) in paragraph">{{content.content}}</span>
+            <span class="paragraph" v-for="content in paragraph">{{content.content}}</span>
         </div>
     </div>
 </div>
 </body>
 <link rel="stylesheet" type="text/css" href="${(OFC_WEB_URL)!}/css/platformDaily.css">
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/vue.min.js"></script>
+<#--<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
 <script type="text/javascript">
     document.documentElement.style.fontSize=document.documentElement.clientWidth/6.4+'px';
     //通过resize事件 监听当前窗口大小变化
     window.addEventListener("resize",function(){document.documentElement.style.fontSize=document.documentElement.clientWidth/6.4+'px';});
-    var me=new Vue({
+    new Vue({
         el:"#app",
         data(){
             return{

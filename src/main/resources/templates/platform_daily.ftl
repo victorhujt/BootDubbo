@@ -6,7 +6,7 @@
     <title>平台使用情况日报</title>
 </head>
 <body>
-<div id="app" :class="normal">
+<div id="app" :class="normal" v-cloak>
     <img class='bg1' src='${(OFC_WEB_URL)!}/img/background-image-1.png'>
     <img class='bg2' src='${(OFC_WEB_URL)!}/img/background-image-2.png'>
     <img class='theme' src='${(OFC_WEB_URL)!}/img/theme.png'>
@@ -38,13 +38,11 @@
 </div>
 </body>
 <link rel="stylesheet" type="text/css" href="${(OFC_WEB_URL)!}/css/platformDaily.css">
-<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/vue.js"></script>
+<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/vue.min.js"></script>
 <script type="text/javascript" src="${(OFC_WEB_URL)!}/js/common/common-client.js"></script>
-<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/jquery.js"></script>
+<script type="text/javascript" src="${(OFC_WEB_URL)!}/js/jquery.min.js"></script>
 <script type="text/javascript" src="${(OFC_WEB_URL)!}/js/common/jquery.blockUI.js"></script>
 <script type="text/javascript" src="${(OFC_WEB_URL)!}/plugins/layui/layer/layer.js"></script>
-
-
 <script type="text/javascript">
     document.documentElement.style.fontSize=document.documentElement.clientWidth/6.4+'px';
     //通过resize事件 监听当前窗口大小变化
