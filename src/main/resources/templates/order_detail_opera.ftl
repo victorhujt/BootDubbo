@@ -684,6 +684,8 @@
             value = "退货入库";
         } else if (businessType == "623") {
             value = "加工入库";
+        }else if(businessType == "617"){
+            value = "退车间";
         }
         return value;
     }

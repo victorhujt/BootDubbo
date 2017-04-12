@@ -626,7 +626,10 @@
         value = "其他入库";
       } else if (order.businessType == "627") {
         value = "分拨入库";
+      }else if(order.businessType == "617"){
+          value = "退车间";
       }
+
       return value;
     }
 
