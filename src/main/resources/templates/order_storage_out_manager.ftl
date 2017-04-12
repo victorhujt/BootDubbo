@@ -48,7 +48,7 @@
                 <el-table-column property="channel" label="渠道"></el-table-column>
                 <el-table-column property="productType" label="产品类别"></el-table-column>
             </el-table>
-            <el-pagination @size-change="handleCustomerSizeChange" @current-change="handleCustomerCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="customerPageSize" :total="total" layout="total, sizes, prev, pager, next, jumper">
+            <el-pagination @size-change="handleCustomerSizeChange" @current-change="handleCustomerCurrentPage" :current-page="customerCurrentPage" :page-sizes="pageSizes" :page-size="customerPageSize" :total="totalCustomer" layout="total, sizes, prev, pager, next, jumper">
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectCustomer">取 消</el-button>
@@ -187,7 +187,7 @@
                 <el-table-column property="baseName" label="基地名称"></el-table-column>
                 <el-table-column property="exceptionReason" label="异常原因"></el-table-column>
             </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="orderCurrentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalOrder">
             </el-pagination>
         </div>
     </div>
@@ -206,7 +206,8 @@
             isDisabledRepeatAudit:false,
             currentRow:'',
             currentCustomerRow:'',
-            currentPage:1,
+            orderCurrentPage:1,
+            customerCurrentPage:1,
             formLabelWidth: '100px',
             formLabelWidth20: '20px',
             pageSize:10,
@@ -214,7 +215,6 @@
             pageSizes:[10, 20, 30, 40,50],
             customerData:[],
             customerPageSize:10,
-            currentCustomerPage:1,
             wareHouseName:'',
             businessType:'',
             areaName:'',
@@ -224,7 +224,8 @@
             customerName:'',
             customerCode:'',
             customerOrderCode:'',
-            total:0,
+            totalOrder:0,
+            totalCustomer:0,
             chosenCusForm: {
                 name: ''
             },
@@ -348,7 +349,7 @@
                     window.open(html.substring(0,index) + "/index#" + url);
             },
             handleCustomerCurrentPage:function(val) {
-                this.currentCustomerPage = val;
+                this.customerCurrentPage = val;
                 this.selectCustomer();
             },
             setCurrentCustInfo:function(val) {
@@ -359,25 +360,32 @@
             cancelSelectCustomer:function(){
                 this.customerData=[];
                 this.customerPageSize=10;
-                this.total=0;
+                this.totalCustomer=0;
                 this.chosenCus=false;
             },
             handleCustomerCurrentPage:function(val) {
-                this.currentCustomerPage = val;
+                this.customerCurrentPage = val;
                 this.selectCustomer();
             },
             selectCustomer:function(){
                 var param = {};
-                param.pageNum = this.currentCustomerPage;
+                param.pageNum = this.customerCurrentPage;
                 param.pageSize=this.customerPageSize;
                 param.custName = this.chosenCusForm.name;
                 this.customerData=[];
                 var vueObj=this;
-                CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param,
+                CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryCustomerByName", param,
                         function(result) {
-                            if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                            if (result == undefined || result == null || result.result == null ||  result.result.length == 0 || result.result.list == null) {
+                                vueObj.totalCustomer=0;
+                                vueObj.customerCurrentPage=0;
                                 layer.msg("暂时未查询到客户信息！！");
                             } else if (result.code == 200) {
+                                if(result.result.length == 0){
+                                    vueObj.totalCustomer=0;
+                                    vueObj.customerCurrentPage=0;
+                                    layer.msg("暂时未查询到客户信息！！");
+                                }
                                 $.each(result.result.list,function (index,cscCustomerVo) {
                                     var channel = cscCustomerVo.channel;
                                     if(null == channel){
@@ -398,7 +406,7 @@
                                     customer.productType=cscCustomerVo.productType;
                                     vueObj.customerData.push(customer);
                                 });
-                                vueObj.total=result.result.total;
+                                vueObj.totalCustomer=result.result.total;
                             } else if (result.code == 403) {
                                 vueObj.promptInfo("没有权限","error");
                             }
@@ -634,7 +642,7 @@
                 return true;
             },
             handleCurrentPage:function(val){
-                this.currentPage=val;
+                this.orderCurrentPage=val;
                 this.selectOrder();
             },
             getBusinessName:function(businessType){
@@ -690,7 +698,7 @@
                 if(this.endDate){
                     param.endDate = this.endDate.getFullYear()+"-"+(this.endDate.getMonth()+1)+"-"+this.endDate.getDate()+" 23:59:59";
                 }
-                param.pageNum = this.currentPage;
+                param.pageNum = this.orderCurrentPage;
                 param.pageSize=this.pageSize;
                 param.custName =this.customerName;
                 param.orderCode =StringUtil.trim(this.orderCode);
@@ -702,11 +710,17 @@
                 param.custOrderCode=StringUtil.trim(this.customerOrderCode);
                 param.warehouseCode=StringUtil.trim(this.wareHouseName);
                 param.tag="out";
-                CommonClient.post(sys.rootPath + "/ofc/queryOrderStorageDataOper",param,function (result) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/queryOrderStorageDataOper",param,function (result) {
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
-                        layer.msg("暂时未查询到相关订单信息!");
+                        vueObj.totalOrder=0;
+                        vueObj.orderCurrentPage=0;
+                        layer.msg("暂时未查询到相关订单信息！");
                     } else if (result.code == 200) {
-                        var i=0;
+                        if(result.result.list.length == 0){
+                            vueObj.totalOrder=0;
+                            vueObj.orderCurrentPage=0;
+                            layer.msg("暂时未查询到相关订单信息！");
+                        }
                         $.each(result.result.list, function (index, item) {
                             var order={};
                             order.customerName=item.custName;
@@ -721,18 +735,17 @@
                             order.exceptionReason=item.exceptionReason;
                             vueObj.orderData.push(order);
                         })
-                        vueObj.total=result.result.total;
+                        vueObj.totalOrder=result.result.total;
                     } else if (result.code == 403) {
                         vueObj.promptInfo("没有权限","error");
-
                     }
                 });
             },
             promptInfo:function(message,type){
-                    this.$message({
-                        message: message,
-                        type: type
-                    });
+                this.$message({
+                    message: message,
+                    type: type
+                });
             },
             getBaseNameByArea:function(){
                 var  _this=this;
@@ -761,7 +774,7 @@
             openCustomer:function(){
                 this.customerData=[];
                 this.customerPageSize=10;
-                this.total=0;
+                this.totalCustomer=0;
                 this.chosenCus=true;
             }
 

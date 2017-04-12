@@ -6,30 +6,26 @@
             margin: 20px 0;
         }
         .el-dialog{
-          top:50%!important;
-          margin-top:-300px;
-          margin-bottom:0!important;
+            top:50%!important;
+            margin-top:-300px;
+            margin-bottom:0!important;
         }
         .el-dialog__body{
-          padding:10px 20px 30px;
+            padding:10px 20px 30px;
         }
         .el-dialog__footer{
-          padding:15px 20px;
+            padding:15px 20px;
         }
         .el-dialog--small .el-table{
-          min-height:350px;
+            min-height:350px;
         }
         .el-dialog--small .el-table tr{
-          cursor:pointer;
-        }
-        .el-table__body-wrapper{
-            overflow-y: auto;
-            overflow-x: hidden;
+            cursor:pointer;
         }
     </style>
 </head>
 <body>
-    <div id="app">
+<div id="app">
     <div class="list-mian-01">
         <el-dialog title="货品实收详情" v-model="chosenRealGood" size="small">
             <el-table :data="realGoodsData" border style="width: 100%">
@@ -99,7 +95,7 @@
                     <el-input v-model="chosenCusForm.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth20">
-                  <el-button type="primary" @click="selectCustomer">查询</el-button>
+                    <el-button type="primary" @click="selectCustomer">查询</el-button>
                 </el-form-item>
             </el-form>
             <el-table :data="customerData" border highlight-current-row @current-change="handleCustomerCurrentChange"
@@ -111,108 +107,108 @@
                 <el-table-column property="channel" label="渠道"></el-table-column>
                 <el-table-column property="productType" label="产品类别"></el-table-column>
             </el-table>
-            <el-pagination @size-change="handleCustomerSizeChange" @current-change="handleCustomerCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="customerPageSize" :total="total" layout="total, sizes, prev, pager, next, jumper">
+            <el-pagination @size-change="handleCustomerSizeChange" @current-change="handleCustomerCurrentPage" :current-page="customerCurrentPage" :page-sizes="pageSizes" :page-size="customerPageSize" :total="totalCustomer" layout="total, sizes, prev, pager, next, jumper">
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectCustomer">取 消</el-button>
                 <el-button type="primary" @click="setCurrentCustInfo(currentCustomerRow)">确 定</el-button>
             </div>
         </el-dialog>
-      <div class="xe-pageHeader">
-        入库单筛选
-      </div>
+        <div class="xe-pageHeader">
+            入库单筛选
+        </div>
         <el-form label-width="100px">
-          <div class="xe-block">
-            <el-form-item label="订单日期"  class="xe-col-3">
-              <el-date-picker
-                     style="width:114px;"
-                      v-model="beginDate"
-                      type="date"
-                     :clearable="false"
-                     :editable="false"
-                      placeholder="选择起始日期">
-              </el-date-picker>
-              <label for="" style="width:15px;">至</label>
-              <el-date-picker
-                      style="width:114px;"
-                      v-model="endDate"
-                      type="date"
-                      :clearable="false"
-                      :editable="false"
-                      placeholder="选择结束日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="订单编号" class="xe-col-3">
-              <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item label="客户订单编号" class="xe-col-3">
-              <el-input v-model="customerOrderCode" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="客户名称" class="xe-col-3">
-              <el-input
-                      placeholder="请选择"
-                      icon="search"
-                      v-model="customerName"
-                      :readOnly="true"
-                      @click="openCustomer">
-              </el-input>
-            </el-form-item>
-            <el-form-item label="仓库名称" class="xe-col-3">
-              <el-select v-model="wareHouseName" placeholder="请选择">
-                <el-option
-                        v-for="item in wareHouseOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="业务类型" class="xe-col-3">
-              <el-select v-model="businessType" placeholder="请选择">
-                <el-option
-                        v-for="item in businessTypeOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="大区名称" class="xe-col-3">
-              <el-select v-model="areaName" placeholder="请选择" @change="getBaseNameByArea">
-                <el-option
-                        v-for="item in areaNameOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="基地名称" class="xe-col-3">
-              <el-select v-model="baseName" placeholder="请选择">
-                <el-option
-                        v-for="item in baseNameOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="订单状态" class="xe-col-3">
-              <el-select v-model="orderStatus" placeholder="请选择">
-                <el-option
-                        v-for="item in orderStatusOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="" class="xe-col-3">
-              <el-button type="primary" @click="selectOrder">筛选</el-button>
-              <el-button @click="resetCondition">重置</el-button>
-            </el-form-item>
-          </div>
+            <div class="xe-block">
+                <el-form-item label="订单日期"  class="xe-col-3">
+                    <el-date-picker
+                            style="width:114px;"
+                            v-model="beginDate"
+                            type="date"
+                            :clearable="false"
+                            :editable="false"
+                            placeholder="选择起始日期">
+                    </el-date-picker>
+                    <label for="" style="width:15px;">至</label>
+                    <el-date-picker
+                            style="width:114px;"
+                            v-model="endDate"
+                            type="date"
+                            :clearable="false"
+                            :editable="false"
+                            placeholder="选择结束日期">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="订单编号" class="xe-col-3">
+                    <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="客户订单编号" class="xe-col-3">
+                    <el-input v-model="customerOrderCode" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="客户名称" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="customerName"
+                            :readOnly="true"
+                            @click="openCustomer">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="仓库名称" class="xe-col-3">
+                    <el-select v-model="wareHouseName" placeholder="请选择">
+                        <el-option
+                                v-for="item in wareHouseOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="业务类型" class="xe-col-3">
+                    <el-select v-model="businessType" placeholder="请选择">
+                        <el-option
+                                v-for="item in businessTypeOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="大区名称" class="xe-col-3">
+                    <el-select v-model="areaName" placeholder="请选择" @change="getBaseNameByArea">
+                        <el-option
+                                v-for="item in areaNameOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="基地名称" class="xe-col-3">
+                    <el-select v-model="baseName" placeholder="请选择">
+                        <el-option
+                                v-for="item in baseNameOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="订单状态" class="xe-col-3">
+                    <el-select v-model="orderStatus" placeholder="请选择">
+                        <el-option
+                                v-for="item in orderStatusOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="" class="xe-col-3">
+                    <el-button type="primary" @click="selectOrder">筛选</el-button>
+                    <el-button @click="resetCondition">重置</el-button>
+                </el-form-item>
+            </div>
 
         </el-form>
         <div class="xe-pageHeader">
@@ -239,7 +235,7 @@
                         property="orderCode"
                         label="订单编号">
                     <template scope="scope">
-                      <span @click="orderDetails(scope.row.orderCode)" class="xe-link">{{scope.row.orderCode}}</span>
+                        <span @click="orderDetails(scope.row.orderCode)" class="xe-link">{{scope.row.orderCode}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column property="orderBatchNumber" label="订单批次号"></el-table-column>
@@ -250,7 +246,7 @@
                 <el-table-column property="wareHouseName" label="仓库名称"></el-table-column>
                 <el-table-column property="baseName" label="基地名称"></el-table-column>
             </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="orderCurrentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalOrder">
             </el-pagination>
         </div>
     </div>
@@ -271,16 +267,17 @@
             realGoodsData:[],
             currentRow:'',
             currentCustomerRow:'',
-            currentPage:1,
+            orderCurrentPage:1,
+            customerCurrentPage:1,
             formLabelWidth: '100px',
             formLabelWidth20: '20px',
             pageSize:10,
-            total:0,
+            totalCustomer:0,
+            totalOrder:0,
             wareHouseOptions:[],
             pageSizes:[10, 20, 30, 40,50],
             customerData:[],
             customerPageSize:10,
-            currentCustomerPage:1,
             wareHouseName:'',
             businessType:'',
             areaName:'',
@@ -290,7 +287,6 @@
             customerName:'',
             customerCode:'',
             customerOrderCode:'',
-            total:0,
             chosenCusForm: {
                 name: ''
             },
@@ -323,16 +319,16 @@
             orderStatusOptions:[{
                 value: '10',
                 label: '待审核'
-                },{
-                 value: '20',
-                 label: '已审核'
-                },{
+            },{
+                value: '20',
+                label: '已审核'
+            },{
                 value: '30',
                 label: '执行中'
-                },{
+            },{
                 value: '40',
                 label: '已完成'
-                },{
+            },{
                 value: '50',
                 label: '已取消'
             }],
@@ -355,7 +351,7 @@
                             vueObj.wareHouseOptions.push(warehouse);
                         });
                         if(vueObj.wareHouseOptions.length==1){
-                             vueObj.wareHouseName = vueObj.wareHouseOptions[0].value;
+                            vueObj.wareHouseName = vueObj.wareHouseOptions[0].value;
                         }
                     }else{
                         layer.msg("当前用户下没有仓库信息！");
@@ -414,7 +410,7 @@
                     window.open(html.substring(0,index) + "/index#" + url);
             },
             handleCustomerCurrentPage:function(val) {
-                this.currentCustomerPage = val;
+                this.customerCurrentPage = val;
                 this.selectCustomer();
             },
             setCurrentCustInfo:function(val) {
@@ -425,25 +421,33 @@
             cancelSelectCustomer:function(){
                 this.customerData=[];
                 this.customerPageSize=10;
-                this.total=0;
+                this.totalCustomer=0;
                 this.chosenCus=false;
             },
             handleCustomerCurrentPage:function(val) {
-                this.currentCustomerPage = val;
+                this.customerCurrentPage = val;
                 this.selectCustomer();
             },
             selectCustomer:function(){
                 var param = {};
-                param.pageNum = this.currentCustomerPage;
+                param.pageNum = this.customerCurrentPage;
                 param.pageSize=this.customerPageSize;
                 param.custName = this.chosenCusForm.name;
                 this.customerData=[];
                 var vueObj=this;
-                CommonClient.post(sys.rootPath + "/ofc/distributing/queryCustomerByName", param,
+                CommonClient.syncpost(sys.rootPath + "/ofc/distributing/queryCustomerByName", param,
                         function(result) {
-                            if (result == undefined || result == null || result.result == null ||  result.result.size == 0 || result.result.list == null) {
+                            if (result == undefined || result == null || result.result == null ||  result.result.length == 0 || result.result.list == null) {
+                                vueObj.totalCustomer=0;
+                                vueObj.customerCurrentPage=0;
                                 layer.msg("暂时未查询到客户信息！！");
+
                             } else if (result.code == 200) {
+                                if(result.result.length == 0){
+                                    vueObj.totalCustomer=0;
+                                    vueObj.customerCurrentPage=0;
+                                    layer.msg("暂时未查询到客户信息！！");
+                                }
                                 $.each(result.result.list,function (index,cscCustomerVo) {
                                     var channel = cscCustomerVo.channel;
                                     if(null == channel){
@@ -464,7 +468,7 @@
                                     customer.productType=cscCustomerVo.productType;
                                     vueObj.customerData.push(customer);
                                 });
-                                vueObj.total=result.result.total;
+                                vueObj.totalCustomer=result.result.total;
                             } else if (result.code == 403) {
                                 vueObj.promptInfo("没有权限","error");
                             }
@@ -559,24 +563,24 @@
                 }
             },
             resetCondition:function(){
-                    this.beginDate=new Date()- 3600 * 1000 * 24 * 2;
-                    this.endDate=new Date();
-                    this.orderCode="";
-                    this.customerOrderCode="";
-                    this.customerName="";
-                    this.customerCode="";
-                    this.orderStatus="";
-                    this.businessType="";
-                    this.baseName="";
-                    this.areaName="";
-                    this.wareHouseName="";
-                    if(this.baseNameOptions.length==1&&this.areaNameOptions.length==1){
-                        this.areaName=this.areaNameOptions[0].value;
-                        this.baseName=this.baseNameOptions[0].value;
-                    }
-                    if(this.baseNameOptions.length>1&&this.areaNameOptions.length==1){
-                        this.areaName=this.areaNameOptions[0].value;
-                    }
+                this.beginDate=new Date()- 3600 * 1000 * 24 * 2;
+                this.endDate=new Date();
+                this.orderCode="";
+                this.customerOrderCode="";
+                this.customerName="";
+                this.customerCode="";
+                this.orderStatus="";
+                this.businessType="";
+                this.baseName="";
+                this.areaName="";
+                this.wareHouseName="";
+                if(this.baseNameOptions.length==1&&this.areaNameOptions.length==1){
+                    this.areaName=this.areaNameOptions[0].value;
+                    this.baseName=this.baseNameOptions[0].value;
+                }
+                if(this.baseNameOptions.length>1&&this.areaNameOptions.length==1){
+                    this.areaName=this.areaNameOptions[0].value;
+                }
             },
             auditOrder:function(){
                 if(this.multipleSelection.length<1){
@@ -695,7 +699,7 @@
                 return true;
             },
             handleCurrentPage:function(val){
-                this.currentPage=val;
+                this.orderCurrentPage=val;
                 this.selectOrder();
             },
             getBusinessName:function(businessType){
@@ -749,7 +753,7 @@
                         return;
                     }
                 }
-                param.pageNum = this.currentPage;
+                param.pageNum = this.orderCurrentPage;
                 param.pageSize=this.pageSize;
                 param.custName =this.customerName;
                 param.orderCode =StringUtil.trim(this.orderCode);
@@ -761,10 +765,18 @@
                 param.custOrderCode=StringUtil.trim(this.customerOrderCode);
                 param.warehouseCode=StringUtil.trim(this.wareHouseName);
                 param.tag="in";
-                CommonClient.post(sys.rootPath + "/ofc/queryOrderStorageDataOper", param,function (result) {
-                    if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/queryOrderStorageDataOper", param,function (result) {
+                    if (result == undefined || result == null || result.result.list.length == 0 || result.result.list == null) {
+                        vueObj.totalOrder=0;
+                        vueObj.orderCurrentPage=0;
                         layer.msg("暂时未查询到相关订单信息！");
-                    } else if (result.code == 200) {
+                    }
+                    if (result.code == 200) {
+                        if(result.result.list.length == 0){
+                            vueObj.totalOrder=0;
+                            vueObj.orderCurrentPage=0;
+                            layer.msg("暂时未查询到相关订单信息！");
+                        }
                         $.each(result.result.list, function (index, item) {
                             var order={};
                             order.customerName=item.custName;
@@ -778,7 +790,7 @@
                             order.baseName=item.baseName;
                             vueObj.orderData.push(order);
                         })
-                        vueObj.total=result.result.total;
+                        vueObj.totalOrder=result.result.total;
                     } else if (result.code == 403) {
                         vueObj.promptInfo("没有权限","error");
                     }
@@ -818,7 +830,7 @@
             openCustomer:function(){
                 this.customerData=[];
                 this.customerPageSize=10;
-                this.total=0;
+                this.totalCustomer=0;
                 this.chosenCus=true;
             },
             realGood:function(){
