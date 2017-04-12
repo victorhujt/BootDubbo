@@ -1295,7 +1295,7 @@
                 var cscContactCompanyDto = {};
                 cscContactCompanyDto.contactCompanyName = this.orderForm.consigneeName;
                 cscContactDto.contactName = this.orderForm.consigneeContactName;
-                cscContactDto.purpose = "2";
+                cscContactDto.purpose = "1";
                 cscContactDto.phone =this.orderForm.consigneeContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consigneeName;
                 var consigneeAddressCodeMessage = this.orderForm.destinationCode.split(',');
@@ -1321,7 +1321,7 @@
                 var cscContactCompanyDto = {};
                 cscContactCompanyDto.contactCompanyName =warehouse.warehouseName;
                 cscContactDto.contactName = warehouse.contactName;
-                cscContactDto.purpose = "1";
+                cscContactDto.purpose = "2";
                 cscContactDto.phone =warehouse.phone;
                 cscContactDto.contactCompanyName =warehouse.warehouseName;
                 cscContactDto.province = warehouse.provinceCode;

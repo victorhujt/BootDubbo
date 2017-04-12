@@ -33,4 +33,15 @@ public interface OfcMobileOrderService extends IService<OfcMobileOrder>{
 
 
     int updateByMobileCode(OfcMobileOrder mobileOrder);
+
+    /**
+     * 自动获取待受理订单
+     * @return
+     */
+    OfcMobileOrderVo autoAcceptPendingOrder(String user);
+
+    void pushOrderToCache(String orderCode);
+
+    void dealDingdingOrder();
+
 }

@@ -11,10 +11,13 @@ import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcMerchandiser;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
+import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.OfcMerchandiserService;
+import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.DateUtils;
@@ -55,6 +58,8 @@ public class OfcJumpontroller extends BaseController{
     private CscCustomerEdasService cscCustomerEdasService;
     @Resource
     private UamGroupEdasService uamGroupEdasService;
+    @Resource
+    private OfcMobileOrderService ofcMobileOrderService;
 
     @Resource
     private RestConfig restConfig;
@@ -468,4 +473,30 @@ public class OfcJumpontroller extends BaseController{
         return "/storage/template/template_design";
     }
 
+    /**
+     * 拍照开单-自动受理
+     */
+    @RequestMapping(value = "/ofc/autoAcceptMobileOrder")
+    public ModelAndView autoAcceptMobileOrder(Model model) {
+        ModelAndView modelAndView = new ModelAndView("mobile_order_autoaccept_opera");
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
+        AuthResDto userInfo = getAuthResDtoByToken();
+        String curUser = userInfo.getUserName();
+        OfcMobileOrderVo mobileOrderVo = null;
+        List<String> urls = new ArrayList<>();
+        String mobileOrderCode = null;
+        try {
+            mobileOrderVo = ofcMobileOrderService.autoAcceptPendingOrder(curUser);
+            if (!PubUtils.isNull(mobileOrderVo)) {
+                urls = mobileOrderVo.getUrls();
+                mobileOrderCode = mobileOrderVo.getMobileOrderCode();
+            }
+        } catch (Exception e) {
+            logger.error("拍照开单自动受理订单发生错误！", e);
+        }
+        modelAndView.addObject("urls", urls);
+        modelAndView.addObject("mobileOrderCode", mobileOrderCode);
+        setDefaultModel(model);
+        return modelAndView;
+    }
 }
