@@ -531,7 +531,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }else if(StringUtils.equals(StorageImportInEnum.BUSINESS_TYPE.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
                                 if(!PubUtils.isSEmptyOrNull(colDefaultVal)){
-                                    cellValue = colDefaultVal;
+                                    Wrapper wrapper = checkBusinessType(colDefaultVal, ofcStorageTemplate.getTemplateType());
+                                    if(wrapper.getCode() == 200){
+                                        cellValue = (String) wrapper.getResult();
+                                    }else {
+                                        logger.error("当前行:{},业务类型校验失败,模板配置中业务类型默认值校验失败, 请维护", rowNum + 1);
+                                        xlsErrorMsg.add("行:" + (rowNum + 1) + "模板配置中业务类型默认值【" + colDefaultVal + "】校验失败！");
+                                        checkPass = false;
+                                        continue;
+                                    }
                                 }else {
                                     logger.error("当前行:{},列:{} 没有业务类型", rowNum + 1, cellNum + 1);
 //                                    xlsErrorMsg.add("行:" + (rowNum + 1) + ",列:" + (cellNum + 1) + " 缺少必填字段:" + ofcStorageTemplateForCheck.getReflectColName());
