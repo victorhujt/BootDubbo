@@ -499,4 +499,13 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    /**
+     * 跳转到众品遗漏订单导入界面
+     */
+    @RequestMapping(value = "/ofc/toZPMissOrderImport")
+    public String toZPMissOrderImport(Model model) {
+        setDefaultModel(model);
+        return "zp_import";
+    }
 }
