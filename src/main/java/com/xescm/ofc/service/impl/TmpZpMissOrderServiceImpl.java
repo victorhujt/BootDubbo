@@ -79,7 +79,7 @@ public class TmpZpMissOrderServiceImpl extends BaseService<TmpZpMissOrder> imple
                     } else if (Cell.CELL_TYPE_NUMERIC == commonCell.getCellType()) {
                         cellValue = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
                     }
-                    if (rowNum == 0 && StringUtils.equals("客户订单号", cellValue)) {//第一行
+                    if (rowNum == 0 && (StringUtils.equals("客户订单号", cellValue) || StringUtils.equals("客户订单编号", cellValue))) {//第一行
                         custOrderCodeCellNum = cellNum;
                     } else if (rowNum > 0 && cellNum == custOrderCodeCellNum) {
                         TmpZpMissOrder tmpZpMissOrder = new TmpZpMissOrder();

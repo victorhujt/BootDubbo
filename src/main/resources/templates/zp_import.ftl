@@ -46,7 +46,14 @@
                 //文件大小限制
             },
             handleSuccess(response, file, fileList) {
-
+                var vm = this;
+                if(response.code == 500) {
+                    vm.$message.error(response.message);
+                    vm.fileList = [];
+                } else if (response.code == 200) {
+                    vm.$message(response.message);
+                    vm.fileList = [];
+                }
             },
             beforeUpload(file){
                 //限制只允许上传一个文件
