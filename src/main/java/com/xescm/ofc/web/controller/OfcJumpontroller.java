@@ -499,4 +499,14 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    /**
+     * 导出
+     */
+    @RequestMapping(value = "/ofc/order_load_export")
+    public ModelAndView zpLoadOrderExport(Model model){
+        ModelAndView modelAndView = new ModelAndView("order_load_export");
+        modelAndView.addObject(OrderConstConstant.REPORT, restConfig.getReport());
+        return modelAndView;
+    }
 }
