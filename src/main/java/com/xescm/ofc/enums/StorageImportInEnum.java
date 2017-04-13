@@ -30,6 +30,7 @@ public enum StorageImportInEnum {
     SUPPORT_NAME("supportName","供应商名称"),
     ARRIVE_TIME("arriveTime","预计入库时间"),
     PROVIDE_TRANSPORT("provideTransport","是否提供运输服务"),
+    TRANS_CODE("transCode","运输单号"),
     PLATE_NUMBER("plateNumber","车牌号"),
     DRIVER_NAME("driverName","司机姓名"),
     CONTACT_NUMBER("contactNumber","联系电话"),
