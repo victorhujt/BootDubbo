@@ -1657,6 +1657,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = this.convertCscGoods(ofcStorageTemplateDto);
                 StringBuilder key=new StringBuilder();
                 key.append(ofcGoodsDetailsInfo.getGoodsCode());
+                if(ofcGoodsDetailsInfo.getSupportBatch()!=null){
+                    key.append(ofcGoodsDetailsInfo.getSupportBatch());
+                }
                 if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
                     key.append(ofcGoodsDetailsInfo.getProductionBatch());
                 }
