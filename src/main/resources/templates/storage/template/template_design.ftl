@@ -214,10 +214,11 @@
                     {indexNum:'16', standardColName:'供应商名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportName'},
                     {indexNum:'17', standardColName:'预计入库时间', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'arriveTime'},
                     {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
-                    {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
-                    {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
-                    {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
-                    {indexNum:'22', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
+                    {indexNum:'19', standardColName:'运输单号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'transCode'},
+                    {indexNum:'20', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
+                    {indexNum:'21', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
+                    {indexNum:'22', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                    {indexNum:'23', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                 ]
             }
         } ,
@@ -274,10 +275,11 @@
                         {indexNum:'16', standardColName:'供应商名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportName'},
                         {indexNum:'17', standardColName:'预计入库时间', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'arriveTime'},
                         {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
-                        {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
-                        {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
-                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
-                        {indexNum:'22', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
+                        {indexNum:'19', standardColName:'运输单号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'transCode'},
+                        {indexNum:'20', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
+                        {indexNum:'21', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
+                        {indexNum:'22', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                        {indexNum:'23', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                     ];
                     vm.businessTypeList=[
                         {value:'采购入库',label:'采购入库'},
@@ -309,13 +311,14 @@
                         {indexNum:'16', standardColName:'供应商名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportName'},
                         {indexNum:'17', standardColName:'预计出库时间', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'shipmentTime'},
                         {indexNum:'18', standardColName:'是否提供运输服务', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'provideTransport'},
-                        {indexNum:'19', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
-                        {indexNum:'20', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
-                        {indexNum:'21', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
-                        {indexNum:'22', standardColName:'收货方名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'consigneeName'},
-                        {indexNum:'23', standardColName:'收货人编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'consigneeContactCode'},
-                        {indexNum:'24', standardColName:'供应商编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportCode'},
-                        {indexNum:'25', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
+                        {indexNum:'19', standardColName:'运输单号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'transCode'},
+                        {indexNum:'20', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
+                        {indexNum:'21', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
+                        {indexNum:'22', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
+                        {indexNum:'23', standardColName:'收货方名称', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'consigneeName'},
+                        {indexNum:'24', standardColName:'收货人编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'consigneeContactCode'},
+                        {indexNum:'25', standardColName:'供应商编码', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportCode'},
+                        {indexNum:'26', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
                     ];
                     vm.businessTypeList=[
                         {value:'销售出库',label:'销售出库'},
@@ -386,30 +389,31 @@
                     template.custCode = custCode;
                     var reflectColName = StringUtil.isEmpty(design.reflectColName) ? "" : StringUtil.trim(design.reflectColName);
                     var colDefaultVal = StringUtil.isEmpty(design.colDefaultVal) ? "" : StringUtil.trim(design.colDefaultVal);
+                    var standardColCode = design.standardColCode;
                     var index = design.indexNum;
                     if(reflectColName.length > 50) {
                         vm.$message.error("第" + index + "行模板列名过长!最长50位!");
                         return;
                     }
-                    if(index == 1 && StringUtil.isEmpty(reflectColName)){
+                    if(standardColCode == 'custOrderCode' && StringUtil.isEmpty(reflectColName)){
                         vm.$message.error('客户订单号模板列名必填!');
                         return;
-                    } else if(index == 3 && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
+                    } else if(standardColCode == 'merchandiser' && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
                         vm.$message.error('开单员模板列名或对应默认值必填一个!');
                         return;
-                    } else if(index == 4 && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
+                    } else if(standardColCode == 'warehouseName' && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
                         vm.$message.error('仓库名称模板列名或对应默认值必填一个!');
                         return;
-                    } else if(index == 5 && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
+                    } else if(standardColCode == 'businessType' && (StringUtil.isEmpty(reflectColName) && StringUtil.isEmpty(colDefaultVal))) {
                         vm.$message.error('业务类型模板列名或对应默认值必填一个!');
                         return;
-                    } else if(index == 7 && StringUtil.isEmpty(reflectColName)){
+                    } else if(standardColCode == 'goodsCode' && StringUtil.isEmpty(reflectColName)){
                         vm.$message.error('货品编码模板列名必填!');
                         return;
-                    } else if(index == 12 && StringUtil.isEmpty(reflectColName)){
+                    } else if(standardColCode == 'quantity' && StringUtil.isEmpty(reflectColName)){
                         vm.typeOfTemplate == 'storageIn' ? vm.$message.error('入库数量模板列名必填!') : vm.$message.error('出库数量模板列名必填!');
                         return;
-                    } else if(index == 22 && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageOut'){
+                    } else if(standardColCode == 'consigneeName' && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageOut'){
                         vm.$message.error('收货方名称模板列名必填!');
                         return;
                     }
@@ -417,7 +421,7 @@
                     template.standardColCode = design.standardColCode;
                     template.standardColName = design.standardColName;
                     template.reflectColName = reflectColName;
-                    if(index != 2){
+                    if(standardColCode != 'orderTime'){
                         template.colDefaultVal = colDefaultVal;
                     }
                     templateList.push(template);

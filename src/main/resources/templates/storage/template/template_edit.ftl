@@ -250,8 +250,9 @@
                     }
                     var tableItem = {};
                     var indexNum = item.indexNum;
-                    if(indexNum == 1 || indexNum == 3 || indexNum == 4
-                            || indexNum == 5 || indexNum == 7 || indexNum == 12 || (indexNum == 22 && vm.typeOfTemplate == 'storageOut')){
+                    var standardColCode = item.standardColCode;
+                    if(standardColCode == 'custOrderCode' || standardColCode == 'merchandiser' || standardColCode == 'warehouseName'
+                            || standardColCode == 'businessType' || standardColCode == 'goodsCode' || standardColCode == 'quantity' || (standardColCode == 'consigneeName' && vm.typeOfTemplate)){
                         tableItem.isRequired = true;
                     }
                     tableItem.indexNum = indexNum;
@@ -259,20 +260,20 @@
                     tableItem.reflectColName = item.reflectColName;
                     var colDefaultVal = item.colDefaultVal;
                     if(!StringUtil.isEmpty(colDefaultVal)){
-                        if(indexNum == 2){
+                        if(standardColCode == 'orderTime'){
 //                            orderTime = '当前日期';
-                        }else if(indexNum == 3){
+                        }else if(standardColCode == 'merchandiser'){
                             merchandiser = colDefaultVal;
-                        }else if(indexNum == 4){
+                        }else if(standardColCode == 'warehouseName'){
                             warehouseName = colDefaultVal;
-                        }else if(indexNum == 5){
+                        }else if(standardColCode == 'businessType'){
                             businessType = colDefaultVal;
-                        }else if(indexNum == 18){
+                        }else if(standardColCode == 'provideTransport'){
                             provideTransport = colDefaultVal;
                         }
 
                     }
-                    if(indexNum == 2){
+                    if(standardColCode == 'orderTime'){
                         colDefaultVal = '当前日期';
                     }
                     tableItem.colDefaultVal = colDefaultVal;
