@@ -291,9 +291,9 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportBatch" label="供应商批次号">
+                <el-table-column property="goodSupportName" label="供应商批次号">
                     <template scope="scope">
-                        <el-input v-model="supplierName"  :readOnly="true"></el-input>
+                        <el-input v-model="scope.row.goodSupportName"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -541,6 +541,7 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                            good.goodSupportName=goodDetail.goodSupportName;
                                             vueObj.goodsData.push(good);
                                         }
                                     }

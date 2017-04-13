@@ -1241,8 +1241,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
             StringBuilder key=new StringBuilder();
             key.append(ofcGoodsDetails.getGoodsCode());
-            if(!StringUtils.isEmpty(ofcGoodsDetails.getSupportBatch())){
-                key.append(ofcGoodsDetails.getSupportBatch());
+            if(!StringUtils.isEmpty(ofcGoodsDetails.getGoodSupportBatch())){
+                key.append(ofcGoodsDetails.getGoodSupportBatch());
             }
             if(!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())){
                 key.append(ofcGoodsDetails.getProductionBatch());

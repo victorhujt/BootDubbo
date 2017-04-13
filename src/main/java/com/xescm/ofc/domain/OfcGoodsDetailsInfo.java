@@ -202,18 +202,15 @@ public class OfcGoodsDetailsInfo {
     @Column(name = "charging_unit_price")
     private BigDecimal chargingUnitPrice;
     /**
-     * 供应商批次
+     * 货品供应商批次
      */
-    @Column(name = "support_batch")
-    private String supportBatch;
-
-    public String getSupportBatch() {
-        return supportBatch;
-    }
-
-    public void setSupportBatch(String supportBatch) {
-        this.supportBatch = supportBatch;
-    }
+    @Column(name = "good_support_batch")
+    private String goodSupportBatch;
+    /**
+     * 货品供应商名称
+     */
+    @Column(name = "good_support_name")
+   private String goodSupportName;
 
 
     public String getId() {

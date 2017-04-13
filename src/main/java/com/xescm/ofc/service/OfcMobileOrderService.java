@@ -44,4 +44,6 @@ public interface OfcMobileOrderService extends IService<OfcMobileOrder>{
 
     void dealDingdingOrder();
 
+    void deleteMobileOrder(String mobileOrder) throws UnsupportedEncodingException;
+
 }

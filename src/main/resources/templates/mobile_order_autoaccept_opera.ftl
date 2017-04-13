@@ -44,6 +44,8 @@
             <el-form-item label="运输单号" prop="tranCode" class="xe-col-1">
                 <el-input v-model="mobileOrderVo.tranCode" :readonly="true"></el-input>
             </el-form-item>
+            <#--<el-button type="primary" @click="deleteMobileOrder">删除</el-button>-->
+
         </div>
     </el-form>
 
@@ -782,44 +784,44 @@
                     province: {
                         code: '',
                         keyword: "province",
-                        title: ''
+                        title: '请选择省'
                     },
                     city: {
                         code: '',
                         keyword: "city",
-                        title: ''
+                        title: '市'
                     },
                     district: {
                         code: '',
                         keyword: "district",
-                        title: ''
+                        title: '区'
                     },
                     street: {
                         code: '',
                         keyword: "street",
-                        title: ''
+                        title: '街道'
                     }
                 },
                 cpConsigneeData: {
                     province: {
                         code: '',
                         keyword: "province",
-                        title: ''
+                        title: '请选择省'
                     },
                     city: {
                         code: '',
                         keyword: "city",
-                        title: ''
+                        title: '市'
                     },
                     district: {
                         code: '',
                         keyword: "district",
-                        title: ''
+                        title: '区'
                     },
                     street: {
                         code: '',
                         keyword: "street",
-                        title: ''
+                        title: '街道'
                     }
                 }
             };
@@ -1323,49 +1325,53 @@
                 var code = '', addr = '';
                 var vm = this;
                 $.each(address, function(index, area) {
-                    if (index == address.length - 1) {
-                        code += area.code;
-                    } else {
-                        code += area.code + ',';
-                    }
-                    addr += area.title;
-                    if (area.keyword == 'province') {
-                        vm.orderForm.departureProvince = area.title;
-                    }
-                    if (area.keyword == 'city') {
-                        vm.orderForm.departureCity = area.title;
-                    }
-                    if (area.keyword == 'district') {
-                        vm.orderForm.departureDistrict = area.title;
-                    }
-                    if (area.keyword == 'street') {
-                        vm.orderForm.departureTowns = area.title;
-                    }
-                });
-                this.orderForm.departurePlaceCode = code;
-                this.orderForm.departurePlace = addr;
-            },
+                    if(!StringUtil.isEmpty(area.code)) {
+                        if (index == address.length - 1) {
+                            code += area.code;
+                        } else {
+                            code += area.code + ',';
+                        }
+                        addr += area.title;
+                        if (area.keyword == 'province') {
+                            vm.orderForm.departureProvince = area.title;
+                        }
+                        if (area.keyword == 'city') {
+                            vm.orderForm.departureCity = area.title;
+                        }
+                        if (area.keyword == 'district') {
+                            vm.orderForm.departureDistrict = area.title;
+                        }
+                        if (area.keyword == 'street') {
+                            vm.orderForm.departureTowns = area.title;
+                        }
+                     }
+                    });
+                    this.orderForm.departurePlaceCode = code;
+                    this.orderForm.departurePlace = addr;
+               },
             consigneeCallBack: function(address){
                 var code = '', addr = '';
                 var vm = this;
                 $.each(address, function(index, area) {
-                    if (index == address.length - 1) {
-                        code += area.code;
-                    } else {
-                        code += area.code + ',';
-                    }
-                    addr += area.title;
-                    if (area.keyword == 'province') {
-                        vm.orderForm.destinationProvince = area.title;
-                    }
-                    if (area.keyword == 'city') {
-                        vm.orderForm.destinationCity = area.title;
-                    }
-                    if (area.keyword == 'district') {
-                        vm.orderForm.destinationDistrict = area.title;
-                    }
-                    if (area.keyword == 'street') {
-                        vm.orderForm.destinationTowns = area.title;
+                    if(!StringUtil.isEmpty(area.code)){
+                        if (index == address.length - 1) {
+                            code += area.code;
+                        } else {
+                            code += area.code + ',';
+                        }
+                        addr += area.title;
+                        if (area.keyword == 'province') {
+                            vm.orderForm.destinationProvince = area.title;
+                        }
+                        if (area.keyword == 'city') {
+                            vm.orderForm.destinationCity = area.title;
+                        }
+                        if (area.keyword == 'district') {
+                            vm.orderForm.destinationDistrict = area.title;
+                        }
+                        if (area.keyword == 'street') {
+                            vm.orderForm.destinationTowns = area.title;
+                        }
                     }
                 });
                 this.orderForm.destinationCode = code;
@@ -1828,6 +1834,9 @@
                     var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
                     return cscContantAndCompanyDtoConsigneeStr;
                 }
+            },
+            deleteMobileOrder:function(){
+
             }
         }
     });
