@@ -739,6 +739,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Override
     public void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
             , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, OfcWarehouseInformation ofcWarehouseInformation) {
+        logger.info("订单信息推送结算中心 == > ofcFundamentalInformation{}", ofcFundamentalInformation);
+        logger.info("订单信息推送结算中心 == > ofcFinanceInformation{}", ofcFinanceInformation);
+        logger.info("订单信息推送结算中心 == > ofcDistributionBasicInfo{}", ofcDistributionBasicInfo);
+        logger.info("订单信息推送结算中心 == > ofcGoodsDetailsInfos{}", ofcGoodsDetailsInfos);
+        logger.info("订单信息推送结算中心 == > ofcWarehouseInformation{}", ofcWarehouseInformation);
         AcOrderDto acOrderDto = new AcOrderDto();
         try {
             AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();

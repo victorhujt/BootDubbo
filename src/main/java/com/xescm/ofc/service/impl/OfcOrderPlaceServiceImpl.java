@@ -206,6 +206,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee
             , OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation
             , OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcMerchandiser ofcMerchandiser, OfcOrderStatus ofcOrderStatus) {
+        logger.info("运输开单 ==> ofcGoodsDetailsInfos:{}", ofcGoodsDetailsInfos);
+        logger.info("运输开单 ==> authResDtoByToken:{}", authResDtoByToken);
+        logger.info("运输开单 ==> cscContantAndCompanyDtoConsignor:{}", ofcGoodsDetailsInfos);
+        logger.info("运输开单 ==> cscContantAndCompanyDtoConsignee:{}", cscContantAndCompanyDtoConsignee);
+        logger.info("运输开单 ==> ofcFinanceInformation:{}", ofcFinanceInformation);
+        logger.info("运输开单 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("运输开单 ==> ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
+        logger.info("运输开单 ==> ofcMerchandiser:{}", ofcMerchandiser);
+        logger.info("运输开单 ==> ofcOrderStatus:{}", ofcOrderStatus);
         StringBuilder notes = new StringBuilder();
         // 校验当前客户的客户订单号是否重复
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
@@ -307,7 +316,19 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcWarehouseInformation 仓库信息
      * @param ofcOrderStatus 订单状态
      */
-    private void orderPlaceTagManage(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, AuthResDto authResDtoByToken, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation, OfcOrderStatus ofcOrderStatus) {
+    private void orderPlaceTagManage(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos
+            , AuthResDto authResDtoByToken, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee
+            , OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo
+            , OfcWarehouseInformation ofcWarehouseInformation, OfcOrderStatus ofcOrderStatus) {
+        logger.info("订单编辑 ==> ofcOrderDTO:{}", ofcOrderDTO);
+        logger.info("订单编辑 ==> ofcGoodsDetailsInfos:{}", ofcGoodsDetailsInfos);
+        logger.info("订单编辑 ==> authResDtoByToken:{}", authResDtoByToken);
+        logger.info("订单编辑 ==> cscContantAndCompanyDtoConsignor:{}", cscContantAndCompanyDtoConsignor);
+        logger.info("订单编辑 ==> cscContantAndCompanyDtoConsignee:{}", cscContantAndCompanyDtoConsignee);
+        logger.info("订单编辑 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("订单编辑 ==> ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
+        logger.info("订单编辑 ==> ofcWarehouseInformation:{}", ofcWarehouseInformation);
+        logger.info("订单编辑 ==> ofcOrderStatus:{}", ofcOrderStatus);
         //删除之前订单的货品信息
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
         ofcGoodsDetailsInfo.setOrderCode(ofcOrderDTO.getOrderCode());
@@ -535,6 +556,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     @Override
     public OfcFundamentalInformation getAreaAndBaseMsg(AuthResDto authResDtoByToken, OfcFundamentalInformation ofcFundamentalInformation) {
+        logger.info("校验当前登录用户的身份信息,并存放大区和基地信息 authResDtoByToken:{}", authResDtoByToken);
+        logger.info("校验当前登录用户的身份信息,并存放大区和基地信息 ofcFundamentalInformation:{}", ofcFundamentalInformation);
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(authResDtoByToken.getGroupRefCode());
         Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
@@ -588,6 +611,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @return  boolean
      */
     private boolean checkOrderCode (String custOrderCode, String custCode) {
+        logger.info("根据客户编号和客户订单号校验重复 custOrderCode:{}", custOrderCode);
+        logger.info("根据客户编号和客户订单号校验重复 custCode:{}", custCode);
         boolean isDup = false;
         // 校验客户订单号
         if(!PubUtils.isStrsEmptyOrNull(custOrderCode)) {
@@ -717,6 +742,17 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                                         OfcFinanceInformation ofcFinanceInformation,String custId,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor,
                                         CscContantAndCompanyDto cscContantAndCompanyDtoConsignee,AuthResDto authResDtoByToken,
                                         OfcOrderStatus ofcOrderStatus,OfcMerchandiser ofcMerchandiser) {
+        logger.info("城配开单下单 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("城配开单下单 ==> ofcGoodsDetailsInfos:{}", ofcGoodsDetailsInfos);
+        logger.info("城配开单下单 ==> ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
+        logger.info("城配开单下单 ==> ofcWarehouseInformation:{}", ofcWarehouseInformation);
+        logger.info("城配开单下单 ==> ofcFinanceInformation:{}", ofcFinanceInformation);
+        logger.info("城配开单下单 ==> custId:{}", custId);
+        logger.info("城配开单下单 ==> cscContantAndCompanyDtoConsignor:{}", cscContantAndCompanyDtoConsignor);
+        logger.info("城配开单下单 ==> cscContantAndCompanyDtoConsignee:{}", cscContantAndCompanyDtoConsignee);
+        logger.info("城配开单下单 ==> authResDtoByToken:{}", authResDtoByToken);
+        logger.info("城配开单下单 ==> ofcOrderStatus:{}", ofcOrderStatus);
+        logger.info("城配开单下单 ==> ofcMerchandiser:{}", ofcMerchandiser);
         int custOrderCode = 0;
         StringBuilder notes = new StringBuilder();
         if(!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())){
@@ -874,7 +910,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcDistributionBasicInfo
      * @param fundamentalInformation
      */
-    private void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation fundamentalInformation) {
+    private void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo
+            , OfcFundamentalInformation fundamentalInformation) {
+        logger.info("更新大区基地 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("更新大区基地 ==> ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
+        logger.info("更新大区基地 ==> fundamentalInformation:{}", fundamentalInformation);
         // 更新大区基地
         String departurePlaceCode = ofcDistributionBasicInfo.getDeparturePlaceCode();
         String departureProvince = ofcDistributionBasicInfo.getDepartureProvince();
