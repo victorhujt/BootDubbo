@@ -1844,7 +1844,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
             TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
-//            tfcTransportDetail.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            tfcTransportDetail.setOrderCode(ofcFundamentalInformation.getOrderCode());
             tfcTransportDetail.setStandard(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsSpec()));
 //            tfcTransportDetail.setPono();
 //            tfcTransportDetail.setQtyPicked();
