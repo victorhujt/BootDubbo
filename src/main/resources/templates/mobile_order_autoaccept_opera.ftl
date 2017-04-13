@@ -334,7 +334,7 @@
                             <el-input v-model="orderForm.consigneeContactPhone"></el-input>
                         </el-form-item>
                     </div>
-                    <div class="xe-block">
+                    <div class="xe-block" style="overflow: visible">
                         <el-form-item label="地址选择" required prop="destination" class="xe-col-2">
                             <city-picker class = "cp cityPicker" :url="cityUrl"
                                          :default-data="cpConsigneeData" :options="cityPickerOptions"
