@@ -34,7 +34,8 @@ public interface OfcOrderManageService {
 	void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation,
                        OfcFinanceInformation ofcFinanceInformation,
                        OfcDistributionBasicInfo ofcDistributionBasicInfo,
-                       List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
+                       List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,
+                       OfcWarehouseInformation ofcWarehouseInformation);
 
     String orderAutoAudit(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList
             , OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation

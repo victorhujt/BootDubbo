@@ -287,6 +287,15 @@
                 };
                 vm.typeOfTemplate = businessType;
                 var templateType = itemOut.templateType;
+                if (templateType == 'storageOut') {
+                    vm.businessTypeList = [
+                        {value:'销售出库',label:'销售出库'},
+                        {value:'调拨出库',label:'调拨出库'},
+                        {value:'报损出库',label:'报损出库'},
+                        {value:'其他出库',label:'其他出库'},
+                        {value:'分拨出库',label:'分拨出库'}
+                    ];
+                }
                 vm.templateForm = {
                     templateType:templateType,
                     templateName:itemOut.templateName,

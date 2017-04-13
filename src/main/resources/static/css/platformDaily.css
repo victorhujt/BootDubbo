@@ -268,3 +268,6 @@ body{
 	height:100%;
 	overflow: hidden;
 }
+[v-cloak] {
+	display: none;
+}

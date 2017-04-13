@@ -103,7 +103,12 @@ public class CreateOrderApiConsumer implements MessageListener {
                     goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
                 } catch (Exception e) {
                     logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
-                    return Action.ReconsumeLater;
+                    logger.info("================> 失败消费次数：" + message.getReconsumeTimes());
+                    if (message.getReconsumeTimes() < 16) {
+                        return Action.ReconsumeLater;
+                    } else {
+                        return Action.CommitMessage;
+                    }
                 }
             }
 

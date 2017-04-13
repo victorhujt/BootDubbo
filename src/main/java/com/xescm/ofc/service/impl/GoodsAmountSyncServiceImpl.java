@@ -157,7 +157,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 && !PubUtils.isNull(orderFinanceInfo)
                 //&& !PubUtils.isNull(detailsInfos)
                 ) {
-            ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos);
+            ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos, null);
         }
         //再次推送TFC
         tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
