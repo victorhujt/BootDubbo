@@ -3,6 +3,7 @@ package com.xescm.ofc.model.dto.tfc;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -189,7 +190,23 @@ public class TfcTransport implements Serializable {
     private String areaCode;
     //大区名称
     private String areaName;
+    /**
+     * 取货时间
+     */
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @Column(name = "pickup_time")
+    private Date pickupTime;
+
+
+    public Date getPickupTime() {
+        return pickupTime;
+    }
+
+    public void setPickupTime(Date pickupTime) {
+        this.pickupTime = pickupTime;
+    }
 
     public String getBaseCode() {
         return baseCode;
