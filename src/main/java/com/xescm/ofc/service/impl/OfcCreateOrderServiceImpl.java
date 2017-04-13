@@ -795,7 +795,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         if (!PubUtils.isOEmptyOrNull(consigneeCode)) {
             ResultModel resultModel = queryContactAndSet(createOrderEntity, custCode,"1", consigneeCode);
             if (ResultModel.ResultEnum.CODE_3001.getCode().equals(resultModel.getCode())) {
-                createOrderEntity.setConsignorCode(null);
+                createOrderEntity.setConsigneeCode(null);
                 return checkConsigneeInfo(createOrderEntity);
             } else {
                 return resultModel;

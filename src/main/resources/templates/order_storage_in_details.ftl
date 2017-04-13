@@ -4,6 +4,10 @@
 <head>
     <style lang="css">
         .borderNone .el-input__inner{border:none;}
+        .el-table__body-wrapper{
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
@@ -129,7 +133,7 @@
                 </div>
             <div class="xe-block">
                 <el-form-item label="备注" class="xe-col-3">
-                    <el-input type="textarea" v-model="notes" :readOnly="true">
+                    <el-input type="textarea" v-model="notes" :disabled="true">
                 </el-form-item>
             </div>
             <div class="xe-block">

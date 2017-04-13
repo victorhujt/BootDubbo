@@ -241,6 +241,8 @@
     <result column="charging_unit_price" property="chargingUnitPrice" jdbcType="DECIMAL" />
   </resultMap>
 
+
+
   <sql id="Base_Column_List_Fundamental" >
     order_code, order_batch_number, order_time, cust_code, cust_name, sec_cust_code, 
     sec_cust_name, order_type, business_type, cust_order_code, notes, store_code, store_name, 

@@ -20,6 +20,8 @@ import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,7 @@ import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -67,6 +70,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     private ModelMapper modelMapper = new ModelMapper();
 
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
+
     @Override
     public OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder) {
         //如果运输单号存在，校验运输单号是否重复
@@ -103,16 +109,16 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     @Override
     public OfcMobileOrderVo selectOneOfcMobileOrder(OfcMobileOrder ofcMobileOrder) throws UnsupportedEncodingException {
-        OfcMobileOrder order=selectOne(ofcMobileOrder);
+        OfcMobileOrder order = super.selectOne(ofcMobileOrder);
         OfcMobileOrderVo vo;
         List<String> urls;
-       if(order!=null&& StringUtils.isNotEmpty(order.getSerialNo())){
-            String serialNo=order.getSerialNo();
+       if(order != null && StringUtils.isNotEmpty(order.getSerialNo())){
+           String serialNo = order.getSerialNo();
            modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
-           vo=modelMapper.map(order, OfcMobileOrderVo.class);
-           String[] serialNos=serialNo.split(",");
-           if(serialNos.length>0){
-            urls=getOssUrls(serialNos);
+           vo = modelMapper.map(order, OfcMobileOrderVo.class);
+           String[] serialNos = serialNo.split(",");
+           if(serialNos.length > 0){
+            urls = this.getOssUrls(serialNos);
             vo.setUrls(urls);
            }
        }else{
@@ -274,5 +280,114 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         return urls;
     }
 
+    /**
+     * 将待受理订单号放入缓存
+     * @param orderCode 订单号
+     */
+    public void pushOrderToCache(String orderCode) {
+        String key = "MobilePendingOrderList";
+        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        listOps.rightPush(key, orderCode);
+    }
 
+    @Override
+    public void dealDingdingOrder() {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.MINUTE, -5);
+        Date time = now.getTime();
+        OfcMobileOrder ofcMobileOrder = new OfcMobileOrder();
+        ofcMobileOrder.setAppcetDate(time);
+        ofcMobileOrder.setMobileOrderStatus("2");
+        logger.info("ofcMobileOrder :{}", ofcMobileOrder);
+        List<OfcMobileOrder> mobileOrders = ofcMobileOrderMapper.queryNeedDeal(ofcMobileOrder);
+        if(mobileOrders.size() < 1){
+            logger.info("没有待处理订单...");
+            return;
+        }
+        for (OfcMobileOrder mobileOrder : mobileOrders) {
+            String mobileOrderCode = mobileOrder.getMobileOrderCode();
+            mobileOrder.setMobileOrderStatus("0");
+            int update = ofcMobileOrderMapper.updateByMobileCode(mobileOrder);
+            if(update < 1){
+                logger.error("钉钉录单重新更新为未处理失败! 订单号: {}", mobileOrderCode);
+                continue;
+            }
+            this.pushOrderToCache(mobileOrderCode);
+        }
+    }
+
+    /**
+     * 从缓存中获取待受理订单
+     * @return 订单号
+     */
+    public String getOrderFromCache() {
+        String orderCode = null;
+        String key = "MobilePendingOrderList";
+        boolean existList = redisTemplate.hasKey(key);
+        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        if (existList && listOps.size(key) > 0) {
+            orderCode = listOps.leftPop(key);
+        } else {
+            logger.info("不存在待受理订单！");
+        }
+        return orderCode;
+    }
+
+    /**
+     * 自动获取待受理订单
+     * @return
+     */
+    @Transactional
+    public OfcMobileOrderVo autoAcceptPendingOrder(String user) {
+        OfcMobileOrderVo mobileOrderVo = null;
+        // 查询待受理订单
+        String mobileOrderCode = this.getOrderFromCache();
+        if (!PubUtils.isOEmptyOrNull(mobileOrderCode)) {
+            OfcMobileOrder params = new OfcMobileOrder();
+            params.setMobileOrderCode(mobileOrderCode);
+            try {
+                // 查询易录单信息
+                mobileOrderVo = this.selectOneOfcMobileOrder(params);
+                String acceptStatus = mobileOrderVo.getMobileOrderStatus();
+                // 判断是否受理 - 待受理
+                if ("0".equals(acceptStatus)) {
+                    // 更新受理状态
+                    params.setMobileOrderCode(mobileOrderCode);
+                    params.setAccepter(user);
+                    params.setAppcetDate(new Date());
+                    params.setMobileOrderStatus("2");
+                    int line = this.updateByMobileCode(params);
+                    if (line <= 0) {
+                        this.pushOrderToCache(mobileOrderCode);
+                        logger.info("更新拍照开单受理信息错误，订单重新缓存到未受理状态！");
+                    }
+                } else { // 受理中、已受理, 重新获取新订单
+                    String status = "0".equals(acceptStatus) ? "未受理" : "1".equals(acceptStatus)
+                        ? "已受理" : "2".equals(acceptStatus) ? "受理中" : acceptStatus;
+                    logger.info("订单【"+mobileOrderVo.getMobileOrderCode()+"】当前状态为【"+status+"】,重新获取订单！");
+                    // 订单已经受理，重新获取
+                    while (true) {
+                        mobileOrderVo = this.autoAcceptPendingOrder(user);
+                        if (mobileOrderVo != null) {
+                            return mobileOrderVo;
+                        }
+                    }
+                }
+
+            } catch (UnsupportedEncodingException e) {
+                this.pushOrderToCache(mobileOrderCode);
+                throw new BusinessException("获取照片发生错误！");
+            } catch (BusinessException e) {
+                this.pushOrderToCache(mobileOrderCode);
+                throw e;
+            } catch (Exception e) {
+                this.pushOrderToCache(mobileOrderCode);
+                throw e;
+            }
+        } else {
+            throw new BusinessException("不存在待受理订单！");
+        }
+
+        return mobileOrderVo;
+    }
 }

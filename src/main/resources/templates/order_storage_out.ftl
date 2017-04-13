@@ -33,6 +33,10 @@
         z-index:5;
         width:100%;
     }
+    .el-table__body-wrapper{
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
   </style>
 </head>
 <body>
@@ -247,7 +251,7 @@
             <div class="xe-block">
                 <el-form-item label="订单日期" required  prop="orderDate" class="xe-col-3">
                     <el-form-item>
-                        <el-date-picker type="date" v-model="orderForm.orderDate" :picker-options="pickerOptions"></el-date-picker>
+                        <el-date-picker type="date" :clearable="false" :editable="false" v-model="orderForm.orderDate" :picker-options="pickerOptions"></el-date-picker>
                     </el-form-item>
                 </el-form-item>
                 <el-form-item label="开单员" required  prop="merchandiser" class="xe-col-3">
@@ -309,6 +313,8 @@
                         <el-date-picker
                                 v-model="orderForm.shipmentTime"
                                 type="datetime"
+                                :clearable="false"
+                                :editable="false"
                                 placeholder="选择日期"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
@@ -430,6 +436,8 @@
                                 v-model="scope.row.productionTime"
                                 align="right"
                                 type="date"
+                                :clearable="false"
+                                :editable="false"
                                 @change="accountInvalidTime(scope.row)"
                                 placeholder="选择日期"
                                 :picker-options="pickerOptions1">
@@ -441,6 +449,8 @@
                         <el-date-picker
                                 v-model="scope.row.invalidTime"
                                 align="right"
+                                :clearable="false"
+                                :editable="false"
                                 type="date"
                                 placeholder="选择日期"
                                 :picker-options="pickerOptions1">
@@ -595,7 +605,12 @@
                 }, {
                     value: '614',
                     label: '分拨出库'
-                }],
+                },
+                  {
+                      value: '617',
+                      label: '退车间'
+                  }
+              ],
                 goodsMsgOptions: [],
                 pickerOptions1: {
                     shortcuts: [{
@@ -1280,7 +1295,7 @@
                 var cscContactCompanyDto = {};
                 cscContactCompanyDto.contactCompanyName = this.orderForm.consigneeName;
                 cscContactDto.contactName = this.orderForm.consigneeContactName;
-                cscContactDto.purpose = "2";
+                cscContactDto.purpose = "1";
                 cscContactDto.phone =this.orderForm.consigneeContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consigneeName;
                 var consigneeAddressCodeMessage = this.orderForm.destinationCode.split(',');
@@ -1306,7 +1321,7 @@
                 var cscContactCompanyDto = {};
                 cscContactCompanyDto.contactCompanyName =warehouse.warehouseName;
                 cscContactDto.contactName = warehouse.contactName;
-                cscContactDto.purpose = "1";
+                cscContactDto.purpose = "2";
                 cscContactDto.phone =warehouse.phone;
                 cscContactDto.contactCompanyName =warehouse.warehouseName;
                 cscContactDto.province = warehouse.provinceCode;

@@ -62,10 +62,10 @@ public class OfcStorageTemplateRest extends BaseController{
             ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
         } catch (Exception e) {
             logger.error("模板配置保存,json转换异常,{},{}",e,e.getMessage());
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!数据转换异常!");
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!内部异常!");
         }
-        ofcStorageTemplateService.checkTemplateListRequired(ofcStorageTemplates);
         try {
+            ofcStorageTemplateService.checkTemplateListRequired(ofcStorageTemplates);
             AuthResDto authResDto = getAuthResDtoByToken();
             ofcStorageTemplateService.saveTemplate(ofcStorageTemplates,authResDto);
         }catch (BusinessException e) {

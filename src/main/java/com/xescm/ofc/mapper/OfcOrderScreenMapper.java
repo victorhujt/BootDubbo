@@ -44,4 +44,7 @@ public interface OfcOrderScreenMapper extends MyMapper<OrderScreenResult> {
      * @return List<OrderScreenResult>
      */
     List<OrderScreenResult> queryOrderOper(@Param(value = "form") OrderOperForm form);
+
+
+    List<String> searchOverallOrder(@Param(value = "code") String code);
 }
