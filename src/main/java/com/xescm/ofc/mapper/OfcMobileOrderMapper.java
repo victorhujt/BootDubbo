@@ -36,4 +36,5 @@ public interface OfcMobileOrderMapper extends Mapper<OfcMobileOrder> {
 
     List<OfcMobileOrder> queryNeedDeal(OfcMobileOrder ofcMobileOrder);
 
+
 }

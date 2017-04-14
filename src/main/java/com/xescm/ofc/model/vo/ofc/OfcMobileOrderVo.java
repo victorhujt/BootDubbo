@@ -48,7 +48,7 @@ public class OfcMobileOrderVo {
     private String tranCode;
 
     /**
-     * 订单状态 0:未受理 1:已受理 默认值未受理
+     * 订单状态 0:未受理 1:已受理  2:受理中 默认值未受理
      */
     private String mobileOrderStatus;
 
@@ -69,10 +69,16 @@ public class OfcMobileOrderVo {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date appcetDate;
 
+
+
     /**
      * 图片路径集合
      */
     private List<String> urls;
+    /**
+     * 附件流水号 多个附件以逗号隔开
+     */
+    private String serialNo;
 
     public List<String> getUrls() {
         return urls;
@@ -80,6 +86,14 @@ public class OfcMobileOrderVo {
 
     public void setUrls(List<String> urls) {
         this.urls = urls;
+    }
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
     }
 
     /**

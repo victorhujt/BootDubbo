@@ -139,6 +139,8 @@ public final class OrderConstConstant {
 
     public static final String TREATED="1";//钉钉录单状态  已处理
 
+    public static final String TREATING="2";//钉钉录单状态  处理中
+
     public OrderConstConstant() {
     }
 }
