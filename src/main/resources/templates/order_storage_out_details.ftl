@@ -233,13 +233,7 @@
                 </el-table-column>
                 <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
-                        <el-select v-model="scope.row.supportBatch" placeholder="请选择">
-                            <el-option
-                                    v-for="item in supportBatchData"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-input v-model="scope.row.supportBatch" class="borderNone" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
