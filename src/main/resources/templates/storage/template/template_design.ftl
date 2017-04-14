@@ -325,7 +325,8 @@
                         {value:'调拨出库',label:'调拨出库'},
                         {value:'报损出库',label:'报损出库'},
                         {value:'其他出库',label:'其他出库'},
-                        {value:'分拨出库',label:'分拨出库'}
+                        {value:'分拨出库',label:'分拨出库'},
+                        {value:'退车间',label:'退车间'}
                     ];
                     vm.typeOfTemplate = 'storageOut';
                 }

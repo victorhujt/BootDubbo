@@ -300,7 +300,6 @@
                         head.propertyCode = propertyCode;
                         headData.push(head);
                     });
-
                     $.each(orderMsg, function (indexOut, itemOut) {
                         var tableRow = {};
                         $.each(tableHeadMsg, function (indexIn, itemIn) {
@@ -420,7 +419,7 @@
                 switch (businessName) {
                     //出库
                     case '610': businessName = '销售出库'; break; case '611': businessName = '调拨出库'; break; case '612': businessName = '报损出库'; break;
-                    case '613': businessName = '其他出库'; break; case '614': businessName = '分拨出库'; break;
+                    case '613': businessName = '其他出库'; break; case '614': businessName = '分拨出库'; break;case '617': businessName = '退车间'; break;
                     //入库
                     case '620': businessName = '采购入库'; break; case '621': businessName = '调拨入库'; break; case '622': businessName = '退货入库'; break;
                     case '623': businessName = '加工入库'; break;  case '624': businessName = '盘盈入库'; break; case '625': businessName = '流通入库'; break;
