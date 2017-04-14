@@ -455,14 +455,15 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportName" label="供应商批次">
+                <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
-                        <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column property="supportBatch" v-if="false" label="供应商编码">
-                    <template scope="scope">
-                        <el-input v-model="orderForm.supporCode" :readOnly="true"></el-input>
+                        <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                            <el-option
+                                    v-for="item in supportBatchData"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
@@ -567,6 +568,7 @@
                         consigneeContactPhone:''
                     }
                 },
+                supportBatchData:[],
                 supplierDataInfo:{
                     currentSupplierPage:1,
                     supplierPageSize:10,
@@ -800,8 +802,8 @@
                                     wareHouse.value= vueObj.wareHouseCode;
                                     vueObj.wareHouseOptions.push(wareHouse);
                                     vueObj.orderForm.wareHouse=ofcWarehouseInformation.warehouseCode;
-                                    vueObj.orderForm.supplierName=ofcWarehouseInformation.supportName;
-                                    vueObj.orderForm.supplierCode=ofcWarehouseInformation.supportCode;
+                                    vueObj.orderForm.supportName=ofcWarehouseInformation.supportName;
+                                    vueObj.orderForm.supportCode=ofcWarehouseInformation.supportCode;
                                     vueObj.orderForm.shipmentTime=DateUtil.parse(ofcWarehouseInformation.shipmentTime);
                                     vueObj.orderForm.plateNumber=ofcWarehouseInformation.plateNumber;
                                     vueObj.orderForm.driverName=ofcWarehouseInformation.driverName;
@@ -860,12 +862,11 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
-                                            good.supportName=ofcWarehouseInformation.supportName;
                                             good.supportBatch=goodDetail.supportBatch;
-                                            vueObj.orderForm.supportCode=goodDetail.supportBatch;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
+                                    vueObj.selectSupplier();
                                 }
                             }
 
@@ -1011,7 +1012,9 @@
                     this.supplierDataInfo.chosenSupplier=false;
                     return;
                 }
+
                 this.supplierDataInfo.supplierData=[];
+                this.supportBatchData=[];
                 var vueObj=this;
                 var param = {};
                 param = vueObj.supplierDataInfo.supplierForm;
@@ -1020,24 +1023,26 @@
                 param.pSize=vueObj.supplierDataInfo.supplierPageSize;
                 CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     vueObj.supplierDataInfo.supplierData = [];
-                    vueObj.orderForm.supportName = '';
+                    //vueObj.orderForm.supportName = '';
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
                         layer.msg("暂时未查询到供应商信息！！");
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var supplier={};
+                            var option={};
                             supplier.supportName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            option.label=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
                             supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
                             supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
                             supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
                             supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
                             supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
                             supplier.supportCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            option.value=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
                             supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
-
+                            vueObj.supportBatchData.push(option);
                             vueObj.supplierDataInfo.supplierData.push(supplier);
-
                         });
                         vueObj.supplierDataInfo.totalSupplier=data.result.total;
                     } else if (result.code == 403) {
@@ -1065,7 +1070,6 @@
                 }
             },
             setCurrentGoodsInfo:function(){
-                
                 if(this.multipleSelection.length<1){
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
@@ -1086,10 +1090,12 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportName:this.orderForm.supportName,
-                        supportBatch:this.orderForm.supportCode
+                        supportBatch:''
                     };
                     this.goodsData.push(newData);
+                    if(this.supportBatchData.length==0){
+                        this.selectSupplier();
+                    }
                 }
             },
             cancelSelectSupplier:function(){
@@ -1361,12 +1367,11 @@
                 //校验金额和格式化日期时间
               for(var i=0;i<goodsTable.length;i++){
                   var good=goodsTable[i];
-
-                  if(StringUtil.isEmpty(good.supportBatch)){
-                      if(!StringUtil.isEmpty(this.orderForm.supportCode)){
-                          good.supportBatch=this.orderForm.supportCode;
-                      }
-                  }
+//                  if(StringUtil.isEmpty(good.supportBatch)){
+//                      if(!StringUtil.isEmpty(this.orderForm.supportCode)){
+//                          good.supportBatch=this.orderForm.supportCode;
+//                      }
+//                  }
                   if(!StringUtil.isEmpty(good.unitPrice)){
                       if(isNaN(good.unitPrice)){
                           this.promptInfo("货品单价必须为数字",'error');

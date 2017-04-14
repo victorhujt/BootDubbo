@@ -189,7 +189,17 @@ public class TfcTransport implements Serializable {
     private String areaCode;
     //大区名称
     private String areaName;
+    /*@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date pickupTime;
 
+    public Date getPickupTime() {
+        return pickupTime;
+    }
+
+    public void setPickupTime(Date pickupTime) {
+        this.pickupTime = pickupTime;
+    }*/
 
     public String getBaseCode() {
         return baseCode;

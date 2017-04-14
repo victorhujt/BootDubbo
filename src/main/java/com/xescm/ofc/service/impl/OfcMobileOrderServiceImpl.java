@@ -17,6 +17,7 @@ import com.xescm.ofc.model.vo.ofc.OfcMobileOrderVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -28,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
@@ -122,7 +120,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             vo.setUrls(urls);
            }
        }else{
-           throw new BusinessException("没有查询到订单信息!");
+           throw new BusinessException("已经没有未受理订单!");
        }
         return vo;
     }
@@ -297,7 +295,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         Date time = now.getTime();
         OfcMobileOrder ofcMobileOrder = new OfcMobileOrder();
         ofcMobileOrder.setAppcetDate(time);
-        ofcMobileOrder.setMobileOrderStatus("2");
+        ofcMobileOrder.setMobileOrderStatus(TREATING);
         logger.info("ofcMobileOrder :{}", ofcMobileOrder);
         List<OfcMobileOrder> mobileOrders = ofcMobileOrderMapper.queryNeedDeal(ofcMobileOrder);
         if(mobileOrders.size() < 1){
@@ -306,13 +304,50 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         }
         for (OfcMobileOrder mobileOrder : mobileOrders) {
             String mobileOrderCode = mobileOrder.getMobileOrderCode();
-            mobileOrder.setMobileOrderStatus("0");
+            mobileOrder.setMobileOrderStatus(UN_TREATED);
             int update = ofcMobileOrderMapper.updateByMobileCode(mobileOrder);
             if(update < 1){
                 logger.error("钉钉录单重新更新为未处理失败! 订单号: {}", mobileOrderCode);
                 continue;
             }
             this.pushOrderToCache(mobileOrderCode);
+        }
+    }
+
+    /**
+     * 删除未受理的手机订单
+     * @param mobileOrderCode 手机订单号
+     */
+    @Override
+    public void deleteMobileOrder(String mobileOrderCode) throws UnsupportedEncodingException {
+        OfcMobileOrder ofcMobileOrder=new OfcMobileOrder();
+        ofcMobileOrder.setMobileOrderCode(mobileOrderCode);
+        try{
+            OfcMobileOrderVo mobileOrder = selectOneOfcMobileOrder(ofcMobileOrder);
+            String acceptStatus=mobileOrder.getMobileOrderStatus();
+            String status = UN_TREATED.equals(acceptStatus) ? "未受理" : TREATED.equals(acceptStatus)
+                    ? "已受理" : TREATING.equals(acceptStatus) ? "受理中" : acceptStatus;
+           if(TREATED.equals(acceptStatus)||TREATING.equals(acceptStatus)){
+               throw new BusinessException("订单号:"+mobileOrderCode+"状态为【"+status+"】不可进行删除!");
+           }
+           //手机订单对应的图片路径
+          List<String> urls=mobileOrder.getUrls();
+           //删除OSS上面的图片
+           if(!CollectionUtils.isEmpty(urls)){
+               for (String url :urls) {
+                   ofcOssManagerService.deleteFile(url);
+               }
+           }
+           String serialNo=mobileOrder.getSerialNo();
+          if(PubUtils.isSEmptyOrNull(serialNo)){
+              //删除手机订单号对应的附件
+              String[] serialNos=serialNo.split(",");
+              for(int i=0;i<serialNos.length;i++){
+                  ofcAttachmentService.deleteByKey(serialNos[i]);
+              }
+          }
+        }catch (Exception e) {
+            throw e;
         }
     }
 
@@ -350,20 +385,20 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 mobileOrderVo = this.selectOneOfcMobileOrder(params);
                 String acceptStatus = mobileOrderVo.getMobileOrderStatus();
                 // 判断是否受理 - 待受理
-                if ("0".equals(acceptStatus)) {
+                if (UN_TREATED.equals(acceptStatus)) {
                     // 更新受理状态
                     params.setMobileOrderCode(mobileOrderCode);
                     params.setAccepter(user);
                     params.setAppcetDate(new Date());
-                    params.setMobileOrderStatus("2");
+                    params.setMobileOrderStatus(TREATING);
                     int line = this.updateByMobileCode(params);
                     if (line <= 0) {
                         this.pushOrderToCache(mobileOrderCode);
                         logger.info("更新拍照开单受理信息错误，订单重新缓存到未受理状态！");
                     }
                 } else { // 受理中、已受理, 重新获取新订单
-                    String status = "0".equals(acceptStatus) ? "未受理" : "1".equals(acceptStatus)
-                        ? "已受理" : "2".equals(acceptStatus) ? "受理中" : acceptStatus;
+                    String status = UN_TREATED.equals(acceptStatus) ? "未受理" : TREATED.equals(acceptStatus)
+                        ? "已受理" : TREATING.equals(acceptStatus) ? "受理中" : acceptStatus;
                     logger.info("订单【"+mobileOrderVo.getMobileOrderCode()+"】当前状态为【"+status+"】,重新获取订单！");
                     // 订单已经受理，重新获取
                     while (true) {

@@ -1926,6 +1926,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         if (null != ofcDistributionBasicInfo.getPickupTime()) {
             tfcTransport.setExpectedShipmentTime(ofcDistributionBasicInfo.getPickupTime());
+//            tfcTransport.setPickupTime(ofcDistributionBasicInfo.getPickupTime());
         }
         if (null != ofcDistributionBasicInfo.getExpectedArrivedTime()) {
             tfcTransport.setExpectedArriveTime(ofcDistributionBasicInfo.getExpectedArrivedTime());
