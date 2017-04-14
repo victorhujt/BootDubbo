@@ -398,9 +398,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column property="goodSupportName"  v-if="false" label="供应商名称"></el-table-column>
-                <el-table-column property="goodSupportBatch" label="供应商批次">
+                <el-table-column property="supportBatch" label="供应商批次">
                 <template scope="scope">
-                    <el-select v-model="scope.row.goodSupportBatch" placeholder="请选择">
+                    <el-select v-model="scope.row.supportBatch" placeholder="请选择">
                         <el-option
                                 v-for="item in supportBatchData"
                                 :label="item.label"
@@ -806,7 +806,7 @@
                         productionTime:'',
                         invalidTime:'',
                         goodSupportName:'',
-                        goodSupportBatch:''
+                        supportBatch:''
                     };
                     this.goodsData.push(newData);
                     if(this.supportBatchData.length==0){
@@ -1068,7 +1068,7 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-                    good.goodSupportName=this.getGoodSupportName(good.goodSupportBatch);
+                    good.goodSupportName=this.getGoodSupportName(good.supportBatch);
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');

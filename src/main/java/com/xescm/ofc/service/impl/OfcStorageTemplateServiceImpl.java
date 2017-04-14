@@ -1781,7 +1781,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();
         String invalidTime = ofcStorageTemplateDto.getInvalidTime();
-        ofcGoodsDetailsInfo.setGoodSupportBatch(supportBatch);
+        ofcGoodsDetailsInfo.setSupportBatch(supportBatch);
         if(!PubUtils.isSEmptyOrNull(productionTime)){
             ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
         }

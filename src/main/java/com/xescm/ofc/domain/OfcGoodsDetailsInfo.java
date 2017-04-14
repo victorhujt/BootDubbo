@@ -204,8 +204,8 @@ public class OfcGoodsDetailsInfo {
     /**
      * 货品供应商批次
      */
-    @Column(name = "good_support_batch")
-    private String goodSupportBatch;
+    @Column(name = "support_batch")
+    private String supportBatch;
     /**
      * 货品供应商名称
      */
