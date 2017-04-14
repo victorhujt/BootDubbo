@@ -116,11 +116,18 @@
           </#list>
           </select>
         </div>
-        <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+        <label class="control-label col-label no-padding-right" for="name">是否提供运输</label>
         <div class="col-width-168" style="margin:0 12px;">
-          <input id="custOrderCode" class="col-width-168" name="" type="search" placeholder=""
+          <input id="provideTransport" class="col-width-168" name="" type="search" placeholder=""
                  aria-controls="dynamic-table">
         </div>
+      </div>
+      <div class="form-group">
+          <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+          <div class="col-width-168" style="width:369px;margin:0 12px;">
+              <input id="custOrderCode" class="col-width-168" name="" style="width:369px;" type="search" placeholder=""
+                     aria-controls="dynamic-table">
+          </div>
       </div>
       <div class="form-group">
         <label class="control-label col-label no-padding-right" for="name"></label>
