@@ -1844,7 +1844,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
             TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
-            tfcTransportDetail.setOrderCode(ofcFundamentalInformation.getOrderCode());
+//            tfcTransportDetail.setOrderCode(ofcFundamentalInformation.getOrderCode());
             tfcTransportDetail.setStandard(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsSpec()));
 //            tfcTransportDetail.setPono();
 //            tfcTransportDetail.setQtyPicked();
@@ -1926,7 +1926,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         if (null != ofcDistributionBasicInfo.getPickupTime()) {
             tfcTransport.setExpectedShipmentTime(ofcDistributionBasicInfo.getPickupTime());
-            tfcTransport.setPickupTime(ofcDistributionBasicInfo.getPickupTime());
+//            tfcTransport.setPickupTime(ofcDistributionBasicInfo.getPickupTime());
         }
         if (null != ofcDistributionBasicInfo.getExpectedArrivedTime()) {
             tfcTransport.setExpectedArriveTime(ofcDistributionBasicInfo.getExpectedArrivedTime());
