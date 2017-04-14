@@ -185,8 +185,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         } else {
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
-            //为了在编辑时对运输单号进行校验 by lyh
-            ofcDistributionBasicInfo.setSelfTransCode(ofcDistributionBasicInfo.getTransCode());
         }
         OfcOrderStatus status = ofcOrderStatusService.orderStatusSelect(orderCode, "orderCode");
         if (status == null) {

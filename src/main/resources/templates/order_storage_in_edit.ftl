@@ -458,6 +458,7 @@
                 }
             };
             return {
+                selfTransCode:'',
                 activeNames:'',
                 wareHouseObj:'',
                 goodsCategoryOptions:[],
@@ -726,6 +727,7 @@
                                             vueObj.orderForm.departureDetailAddress=vueObj.orderForm.departureDetailAddress+ofcDistributionBasicInfo.departurePlace;
                                         }
                                         vueObj.orderForm.departurePlaceCode=ofcDistributionBasicInfo.departurePlaceCode;
+                                        vueObj.selfTransCode = ofcDistributionBasicInfo.transCode;
                                     }
                                     if(ofcGoodsDetailsInfo!=null&&ofcGoodsDetailsInfo.length>0){
                                         for(var i=0;i<ofcGoodsDetailsInfo.length;i++){
@@ -1184,6 +1186,9 @@
                 var cscContactDto={};
                 //供应商信息
                 var cscSupplierInfoDtoStr={};
+
+                var vueObj = this;
+
                 ofcOrderDTOStr=this.orderForm;
                 //this.orderForm.
                 //是否提供运输
@@ -1196,6 +1201,7 @@
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
                 }
+                ofcOrderDTOStr.selfTransCode = vueObj.selfTransCode;
                 //订单基本信息
                 if(this.orderForm.orderDate){
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");

@@ -415,7 +415,17 @@ public class OfcOrderDTO {
 
     private String selfCustOrderCode;
 
+    private String selfCustCode;
+
     private String consignmentBatchNumber;
+
+    public String getSelfCustCode() {
+        return selfCustCode;
+    }
+
+    public void setSelfCustCode(String selfCustCode) {
+        this.selfCustCode = selfCustCode;
+    }
 
     public String getConsignmentBatchNumber() {
         return consignmentBatchNumber;
