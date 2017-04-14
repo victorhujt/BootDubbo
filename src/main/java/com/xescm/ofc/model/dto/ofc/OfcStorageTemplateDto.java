@@ -51,5 +51,7 @@ public class OfcStorageTemplateDto {
     private String supportCode;
     //供应商批次
     private String supportBatch;
+    //运输单号
+    private String transCode;
 
 }

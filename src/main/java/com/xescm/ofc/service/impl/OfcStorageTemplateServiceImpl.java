@@ -830,6 +830,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue.equals("是") ? "1" : "0", standardColCode);
+                            //运输单号
+                        }else if(StringUtils.equals(StorageImportInEnum.TRANS_CODE.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有运输单号", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //车牌号
                         }else if(StringUtils.equals(StorageImportInEnum.PLATE_NUMBER.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){

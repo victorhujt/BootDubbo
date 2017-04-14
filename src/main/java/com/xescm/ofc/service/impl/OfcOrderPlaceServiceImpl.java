@@ -853,7 +853,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 }
             }
             //城配开单订单推结算中心
-            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos, null);
+            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos, ofcWarehouseInformation);
         }
     }
 

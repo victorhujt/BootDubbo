@@ -185,6 +185,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         } else {
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
+            //为了在编辑时对运输单号进行校验 by lyh
+            ofcDistributionBasicInfo.setSelfTransCode(ofcDistributionBasicInfo.getTransCode());
         }
         OfcOrderStatus status = ofcOrderStatusService.orderStatusSelect(orderCode, "orderCode");
         if (status == null) {
@@ -1172,10 +1174,18 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("ofcWarehouseInformation.getProvideTransport为空");
             throw new BusinessException("创建仓储订单失败!");
         }
-        if (ofcWarehouseInformation.getProvideTransport() == 1) {
+        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
             ofcFundamentalInformation.setTransportType("整车");
             if (ofcDistributionBasicInfo == null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
+            }
+            // 运输单号逻辑追加 by lyh
+            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+            }
+            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+            if (repeatNum > 0) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
             }
         }
 
@@ -1404,9 +1414,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
         ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
-        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
-        }
+
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
             logger.info("ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
             ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
