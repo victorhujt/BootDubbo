@@ -455,7 +455,6 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="goodSupportName"  v-if="false" label="供应商名称"></el-table-column>
                 <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
                         <el-select v-model="scope.row.supportBatch" placeholder="请选择">
@@ -863,7 +862,6 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
-                                            good.goodSupportName=goodDetail.goodSupportName;
                                             good.supportBatch=goodDetail.supportBatch;
                                             vueObj.goodsData.push(good);
                                         }
@@ -1092,7 +1090,6 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        goodSupportName:'',
                         supportBatch:''
                     };
                     this.goodsData.push(newData);
@@ -1370,7 +1367,6 @@
                 //校验金额和格式化日期时间
               for(var i=0;i<goodsTable.length;i++){
                   var good=goodsTable[i];
-                  good.goodSupportName=this.getGoodSupportName(good.supportBatch);
 //                  if(StringUtil.isEmpty(good.supportBatch)){
 //                      if(!StringUtil.isEmpty(this.orderForm.supportCode)){
 //                          good.supportBatch=this.orderForm.supportCode;
@@ -1653,14 +1649,6 @@
                         _this.chosenGoodStock=true;
                     }
                 },"json");
-            },
-            getGoodSupportName:function(val){
-                for(var i=0;i<this.supportBatchData.length;i++){
-                    var option=this.supportBatchData[i];
-                    if(val==option.value){
-                        return option.label;
-                    }
-                }
             }
         }
     });
