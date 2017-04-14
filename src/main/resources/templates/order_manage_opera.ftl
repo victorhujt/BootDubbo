@@ -118,8 +118,14 @@
         </div>
         <label class="control-label col-label no-padding-right" for="name">是否提供运输</label>
         <div class="col-width-168" style="margin:0 12px;">
-          <input id="provideTransport" class="col-width-168" name="" type="search" placeholder=""
-                 aria-controls="dynamic-table">
+            <div class="col-width-168">
+                <select data-placeholder="请选择" style="width: 168px;" id="provideTransport" class="chosen-select"
+                        name="orderType">
+                    <option value=""></option>
+                    <option value= "0">否</option>
+                    <option value= "1">是</option>
+                </select>
+            </div>
         </div>
       </div>
       <div class="form-group">
@@ -508,6 +514,7 @@
       param.areaSerialNo = areaName;
       param.baseSerialNo = baseName;
       param.custOrderCode = $("#custOrderCode").val();
+      param.provideTransport = $("#orderType").val() != "60" ? ($("#provideTransport").val() == "1" ? 1 : 0) : null;
       CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
         if ( result == undefined || result == null || result.code == 500 || result.result == null || result.result.size == 0 || result.result.list == null) {

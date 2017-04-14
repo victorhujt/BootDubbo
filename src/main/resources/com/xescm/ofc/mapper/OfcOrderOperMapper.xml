@@ -333,6 +333,9 @@
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>
+      <if test="form.provideTransport!=null">
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
 
     </where>
     ORDER BY ofi.order_code DESC
