@@ -121,6 +121,8 @@ public class TfcTransportDetail implements Serializable {
 
     private String goodsType;
 
+    private String orderCode;
+
     /**
      * 包装
      */
@@ -220,6 +222,14 @@ public class TfcTransportDetail implements Serializable {
 
     public void setBasicUnits2(String basicUnits2) {
         this.basicUnits2 = basicUnits2;
+    }
+
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     /**

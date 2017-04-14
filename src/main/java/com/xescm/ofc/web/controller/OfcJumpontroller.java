@@ -499,4 +499,23 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return modelAndView;
     }
+
+    /**
+     * 导出
+     */
+    @RequestMapping(value = "/ofc/order_load_export")
+    public ModelAndView zpLoadOrderExport(Model model){
+        ModelAndView modelAndView = new ModelAndView("order_load_export");
+        modelAndView.addObject(OrderConstConstant.REPORT, restConfig.getReport());
+        return modelAndView;
+    }
+
+    /**
+     * 跳转到众品遗漏订单导入界面
+     */
+    @RequestMapping(value = "/ofc/toZPMissOrderImport")
+    public String toZPMissOrderImport(Model model) {
+        setDefaultModel(model);
+        return "zp_import";
+    }
 }

@@ -102,13 +102,19 @@
                             <input id="merchandiser" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.merchandiser)!""}">
                         </div>
+                        <label class="control-label col-label no-padding-right" for="name">承诺到达时间</label>
+                        <div class="w-width-220 col-float">
+                            <input id="expectedArrivedTime" name="expectedArrivedTime" type="search" placeholder=""
+                                   aria-controls="dynamic-table"
+                                   value="${(ofcDistributionBasicInfo.expectedArrivedTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">备注</label>
                         <div class="w-width-220 col-float">
                             <input id="notes" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.notes)!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">创建日期</label>
                         <div class="w-width-220 col-float">
                             <input id="creationTime" name="custName" type="search" placeholder=""
@@ -120,14 +126,15 @@
                             <input id="creator" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table" value="${(ofcFundamentalInformation.creatorName)!""}">
                         </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">完成日期</label>
                         <div class="w-width-220 col-float">
                             <input id="finishedTime" name="custName" type="search" placeholder=""
                                    aria-controls="dynamic-table"
                                    value="${(ofcFundamentalInformation.finishedTime?string("yyyy-MM-dd HH:mm:ss"))!""}">
                         </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">取消日期</label>
                         <div class="w-width-220 col-float">
                             <input id="abolishTime" name="abolishTime" type="search" placeholder=""
