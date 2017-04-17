@@ -228,9 +228,11 @@ public class CreateOrderTrans {
             //承运商
             ofcDistributionBasicInfo.setCarrierName(createOrderEntity.getSupportName());
 
-            //生成运输单号
-            String transCode = null;
-            ofcDistributionBasicInfo.setTransCode(transCode);
+            //生成运输单号(如果运输单号为空设置为订单号)
+            String transCode = ofcDistributionBasicInfo.getTransCode();
+            if (PubUtils.isNull(transCode)) {
+                ofcDistributionBasicInfo.setTransCode(this.orderCode);
+            }
             ofcDistributionBasicInfo.setCreationTime(nowDate);
             ofcDistributionBasicInfo.setOperator(CREATE_ORDER_BYAPI);
             ofcDistributionBasicInfo.setOperTime(nowDate);
