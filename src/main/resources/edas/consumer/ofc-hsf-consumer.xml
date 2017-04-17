@@ -8,25 +8,26 @@
        default-autowire="byName">
 
     <!-- uam 用户中心 -->
-    <hsf:consumer id="uamAuthEdasService" interface="com.xescm.uam.provider.UamAuthEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="uamGroupEdasService" interface="com.xescm.uam.provider.UamGroupEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="uamUserEdasService" interface="com.xescm.uam.provider.UamUserEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="chatRobotEdasService" interface="com.xescm.uam.provider.ChatRobotEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="uamAuthEdasService" interface="com.xescm.uam.provider.UamAuthEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="uamGroupEdasService" interface="com.xescm.uam.provider.UamGroupEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="uamUserEdasService" interface="com.xescm.uam.provider.UamUserEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="distributedLockEdasService" interface="com.xescm.uam.provider.DistributedLockEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="chatRobotEdasService" interface="com.xescm.uam.provider.ChatRobotEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
 
     <!-- 客户中心 -->
-    <hsf:consumer id="cscContactEdasService" interface="com.xescm.csc.provider.CscContactEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="cscCustomerEdasService" interface="com.xescm.csc.provider.CscCustomerEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="cscGoodsEdasService" interface="com.xescm.csc.provider.CscGoodsEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="cscGoodsTypeEdasService" interface="com.xescm.csc.provider.CscGoodsTypeEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="cscStoreEdasService" interface="com.xescm.csc.provider.CscStoreEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="cscSupplierEdasService" interface="com.xescm.csc.provider.CscSupplierEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="cscWarehouseEdasService" interface="com.xescm.csc.provider.CscWarehouseEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="cscContactCompanyEdasService" interface="com.xescm.csc.provider.CscContactCompanyEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="cscContactEdasService" interface="com.xescm.csc.provider.CscContactEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="cscCustomerEdasService" interface="com.xescm.csc.provider.CscCustomerEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="cscGoodsEdasService" interface="com.xescm.csc.provider.CscGoodsEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="cscGoodsTypeEdasService" interface="com.xescm.csc.provider.CscGoodsTypeEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="cscStoreEdasService" interface="com.xescm.csc.provider.CscStoreEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="cscSupplierEdasService" interface="com.xescm.csc.provider.CscSupplierEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="cscWarehouseEdasService" interface="com.xescm.csc.provider.CscWarehouseEdasService"  group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="cscContactCompanyEdasService" interface="com.xescm.csc.provider.CscContactCompanyEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <!-- 结算中心 -->
-    <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="acSettleStatisticsEdasService" interface="com.xescm.ac.provider.AcSettleStatisticsEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
-    <hsf:consumer id="acModifyOrderEdasService" interface="com.xescm.ac.provider.AcModifyOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="60000"/>
+    <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="acSettleStatisticsEdasService" interface="com.xescm.ac.provider.AcSettleStatisticsEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="acModifyOrderEdasService" interface="com.xescm.ac.provider.AcModifyOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
     <!-- 资源中心 -->
     <hsf:consumer id="rmcAddressEdasService" interface="com.xescm.rmc.edas.service.RmcAddressEdasService" group="xescm-rmc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>

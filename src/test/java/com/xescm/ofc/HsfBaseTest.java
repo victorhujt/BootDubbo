@@ -16,7 +16,7 @@ public class HsfBaseTest {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     private String projectName = "ofc";
 
-    private String defaultSarPath = "/Users/Jim/Software/EDAS/xescm-ofc-edas/deploy/";
+    private String defaultSarPath = "/Users/Jim/Software/EDAS/xescm-uam-edas/deploy/";
 
     private ServiceFactory factory ;
 
