@@ -611,7 +611,7 @@
                 CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.length == 0) {
-                        layer.msg("暂时未查询到供应商信息！！");
+                      //  layer.msg("暂时未查询到供应商信息！！");
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var option={};
@@ -620,7 +620,7 @@
                             vueObj.supportBatchData.push(option);
                         });
                     } else if (result.code == 403) {
-                        vueObj.promptInfo("没有权限",'error');
+                      //  vueObj.promptInfo("没有权限",'error');
                     }
                 },"json");
             },

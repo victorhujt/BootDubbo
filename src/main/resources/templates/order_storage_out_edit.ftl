@@ -511,6 +511,7 @@
             }
           };
             return {
+                isShow:false,
                 cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
                 defaultData: {
                     province: {
@@ -874,6 +875,7 @@
                                         }
                                     }
                                     vueObj.selectSupplier();
+                                    vueObj.isShow = true;
                                 }
                             }
 
@@ -1033,7 +1035,9 @@
                     //vueObj.orderForm.supportName = '';
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
-                        layer.msg("暂时未查询到供应商信息！！");
+                        if(!vueObj.isShow){
+                            layer.msg("暂时未查询到供应商信息！！");
+                        }
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var supplier={};
@@ -1102,6 +1106,7 @@
                     this.goodsData.push(newData);
                     if(this.supportBatchData.length==0){
                         this.selectSupplier();
+                        this.isShow = true;
                     }
                 }
             },
