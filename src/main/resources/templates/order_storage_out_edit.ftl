@@ -318,8 +318,11 @@
                                         :picker-options="pickerOptions1">
                                 </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="是否提供运输">
+                            <el-form-item label="是否提供运输" class="xe-col-3">
                                 <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+                            </el-form-item>
+                            <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                                <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
                             </el-form-item>
                         </div>
                         <div class="xe-block">
@@ -531,6 +534,7 @@
                     }
                 },
                 activeNames:'',
+                selfTransCode:'',
                 wareHouseObj:'',
                 thirdLevelAddress:'',
                 goodsStockData:[],
@@ -689,6 +693,7 @@
                     isNeedTransport:false,
                     isEditable:false,
                     plateNumber:'',
+                    transCode:'',
                     driverName:'',
                     contactNumber:'',
                     consigneeName:'',
@@ -818,6 +823,8 @@
                                         vueObj.orderForm.consigneeName=ofcDistributionBasicInfo.consigneeName;
                                         vueObj.orderForm.consigneeCode=ofcDistributionBasicInfo.consigneeCode;
                                         vueObj.orderForm.consigneeContactCode=ofcDistributionBasicInfo.consigneeContactCode;
+                                        vueObj.orderForm.transCode = ofcDistributionBasicInfo.transCode;
+                                        vueObj.selfTransCode = ofcDistributionBasicInfo.transCode;
                                         vueObj.orderForm.consigneeContactName=ofcDistributionBasicInfo.consigneeContactName;
                                         vueObj.orderForm.consigneeContactPhone=ofcDistributionBasicInfo.consigneeContactPhone;
                                         if(ofcDistributionBasicInfo.destinationProvince!=null){
@@ -1337,6 +1344,10 @@
                     ofcOrderDTOStr.provideTransport="1";
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
+                    if(!StringUtil.isEmpty(this.orderForm.transCode)){
+                        this.promptInfo("不提供运输时,请不要填写运输单号!",'warning');
+                        return;
+                    }
                 }
                 //订单基本信息
                 ofcOrderDTOStr.orderCode=this.orderCode;
@@ -1344,6 +1355,7 @@
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
                 }
 
+              ofcOrderDTOStr.selfTransCode = this.selfTransCode;
                 //订单基本信息
                 ofcOrderDTOStr.warehouseName=this.getWareHouseNameByCode(this.orderForm.wareHouse);//仓库名称
                 ofcOrderDTOStr.warehouseCode=this.orderForm.wareHouse;//仓库编码

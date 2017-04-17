@@ -163,6 +163,16 @@ public class OfcOrderDTO {
      */
     private String transCode;
     //private String goodsType;
+
+    public String getSelfTransCode() {
+        return selfTransCode;
+    }
+
+    public void setSelfTransCode(String selfTransCode) {
+        this.selfTransCode = selfTransCode;
+    }
+
+    private String selfTransCode;
     /**
      * 是否加急
      */

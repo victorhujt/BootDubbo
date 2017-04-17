@@ -271,8 +271,11 @@
                                         :picker-options="pickerOptions1">
                                 </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="是否提供运输">
+                            <el-form-item label="是否提供运输"  class="xe-col-3">
                                 <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+                            </el-form-item>
+                            <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                                <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
                             </el-form-item>
                         </div>
                         <div class="xe-block">
@@ -397,9 +400,22 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportName" label="供应商批次">
+                <el-table-column property="supportBatch" label="供应商批次">
                 <template scope="scope">
-                    <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
+                    <el-form-item  class="xe-col-3" requird>
+                        <el-input v-model="templateBatchIn.custName" v-if="custNameShow"></el-input>
+                        <el-input v-model="templateBatchIn.custCode" v-if="custCodeShow"></el-input>
+                        <input class="form-control select2-single"  name="supportName" id="supportName" placeholder="请输入供应商名称"/>
+                        <input  hidden name="custCode" id="custCode"  />
+                    </el-form-item>
+
+                    <#--<el-select v-model="scope.row.supportBatch" placeholder="请选择">-->
+                        <#--<el-option-->
+                                <#--v-for="item in supportBatchData"-->
+                                <#--:label="item.label"-->
+                                <#--:value="item.value">-->
+                        <#--</el-option>-->
+                    <#--</el-select>-->
                 </template>
             </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
@@ -469,6 +485,7 @@
                         consignorContactPhone:''
                     }
                 },
+                supportBatchData:[],
                 supplierDataInfo:{
                     currentSupplierPage:1,
                     supplierPageSize:10,
@@ -599,7 +616,8 @@
                     departureProvince:'',
                     departureCity:'',
                     departureDistrict:'',
-                    departureTowns:''
+                    departureTowns:'',
+                    transCode:''
 
 
                 },
@@ -632,6 +650,9 @@
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ],
                     driverName:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    transCode:[
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ],
                     contactNumber:[
@@ -720,6 +741,7 @@
             },
             selectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];
+                this.supportBatchData=[];
                 var vueObj=this;
                 var param = {};
                 param = vueObj.supplierDataInfo.supplierForm;
@@ -735,15 +757,18 @@
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var supplier={};
+                            var option={};
                             supplier.supportName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            option.label=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
                             supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
                             supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
                             supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
                             supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
                             supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
                             supplier.supportCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            option.value=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
                             supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
-
+                            vueObj.supportBatchData.push(option);
                             vueObj.supplierDataInfo.supplierData.push(supplier);
 
                         });
@@ -793,10 +818,12 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportName:this.orderForm.supportName,
-                        supportBatch:this.orderForm.supportCode
+                        supportBatch:''
                     };
                     this.goodsData.push(newData);
+                    if(this.supportBatchData.length==0){
+                        this.selectSupplier();
+                    }
                 }
             },
             cancelSelectSupplier:function(){
@@ -1015,6 +1042,10 @@
                     }
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
+                    if(!StringUtil.isEmpty(this.orderForm.transCode)){
+                        this.promptInfo("不提供运输时,请不要填写运输单号!",'warning');
+                        return;
+                    }
                 }
                 ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
                 //收货方信息(仓库的信息)
@@ -1053,7 +1084,6 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
@@ -1298,7 +1328,7 @@
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
-            },
+            }
         }
     })
 

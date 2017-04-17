@@ -1234,6 +1234,23 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
         }
+
+        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+            // 运输单号逻辑追加 by lyh
+            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+            }
+            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+            if(!(PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())&&PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getSelfTransCode()))){
+                if(ofcDistributionBasicInfo.getTransCode().equals(ofcDistributionBasicInfo.getSelfTransCode())){
+                    repeatNum = 0;
+                }
+            }
+            if (repeatNum > 0) {
+                throw new BusinessException("运输单号重复!");
+            }
+        }
+
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         //货品数量
         BigDecimal goodsAmountCount = new BigDecimal(0);
