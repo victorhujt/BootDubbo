@@ -57,7 +57,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private AcModifyOrderEdasService acModifyOrderEdasService;
 
     @Transactional
-    public Wrapper<?> GoodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto){
+    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto){
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();
         String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
