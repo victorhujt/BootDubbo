@@ -176,6 +176,9 @@
                 <el-form-item label="是否提供运输" class="xe-col-3">
                     <el-input v-model="needTransport" :readOnly="true"></el-input>
                 </el-form-item>
+                <el-form-item label="运输单号" class="xe-col-3">
+                    <el-input v-model="transCode" :readOnly="true"></el-input>
+                </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="出发地" class="xe-col-3">
@@ -332,6 +335,7 @@
                 goodsSpec:'',
                 unit:'',
                 goodsCategoryOptions:[],
+                transCode:'',
                 goodsType:'',
                 goodsCategory:'',
                 invalidTime:'',
@@ -492,6 +496,7 @@
                                         //发货方
                                         vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
                                         vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
+                                        vueObj.transCode = ofcDistributionBasicInfo.transCode;
                                         vueObj.consignorContactPhone=ofcDistributionBasicInfo.consignorContactPhone;
                                         if(ofcDistributionBasicInfo.departureProvince!=null){
                                             vueObj.consignorAddress=ofcDistributionBasicInfo.departureProvince;

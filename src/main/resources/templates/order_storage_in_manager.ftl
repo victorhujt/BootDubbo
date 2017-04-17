@@ -202,6 +202,16 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="是否提供运输"  class="xe-col-3">
+                    <#--<el-checkbox v-model="isNeedTransport"  @click="isNeedTransport = true"></el-checkbox>-->
+                        <el-select v-model="provideTransport" placeholder="请选择">
+                            <el-option
+                                    v-for="item in needTranSportOptions"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="" class="xe-col-3">
@@ -263,8 +273,14 @@
             isDisabledCopy:false,
             isDisabledAudit:false,
             isDisabledRepeatAudit:false,
+            provideTransport:'',
             chosenRealGood:false,
             realGoodsData:[],
+            needTranSportOptions:[
+                {label:"全部",value:''} ,
+                {label:"是",value:'1'},
+                {label:"否",value:'0'}
+            ],
             currentRow:'',
             currentCustomerRow:'',
             orderCurrentPage:1,
@@ -574,6 +590,7 @@
                 this.baseName="";
                 this.areaName="";
                 this.wareHouseName="";
+                this.provideTransport="";
                 if(this.baseNameOptions.length==1&&this.areaNameOptions.length==1){
                     this.areaName=this.areaNameOptions[0].value;
                     this.baseName=this.baseNameOptions[0].value;
@@ -764,6 +781,7 @@
                 param.baseSerialNo = StringUtil.trim(this.baseName);
                 param.custOrderCode=StringUtil.trim(this.customerOrderCode);
                 param.warehouseCode=StringUtil.trim(this.wareHouseName);
+                param.provideTransport = StringUtil.trim(this.provideTransport);
                 param.tag="in";
                 CommonClient.syncpost(sys.rootPath + "/ofc/queryOrderStorageDataOper", param,function (result) {
                     if (result == undefined || result == null || result.result.list.length == 0 || result.result.list == null) {
