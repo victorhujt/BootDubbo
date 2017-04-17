@@ -1317,16 +1317,10 @@
                         ,"您确认提交订单吗?"
                         ,function () {
                             location.reload();
-                            var url=window.location.href;
-                            if(url.indexOf("?")!=-1){
-                                var param=url.split("?")[1].split("=");
-                            }
-                            if(param[1]=="manager"){
-                                var newurl = "/ofc/orderStorageInManager/";
-                                var html = window.location.href;
-                                var index = html.indexOf("/index#");
-                                window.open(html.substring(0,index) + "/index#" + newurl);
-                            }
+                            var newurl = "/ofc/orderStorageInManager/";
+                            var html = window.location.href;
+                            var index = html.indexOf("/index#");
+                            window.open(html.substring(0,index) + "/index#" + newurl);
                         });
             },
             getCscContantAndCompanyDtoConsignorStr:function(){
