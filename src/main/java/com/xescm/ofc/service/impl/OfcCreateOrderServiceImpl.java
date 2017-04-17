@@ -208,8 +208,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
         ofcFundamentalInformation.setStoreName(storeName);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
-//        ofcDistributionBasicInfo.setGoodsType(goodsTypeCode);
-//        ofcDistributionBasicInfo.setGoodsTypeName(goodsTypeParentName);
         // 设置货品分类编码、名称(配送表字段)
         this.setOfcDistributionGoodsInfo(createOrderEntity, custCode, ofcDistributionBasicInfo);
         OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
@@ -245,14 +243,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
                     if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
                         for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
-                            // 货品大类ID
-                            String goodsTypeId = goodsApiVo.getGoodsTypeId();
-                            // 货品大类名称
-                            String goodsTypeName = goodsApiVo.getGoodsTypeParentName();
-                            // 设置 ofcDistributionBasicInfo 类别名称、编码
-//                            goodsTypeCode = PubUtils.isOEmptyOrNull(goodsTypeCode) && !PubUtils.isOEmptyOrNull(goodsTypeId) ? goodsTypeId : goodsTypeCode;
-//                            goodsTypeParentName = PubUtils.isOEmptyOrNull(goodsTypeParentName) && !PubUtils.isOEmptyOrNull(goodsTypeName) ? goodsTypeName : goodsTypeParentName;
-                            goodsInfo.setGoodsType(goodsTypeName);
+                            goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
                             goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
                         }
                     }
