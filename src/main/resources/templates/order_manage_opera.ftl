@@ -514,7 +514,7 @@
       param.areaSerialNo = areaName;
       param.baseSerialNo = baseName;
       param.custOrderCode = $("#custOrderCode").val();
-      param.provideTransport = $("#orderType").val() != "60" ? ($("#provideTransport").val() == "1" ? 1 : 0) : null;
+      param.provideTransport = $("#orderType").val() == "61" ? ($("#provideTransport").val() == "1" ? 1 : 0) : null;
       CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
         if ( result == undefined || result == null || result.code == 500 || result.result == null || result.result.size == 0 || result.result.list == null) {
@@ -938,10 +938,10 @@
       //重新加载大区和基地
       $("#areaName option").remove();
       $("#baseName option").remove();
-      $("#areaName").html("")
-      $("#baseName").html("")
-      $("#areaName").html(areaSelect)
-      $("#baseName").html(baseSelect)
+      $("#areaName").html("");
+      $("#baseName").html("");
+      $("#areaName").html(areaSelect);
+      $("#baseName").html(baseSelect);
       $("#areaName").trigger("chosen:updated");
       $("#baseName").trigger("chosen:updated");
     })
