@@ -1644,7 +1644,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
             BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
             BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
-            ofcOrderDTO.setOrderTime(DateUtils.String2Date(forOrderMsg.getOrderTime(), DateUtils.DateFormatType.TYPE1));
+            ofcOrderDTO.setOrderTime(this.convertStringToDate(forOrderMsg.getOrderTime()));
             if(!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())){
                 ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
             }
@@ -1700,6 +1700,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
+    }
+
+    private Date convertStringToDate(String orderTime) {
+        String[] split = orderTime.split(" ");
+        if (split.length == 1 || orderTime.matches(REGEX_YYYYMMDD)) {
+            orderTime = orderTime + " 00:00:00";
+        }
+        return DateUtils.String2Date(orderTime, DateUtils.DateFormatType.TYPE1);
     }
 
     private void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {

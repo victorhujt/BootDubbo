@@ -294,9 +294,9 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportBatch" label="供应商批次号">
+                <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
-                        <el-input v-model="supplierName"  :readOnly="true"></el-input>
+                        <el-input v-model="scope.row.supportBatch" class="borderNone" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -344,6 +344,7 @@
                 customerOrderNum: '',
                 orderBatchNumber:'',
                 customerName: '',
+                customerCode:'',
                 orderSource:'',
                 orderStatus:'',
                 consignorName:'',
@@ -352,6 +353,7 @@
                 consignorAddress:'',
                 supplierName:'',
                 wareHouseOptions:[],
+                supportBatchData:[],
                 serviceTypeOptions: [{
                     value: '620',
                     label: '采购入库'
@@ -392,6 +394,7 @@
                     }
                 ],
                 goodsMsgOptions: [],
+                consignorContactPhone:'',
                 serviceType: '',
                 merchandiser: '',
                 orderTime: new Date(),
@@ -467,6 +470,7 @@
                                 vueObj.orderTime=DateUtil.parse(ofcFundamentalInformation.orderTime);
                                 vueObj.merchandiser=ofcFundamentalInformation.merchandiser;
                                 vueObj.customerName=ofcFundamentalInformation.custName;
+                                vueObj.customerCode=ofcFundamentalInformation.custCode;
                                 vueObj.customerOrderNum=ofcFundamentalInformation.custOrderCode;
                                 vueObj.serviceType =vueObj.getServiceTypeName(ofcFundamentalInformation.businessType);
                                 vueObj.orderStatus=vueObj.getOrderStatusName(status.orderStatus);
@@ -546,6 +550,10 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                            if(vueObj.supportBatchData.length==0){
+                                                vueObj.selectSupplier();
+                                            }
+                                            good.supportBatch=vueObj.getGoodSupportName(goodDetail.supportBatch);
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -592,6 +600,37 @@
                // _this.realGoodsData=[];
                 _this.chosenRealGood=true;
 
+            },
+            selectSupplier:function(){
+                this.supportBatchData=[];
+                var vueObj=this;
+                var param = {};
+                param.customerCode = vueObj.customerCode;
+                param.pNum = 1;
+                param.pSize= 50;
+                CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
+                    var data = eval(result);
+                    if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.length == 0) {
+                        layer.msg("暂时未查询到供应商信息！！");
+                    } else if (data.code == 200) {
+                        $.each(data.result.list,function (index,CscSupplierInfoDto) {
+                            var option={};
+                            option.label=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            option.value=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            vueObj.supportBatchData.push(option);
+                        });
+                    } else if (result.code == 403) {
+                        vueObj.promptInfo("没有权限",'error');
+                    }
+                },"json");
+            },
+            getGoodSupportName:function(val){
+                for(var i=0;i<this.supportBatchData.length;i++){
+                    var option=this.supportBatchData[i];
+                    if(val==option.value){
+                        return option.label;
+                    }
+                }
             }
         }
     });

@@ -460,14 +460,15 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportName" label="供应商批次">
+                <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
-                        <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column property="supporBatch" v-if="false" label="供应商编码">
-                    <template scope="scope">
-                        <el-input v-model="orderForm.supportCode" :readOnly="true"></el-input>
+                        <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                            <el-option
+                                    v-for="item in supportBatchData"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
@@ -563,6 +564,7 @@
                       consigneeContactPhone:''
                   }
               },
+              supportBatchData:[],
               supplierDataInfo:{
                   currentSupplierPage:1,
                   supplierPageSize:10,
@@ -852,6 +854,7 @@
             },
             selectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];
+                this.supportBatchData=[];
                 var vueObj=this;
                 var param = {};
                 param = vueObj.supplierDataInfo.supplierForm;
@@ -867,15 +870,18 @@
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var supplier={};
+                            var option={};
                             supplier.supportName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            option.label=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
                             supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
                             supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
                             supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
                             supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
                             supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
                             supplier.supportCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            option.value=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
                             supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
-
+                            vueObj.supportBatchData.push(option);
                             vueObj.supplierDataInfo.supplierData.push(supplier);
 
                         });
@@ -918,16 +924,18 @@
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
                         unit: val.unit,
-                        quantity:'',
+                        quantity: '',
                         unitPrice:'',
                         productionBatch:'',
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:this.orderForm.supportCode,
-                        supportName:this.orderForm.supportName
+                        supportBatch:''
                     };
                     this.goodsData.push(newData);
+                    if(this.supportBatchData.length==0){
+                        this.selectSupplier();
+                    }
                 }
             },
             cancelSelectSupplier:function(){
@@ -1218,7 +1226,6 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');

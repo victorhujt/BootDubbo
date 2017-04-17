@@ -402,20 +402,13 @@
                 </el-table-column>
                 <el-table-column property="supportBatch" label="供应商批次">
                 <template scope="scope">
-                    <el-form-item  class="xe-col-3" requird>
-                        <el-input v-model="templateBatchIn.custName" v-if="custNameShow"></el-input>
-                        <el-input v-model="templateBatchIn.custCode" v-if="custCodeShow"></el-input>
-                        <input class="form-control select2-single"  name="supportName" id="supportName" placeholder="请输入供应商名称"/>
-                        <input  hidden name="custCode" id="custCode"  />
-                    </el-form-item>
-
-                    <#--<el-select v-model="scope.row.supportBatch" placeholder="请选择">-->
-                        <#--<el-option-->
-                                <#--v-for="item in supportBatchData"-->
-                                <#--:label="item.label"-->
-                                <#--:value="item.value">-->
-                        <#--</el-option>-->
-                    <#--</el-select>-->
+                    <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                        <el-option
+                                v-for="item in supportBatchData"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
                 </template>
             </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
