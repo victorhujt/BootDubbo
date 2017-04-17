@@ -149,15 +149,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             return resultModel;
         }
 
-        //check 数量、重量、体积 三选一不能为空
-//        resultModel = CheckUtils.checkQuantityAndWeightAndCubage(createOrderEntity.getQuantity(), createOrderEntity.getWeight(), createOrderEntity.getCubage());
-//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-//            logger.error("校验数据{}失败：{}", "数量、重量、体积 三选一不能为空", resultModel.getCode());
-//            return resultModel;
-//        }
-
-
-
         //校验：店铺编码，获取该客户下的店铺编码
         String storeCode = null;
         //店铺名称
@@ -205,9 +196,42 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //供应商
         //checkSupport(createOrderEntity, custCode);
 
-        // 货品大类编码、名称
-        String goodsTypeCode = null, goodsTypeParentName = null;
         //校验：货品档案信息，校验货品明细
+        resultModel = checkGoodsDetailInfo(createOrderEntity, custCode, orderType);
+        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+            logger.error("校验订单商品信息失败：{}", resultModel.getDesc());
+            return resultModel;
+        }
+
+        //转换 dto → do
+        CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
+        ofcFundamentalInformation.setStoreName(storeName);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
+        // 设置货品分类编码、名称(配送表字段)
+        this.setOfcDistributionGoodsInfo(createOrderEntity, custCode, ofcDistributionBasicInfo);
+        OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
+        OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
+        OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
+        //调用创建订单方法
+        resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+        if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+            //操作成功
+            logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
+        }
+        return resultModel;
+    }
+
+    /**
+     * 校验货品编码
+     * @param createOrderEntity
+     * @param custCode
+     * @param orderType
+     * @return
+     */
+    private ResultModel checkGoodsDetailInfo(CreateOrderEntity createOrderEntity, String custCode, String orderType) {
+        ResultModel resultModel;
         List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
         if (PubUtils.isNotNullAndBiggerSize(createOrderGoodsInfos, 0)) {
             for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
@@ -219,14 +243,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
                     if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
                         for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
-                            // 货品大类ID
-                            String goodsTypeId = goodsApiVo.getGoodsTypeId();
-                            // 货品大类名称
-                            String goodsTypeName = goodsApiVo.getGoodsTypeParentName();
-                            // 设置 ofcDistributionBasicInfo 类别名称、编码
-                            goodsTypeCode = PubUtils.isOEmptyOrNull(goodsTypeCode) && !PubUtils.isOEmptyOrNull(goodsTypeId) ? goodsTypeId : goodsTypeCode;
-                            goodsTypeParentName = PubUtils.isOEmptyOrNull(goodsTypeParentName) && !PubUtils.isOEmptyOrNull(goodsTypeName) ? goodsTypeName : goodsTypeParentName;
-                            goodsInfo.setGoodsType(goodsTypeName);
+                            goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
                             goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
                         }
                     }
@@ -243,25 +260,42 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         } else {
             return new ResultModel(ResultModel.ResultEnum.CODE_2000);
         }
+        return new ResultModel(ResultModel.ResultEnum.CODE_0000);
+    }
 
-        //转换 dto → do
-        CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
-        OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
-        ofcFundamentalInformation.setStoreName(storeName);
-        OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
-        ofcDistributionBasicInfo.setGoodsType(goodsTypeCode);
-        ofcDistributionBasicInfo.setGoodsTypeName(goodsTypeParentName);
-        OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
-        OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
-        OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
-        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
-        //调用创建订单方法
-        resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
-        if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            //操作成功
-            logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
+    /**
+     * 设置货品分类编码、名称
+     * @param createOrderEntity
+     * @param custCode
+     * @param distributionBasicInfo
+     */
+    private void setOfcDistributionGoodsInfo(CreateOrderEntity createOrderEntity, String custCode,
+                                             OfcDistributionBasicInfo distributionBasicInfo) {
+        List<CreateOrderGoodsInfo> orderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+        if (PubUtils.isNotNullAndBiggerSize(orderGoodsInfos, 0)) {
+            // 货品大类编码、名称
+            String goodsTypeCode = null, goodsTypeParentName = null;
+            for (CreateOrderGoodsInfo goodsInfo : orderGoodsInfos) {
+                String goodsCode = goodsInfo.getGoodsCode();
+                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                cscGoods.setCustomerCode(custCode);
+                cscGoods.setGoodsCode(goodsCode);
+                Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
+                if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
+                    for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
+                        // 货品大类ID
+                        String goodsTypeId = goodsApiVo.getGoodsTypeId();
+                        // 货品大类名称
+                        String goodsTypeName = goodsApiVo.getGoodsTypeParentName();
+                        // 设置 ofcDistributionBasicInfo 类别名称、编码
+                      goodsTypeCode = PubUtils.isOEmptyOrNull(goodsTypeCode) && !PubUtils.isOEmptyOrNull(goodsTypeId) ? goodsTypeId : goodsTypeCode;
+                      goodsTypeParentName = PubUtils.isOEmptyOrNull(goodsTypeParentName) && !PubUtils.isOEmptyOrNull(goodsTypeName) ? goodsTypeName : goodsTypeParentName;
+                    }
+                }
+            }
+            distributionBasicInfo.setGoodsType(goodsTypeCode);
+            distributionBasicInfo.setGoodsTypeName(goodsTypeParentName);
         }
-        return resultModel;
     }
 
     /**

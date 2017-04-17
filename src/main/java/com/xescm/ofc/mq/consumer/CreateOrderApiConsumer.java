@@ -7,12 +7,15 @@ import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.OfcPlanFedBackCondition;
 import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
+import com.xescm.ofc.enums.ExceptionTypeEnum;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.GoodsAmountSyncService;
@@ -66,11 +69,6 @@ public class CreateOrderApiConsumer implements MessageListener {
         String userName ="";
         String key = message.getKey();
         String messageBody = null;
-        /*try {
-            messageBody = new String(message.getBody(),"GBK");
-        } catch (UnsupportedEncodingException e) {
-            logger.error("字符編碼發生錯誤");
-        }*/
         messageBody = new String(message.getBody());
         logger.info("OFC消费MQ开始。。。MessageBody:" + messageBody + ",topicName:" + topicName + ",tag:" + tag );
         //EPCTopic
@@ -82,6 +80,11 @@ public class CreateOrderApiConsumer implements MessageListener {
                     if(!keyList.contains(key)) {
                         result = createOrderService.createOrder(messageBody);
                         keyList.add(key);
+                    }
+                } catch (BusinessException ex) {
+                    logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
+                    if (!PubUtils.isOEmptyOrNull(ex) && ExceptionTypeEnum.LOCK_FAIL.getCode().equals(ex.getCode())) {
+                        return Action.ReconsumeLater;
                     }
                 } catch (Exception ex) {
                     logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
@@ -100,7 +103,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                 GoodsAmountSyncDto goodsAmountSyncDto;
                 try {
                     goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
-                    goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
+                    goodsAmountSyncService.goodsAmountSync(goodsAmountSyncDto);
                 } catch (Exception e) {
                     logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
                     logger.info("================> 失败消费次数：" + message.getReconsumeTimes());
