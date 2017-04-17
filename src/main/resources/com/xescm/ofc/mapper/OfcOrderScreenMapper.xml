@@ -172,11 +172,13 @@
         FROM
         ofc_fundamental_information ofi
         LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+        LEFT JOIN ofc_order_newstatus oos ON ofi.order_code = oos.order_code
         WHERE
         <if test="code != '' and code != null">
-            ofi.order_code = #{code,jdbcType=VARCHAR}
+            (ofi.order_code = #{code,jdbcType=VARCHAR}
             OR ofi.cust_order_code = #{code,jdbcType=VARCHAR}
-            OR odbi.trans_code = #{code,jdbcType=VARCHAR}
+            OR odbi.trans_code = #{code,jdbcType=VARCHAR})
+            AND oos.order_latest_status != '50'
         </if>
     </select>
 
