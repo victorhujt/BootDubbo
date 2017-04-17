@@ -203,7 +203,6 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="是否提供运输"  class="xe-col-3">
-                    <#--<el-checkbox v-model="isNeedTransport"  @click="isNeedTransport = true"></el-checkbox>-->
                         <el-select v-model="provideTransport" placeholder="请选择">
                             <el-option
                                     v-for="item in needTranSportOptions"
@@ -277,7 +276,6 @@
             chosenRealGood:false,
             realGoodsData:[],
             needTranSportOptions:[
-                {label:"全部",value:''} ,
                 {label:"是",value:'1'},
                 {label:"否",value:'0'}
             ],

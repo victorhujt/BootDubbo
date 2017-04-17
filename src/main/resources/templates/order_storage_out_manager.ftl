@@ -225,7 +225,6 @@
             pageSizes:[10, 20, 30, 40,50],
             customerData:[],
             needTranSportOptions:[
-                {label:"全部",value:''} ,
                 {label:"是",value:'1'},
                 {label:"否",value:'0'}
                 ],
