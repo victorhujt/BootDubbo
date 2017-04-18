@@ -426,7 +426,8 @@ public class OfcOperationDistributing extends BaseController {
 
     @RequestMapping(value = "/querySupplierSelect2", method = RequestMethod.GET)
     @ResponseBody
-    public Object querySupplierByName(Select2ReqDto select2ReqDto,String customerCode) {
+    public Object querySupplierByName(Select2ReqDto select2ReqDto,HttpServletRequest req,String customerCode) {
+        String url=req.getRequestURI();
         Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
         try {
             if(PubUtils.isSEmptyOrNull(customerCode)){

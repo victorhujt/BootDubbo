@@ -373,6 +373,7 @@ public class OfcJumpontroller extends BaseController{
         ModelAndView modelAndView = new ModelAndView("order_storage_in");
         logger.info("当前用户为{}",getAuthResDtoByToken().getGroupRefName());
         model.addAttribute("merchandiser",getAuthResDtoByToken().getUserName());
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         setDefaultModel(model);
         return modelAndView;
     }
