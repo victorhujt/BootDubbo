@@ -87,7 +87,7 @@
                         v-if="templateCodeShow">
                 </el-table-column>
             </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="currentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next" :total="total">
             </el-pagination>
         </template>
     </div>

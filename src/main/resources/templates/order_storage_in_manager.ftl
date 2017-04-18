@@ -255,7 +255,7 @@
                 <el-table-column property="wareHouseName" label="仓库名称"></el-table-column>
                 <el-table-column property="baseName" label="基地名称"></el-table-column>
             </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="orderCurrentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalOrder">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="orderCurrentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next" :total="totalOrder">
             </el-pagination>
         </div>
     </div>
