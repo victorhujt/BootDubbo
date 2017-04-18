@@ -1208,14 +1208,57 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         //基本校验通过后检查客户订单编号是否重复
         Set<String> custOrderCodeSet = new HashSet<>();
         BigDecimal countImportNum = new BigDecimal(0);
+        Map<String, Set<String>> custOrderCodeTransCode = new HashMap<>(); //key:custOrderCode, value: transCode
+        Map<String, Set<String>> transCodeCustOrderCode = new HashMap<>(); //key:transCode, value: custOrderCode
         logger.info("数量初始化: {}", countImportNum.intValue());
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
             logger.info("数量 : {}", ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之前: {}", countImportNum.intValue());
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之后: {}", countImportNum.intValue());
-            custOrderCodeSet.add(ofcStorageTemplateDto.getCustOrderCode());
+            String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
+            String transCode = ofcStorageTemplateDto.getTransCode();
+            custOrderCodeSet.add(custOrderCode);
+
+            Set<String> strings = custOrderCodeTransCode.get(custOrderCode);
+            if (CollectionUtils.isEmpty(strings)) {
+                Set<String> newSet = new HashSet<>();
+                newSet.add(transCode);
+                custOrderCodeTransCode.put(custOrderCode, newSet);
+            } else if (CollectionUtils.isNotEmpty(strings) && !strings.contains(transCode)) {
+                strings.add(transCode);
+            }
+
+            Set<String> stringsSec = transCodeCustOrderCode.get(transCode);
+            if (CollectionUtils.isEmpty(stringsSec)) {
+                Set<String> newSet = new HashSet<>();
+                newSet.add(custOrderCode);
+                transCodeCustOrderCode.put(transCode, newSet);
+            } else if (CollectionUtils.isNotEmpty(stringsSec) && !stringsSec.contains(custOrderCode)) {
+                stringsSec.add(custOrderCode);
+            }
         }
+
+        for (String custOrderCode : custOrderCodeTransCode.keySet()) {
+            Set<String> transCodeSetForCheck = custOrderCodeTransCode.get(custOrderCode);
+            if (transCodeSetForCheck.size() > 1) {
+                logger.error("客户订单号【{}】对应了多个运输单号:{}", custOrderCode, transCodeSetForCheck.toString());
+                xlsErrorMsg.add("客户订单号【" + custOrderCode + "】对应了多个运输单号" + transCodeSetForCheck.toString() + "，无法导入，请检查处理!");
+                checkPass = false;
+            }
+        }
+
+        for (String transCode : transCodeCustOrderCode.keySet()) {
+            Set<String> custOrderCodeSetForCheck = transCodeCustOrderCode.get(transCode);
+            if (custOrderCodeSetForCheck.size() > 1) {
+                logger.error("客户订单号【{}】对应了同一个运输单号:{}", custOrderCodeSetForCheck.toString(), transCode);
+                xlsErrorMsg.add("客户订单号" + custOrderCodeSetForCheck.toString() + "的运输单号【" + transCode + "】重复，无法导入，请检查处理!");
+                checkPass = false;
+            }
+
+        }
+
+
         Integer importOrderNum = custOrderCodeSet.size();
         for (String custOrderCode : custOrderCodeSet) {
             OfcFundamentalInformation ofc = new OfcFundamentalInformation();

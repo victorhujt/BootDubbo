@@ -305,10 +305,12 @@
                         $.each(tableHeadMsg, function (indexIn, itemIn) {
                             var items = itemIn.split('@');
                             var propertyCode = items[1];
-                            var businessName = '';
                             if(propertyCode == 'businessType'){
-                                businessName = vm.convertCodeToName(itemOut[propertyCode]);
+                                var businessName = vm.convertCodeToName(itemOut[propertyCode]);
                                 tableRow[propertyCode] = businessName;
+                            } else if (propertyCode == 'provideTransport') {
+                                var provideTransport = itemOut[propertyCode] == '1' ? '是' : '否';
+                                tableRow[propertyCode] = provideTransport;
                             } else {
                                 tableRow[propertyCode] = itemOut[propertyCode];
                             }

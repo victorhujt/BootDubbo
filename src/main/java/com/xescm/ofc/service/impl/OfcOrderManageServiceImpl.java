@@ -1185,6 +1185,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (repeatNum > 0) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
             }
+        } else {
+            //如果不提供运输, 则运输单号为空
+            ofcDistributionBasicInfo.setTransCode("");
         }
 
         //订单的基本信息
