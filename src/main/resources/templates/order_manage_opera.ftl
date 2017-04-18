@@ -514,7 +514,7 @@
       param.areaSerialNo = areaName;
       param.baseSerialNo = baseName;
       param.custOrderCode = $("#custOrderCode").val();
-      param.provideTransport = $("#orderType").val() == "61" ? ($("#provideTransport").val() == "1" ? 1 : 0) : null;
+      param.provideTransport = $("#provideTransport").val() == "1" ? 1 : $("#provideTransport").val() == "0" ? 0 : null;
       CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
         if ( result == undefined || result == null || result.code == 500 || result.result == null || result.result.size == 0 || result.result.list == null) {
