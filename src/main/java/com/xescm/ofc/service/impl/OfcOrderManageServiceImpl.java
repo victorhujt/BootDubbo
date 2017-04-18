@@ -1173,7 +1173,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("创建仓储订单失败!");
         }
         if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-            ofcFundamentalInformation.setTransportType("整车");
+            ofcFundamentalInformation.setTransportType("10");//10 零担 20整车
             if (ofcDistributionBasicInfo == null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
             }
