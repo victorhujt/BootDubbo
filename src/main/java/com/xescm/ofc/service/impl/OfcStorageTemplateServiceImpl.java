@@ -204,62 +204,58 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Transactional
     @Override
     public void templateEditConfirm(String templateList, AuthResDto authResDto, String lastTemplateType) throws Exception {
+        logger.info("模板配置编辑 ==> templateList:{}", templateList);
+        logger.info("模板配置编辑 ==> authResDto:{}", authResDto);
+        logger.info("模板配置编辑 ==> lastTemplateType:{}", lastTemplateType);
         TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
         };
         List<OfcStorageTemplate> ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
+        //校验模板必填项
         this.checkTemplateListRequired(ofcStorageTemplates);
         String userId = authResDto.getUserId();
         String userName = authResDto.getUserName();
         Date now = new Date();
         OfcStorageTemplate ofcStorageTemplateForFix = ofcStorageTemplates.get(0);
         String currTemplateType = ofcStorageTemplateForFix.getTemplateType();
-        OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
-        ofcStorageTemplate.setIndexNum(22);
-
-        Integer changeNum = StringUtils.equals(currTemplateType, STORAGE_IN) ? 21 : 22;
-        Integer updateNum = changeNum;
-        int num = 0;
+        boolean templateTypeChange = !StringUtils.equals(currTemplateType, lastTemplateType);
+        //模板类型改变
+        if (templateTypeChange) {
+            int delete = ofcStorageTemplateMapper.deleteByTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
+            if (delete == 0) {
+                logger.error("模板配置删除失败!");
+                throw new BusinessException("模板配置删除失败");
+            }
+        }
+        int changeNum = 0;
         for (OfcStorageTemplate ofcStorageTemp : ofcStorageTemplates) {
-            num ++ ;
             ofcStorageTemp.setOperator(userId);
             ofcStorageTemp.setOperatorName(userName);
             ofcStorageTemp.setOperTime(now);
-            int i = 0;
-            if(num != changeNum){
-                i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
-            }else {
-
-                if(StringUtils.equals(currTemplateType, STORAGE_IN) && StringUtils.equals(lastTemplateType, STORAGE_OUT)){
-                    //21
-                    ofcStorageTemplate.setTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
-                    //删掉模板中第22条
-                    int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
-                    if(delete == 0){
-                        logger.error("模板配置编辑更新失败, 删掉模板中第22条失败");
-                        throw new BusinessException("模板配置编辑更新失败");
-                    }
-                }else if(StringUtils.equals(currTemplateType, STORAGE_OUT) && StringUtils.equals(lastTemplateType, STORAGE_IN)){
-                    //22
-                    //新增模板第22条
-                    ModelMapper modelMapper = new ModelMapper();
-                    modelMapper.map(ofcStorageTemplate, ofcStorageTemplateForFix);
-                    modelMapper.map(ofcStorageTemp, ofcStorageTemplate);
-                    ofcStorageTemp.setId(null);
-                    ofcStorageTemp.setCreatTime(now);
-                    ofcStorageTemp.setCreator(userId);
-                    ofcStorageTemp.setCreatorName(userName);
-                    i = ofcStorageTemplateMapper.insert(ofcStorageTemp);
-                }else {
-                    i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
-                }
+            if (templateTypeChange) {
+                ofcStorageTemp.setCreator(userId);
+                ofcStorageTemp.setCreatorName(userName);
+                ofcStorageTemp.setCreatTime(now);
+                int insert = ofcStorageTemplateMapper.insert(ofcStorageTemp);
+                changeNum += insert;
+            } else {
+                int update = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
+                changeNum += update;
             }
-            updateNum -= i;
         }
-        if(updateNum.compareTo(changeNum) == 0){
-            logger.error("模板配置编辑更新失败! updateNum:{}", updateNum);
-            throw new BusinessException("模板配置编辑更新失败!");
+        if (changeNum != this.getTemplateByType(currTemplateType)) {
+            logger.error("模板配置编辑失败");
+            throw new BusinessException("模板配置编辑失败");
         }
+        logger.info("模板配置编辑成功! changeNum:{}", changeNum);
+    }
 
+    private int getTemplateByType(String currTemplateType) {
+        if (StringUtils.equals(currTemplateType, STORAGE_IN)) {
+            return StorageImportInEnum.queryList().size();
+        } else if (StringUtils.equals(currTemplateType, STORAGE_OUT)) {
+            return StorageImportOutEnum.queryList().size();
+        }
+        return Integer.MAX_VALUE;
     }
 
     /**
@@ -1605,8 +1601,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Override
     @Transactional
     public Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception{
-        logger.info("orderList ==> {}", orderList);
-        logger.info("authResDto ==> {}", authResDto);
+        logger.info("仓储开单批量导单确认下单orderList ==> {}", orderList);
+        logger.info("仓储开单批量导单确认下单authResDto ==> {}", authResDto);
 //        List<String> orderBatchNumberList = new ArrayList<>();
         if(PubUtils.isSEmptyOrNull(orderList) || null == authResDto){
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
@@ -1866,20 +1862,28 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             int indexNum = ofcStorageTemplate.getIndexNum();
             String reflectColName = ofcStorageTemplate.getReflectColName();
             String colDefaultVal = ofcStorageTemplate.getColDefaultVal();
-            if(indexNum == 1 && PubUtils.isSEmptyOrNull(reflectColName)){
+            String standardColCode = ofcStorageTemplate.getStandardColCode();
+            if(StringUtils.equals(standardColCode, StorageImportOutEnum.CUST_ORDER_CODE.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName)){
                 throw new BusinessException(StorageImportOutEnum.CUST_ORDER_CODE.getStandardColName() + "的模板列名不能为空!");
-            }else if(indexNum == 3 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.MERCHANDISER.getStandardColCode())
+                    && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
                 throw new BusinessException(StorageImportOutEnum.MERCHANDISER.getStandardColName() + "的模板列名和默认值必填一个");
-            }else if(indexNum == 4 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.WAREHOUSE_NAME.getStandardColCode())
+                    && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
                 throw new BusinessException(StorageImportOutEnum.WAREHOUSE_NAME.getStandardColName() + "的模板列名和默认值必填一个");
-            }else if(indexNum == 5 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.BUSINESS_TYPE.getStandardColCode())
+                    && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
                 throw new BusinessException(StorageImportOutEnum.BUSINESS_TYPE.getStandardColName() + "的模板列名和默认值必填一个");
-            }else if(indexNum == 7 && PubUtils.isSEmptyOrNull(reflectColName)){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.GOODS_CODE.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName)){
                 throw new BusinessException(StorageImportOutEnum.GOODS_CODE.getStandardColName() + "的模板列名不能为空!");
-            }else if(indexNum == 12 && PubUtils.isSEmptyOrNull(reflectColName)){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.QUANTITY.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName)){
                 throw new BusinessException(storageIn ? StorageImportInEnum.QUANTITY.getStandardColName()
                         : StorageImportOutEnum.QUANTITY.getStandardColName()  + "的模板列名不能为空!");
-            }else if(indexNum == 22 && PubUtils.isSEmptyOrNull(reflectColName) && !storageIn){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName) && !storageIn){
                 throw new BusinessException(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColName()  + "的模板列名不能为空!");
             }
         }

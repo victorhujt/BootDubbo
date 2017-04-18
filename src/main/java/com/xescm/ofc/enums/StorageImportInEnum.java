@@ -62,7 +62,6 @@ public enum StorageImportInEnum {
         this.standardColName = standardColName;
     }
 
-
     public static List<StorageImportInEnum> queryList() {
         return Arrays.asList(StorageImportInEnum.values());
     }
