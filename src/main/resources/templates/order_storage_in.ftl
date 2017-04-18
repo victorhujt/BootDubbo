@@ -1,6 +1,4 @@
 <head>
-    <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
-    <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
     <title>入库开单</title>
     <style>
         .el-dialog{
@@ -324,7 +322,7 @@
             <div class="xe-pageHeader">
                 货品信息
             </div>
-            <el-table :row-style="rowKey" :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
+            <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
                         <el-input v-model="scope.row.goodsType" :readOnly="true"></el-input>
@@ -403,18 +401,16 @@
                     </template>
                 </el-table-column>
                 <el-table-column property="supportBatch" label="供应商批次">
-                <template scope="scope" v-initSelectTo>
-                    <#--<el-select v-model="scope.row.supportBatch" placeholder="请选择">-->
-                        <#--<el-option-->
-                                <#--v-for="item in supportBatchData"-->
-                                <#--:label="item.label"-->
-                                <#--:value="item.value">-->
-                        <#--</el-option>-->
-                    <#--</el-select>-->
-                    <input class="form-control select2-single" name="custName" :id="'custName' + scope.$index" placeholder="请输入客户名称" />
-                    <input  hidden name="custCode" :id="'custCode' + scope.$index"  />
-                </template>
-            </el-table-column>
+                    <template scope="scope">
+                        <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                            <el-option
+                                    v-for="item in supportBatchData"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
                     <template scope="scope">
                         <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
@@ -428,27 +424,6 @@
 </div>
 </body>
 <script>
-
-    var scripts = [null,
-        "/components/select2.v3/select2.min.js",
-        "/components/select2.v3/select2_locale_zh-CN.js",
-        null];
-
-    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
-        $(document).ready(main);
-    });
-
-    function main() {
-     //   initCustomerName();
-    }
-
-    function initCustomerName(row,i) {
-        var ofc_web_url = $("#ofc_web_url").html();
-//        var url = ofc_web_url + "/ofc/distributing/queryCustomerSelect2";
-        var url =  "localhost:7006/ofc/distributing/querySupplierSelect2?customerCode=" + row.custCode;
-        var notice = "没有找到相关客户";
-        Select2Util.singleSelectInit("#custName" + i,url,notice,"#custCode" + i);
-    }
     new Vue({
         el: '#app',
         data:function () {
@@ -682,10 +657,6 @@
             };
         },
         methods: {
-            rowKey(val,i){
-                console.log(val);
-                initCustomerName(val,i);
-            },
             handleCurrentChange:function(val) {
                 this.customerDataInfo.currentRow = val;
             },
@@ -828,11 +799,9 @@
                     return;
                 }
                 this.goodDataInfo.chosenGoodCode = false;
-
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
                     var newData = {
-                        custCode: this.orderForm.custCode,
                         goodsType: val.goodsType,
                         goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
