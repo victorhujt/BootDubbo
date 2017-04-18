@@ -1217,9 +1217,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之后: {}", countImportNum.intValue());
             String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
-            String transCode = ofcStorageTemplateDto.getTransCode();
             custOrderCodeSet.add(custOrderCode);
-
+            String transCode = ofcStorageTemplateDto.getTransCode();
+            if (PubUtils.isSEmptyOrNull(transCode)) {
+                continue;
+            }
             Set<String> strings = custOrderCodeTransCode.get(custOrderCode);
             if (CollectionUtils.isEmpty(strings)) {
                 Set<String> newSet = new HashSet<>();
