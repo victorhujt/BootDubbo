@@ -758,7 +758,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -976,7 +976,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商编码校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -1018,7 +1018,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商批次校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -1102,7 +1102,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商编码校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
