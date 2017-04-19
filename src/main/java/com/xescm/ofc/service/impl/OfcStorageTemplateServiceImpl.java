@@ -36,7 +36,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -52,10 +51,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.STO_TEMP_PRE;
-import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
-import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_STOCK_IMPORT;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 import static com.xescm.ofc.constant.StorageTemplateConstant.*;
 

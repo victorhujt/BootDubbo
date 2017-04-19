@@ -1,6 +1,4 @@
 <head>
-    <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
-    <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
     <title>入库开单</title>
     <style>
         .el-dialog{
@@ -26,7 +24,6 @@
         }
     </style>
 </head>
-<span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
 <body>
 <div id="app">
     <div class="list-mian-01">
@@ -188,7 +185,6 @@
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
                 <el-table-column property="unit" label="单位"></el-table-column>
                 <el-table-column property="barCode" label="条形码"></el-table-column>
-                <el-table-column property="custCode" v-if="false" label="客户编码"></el-table-column>
                 <el-table-column property="expiryDate" v-if="false" label="保质期限"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleGoodSizeChange" @current-change="handleGoodCurrentPage" :current-page="goodDataInfo.currentGoodPage" :page-sizes="pageSizes" :page-size="goodDataInfo.goodPageSize" layout="total, sizes, prev, pager, next, jumper" :total="goodDataInfo.totalGoods">
@@ -326,7 +322,7 @@
             <div class="xe-pageHeader">
                 货品信息
             </div>
-            <el-table :row-style="rowKey" :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
+            <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
                         <el-input v-model="scope.row.goodsType" :readOnly="true"></el-input>
@@ -404,20 +400,15 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportBatch" v-if="false">
-                    <el-input v-model="scope.row.supportBatch"></el-input>
-                </el-table-column>
-                <el-table-column property="supportBatch1" label="供应商批次">
+                <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
-                    <#--<el-select v-model="scope.row.supportBatch" placeholder="请选择">-->
-                    <#--<el-option-->
-                    <#--v-for="item in supportBatchData"-->
-                    <#--:label="item.label"-->
-                    <#--:value="item.value">-->
-                    <#--</el-option>-->
-                    <#--</el-select>-->
-                        <input class="form-control select2-single" name="custName" :id="'custName' + scope.$index" placeholder="请输入供应商名称" />
-                        <input  hidden name="custCode" :id="'custCode' + scope.$index"  />
+                        <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                            <el-option
+                                    v-for="item in supportBatchData"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
@@ -433,30 +424,6 @@
 </div>
 </body>
 <script>
-
-    var scripts = [null,
-        "/components/select2.v3/select2.min.js",
-        "/components/select2.v3/select2_locale_zh-CN.js",
-        null];
-
-    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
-        $(document).ready(main);
-    });
-
-    function main() {
-        initSupplierName();
-    }
-
-    function initSupplierName(row,i) {
-        var ofc_web_url = $("#ofc_web_url").html();
-        var url =  ofc_web_url+"/ofc/distributing/querySupplierSelect2?customerCode=" + row.custCode;
-        var notice = "没有找到相关供应商";
-        Select2Util.singleSelectInit("#custName" + i,url,notice,"#custCode" + i);
-        $("#custName" + i).on("select2-selecting", function(e) {
-            row.supportBatch = e.choice.code;
-            console.log(row.supportBatch);
-        })
-    }
     new Vue({
         el: '#app',
         data:function () {
@@ -690,9 +657,6 @@
             };
         },
         methods: {
-            rowKey:function(val,i){
-                initSupplierName(val,i);
-            },
             handleCurrentChange:function(val) {
                 this.customerDataInfo.currentRow = val;
             },
@@ -835,11 +799,9 @@
                     return;
                 }
                 this.goodDataInfo.chosenGoodCode = false;
-
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
                     var newData = {
-                        custCode: this.orderForm.custCode,
                         goodsType: val.goodsType,
                         goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
@@ -1058,7 +1020,6 @@
                         },"json");
             },
             saveStorage:function(){
-
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -1120,7 +1081,6 @@
                 }
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
-                    debugger;
                     var good=goodsTable[i];
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
@@ -1202,7 +1162,6 @@
             },
             submitForm:function(formName) {
                 var _this = this;
-                console.log(this.goodsData);
                 this.$refs[formName].validate(function(valid){
                     if (valid) {
                         _this.saveStorage();
