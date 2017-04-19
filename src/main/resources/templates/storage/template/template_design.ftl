@@ -7,6 +7,9 @@
         background-color:#20a0ff;
         border-color:#20a0ff;
     }
+    .select2-container .select2-choice abbr:before{
+      display: none;
+    }
 </style>
 <div id="vm">
     <div class="list-mian-01">
