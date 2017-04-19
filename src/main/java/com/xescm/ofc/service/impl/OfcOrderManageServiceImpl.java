@@ -35,6 +35,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.ofc.model.dto.tfc.TfcTransport;
 import com.xescm.ofc.model.dto.tfc.TfcTransportDetail;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
@@ -78,6 +79,7 @@ import java.util.*;
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
@@ -148,8 +150,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private OfcAddressReflectMapper ofcAddressReflectMapper;
     @Resource
-    private OfcOrderNewstatusService ofcOrderNewstatusService;
-
+    private OfcStorageTemplateService ofcStorageTemplateService;
     @Resource
     private  OfcDailyAccountsService ofcDailyAccountsService;
     @Resource
@@ -636,6 +637,92 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         rmcServiceCoverageForOrderVo = this.copyDestinationPlace(ofcDistributionBasicInfo.getDeparturePlaceCode(), rmcServiceCoverageForOrderVo);
         RmcServiceCoverageForOrderVo rmcPickup = this.rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
         this.updateOrderAreaAndBase(rmcPickup, ofcFundamentalInformation);
+    }
+
+    @Override
+    public Wrapper storageOrderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto) {
+        Map<String, List<OfcStorageTemplateDto>> orderMap = new HashMap<>();
+        for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
+            if(null == ofcStorageTemplateDto){
+                logger.info("仓储开单批量导单确认下单, 订单信息为空! ");
+                continue;
+            }
+            String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
+            List<OfcStorageTemplateDto> orderListByCustOrderCode = orderMap.get(custOrderCode);
+            if(!orderMap.containsKey(custOrderCode) && orderListByCustOrderCode == null){
+                logger.info("初始化");
+                orderListByCustOrderCode = new ArrayList<>();
+//                orderMap.put(custOrderCode, orderListByCustOrderCode);
+            }
+            orderListByCustOrderCode.add(ofcStorageTemplateDto);
+            orderMap.put(custOrderCode, orderListByCustOrderCode);
+        }
+        String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
+
+        for (String orderMapKey : orderMap.keySet()) {
+
+            List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
+            OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
+            OfcStorageTemplateDto forOrderMsg = order.get(0);
+            logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
+            org.springframework.beans.BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
+            org.springframework.beans.BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
+            ofcOrderDTO.setOrderTime(ofcStorageTemplateService.convertStringToDate(forOrderMsg.getOrderTime()));
+            if(!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())){
+                ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
+            }
+            logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
+            //在这里将订单信息补充完整
+
+//            orderBatchNumberList.add(orderBatchNumber);
+            ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
+            ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
+            if(ofcOrderDTO.getProvideTransport() == null){
+                ofcOrderDTO.setProvideTransport(0);
+            }
+//            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
+            Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
+//            MathContext mathContext = new MathContext(3);
+            for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
+                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
+                StringBuilder key=new StringBuilder();
+                key.append(ofcGoodsDetailsInfo.getGoodsCode());
+                if(ofcGoodsDetailsInfo.getSupportBatch()!=null){
+                    key.append(ofcGoodsDetailsInfo.getSupportBatch());
+                }
+                if(!org.apache.commons.lang3.StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
+                    key.append(ofcGoodsDetailsInfo.getProductionBatch());
+                }
+                if(ofcGoodsDetailsInfo.getCreationTime()!=null){
+                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1));
+                }
+                if(ofcGoodsDetailsInfo.getInvalidTime()!=null){
+                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+                }
+                if(ofcGoodsDetailsInfoMap.containsKey(key.toString())){
+                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(key.toString());
+                    if(null == info.getQuantity() || null == ofcGoodsDetailsInfo.getQuantity()){
+                        logger.error("货品数量出错!");
+                        throw new BusinessException("货品数量出错!");
+                    }
+                    info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
+                    ofcGoodsDetailsInfoMap.put(key.toString(), info);
+                }else {
+                    ofcGoodsDetailsInfoMap.put(key.toString(), ofcGoodsDetailsInfo);
+                }
+            }
+            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
+            CscContantAndCompanyDto cscContantAndCompanyDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
+            ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
+            Wrapper save = this.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
+                    , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
+            if(save.getCode() == Wrapper.ERROR_CODE){
+                logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
+                return save;
+            }
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
 
 

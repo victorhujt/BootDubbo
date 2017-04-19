@@ -1219,7 +1219,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
             custOrderCodeSet.add(custOrderCode);
             String transCode = ofcStorageTemplateDto.getTransCode();
-            if (PubUtils.isSEmptyOrNull(transCode)) {
+            if (StringUtils.equals(ofcStorageTemplateDto.getProvideTransport(), "0") || PubUtils.isSEmptyOrNull(transCode)) {
                 continue;
             }
             Set<String> strings = custOrderCodeTransCode.get(custOrderCode);
@@ -1644,7 +1644,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 下单结果
      */
     @Override
-    @Transactional
     public Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception{
         logger.info("仓储开单批量导单确认下单orderList ==> {}", orderList);
         logger.info("仓储开单批量导单确认下单authResDto ==> {}", authResDto);
@@ -1659,91 +1658,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         if(CollectionUtils.isEmpty(ofcStorageTemplateDtoList)){
             throw new BusinessException("仓储开单批量导单确认下单失败! 订单列表为空!");
         }
-        Map<String, List<OfcStorageTemplateDto>> orderMap = new HashMap<>();
-        for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
-            if(null == ofcStorageTemplateDto){
-                logger.info("仓储开单批量导单确认下单, 订单信息为空! ");
-                continue;
-            }
-            String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
-            List<OfcStorageTemplateDto> orderListByCustOrderCode = orderMap.get(custOrderCode);
-            if(!orderMap.containsKey(custOrderCode) && orderListByCustOrderCode == null){
-                logger.info("初始化");
-                orderListByCustOrderCode = new ArrayList<>();
-//                orderMap.put(custOrderCode, orderListByCustOrderCode);
-            }
-            orderListByCustOrderCode.add(ofcStorageTemplateDto);
-            orderMap.put(custOrderCode, orderListByCustOrderCode);
-        }
-        String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
-
-        for (String orderMapKey : orderMap.keySet()) {
-
-            List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
-            OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
-            OfcStorageTemplateDto forOrderMsg = order.get(0);
-            logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
-            BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
-            BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
-            ofcOrderDTO.setOrderTime(this.convertStringToDate(forOrderMsg.getOrderTime()));
-            if(!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())){
-                ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
-            }
-            logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
-            //在这里将订单信息补充完整
-
-//            orderBatchNumberList.add(orderBatchNumber);
-            ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
-            ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
-            if(ofcOrderDTO.getProvideTransport() == null){
-                ofcOrderDTO.setProvideTransport(0);
-            }
-//            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
-            Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
-//            MathContext mathContext = new MathContext(3);
-            for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = this.convertCscGoods(ofcStorageTemplateDto);
-                StringBuilder key=new StringBuilder();
-                key.append(ofcGoodsDetailsInfo.getGoodsCode());
-                if(ofcGoodsDetailsInfo.getSupportBatch()!=null){
-                    key.append(ofcGoodsDetailsInfo.getSupportBatch());
-                }
-                if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
-                    key.append(ofcGoodsDetailsInfo.getProductionBatch());
-                }
-                if(ofcGoodsDetailsInfo.getCreationTime()!=null){
-                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1));
-                }
-                if(ofcGoodsDetailsInfo.getInvalidTime()!=null){
-                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
-                }
-                if(ofcGoodsDetailsInfoMap.containsKey(key.toString())){
-                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(key.toString());
-                    if(null == info.getQuantity() || null == ofcGoodsDetailsInfo.getQuantity()){
-                        logger.error("货品数量出错!");
-                        throw new BusinessException("货品数量出错!");
-                    }
-                    info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
-                    ofcGoodsDetailsInfoMap.put(key.toString(), info);
-                }else {
-                    ofcGoodsDetailsInfoMap.put(key.toString(), ofcGoodsDetailsInfo);
-                }
-            }
-            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
-            CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
-            convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
-            convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
-            Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
-                    , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
-            if(save.getCode() == Wrapper.ERROR_CODE){
-                logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
-                return save;
-            }
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
+        return ofcOrderManageService.storageOrderConfirm(ofcStorageTemplateDtoList, authResDto);
     }
 
-    private Date convertStringToDate(String orderTime) {
+    public Date convertStringToDate(String orderTime) {
         String[] split = orderTime.split(" ");
         if (split.length == 1 || orderTime.matches(REGEX_YYYYMMDD)) {
             orderTime = orderTime + " 00:00:00";
@@ -1751,7 +1669,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return DateUtils.String2Date(orderTime, DateUtils.DateFormatType.TYPE1);
     }
 
-    private void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
+    public void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
         if(null == cscSupplierInfoDto || PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierCode())){
             return;
         }
@@ -1762,7 +1680,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcOrderDTO.setSupportContactName(cscSupplierInfoDto.getContactName());
     }
 
-    private void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
+    public void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
         if(null == cscConsigneeDto || PubUtils.isSEmptyOrNull(cscConsigneeDto.getContactCompanySerialNo())){
             return;
         }
@@ -1797,7 +1715,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 转换后的收货方
      * @throws Exception 异常
      */
-    private CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) throws Exception{
+    public CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto){
         logger.info("转换客户中心DTO收货方 cscConsigneeDto:{}", cscConsigneeDto);
         if(null == cscConsigneeDto){
             logger.error("转换客户中心DTO收货方出错! 入参为空! ");
@@ -1819,7 +1737,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @param ofcStorageTemplateDto 订单DTO
      * @return 转换后的货品
      */
-    private OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto) throws Exception{
+    public OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto){
         logger.info("转换客户中心货品: ofcStorageTemplateDto.getCscGoodsApiVo():{}", ofcStorageTemplateDto.getCscGoodsApiVo());
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
