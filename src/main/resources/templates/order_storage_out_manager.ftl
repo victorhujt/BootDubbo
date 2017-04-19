@@ -728,15 +728,11 @@
                 param.warehouseCode=StringUtil.trim(this.wareHouseName);
                 param.provideTransport=StringUtil.trim(this.provideTransport);
                 param.tag="out";
-                CommonClient.syncpost(sys.rootPath + "/ofc/queryOrderStorageDataOper",param,function (result) {
+                CommonClient.post(sys.rootPath + "/ofc/queryOrderStorageDataOper",param,function (result) {
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
-                        vueObj.totalOrder=0;
-                        vueObj.orderCurrentPage=0;
                         layer.msg("暂时未查询到相关订单信息！");
                     } else if (result.code == 200) {
                         if(result.result.list.length == 0){
-                            vueObj.totalOrder=0;
-                            vueObj.orderCurrentPage=0;
                             layer.msg("暂时未查询到相关订单信息！");
                         }
                         $.each(result.result.list, function (index, item) {
