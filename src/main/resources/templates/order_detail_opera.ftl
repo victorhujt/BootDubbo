@@ -160,6 +160,16 @@
             <div class="col-xs-12">
                 <form class="form-horizontal">
                     <div class="form-group">
+                        <label class="control-label col-label no-padding-right" for="name">是否提供运输</label>
+                        <div class="w-width-220 col-float">
+                            <input  name="" type="search" placeholder="" aria-controls="dynamic-table"
+                                    <#if ofcWarehouseInformation ?? && ofcWarehouseInformation.provideTransport ?? >
+                                        <#if ofcWarehouseInformation.provideTransport == 1>value = "是" <#else> value = "否"
+                                        </#if>
+                                    </#if>/>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-label no-padding-right" for="name">运输单号</label>
                         <div class="w-width-220 col-float">
                             <input id="transCode" name="" type="search" placeholder=""

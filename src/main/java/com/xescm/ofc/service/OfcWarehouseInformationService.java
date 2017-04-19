@@ -14,4 +14,6 @@ public interface OfcWarehouseInformationService extends IService<OfcWarehouseInf
     OfcWarehouseInformation warehouseInformationSelect(String code);
     /*List<String> getWarehouseNameListByCustCode(String custCode);*/
     List<RmcWarehouseRespDto> getWarehouseListByCustCode(String custCode);
+
+    OfcWarehouseInformation queryByOrderCode(String orderCode);
 }
