@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>入库单详情</title>
     <style lang="css">
         .borderNone .el-input__inner{border:none;}
         .el-table__body-wrapper{
