@@ -1743,7 +1743,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
         BeanUtils.copyProperties(cscGoodsApiVo, ofcGoodsDetailsInfo);
         ofcGoodsDetailsInfo.setId(null);
-        ofcGoodsDetailsInfo.setGoodsSpec(cscGoodsApiVo.getSpecification());
+        ofcGoodsDetailsInfo.setGoodsSpec(ofcStorageTemplateDto.getGoodsSpec());
+        ofcGoodsDetailsInfo.setUnit(ofcStorageTemplateDto.getUnit());
+        ofcGoodsDetailsInfo.setUnitPrice(ofcStorageTemplateDto.getUnitPrice());
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
         ofcGoodsDetailsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
         ofcGoodsDetailsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
@@ -1755,6 +1757,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();
         String invalidTime = ofcStorageTemplateDto.getInvalidTime();
+        String productionBatch = ofcStorageTemplateDto.getProductionBatch();
+        ofcGoodsDetailsInfo.setProductionBatch(productionBatch);
         ofcGoodsDetailsInfo.setSupportBatch(supportBatch);
         if(!PubUtils.isSEmptyOrNull(productionTime)){
             ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
