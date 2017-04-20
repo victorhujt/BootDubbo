@@ -221,7 +221,8 @@
                     {indexNum:'20', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
                     {indexNum:'21', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
                     {indexNum:'22', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
-                    {indexNum:'23', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
+                    {indexNum:'23', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'},
+                    {indexNum:'24', standardColName:'发货方名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'consignorName'}
                 ]
             }
         } ,
@@ -282,7 +283,8 @@
                         {indexNum:'20', standardColName:'车牌号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'plateNumber'},
                         {indexNum:'21', standardColName:'司机姓名', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'driverName'},
                         {indexNum:'22', standardColName:'联系电话', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'contactNumber'},
-                        {indexNum:'23', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'}
+                        {indexNum:'23', standardColName:'供应商批次', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'supportBatch'},
+                        {indexNum:'24', standardColName:'发货方名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'consignorName'}
                     ];
                     vm.businessTypeList=[
                         {value:'采购入库',label:'采购入库'},
@@ -384,6 +386,7 @@
                     this.custCodeNotNull = true;
                     return;
                 }
+                var hasProvideTransport = false;
                 for (var i = 0; i < designData.length; i ++){
                     var design = designData[i];
                     var template = {};
@@ -419,6 +422,11 @@
                         return;
                     } else if(standardColCode == 'consigneeName' && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageOut'){
                         vm.$message.error('收货方名称模板列名必填!');
+                        return;
+                    } else if (standardColCode == 'provideTransport' && !StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageIn') {
+                        hasProvideTransport = true;
+                    } else if (standardColCode == 'consignorName' && hasProvideTransport && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageIn') {
+                        vm.$message.error('若您映射了是否提供运输服务, 则发货方名称映射列名必填!');
                         return;
                     }
                     template.indexNum = design.indexNum;
