@@ -688,6 +688,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有批次号", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
+                            cellValue = PubUtils.trim(cellValue);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //生产日期
                         }else if(StringUtils.equals(StorageImportInEnum.PRODUCTION_TIME.getStandardColCode(), standardColCode)){
@@ -828,6 +830,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有运输单号", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
+                            cellValue = PubUtils.trim(cellValue);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //车牌号
                         }else if(StringUtils.equals(StorageImportInEnum.PLATE_NUMBER.getStandardColCode(), standardColCode)){
