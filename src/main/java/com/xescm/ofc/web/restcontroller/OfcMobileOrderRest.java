@@ -202,7 +202,7 @@ public class OfcMobileOrderRest extends BaseController {
     @RequestMapping(value = "/autoAcceptMobileOrderDetail")
     @ResponseBody
     public Wrapper<OfcMobileOrderVo> autoAcceptMobileOrderDetail(String orderCode) {
-        logger.debug("==>拍照开单-自动受理订单 orderCode={}", orderCode);
+        logger.info("==>拍照开单-自动受理订单 orderCode={}", orderCode);
         Wrapper<OfcMobileOrderVo> result;
         try {
             OfcMobileOrder params = new OfcMobileOrder();
@@ -230,18 +230,18 @@ public class OfcMobileOrderRest extends BaseController {
      */
     @RequestMapping(value = "/deleteMobileOrder")
     @ResponseBody
-    public Wrapper<Integer> deleteMobileOrder(String mobileOrderCode) {
-        if(PubUtils.isSEmptyOrNull(mobileOrderCode)){
-            throw new BusinessException("删除手机订单时订单号不能为空！");
-        }
+    public Wrapper<?> deleteMobileOrder(String mobileOrderCode) {
         logger.info("==>拍照开单-删除的手机订单号为: mobileOrderCode={}", mobileOrderCode);
-
         try {
+            if(PubUtils.isSEmptyOrNull(mobileOrderCode)){
+                throw new BusinessException("删除手机订单时订单号不能为空！");
+            }
             ofcMobileOrderService.deleteMobileOrder(mobileOrderCode);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        } catch (Exception e) {
+            logger.error("拍照开单-删除手机订单号发生错误: {}", e);
+            return  WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE,e.getMessage());
 
+        }
+        return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 }

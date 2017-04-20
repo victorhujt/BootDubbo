@@ -9,6 +9,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
@@ -75,4 +76,6 @@ public interface OfcOrderManageService {
      * @param ofcDistributionBasicInfo
      */
     public void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo);
+
+    Wrapper storageOrderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto);
 }

@@ -319,9 +319,12 @@
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                       </el-form-item>
-                      <el-form-item label="是否提供运输">
+                      <el-form-item label="是否提供运输"  class="xe-col-3">
                         <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
                       </el-form-item>
+                        <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                            <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
+                        </el-form-item>
                     </div>
                     <div class="xe-block">
                       <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
@@ -508,6 +511,7 @@
             }
           };
           return {
+              isShow:false,
               cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
               defaultData: {
                   province: {
@@ -679,6 +683,7 @@
                     isNeedTransport:false,
                     isEditable:false,
                     plateNumber:'',
+                    transCode:'',
                     driverName:'',
                     contactNumber:'',
                     consigneeName:'',
@@ -862,7 +867,9 @@
                     vueObj.orderForm.supportName = '';
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
-                        layer.msg("暂时未查询到供应商信息！！");
+                        if(!vueObj.isShow){
+                            layer.msg("暂时未查询到供应商信息！！");
+                        }
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var supplier={};
@@ -930,6 +937,7 @@
                     };
                     this.goodsData.push(newData);
                     if(this.supportBatchData.length==0){
+                        this.isShow = true;
                         this.selectSupplier();
                     }
                 }
@@ -1176,6 +1184,10 @@
                     ofcOrderDTOStr.provideTransport="1";
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
+                    if(!StringUtil.isEmpty(this.orderForm.transCode)){
+                        this.promptInfo("不提供运输时,请不要填写运输单号!",'warning');
+                        return;
+                    }
                 }
                 //订单基本信息
                 ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");

@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>入库单详情</title>
     <style lang="css">
         .borderNone .el-input__inner{border:none;}
         .el-table__body-wrapper{
@@ -176,6 +177,9 @@
                 <el-form-item label="是否提供运输" class="xe-col-3">
                     <el-input v-model="needTransport" :readOnly="true"></el-input>
                 </el-form-item>
+                <el-form-item label="运输单号" class="xe-col-3">
+                    <el-input v-model="transCode" :readOnly="true"></el-input>
+                </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="出发地" class="xe-col-3">
@@ -332,6 +336,7 @@
                 goodsSpec:'',
                 unit:'',
                 goodsCategoryOptions:[],
+                transCode:'',
                 goodsType:'',
                 goodsCategory:'',
                 invalidTime:'',
@@ -496,6 +501,7 @@
                                         //发货方
                                         vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
                                         vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
+                                        vueObj.transCode = ofcDistributionBasicInfo.transCode;
                                         vueObj.consignorContactPhone=ofcDistributionBasicInfo.consignorContactPhone;
                                         if(ofcDistributionBasicInfo.departureProvince!=null){
                                             vueObj.consignorAddress=ofcDistributionBasicInfo.departureProvince;
@@ -542,6 +548,7 @@
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
                                             good.unitPrice=goodDetail.unitPrice;
+                                            good.unit=goodDetail.unit;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
@@ -606,7 +613,7 @@
                 CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.length == 0) {
-                        layer.msg("暂时未查询到供应商信息！！");
+                      //  layer.msg("暂时未查询到供应商信息！！");
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var option={};
@@ -615,7 +622,7 @@
                             vueObj.supportBatchData.push(option);
                         });
                     } else if (result.code == 403) {
-                        vueObj.promptInfo("没有权限",'error');
+                      //  vueObj.promptInfo("没有权限",'error');
                     }
                 },"json");
             },

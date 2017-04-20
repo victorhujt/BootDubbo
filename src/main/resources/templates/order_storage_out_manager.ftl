@@ -143,6 +143,15 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="是否提供运输" class="xe-col-3">
+                    <el-select v-model="provideTransport" placeholder="请选择">
+                        <el-option
+                                v-for="item in needTranSportOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </div>
             <div class="xe-block">
                 <el-form-item label="" class="xe-col-3">
@@ -187,7 +196,7 @@
                 <el-table-column property="baseName" label="基地名称"></el-table-column>
                 <el-table-column property="exceptionReason" label="异常原因"></el-table-column>
             </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="orderCurrentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalOrder">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage" :current-page="orderCurrentPage" :page-sizes="pageSizes" :page-size="pageSize" layout="total, sizes, prev, pager, next" :total="totalOrder">
             </el-pagination>
         </div>
     </div>
@@ -204,6 +213,7 @@
             isDisabledCopy:false,
             isDisabledAudit:false,
             isDisabledRepeatAudit:false,
+            provideTransport:'',
             currentRow:'',
             currentCustomerRow:'',
             orderCurrentPage:1,
@@ -214,6 +224,10 @@
             wareHouseOptions:[],
             pageSizes:[10, 20, 30, 40,50],
             customerData:[],
+            needTranSportOptions:[
+                {label:"是",value:'1'},
+                {label:"否",value:'0'}
+                ],
             customerPageSize:10,
             wareHouseName:'',
             businessType:'',
@@ -511,6 +525,7 @@
                 this.baseName="";
                 this.areaName="";
                 this.wareHouseName="";
+                this.provideTransport="";
                 if(this.baseNameOptions.length==1&&this.areaNameOptions.length==1){
                     this.areaName=this.areaNameOptions[0].value;
                     this.baseName=this.baseNameOptions[0].value;
@@ -693,11 +708,13 @@
                     }
                 }
                 if(this.beginDate){
-                    param.startDate=DateUtil.format(this.beginDate, "yyyy-MM-dd HH:mm:ss");
+                    param.startDate = this.beginDate.getFullYear()+"-"+(this.beginDate.getMonth()+1)+"-"+this.beginDate.getDate()+" 00:00:00";
                 }
+                console.info("起始时间"+param.startDate);
                 if(this.endDate){
                     param.endDate = this.endDate.getFullYear()+"-"+(this.endDate.getMonth()+1)+"-"+this.endDate.getDate()+" 23:59:59";
                 }
+                console.info("结束时间"+param.endDate);
                 param.pageNum = this.orderCurrentPage;
                 param.pageSize=this.pageSize;
                 param.custName =this.customerName;
@@ -709,16 +726,13 @@
                 param.baseSerialNo = StringUtil.trim(this.baseName);
                 param.custOrderCode=StringUtil.trim(this.customerOrderCode);
                 param.warehouseCode=StringUtil.trim(this.wareHouseName);
+                param.provideTransport=StringUtil.trim(this.provideTransport);
                 param.tag="out";
-                CommonClient.syncpost(sys.rootPath + "/ofc/queryOrderStorageDataOper",param,function (result) {
+                CommonClient.post(sys.rootPath + "/ofc/queryOrderStorageDataOper",param,function (result) {
                     if (result == undefined || result == null || result.result.size == 0 || result.result.list == null) {
-                        vueObj.totalOrder=0;
-                        vueObj.orderCurrentPage=0;
                         layer.msg("暂时未查询到相关订单信息！");
                     } else if (result.code == 200) {
                         if(result.result.list.length == 0){
-                            vueObj.totalOrder=0;
-                            vueObj.orderCurrentPage=0;
                             layer.msg("暂时未查询到相关订单信息！");
                         }
                         $.each(result.result.list, function (index, item) {

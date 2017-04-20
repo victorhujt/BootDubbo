@@ -14,7 +14,8 @@ public enum ExceptionTypeEnum {
 
     LOCK_SUCCESS("L0000", "加锁成功"),
     LOCK_FAIL("L0001", "加锁失败"),
-    LOCK_EXCEPTION("L0002", "加锁异常");
+    LOCK_EXCEPTION("L0002", "加锁异常"),
+    LOCK_EXIST("L0003", "锁存在");
 
     ExceptionTypeEnum(String code, String desc) {
         this.code = code;

@@ -327,7 +327,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             String acceptStatus=mobileOrder.getMobileOrderStatus();
             String status = UN_TREATED.equals(acceptStatus) ? "未受理" : TREATED.equals(acceptStatus)
                     ? "已受理" : TREATING.equals(acceptStatus) ? "受理中" : acceptStatus;
-           if(TREATED.equals(acceptStatus)||TREATING.equals(acceptStatus)){
+           if(TREATED.equals(acceptStatus)){
                throw new BusinessException("订单号:"+mobileOrderCode+"状态为【"+status+"】不可进行删除!");
            }
            //手机订单对应的图片路径
@@ -339,13 +339,17 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                }
            }
            String serialNo=mobileOrder.getSerialNo();
-          if(PubUtils.isSEmptyOrNull(serialNo)){
+          if(!PubUtils.isSEmptyOrNull(serialNo)){
               //删除手机订单号对应的附件
               String[] serialNos=serialNo.split(",");
               for(int i=0;i<serialNos.length;i++){
-                  ofcAttachmentService.deleteByKey(serialNos[i]);
+                  OfcAttachment ofcAttachment=new OfcAttachment();
+                  ofcAttachment.setSerialNo(serialNos[i]);
+                  ofcAttachmentService.delete(ofcAttachment);
               }
           }
+        //删除手机订单
+        deleteByKey(mobileOrderCode);
         }catch (Exception e) {
             throw e;
         }
