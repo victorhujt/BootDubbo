@@ -36,7 +36,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.type.TypeReference;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -52,10 +51,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.STO_TEMP_PRE;
-import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
-import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_STOCK_IMPORT;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 import static com.xescm.ofc.constant.StorageTemplateConstant.*;
 
@@ -204,62 +200,58 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Transactional
     @Override
     public void templateEditConfirm(String templateList, AuthResDto authResDto, String lastTemplateType) throws Exception {
+        logger.info("模板配置编辑 ==> templateList:{}", templateList);
+        logger.info("模板配置编辑 ==> authResDto:{}", authResDto);
+        logger.info("模板配置编辑 ==> lastTemplateType:{}", lastTemplateType);
         TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
         };
         List<OfcStorageTemplate> ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
+        //校验模板必填项
         this.checkTemplateListRequired(ofcStorageTemplates);
         String userId = authResDto.getUserId();
         String userName = authResDto.getUserName();
         Date now = new Date();
         OfcStorageTemplate ofcStorageTemplateForFix = ofcStorageTemplates.get(0);
         String currTemplateType = ofcStorageTemplateForFix.getTemplateType();
-        OfcStorageTemplate ofcStorageTemplate = new OfcStorageTemplate();
-        ofcStorageTemplate.setIndexNum(22);
-
-        Integer changeNum = StringUtils.equals(currTemplateType, STORAGE_IN) ? 21 : 22;
-        Integer updateNum = changeNum;
-        int num = 0;
+        boolean templateTypeChange = !StringUtils.equals(currTemplateType, lastTemplateType);
+        //模板类型改变
+        if (templateTypeChange) {
+            int delete = ofcStorageTemplateMapper.deleteByTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
+            if (delete == 0) {
+                logger.error("模板配置删除失败!");
+                throw new BusinessException("模板配置删除失败");
+            }
+        }
+        int changeNum = 0;
         for (OfcStorageTemplate ofcStorageTemp : ofcStorageTemplates) {
-            num ++ ;
             ofcStorageTemp.setOperator(userId);
             ofcStorageTemp.setOperatorName(userName);
             ofcStorageTemp.setOperTime(now);
-            int i = 0;
-            if(num != changeNum){
-                i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
-            }else {
-
-                if(StringUtils.equals(currTemplateType, STORAGE_IN) && StringUtils.equals(lastTemplateType, STORAGE_OUT)){
-                    //21
-                    ofcStorageTemplate.setTemplateCode(ofcStorageTemplateForFix.getTemplateCode());
-                    //删掉模板中第22条
-                    int delete = ofcStorageTemplateMapper.delete(ofcStorageTemplate);
-                    if(delete == 0){
-                        logger.error("模板配置编辑更新失败, 删掉模板中第22条失败");
-                        throw new BusinessException("模板配置编辑更新失败");
-                    }
-                }else if(StringUtils.equals(currTemplateType, STORAGE_OUT) && StringUtils.equals(lastTemplateType, STORAGE_IN)){
-                    //22
-                    //新增模板第22条
-                    ModelMapper modelMapper = new ModelMapper();
-                    modelMapper.map(ofcStorageTemplate, ofcStorageTemplateForFix);
-                    modelMapper.map(ofcStorageTemp, ofcStorageTemplate);
-                    ofcStorageTemp.setId(null);
-                    ofcStorageTemp.setCreatTime(now);
-                    ofcStorageTemp.setCreator(userId);
-                    ofcStorageTemp.setCreatorName(userName);
-                    i = ofcStorageTemplateMapper.insert(ofcStorageTemp);
-                }else {
-                    i = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
-                }
+            if (templateTypeChange) {
+                ofcStorageTemp.setCreator(userId);
+                ofcStorageTemp.setCreatorName(userName);
+                ofcStorageTemp.setCreatTime(now);
+                int insert = ofcStorageTemplateMapper.insert(ofcStorageTemp);
+                changeNum += insert;
+            } else {
+                int update = ofcStorageTemplateMapper.updateByTemplateCode(ofcStorageTemp);
+                changeNum += update;
             }
-            updateNum -= i;
         }
-        if(updateNum.compareTo(changeNum) == 0){
-            logger.error("模板配置编辑更新失败! updateNum:{}", updateNum);
-            throw new BusinessException("模板配置编辑更新失败!");
+        if (changeNum != this.getTemplateByType(currTemplateType)) {
+            logger.error("模板配置编辑失败");
+            throw new BusinessException("模板配置编辑失败");
         }
+        logger.info("模板配置编辑成功! changeNum:{}", changeNum);
+    }
 
+    private int getTemplateByType(String currTemplateType) {
+        if (StringUtils.equals(currTemplateType, STORAGE_IN)) {
+            return StorageImportInEnum.queryList().size();
+        } else if (StringUtils.equals(currTemplateType, STORAGE_OUT)) {
+            return StorageImportOutEnum.queryList().size();
+        }
+        return Integer.MAX_VALUE;
     }
 
     /**
@@ -696,6 +688,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 logger.error("当前行:{},列:{} 没有批次号", rowNum + 1, cellNum + 1);
                                 continue;
                             }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
+                            cellValue = PubUtils.trim(cellValue);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //生产日期
                         }else if(StringUtils.equals(StorageImportInEnum.PRODUCTION_TIME.getStandardColCode(), standardColCode)){
@@ -766,7 +760,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商名称校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -830,6 +824,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue.equals("是") ? "1" : "0", standardColCode);
+                            //运输单号
+                        }else if(StringUtils.equals(StorageImportInEnum.TRANS_CODE.getStandardColCode(), standardColCode)){
+                            if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
+                                logger.error("当前行:{},列:{} 没有运输单号", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
+                            cellValue = PubUtils.trim(cellValue);
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //车牌号
                         }else if(StringUtils.equals(StorageImportInEnum.PLATE_NUMBER.getStandardColCode(), standardColCode)){
                             if(Cell.CELL_TYPE_BLANK == commonCell.getCellType()){
@@ -977,7 +980,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商编码校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -1013,13 +1016,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                             if(!supplierCodeCheck.containsKey(cellValue)){
                                 CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-                                cscSupplierInfoDto.setSupplierCode(cellValue);
+                                cscSupplierInfoDto.setSupplierName(cellValue);
                                 cscSupplierInfoDto.setCustomerCode(ofcStorageTemplate.getCustCode());
-                                Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
+                                Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByCompleteName(cscSupplierInfoDto);
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商批次校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -1028,20 +1031,20 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 if(null == result || result.size() == 0){
                                     logger.error("当前行:{},列:{} 供应商批次校验失败, 请维护", rowNum + 1, cellNum + 1);
 //                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商编码【" + cellValue + "】无效！或当前客户下没有该供应商批次!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商批次【" + cellValue + "】无效！或当前客户下没有该供应商批次!");
                                     checkPass = false;
                                     continue;
                                     //校验通过
                                 }else {
                                     logger.info("当前供应商批次:{},校验通过", cellValue);
                                     supplierCodeCheck.put(cellValue, result.get(0));
-//                                    ofcStorageTemplateDto.setCscSupplierInfoDto(result.get(0));
+                                    ofcStorageTemplateDto.setGoodsSupplier(result.get(0));
                                 }
                             }else {
                                 logger.info("当前供应商批次:{},已经校验过, 不用校验", cellValue);
                                 //不用校验, 直接堆
-//                                CscSupplierInfoDto cscSupplierInfoDto = supplierCodeCheck.get(cellValue);
-//                                ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
+                                CscSupplierInfoDto goodsSupplier = supplierCodeCheck.get(cellValue);
+                                ofcStorageTemplateDto.setGoodsSupplier(goodsSupplier);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //2017年3月21日 追加字段: 收货人编码(收货方联系人编码), 供应商编码
@@ -1101,7 +1104,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                                 if(Wrapper.ERROR_CODE == listWrapper.getCode()){
                                     logger.error("当前行:{},列:{} 供应商编码校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getReflectColName() + "为: " + cellValue +"校验出错!");
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
                                     checkPass = false;
                                     continue;
                                 }
@@ -1205,14 +1208,59 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         //基本校验通过后检查客户订单编号是否重复
         Set<String> custOrderCodeSet = new HashSet<>();
         BigDecimal countImportNum = new BigDecimal(0);
+        Map<String, Set<String>> custOrderCodeTransCode = new HashMap<>(); //key:custOrderCode, value: transCode
+        Map<String, Set<String>> transCodeCustOrderCode = new HashMap<>(); //key:transCode, value: custOrderCode
         logger.info("数量初始化: {}", countImportNum.intValue());
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
             logger.info("数量 : {}", ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之前: {}", countImportNum.intValue());
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之后: {}", countImportNum.intValue());
-            custOrderCodeSet.add(ofcStorageTemplateDto.getCustOrderCode());
+            String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
+            custOrderCodeSet.add(custOrderCode);
+            String transCode = ofcStorageTemplateDto.getTransCode();
+            if (StringUtils.equals(ofcStorageTemplateDto.getProvideTransport(), "0") || PubUtils.isSEmptyOrNull(transCode)) {
+                continue;
+            }
+            Set<String> strings = custOrderCodeTransCode.get(custOrderCode);
+            if (CollectionUtils.isEmpty(strings)) {
+                Set<String> newSet = new HashSet<>();
+                newSet.add(transCode);
+                custOrderCodeTransCode.put(custOrderCode, newSet);
+            } else if (CollectionUtils.isNotEmpty(strings) && !strings.contains(transCode)) {
+                strings.add(transCode);
+            }
+
+            Set<String> stringsSec = transCodeCustOrderCode.get(transCode);
+            if (CollectionUtils.isEmpty(stringsSec)) {
+                Set<String> newSet = new HashSet<>();
+                newSet.add(custOrderCode);
+                transCodeCustOrderCode.put(transCode, newSet);
+            } else if (CollectionUtils.isNotEmpty(stringsSec) && !stringsSec.contains(custOrderCode)) {
+                stringsSec.add(custOrderCode);
+            }
         }
+
+        for (String custOrderCode : custOrderCodeTransCode.keySet()) {
+            Set<String> transCodeSetForCheck = custOrderCodeTransCode.get(custOrderCode);
+            if (transCodeSetForCheck.size() > 1) {
+                logger.error("客户订单号【{}】对应了多个运输单号:{}", custOrderCode, transCodeSetForCheck.toString());
+                xlsErrorMsg.add("客户订单号【" + custOrderCode + "】对应了多个运输单号" + transCodeSetForCheck.toString() + "，无法导入，请检查处理!");
+                checkPass = false;
+            }
+        }
+
+        for (String transCode : transCodeCustOrderCode.keySet()) {
+            Set<String> custOrderCodeSetForCheck = transCodeCustOrderCode.get(transCode);
+            if (custOrderCodeSetForCheck.size() > 1) {
+                logger.error("客户订单号【{}】对应了同一个运输单号:{}", custOrderCodeSetForCheck.toString(), transCode);
+                xlsErrorMsg.add("客户订单号" + custOrderCodeSetForCheck.toString() + "的运输单号【" + transCode + "】重复，无法导入，请检查处理!");
+                checkPass = false;
+            }
+
+        }
+
+
         Integer importOrderNum = custOrderCodeSet.size();
         for (String custOrderCode : custOrderCodeSet) {
             OfcFundamentalInformation ofc = new OfcFundamentalInformation();
@@ -1596,10 +1644,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 下单结果
      */
     @Override
-    @Transactional
     public Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception{
-        logger.info("orderList ==> {}", orderList);
-        logger.info("authResDto ==> {}", authResDto);
+        logger.info("仓储开单批量导单确认下单orderList ==> {}", orderList);
+        logger.info("仓储开单批量导单确认下单authResDto ==> {}", authResDto);
 //        List<String> orderBatchNumberList = new ArrayList<>();
         if(PubUtils.isSEmptyOrNull(orderList) || null == authResDto){
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
@@ -1611,91 +1658,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         if(CollectionUtils.isEmpty(ofcStorageTemplateDtoList)){
             throw new BusinessException("仓储开单批量导单确认下单失败! 订单列表为空!");
         }
-        Map<String, List<OfcStorageTemplateDto>> orderMap = new HashMap<>();
-        for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
-            if(null == ofcStorageTemplateDto){
-                logger.info("仓储开单批量导单确认下单, 订单信息为空! ");
-                continue;
-            }
-            String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
-            List<OfcStorageTemplateDto> orderListByCustOrderCode = orderMap.get(custOrderCode);
-            if(!orderMap.containsKey(custOrderCode) && orderListByCustOrderCode == null){
-                logger.info("初始化");
-                orderListByCustOrderCode = new ArrayList<>();
-//                orderMap.put(custOrderCode, orderListByCustOrderCode);
-            }
-            orderListByCustOrderCode.add(ofcStorageTemplateDto);
-            orderMap.put(custOrderCode, orderListByCustOrderCode);
-        }
-        String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
-
-        for (String orderMapKey : orderMap.keySet()) {
-
-            List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
-            OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
-            OfcStorageTemplateDto forOrderMsg = order.get(0);
-            logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
-            BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
-            BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
-            ofcOrderDTO.setOrderTime(this.convertStringToDate(forOrderMsg.getOrderTime()));
-            if(!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())){
-                ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
-            }
-            logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
-            //在这里将订单信息补充完整
-
-//            orderBatchNumberList.add(orderBatchNumber);
-            ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
-            ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
-            if(ofcOrderDTO.getProvideTransport() == null){
-                ofcOrderDTO.setProvideTransport(0);
-            }
-//            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
-            Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
-//            MathContext mathContext = new MathContext(3);
-            for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = this.convertCscGoods(ofcStorageTemplateDto);
-                StringBuilder key=new StringBuilder();
-                key.append(ofcGoodsDetailsInfo.getGoodsCode());
-                if(ofcGoodsDetailsInfo.getSupportBatch()!=null){
-                    key.append(ofcGoodsDetailsInfo.getSupportBatch());
-                }
-                if(!StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())){
-                    key.append(ofcGoodsDetailsInfo.getProductionBatch());
-                }
-                if(ofcGoodsDetailsInfo.getCreationTime()!=null){
-                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1));
-                }
-                if(ofcGoodsDetailsInfo.getInvalidTime()!=null){
-                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
-                }
-                if(ofcGoodsDetailsInfoMap.containsKey(key.toString())){
-                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(key.toString());
-                    if(null == info.getQuantity() || null == ofcGoodsDetailsInfo.getQuantity()){
-                        logger.error("货品数量出错!");
-                        throw new BusinessException("货品数量出错!");
-                    }
-                    info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
-                    ofcGoodsDetailsInfoMap.put(key.toString(), info);
-                }else {
-                    ofcGoodsDetailsInfoMap.put(key.toString(), ofcGoodsDetailsInfo);
-                }
-            }
-            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
-            CscContantAndCompanyDto cscContantAndCompanyDto = convertCscConsignee(forOrderMsg.getCscConsigneeDto());
-            convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
-            convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
-            Wrapper save = ofcOrderManageService.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
-                    , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
-            if(save.getCode() == Wrapper.ERROR_CODE){
-                logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
-                return save;
-            }
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
+        return ofcOrderManageService.storageOrderConfirm(ofcStorageTemplateDtoList, authResDto);
     }
 
-    private Date convertStringToDate(String orderTime) {
+    public Date convertStringToDate(String orderTime) {
         String[] split = orderTime.split(" ");
         if (split.length == 1 || orderTime.matches(REGEX_YYYYMMDD)) {
             orderTime = orderTime + " 00:00:00";
@@ -1703,7 +1669,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return DateUtils.String2Date(orderTime, DateUtils.DateFormatType.TYPE1);
     }
 
-    private void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
+    public void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
         if(null == cscSupplierInfoDto || PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierCode())){
             return;
         }
@@ -1714,7 +1680,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcOrderDTO.setSupportContactName(cscSupplierInfoDto.getContactName());
     }
 
-    private void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
+    public void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
         if(null == cscConsigneeDto || PubUtils.isSEmptyOrNull(cscConsigneeDto.getContactCompanySerialNo())){
             return;
         }
@@ -1749,7 +1715,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 转换后的收货方
      * @throws Exception 异常
      */
-    private CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) throws Exception{
+    public CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto){
         logger.info("转换客户中心DTO收货方 cscConsigneeDto:{}", cscConsigneeDto);
         if(null == cscConsigneeDto){
             logger.error("转换客户中心DTO收货方出错! 入参为空! ");
@@ -1771,13 +1737,16 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @param ofcStorageTemplateDto 订单DTO
      * @return 转换后的货品
      */
-    private OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto) throws Exception{
+    public OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto){
         logger.info("转换客户中心货品: ofcStorageTemplateDto.getCscGoodsApiVo():{}", ofcStorageTemplateDto.getCscGoodsApiVo());
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+        CscSupplierInfoDto goodsSupplier = ofcStorageTemplateDto.getGoodsSupplier();
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
         BeanUtils.copyProperties(cscGoodsApiVo, ofcGoodsDetailsInfo);
         ofcGoodsDetailsInfo.setId(null);
-        ofcGoodsDetailsInfo.setGoodsSpec(cscGoodsApiVo.getSpecification());
+        ofcGoodsDetailsInfo.setGoodsSpec(ofcStorageTemplateDto.getGoodsSpec());
+        ofcGoodsDetailsInfo.setUnit(ofcStorageTemplateDto.getUnit());
+        ofcGoodsDetailsInfo.setUnitPrice(ofcStorageTemplateDto.getUnitPrice());
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
         ofcGoodsDetailsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
         ofcGoodsDetailsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
@@ -1786,10 +1755,20 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         if(!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())){
             ofcGoodsDetailsInfo.setUnitPrice(new BigDecimal(cscGoodsApiVo.getUnitPrice()));
         }
+        String productionBatch = ofcStorageTemplateDto.getProductionBatch();
         String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();
         String invalidTime = ofcStorageTemplateDto.getInvalidTime();
-        ofcGoodsDetailsInfo.setSupportBatch(supportBatch);
+        if (!PubUtils.isSEmptyOrNull(supportBatch)) {
+            //2017年4月19日 添加逻辑, 供应商批次字段全匹配识别名称, 但保存对应的供应商编码
+            String supplierCode = goodsSupplier.getSupplierCode();
+            if (PubUtils.isSEmptyOrNull(supplierCode)) {
+                logger.error("供应商:{}没有供应商编码", goodsSupplier.getSupplierName());
+                throw new BusinessException("供应商【" + goodsSupplier.getSupplierName() + "】没有供应商编码");
+            }
+            ofcGoodsDetailsInfo.setSupportBatch(supplierCode);
+        }
+        ofcGoodsDetailsInfo.setProductionBatch(productionBatch);
         if(!PubUtils.isSEmptyOrNull(productionTime)){
             ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
         }
@@ -1859,20 +1838,28 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             int indexNum = ofcStorageTemplate.getIndexNum();
             String reflectColName = ofcStorageTemplate.getReflectColName();
             String colDefaultVal = ofcStorageTemplate.getColDefaultVal();
-            if(indexNum == 1 && PubUtils.isSEmptyOrNull(reflectColName)){
+            String standardColCode = ofcStorageTemplate.getStandardColCode();
+            if(StringUtils.equals(standardColCode, StorageImportOutEnum.CUST_ORDER_CODE.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName)){
                 throw new BusinessException(StorageImportOutEnum.CUST_ORDER_CODE.getStandardColName() + "的模板列名不能为空!");
-            }else if(indexNum == 3 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.MERCHANDISER.getStandardColCode())
+                    && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
                 throw new BusinessException(StorageImportOutEnum.MERCHANDISER.getStandardColName() + "的模板列名和默认值必填一个");
-            }else if(indexNum == 4 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.WAREHOUSE_NAME.getStandardColCode())
+                    && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
                 throw new BusinessException(StorageImportOutEnum.WAREHOUSE_NAME.getStandardColName() + "的模板列名和默认值必填一个");
-            }else if(indexNum == 5 && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.BUSINESS_TYPE.getStandardColCode())
+                    && (PubUtils.isSEmptyOrNull(reflectColName) && PubUtils.isSEmptyOrNull(colDefaultVal))){
                 throw new BusinessException(StorageImportOutEnum.BUSINESS_TYPE.getStandardColName() + "的模板列名和默认值必填一个");
-            }else if(indexNum == 7 && PubUtils.isSEmptyOrNull(reflectColName)){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.GOODS_CODE.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName)){
                 throw new BusinessException(StorageImportOutEnum.GOODS_CODE.getStandardColName() + "的模板列名不能为空!");
-            }else if(indexNum == 12 && PubUtils.isSEmptyOrNull(reflectColName)){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.QUANTITY.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName)){
                 throw new BusinessException(storageIn ? StorageImportInEnum.QUANTITY.getStandardColName()
                         : StorageImportOutEnum.QUANTITY.getStandardColName()  + "的模板列名不能为空!");
-            }else if(indexNum == 22 && PubUtils.isSEmptyOrNull(reflectColName) && !storageIn){
+            }else if(StringUtils.equals(standardColCode, StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode())
+                    && PubUtils.isSEmptyOrNull(reflectColName) && !storageIn){
                 throw new BusinessException(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColName()  + "的模板列名不能为空!");
             }
         }

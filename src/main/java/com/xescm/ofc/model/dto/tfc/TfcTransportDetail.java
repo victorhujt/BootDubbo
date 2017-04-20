@@ -121,7 +121,7 @@ public class TfcTransportDetail implements Serializable {
 
     private String goodsType;
 
-//    private String orderCode;
+    private String orderCode;
 
     /**
      * 包装
@@ -224,13 +224,13 @@ public class TfcTransportDetail implements Serializable {
         this.basicUnits2 = basicUnits2;
     }
 
-//    public String getOrderCode() {
-//        return orderCode;
-//    }
-//
-//    public void setOrderCode(String orderCode) {
-//        this.orderCode = orderCode;
-//    }
+    public String getOrderCode() {
+        return orderCode;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
 
     /**
      * 获取ID

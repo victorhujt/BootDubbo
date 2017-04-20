@@ -53,6 +53,8 @@ public class OfcOrderManageOperaRest extends BaseController {
     private OfcBatchOrderVoService ofcBatchOrderVoService;
     @Resource
     private OrderFollowOperService orderFollowOperService;
+    @Resource
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
 
     /**
      * 查询订单
@@ -230,6 +232,8 @@ public class OfcOrderManageOperaRest extends BaseController {
             ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
             //财务信息
             OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+            //仓储信息
+            OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
             //订单状态集合
             OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
             ofcOrderStatus.setOrderCode(orderCode);
@@ -255,6 +259,7 @@ public class OfcOrderManageOperaRest extends BaseController {
 
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
             modelAndView.addObject("ofcDistributionBasicInfo", ofcDistributionBasicInfo);
+            modelAndView.addObject("ofcWarehouseInformation", ofcWarehouseInformation);
             modelAndView.addObject("ofcFinanceInformation", ofcFinanceInformation);
             modelAndView.addObject("ofcFundamentalInformation", ofcFundamentalInformation);
             modelAndView.addObject("ofcGoodsDetailsInfoList", ofcGoodsDetailsInfoList);

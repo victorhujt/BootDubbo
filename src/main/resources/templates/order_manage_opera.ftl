@@ -116,11 +116,24 @@
           </#list>
           </select>
         </div>
-        <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+        <label class="control-label col-label no-padding-right" for="name">是否提供运输</label>
         <div class="col-width-168" style="margin:0 12px;">
-          <input id="custOrderCode" class="col-width-168" name="" type="search" placeholder=""
-                 aria-controls="dynamic-table">
+            <div class="col-width-168">
+                <select data-placeholder="请选择" style="width: 168px;" id="provideTransport" class="chosen-select"
+                        name="orderType">
+                    <option value=""></option>
+                    <option value= "0">否</option>
+                    <option value= "1">是</option>
+                </select>
+            </div>
         </div>
+      </div>
+      <div class="form-group">
+          <label class="control-label col-label no-padding-right" for="name">客户订单编号</label>
+          <div class="col-width-168" style="width:369px;margin:0 12px;">
+              <input id="custOrderCode" class="col-width-168" name="" style="width:369px;" type="search" placeholder=""
+                     aria-controls="dynamic-table">
+          </div>
       </div>
       <div class="form-group">
         <label class="control-label col-label no-padding-right" for="name"></label>
@@ -501,6 +514,7 @@
       param.areaSerialNo = areaName;
       param.baseSerialNo = baseName;
       param.custOrderCode = $("#custOrderCode").val();
+      param.provideTransport = $("#provideTransport").val() == "1" ? 1 : $("#provideTransport").val() == "0" ? 0 : null;
       CommonClient.post(sys.rootPath + "/ofc/queryOrderDataOper", param, function (result) {
 
         if ( result == undefined || result == null || result.code == 500 || result.result == null || result.result.size == 0 || result.result.list == null) {
@@ -917,16 +931,17 @@
       $("#custCode").val("");
       $("#orderCode").val("");
       $("#custOrderCode").val("");
+      $("#provideTransport").val("").trigger("chosen:updated");
       $("#orderState").val("").trigger("chosen:updated");
       $("#orderType").val("").trigger("chosen:updated");
       $("#businessType").val("").trigger("chosen:updated");
       //重新加载大区和基地
       $("#areaName option").remove();
       $("#baseName option").remove();
-      $("#areaName").html("")
-      $("#baseName").html("")
-      $("#areaName").html(areaSelect)
-      $("#baseName").html(baseSelect)
+      $("#areaName").html("");
+      $("#baseName").html("");
+      $("#areaName").html(areaSelect);
+      $("#baseName").html(baseSelect);
       $("#areaName").trigger("chosen:updated");
       $("#baseName").trigger("chosen:updated");
     })

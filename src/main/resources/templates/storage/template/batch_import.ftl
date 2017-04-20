@@ -300,16 +300,17 @@
                         head.propertyCode = propertyCode;
                         headData.push(head);
                     });
-
                     $.each(orderMsg, function (indexOut, itemOut) {
                         var tableRow = {};
                         $.each(tableHeadMsg, function (indexIn, itemIn) {
                             var items = itemIn.split('@');
                             var propertyCode = items[1];
-                            var businessName = '';
                             if(propertyCode == 'businessType'){
-                                businessName = vm.convertCodeToName(itemOut[propertyCode]);
+                                var businessName = vm.convertCodeToName(itemOut[propertyCode]);
                                 tableRow[propertyCode] = businessName;
+                            } else if (propertyCode == 'provideTransport') {
+                                var provideTransport = itemOut[propertyCode] == '1' ? '是' : '否';
+                                tableRow[propertyCode] = provideTransport;
                             } else {
                                 tableRow[propertyCode] = itemOut[propertyCode];
                             }
@@ -420,7 +421,7 @@
                 switch (businessName) {
                     //出库
                     case '610': businessName = '销售出库'; break; case '611': businessName = '调拨出库'; break; case '612': businessName = '报损出库'; break;
-                    case '613': businessName = '其他出库'; break; case '614': businessName = '分拨出库'; break;
+                    case '613': businessName = '其他出库'; break; case '614': businessName = '分拨出库'; break;case '617': businessName = '退车间'; break;
                     //入库
                     case '620': businessName = '采购入库'; break; case '621': businessName = '调拨入库'; break; case '622': businessName = '退货入库'; break;
                     case '623': businessName = '加工入库'; break;  case '624': businessName = '盘盈入库'; break; case '625': businessName = '流通入库'; break;

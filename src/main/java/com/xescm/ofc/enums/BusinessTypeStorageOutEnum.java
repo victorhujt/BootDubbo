@@ -15,7 +15,8 @@ public enum BusinessTypeStorageOutEnum {
     TRANSFER_OUT_OF_THE_LIBRARY("611", "调拨出库"),
     LOSS_OF_REPORTING("612", "报损出库"),
     OTHER_OUT_OF_THE_LIBRARY("613", "其他出库"),
-    ALLOT_OUT_OF_THE_LIBRARY("614", "分拨出库");
+    ALLOT_OUT_OF_THE_LIBRARY("614", "分拨出库"),
+    BACK_TO_SHOP("617", "退车间");
 
     BusinessTypeStorageOutEnum(String code, String desc) {
         this.code = code;

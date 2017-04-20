@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_OrderToOfc;
 import static com.xescm.ofc.constant.BaseConstant.REDIS_LOCK_PREFIX;
@@ -92,6 +93,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String custOrderCode = null;
                 String key = null;
                 for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
+                    AtomicBoolean lockStatus = new AtomicBoolean(false);
                     try {
                         custOrderCode = createOrderEntity.getCustOrderCode();
                         String custCode = createOrderEntity.getCustCode();
@@ -105,6 +107,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             // 加锁
                             Wrapper<Integer> lock = distributedLockEdasService.addLock(key, 5);
                             if (lock.getCode() == Wrapper.SUCCESS_CODE && lock.getResult().intValue() == 1) {
+                                lockStatus.set(true);
                                 OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
                                 if (information != null) {
                                     orderCode = information.getOrderCode();
@@ -133,7 +136,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                 throw new BusinessException(ExceptionTypeEnum.LOCK_FAIL.getCode(), ExceptionTypeEnum.LOCK_FAIL.getDesc());
                             }
                         } else {
-                            throw new BusinessException(ExceptionTypeEnum.LOCK_FAIL.getCode(), ExceptionTypeEnum.LOCK_FAIL.getDesc());
+                            throw new BusinessException(ExceptionTypeEnum.LOCK_EXIST.getCode(), ExceptionTypeEnum.LOCK_EXIST.getDesc());
                         }
                     } catch (BusinessException ex) {
                         logger.error("订单中心创建订单接口出错:{},{}", ex.getMessage(), ex);
@@ -144,7 +147,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
                     } finally {
                         // 释放锁
-                        Wrapper<Long> clearLock = distributedLockEdasService.clearLock(key);
+                        if (lockStatus.get()) {
+                            distributedLockEdasService.clearLock(key);
+                        }
                     }
                 }
             }

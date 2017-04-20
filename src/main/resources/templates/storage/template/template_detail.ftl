@@ -111,14 +111,14 @@
                         vm.typeOfTemplate = itemOut.templateType == 'storageOut';
                     }
                     var tableItem = {};
-                    var indexNum = item.indexNum;
-                    if(indexNum == 1 || indexNum == 3 || indexNum == 4
-                            || indexNum == 5 || indexNum == 7 || indexNum == 12 || (indexNum == 22 && vm.typeOfTemplate)){
+                    var standardColCode = item.standardColCode;
+                    if(standardColCode == 'custOrderCode' || standardColCode == 'merchandiser' || standardColCode == 'warehouseName'
+                            || standardColCode == 'businessType' || standardColCode == 'goodsCode' || standardColCode == 'quantity' || (standardColCode == 'consigneeName' && vm.typeOfTemplate)){
                         tableItem.isRequired = true;
                     }
                     tableItem.standardColName = item.standardColName;
                     tableItem.reflectColName = item.reflectColName;
-                    if(indexNum == 2){
+                    if(standardColCode == 'orderTime'){
                         item.colDefaultVal = '当前日期';
                     }
                     tableItem.colDefaultVal = item.colDefaultVal;
