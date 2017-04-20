@@ -574,11 +574,14 @@
             <tbody>
             <#if ofcOrderStatusList ?? && (ofcOrderStatusList?size > 0) >
                 <#list ofcOrderStatusList as status>
-                <tr>
-                    <td>
-                    ${status.notes!""}
-                    </td>
-                </tr>
+                <#if status ?? >
+                    <tr>
+                        <td>
+                        ${status.notes!""}
+                        </td>
+                    </tr>
+                </#if>
+
                 </#list>
             </#if>
             </tbody>
