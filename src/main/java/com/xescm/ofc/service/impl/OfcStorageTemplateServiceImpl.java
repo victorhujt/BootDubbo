@@ -1754,7 +1754,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();
         String invalidTime = ofcStorageTemplateDto.getInvalidTime();
-        if (!PubUtils.isSEmptyOrNull(goodsSupplier.getSupplierName())) {
+        if (!PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getSupportBatch())) {
             //2017年4月19日 添加逻辑, 供应商批次字段全匹配识别名称, 但保存对应的供应商编码
             String supplierCode = goodsSupplier.getSupplierCode();
             if (PubUtils.isSEmptyOrNull(supplierCode)) {
