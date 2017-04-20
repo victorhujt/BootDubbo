@@ -42,6 +42,7 @@ public class OfcStorageTemplateDto {
     private CscContantAndCompanyResponseDto cscConsigneeDto = new CscContantAndCompanyResponseDto();
     private CscGoodsApiVo cscGoodsApiVo = new CscGoodsApiVo();
     private CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
+    private CscSupplierInfoDto goodsSupplier = new CscSupplierInfoDto();
     private OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
     //字段追加: 发货波次号
     private String consignmentBatchNumber;

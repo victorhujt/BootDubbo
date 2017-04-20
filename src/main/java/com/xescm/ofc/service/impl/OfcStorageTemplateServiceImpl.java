@@ -1034,13 +1034,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 }else {
                                     logger.info("当前供应商批次:{},校验通过", cellValue);
                                     supplierCodeCheck.put(cellValue, result.get(0));
-//                                    ofcStorageTemplateDto.setCscSupplierInfoDto(result.get(0));
+                                    ofcStorageTemplateDto.setGoodsSupplier(result.get(0));
                                 }
                             }else {
                                 logger.info("当前供应商批次:{},已经校验过, 不用校验", cellValue);
                                 //不用校验, 直接堆
-//                                CscSupplierInfoDto cscSupplierInfoDto = supplierCodeCheck.get(cellValue);
-//                                ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
+                                CscSupplierInfoDto goodsSupplier = supplierCodeCheck.get(cellValue);
+                                ofcStorageTemplateDto.setGoodsSupplier(goodsSupplier);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //2017年3月21日 追加字段: 收货人编码(收货方联系人编码), 供应商编码
@@ -1736,7 +1736,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     public OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto){
         logger.info("转换客户中心货品: ofcStorageTemplateDto.getCscGoodsApiVo():{}", ofcStorageTemplateDto.getCscGoodsApiVo());
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
-        CscSupplierInfoDto cscSupplierInfoDto = ofcStorageTemplateDto.getCscSupplierInfoDto();
+        CscSupplierInfoDto goodsSupplier = ofcStorageTemplateDto.getGoodsSupplier();
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
         BeanUtils.copyProperties(cscGoodsApiVo, ofcGoodsDetailsInfo);
         ofcGoodsDetailsInfo.setId(null);
@@ -1754,12 +1754,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();
         String invalidTime = ofcStorageTemplateDto.getInvalidTime();
-        if (null != cscSupplierInfoDto) {
+        if (!PubUtils.isSEmptyOrNull(goodsSupplier.getSupplierName())) {
             //2017年4月19日 添加逻辑, 供应商批次字段全匹配识别名称, 但保存对应的供应商编码
-            String supplierCode = cscSupplierInfoDto.getSupplierCode();
+            String supplierCode = goodsSupplier.getSupplierCode();
             if (PubUtils.isSEmptyOrNull(supplierCode)) {
-                logger.error("供应商:{}没有供应商编码", cscSupplierInfoDto.getSupplierName());
-                throw new BusinessException("供应商【" + cscSupplierInfoDto.getSupplierName() + "】没有供应商编码");
+                logger.error("供应商:{}没有供应商编码", goodsSupplier.getSupplierName());
+                throw new BusinessException("供应商【" + goodsSupplier.getSupplierName() + "】没有供应商编码");
             }
             ofcGoodsDetailsInfo.setProductionBatch(supplierCode);
         }
