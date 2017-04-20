@@ -157,7 +157,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             ofcDistributionBasicInfoService.update(orderDistInfo);
 
             // 待审核订单不推送结算、运输
-            if (!PENDING_AUDIT.equals(orderCode)) {
+            if (!PENDING_AUDIT.equals(orderStatus)) {
                 // 待审核订单不推送到结算和运输中心
                 if (!PubUtils.isNull(orderInfo) && !PubUtils.isNull(orderDistInfo) && !PubUtils.isNull(orderFinanceInfo)) {
                     ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos, null);
@@ -166,8 +166,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
             }
         } catch (Exception e) {
-            logger.error("保存交货量信息发生异常. {}", e);
-            throw e;
+            logger.error("交货量同步更新发生异常. {}", e);
         }
     }
 
