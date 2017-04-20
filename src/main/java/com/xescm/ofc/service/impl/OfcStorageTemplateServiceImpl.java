@@ -1751,19 +1751,20 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         if(!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())){
             ofcGoodsDetailsInfo.setUnitPrice(new BigDecimal(cscGoodsApiVo.getUnitPrice()));
         }
+        String productionBatch = ofcStorageTemplateDto.getProductionBatch();
         String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();
         String invalidTime = ofcStorageTemplateDto.getInvalidTime();
-        if (!PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getSupportBatch())) {
+        if (!PubUtils.isSEmptyOrNull(supportBatch)) {
             //2017年4月19日 添加逻辑, 供应商批次字段全匹配识别名称, 但保存对应的供应商编码
             String supplierCode = goodsSupplier.getSupplierCode();
             if (PubUtils.isSEmptyOrNull(supplierCode)) {
                 logger.error("供应商:{}没有供应商编码", goodsSupplier.getSupplierName());
                 throw new BusinessException("供应商【" + goodsSupplier.getSupplierName() + "】没有供应商编码");
             }
-            ofcGoodsDetailsInfo.setProductionBatch(supplierCode);
+            ofcGoodsDetailsInfo.setSupportBatch(supplierCode);
         }
-        ofcGoodsDetailsInfo.setSupportBatch(supportBatch);
+        ofcGoodsDetailsInfo.setProductionBatch(productionBatch);
         if(!PubUtils.isSEmptyOrNull(productionTime)){
             ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
         }
