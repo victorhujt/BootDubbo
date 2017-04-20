@@ -123,6 +123,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param details
      * @param orderCode
      */
+    @Transactional
     private void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode, String orderStatus) {
         BigDecimal quantityCount = new BigDecimal(0);
         BigDecimal weightCount = new BigDecimal(0);
@@ -172,6 +173,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param orderCode
      * @param goodsAmountDetailDto
      */
+    @Transactional
     private void editGoodsDetailInfo(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
         try {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
@@ -208,6 +210,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param orderCode
      * @param goodsAmountDetailDto
      */
+    @Transactional
     private void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
         try {
 

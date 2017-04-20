@@ -27,8 +27,7 @@ import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
-import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
-import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
+import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
 import com.xescm.ofc.exception.BusinessException;
@@ -122,11 +121,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private CodeGenUtils codeGenUtils;
     @Resource
-    private EpcOrderCancelEdasService epcOrderCancelEdasService;
-    @Resource
     private WhcOrderCancelEdasService whcOrderCancelEdasService;
-    @Resource
-    private EpcOfc2DmsEdasService epcOfc2DmsEdasService;
     @Resource
     private DefaultMqProducer defaultMqProducer;
     @Resource
@@ -157,6 +152,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private AcSettleStatisticsEdasService acSettleStatisticsEdasService;
     @Resource
     private TfcQueryEveryDeliveryService tfcQueryEveryDeliveryService;
+    @Resource
+    private DefaultMqProducer mqProducer;
+    @Resource
+    private MqConfig mqConfig;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -833,6 +832,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("订单信息推送结算中心 == > ofcWarehouseInformation{}", ofcWarehouseInformation);
         AcOrderDto acOrderDto = new AcOrderDto();
         try {
+            // 转换Ac实体
             AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
             BeanUtils.copyProperties(acFundamentalInformation, ofcFundamentalInformation);
 
@@ -858,13 +858,24 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (null != ofcWarehouseInformation && null != ofcWarehouseInformation.getProvideTransport()) {
                 acOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport().toString());
             }
+            try {
+                String orderCode = ofcFundamentalInformation.getOrderCode();
+                String orderInfo = JacksonUtil.toJson(acOrderDto);
+                // 推送结算
+                boolean isSend = mqProducer.sendMsg(orderInfo, mqConfig.getOfc2AcOrderTopic(), orderCode, "xeOrderToAc");
+                if (isSend) {
+                    logger.info("订单中心推送结算中心成功，订单号：{}", orderCode);
+                } else {
+                    logger.info("订单中心推送结算中心失败，订单号：{}", orderCode);
+                }
+            } catch (Exception e) {
+                logger.error("订单中心推送结算订单转换发生错误, 异常： {}", e);
+                throw new BusinessException("订单中心推送结算订单转换发生错误!");
+            }
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
             logger.error("订单信息推送结算中心 转换异常, {}", e);
-        }
-        Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
-        if (ERROR_CODE == wrapper.getCode()) {
-            logger.error(wrapper.getMessage());
-            throw new BusinessException(wrapper.getMessage());
         }
     }
 
