@@ -10,6 +10,7 @@ import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderNewstatusService;
 import com.xescm.ofc.service.OfcOrderStatusService;
+import com.xescm.ofc.utils.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +54,7 @@ public class OfcOrderNewstatusServiceImpl extends BaseService<OfcOrderNewstatus>
         ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
+        ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + feedBackInventoryDto.getReason());
         ofcOrderStatusService.save(ofcOrderStatus);
     }
 
