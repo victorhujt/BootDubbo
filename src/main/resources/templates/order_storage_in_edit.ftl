@@ -1337,13 +1337,16 @@
                 cscContactDto.purpose = "2";
                 cscContactDto.phone =this.orderForm.consignorContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consignorName;
-                var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
-                cscContactDto.province = consignorAddressCodeMessage[0];
-                cscContactDto.city = consignorAddressCodeMessage[1];
-                cscContactDto.area = consignorAddressCodeMessage[2];
-                if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
-                    cscContactDto.street = consignorAddressCodeMessage[3];
+                if(!StringUtil.isEmpty(this.orderForm.departurePlaceCode)){
+                    var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
+                    cscContactDto.province = consignorAddressCodeMessage[0];
+                    cscContactDto.city = consignorAddressCodeMessage[1];
+                    cscContactDto.area = consignorAddressCodeMessage[2];
+                    if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
+                        cscContactDto.street = consignorAddressCodeMessage[3];
+                    }
                 }
+
                 cscContactDto.provinceName = this.orderForm.departureProvince;
                 cscContactDto.cityName = this.orderForm.departureCity;
                 cscContactDto.areaName = this.orderForm.departureDistrict;
