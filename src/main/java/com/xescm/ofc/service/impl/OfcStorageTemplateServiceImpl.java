@@ -306,7 +306,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      */
     @Override
     public Wrapper<?> checkStorageTemplate(MultipartFile uploadFile, AuthResDto authResDto, OfcStorageTemplate ofcStorageTemplate, Integer activeSheetNum) {
-
         //根据模板编码和类型拿到用户保存的配置模板的映射 key是用户表头列名
         //这里是用户进行模板配置了的, 下面还有(在第一行校验表头列名的时候, 如果用户的列名能与标准列名对应上, 那么依然进行可以映射)
         List<Object> templateReflect = this.getTemplateReflect(ofcStorageTemplate.getTemplateCode(), ofcStorageTemplate.getTemplateType());
@@ -1208,7 +1207,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     }
 
                     //对入库订单的发货方信息进行处理
-                    if (!this.dealConsignorName(ofcStorageTemplate, ofcStorageTemplateDto, consignorCheck, xlsErrorMsg, rowNum)) {
+                    if (StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_IN) && !this.dealConsignorName(ofcStorageTemplate, ofcStorageTemplateDto, consignorCheck, xlsErrorMsg, rowNum)) {
                         checkPass = false;
                         continue;
                     }
@@ -1308,6 +1307,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     private boolean dealConsignorName(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto,
             Map<String, CscContantAndCompanyResponseDto> consignorCheck, List<String> xlsErrorMsg, int rowNum) {
+        if (!StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_IN)) {
+            return true;
+        }
         //提供运输时,发货人必填且需校验,
         if (StringUtils.equals(ofcStorageTemplateDto.getProvideTransport(), STR_YES)) {
             String consignorName = ofcStorageTemplateDto.getConsignorName();
