@@ -863,10 +863,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } catch (Exception e) {
             logger.error("订单信息推送结算中心 转换异常, {}", e);
         }
-        Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
-        if (ERROR_CODE == wrapper.getCode()) {
-            logger.error(wrapper.getMessage());
-            throw new BusinessException(wrapper.getMessage());
+
+        try {
+            Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
+            if (wrapper == null || ERROR_CODE == wrapper.getCode()) {
+                logger.error(wrapper.getMessage());
+                throw new BusinessException(wrapper.getMessage());
+            }
+        } catch (Exception e) {
+            logger.error("订单推送结算中心发生错误. {}", e);
         }
     }
 
