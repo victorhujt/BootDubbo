@@ -2,6 +2,7 @@ package com.xescm.ofc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -13,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-//@Profile({ "dev", "test" })
+@Profile({ "dev", "test" })
 public class SwaggerConfiguration {
 //	@Bean
 //	public Docket reservationApi() {
@@ -37,10 +38,10 @@ public class SwaggerConfiguration {
 	}
 
 	private ApiInfo apiInfo() {
-		String email = "15500005676@163.com";
-		String name = "liuzhaoming";
+		String email = "hgf@hnxianyi.com";
+		String name = "订单中心";
 		String url = "http://www.hnxianyi.com";
 		Contact contact = new Contact(name, url, email);
-		return new ApiInfoBuilder().title("接口文档").description("用户中心API").contact(contact).build();
+		return new ApiInfoBuilder().title("接口文档").description("订单中心API").contact(contact).build();
 	}
 }
