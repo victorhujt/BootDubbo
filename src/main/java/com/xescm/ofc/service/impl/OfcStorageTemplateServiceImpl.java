@@ -52,6 +52,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.STO_TEMP_PRE;
+import static com.xescm.ofc.constant.OrderConstConstant.STR_YES;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 import static com.xescm.ofc.constant.StorageTemplateConstant.*;
 
@@ -313,7 +314,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<String,OfcStorageTemplate> templateDetilMap = (Map<String, OfcStorageTemplate>) templateReflect.get(0);//key是用户表头列名  //有映射列名的
         Map<String,OfcStorageTemplate> forDefaultButNotRequired = (Map<String, OfcStorageTemplate>) templateReflect.get(1);//key是用户表头列标准编码 // 没有映射列名的
         Map<String,OfcStorageTemplate> forDefaultButNotRequiredName = (Map<String, OfcStorageTemplate>) templateReflect.get(2);//key是用户表头列标准名称 // 没有映射列名的
-
         //将模板映射成标准格式, 如果不是标准格式的就跳过不校验, 且不展示
         InputStream inputStream ;
         Workbook workbook;
@@ -332,6 +332,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = new ArrayList<>();
         Map<String, CscGoodsApiVo> goodsCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consigneeCheck = new HashMap<>();
+        Map<String, CscContantAndCompanyResponseDto> consignorCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consigneeContactCodeCheck = new HashMap<>();
         Map<String, CscSupplierInfoDto> supplierCheck = new HashMap<>();
         Map<String, CscSupplierInfoDto> supplierCodeCheck = new HashMap<>();
@@ -1049,7 +1050,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //2017年3月21日 追加字段: 收货人编码(收货方联系人编码), 供应商编码
                             //收货人编码
-                        } else if (StringUtils.equals(StorageImportOutEnum.CONSIGNEE_CONTACT_CODE.getStandardColCode(), standardColCode)) {
+                        } /*else if (StringUtils.equals(StorageImportOutEnum.CONSIGNEE_CONTACT_CODE.getStandardColCode(), standardColCode)) {
                             if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
                                 logger.error("当前行:{},列:{} 没有收货人编码", rowNum + 1, cellNum + 1);
                                 continue;
@@ -1129,6 +1130,13 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            //发货方名称
+                        }*/ else if (StringUtils.equals(StorageImportInEnum.CONSIGNOR_NAME.getStandardColCode(), standardColCode)) {
+                            if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
+                                logger.error("当前行:{},列:{} 没有发货方名称", rowNum + 1, cellNum + 1);
+                                continue;
+                            }
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                         }
                     }
                 }
@@ -1197,6 +1205,12 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             provideTrans = forDefault.getColDefaultVal();
                         }
                         ofcStorageTemplateDto.setProvideTransport(PubUtils.isSEmptyOrNull(provideTrans) ? "0" : StringUtils.equals(provideTrans, "是") ? "1" : "0");
+                    }
+
+                    //对入库订单的发货方信息进行处理
+                    if (!this.dealConsignorName(ofcStorageTemplate, ofcStorageTemplateDto, consignorCheck, xlsErrorMsg, rowNum)) {
+                        checkPass = false;
+                        continue;
                     }
 
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
@@ -1290,6 +1304,49 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         succeedResult.add(countImportNum);
         succeedResult.add(importOrderNum);
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
+    }
+
+    private boolean dealConsignorName(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto,
+            Map<String, CscContantAndCompanyResponseDto> consignorCheck, List<String> xlsErrorMsg, int rowNum) {
+        //提供运输时,发货人必填且需校验,
+        if (StringUtils.equals(ofcStorageTemplateDto.getProvideTransport(), STR_YES)) {
+            String consignorName = ofcStorageTemplateDto.getConsignorName();
+            if (PubUtils.isSEmptyOrNull(consignorName)) {
+                logger.error("当前行:{},提供运输时,发货人必填, 校验出错, 请维护", rowNum + 1);
+                xlsErrorMsg.add("行:" + (rowNum + 1) + "校验失败！提供运输时,发货人必填！");
+            }
+            if (!consignorCheck.containsKey(consignorName)) {
+                CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
+                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+                CscContactDto cscContactDto = new CscContactDto();
+                cscContantAndCompanyDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+                cscContactCompanyDto.setContactCompanyName(consignorName);
+                cscContactDto.setPurpose("2");//用途为发货方
+                cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
+                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+                if (Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()) {
+                    logger.error("当前行:{},发货方名称校验失败, 请维护", rowNum + 1);
+                    throw new BusinessException(queryCscCustomerResult.getMessage());
+                }
+                List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
+                //即在客户中心没有找到该收货方
+                if (null == result || result.size() == 0) {
+                    logger.error("当前行:{},发货方名称校验失败, 请维护", rowNum + 1);
+                    xlsErrorMsg.add("行:" + (rowNum + 1)  + "发货方名称【" + consignorName + "】无效！");
+                    return false;
+                    //找到该收货方了
+                }else {
+                    CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = result.get(0);
+                    ofcStorageTemplateDto.setConsignor(cscContantAndCompanyResponseDto);
+                    consignorCheck.put(consignorName, cscContantAndCompanyResponseDto);
+                }
+            }else {
+                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consignorCheck.get(consignorName);
+                ofcStorageTemplateDto.setConsignor(cscContantAndCompanyResponseDto);
+            }
+        }
+        return true;
     }
 
     private boolean checkNullOrEmpty(String cellValue) {
@@ -1680,11 +1737,61 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcOrderDTO.setSupportContactName(cscSupplierInfoDto.getContactName());
     }
 
+    @Override
+    public CscContantAndCompanyDto convertCscConsignor(CscContantAndCompanyResponseDto consignor) {
+        logger.info("转换客户中心DTO发货方 consignor:{}", consignor);
+        if (null == consignor) {
+            logger.error("转换客户中心DTO发货方出错! 入参为空! ");
+            throw new BusinessException("转换客户中心DTO发货方出错!");
+        }
+        CscContantAndCompanyDto cscContactAndCompanyDto = new CscContantAndCompanyDto();
+        CscContactDto cscContactDto = new CscContactDto();
+        CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+        BeanUtils.copyProperties(consignor, cscContactDto);
+        BeanUtils.copyProperties(consignor, cscContactCompanyDto);
+        cscContactAndCompanyDto.setCscContactDto(cscContactDto);
+        cscContactAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
+        logger.info("转换客户中心DTO发货方 cscContactAndCompanyDto:{}", cscContactAndCompanyDto);
+        return cscContactAndCompanyDto;
+    }
+
+    @Override
+    public void convertConsignorToDis(CscContantAndCompanyResponseDto consignor, OfcOrderDTO ofcOrderDTO) {
+        logger.info("===>consignor:{}", consignor);
+        logger.info("===>ofcOrderDTO:{}", ofcOrderDTO);
+        if (null == consignor || PubUtils.isSEmptyOrNull(consignor.getContactCompanySerialNo())) {
+            return;
+        }
+        ofcOrderDTO.setConsignorCode(consignor.getContactCompanyName());//特别的,这里就是传NAME
+        ofcOrderDTO.setConsignorContactCode(consignor.getContactCode());
+        ofcOrderDTO.setConsignorName(consignor.getContactCompanyName());
+        ofcOrderDTO.setConsignorContactName(consignor.getContactName());
+        ofcOrderDTO.setConsignorType(consignor.getType());
+        ofcOrderDTO.setConsignorContactPhone(consignor.getPhone());
+        ofcOrderDTO.setDepartureProvince(consignor.getProvinceName());
+        ofcOrderDTO.setDepartureCity(consignor.getCityName());
+        ofcOrderDTO.setDepartureDistrict(consignor.getAreaName());
+        ofcOrderDTO.setDepartureTowns(consignor.getStreetName());
+        ofcOrderDTO.setDeparturePlace(consignor.getDetailAddress());
+        StringBuilder sb = new StringBuilder(consignor.getProvince());
+        if (!PubUtils.isSEmptyOrNull(consignor.getCity())) {
+            sb.append(consignor.getCity());
+            if (!PubUtils.isSEmptyOrNull(consignor.getArea())) {
+                sb.append(consignor.getArea());
+                if (!PubUtils.isSEmptyOrNull(consignor.getStreet())) {
+                    sb.append(consignor.getStreet());
+                }
+            }
+        }
+        ofcOrderDTO.setDeparturePlaceCode(sb.toString());
+    }
+
     public void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
+        logger.info("===>cscConsigneeDto:{}", cscConsigneeDto);
+        logger.info("===>ofcOrderDTO:{}", ofcOrderDTO);
         if (null == cscConsigneeDto || PubUtils.isSEmptyOrNull(cscConsigneeDto.getContactCompanySerialNo())) {
             return;
         }
-        logger.info("==========> cscConsigneeDto:{} ", ToStringBuilder.reflectionToString(cscConsigneeDto));
         ofcOrderDTO.setConsigneeCode(cscConsigneeDto.getContactCompanyName());//特别的,这里就是传NAME
         ofcOrderDTO.setConsigneeContactCode(cscConsigneeDto.getContactCode());
         ofcOrderDTO.setConsigneeName(cscConsigneeDto.getContactCompanyName());

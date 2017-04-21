@@ -712,11 +712,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
-            CscContantAndCompanyDto cscContantAndCompanyDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getCscConsigneeDto());
+            CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
             ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
             Wrapper save = this.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
-                    , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
+                    , cscConsignorDto, cscConsigneeDto, forOrderMsg.getCscSupplierInfoDto(), authResDto);
             if(save.getCode() == Wrapper.ERROR_CODE){
                 logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
                 return save;
