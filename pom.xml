@@ -82,11 +82,6 @@
 			<version>edas1.0.1</version>
 		</dependency>
 		<dependency>
-			<artifactId>xescm-tfc-api</artifactId>
-			<groupId>com.xescm.api</groupId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
@@ -160,12 +155,6 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.9.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.aliyun.sdk</groupId>
-			<artifactId>aliyun-sdk</artifactId>
-			<version>2.4.0</version>
 		</dependency>
 
 		<!--Swagger-->
@@ -310,6 +299,35 @@
 		</dependency>
 
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<profileActive>dev</profileActive>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<profileActive>test</profileActive>
+			</properties>
+		</profile>
+		<profile>
+			<id>beta</id>
+			<properties>
+				<profileActive>beta</profileActive>
+			</properties>
+		</profile>
+		<profile>
+			<id>pro</id>
+			<properties>
+				<profileActive>pro</profileActive>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
