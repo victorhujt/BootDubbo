@@ -1312,8 +1312,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         if (StringUtils.equals(ofcStorageTemplateDto.getProvideTransport(), STR_YES)) {
             String consignorName = ofcStorageTemplateDto.getConsignorName();
             if (PubUtils.isSEmptyOrNull(consignorName)) {
-                logger.error("当前行:{},提供运输时,发货人必填, 校验出错, 请维护", rowNum + 1);
-                xlsErrorMsg.add("行:" + (rowNum + 1) + "校验失败！提供运输时,发货人必填！");
+                logger.error("当前行:{},提供运输时,发货方名称必填, 校验出错, 请维护", rowNum + 1);
+                xlsErrorMsg.add("行:" + (rowNum + 1) + "校验失败！提供运输时,发货方名称必填！");
+                return false;
             }
             if (!consignorCheck.containsKey(consignorName)) {
                 CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
