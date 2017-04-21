@@ -712,8 +712,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
-            CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getCscConsigneeDto());
-            CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
+           CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
             ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
@@ -1419,7 +1419,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
         dinfo = ofcDistributionBasicInfoService.selectOne(condition);
 
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || ORDER_TAG_STOCK_IMPORT.equals(trimAndNullAsEmpty(reviewTag))) {//
             //编辑时不提供运输改为提供运输时 收货方即是仓库的信息   前台不好处理  后台通过仓库编码获取仓库的信息
             StringBuilder sb = new StringBuilder();
             RmcWarehouseDto rmcWarehouseDto = new RmcWarehouseDto();
