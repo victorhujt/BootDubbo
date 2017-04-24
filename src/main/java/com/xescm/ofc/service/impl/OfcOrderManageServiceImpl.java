@@ -1468,6 +1468,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
 
                 } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
+                    ofcDistributionBasicInfo.setConsigneeName(resp.getWarehouseName());
+                    ofcDistributionBasicInfo.setConsigneeContactName(resp.getWarehouseName());
                     ofcDistributionBasicInfo.setDestinationCode(sb.toString());
                     ofcDistributionBasicInfo.setDestination(resp.getDetailAddress());
                     ofcDistributionBasicInfo.setDestinationProvince(resp.getProvince());
