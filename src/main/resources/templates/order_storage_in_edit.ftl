@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
+    <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
+    <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
     <style lang="css">
         .block {
             margin: 20px 0;
         }
         .el-dialog{
-          top:50%!important;
-          margin-top:-300px;
-          margin-bottom:0!important;
+            top:50%!important;
+            margin-top:-300px;
+            margin-bottom:0!important;
         }
         .el-dialog__body{
-          padding:10px 20px 30px;
+            padding:10px 20px 30px;
         }
         .el-dialog__footer{
-          padding:15px 20px;
+            padding:15px 20px;
         }
         .el-dialog--small .el-table{
-          min-height:350px;
+            min-height:350px;
         }
         .el-dialog--small .el-table tr{
-          cursor:pointer;
+            cursor:pointer;
         }
         .el-table__body-wrapper{
             overflow-y: auto;
@@ -199,246 +202,278 @@
                 <el-button type="primary" @click="setCurrentGoodsInfo">确 定</el-button>
             </div>
         </el-dialog>
-          <div class="xe-pageHeader">
+        <div class="xe-pageHeader">
             基本信息
-          </div>
-      <el-form :model="orderForm" ref="orderForm" :rules="rules"  label-width="100px" class="demo-ruleForm">
-          <div class="xe-block">
-            <el-form-item label="订单日期" required prop="orderDate" class="xe-col-3">
-              <el-date-picker
-                      v-model="orderForm.orderDate"
-                      align="right"
-                      type="date"
-                      :clearable="false"
-                      :editable="false"
-                      placeholder="选择日期"
-                      :picker-options="pickerOptions">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
-              <el-input v-model="orderForm.merchandiser" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item label="客户名称" required prop="custName" class="xe-col-3">
-              <el-input
-                      placeholder="请选择"
-                      icon="search"
-                      v-model="orderForm.custName"
-                      :readOnly="true"
-                      @click="openCustomer">
-              </el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="仓库名称" required prop="wareHouse" class="xe-col-3">
-              <el-select v-model="orderForm.wareHouse" placeholder="请选择">
-                <el-option
-                        v-for="item in wareHouseOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="业务名称" required prop="businessType" class="xe-col-3">
-              <el-select v-model="orderForm.businessType" placeholder="请选择">
-                <el-option
-                        v-for="item in businessTypeOptions"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="客户订单号"  prop="custOrderCode" class="xe-col-3">
-              <el-input v-model="orderForm.custOrderCode" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="供应商名称" class="xe-col-3">
-              <el-input
-                      placeholder="请选择"
-                      icon="search"
-                      v-model="orderForm.supportName"
-                      v-bind:disabled = "isDisabled"
-                      :readOnly="true"
-                      @click="openSupplier">
-              </el-input>
-            </el-form-item>
-            <el-form-item label="备注" prop="notes" class="xe-col-3">
-              <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes">
-            </el-form-item>
-          </div>
-
-          <div class="xe-pageHeader">
-            运输信息
-          </div>
-          <div class="xe-block">
-            <el-form-item label="预计入库时间" class="xe-col-3">
-              <el-date-picker
-                    v-model="orderForm.arriveTime"
-                    align="right"
-                    type="datetime"
-                    :clearable="false"
-                    :editable="false"
-                    placeholder="选择日期"
-                    :picker-options="pickerOptions1">
-            </el-date-picker>
-            </el-form-item>
-            <el-form-item label="是否提供运输" class="xe-col-3">
-              <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
-            </el-form-item>
-              <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
-                  <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
-              </el-form-item>
-            <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
-              <el-input v-model="orderForm.plateNumber" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="司机姓名" prop="driverName" class="xe-col-3">
-              <el-input v-model="orderForm.driverName" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item label="联系电话" prop="contactNumber" class="xe-col-3">
-              <el-input v-model="orderForm.contactNumber" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-pageHeader">
-            发货方信息
-          </div>
-          <div class="xe-block">
-            <el-form-item label="名称" class="xe-col-3">
-              <el-input
-                      placeholder="请选择"
-                      icon="search"
-                      v-model="orderForm.consignorName"
-                      v-bind:disabled = "isDisabled"
-                      :readOnly="true"
-                      @click="openConsignor">
-              </el-input>
-            </el-form-item>
-            <el-form-item label="联系人" class="xe-col-3">
-              <el-input v-model="orderForm.consignorContactName" placeholder="请输入内容" :readOnly="true"></el-input>
-            </el-form-item>
-            <el-form-item label="联系电话" class="xe-col-3">
-              <el-input v-model="orderForm.consignorContactPhone" placeholder="请输入内容" :readOnly="true"></el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-block">
-            <el-form-item label="地址" class="xe-col-3">
-              <el-input v-model="orderForm.departureDetailAddress" placeholder="请输入内容" :readOnly="true"></el-input>
-            </el-form-item>
-          </div>
-          <div class="xe-pageHeader">
-            货品信息
-          </div>
-          <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
-              <el-table-column property="goodsType" label="货品种类">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.goodsType" :readOnly="true"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="goodsCategory" label="货品小类">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.goodsCategory" :readOnly="true"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="goodsCode" label="货品编码">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="goodsName" label="货品名称">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.goodsName" :readOnly="true"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="goodsSpec" label="规格">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.goodsSpec" :readOnly="true"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="unit" label="单位">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="quantity" label="入库数量">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="unitPrice" label="单价">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="productionBatch" label="批次号">
-                  <template scope="scope">
-                      <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
-                  </template>
-              </el-table-column>
-            <el-table-column property="expiryDate" label="保质期限" v-if="false">
-              <template scope="scope">
-                <el-input v-model="scope.row.expiryDate"></el-input>
-              </template>
-            </el-table-column>
-              <el-table-column property="productionTime" label="生产日期">
-                  <template scope="scope">
-                      <el-date-picker
-                              v-model="scope.row.productionTime"
-                              align="right"
-                              type="date"
-                              :clearable="false"
-                              :editable="false"
-                              @change="accountInvalidTime(scope.row)"
-                              placeholder="选择日期"
-                              :picker-options="pickerOptions1">
-                      </el-date-picker>
-                  </template>
-              </el-table-column>
-              <el-table-column property="invalidTime" label="失效日期">
-                  <template scope="scope">
-                      <el-date-picker
-                              v-model="scope.row.invalidTime"
-                              align="right"
-                              type="date"
-                              :clearable="false"
-                              :editable="false"
-                              placeholder="选择日期"
-                              :picker-options="pickerOptions1">
-                      </el-date-picker>
-                  </template>
-              </el-table-column>
-              <el-table-column property="supportBatch" label="供应商批次">
-                  <template scope="scope">
-                      <el-select v-model="scope.row.supportBatch" placeholder="请选择">
-                          <el-option
-                                  v-for="item in supportBatchData"
-                                  :label="item.label"
-                                  :value="item.value">
-                          </el-option>
-                      </el-select>
-                  </template>
-              </el-table-column>
-              <el-table-column property="goodsOperation" label="操作">
-                  <template scope="scope">
-                      <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
-                  </template>
-              </el-table-column>
-          </el-table>
-        <div class="xe-block">
-          <el-button @click="addGoods">添加货品</el-button>
-          <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
         </div>
+        <el-form :model="orderForm" ref="orderForm" :rules="rules"  label-width="100px" class="demo-ruleForm">
+            <div class="xe-block">
+                <el-form-item label="订单日期" required prop="orderDate" class="xe-col-3">
+                    <el-date-picker
+                            v-model="orderForm.orderDate"
+                            align="right"
+                            type="date"
+                            :clearable="false"
+                            :editable="false"
+                            placeholder="选择日期"
+                            :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="开单员" required prop="merchandiser" class="xe-col-3">
+                    <el-input v-model="orderForm.merchandiser" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="客户名称" required prop="custName" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="orderForm.custName"
+                            :readOnly="true"
+                            @click="openCustomer">
+                    </el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="仓库名称" required prop="wareHouse" class="xe-col-3">
+                    <el-select v-model="orderForm.wareHouse" placeholder="请选择">
+                        <el-option
+                                v-for="item in wareHouseOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="业务名称" required prop="businessType" class="xe-col-3">
+                    <el-select v-model="orderForm.businessType" placeholder="请选择">
+                        <el-option
+                                v-for="item in businessTypeOptions"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="客户订单号"  prop="custOrderCode" class="xe-col-3">
+                    <el-input v-model="orderForm.custOrderCode" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="供应商名称" class="xe-col-3">
+                    <el-input v-model="orderForm.supportName" v-if="supportNameShow"  placeholder="请输入供应商名称"></el-input>
+                    <input class="form-control select2-single" name="custName" id="custName" placeholder="请输入供应商名称" />
+                    <input  hidden name="custCode" id="custCode"  />
+                </el-form-item>
+                <el-form-item label="备注" prop="notes" class="xe-col-3">
+                    <el-input type="textarea" placeholder="请输入内容" v-model="orderForm.notes">
+                </el-form-item>
+            </div>
+
+            <div class="xe-pageHeader">
+                运输信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="预计入库时间" class="xe-col-3">
+                    <el-date-picker
+                            v-model="orderForm.arriveTime"
+                            align="right"
+                            type="datetime"
+                            :clearable="false"
+                            :editable="false"
+                            placeholder="选择日期"
+                            :picker-options="pickerOptions1">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="是否提供运输" class="xe-col-3">
+                    <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+                </el-form-item>
+                <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                    <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
+                    <el-input v-model="orderForm.plateNumber" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="司机姓名" prop="driverName" class="xe-col-3">
+                    <el-input v-model="orderForm.driverName" placeholder="请输入内容"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="contactNumber" class="xe-col-3">
+                    <el-input v-model="orderForm.contactNumber" placeholder="请输入内容"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-pageHeader">
+                发货方信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="名称" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="orderForm.consignorName"
+                            v-bind:disabled = "isDisabled"
+                            :readOnly="true"
+                            @click="openConsignor">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="联系人" class="xe-col-3">
+                    <el-input v-model="orderForm.consignorContactName" placeholder="请输入内容" :readOnly="true"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" class="xe-col-3">
+                    <el-input v-model="orderForm.consignorContactPhone" placeholder="请输入内容" :readOnly="true"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="地址" class="xe-col-3">
+                    <el-input v-model="orderForm.departureDetailAddress" placeholder="请输入内容" :readOnly="true"></el-input>
+                </el-form-item>
+            </div>
+            <div class="xe-pageHeader">
+                货品信息
+            </div>
+            <el-table :data="goodsData" border highlight-current-row @current-change="GoodsCurrentChange" style="width: 100%">
+                <el-table-column property="goodsType" label="货品种类">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsType" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsCategory" label="货品小类">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsCategory" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsCode" label="货品编码">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsCode" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsName" label="货品名称">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsName" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsSpec" label="规格">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.goodsSpec" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unit" label="单位">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="quantity" label="入库数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="unitPrice" label="单价">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionBatch" label="批次号">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="expiryDate" label="保质期限" v-if="false">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.expiryDate"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="productionTime" label="生产日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.productionTime"
+                                align="right"
+                                type="date"
+                                :clearable="false"
+                                :editable="false"
+                                @change="accountInvalidTime(scope.row)"
+                                placeholder="选择日期"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="invalidTime" label="失效日期">
+                    <template scope="scope">
+                        <el-date-picker
+                                v-model="scope.row.invalidTime"
+                                align="right"
+                                type="date"
+                                :clearable="false"
+                                :editable="false"
+                                placeholder="选择日期"
+                                :picker-options="pickerOptions1">
+                        </el-date-picker>
+                    </template>
+                </el-table-column>
+                <el-table-column property="supportBatch" label="供应商批次">
+                    <template scope="scope">
+                        <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                            <el-option
+                                    v-for="item in supportBatchData"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column property="goodsOperation" label="操作">
+                    <template scope="scope">
+                        <el-button type="text" @click="deleteRow(scope.$index, goodsData)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="xe-block">
+                <el-button @click="addGoods">添加货品</el-button>
+                <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
+            </div>
 
         </el-form>
     </div>
 </div>
 </body>
 <script>
-    new Vue({
+
+    var scripts = [null,
+        "/components/select2.v3/select2.min.js",
+        "/components/select2.v3/select2_locale_zh-CN.js",
+        null];
+
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
+        $(document).ready(main);
+    });
+
+    function main() {
+        debugger;
+        initSupplierName();
+    }
+
+    function custNameSelected() {
+        $("#custName").select2("data", {"code": _this.orderForm.supportCode, "name": _this.orderForm.supportName});
+    }
+
+    function initSupplierName(val) {
+        debugger;
+        var customerCode;
+        if("default" == val){
+            customerCode = "xxxxxx";
+        }else{
+            customerCode =  _this.orderForm.custCode;
+        }
+        var ofc_web_url = $("#ofc_web_url").html();
+        var url =  ofc_web_url+"/ofc/distributing/querySupplierSelect2?customerCode="+customerCode;
+        var notice = "没有找到相关供应商";
+        Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
+        $("#custName").on("select2-selecting", function(e) {
+            _this.orderForm.supportName = e.choice.name;
+            _this.orderForm.supportCode = e.choice.code;
+        });
+    }
+
+    var _this = new Vue({
         el: '#app',
         data :function() {
             var validateOrdeTime = function(rule, value, callback){
-                
+
                 if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
                     callback(new Error('只能选择一周之内的日期!'));
                 }else if(value.getTime()>new Date().getTime()){
@@ -464,6 +499,7 @@
             return {
                 activeNames:'',
                 isShow:false,
+                supportNameShow:false,
                 wareHouseObj:'',
                 goodsCategoryOptions:[],
                 customerDataInfo:{
@@ -690,6 +726,7 @@
                             var ofcGoodsDetailsInfo=result.result.ofcGoodsDetailsInfo;
                             var ofcDistributionBasicInfo=result.result.ofcDistributionBasicInfo;
                             if(ofcFundamentalInformation!=null){
+                                debugger;
                                 vueObj.orderCode=ofcFundamentalInformation.orderCode;
                                 vueObj.orderForm.orderDate=DateUtil.parse(ofcFundamentalInformation.orderTime);
                                 vueObj.orderForm.merchandiser=ofcFundamentalInformation.merchandiser;
@@ -768,6 +805,7 @@
                                     }
                                     vueObj.isShow = true;
                                     vueObj.selectSupplier();
+                                    custNameSelected();
                                 }
                             }
                         }
@@ -788,11 +826,12 @@
                     this.orderForm.custName = val.custName;
                     this.orderForm.custCode=val.custCode;
                     this.customerDataInfo.chosenCus = false;
+                    initSupplierName();
                     CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":vueObj.orderForm.custCode}, function(result) {
                         vueObj.wareHouseOptions = [];// 仓库下拉列表清空
                         vueObj.orderForm.wareHouse = '';       // 清空仓库
                         vueObj.supplierDataInfo.supplierData = [];    // 供应商列表清空
-                        vueObj.orderForm.supportName = '';    // 清空供应商
+                        //  vueObj.orderForm.supportName = '';    // 清空供应商
                         var data=result.result;
                         if (data == undefined || data == null || data.length ==0) {
                             layer.msg("暂时未查询到该客户下的仓库信息！");
@@ -913,7 +952,7 @@
                 param.pSize=vueObj.supplierDataInfo.supplierPageSize;
                 CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     vueObj.supplierDataInfo.supplierData = [];
-                   // vueObj.orderForm.supportName = '';
+                    // vueObj.orderForm.supportName = '';
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
                         if(!vueObj.isShow){
@@ -1190,9 +1229,9 @@
             },
             submitForm:function(formName) {
                 var _this = this;
-              this.$refs[formName].validate(function(valid){
+                this.$refs[formName].validate(function(valid){
                     if (valid) {
-                       _this.saveStorage();
+                        _this.saveStorage();
                     } else {
                         return false;
                     }
@@ -1252,11 +1291,11 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-//                    if(StringUtil.isEmpty(good.supportBatch)){
-//                        if(!StringUtil.isEmpty(this.orderForm.supportCode)){
-//                            good.supportBatch=this.orderForm.supportCode;
-//                        }
-//                    }
+                    //                    if(StringUtil.isEmpty(good.supportBatch)){
+                    //                        if(!StringUtil.isEmpty(this.orderForm.supportCode)){
+                    //                            good.supportBatch=this.orderForm.supportCode;
+                    //                        }
+                    //                    }
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
@@ -1436,13 +1475,13 @@
                     _this.orderForm.supportName="";
                 });
             },
-          accountInvalidTime:function(val){
-            console.log(val);
-            if(val.productionTime!=null) {
-              val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
-            }
-          },
-          reSetCondition:function(){
+            accountInvalidTime:function(val){
+                console.log(val);
+                if(val.productionTime!=null) {
+                    val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
+                }
+            },
+            reSetCondition:function(){
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
                 this.goodDataInfo.goodsForm.goodsCode="";

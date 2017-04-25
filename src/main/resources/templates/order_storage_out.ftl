@@ -1,44 +1,47 @@
 <head>
+    <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
+    <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
     <title>出库开单</title>
-  <style>
-    .el-dialog{
-      top:50%!important;
-      margin-top:-300px;
-      margin-bottom:0!important;
-    }
-    .el-dialog__body{
-      padding:10px 20px 30px;
-    }
-    .el-dialog__footer{
-      padding:15px 20px;
-    }
-    .el-dialog--small .el-table{
-      min-height:350px;
-    }
-    .el-dialog--small .el-table tr{
-      cursor:pointer;
-    }
-    .xe-block{
-        overflow:visible;
-    }
-    .xe-block:after{
-        content:".";
-        display:block;
-        height:0;
-        clear:both;
-        visibility:hidden;
-    }
-    .cityPicker{
-        position:relative;
-        z-index:5;
-        width:100%;
-    }
-    .el-table__body-wrapper{
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-  </style>
+    <style>
+        .el-dialog{
+            top:50%!important;
+            margin-top:-300px;
+            margin-bottom:0!important;
+        }
+        .el-dialog__body{
+            padding:10px 20px 30px;
+        }
+        .el-dialog__footer{
+            padding:15px 20px;
+        }
+        .el-dialog--small .el-table{
+            min-height:350px;
+        }
+        .el-dialog--small .el-table tr{
+            cursor:pointer;
+        }
+        .xe-block{
+            overflow:visible;
+        }
+        .xe-block:after{
+            content:".";
+            display:block;
+            height:0;
+            clear:both;
+            visibility:hidden;
+        }
+        .cityPicker{
+            position:relative;
+            z-index:5;
+            width:100%;
+        }
+        .el-table__body-wrapper{
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    </style>
 </head>
+<span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
 <body>
 <div id="app">
     <div class="list-mian-01">
@@ -108,42 +111,6 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectConsignee">取 消</el-button>
                 <el-button type="primary" @click="setCurrentConsigneeInfo(consigneeDataInfo.consigneeCurrentRow)">确 定</el-button>
-            </div>
-        </el-dialog>
-
-        <el-dialog title="供应商信息" v-model="supplierDataInfo.chosenSupplier" size="small">
-            <el-form :model="supplierDataInfo.supplierForm">
-                <el-form-item label="名称" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.supportName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.contactName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.contactPhone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item  label="" :label-width="formLabelWidth20">
-                    <el-button type="primary" @click="selectSupplier">筛选</el-button>
-                </el-form-item>
-            </el-form>
-
-            <el-table border :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange"
-                      @row-dblclick="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)" style="width: 100%" max-height="400">
-                <el-table-column type="index" label="序号"></el-table-column>
-                <el-table-column property="supportName" label="名称"></el-table-column>
-                <el-table-column property="contactName" label="联系人"></el-table-column>
-                <el-table-column property="contactPhone" label="联系电话"></el-table-column>
-                <el-table-column property="fax" label="传真"></el-table-column>
-                <el-table-column property="email" label="邮箱"></el-table-column>
-                <el-table-column property="postCode" label="邮编"></el-table-column>
-                <el-table-column property="supportCode" label="供应商编码"></el-table-column>
-                <el-table-column property="completeAddress" label="地址"></el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleSupplierSizeChange" @current-change="handleSupplierCurrentPage" :current-page="supplierDataInfo.currentSupplierPage" :page-sizes="pageSizes" :page-size="supplierDataInfo.supplierPageSize" layout="total, sizes, prev, pager, next, jumper" :total="supplierDataInfo.totalSupplier">
-            </el-pagination>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectSupplier">取 消</el-button>
-                <el-button type="primary" @click="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -291,94 +258,88 @@
                 </el-form-item>
             </div>
             <div class="xe-block">
-              <el-form-item label="供应商名称" class="xe-col-3">
-                <el-input
-                        placeholder="请选择"
-                        icon="search"
-                        v-model="orderForm.supportName"
-                        v-bind:disabled = "isDisabled"
-                        :readOnly="true"
-                        @click="openSupplier">
-                </el-input>
-              </el-form-item>
+                <el-form-item label="供应商名称" class="xe-col-3">
+                    <input class="form-control select2-single" name="custName" id="custName" placeholder="请输入供应商名称" />
+                    <input  hidden name="custCode" id="custCode"  />
+                </el-form-item>
                 <el-form-item label="备注" prop="notes" class="xe-col-3">
                     <el-input type="textarea"  v-model="orderForm.notes" ></el-input>
                 </el-form-item>
             </div>
             <div>
-              <el-collapse v-model="activeNames" accordion>
-                <el-collapse-item title="运输信息" name="1">
-                    <div class="xe-block">
-                      <el-form-item label="预计出库时间" class="xe-col-3">
-                        <el-date-picker
-                                v-model="orderForm.shipmentTime"
-                                type="datetime"
-                                :clearable="false"
-                                :editable="false"
-                                placeholder="选择日期"
-                                :picker-options="pickerOptions1">
-                        </el-date-picker>
-                      </el-form-item>
-                      <el-form-item label="是否提供运输"  class="xe-col-3">
-                        <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
-                      </el-form-item>
-                        <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
-                            <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="xe-block">
-                      <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
-                        <el-input v-model="orderForm.plateNumber" placeholder="请输入内容"></el-input>
-                      </el-form-item>
-                      <el-form-item label="司机姓名" prop="driverName" class="xe-col-3">
-                        <el-input v-model="orderForm.driverName"  placeholder="请输入内容"></el-input>
-                      </el-form-item>
-                      <el-form-item label="联系电话"  prop="contactNumber" class="xe-col-3">
-                        <el-input v-model="orderForm.contactNumber"  placeholder="请输入内容"></el-input>
-                      </el-form-item>
-                    </div>
-                </el-collapse-item>
-              </el-collapse>
+                <el-collapse v-model="activeNames" accordion>
+                    <el-collapse-item title="运输信息" name="1">
+                        <div class="xe-block">
+                            <el-form-item label="预计出库时间" class="xe-col-3">
+                                <el-date-picker
+                                        v-model="orderForm.shipmentTime"
+                                        type="datetime"
+                                        :clearable="false"
+                                        :editable="false"
+                                        placeholder="选择日期"
+                                        :picker-options="pickerOptions1">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="是否提供运输"  class="xe-col-3">
+                                <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
+                            </el-form-item>
+                            <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                                <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="xe-block">
+                            <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
+                                <el-input v-model="orderForm.plateNumber" placeholder="请输入内容"></el-input>
+                            </el-form-item>
+                            <el-form-item label="司机姓名" prop="driverName" class="xe-col-3">
+                                <el-input v-model="orderForm.driverName"  placeholder="请输入内容"></el-input>
+                            </el-form-item>
+                            <el-form-item label="联系电话"  prop="contactNumber" class="xe-col-3">
+                                <el-input v-model="orderForm.contactNumber"  placeholder="请输入内容"></el-input>
+                            </el-form-item>
+                        </div>
+                    </el-collapse-item>
+                </el-collapse>
             </div>
-          <div class="xe-pageHeader">
-            收货方信息
-          </div>
-          <div class="xe-block">
-              <el-form-item label="名称" v-if="!orderForm.isEditable" prop="consigneeName" class="xe-col-3">
-              <el-input
-                      placeholder="请选择"
-                      icon="search"
-                      v-model="orderForm.consigneeName"
-                      v-bind:readOnly="!orderForm.isEditable"
-                      @click="openConsignee">
-              </el-input>
-            </el-form-item>
-              <el-form-item label="名称" v-if="orderForm.isEditable" required prop="consigneeName" class="xe-col-3">
-                  <el-input v-model="orderForm.consigneeName"></el-input>
-              </el-form-item>
-              <el-form-item label="联系人" required prop="consigneeContactName" class="xe-col-3">
-                  <el-input v-model="orderForm.consigneeContactName"   v-bind:readOnly="!orderForm.isEditable"></el-input>
-              </el-form-item>
-              <el-form-item label="编辑">
-                  <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
-              </el-form-item>
+            <div class="xe-pageHeader">
+                收货方信息
+            </div>
+            <div class="xe-block">
+                <el-form-item label="名称" v-if="!orderForm.isEditable" prop="consigneeName" class="xe-col-3">
+                    <el-input
+                            placeholder="请选择"
+                            icon="search"
+                            v-model="orderForm.consigneeName"
+                            v-bind:readOnly="!orderForm.isEditable"
+                            @click="openConsignee">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="名称" v-if="orderForm.isEditable" required prop="consigneeName" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeName"></el-input>
+                </el-form-item>
+                <el-form-item label="联系人" required prop="consigneeContactName" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeContactName"   v-bind:readOnly="!orderForm.isEditable"></el-input>
+                </el-form-item>
+                <el-form-item label="编辑">
+                    <el-checkbox v-model="orderForm.isEditable" @change="emptyConsigneeInfo"></el-checkbox>
+                </el-form-item>
 
-          </div>
-          <div class="xe-block">
-              <el-form-item label="联系电话" required prop="consigneeContactPhone" class="xe-col-3">
-                  <el-input v-model="orderForm.consigneeContactPhone"   v-bind:readOnly="!orderForm.isEditable"></el-input>
-              </el-form-item>
-            <el-form-item label="地址选择" class="xe-col-3"  v-if="orderForm.isEditable">
-                <city-picker class = "cp cityPicker"
-                             :url = "cityUrl" :readonly = !orderForm.isEditable
-                             :default-data = "defaultData"
-                             :success-callback = "addressCallback"></city-picker>
-            </el-form-item>
-            <el-form-item label="详细地址" class="xe-col-3">
-              <el-input v-if="!orderForm.isEditable" v-model="orderForm.destinationDetailAddress" v-bind:readOnly="!orderForm.isEditable"></el-input>
-              <el-input v-if="orderForm.isEditable" v-model="orderForm.destination"></el-input>
-          </el-form-item>
-          </div>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="联系电话" required prop="consigneeContactPhone" class="xe-col-3">
+                    <el-input v-model="orderForm.consigneeContactPhone"   v-bind:readOnly="!orderForm.isEditable"></el-input>
+                </el-form-item>
+                <el-form-item label="地址选择" class="xe-col-3"  v-if="orderForm.isEditable">
+                    <city-picker class = "cp cityPicker"
+                                 :url = "cityUrl" :readonly = !orderForm.isEditable
+                                 :default-data = "defaultData"
+                                 :success-callback = "addressCallback"></city-picker>
+                </el-form-item>
+                <el-form-item label="详细地址" class="xe-col-3">
+                    <el-input v-if="!orderForm.isEditable" v-model="orderForm.destinationDetailAddress" v-bind:readOnly="!orderForm.isEditable"></el-input>
+                    <el-input v-if="orderForm.isEditable" v-model="orderForm.destination"></el-input>
+                </el-form-item>
+            </div>
             <div class="xe-pageHeader">
                 货品信息
             </div>
@@ -410,12 +371,26 @@
                 </el-table-column>
                 <el-table-column property="unit" label="单位">
                     <template scope="scope">
-                        <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
+                    <#--<el-input v-model="scope.row.unit" :readOnly="true"></el-input>-->
+                        <el-select v-model="scope.row.unit" placeholder="请选择">
+                            <el-option
+                                    v-for="item in unitsOptions"
+                                    :label="item.label"
+                                    :value="item.value">
+                                <span style="float: left">{{ item.label }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                            </el-option>
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column property="quantity" label="出库数量">
                     <template scope="scope">
                         <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="primaryQuantity" label="主单位数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
@@ -428,11 +403,11 @@
                         <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
-              <el-table-column property="expiryDate" label="保质期限" v-if="false">
-                <template scope="scope">
-                  <el-input v-model="scope.row.expiryDate"></el-input>
-                </template>
-              </el-table-column>
+                <el-table-column property="expiryDate" label="保质期限" v-if="false">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.expiryDate"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="productionTime" label="生产日期">
                     <template scope="scope">
                         <el-date-picker
@@ -479,124 +454,159 @@
             </el-table>
             <el-button @click="addGoods">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
-            <#--<el-button type="primary" @click="validateStockCount">校验当前库存</el-button>-->
+        <#--<el-button type="primary" @click="validateStockCount">校验当前库存</el-button>-->
         </el-form>
     </div>
 </body>
 <script>
-    new Vue({
+    var scripts = [null,
+        "/components/select2.v3/select2.min.js",
+        "/components/select2.v3/select2_locale_zh-CN.js",
+        null];
+
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
+        $(document).ready(main);
+    });
+
+    function main() {
+        initSupplierName("default");
+    }
+
+    function initSupplierName(val) {
+        debugger;
+        var customerCode;
+        if("default" == val){
+            customerCode = "xxxxxx";
+        }else{
+            customerCode =  _this.orderForm.custCode;
+        }
+        var ofc_web_url = $("#ofc_web_url").html();
+        var url =  ofc_web_url+"/ofc/distributing/querySupplierSelect2?customerCode="+customerCode;
+        var notice = "没有找到相关供应商";
+        Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
+        $("#custName").on("select2-selecting", function(e) {
+            debugger;
+            _this.orderForm.supportName = e.choice.name;
+            _this.orderForm.supportCode = e.choice.code;
+        });
+    }
+
+
+
+    var _this = new Vue({
         el: '#app',
         data :function() {
-          var validateOrdeTime = function(rule, value, callback){
-            if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-              callback(new Error('只能选择一周之内的日期!'));
-            }else if(value.getTime()>new Date().getTime()){
-              callback(new Error('不能选择当前日期的往后日期!'));
-            }else{
-              callback();
-            }
-          };
-          var checkPhoneOrMobile = function(rule, value, callback) {
-            if(value!==""){
-              var mp=/^1\d{10}$/;
-              var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
-              var phone = pp.test(value)||mp.test(value);
-              if(phone!==true){
-                callback(new Error('请正确输入联系电话'));
-              }else{
-                callback();
-              }
-            }else{
-                callback();
-            }
-          };
-          return {
-              isShow:false,
-              cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
-              defaultData: {
-                  province: {
-                      code: "",
-                      keyword: "province",
-                      title: "请选择省"
-                  },
-                  city: {
-                      code: "",
-                      keyword: "city",
-                      title: "市"
-                  },
-                  district: {
-                      code: "",
-                      keyword: "district",
-                      title: "区"
-                  },
-                  street: {
-                      code: "",
-                      keyword: "street",
-                      title: "街道"
-                  }
-              },
-              activeNames:'',
-              wareHouseObj:'',
-              thirdLevelAddress:'',
-              goodsCategoryOptions:[],
-              goodsStockData:[],
-              chosenGoodStock:false,
-              customerDataInfo:{
-                  currentCustomerPage:1,
-                  customerPageSize:10,
-                  total:0,
-                  currentRow:null,
-                  customerData:[],
-                  chosenCus:false,
-                  chosenCusForm: {
-                      name: ''
-                  }
-              },
-              consigneeDataInfo:{
-                  currentConsigneePage:1,
-                  consigneePageSize:10,
-                  totalConsignee:0,
-                  consigneeCurrentRow:null,
-                  consigneeData:[],
-                  chosenSend:false,
-                  consigneeForm: {
-                      consigneeName: '',
-                      consigneeContactName: '',
-                      consigneeContactPhone:''
-                  }
-              },
-              supportBatchData:[],
-              supplierDataInfo:{
-                  currentSupplierPage:1,
-                  supplierPageSize:10,
-                  totalSupplier:0,
-                  supplierCurrentRow:null,
-                  supplierData:[],
-                  chosenSupplier:false,
-                  supplierForm:{
-                      supportName:'',
-                      contactName:'',
-                      contactPhone:''
-                  }
-              },
-              goodDataInfo:{
-                  currentGoodPage:1,
-                  goodPageSize:10,
-                  totalGoods:0,
-                  goodCurrentRow:null,
-                  goodsCodeData:[],
-                  chosenGoodCode:false,
-                  goodsForm:{
-                      goodsName:'',
-                      goodsTypeId:'',
-                      goodsTypeSonId:'',
-                      goodsCode:'',
-                      barCode:''
-                  }
-              },
-              currentRowData : '',
-              wareHouseOptions:[],
-              businessTypeOptions: [{
+            var validateOrdeTime = function(rule, value, callback){
+                if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
+                    callback(new Error('只能选择一周之内的日期!'));
+                }else if(value.getTime()>new Date().getTime()){
+                    callback(new Error('不能选择当前日期的往后日期!'));
+                }else{
+                    callback();
+                }
+            };
+            var checkPhoneOrMobile = function(rule, value, callback) {
+                if(value!==""){
+                    var mp=/^1\d{10}$/;
+                    var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
+                    var phone = pp.test(value)||mp.test(value);
+                    if(phone!==true){
+                        callback(new Error('请正确输入联系电话'));
+                    }else{
+                        callback();
+                    }
+                }else{
+                    callback();
+                }
+            };
+            return {
+                isShow:false,
+                cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
+                defaultData: {
+                    province: {
+                        code: "",
+                        keyword: "province",
+                        title: "请选择省"
+                    },
+                    city: {
+                        code: "",
+                        keyword: "city",
+                        title: "市"
+                    },
+                    district: {
+                        code: "",
+                        keyword: "district",
+                        title: "区"
+                    },
+                    street: {
+                        code: "",
+                        keyword: "street",
+                        title: "街道"
+                    }
+                },
+                activeNames:'',
+                wareHouseObj:'',
+                thirdLevelAddress:'',
+                goodsCategoryOptions:[],
+                goodsStockData:[],
+                chosenGoodStock:false,
+                unitsOptions: [{value: 'EA', label: '箱'}, {value: 'IP', label: '内包装'},{ value: 'CS', label: '主单位'}, {value:"栈板",label:"托"}],
+                customerDataInfo:{
+                    currentCustomerPage:1,
+                    customerPageSize:10,
+                    total:0,
+                    currentRow:null,
+                    customerData:[],
+                    chosenCus:false,
+                    chosenCusForm: {
+                        name: ''
+                    }
+                },
+                consigneeDataInfo:{
+                    currentConsigneePage:1,
+                    consigneePageSize:10,
+                    totalConsignee:0,
+                    consigneeCurrentRow:null,
+                    consigneeData:[],
+                    chosenSend:false,
+                    consigneeForm: {
+                        consigneeName: '',
+                        consigneeContactName: '',
+                        consigneeContactPhone:''
+                    }
+                },
+                supportBatchData:[],
+                supplierDataInfo:{
+                    currentSupplierPage:1,
+                    supplierPageSize:10,
+                    totalSupplier:0,
+                    supplierCurrentRow:null,
+                    supplierData:[],
+                    chosenSupplier:false,
+                    supplierForm:{
+                        supportName:'',
+                        contactName:'',
+                        contactPhone:''
+                    }
+                },
+                goodDataInfo:{
+                    currentGoodPage:1,
+                    goodPageSize:10,
+                    totalGoods:0,
+                    goodCurrentRow:null,
+                    goodsCodeData:[],
+                    chosenGoodCode:false,
+                    goodsForm:{
+                        goodsName:'',
+                        goodsTypeId:'',
+                        goodsTypeSonId:'',
+                        goodsCode:'',
+                        barCode:''
+                    }
+                },
+                currentRowData : '',
+                wareHouseOptions:[],
+                businessTypeOptions: [{
                     value: '610',
                     label: '销售出库'
                 }, {
@@ -612,11 +622,11 @@
                     value: '614',
                     label: '分拨出库'
                 },
-                  {
-                      value: '617',
-                      label: '退车间'
-                  }
-              ],
+                    {
+                        value: '617',
+                        label: '退车间'
+                    }
+                ],
                 goodsMsgOptions: [],
                 pickerOptions1: {
                     shortcuts: [{
@@ -662,12 +672,12 @@
                         }
                     }]
                 },
-              pageSizes:[10, 20, 30, 40,50],
-              formLabelWidth: '100px',
-              formLabelWidth20: '20px',
-              isDisabled: false,
-              isDisabled11: false,
-              goodsData: [],
+                pageSizes:[10, 20, 30, 40,50],
+                formLabelWidth: '100px',
+                formLabelWidth20: '20px',
+                isDisabled: false,
+                isDisabled11: false,
+                goodsData: [],
                 orderForm:{
                     orderDate:new Date(),
                     merchandiser:'${merchandiser!}',
@@ -700,63 +710,60 @@
                     destinationDistrict:'',
                     destinationTowns:''
                 },
-              rules:{
-                  orderDate:[
-                  { type: 'date', required: true, message: '请选择日期', trigger: 'blur' },
-                  {validator: validateOrdeTime, trigger: 'blur'}
-                ],
-                merchandiser:[
-                  { required: true, message: '请输入开单员', trigger: 'blur' },
-                  { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
-                ],
-                  custName:[
-                  { required: true, message: '请输入客户名称', trigger: 'change' },
-                  { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'change' }
-                ],
-                wareHouse:[
-                  { required: true, message: '请选择仓库名称', trigger: 'change' }
-                ],
-                  businessType:[
-                  { required: true, message: '请选择业务名称', trigger: 'change' }
-                ],
-                  custOrderCode:[
-                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
-                ],
-                notes:[
-                  { min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'change' }
-                ],
-                  plateNumber:[
-                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
-                ],
-                driverName:[
-                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
-                ],
-                  contactNumber:[
-                  {validator: checkPhoneOrMobile, trigger: 'blur'},
-                  { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
-                ],
-                consigneeName:[
-                      { required: true, message: '请输入收货方名称', trigger: 'change' },
-                    { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
-                  ],
-                consigneeContactName:[
-                      { required: true, message: '请输入收货方联系人名称', trigger: 'change' },
-                      { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
-                  ],
-                consigneeContactPhone:[
-                    { required: true, message: '请输入联系电话', trigger: 'change' },
-                    {validator: checkPhoneOrMobile, trigger: 'blur'},
-                    {min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
-                  ]
-              }
+                rules:{
+                    orderDate:[
+                        { type: 'date', required: true, message: '请选择日期', trigger: 'blur' },
+                        {validator: validateOrdeTime, trigger: 'blur'}
+                    ],
+                    merchandiser:[
+                        { required: true, message: '请输入开单员', trigger: 'blur' },
+                        { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'change' }
+                    ],
+                    custName:[
+                        { required: true, message: '请输入客户名称', trigger: 'change' },
+                        { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'change' }
+                    ],
+                    wareHouse:[
+                        { required: true, message: '请选择仓库名称', trigger: 'change' }
+                    ],
+                    businessType:[
+                        { required: true, message: '请选择业务名称', trigger: 'change' }
+                    ],
+                    custOrderCode:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    notes:[
+                        { min: 0, max: 200, message: '长度在 0 到 200 个字符', trigger: 'change' }
+                    ],
+                    plateNumber:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    driverName:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    contactNumber:[
+                        {validator: checkPhoneOrMobile, trigger: 'blur'},
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    consigneeName:[
+                        { required: true, message: '请输入收货方名称', trigger: 'change' },
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    consigneeContactName:[
+                        { required: true, message: '请输入收货方联系人名称', trigger: 'change' },
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    consigneeContactPhone:[
+                        { required: true, message: '请输入联系电话', trigger: 'change' },
+                        {validator: checkPhoneOrMobile, trigger: 'blur'},
+                        {min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ]
+                }
             };
         },
         methods: {
             handleCurrentChange:function(val) {
                 this.customerDataInfo.currentRow = val;
-            },
-            handlSuppliereCurrentChange:function(val) {
-                this.supplierDataInfo.supplierCurrentRow = val;
             },
             setCurrentCustInfo:function(val) {
                 var vueObj=this;
@@ -794,6 +801,7 @@
 
                         }
                     },"json");
+                    initSupplierName();
                 } else {
                     vueObj.promptInfo("请选择客户信息!",'warning');
                 }
@@ -815,6 +823,10 @@
             addGoods:function(){
                 if(StringUtil.isEmpty(this.orderForm.custName)&&StringUtil.isEmpty(this.orderForm.custCode)){
                     this.promptInfo("请选择客户!",'warning');
+                    return;
+                }
+                if(StringUtil.isEmpty(this.orderForm.wareHouse)){
+                    this.promptInfo("请先选择仓库名称!",'warning');
                     return;
                 }
                 this.goodDataInfo.chosenGoodCode = true;
@@ -864,7 +876,7 @@
                 param.pSize=vueObj.supplierDataInfo.supplierPageSize;
                 CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     vueObj.supplierDataInfo.supplierData = [];
-                    vueObj.orderForm.supportName = '';
+                    //  vueObj.orderForm.supportName = '';
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
                         if(!vueObj.isShow){
@@ -895,23 +907,6 @@
                 },"json");
 
             },
-            handleSupplierSizeChange:function(val){
-                this.supplierDataInfo.supplierPageSize = val;
-                this.selectSupplier();
-            },
-            handleSupplierCurrentPage:function(val){
-                this.supplierDataInfo.currentSupplierPage = val;
-                this.selectSupplier();
-            },
-            setCurrentSupplierInfo:function(val){
-                if (val != null) {
-                    this.orderForm.supportName=val.supportName;
-                    this.orderForm.supportCode=val.supportCode;
-                    this.supplierDataInfo.chosenSupplier=false;
-                } else {
-                    this.promptInfo("请选择供应商!",'warning');
-                }
-            },
             setCurrentGoodsInfo:function(){
                 if(this.multipleSelection.length<1){
                     this.promptInfo("请至少选择一条货品明细!",'warning');
@@ -941,10 +936,6 @@
                         this.selectSupplier();
                     }
                 }
-            },
-            cancelSelectSupplier:function(){
-                this.supplierDataInfo.supplierData=[];
-                this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignee:function(){
                 this.consigneeDataInfo.consigneeData=[];
@@ -1059,7 +1050,7 @@
                             goodCode.goodsName=cscGoodsVo.goodsName;
                             goodCode.goodsBrand=cscGoodsVo.brand;
                             goodCode.goodsSpec=cscGoodsVo.specification;
-                            goodCode.unit=cscGoodsVo.unit;
+                            //goodCode.unit=cscGoodsVo.unit;
                             goodCode.barCode=cscGoodsVo.barCode;
                             if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
                                 goodCode.expiryDate=0;
@@ -1139,15 +1130,15 @@
             },
             submitForm:function(formName) {
                 var _this = this;
-              this.$refs[formName].validate(function(valid) {
-                  if (valid) {
-                      _this.saveStorage();
-                  } else {
-                      console.log('error submit!!');
-                      return false;
-                  }
-              });
-          },
+                this.$refs[formName].validate(function(valid) {
+                    if (valid) {
+                        _this.saveStorage();
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
             saveStorage:function(){
                 if(this.orderForm.businessType=="614"){
                     if(StringUtil.isEmpty(this.orderForm.supportName)){
@@ -1367,8 +1358,8 @@
             },
             promptInfo:function(message,type){
                 this.$message({
-                     message: message,
-                     type: type
+                    message: message,
+                    type: type
                 });
             },
             openCustomer:function(){
@@ -1448,12 +1439,12 @@
                     _this.orderForm.supportName="";
                 });
             },
-          accountInvalidTime:function(val){
-            if(val.productionTime!=null) {
-              val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
-            }
-          },
-          reSetCondition:function(){
+            accountInvalidTime:function(val){
+                if(val.productionTime!=null) {
+                    val.invalidTime = new Date(val.productionTime.getTime() + val.expiryDate * 3600 * 1000 * 24);
+                }
+            },
+            reSetCondition:function(){
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
                 this.goodDataInfo.goodsForm.goodsCode="";

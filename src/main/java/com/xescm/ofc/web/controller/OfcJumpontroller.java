@@ -411,6 +411,7 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/orderStorageOutEdit")
     public ModelAndView orderStorageOutEdit(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_out_edit");
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         return modelAndView;
     }
 
@@ -430,6 +431,7 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/orderStorageInEdit")
     public ModelAndView orderStorageInEdit(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_in_edit");
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         return modelAndView;
     }
 

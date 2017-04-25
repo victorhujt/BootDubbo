@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
+    <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
+    <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
     <style lang="css">
         .block {
             margin: 20px 0;
         }
         .el-textarea__inner{
-          font-size:12px;
+            font-size:12px;
         }
         .el-dialog{
-          top:50%!important;
-          margin-top:-300px;
-          margin-bottom:0!important;
+            top:50%!important;
+            margin-top:-300px;
+            margin-bottom:0!important;
         }
         .el-dialog__body{
-          padding:10px 20px 30px;
+            padding:10px 20px 30px;
         }
         .el-dialog__footer{
-          padding:15px 20px;
+            padding:15px 20px;
         }
         .el-dialog--small .el-table{
-          min-height:350px;
+            min-height:350px;
         }
         .el-dialog--small .el-table tr{
-          cursor:pointer;
+            cursor:pointer;
         }
         .xe-block{
             overflow:visible;
@@ -108,43 +111,6 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectConsignee">取 消</el-button>
                 <el-button type="primary" @click="setCurrentConsigneeInfo(consigneeDataInfo.consigneeCurrentRow)">确 定</el-button>
-            </div>
-        </el-dialog>
-
-
-        <el-dialog title="供应商信息" v-model="supplierDataInfo.chosenSupplier" size="small">
-            <el-form :model="supplierDataInfo.supplierForm">
-                <el-form-item label="名称" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.supportName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.contactName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.contactPhone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item  label="" :label-width="formLabelWidth20">
-                    <el-button type="primary" @click="selectSupplier">筛选</el-button>
-                </el-form-item>
-            </el-form>
-
-            <el-table border :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange"
-                      @row-dblclick="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)" style="width: 100%" max-height="400">
-                <el-table-column type="index"></el-table-column>
-                <el-table-column property="supportName" label="名称"></el-table-column>
-                <el-table-column property="contactName" label="联系人"></el-table-column>
-                <el-table-column property="contactPhone" label="联系电话"></el-table-column>
-                <el-table-column property="fax" label="传真"></el-table-column>
-                <el-table-column property="email" label="邮箱"></el-table-column>
-                <el-table-column property="postCode" label="邮编"></el-table-column>
-                <el-table-column property="supportCode" label="供应商编码"></el-table-column>
-                <el-table-column property="completeAddress" label="地址"></el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleSupplierSizeChange" @current-change="handleSupplierCurrentPage" :current-page="supplierDataInfo.currentSupplierPage" :page-sizes="pageSizes" :page-size="supplierDataInfo.supplierPageSize" layout="total, sizes, prev, pager, next, jumper" :total="supplierDataInfo.totalSupplier">
-            </el-pagination>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectSupplier">取 消</el-button>
-                <el-button type="primary" @click="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -290,14 +256,9 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="供应商名称" class="xe-col-3">
-                    <el-input
-                            placeholder="请选择"
-                            icon="search"
-                            v-model="orderForm.supportName"
-                            v-bind:disabled = "isDisabled"
-                            :readOnly="true"
-                            @click="openSupplier">
-                    </el-input>
+                    <el-input v-model="orderForm.supportName" v-if="supportNameShow"  placeholder="请输入供应商名称"></el-input>
+                    <input class="form-control select2-single" name="custName" id="custName" placeholder="请输入供应商名称" />
+                    <input  hidden name="custCode" id="custCode"  />
                 </el-form-item>
                 <el-form-item label="备注" prop="notes" class="xe-col-3">
                     <el-input type="textarea"  v-model="orderForm.notes"></el-input>
@@ -408,7 +369,16 @@
                 </el-table-column>
                 <el-table-column property="unit" label="单位">
                     <template scope="scope">
-                        <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
+                    <#--<el-input v-model="scope.row.unit" :readOnly="true"></el-input>-->
+                        <el-select v-model="scope.row.unit" placeholder="请选择">
+                            <el-option
+                                    v-for="item in unitsOptions"
+                                    :label="item.label"
+                                    :value="item.value">
+                                <span style="float: left">{{ item.label }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                            </el-option>
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column property="quantity" label="出库数量">
@@ -426,11 +396,11 @@
                         <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
-              <el-table-column property="expiryDate" label="保质期限" v-if="false">
-                <template scope="scope">
-                  <el-input v-model="scope.row.expiryDate"></el-input>
-                </template>
-              </el-table-column>
+                <el-table-column property="expiryDate" label="保质期限" v-if="false">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.expiryDate"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="productionTime" label="生产日期">
                     <template scope="scope">
                         <el-date-picker
@@ -477,42 +447,81 @@
             </el-table>
             <el-button @click="addGoods">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
-            <#--<el-button type="primary" @click="validateStockCount">校验当前库存</el-button>-->
+        <#--<el-button type="primary" @click="validateStockCount">校验当前库存</el-button>-->
         </el-form>
     </div>
 </div>
 </body>
 <script>
-    new Vue({
+    var scripts = [null,
+        "/components/select2.v3/select2.min.js",
+        "/components/select2.v3/select2_locale_zh-CN.js",
+        null];
+
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
+        $(document).ready(main);
+    });
+
+    function main() {
+        debugger;
+        initSupplierName();
+    }
+
+    function custNameSelected() {
+        $("#custName").select2("data", {"code": _this.orderForm.supportCode, "name": _this.orderForm.supportName});
+    }
+
+    function initSupplierName(val) {
+        debugger;
+        var customerCode;
+        if("default" == val){
+            customerCode = "xxxxxx";
+        }else{
+            customerCode =  _this.orderForm.custCode;
+        }
+        var ofc_web_url = $("#ofc_web_url").html();
+        var url =  ofc_web_url+"/ofc/distributing/querySupplierSelect2?customerCode="+customerCode;
+        var notice = "没有找到相关供应商";
+        Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
+        $("#custName").on("select2-selecting", function(e) {
+            _this.orderForm.supportName = e.choice.name;
+            _this.orderForm.supportCode = e.choice.code;
+        });
+    }
+
+
+    var _this = new Vue({
         el: '#app',
         data :function() {
-          var validateOrdeTime = function(rule, value, callback){
-            
-            if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-              callback(new Error('只能选择一周之内的日期!'));
-            }else if(value.getTime()>new Date().getTime()){
-              callback(new Error('不能选择当前日期的往后日期!'));
-            }else{
-              callback();
-            }
-          };
-          var checkPhoneOrMobile = function(rule, value, callback) {
-            if(value!==""){
-              var mp=/^1\d{10}$/;
-              var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
-              var phone = pp.test(value)||mp.test(value);
-              if(phone!==true){
-                callback(new Error('请正确输入联系电话'));
-              }else{
-                callback();
-              }
-            }else{
-                callback();
-            }
-          };
+            var validateOrdeTime = function(rule, value, callback){
+
+                if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
+                    callback(new Error('只能选择一周之内的日期!'));
+                }else if(value.getTime()>new Date().getTime()){
+                    callback(new Error('不能选择当前日期的往后日期!'));
+                }else{
+                    callback();
+                }
+            };
+            var checkPhoneOrMobile = function(rule, value, callback) {
+                if(value!==""){
+                    var mp=/^1\d{10}$/;
+                    var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
+                    var phone = pp.test(value)||mp.test(value);
+                    if(phone!==true){
+                        callback(new Error('请正确输入联系电话'));
+                    }else{
+                        callback();
+                    }
+                }else{
+                    callback();
+                }
+            };
             return {
                 isShow:false,
+                supportNameShow:false,
                 cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
+                unitsOptions: [{value: 'EA', label: '箱'}, {value: 'IP', label: '内包装'},{ value: 'CS', label: '主单位'}, {value:"栈板",label:"托"}],
                 defaultData: {
                     province: {
                         code: "",
@@ -624,10 +633,10 @@
                     value: '614',
                     label: '分拨出库'
                 },
-                {
-                    value: '617',
-                    label: '退车间'
-                }
+                    {
+                        value: '617',
+                        label: '退车间'
+                    }
                 ],
                 goodsMsgOptions: [],
                 pickerOptions1: {
@@ -866,6 +875,7 @@
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
+                                            good.primaryQuantity=goodDetail.primaryQuantity;
                                             good.unitPrice=goodDetail.unitPrice;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
@@ -876,6 +886,7 @@
                                     }
                                     vueObj.selectSupplier();
                                     vueObj.isShow = true;
+                                    custNameSelected();
                                 }
                             }
 
@@ -888,9 +899,6 @@
             handleCurrentChange:function(val) {
                 this.customerDataInfo.currentRow = val;
             },
-            handlSuppliereCurrentChange:function(val) {
-                this.supplierDataInfo.supplierCurrentRow = val;
-            },
             handleSelectionChange:function(val){
                 this.multipleSelection = val;
             },
@@ -900,6 +908,7 @@
                     this.orderForm.custName = val.custName;
                     this.orderForm.custCode=val.custCode;
                     this.customerDataInfo.chosenCus = false;
+                    initSupplierName();
                     CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":vueObj.orderForm.custCode}, function(result) {
                         vueObj.wareHouseOptions = [];// 仓库下拉列表清空
                         vueObj.orderForm.wareHouse = '';       // 清空仓库
@@ -995,7 +1004,7 @@
             },
             getGoodsCategory:function(val) {
                 var vueObj=this;
-               // val.goodsCategory = null;
+                // val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
@@ -1062,24 +1071,6 @@
                 },"json");
 
             },
-            handleSupplierSizeChange:function(val){
-                this.supplierDataInfo.supplierPageSize = val;
-                this.selectSupplier();
-            },
-            handleSupplierCurrentPage:function(val){
-                this.supplierDataInfo.currentSupplierPage = val;
-                this.selectSupplier();
-            },
-
-            setCurrentSupplierInfo:function(val){
-                if (val != null) {
-                    this.orderForm.supportName=val.supportName;
-                    this.orderForm.supportCode=val.supportCode;
-                    this.supplierDataInfo.chosenSupplier=false;
-                } else {
-                    this.promptInfo("请选择供应商!",'warning');
-                }
-            },
             setCurrentGoodsInfo:function(){
                 if(this.multipleSelection.length<1){
                     this.promptInfo("请至少选择一条货品明细!",'warning');
@@ -1109,10 +1100,6 @@
                         this.isShow = true;
                     }
                 }
-            },
-            cancelSelectSupplier:function(){
-                this.supplierDataInfo.supplierData=[];
-                this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignee:function(){
                 this.consigneeDataInfo.consigneeData=[];
@@ -1306,18 +1293,18 @@
                             }
                         },"json");
             },
-          submitForm:function(formName) {
+            submitForm:function(formName) {
                 var _this = this;
-            this.$refs[formName].validate(function(valid){
-              if (valid) {
-                _this.saveStorage();
-              } else {
-                console.log('error submit!!');
-                return false;
-              }
-            });
-          },
-          saveStorage:function(){
+                this.$refs[formName].validate(function(valid){
+                    if (valid) {
+                        _this.saveStorage();
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            saveStorage:function(){
                 if(this.orderForm.businessType=="614"){
                     if(StringUtil.isEmpty(this.orderForm.supportName)){
                         this.promptInfo("业务名称为分拨出库时，供应商必须选择!","warning");
@@ -1325,15 +1312,15 @@
                     }
                 }
 
-              if(this.orderForm.isEditable){
-                  if(StringUtil.isEmpty(this.thirdLevelAddress)){
-                      this.promptInfo("编辑收货方时，请选择三级地址!",'warning');
-                      return;
-                  }
-              }
-              if(StringUtil.isEmpty(this.orderForm.consigneeContactCode)){
-                  this.orderForm.consigneeContactCode="XE";
-              }
+                if(this.orderForm.isEditable){
+                    if(StringUtil.isEmpty(this.thirdLevelAddress)){
+                        this.promptInfo("编辑收货方时，请选择三级地址!",'warning');
+                        return;
+                    }
+                }
+                if(StringUtil.isEmpty(this.orderForm.consigneeContactCode)){
+                    this.orderForm.consigneeContactCode="XE";
+                }
 
                 //订单基本信息
                 var ofcOrderDTOStr = {};
@@ -1345,11 +1332,11 @@
                 var cscContactDto={};
                 //供应商信息
                 var cscSupplierInfoDtoStr={};
-              if(StringUtil.isEmpty(this.orderForm.consigneeName)){
-                  this.promptInfo("收货方不能为空，请选择收货方","warning");
-                  return;
-              }
-              ofcOrderDTOStr=this.orderForm;
+                if(StringUtil.isEmpty(this.orderForm.consigneeName)){
+                    this.promptInfo("收货方不能为空，请选择收货方","warning");
+                    return;
+                }
+                ofcOrderDTOStr=this.orderForm;
                 //是否提供运输
                 if(this.orderForm.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
@@ -1366,7 +1353,7 @@
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
                 }
 
-              ofcOrderDTOStr.selfTransCode = this.selfTransCode;
+                ofcOrderDTOStr.selfTransCode = this.selfTransCode;
                 //订单基本信息
                 ofcOrderDTOStr.warehouseName=this.getWareHouseNameByCode(this.orderForm.wareHouse);//仓库名称
                 ofcOrderDTOStr.warehouseCode=this.orderForm.wareHouse;//仓库编码
@@ -1382,60 +1369,60 @@
                     return;
                 }
                 //校验金额和格式化日期时间
-              for(var i=0;i<goodsTable.length;i++){
-                  var good=goodsTable[i];
+                for(var i=0;i<goodsTable.length;i++){
+                    var good=goodsTable[i];
 //                  if(StringUtil.isEmpty(good.supportBatch)){
 //                      if(!StringUtil.isEmpty(this.orderForm.supportCode)){
 //                          good.supportBatch=this.orderForm.supportCode;
 //                      }
 //                  }
-                  if(!StringUtil.isEmpty(good.unitPrice)){
-                      if(isNaN(good.unitPrice)){
-                          this.promptInfo("货品单价必须为数字",'error');
-                          return;
-                      }
-                      if(good.unitPrice>99999.99||good.unitPrice<0){
-                          this.promptInfo("货品单价不能大于99999.99或小于0",'warning');
-                          return;
-                      }
-                      if(isNaN(good.unitPrice)){
-                          this.promptInfo("货品数量必须为数字",'error');
-                          return;
-                      }
-                  }
-                  if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
-                      if(!good.quantity){
-                          this.promptInfo("货品出库数量不能为空",'warning');
-                          return;
-                      }
-                      if(isNaN(good.quantity)){
-                          this.promptInfo("货品出库数量必须为数字",'error');
-                          return;
-                      }
-                      if(good.quantity>99999.999){
-                          this.promptInfo("货品数量不能大于99999.999",'warning');
-                          return;
-                      }
-                      if(good.quantity<0){
-                          this.promptInfo("货品数量不能小于0",'error');
-                          return;
-                      }
-                      if(good.quantity==0){
-                          this.promptInfo("货品数量不能小于0",'error');
-                          return;
-                      }
-                  }else{
-                      this.promptInfo("货品数量不能为空",'warning');
-                      return;
-                  }
-                  if( good.productionTime&& good.invalidTime){
-                      if( good.productionTime.getTime()> good.invalidTime.getTime()){
-                          this.promptInfo("生产日期不能大于失效日期",'error');
-                          return;
-                      }
-                  }
-                  goodDetail.push(good);
-              }
+                    if(!StringUtil.isEmpty(good.unitPrice)){
+                        if(isNaN(good.unitPrice)){
+                            this.promptInfo("货品单价必须为数字",'error');
+                            return;
+                        }
+                        if(good.unitPrice>99999.99||good.unitPrice<0){
+                            this.promptInfo("货品单价不能大于99999.99或小于0",'warning');
+                            return;
+                        }
+                        if(isNaN(good.unitPrice)){
+                            this.promptInfo("货品数量必须为数字",'error');
+                            return;
+                        }
+                    }
+                    if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
+                        if(!good.quantity){
+                            this.promptInfo("货品出库数量不能为空",'warning');
+                            return;
+                        }
+                        if(isNaN(good.quantity)){
+                            this.promptInfo("货品出库数量必须为数字",'error');
+                            return;
+                        }
+                        if(good.quantity>99999.999){
+                            this.promptInfo("货品数量不能大于99999.999",'warning');
+                            return;
+                        }
+                        if(good.quantity<0){
+                            this.promptInfo("货品数量不能小于0",'error');
+                            return;
+                        }
+                        if(good.quantity==0){
+                            this.promptInfo("货品数量不能小于0",'error');
+                            return;
+                        }
+                    }else{
+                        this.promptInfo("货品数量不能为空",'warning');
+                        return;
+                    }
+                    if( good.productionTime&& good.invalidTime){
+                        if( good.productionTime.getTime()> good.invalidTime.getTime()){
+                            this.promptInfo("生产日期不能大于失效日期",'error');
+                            return;
+                        }
+                    }
+                    goodDetail.push(good);
+                }
 
                 if(goodDetail.length <1){
                     this.promptInfo("请添加至少一条货品!",'warning');
@@ -1590,14 +1577,14 @@
                     }
                 }
             },
-          reSetCondition:function(){
+            reSetCondition:function(){
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
             },
-           addressCallback:function(val){
+            addressCallback:function(val){
                 if(val!=null&&val.length>0){
                     for(var i=0;i<val.length;i++){
                         var addr=val[i];
@@ -1623,7 +1610,7 @@
                 }
             },
             validateStockCount:function(){
-                
+
                 var _this=this;
                 _this.goodsStockData=[];
                 if(StringUtil.isEmpty(_this.orderForm.custCode)){
