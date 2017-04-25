@@ -68,6 +68,7 @@
                             <select class="chosen-select form-control" data-placeholder="请选择订单类型" id="mobileOrderStatus" name="mobileOrderStatus">
                                 <option value=""></option>
                                 <option value="0" selected="selected">未受理</option>
+                                <option value="2">受理中</option>
                                 <option value="1">已受理</option>
                             </select>
                         </div>
@@ -86,9 +87,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
 
             <div class="form-group">
                 <label class="control-label col-label no-padding-right"></label>
@@ -302,9 +300,11 @@
         function getOperatorByStatus(order,index) {
             var value = "";
             if (order.mobileOrderStatus == "0") {
-                 value = "<a  id=\"review\" onclick=\"acceptMobileOrder('" + order.mobileOrderCode + "')\" class=\"hidden-480\">未处理</a>"
-            }else{
-                value = "<span class=\"hidden-480\">已处理</span>"
+                 value ="未处理";
+            }else if (order.mobileOrderStatus == "1"){
+                value ="已受理";
+            }else if(order.mobileOrderStatus == "2"){
+                value ="受理中";
             }
             return value;
         }

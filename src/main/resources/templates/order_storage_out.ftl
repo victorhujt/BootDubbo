@@ -319,9 +319,12 @@
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                       </el-form-item>
-                      <el-form-item label="是否提供运输">
+                      <el-form-item label="是否提供运输"  class="xe-col-3">
                         <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
                       </el-form-item>
+                        <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                            <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
+                        </el-form-item>
                     </div>
                     <div class="xe-block">
                       <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
@@ -457,14 +460,15 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportName" label="供应商批次">
+                <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
-                        <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column property="supporBatch" v-if="false" label="供应商编码">
-                    <template scope="scope">
-                        <el-input v-model="orderForm.supportCode" :readOnly="true"></el-input>
+                        <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                            <el-option
+                                    v-for="item in supportBatchData"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作">
@@ -507,6 +511,7 @@
             }
           };
           return {
+              isShow:false,
               cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
               defaultData: {
                   province: {
@@ -560,6 +565,7 @@
                       consigneeContactPhone:''
                   }
               },
+              supportBatchData:[],
               supplierDataInfo:{
                   currentSupplierPage:1,
                   supplierPageSize:10,
@@ -677,6 +683,7 @@
                     isNeedTransport:false,
                     isEditable:false,
                     plateNumber:'',
+                    transCode:'',
                     driverName:'',
                     contactNumber:'',
                     consigneeName:'',
@@ -848,6 +855,7 @@
             },
             selectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];
+                this.supportBatchData=[];
                 var vueObj=this;
                 var param = {};
                 param = vueObj.supplierDataInfo.supplierForm;
@@ -859,19 +867,24 @@
                     vueObj.orderForm.supportName = '';
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
-                        layer.msg("暂时未查询到供应商信息！！");
+                        if(!vueObj.isShow){
+                            layer.msg("暂时未查询到供应商信息！！");
+                        }
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var supplier={};
+                            var option={};
                             supplier.supportName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            option.label=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
                             supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
                             supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
                             supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
                             supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
                             supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
                             supplier.supportCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            option.value=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
                             supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
-
+                            vueObj.supportBatchData.push(option);
                             vueObj.supplierDataInfo.supplierData.push(supplier);
 
                         });
@@ -914,16 +927,19 @@
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
                         unit: val.unit,
-                        quantity:'',
+                        quantity: '',
                         unitPrice:'',
                         productionBatch:'',
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:this.orderForm.supportCode,
-                        supportName:this.orderForm.supportName
+                        supportBatch:''
                     };
                     this.goodsData.push(newData);
+                    if(this.supportBatchData.length==0){
+                        this.isShow = true;
+                        this.selectSupplier();
+                    }
                 }
             },
             cancelSelectSupplier:function(){
@@ -1168,6 +1184,10 @@
                     ofcOrderDTOStr.provideTransport="1";
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
+                    if(!StringUtil.isEmpty(this.orderForm.transCode)){
+                        this.promptInfo("不提供运输时,请不要填写运输单号!",'warning');
+                        return;
+                    }
                 }
                 //订单基本信息
                 ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
@@ -1210,7 +1230,6 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');

@@ -103,37 +103,36 @@ public class OfcMobileOrderRest extends BaseController {
     }
 
     /**
-     *
-     * @param ofcOrderDTOStr        订单基本信息、收发货方信息
-     * @param orderGoodsListStr     货品信息
-     * @param cscContantAndCompanyDtoConsignorStr   发货人信息
-     * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
-     * @param cscSupplierInfoDtoStr                 供应商信息
+     * @param ofcOrderDTOStr                      订单基本信息、收发货方信息
+     * @param orderGoodsListStr                   货品信息
+     * @param cscContantAndCompanyDtoConsignorStr 发货人信息
+     * @param cscContantAndCompanyDtoConsigneeStr 收货人信息
+     * @param cscSupplierInfoDtoStr               供应商信息
      * @return
      */
     @RequestMapping("/mobileorderPlaceCon")
     @ResponseBody
     public Wrapper<?> mobileOrderPlace(String ofcOrderDTOStr, String orderGoodsListStr, String cscContantAndCompanyDtoConsignorStr
-            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String mobileOrderCode){
+            , String cscContantAndCompanyDtoConsigneeStr, String cscSupplierInfoDtoStr, String mobileOrderCode) {
         logger.info("==>拍照下单订单中心下单 ofcOrderDTOStr={}", ofcOrderDTOStr);
         String orderCode;
         try {
-            orderGoodsListStr = orderGoodsListStr.replace("~`","");
+            orderGoodsListStr = orderGoodsListStr.replace("~`", "");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
+            if (PubUtils.isSEmptyOrNull(ofcOrderDTOStr)) {
                 ofcOrderDTOStr = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
             }
-            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
+            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
                 cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
-            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
+            if (PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
                 cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
-            if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
+            if (PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)) {
                 cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
+            if (!PubUtils.isSEmptyOrNull(orderGoodsListStr)) { // 如果货品不空才去添加
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
             OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
@@ -141,38 +140,38 @@ public class OfcMobileOrderRest extends BaseController {
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
             logger.info(cscContantAndCompanyDtoConsigneeStr);
             CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-            if(cscContantAndCompanyDtoConsignor==null){
+            if (cscContantAndCompanyDtoConsignor == null) {
                 throw new BusinessException("发货人信息不允许为空！");
             }
-            if(cscContantAndCompanyDtoConsignee==null){
+            if (cscContantAndCompanyDtoConsignee == null) {
                 throw new BusinessException("收货人信息不允许为空！");
             }
-            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
+            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr, CscSupplierInfoDto.class);
             //校验业务类型，如果是卡班，必须要有运输单号
-            if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
-                if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
+            if (StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())) {
+                if (StringUtils.isBlank(ofcOrderDTO.getTransCode())) {
                     throw new Exception("业务类型是卡班，运输单号是必填项");
                 }
             }
-            if(null !=ofcOrderDTO){
-                if (null == ofcOrderDTO.getProvideTransport()){
+            if (null != ofcOrderDTO) {
+                if (null == ofcOrderDTO.getProvideTransport()) {
                     ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
                 }
-                if (null == ofcOrderDTO.getUrgent()){
+                if (null == ofcOrderDTO.getUrgent()) {
                     ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
                 }
-                if(null == ofcOrderDTO.getOrderTime()){
+                if (null == ofcOrderDTO.getOrderTime()) {
                     throw new BusinessException("请选择订单日期！");
                 }
-            }else{
+            } else {
                 throw new BusinessException("订单相关信息有误！");
             }
-            orderCode = ofcMobileOrderService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,authResDtoByToken,authResDtoByToken.getGroupRefCode()
-                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
+            orderCode = ofcMobileOrderService.placeOrder(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, authResDtoByToken.getGroupRefCode()
+                    , cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee, cscSupplierInfoDto);
 
             //更新拍照订单的状态，订单号
-            if(!PubUtils.isSEmptyOrNull(orderCode)){
-                OfcMobileOrder order=new OfcMobileOrder();
+            if (!PubUtils.isSEmptyOrNull(orderCode)) {
+                OfcMobileOrder order = new OfcMobileOrder();
                 order.setMobileOrderCode(mobileOrderCode);
                 order.setAccepter(authResDtoByToken.getUserName());
                 order.setAppcetDate(new Date());
@@ -180,29 +179,30 @@ public class OfcMobileOrderRest extends BaseController {
                 order.setOrderCode(orderCode);
                 ofcMobileOrderService.updateByMobileCode(order);
             }
-        } catch (BusinessException ex){
+        } catch (BusinessException ex) {
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                 logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "获取订单号发生重复!");
             } else {
                 logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
             }
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
     /**
      * 拍照开单-自动受理订单
+     *
      * @return
      */
     @RequestMapping(value = "/autoAcceptMobileOrderDetail")
     @ResponseBody
     public Wrapper<OfcMobileOrderVo> autoAcceptMobileOrderDetail(String orderCode) {
-        logger.debug("==>拍照开单-自动受理订单 orderCode={}", orderCode);
+        logger.info("==>拍照开单-自动受理订单 orderCode={}", orderCode);
         Wrapper<OfcMobileOrderVo> result;
         try {
             OfcMobileOrder params = new OfcMobileOrder();
@@ -221,5 +221,27 @@ public class OfcMobileOrderRest extends BaseController {
             result = WrapMapper.error();
         }
         return result;
+    }
+
+    /**
+     *
+     * @param mobileOrderCode 手机订单号
+     * @return
+     */
+    @RequestMapping(value = "/deleteMobileOrder")
+    @ResponseBody
+    public Wrapper<?> deleteMobileOrder(String mobileOrderCode) {
+        logger.info("==>拍照开单-删除的手机订单号为: mobileOrderCode={}", mobileOrderCode);
+        try {
+            if(PubUtils.isSEmptyOrNull(mobileOrderCode)){
+                throw new BusinessException("删除手机订单时订单号不能为空！");
+            }
+            ofcMobileOrderService.deleteMobileOrder(mobileOrderCode);
+        } catch (Exception e) {
+            logger.error("拍照开单-删除手机订单号发生错误: {}", e);
+            return  WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE,e.getMessage());
+
+        }
+        return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 }

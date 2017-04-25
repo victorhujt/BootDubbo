@@ -13,6 +13,8 @@ import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
+import com.xescm.ofc.enums.ExceptionTypeEnum;
+import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
@@ -21,6 +23,7 @@ import com.xescm.ofc.model.dto.coo.MessageDto;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
+import com.xescm.uam.provider.DistributedLockEdasService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
@@ -32,7 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_OrderToOfc;
+import static com.xescm.ofc.constant.BaseConstant.REDIS_LOCK_PREFIX;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
@@ -58,7 +64,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcOrderManageService ofcOrderManageService;
     @Resource
     private OfcCreateOrderMapper ofcCreateOrderMapper;
-
+    @Resource
+    private DistributedLockEdasService distributedLockEdasService;
 
     @Override
     public boolean CreateOrders(List<CreateOrderEntity> list) {
@@ -84,42 +91,71 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 boolean result = false;
                 String reason = null;
                 String custOrderCode = null;
+                String key = null;
                 for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
-                    synchronized (this) {
-                        try {
-                            custOrderCode = createOrderEntity.getCustOrderCode();
-                            String custCode = createOrderEntity.getCustCode();
-                            OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
-                            if (information != null) {
-                                String orderCode = information.getOrderCode();
-                                OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
-                                //订单已存在,获取订单的最新状态,只有待审核的才能更新
-                                if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
-                                    logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
-                                    addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
-                                    return "";
+                    AtomicBoolean lockStatus = new AtomicBoolean(false);
+                    try {
+                        custOrderCode = createOrderEntity.getCustOrderCode();
+                        String custCode = createOrderEntity.getCustCode();
+                        String orderCode = null;
+                        // 对创建订单操作进行加锁，防止订单创建重复
+                        // redis key : OFC:MQ:xeOrderToOfc:<客户编码>:<客户订单号>
+                        key = REDIS_LOCK_PREFIX + MQ_TAG_OrderToOfc + ":" + custCode + ":" + custOrderCode;
+                        // 验证锁是否存在
+                        Wrapper<String> checkLock = distributedLockEdasService.checkLocksExist(key);
+                        if (Wrapper.SUCCESS_CODE != checkLock.getCode()) {
+                            // 加锁
+                            Wrapper<Integer> lock = distributedLockEdasService.addLock(key, 5);
+                            if (lock.getCode() == Wrapper.SUCCESS_CODE && lock.getResult().intValue() == 1) {
+                                lockStatus.set(true);
+                                OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+                                if (information != null) {
+                                    orderCode = information.getOrderCode();
+                                    OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
+                                    //订单已存在,获取订单的最新状态,只有待审核的才能更新
+                                    if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
+                                        logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
+                                        addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                        return "";
+                                    }
                                 }
-                            }
-                            String orderCode = codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE, 6);
-                            //调用创建方法
-                            resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
-                            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                                addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
-                                reason = resultModel == null ? "" : resultModel.getDesc();
-                                logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, reason);
+                                // 如果订单存在（待审核），则更新订单，单号不重新生成
+                                orderCode = orderCode != null ? orderCode : codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE, 6);
+                                //调用创建方法
+                                resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
+                                if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                                    addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
+                                    reason = resultModel == null ? "" : resultModel.getDesc();
+                                    logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, reason);
+                                } else {
+                                    result = true;
+                                    addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
+                                    logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
+                                }
                             } else {
-                                result = true;
-                                addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
-                                logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
+                                throw new BusinessException(ExceptionTypeEnum.LOCK_FAIL.getCode(), ExceptionTypeEnum.LOCK_FAIL.getDesc());
                             }
-                        } catch (Exception ex) {
-                            logger.error("订单中心创建订单接口异常: {}, {}", ex, ex.getMessage());
-                            addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
-                            saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
+                        } else {
+                            throw new BusinessException(ExceptionTypeEnum.LOCK_EXIST.getCode(), ExceptionTypeEnum.LOCK_EXIST.getDesc());
+                        }
+                    } catch (BusinessException ex) {
+                        logger.error("订单中心创建订单接口出错:{},{}", ex.getMessage(), ex);
+                        throw ex;
+                    } catch (Exception ex) {
+                        logger.error("订单中心创建订单接口异常: {}, {}", ex, ex.getMessage());
+                        addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
+                        saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
+                    } finally {
+                        // 释放锁
+                        if (lockStatus.get()) {
+                            distributedLockEdasService.clearLock(key);
                         }
                     }
                 }
             }
+        } catch (BusinessException ex) {
+            logger.error("订单中心创建订单接口出错:{},{}", ex.getMessage(), ex);
+            throw ex;
         } catch (Exception ex) {
             logger.error("订单中心创建订单接口出错:{},{}", ex.getMessage(), ex);
             throw new Exception(ex);

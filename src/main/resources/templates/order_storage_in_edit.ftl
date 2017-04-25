@@ -285,6 +285,9 @@
             <el-form-item label="是否提供运输" class="xe-col-3">
               <el-checkbox v-model="orderForm.isNeedTransport" @click="isNeedTransport = true"></el-checkbox>
             </el-form-item>
+              <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                  <el-input v-model="orderForm.transCode" placeholder="请输入内容"></el-input>
+              </el-form-item>
             <el-form-item label="车牌号"  prop="plateNumber" class="xe-col-3">
               <el-input v-model="orderForm.plateNumber" placeholder="请输入内容"></el-input>
             </el-form-item>
@@ -404,14 +407,15 @@
                       </el-date-picker>
                   </template>
               </el-table-column>
-              <el-table-column property="supportName" label="供应商批次">
+              <el-table-column property="supportBatch" label="供应商批次">
                   <template scope="scope">
-                      <el-input v-model="orderForm.supportName" :readOnly="true"></el-input>
-                  </template>
-              </el-table-column>
-              <el-table-column property="supportBatch"  v-if="false" label="供应商编码">
-                  <template scope="scope">
-                      <el-input v-model="orderForm.supportCode" :readOnly="true"></el-input>
+                      <el-select v-model="scope.row.supportBatch" placeholder="请选择">
+                          <el-option
+                                  v-for="item in supportBatchData"
+                                  :label="item.label"
+                                  :value="item.value">
+                          </el-option>
+                      </el-select>
                   </template>
               </el-table-column>
               <el-table-column property="goodsOperation" label="操作">
@@ -459,6 +463,7 @@
             };
             return {
                 activeNames:'',
+                isShow:false,
                 wareHouseObj:'',
                 goodsCategoryOptions:[],
                 customerDataInfo:{
@@ -485,6 +490,7 @@
                         consignorContactPhone:''
                     }
                 },
+                supportBatchData:[],
                 supplierDataInfo:{
                     currentSupplierPage:1,
                     supplierPageSize:10,
@@ -598,6 +604,7 @@
                     notes:'',
                     supportName:'',
                     supportCode:'',
+                    transCode:'',
                     arriveTime:'',
                     isNeedTransport:false,
                     plateNumber:'',
@@ -711,19 +718,29 @@
                                     if(ofcDistributionBasicInfo!=null){
                                         //发货方
                                         vueObj.orderForm.consignorName=ofcDistributionBasicInfo.consignorName;
+                                        vueObj.orderForm.transCode = ofcDistributionBasicInfo.transCode;
                                         vueObj.orderForm.consignorCode=ofcDistributionBasicInfo.consignorCode;
                                         vueObj.orderForm.consignorContactCode=ofcDistributionBasicInfo.consignorContactCode;
                                         vueObj.orderForm.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
                                         vueObj.orderForm.consignorContactPhone=ofcDistributionBasicInfo.consignorContactPhone;
                                         vueObj.orderForm.departureDetailAddress=ofcDistributionBasicInfo.departureProvince+ofcDistributionBasicInfo.departureCity;
+                                        vueObj.orderForm.departureProvince = ofcDistributionBasicInfo.departureProvince;
+                                        vueObj.orderForm.departureCity = ofcDistributionBasicInfo.departureCity;
+
                                         if(ofcDistributionBasicInfo.departureDistrict!=null){
                                             vueObj.orderForm.departureDetailAddress=vueObj.orderForm.departureDetailAddress+ofcDistributionBasicInfo.departureDistrict;
+                                            vueObj.orderForm.departureDistrict = ofcDistributionBasicInfo.departureDistrict;
+
                                         }
                                         if(ofcDistributionBasicInfo.departureTowns!=null){
                                             vueObj.orderForm.departureDetailAddress=vueObj.orderForm.departureDetailAddress+ofcDistributionBasicInfo.departureTowns;
+                                            vueObj.orderForm.departureTowns = ofcDistributionBasicInfo.departureTowns;
+
                                         }
                                         if(ofcDistributionBasicInfo.departurePlace!=null){
                                             vueObj.orderForm.departureDetailAddress=vueObj.orderForm.departureDetailAddress+ofcDistributionBasicInfo.departurePlace;
+                                            vueObj.orderForm.departurePlace = ofcDistributionBasicInfo.departurePlace;
+
                                         }
                                         vueObj.orderForm.departurePlaceCode=ofcDistributionBasicInfo.departurePlaceCode;
                                     }
@@ -745,12 +762,12 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
-                                            good.supportName=ofcWarehouseInformation.supportName;
-                                            good.supportBatch=ofcWarehouseInformation.supportBatch;
-                                            vueObj.orderForm.supportCode=goodDetail.supportBatch;
+                                            good.supportBatch=goodDetail.supportBatch;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
+                                    vueObj.isShow = true;
+                                    vueObj.selectSupplier();
                                 }
                             }
                         }
@@ -887,6 +904,7 @@
             },
             selectSupplier:function(){
                 this.supplierDataInfo.supplierData=[];
+                this.supportBatchData=[];
                 var vueObj=this;
                 var param = {};
                 param = vueObj.supplierDataInfo.supplierForm;
@@ -895,24 +913,28 @@
                 param.pSize=vueObj.supplierDataInfo.supplierPageSize;
                 CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
                     vueObj.supplierDataInfo.supplierData = [];
-                    vueObj.orderForm.supportName = '';
+                   // vueObj.orderForm.supportName = '';
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
-                        layer.msg("暂时未查询到供应商信息！！");
+                        if(!vueObj.isShow){
+                            layer.msg("暂时未查询到供应商信息！！");
+                        }
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
                             var supplier={};
+                            var option={};
                             supplier.supportName=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            option.label=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
                             supplier.contactName=StringUtil.nullToEmpty(CscSupplierInfoDto.contactName);
                             supplier.contactPhone=StringUtil.nullToEmpty(CscSupplierInfoDto.contactPhone);
                             supplier.fax=StringUtil.nullToEmpty(CscSupplierInfoDto.fax);
                             supplier.email=StringUtil.nullToEmpty(CscSupplierInfoDto.email);
                             supplier.postCode=StringUtil.nullToEmpty(CscSupplierInfoDto.postCode);
                             supplier.supportCode=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            option.value=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
                             supplier.completeAddress=StringUtil.nullToEmpty(CscSupplierInfoDto.completeAddress);
-
+                            vueObj.supportBatchData.push(option);
                             vueObj.supplierDataInfo.supplierData.push(supplier);
-
                         });
                         vueObj.supplierDataInfo.totalSupplier=data.result.total;
                     } else if (result.code == 403) {
@@ -961,10 +983,13 @@
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:this.orderForm.supportCode,
-                        supportName:this.orderForm.supportName
+                        supportBatch:''
                     };
                     this.goodsData.push(newData);
+                    if(this.supportBatchData.length==0){
+                        this.isShow = true;
+                        this.selectSupplier();
+                    }
                 }
             },
             cancelSelectSupplier:function(){
@@ -1185,7 +1210,6 @@
                 //供应商信息
                 var cscSupplierInfoDtoStr={};
                 ofcOrderDTOStr=this.orderForm;
-                //this.orderForm.
                 //是否提供运输
                 if(this.orderForm.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
@@ -1195,7 +1219,12 @@
                     }
                 }else{
                     ofcOrderDTOStr.provideTransport="0";
+                    if(!StringUtil.isEmpty(this.orderForm.transCode)){
+                        this.promptInfo("不提供运输时,请不要填写运输单号!",'warning');
+                        return;
+                    }
                 }
+                ofcOrderDTOStr.selfTransCode = this.selfTransCode;
                 //订单基本信息
                 if(this.orderForm.orderDate){
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
@@ -1223,12 +1252,11 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-                    if(StringUtil.isEmpty(good.supportBatch)){
-                        if(!StringUtil.isEmpty(this.orderForm.supportCode)){
-                            good.supportBatch=this.orderForm.supportCode;
-                        }
-                    }
-
+//                    if(StringUtil.isEmpty(good.supportBatch)){
+//                        if(!StringUtil.isEmpty(this.orderForm.supportCode)){
+//                            good.supportBatch=this.orderForm.supportCode;
+//                        }
+//                    }
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
@@ -1294,16 +1322,10 @@
                         ,"您确认提交订单吗?"
                         ,function () {
                             location.reload();
-                            var url=window.location.href;
-                            if(url.indexOf("?")!=-1){
-                                var param=url.split("?")[1].split("=");
-                            }
-                            if(param[1]=="manager"){
-                                var newurl = "/ofc/orderStorageInManager/";
-                                var html = window.location.href;
-                                var index = html.indexOf("/index#");
-                                window.open(html.substring(0,index) + "/index#" + newurl);
-                            }
+                            var newurl = "/ofc/orderStorageInManager/";
+                            var html = window.location.href;
+                            var index = html.indexOf("/index#");
+                            window.open(html.substring(0,index) + "/index#" + newurl);
                         });
             },
             getCscContantAndCompanyDtoConsignorStr:function(){
@@ -1315,13 +1337,16 @@
                 cscContactDto.purpose = "2";
                 cscContactDto.phone =this.orderForm.consignorContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consignorName;
-                var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
-                cscContactDto.province = consignorAddressCodeMessage[0];
-                cscContactDto.city = consignorAddressCodeMessage[1];
-                cscContactDto.area = consignorAddressCodeMessage[2];
-                if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
-                    cscContactDto.street = consignorAddressCodeMessage[3];
+                if(!StringUtil.isEmpty(this.orderForm.departurePlaceCode)){
+                    var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
+                    cscContactDto.province = consignorAddressCodeMessage[0];
+                    cscContactDto.city = consignorAddressCodeMessage[1];
+                    cscContactDto.area = consignorAddressCodeMessage[2];
+                    if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
+                        cscContactDto.street = consignorAddressCodeMessage[3];
+                    }
                 }
+
                 cscContactDto.provinceName = this.orderForm.departureProvince;
                 cscContactDto.cityName = this.orderForm.departureCity;
                 cscContactDto.areaName = this.orderForm.departureDistrict;

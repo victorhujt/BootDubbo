@@ -1,6 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.provider.CscWarehouseEdasService;
@@ -11,6 +12,7 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,6 +98,28 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
             throw new BusinessException("下单页面抓取仓库信息失败",ex);
         }
 
+    }
+
+
+    @Override
+    public OfcWarehouseInformation queryByOrderCode(String orderCode) {
+        logger.info("通过订单号查询订单仓储信息 orderCode ==> {}", orderCode);
+        if (PubUtils.isSEmptyOrNull(orderCode)) {
+            logger.error("通过订单号查询订单仓储信息, 入参为空");
+            throw new BusinessException("查询订单仓储信息失败!");
+        }
+        OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+        ofcWarehouseInformation.setOrderCode(orderCode);
+        List<OfcWarehouseInformation> select = ofcWarehouseInformationMapper.select(ofcWarehouseInformation);
+        if (select.size() > 1) {
+            logger.error("通过订单号查询订单仓储信息查询到多条");
+            throw new BusinessException("查询订单仓储信息失败!");
+        }
+        if (CollectionUtils.isEmpty(select)) {
+            logger.error("通过订单号查询不到订单仓储信息");
+            return null;
+        }
+        return select.get(0);
     }
 
 

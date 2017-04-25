@@ -163,6 +163,16 @@ public class OfcOrderDTO {
      */
     private String transCode;
     //private String goodsType;
+
+    public String getSelfTransCode() {
+        return selfTransCode;
+    }
+
+    public void setSelfTransCode(String selfTransCode) {
+        this.selfTransCode = selfTransCode;
+    }
+
+    private String selfTransCode;
     /**
      * 是否加急
      */
@@ -415,7 +425,17 @@ public class OfcOrderDTO {
 
     private String selfCustOrderCode;
 
+    private String selfCustCode;
+
     private String consignmentBatchNumber;
+
+    public String getSelfCustCode() {
+        return selfCustCode;
+    }
+
+    public void setSelfCustCode(String selfCustCode) {
+        this.selfCustCode = selfCustCode;
+    }
 
     public String getConsignmentBatchNumber() {
         return consignmentBatchNumber;

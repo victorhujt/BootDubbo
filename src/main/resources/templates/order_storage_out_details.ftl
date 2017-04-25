@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>出库单详情</title>
     <style lang="css">
         .borderNone .el-input__inner{border:none;}
         .el-table__body-wrapper{
@@ -113,6 +114,9 @@
             <div class="xe-block">
                 <el-form-item label="是否提供运输" class="xe-col-3">
                     <el-input v-model="needTransport" :readOnly="true"></el-input>
+                </el-form-item>
+                <el-form-item  prop="transCode"  class="xe-col-3" label="运输单号">
+                    <el-input v-model="transCode" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
@@ -231,9 +235,9 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="supportBatch" label="供应商批次号">
+                <el-table-column property="supportBatch" label="供应商批次">
                     <template scope="scope">
-                        <el-input v-model="supplierName" :readOnly="true"></el-input>
+                        <el-input v-model="scope.row.supportBatch" class="borderNone" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
             </el-table>
@@ -272,6 +276,7 @@
                 goodsSpec:'',
                 unit:'',
                 goodsCategoryOptions:[],
+                supportBatchData:[],
                 goodsType:'',
                 goodsCategory:'',
                 invalidTime:'',
@@ -280,6 +285,7 @@
                 customerOrderNum: '',
                 orderBatchNumber:'',
                 customerName: '',
+                customerCode:'',
                 orderSource:'',
                 orderStatus:'',
                 consignorName:'',
@@ -327,6 +333,7 @@
                     }
                 ],
                 goodsMsgOptions: [],
+                transCode:'',
                 serviceType: '',
                 merchandiser: '',
                 orderTime: new Date(),
@@ -377,6 +384,7 @@
                                 vueObj.orderTime=DateUtil.parse(ofcFundamentalInformation.orderTime);
                                 vueObj.merchandiser=ofcFundamentalInformation.merchandiser;
                                 vueObj.customerName=ofcFundamentalInformation.custName;
+                                vueObj.customerCode=ofcFundamentalInformation.custCode;
                                 vueObj.customerOrderNum=ofcFundamentalInformation.custOrderCode;
                                 vueObj.serviceType =vueObj.getServiceTypeName(ofcFundamentalInformation.businessType);
                                 vueObj.orderStatus=vueObj.getOrderStatusName(status.orderStatus);
@@ -408,6 +416,7 @@
                                     vueObj.consignorName=ofcDistributionBasicInfo.consignorName;
                                     vueObj.consignorContactName=ofcDistributionBasicInfo.consignorContactName;
                                     vueObj.consignorPhoneNumber=ofcDistributionBasicInfo.consignorContactPhone;
+                                    vueObj.transCode = ofcDistributionBasicInfo.transCode;
                                     vueObj.isNeedTransport=true;
                                     vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
                                     if(ofcDistributionBasicInfo.destinationProvince!=null){
@@ -442,9 +451,14 @@
                                         good.quantity=goodDetail.quantity;
                                         good.realQuantity=goodDetail.realQuantity;
                                         good.unitPrice=goodDetail.unitPrice;
+                                        good.unit=goodDetail.unit;
                                         good.productionBatch=goodDetail.productionBatch;
                                         good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                         good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                        if(vueObj.supportBatchData.length==0){
+                                            vueObj.selectSupplier();
+                                        }
+                                        good.supportBatch=vueObj.getGoodSupportName(goodDetail.supportBatch);
                                         vueObj.goodsData.push(good);
                                     }
                                 }
@@ -487,6 +501,37 @@
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0,index) + "/index#" + newurl);
+            },
+            selectSupplier:function(){
+                this.supportBatchData=[];
+                var vueObj=this;
+                var param = {};
+                param.customerCode = vueObj.customerCode;
+                param.pNum = 1;
+                param.pSize= 50;
+                CommonClient.syncpost(sys.rootPath + "/ofc/supplierSelect",param, function(result) {
+                    var data = eval(result);
+                    if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.length == 0) {
+                       // layer.msg("暂时未查询到供应商信息！！");
+                    } else if (data.code == 200) {
+                        $.each(data.result.list,function (index,CscSupplierInfoDto) {
+                            var option={};
+                            option.label=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierName);
+                            option.value=StringUtil.nullToEmpty(CscSupplierInfoDto.supplierCode);
+                            vueObj.supportBatchData.push(option);
+                        });
+                    } else if (result.code == 403) {
+                      //  vueObj.promptInfo("没有权限",'error');
+                    }
+                },"json");
+            },
+            getGoodSupportName:function(val){
+                for(var i=0;i<this.supportBatchData.length;i++){
+                    var option=this.supportBatchData[i];
+                    if(val==option.value){
+                        return option.label;
+                    }
+                }
             }
         }
     });

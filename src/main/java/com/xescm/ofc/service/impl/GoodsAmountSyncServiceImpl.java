@@ -29,6 +29,7 @@ import java.util.List;
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
+import static com.xescm.ofc.constant.OrderConstConstant.PENDING_AUDIT;
 
 /**
  *
@@ -57,7 +58,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private AcModifyOrderEdasService acModifyOrderEdasService;
 
     @Transactional
-    public Wrapper<?> GoodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto){
+    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto){
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();
         String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
@@ -79,17 +80,19 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 for (OfcFundamentalInformation ofcOrder : orderList) {
                     String orderCode = ofcOrder.getOrderCode();
                     OfcOrderNewstatus orderStatusObj = ofcOrderNewstatusService.selectByKey(orderCode);
-                    if (!PubUtils.isOEmptyOrNull(orderStatusObj)) {
+                    if (!PubUtils.isOEmptyOrNull(orderStatusObj) && !PubUtils.isOEmptyOrNull(orderStatusObj.getOrderLatestStatus())) {
                         String orderStatus = orderStatusObj.getOrderLatestStatus();
-                        // 订单取消或者已完成，不调整
-                        if (!PubUtils.isOEmptyOrNull(orderStatus) && (HASBEEN_COMPLETED.equals(orderStatus)
-                            || HASBEEN_CANCELED.equals(orderStatus))) {
+                        // 订单取消或者已完成，不调整；待审核只修改订单中心
+                        if (HASBEEN_COMPLETED.equals(orderStatus) || HASBEEN_CANCELED.equals(orderStatus)) {
                             logger.info("订单{}当前状态为{},不允许调整数量!", orderCode, orderStatus);
                             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "订单已经完成或取消,不允许调整数量!");
-                        } else if (!PubUtils.isOEmptyOrNull(orderStatus)) {
+                        } else if (PENDING_AUDIT.equals(orderStatus)) { // 待审核只调整OFC
+                            modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
+                            result = WrapMapper.ok();
+                        } else {
                             Wrapper<Boolean> acStatus = acModifyOrderEdasService.queryOrderIncomeStatus(orderCode);
                             if (!PubUtils.isNull(acStatus) && Wrapper.SUCCESS_CODE == acStatus.getCode()) {
-                                modifyGoodsDetails(goodsAmountSyncDto, details, orderCode);
+                                modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
                                 result = WrapMapper.ok();
                             } else {
                                 result = WrapMapper.wrap(Wrapper.ERROR_CODE, "客户订单"+custOrderCode+"已经结算，无法调整数量.");
@@ -120,47 +123,52 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param details
      * @param orderCode
      */
-    private void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode) {
-        BigDecimal quantityCount = new BigDecimal(0);
-        BigDecimal weightCount = new BigDecimal(0);
-        BigDecimal cubageCount = new BigDecimal(0);
-        for (GoodsAmountDetailDto goodsDetail : details) {
-            if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsName())) {
-                throw new BusinessException("货品名称不能为空");
-            } else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
-                throw new BusinessException("货品编号不能为空");
+    private void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode, String orderStatus) {
+        try {
+            BigDecimal quantityCount = new BigDecimal(0);
+            BigDecimal weightCount = new BigDecimal(0);
+            BigDecimal cubageCount = new BigDecimal(0);
+            for (GoodsAmountDetailDto goodsDetail : details) {
+                if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsName())) {
+                    throw new BusinessException("货品名称不能为空");
+                } else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
+                    throw new BusinessException("货品编号不能为空");
+                }
+                // 添加修改记录
+                this.addGoodsModifyRecord(orderCode, goodsDetail);
+                // 修改货品信息
+                editGoodsDetailInfo(orderCode, goodsDetail);
             }
-            // 添加修改记录
-            this.addGoodsModifyRecord(orderCode, goodsDetail);
-            // 修改货品信息
-            editGoodsDetailInfo(orderCode, goodsDetail);
+            // 调结算中心接口并推送AC
+            OfcFundamentalInformation orderInfo = ofcFundamentalInformationService.selectByKey(orderCode);
+            OfcDistributionBasicInfo orderDistInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+            OfcFinanceInformation orderFinanceInfo = ofcFinanceInformationService.selectByKey(orderCode);
+            List<OfcGoodsDetailsInfo> detailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+            for (OfcGoodsDetailsInfo detailsInfo : detailsInfos) {
+                BigDecimal quantity = detailsInfo.getQuantity();
+                BigDecimal weight = detailsInfo.getWeight();
+                BigDecimal cubage = detailsInfo.getCubage();
+                quantityCount = quantityCount.add(PubUtils.isNull(quantity) ? new BigDecimal(0) : quantity);
+                weightCount = weightCount.add(PubUtils.isNull(weight) ? new BigDecimal(0) : weight);
+                cubageCount = cubageCount.add(PubUtils.isNull(cubage) ? new BigDecimal(0) : cubage);
+            }
+            orderDistInfo.setQuantity(quantityCount);
+            orderDistInfo.setWeight(weightCount);
+            orderDistInfo.setCubage(cubageCount.toString());
+            ofcDistributionBasicInfoService.update(orderDistInfo);
+
+            // 待审核订单不推送结算、运输
+            if (!PENDING_AUDIT.equals(orderStatus)) {
+                // 待审核订单不推送到结算和运输中心
+                if (!PubUtils.isNull(orderInfo) && !PubUtils.isNull(orderDistInfo) && !PubUtils.isNull(orderFinanceInfo)) {
+                    ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos, null);
+                }
+                //再次推送TFC
+                tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+            }
+        } catch (Exception e) {
+            logger.error("交货量同步更新发生异常. {}", e);
         }
-        // 调结算中心接口并推送AC
-        OfcFundamentalInformation orderInfo = ofcFundamentalInformationService.selectByKey(orderCode);
-        OfcDistributionBasicInfo orderDistInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
-        OfcFinanceInformation orderFinanceInfo = ofcFinanceInformationService.selectByKey(orderCode);
-        List<OfcGoodsDetailsInfo> detailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-        for(OfcGoodsDetailsInfo detailsInfo:detailsInfos){
-            BigDecimal quantity = detailsInfo.getQuantity();
-            BigDecimal weight = detailsInfo.getWeight();
-            BigDecimal cubage = detailsInfo.getCubage();
-            quantityCount = quantityCount.add(PubUtils.isNull(quantity) ? new BigDecimal(0) : quantity);
-            weightCount = weightCount.add(PubUtils.isNull(weight) ? new BigDecimal(0) : weight);
-            cubageCount = cubageCount.add(PubUtils.isNull(cubage) ? new BigDecimal(0) : cubage);
-        }
-        orderDistInfo.setQuantity(quantityCount);
-        orderDistInfo.setWeight(weightCount);
-        orderDistInfo.setCubage(cubageCount.toString());
-        ofcDistributionBasicInfoService.update(orderDistInfo);
-        if (!PubUtils.isNull(orderInfo)
-                && !PubUtils.isNull(orderDistInfo)
-                && !PubUtils.isNull(orderFinanceInfo)
-                //&& !PubUtils.isNull(detailsInfos)
-                ) {
-            ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos, null);
-        }
-        //再次推送TFC
-        tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
     }
 
     /**
@@ -262,7 +270,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param ofcGoodsDetailsInfos      货品明细
      */
     public void modifyOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
-            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+        , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         AcOrderDto acOrderDto = new AcOrderDto();
         try {
             AcFinanceInformation acFinanceInformation = new AcFinanceInformation();

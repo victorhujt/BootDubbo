@@ -314,6 +314,7 @@ public class OfcStorageTemplateRest extends BaseController{
     @RequestMapping(value = "/confirm")
     @ResponseBody
     public Wrapper confirm(String orderList){
+        logger.info("仓储开单批量导单确认下单 ==> orderList:{}", orderList);
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             //下单

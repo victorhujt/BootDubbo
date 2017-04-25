@@ -3,6 +3,7 @@
 <div id="app" class="col-xs-12">
     <div class="xe-pageHeader">
         拍照开单信息
+            <el-button type="primary" @click="deleteMobileOrder" :disabled = "isDisabledDelete" style="float: right;position: relative;bottom:9px;background: #ff0000;border-color: #ff0000">删除</el-button>
     </div>
     <div class="drag_con" id="drag_con_id">
         <div id='drag_img'>
@@ -34,7 +35,7 @@
                 <el-input v-model="mobileOrderVo.operator" :readonly="true"></el-input>
             </el-form-item>
             <el-form-item label="业务类型" prop="businessType" class="xe-col-1">
-                <el-select v-model="mobileOrderVo.businessType" disabled style="width: 135px;">
+                <el-select v-model="mobileOrderVo.businessType" disabled style="width: 141px;">
                     <el-option v-for="item in businessTypeOptions"
                                :label="item.label"
                                :value="item.value" style="width:80px;">
@@ -46,6 +47,7 @@
             </el-form-item>
         </div>
     </el-form>
+
 
     <div class="col-xs-12">
     <div class="list-mian-01" style="height: 300px;overflow: auto" id="Overflow">
@@ -222,7 +224,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="业务类型" prop="businessType" class="xe-col-3">
-                    <el-select v-model="orderForm.businessType">
+                    <el-select v-model="orderForm.businessType" disabled>
                         <el-option
                                 v-for="item in businessTypeOptions"
                                 :label="item.label"
@@ -231,13 +233,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开单员" prop="merchandiser" class="xe-col-3">
-                    <el-select v-model="orderForm.merchandiser" allow-create filterable placeholder="请设置开单员">
-                        <el-option
-                                v-for="item in merchandiserOptions"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <el-input v-model="orderForm.merchandiser" :readonly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="运输类型" prop="transportType" class="xe-col-3">
                     <el-radio-group v-model="orderForm.transportType">
@@ -251,7 +247,7 @@
                     <el-date-picker type="date" v-model="orderForm.orderDate" :editable="false"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="运输单号" prop="transCode" class="xe-col-3">
-                    <el-input v-model="orderForm.transCode"></el-input>
+                    <el-input v-model="orderForm.transCode" :readonly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="客户订单号" prop="custOrderCode" class="xe-col-3">
                     <el-input v-model="orderForm.custOrderCode"></el-input>
@@ -334,7 +330,7 @@
                             <el-input v-model="orderForm.consigneeContactPhone"></el-input>
                         </el-form-item>
                     </div>
-                    <div class="xe-block">
+                    <div class="xe-block" style="overflow: visible">
                         <el-form-item label="地址选择" required prop="destination" class="xe-col-2">
                             <city-picker class = "cp cityPicker" :url="cityUrl"
                                          :default-data="cpConsigneeData" :options="cityPickerOptions"
@@ -575,6 +571,7 @@
                 showGoodsDialog: false,
                 closeOnClick: false,
                 closeOnPressEsc: false,
+                isDisabledDelete:false,
                 showClose: true,
                 businessTypeOptions:[
                     {value: '600', label: '城配'},
@@ -782,44 +779,44 @@
                     province: {
                         code: '',
                         keyword: "province",
-                        title: ''
+                        title: '请选择省'
                     },
                     city: {
                         code: '',
                         keyword: "city",
-                        title: ''
+                        title: '市'
                     },
                     district: {
                         code: '',
                         keyword: "district",
-                        title: ''
+                        title: '区'
                     },
                     street: {
                         code: '',
                         keyword: "street",
-                        title: ''
+                        title: '街道'
                     }
                 },
                 cpConsigneeData: {
                     province: {
                         code: '',
                         keyword: "province",
-                        title: ''
+                        title: '请选择省'
                     },
                     city: {
                         code: '',
                         keyword: "city",
-                        title: ''
+                        title: '市'
                     },
                     district: {
                         code: '',
                         keyword: "district",
-                        title: ''
+                        title: '区'
                     },
                     street: {
                         code: '',
                         keyword: "street",
-                        title: ''
+                        title: '街道'
                     }
                 }
             };
@@ -1323,49 +1320,53 @@
                 var code = '', addr = '';
                 var vm = this;
                 $.each(address, function(index, area) {
-                    if (index == address.length - 1) {
-                        code += area.code;
-                    } else {
-                        code += area.code + ',';
-                    }
-                    addr += area.title;
-                    if (area.keyword == 'province') {
-                        vm.orderForm.departureProvince = area.title;
-                    }
-                    if (area.keyword == 'city') {
-                        vm.orderForm.departureCity = area.title;
-                    }
-                    if (area.keyword == 'district') {
-                        vm.orderForm.departureDistrict = area.title;
-                    }
-                    if (area.keyword == 'street') {
-                        vm.orderForm.departureTowns = area.title;
-                    }
-                });
-                this.orderForm.departurePlaceCode = code;
-                this.orderForm.departurePlace = addr;
-            },
+                    if(!StringUtil.isEmpty(area.code)) {
+                        if (index == address.length - 1) {
+                            code += area.code;
+                        } else {
+                            code += area.code + ',';
+                        }
+                        addr += area.title;
+                        if (area.keyword == 'province') {
+                            vm.orderForm.departureProvince = area.title;
+                        }
+                        if (area.keyword == 'city') {
+                            vm.orderForm.departureCity = area.title;
+                        }
+                        if (area.keyword == 'district') {
+                            vm.orderForm.departureDistrict = area.title;
+                        }
+                        if (area.keyword == 'street') {
+                            vm.orderForm.departureTowns = area.title;
+                        }
+                     }
+                    });
+                    this.orderForm.departurePlaceCode = code;
+                    this.orderForm.departurePlace = addr;
+               },
             consigneeCallBack: function(address){
                 var code = '', addr = '';
                 var vm = this;
                 $.each(address, function(index, area) {
-                    if (index == address.length - 1) {
-                        code += area.code;
-                    } else {
-                        code += area.code + ',';
-                    }
-                    addr += area.title;
-                    if (area.keyword == 'province') {
-                        vm.orderForm.destinationProvince = area.title;
-                    }
-                    if (area.keyword == 'city') {
-                        vm.orderForm.destinationCity = area.title;
-                    }
-                    if (area.keyword == 'district') {
-                        vm.orderForm.destinationDistrict = area.title;
-                    }
-                    if (area.keyword == 'street') {
-                        vm.orderForm.destinationTowns = area.title;
+                    if(!StringUtil.isEmpty(area.code)){
+                        if (index == address.length - 1) {
+                            code += area.code;
+                        } else {
+                            code += area.code + ',';
+                        }
+                        addr += area.title;
+                        if (area.keyword == 'province') {
+                            vm.orderForm.destinationProvince = area.title;
+                        }
+                        if (area.keyword == 'city') {
+                            vm.orderForm.destinationCity = area.title;
+                        }
+                        if (area.keyword == 'district') {
+                            vm.orderForm.destinationDistrict = area.title;
+                        }
+                        if (area.keyword == 'street') {
+                            vm.orderForm.destinationTowns = area.title;
+                        }
                     }
                 });
                 this.orderForm.destinationCode = code;
@@ -1828,6 +1829,34 @@
                     var cscContantAndCompanyDtoConsigneeStr = JSON.stringify(paramConsignee);
                     return cscContantAndCompanyDtoConsigneeStr;
                 }
+            },
+            deleteMobileOrder:function(){
+                var _this=this;
+                var mobileOrderCode =_this.mobileOrderVo.mobileOrderCode;
+                if(StringUtil.isEmpty(mobileOrderCode)){
+                    _this.promptInfo("没有删除的订单!",'warning');
+                    return;
+                }
+                _this.isDisabledDelete = true;
+                CommonClient.syncpost(sys.rootPath + "/ofc/deleteMobileOrder", {"mobileOrderCode":mobileOrderCode}, function(result) {
+                    if (result == undefined || result == null ) {
+                        _this.promptInfo("手机订单删除失败",'error');
+                        _this.isDisabledDelete = false;
+                    } else if (result.code == 200) {
+                        _this.promptInfo("手机订单删除成功",'success');
+                        _this.isDisabledDelete = false;
+                        var url = "/ofc/autoAcceptMobileOrder";
+                        var html = window.location.href;
+                        var index = html.indexOf("/index#");
+                        window.open(html.substring(0,index) + "/index#" + url);
+                    } else if (result.code == 403) {
+                        _this.promptInfo("没有权限",'error');
+                        _this.isDisabledDelete = false;
+                    } else {
+                        _this.promptInfo(result.message,'error');
+                        _this.isDisabledDelete = false;
+                    }
+                },"json");
             }
         }
     });
