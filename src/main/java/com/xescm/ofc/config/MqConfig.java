@@ -16,6 +16,7 @@
 package com.xescm.ofc.config;
 
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,6 +28,7 @@ import org.springframework.context.annotation.Configuration;
  * @Author         <a>向铭涛</a>
  * @CreateDate     2016/11/11 15:40
  */
+@Data
 @Configuration
 @ConfigurationProperties(prefix = MqConfig.MQ_PREFIX)
 public class MqConfig {
@@ -63,6 +65,9 @@ public class MqConfig {
      * 仓储计划单
      */
     private String ofc2WhcOrderTopic;
+    /** 订单推结算 */
+    private String ofc2AcOrderTopic;
+
     /**
      *  /**
      * 仓储订单状态反馈
@@ -197,5 +202,13 @@ public class MqConfig {
 
     public void setOnsAddr(String onsAddr) {
         this.onsAddr = onsAddr;
+    }
+
+    public String getOfc2AcOrderTopic() {
+        return ofc2AcOrderTopic;
+    }
+
+    public void setOfc2AcOrderTopic(String ofc2AcOrderTopic) {
+        this.ofc2AcOrderTopic = ofc2AcOrderTopic;
     }
 }

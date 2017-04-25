@@ -27,8 +27,7 @@ import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
-import com.xescm.epc.edas.service.EpcOfc2DmsEdasService;
-import com.xescm.epc.edas.service.EpcOrderCancelEdasService;
+import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
 import com.xescm.ofc.exception.BusinessException;
@@ -122,11 +121,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private CodeGenUtils codeGenUtils;
     @Resource
-    private EpcOrderCancelEdasService epcOrderCancelEdasService;
-    @Resource
     private WhcOrderCancelEdasService whcOrderCancelEdasService;
-    @Resource
-    private EpcOfc2DmsEdasService epcOfc2DmsEdasService;
     @Resource
     private DefaultMqProducer defaultMqProducer;
     @Resource
@@ -157,6 +152,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private AcSettleStatisticsEdasService acSettleStatisticsEdasService;
     @Resource
     private TfcQueryEveryDeliveryService tfcQueryEveryDeliveryService;
+    @Resource
+    private DefaultMqProducer mqProducer;
+    @Resource
+    private MqConfig mqConfig;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -712,11 +711,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
-            CscContantAndCompanyDto cscContantAndCompanyDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
+           CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
             ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
             Wrapper save = this.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
-                    , null, cscContantAndCompanyDto, new CscSupplierInfoDto(), authResDto);
+                    , cscConsignorDto, cscConsigneeDto, forOrderMsg.getCscSupplierInfoDto(), authResDto);
             if(save.getCode() == Wrapper.ERROR_CODE){
                 logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
                 return save;
@@ -833,6 +834,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("订单信息推送结算中心 == > ofcWarehouseInformation{}", ofcWarehouseInformation);
         AcOrderDto acOrderDto = new AcOrderDto();
         try {
+            // 转换Ac实体
             AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
             BeanUtils.copyProperties(acFundamentalInformation, ofcFundamentalInformation);
 
@@ -858,18 +860,24 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (null != ofcWarehouseInformation && null != ofcWarehouseInformation.getProvideTransport()) {
                 acOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport().toString());
             }
+            try {
+                String orderCode = ofcFundamentalInformation.getOrderCode();
+                String orderInfo = JacksonUtil.toJson(acOrderDto);
+                // 推送结算
+                boolean isSend = mqProducer.sendMsg(orderInfo, mqConfig.getOfc2AcOrderTopic(), orderCode, "xeOrderToAc");
+                if (isSend) {
+                    logger.info("订单中心推送结算中心成功，订单号：{}", orderCode);
+                } else {
+                    logger.info("订单中心推送结算中心失败，订单号：{}", orderCode);
+                }
+            } catch (Exception e) {
+                logger.error("订单中心推送结算订单转换发生错误, 异常： {}", e);
+                throw new BusinessException("订单中心推送结算订单转换发生错误!");
+            }
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
             logger.error("订单信息推送结算中心 转换异常, {}", e);
-        }
-
-        try {
-            Wrapper<?> wrapper = acOrderEdasService.pullOfcOrder(acOrderDto);
-            if (wrapper == null || ERROR_CODE == wrapper.getCode()) {
-                logger.error(wrapper.getMessage());
-                throw new BusinessException(wrapper.getMessage());
-            }
-        } catch (Exception e) {
-            logger.error("订单推送结算中心发生错误. {}", e);
         }
     }
 
@@ -1422,7 +1430,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
         dinfo = ofcDistributionBasicInfoService.selectOne(condition);
 
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || ORDER_TAG_STOCK_IMPORT.equals(trimAndNullAsEmpty(reviewTag))) {//
             //编辑时不提供运输改为提供运输时 收货方即是仓库的信息   前台不好处理  后台通过仓库编码获取仓库的信息
             StringBuilder sb = new StringBuilder();
             RmcWarehouseDto rmcWarehouseDto = new RmcWarehouseDto();
@@ -1466,6 +1474,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
 
                 } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
+                    ofcDistributionBasicInfo.setConsigneeName(resp.getWarehouseName());
+                    ofcDistributionBasicInfo.setConsigneeContactName(resp.getWarehouseName());
                     ofcDistributionBasicInfo.setDestinationCode(sb.toString());
                     ofcDistributionBasicInfo.setDestination(resp.getDetailAddress());
                     ofcDistributionBasicInfo.setDestinationProvince(resp.getProvince());

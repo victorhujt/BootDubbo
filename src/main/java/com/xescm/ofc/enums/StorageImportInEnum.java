@@ -34,7 +34,8 @@ public enum StorageImportInEnum {
     PLATE_NUMBER("plateNumber","车牌号"),
     DRIVER_NAME("driverName","司机姓名"),
     CONTACT_NUMBER("contactNumber","联系电话"),
-    SUPPORT_BATCH("supportBatch","供应商批次");
+    SUPPORT_BATCH("supportBatch","供应商批次"),
+    CONSIGNOR_NAME("consignorName","发货方名称");
 
 
     private String standardColCode;
