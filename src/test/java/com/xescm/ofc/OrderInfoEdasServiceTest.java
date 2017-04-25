@@ -4,8 +4,11 @@ import com.taobao.hsf.lightapi.ServiceFactory;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderInfoDto;
 import com.xescm.ofc.edas.service.OfcOrderInfoEdasService;
+import com.xescm.ofc.service.GoodsAmountSyncService;
+import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import org.junit.Test;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +18,9 @@ import java.util.List;
  * @date: 2017/3/2 19:44
  */
 public class OrderInfoEdasServiceTest extends HsfBaseTest {
+
+    @Resource
+    GoodsAmountSyncService goodsAmountSyncService;
 
     // 这里设置Pandora地址，参数是sar包所在目录，如这里我的sar包地址是/Users/Jason/Work/AliSoft/PandoraSar/DevSar/taobao-hsf.sar，则只取前面的地址即可
     private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("//Users//Jim//Software//EDAS//xescm-ofc-edas//deploy//");
@@ -138,5 +144,15 @@ public class OrderInfoEdasServiceTest extends HsfBaseTest {
         } else {
             System.out.println(result.getMessage());
         }
+    }
+
+    @Test
+    public void updateGoodsInfoTest(){
+        GoodsAmountSyncDto goodsAmountSyncDto = new GoodsAmountSyncDto();
+        goodsAmountSyncDto.setCustCode("100002");
+        goodsAmountSyncDto.setCustName("鲜易网");
+        goodsAmountSyncDto.setCustOrderCode("D170103171129969");
+        Wrapper<?> result = goodsAmountSyncService.GoodsAmountSync(null);
+        System.out.println(result.getMessage());
     }
 }
