@@ -146,7 +146,7 @@ public class OrderInfoEdasServiceTest extends HsfBaseTest {
         }
     }
 
-    @Test
+    /*@Test
     public void updateGoodsInfoTest(){
         GoodsAmountSyncDto goodsAmountSyncDto = new GoodsAmountSyncDto();
         goodsAmountSyncDto.setCustCode("100002");
@@ -154,5 +154,5 @@ public class OrderInfoEdasServiceTest extends HsfBaseTest {
         goodsAmountSyncDto.setCustOrderCode("D170103171129969");
         Wrapper<?> result = goodsAmountSyncService.GoodsAmountSync(null);
         System.out.println(result.getMessage());
-    }
+    }*/
 }

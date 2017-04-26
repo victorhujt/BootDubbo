@@ -33,6 +33,7 @@ public enum StorageImportOutEnum {
     CONTACT_NUMBER("contactNumber","联系电话"),
     CONSIGNEE_NAME("consigneeName","收货方名称"),
     CONSIGNEE_CONTACT_CODE("consigneeContactCode","收货人编码"),
+    STORE_CODE("storeCode","门店编码"),
     SUPPORT_CODE("supportCode","供应商编码"),
     SUPPORT_BATCH("supportBatch","供应商批次");
 

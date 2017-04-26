@@ -37,7 +37,7 @@ public class CreateOrderApiTest {
     GoodsAmountSyncService goodsAmountSyncService;
 
 
-    @Test
+   /* @Test
     public void sdf(){
         GoodsAmountSyncDto goodsAmountSyncDto = new GoodsAmountSyncDto();
         goodsAmountSyncDto.setCustCode("BHHYSCSPYX");
@@ -62,5 +62,5 @@ public class CreateOrderApiTest {
         goodsAmountSyncDto.setGoodsAmountDetailDtoList(list);
         goodsAmountSyncService.GoodsAmountSync(goodsAmountSyncDto);
         System.out.println("111");
-    }
+    }*/
 }
