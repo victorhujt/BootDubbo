@@ -291,7 +291,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            cscGood.setFromSys("WMS");//只要WMS渠道的货品
+            // cscGood.setFromSys("WMS");//只要WMS渠道的货品 增加有问题暂时改回传空串
+            cscGood.setFromSys("");//只要WMS渠道的货品 增加有问题暂时改回传空串
             cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageList(cscGood);
             //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
