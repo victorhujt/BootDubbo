@@ -87,6 +87,11 @@ public class CreateOrderEntity {
     private String storeCode;
 
     /**
+     * 平台类型
+     */
+    private String platformType;
+
+    /**
      * 订单来源 Y
      * 【平台、EDI、手工录入】
      */
@@ -1267,5 +1272,13 @@ public class CreateOrderEntity {
 
     public void setAreaName(String areaName) {
         this.areaName = areaName;
+    }
+
+    public String getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(String platformType) {
+        this.platformType = platformType;
     }
 }
