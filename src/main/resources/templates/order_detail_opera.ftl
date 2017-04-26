@@ -626,14 +626,17 @@
     });
 
     function getOrderSource(type) {
-        if("6001" == type) {
-            return "EDI";
-        }
+//        if("6001" == type || '6002' == type || '6003' == type) {
+//            return "EDI";
+//        }
         return type;
     }
     function getPlatformType(type) {
-        if(type == "4"){
+        if(type == "4" || type == 'XEBEST'){
             return "鲜易网";
+        }
+        if(type == 'ZP-ESB') {
+            return '众品';
         }
         return type;
     }
