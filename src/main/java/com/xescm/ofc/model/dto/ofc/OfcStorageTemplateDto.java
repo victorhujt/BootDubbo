@@ -40,6 +40,7 @@ public class OfcStorageTemplateDto {
     private String consigneeName;//收货方名称
     //上面部分字段是Excel表中的字段, 但是下单的话还需要其他字段的补充
     private CscContantAndCompanyResponseDto cscConsigneeDto = new CscContantAndCompanyResponseDto();
+    private CscContantAndCompanyResponseDto consignor = new CscContantAndCompanyResponseDto();
     private CscGoodsApiVo cscGoodsApiVo = new CscGoodsApiVo();
     private CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
     private CscSupplierInfoDto goodsSupplier = new CscSupplierInfoDto();
@@ -54,5 +55,7 @@ public class OfcStorageTemplateDto {
     private String supportBatch;
     //运输单号
     private String transCode;
+    //发货方名称
+    private String consignorName;
 
 }

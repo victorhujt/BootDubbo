@@ -56,4 +56,8 @@ public interface OfcStorageTemplateService {
     void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO);
 
     void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO);
+
+    CscContantAndCompanyDto convertCscConsignor(CscContantAndCompanyResponseDto cscConsigneeDto);
+
+    void convertConsignorToDis(CscContantAndCompanyResponseDto consignor, OfcOrderDTO ofcOrderDTO);
 }
