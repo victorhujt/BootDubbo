@@ -713,6 +713,7 @@
       isclear: true,
       istoday: true,
       start:laydate.now(0, 'YYYY/MM/DD hh:ss'),
+      min:laydate.now(),
       choose: function (dates) {
           $("#pickupTime-error").remove();
       }
