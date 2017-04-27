@@ -905,6 +905,11 @@
                 }
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
+                vueObj.goodDataInfo.goodsForm.goodsName = "";
+                vueObj.goodDataInfo.goodsForm.goodsTypeId = "";
+                vueObj.goodDataInfo.goodsForm.goodsTypeSonId = "";
+                vueObj.goodDataInfo.goodsForm.barCode = "";
+                vueObj.goodDataInfo.goodsForm.goodsCode =　"";
                 vueObj.multipleSelection=[];
                 vueObj.goodDataInfo.goodsCodeData=[];
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {

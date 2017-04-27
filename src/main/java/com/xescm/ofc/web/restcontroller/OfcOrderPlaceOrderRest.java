@@ -269,7 +269,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     * 运营中心货品筛选(调用客户中心API)
+     * 运营中心货品筛选(调用客户中心API) 运输、城配开单货品筛选
      * @param cscGoods 货品筛选条件
      * @param customerCode 客户编码
      * @return
