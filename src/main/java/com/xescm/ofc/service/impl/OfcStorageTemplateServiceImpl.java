@@ -1330,14 +1330,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         String storeCodeForCheck = ofcStorageTemplateDto.getStoreCode();
         CscContantAndCompanyResponseDto cscConsigneeDto = ofcStorageTemplateDto.getCscConsigneeDto();
-        /*
         String storeCode = cscConsigneeDto.getStoreCode();
         if (PubUtils.isSEmptyOrNull(storeCode)) {
             xlsErrorMsg.add("行:" + (rowCount + 1) + "收货方【" + cscConsigneeDto.getContactCompanyName() + "】没有门店编码, 请维护！");
             return false;
         }
-         */
-        String storeCode = "";
         if (!StringUtils.equals(storeCodeForCheck, storeCode)) {
             xlsErrorMsg.add("行:" + (rowCount + 1) + "门店编码【" + storeCodeForCheck +"】不属于收货方【" + cscConsigneeDto.getContactCompanyName() + "】！");
             return false;
