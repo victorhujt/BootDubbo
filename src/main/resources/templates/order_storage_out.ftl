@@ -921,7 +921,7 @@
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
-                        unit: val.unit,
+                       // unit: val.unit,
                         quantity: '',
                         unitPrice:'',
                         productionBatch:'',

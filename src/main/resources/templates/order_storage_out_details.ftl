@@ -198,6 +198,11 @@
                         <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column property="primaryQuantity" label="主单位数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="realQuantity" label="实际数量">
                     <template scope="scope">
                         <el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>

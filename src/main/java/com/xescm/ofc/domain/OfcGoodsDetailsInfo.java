@@ -206,6 +206,31 @@ public class OfcGoodsDetailsInfo {
      */
     @Column(name = "support_batch")
     private String supportBatch;
+    /**
+     * 包装名称
+     */
+    @Column(name = "package_name")
+    private String packageName;
+
+    /**
+     *包装类型
+     * @return
+     */
+    @Column(name = "package_type")
+    private String packageType;
+
+    /**
+     * 与主单位的换算规格
+     * @return
+     */
+    @Column(name = "conversion_rate")
+    private String conversionRate;
+
+    @Column(name = "primary_quantity")
+    private String primaryQuantity;
+
+
+
 
     public String getId() {
         return id;

@@ -119,8 +119,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         orderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
                         orderStatus.setOrderStatus(HASBEEN_COMPLETED);
                         orderStatus.setLastedOperTime(now);
-                        orderStatus.setStatusDesc("已完成");
-                        orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) + " " + "订单已完成");
+                        orderStatus.setStatusDesc("运输单已完成");
+                        orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) + " " + "运输单订单已完成");
                         orderStatus.setOperator(userName);
                         if (null == ofcFundamentalInformation.getFinishedTime()) {
                             ofcFundamentalInformation.setFinishedTime(now);

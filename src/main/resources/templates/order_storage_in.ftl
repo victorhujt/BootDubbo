@@ -313,9 +313,9 @@
                 <el-table-column property="unit" label="单位">
                     <template scope="scope">
                     <#--<el-input v-model="scope.row.unit" :readOnly="true"></el-input>-->
-                        <el-select v-model="scope.row.unit"  @change="accountPrimaryQuantity(scope.row)" placeholder="请选择">
+                        <el-select v-model="scope.row.unit"  @change="accountSpecification(scope.row)" placeholder="请选择">
                             <el-option
-                                    v-for="item in unitsOptions"
+                                    v-for="item in scope.row.unitsOptions"
                                     :label="item.label"
                                     :value="item.value">
                                 <span style="float: left">{{ item.label }}</span>
@@ -326,7 +326,7 @@
                 </el-table-column>
                 <el-table-column property="quantity" label="入库数量">
                     <template scope="scope">
-                        <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
+                        <el-input v-model="scope.row.quantity" @blur="accountPrimaryQuantity(scope.row)" placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="primaryQuantity" label="主单位数量">
@@ -334,9 +334,29 @@
                         <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column property="packageType" v-if="false" label="包装类型">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.packageType"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="packageName" v-if="false" label="包装名称">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.packageName"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="conversionRate" v-if="false" label="与主单位的换算规格">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.conversionRate"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="expiryDate" label="保质期限" v-if="false">
                     <template scope="scope">
                         <el-input v-model="scope.row.expiryDate"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="" label="" v-if="false">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.levelSpecificationOptions"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
@@ -464,8 +484,9 @@
                 isShow:false,
                 activeNames:'',
                 wareHouseObj:'',
+                specification:1,
                 goodsCategoryOptions:[],
-                unitsOptions: [{value: 'EA', label: '箱'}, {value: 'IP', label: '内包装'},{ value: 'CS', label: '主单位'}, {value:"栈板",label:"托"}],
+                unitsOptions:[],
                 customerDataInfo:{
                     currentCustomerPage:1,
                     customerPageSize:10,
@@ -671,8 +692,24 @@
             handleCurrentChange:function(val) {
                 this.customerDataInfo.currentRow = val;
             },
-            accountPrimaryQuantity:function(val){
+            accountSpecification:function(val){
+                debugger;
                 //计算主单位数量
+                if(!StringUtil.isEmpty(val.unit)){
+                    var specification = this.getLevelSpecification(val);
+                    this.specification = specification;
+                    val.goodsSpec = specification + "箱/"+val.unit;
+                    val.packageType = val.unit;
+                    val.packageName = this.getLevelName(val);
+
+                }
+            },
+            accountPrimaryQuantity:function(val){
+                debugger;
+                if(!StringUtil.isEmpty(val.quantity)){
+                    val.primaryQuantity = val.quantity*(this.specification);
+                    val.conversionRate = this.specification;
+                }
             },
             setCurrentCustInfo:function(val) {
                 var vueObj=this;
@@ -792,7 +829,10 @@
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
                 }
+                debugger;
                 this.goodDataInfo.chosenGoodCode = false;
+                this.unitsOptions = [];
+                this.levelSpecificationOptions = [];
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
                     var newData = {
@@ -800,15 +840,22 @@
                         goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
-                        goodsSpec: val.goodsSpec,
-                        //unit: val.unit,
+                        goodsSpec:'',
+                        unit:'',
                         quantity: '',
+                        unitsOptions:val.unitsOptions,
+                        levelSpecificationOptions:val.levelSpecificationOptions,
+                        primaryQuantity:'',
                         unitPrice:'',
                         productionBatch:'',
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:''
+                        supportBatch:'',
+                        packageType:'',
+                        packageName:'',
+                        conversionRate:''
+
                     };
                     this.goodsData.push(newData);
                     if(this.supportBatchData.length==0){
@@ -910,7 +957,9 @@
                 this.goodDataInfo.goodsCodeData=[];
                 var vueObj=this;
                 var cscGoods = {};
+                this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
                 var customerCode = vueObj.orderForm.custCode;
+                var warehouseCode = vueObj.wareHouseObj.warehouseCode;
                 cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
                 cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
                 cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
@@ -919,12 +968,15 @@
                 cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                 cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                 var param = JSON.stringify(cscGoods);
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+                CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
                     if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                         layer.msg("暂时未查询到货品信息！！");
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,cscGoodsVo) {
                             var goodCode={};
+                            var unitsOptions = [];
+                            var levelSpecificationOptions = [];
+                            debugger;
                             goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
                             goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
                             goodCode.goodsCode=cscGoodsVo.goodsCode;
@@ -937,6 +989,23 @@
                                 goodCode.expiryDate=0;
                             }else{
                                 goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            }
+                            if(cscGoodsVo.goodsPackingDtoList!=null){
+                                if(cscGoodsVo.goodsPackingDtoList.length>0){
+                                    for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
+                                        var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
+                                        var unit = {};
+                                        var levelSpecification = {};
+                                        unit.label = goodsPacking.levelName;
+                                        unit.value = goodsPacking.level;
+                                        levelSpecification.label = goodsPacking.levelSpecification;
+                                        levelSpecification.value =  goodsPacking.level;
+                                        unitsOptions.push(unit);
+                                        goodCode.unitsOptions = unitsOptions;
+                                        levelSpecificationOptions.push(levelSpecification);
+                                        goodCode.levelSpecificationOptions = levelSpecificationOptions;
+                                    }
+                                }
                             }
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
@@ -1298,7 +1367,25 @@
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
-            }
+            },
+            getLevelSpecification:function(val){
+                debugger;
+                for(var i =0;i <val.levelSpecificationOptions.length;i++){
+                    var option = val.levelSpecificationOptions[i];
+                    if(val.unit == option.value){
+                        return option.label;
+                    }
+                }
+            },
+            getLevelName:function(val){
+                debugger;
+                for(var i =0;i <val.unitsOptions.length;i++){
+                    var option = val.unitsOptions[i];
+                    if(val.unit == option.value){
+                        return option.label;
+                    }
+                }
+            },
         }
     })
 

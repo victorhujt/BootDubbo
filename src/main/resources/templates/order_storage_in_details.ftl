@@ -263,6 +263,11 @@
                         <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column property="primaryQuantity" label="主单位数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
                         <el-input v-model="scope.row.unitPrice" :readOnly="true"></el-input>
@@ -552,6 +557,7 @@
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                           // good.primaryQuantity = goodDetail.primaryQuantity;
                                             if(vueObj.supportBatchData.length==0){
                                                 vueObj.selectSupplier();
                                             }

@@ -386,6 +386,11 @@
                         <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column property="primaryQuantity" label="主单位数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
                     <template scope="scope">
                         <el-input v-model="scope.row.unitPrice" placeholder="请输入内容"></el-input>

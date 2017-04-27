@@ -80,8 +80,10 @@ public class OfcOrderManageApiRest {
         MarkdownDto markdownDto=new MarkdownDto();
         AtDto atDto=new AtDto();
         atDto.setAtAll(dingDingRobotConfig.isAtAll());
-        String[] phones=dingDingRobotConfig.getAtMobiles().split(",");
-        atDto.setAtMobiles(phones);
+        if(!PubUtils.isSEmptyOrNull(dingDingRobotConfig.getAtMobiles())){
+            String[] phones=dingDingRobotConfig.getAtMobiles().split(",");
+            atDto.setAtMobiles(phones);
+        }
         chatRobotMsgDto.setAt(atDto);
         markdownDto.setText(content);
         markdownDto.setTitle("平台日报红黑榜");

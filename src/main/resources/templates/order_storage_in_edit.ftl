@@ -502,6 +502,7 @@
                 supportNameShow:false,
                 wareHouseObj:'',
                 goodsCategoryOptions:[],
+                unitsOptions: [{value: 'EA', label: '箱'}, {value: 'IP', label: '内包装'},{ value: 'CS', label: '主单位'}, {value:"栈板",label:"托"}],
                 customerDataInfo:{
                     currentCustomerPage:1,
                     customerPageSize:10,
@@ -817,8 +818,8 @@
             handleCurrentChange:function(val) {
                 this.customerDataInfo.currentRow = val;
             },
-            handlSuppliereCurrentChange:function(val) {
-                this.supplierDataInfo.supplierCurrentRow = val;
+            accountPrimaryQuantity:function(val){
+                //计算主单位数量
             },
             setCurrentCustInfo:function(val) {
                 var vueObj=this;
@@ -982,25 +983,6 @@
                 },"json");
 
             },
-            handleSupplierSizeChange:function(val){
-                this.supplierDataInfo.supplierPageSize = val;
-                this.selectSupplier();
-            },
-            handleSupplierCurrentPage:function(val){
-                this.supplierDataInfo.currentSupplierPage = val;
-                this.selectSupplier();
-            },
-
-            setCurrentSupplierInfo:function(val){
-                if (val != null) {
-                    this.orderForm.supportName=val.supportName;
-                    this.orderForm.supportCode=val.supportCode;
-                    this.supplierDataInfo.chosenSupplier=false;
-
-                } else {
-                    this.promptInfo("请选择供应商!",'warning');
-                }
-            },
             setCurrentGoodsInfo:function(){
                 if(this.multipleSelection.length<1){
                     this.promptInfo("请至少选择一条货品明细!",'warning');
@@ -1015,7 +997,7 @@
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
-                        unit: val.unit,
+                        //unit: val.unit,
                         quantity: '',
                         unitPrice:'',
                         productionBatch:'',
@@ -1030,10 +1012,6 @@
                         this.selectSupplier();
                     }
                 }
-            },
-            cancelSelectSupplier:function(){
-                this.supplierDataInfo.supplierData=[];
-                this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignor:function(){
                 this.consignorDataInfo.consignorData=[];
@@ -1137,7 +1115,7 @@
                 cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                 cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                 var param = JSON.stringify(cscGoods);
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+                CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode}, function(data) {
                     if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                         layer.msg("暂时未查询到货品信息！！");
                     } else if (data.code == 200) {
