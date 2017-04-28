@@ -1144,6 +1144,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 checkPass = false;
                                 continue;
                             }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
+                            cellValue = PubUtils.trim(cellValue);
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                         }
                     }
