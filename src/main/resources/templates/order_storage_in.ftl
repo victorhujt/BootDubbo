@@ -189,7 +189,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="仓库名称" required prop="wareHouse" class="xe-col-3">
-                    <el-select v-model="orderForm.wareHouse" placeholder="请选择">
+                    <el-select v-model="orderForm.wareHouse" placeholder="请选择"  @change="clearGoodsData">
                         <el-option
                                 v-for="item in wareHouseOptions"
                                 :label="item.label"
@@ -434,7 +434,6 @@
     }
 
     function initSupplierName(val) {
-        debugger;
         var customerCode;
         if("default" == val){
             customerCode = "xxxxxx";
@@ -446,7 +445,6 @@
         var notice = "没有找到相关供应商";
         Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
         $("#custName").on("select2-selecting", function(e) {
-            debugger;
             _this.orderForm.supportName = e.choice.name;
             _this.orderForm.supportCode = e.choice.code;
         });
@@ -485,6 +483,8 @@
                 activeNames:'',
                 wareHouseObj:'',
                 specification:1,
+                oldWarehouse:'',
+                oldCustomerCode:'',
                 goodsCategoryOptions:[],
                 unitsOptions:[],
                 customerDataInfo:{
@@ -693,7 +693,6 @@
                 this.customerDataInfo.currentRow = val;
             },
             accountSpecification:function(val){
-                debugger;
                 //计算主单位数量
                 if(!StringUtil.isEmpty(val.unit)){
                     var specification = this.getLevelSpecification(val);
@@ -705,7 +704,6 @@
                 }
             },
             accountPrimaryQuantity:function(val){
-                debugger;
                 if(!StringUtil.isEmpty(val.quantity)){
                     val.primaryQuantity = val.quantity*(this.specification);
                     val.conversionRate = this.specification;
@@ -829,7 +827,6 @@
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
                 }
-                debugger;
                 this.goodDataInfo.chosenGoodCode = false;
                 this.unitsOptions = [];
                 this.levelSpecificationOptions = [];
@@ -976,7 +973,6 @@
                             var goodCode={};
                             var unitsOptions = [];
                             var levelSpecificationOptions = [];
-                            debugger;
                             goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
                             goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
                             goodCode.goodsCode=cscGoodsVo.goodsCode;
@@ -1079,7 +1075,6 @@
                         },"json");
             },
             saveStorage:function(){
-                debugger;
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -1133,6 +1128,7 @@
                     ofcOrderDTOStr.destinationTowns=this.wareHouseObj.street;
                 }
 
+                var  str = "您确认提交订单吗?";
                 var goodsTable =this.goodsData;
                 var goodDetail=[];
                 if(goodsTable.length <1){
@@ -1140,6 +1136,8 @@
                     return;
                 }
                 //校验金额和格式化日期时间
+                var messageReminder = "货品";
+                var reminder = "";
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
                     if(!StringUtil.isEmpty(good.unitPrice)){
@@ -1187,12 +1185,22 @@
                             return;
                         }
                     }
+                    if(!this.isInteger(good.primaryQuantity)){
+                        if(StringUtil.isEmpty(reminder)){
+                            reminder = good.goodsCode;
+                        }else{
+                            reminder = reminder +"," + good.goodsCode;
+                        }
+                    }
                     goodDetail.push(good);
                 }
 
                 if(goodDetail.length <1){
                     this.promptInfo("请添加至少一条货品!",'warning');
                     return;
+                }
+                if(!StringUtil.isEmpty(reminder)){
+                    str = messageReminder + reminder + "主单位数量为非正整数，你确认下单吗？";
                 }
                 var ofcOrderDto = JSON.stringify(ofcOrderDTOStr);
                 var orderGoodsListStr = JSON.stringify(goodDetail);
@@ -1205,7 +1213,7 @@
                             ,"cscSupplierInfoDtoStr":cscSupplierInfoDtoStr
                             ,"tag":tag
                         }
-                        ,"您确认提交订单吗?"
+                        ,str
                         ,function () {
                             location.reload();
                             var url=window.location.href;
@@ -1291,7 +1299,6 @@
                 this.currentRowData = currentRowData;
             },
             addGoods:function(){
-                debugger;
                 if(StringUtil.isEmpty(this.orderForm.custName)&&StringUtil.isEmpty(this.orderForm.custCode)){
                     this.promptInfo("请选择客户!",'warning');
                     return;
@@ -1302,6 +1309,8 @@
                 }
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
+                this.oldWarehouse = this.orderForm.wareHouse;
+                this.oldCustomerCode = this.orderForm.custCode;
                 vueObj.goodDataInfo.goodsForm.goodsName = "";
                 vueObj.goodDataInfo.goodsForm.goodsTypeId = "";
                 vueObj.goodDataInfo.goodsForm.goodsTypeSonId = "";
@@ -1374,7 +1383,6 @@
                 this.goodDataInfo.goodsForm.goodsTypeId="";
             },
             getLevelSpecification:function(val){
-                debugger;
                 for(var i =0;i <val.levelSpecificationOptions.length;i++){
                     var option = val.levelSpecificationOptions[i];
                     if(val.unit == option.value){
@@ -1383,7 +1391,6 @@
                 }
             },
             getLevelName:function(val){
-                debugger;
                 for(var i =0;i <val.unitsOptions.length;i++){
                     var option = val.unitsOptions[i];
                     if(val.unit == option.value){
@@ -1391,6 +1398,42 @@
                     }
                 }
             },
+            clearGoodsData:function(){
+                var _this = this;
+                if(_this.goodsData.length>0){
+                    if(!StringUtil.isEmpty(this.orderForm.custCode)){
+                        if((_this.orderForm.custCode == _this.oldCustomerCode) && (StringUtil.isEmpty( _this.orderForm.wareHouse))){
+                            if(!StringUtil.isEmpty(_this.oldWarehouse)){
+                                _this.orderForm.wareHouse = _this.oldWarehouse;
+                            }
+                        }
+                    }
+                    if(!StringUtil.isEmpty(_this.orderForm.wareHouse)){
+                        var wareHouseObj=JSON.parse(_this.orderForm.wareHouse);
+                        var warehouseCode = wareHouseObj.warehouseCode;
+                    }
+                    var oldwareHouseObj=JSON.parse(_this.oldWarehouse);
+                    var oldwarehouseCode = oldwareHouseObj.warehouseCode;
+                    if(oldwarehouseCode != warehouseCode){
+                        _this.openChangeWarehouseMessage();
+                    }
+                }
+            },
+            openChangeWarehouseMessage:function(){
+                var _this=this;
+                _this.$confirm('更改客户名称或者仓库名称货品信息将会被清空, 确定要更改吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.goodsData = [];
+                }).catch(function() {
+                    _this.orderForm.wareHouse = _this.oldWarehouse;
+                });
+            },
+            isInteger:function (obj) {
+                return obj%1 === 0 ;
+            }
         }
     })
 

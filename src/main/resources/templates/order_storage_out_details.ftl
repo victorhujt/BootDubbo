@@ -460,6 +460,7 @@
                                         good.productionBatch=goodDetail.productionBatch;
                                         good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                         good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                        good.primaryQuantity = goodDetail.primaryQuantity;
                                         if(vueObj.supportBatchData.length==0){
                                             vueObj.selectSupplier();
                                         }

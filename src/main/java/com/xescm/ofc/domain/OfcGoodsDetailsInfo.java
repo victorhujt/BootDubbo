@@ -224,10 +224,10 @@ public class OfcGoodsDetailsInfo {
      * @return
      */
     @Column(name = "conversion_rate")
-    private String conversionRate;
+    private BigDecimal conversionRate;
 
     @Column(name = "primary_quantity")
-    private String primaryQuantity;
+    private BigDecimal primaryQuantity;
 
 
 
