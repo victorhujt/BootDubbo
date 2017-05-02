@@ -105,6 +105,7 @@
                 <el-table-column property="cityName" v-if="false" label="城市"></el-table-column>
                 <el-table-column property="areaName" v-if="false" label="区"></el-table-column>
                 <el-table-column property="streetName" v-if="false" label="街道"></el-table-column>
+                <el-table-column property="storeCode" v-if="false" label="门店编码"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleConsigneeSizeChange" @current-change="handleConsigneeCurrentPage" :current-page="consigneeDataInfo.currentConsigneePage" :page-sizes="pageSizes" :page-size="consigneeDataInfo.consigneePageSize" layout="total, sizes, prev, pager, next, jumper" :total="consigneeDataInfo.totalConsignee">
             </el-pagination>
@@ -725,7 +726,8 @@
                     destinationProvince:'',
                     destinationCity:'',
                     destinationDistrict:'',
-                    destinationTowns:''
+                    destinationTowns:'',
+                    storeCode:''
                 },
                 rules:{
                     orderDate:[
@@ -1198,6 +1200,7 @@
                 this.orderForm.consigneeCode=val.consigneeCode;
                 this.orderForm.consigneeContactCode=val.consigneeContactCode;
                 this.orderForm.destinationCode=val.destinationCode;
+                this.orderForm.storeCode = val.storeCode;
                 this.consigneeDataInfo.chosenSend = false;
             },
             selectGoods:function(){

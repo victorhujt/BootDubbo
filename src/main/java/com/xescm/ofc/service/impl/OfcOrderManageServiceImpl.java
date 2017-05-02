@@ -712,7 +712,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
-           CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
+            CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
             ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);

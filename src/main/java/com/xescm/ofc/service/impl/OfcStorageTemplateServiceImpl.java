@@ -1136,6 +1136,17 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                            //门店编码
+                        } else if (StringUtils.equals(StorageImportOutEnum.STORE_CODE.getStandardColCode(), standardColCode)) {
+                            if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
+                                logger.error("当前行:{},列:{} 没有门店编码", rowNum + 1, cellNum);
+                                xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
+                                checkPass = false;
+                                continue;
+                            }
+                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
+                            cellValue = PubUtils.trim(cellValue);
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                         }
                     }
                 }
@@ -1224,11 +1235,18 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<String, Set<String>> custOrderCodeTransCode = new HashMap<>(); //key:custOrderCode, value: transCode
         Map<String, Set<String>> transCodeCustOrderCode = new HashMap<>(); //key:transCode, value: custOrderCode
         logger.info("数量初始化: {}", countImportNum.intValue());
+        int rowCount = 0;
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
+            rowCount ++;
             logger.info("数量 : {}", ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之前: {}", countImportNum.intValue());
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之后: {}", countImportNum.intValue());
+            //处理门店编码
+            if (checkPass && !this.dealStoreCode(ofcStorageTemplate, ofcStorageTemplateDto, xlsErrorMsg, rowCount)) {
+                checkPass = false;
+                continue;
+            }
             String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
             custOrderCodeSet.add(custOrderCode);
             String transCode = ofcStorageTemplateDto.getTransCode();
@@ -1305,8 +1323,33 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
     }
 
+    private boolean dealStoreCode(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto, List<String> xlsErrorMsg, int rowCount) {
+        logger.info("处理店铺编码 ==> ofcStorageTemplate:{}", ofcStorageTemplate);
+        logger.info("处理店铺编码 ==> ofcStorageTemplateDto:{}", ofcStorageTemplateDto);
+        logger.info("处理店铺编码 ==> rowCount:{}", rowCount);
+        if (!StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_OUT) || PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getStoreCode())) {
+            return true;
+        }
+        String storeCodeForCheck = ofcStorageTemplateDto.getStoreCode();
+        CscContantAndCompanyResponseDto cscConsigneeDto = ofcStorageTemplateDto.getCscConsigneeDto();
+        String storeCode = cscConsigneeDto.getStoreCode();
+        if (PubUtils.isSEmptyOrNull(storeCode)) {
+            xlsErrorMsg.add("行:" + (rowCount + 1) + "收货方【" + cscConsigneeDto.getContactCompanyName() + "】没有门店编码, 请维护！");
+            return false;
+        }
+        if (!StringUtils.equals(storeCodeForCheck, storeCode)) {
+            xlsErrorMsg.add("行:" + (rowCount + 1) + "门店编码【" + storeCodeForCheck +"】不属于收货方【" + cscConsigneeDto.getContactCompanyName() + "】！");
+            return false;
+        }
+        return true;
+    }
+
     private boolean dealConsignorName(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto,
             Map<String, CscContantAndCompanyResponseDto> consignorCheck, List<String> xlsErrorMsg, int rowNum) {
+        logger.info("处理发货方 ==> ofcStorageTemplate:{}", ofcStorageTemplate);
+        logger.info("处理发货方 ==> ofcStorageTemplateDto:{}", ofcStorageTemplateDto);
+        logger.info("处理发货方 ==> consignorCheck:{}", consignorCheck);
+        logger.info("处理发货方 ==> rowNum:{}", rowNum);
         if (!StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_IN)) {
             return true;
         }
@@ -1507,7 +1550,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private Map<Integer, String> checkExcelRequiedItem(Row commonRow, String templateType, Map<String, OfcStorageTemplate> templateDetilMap) {
         List<String> inRquiredItems = InRquiredItem.getstandardCodeList();
         List<String> outRquiredItems = OutRquiredItem.getstandardCodeList();
-        List<String> item = StringUtils.equals(templateType,STORAGE_IN) ? inRquiredItems : outRquiredItems;
+        boolean storageIn = StringUtils.equals(templateType,STORAGE_IN);
+        List<String> item = storageIn ? inRquiredItems : outRquiredItems;
         List<String> check = new ArrayList<>();
         check.addAll(item);
         Map<String, Integer> colNumMap = new HashMap<>();
@@ -1534,6 +1578,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 continue;
             }
             String standardColCode = ofcStorageTemplate.getStandardColCode();
+            if (!storageIn && StringUtils.equals(StorageImportOutEnum.STORE_CODE.getStandardColCode(), standardColCode)) {
+                check.add(standardColCode);
+                item.add(standardColCode);
+            }
             //如果能找到
             int index = check.indexOf(standardColCode);
             if (index != -1) {

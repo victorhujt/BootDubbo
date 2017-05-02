@@ -57,5 +57,7 @@ public class OfcStorageTemplateDto {
     private String transCode;
     //发货方名称
     private String consignorName;
+    //门店编码
+    private String storeCode;
 
 }
