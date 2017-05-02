@@ -11,6 +11,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscGoodsEdasService;
@@ -580,7 +581,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
                                 cscGoodsApiDto.setGoodsCode(cellValue);
                                 cscGoodsApiDto.setCustomerCode(ofcStorageTemplate.getCustCode());
-                                Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsList(cscGoodsApiDto);
+                                String warehouseCode = ofcStorageTemplateDto.getWarehouseCode();
+                                if (PubUtils.isSEmptyOrNull(warehouseCode)) {
+                                    logger.error("当前行:{},列:{} 货品编码校验失败, 仓库列需在货品编码列之前", rowNum + 1, cellNum + 1);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "【" + ofcStorageTemplateForCheck.getReflectColName() + "】为：【" + cellValue +"】校验出错！请尝试将仓库列移动到货品编码列之前!");
+                                    checkPass = false;
+                                    continue;
+                                }
+                                cscGoodsApiDto.setWarehouseCode(warehouseCode);
+                                Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsListFullMatch(cscGoodsApiDto);
                                 if (Wrapper.ERROR_CODE == queryCscGoodsList.getCode()) {
                                     logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum + 1);
                                     xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "【" + ofcStorageTemplateForCheck.getReflectColName() + "】为：【" + cellValue +"】校验出错！");
@@ -1222,6 +1231,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         checkPass = false;
                         continue;
                     }
+                    //对单位进行处理(对应货品的包装)
+                    if (!PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getUnit()) && !this.dealGoodsUnit(ofcStorageTemplate, ofcStorageTemplateDto, xlsErrorMsg, rowNum)) {
+                        checkPass = false;
+                        continue;
+                    }
 
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
@@ -1316,11 +1330,77 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         //ofcStorageTemplateDtoList 用来下单用的
         //然后堆一个
         List<Object> succeedResult = new ArrayList<>();
+        //增加货品单位和包装代码列
+        this.dealUsefulCol(usefulCol);
         succeedResult.add(usefulCol);
         succeedResult.add(ofcStorageTemplateDtoList);
         succeedResult.add(countImportNum);
         succeedResult.add(importOrderNum);
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
+    }
+
+    private void dealUsefulCol(List<String> usefulCol) {
+        int unitColNum = -1;
+        for (String col : usefulCol) {
+            String colCode = col.split("@")[1];
+            if (StringUtils.equals(colCode, StorageImportOutEnum.UNIT.getStandardColCode())) {
+                unitColNum = usefulCol.indexOf(col);
+            }
+        }
+        if (unitColNum == -1) {
+            //说明不存在单位列, 报错
+            logger.error("");
+            throw new BusinessException("");
+        }
+        //包装代码列
+        String packageId = PACKAGE_ID_NAME + "@" + PACKAGE_ID_CODE;
+        //主单位数量列
+        String mainUnitNum = MAIN_UNIT_NUM_NAME + "@" + MAIN_UNIT_NUM_CODE;
+        usefulCol.add(unitColNum, packageId);
+        usefulCol.add(mainUnitNum);
+    }
+
+    private boolean dealGoodsUnit(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto, List<String> xlsErrorMsg, int rowNum) {
+        logger.info("开始处理货品单位 ==> ofcStorageTemplate:{}", ofcStorageTemplate);
+        logger.info("开始处理货品单位 ==> ofcStorageTemplateDto:{}", ofcStorageTemplateDto);
+        logger.info("开始处理货品单位 ==> xlsErrorMsg:{}", xlsErrorMsg);
+        logger.info("开始处理货品单位 ==> rowNum:{}", rowNum);
+        String unit = ofcStorageTemplateDto.getUnit();
+        if (PubUtils.isSEmptyOrNull(unit)) {
+            logger.error("货品【{}】的单位为空", ofcStorageTemplateDto.getGoodsCode());
+            return true;
+        }
+        //调用接口
+        CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+        if (null == cscGoodsApiVo) {
+            logger.error("行:{}货品单位【{}】对应的货品信息为空！", (rowNum + 1), unit);
+            xlsErrorMsg.add("行:" + (rowNum + 1) + "货品单位【" + unit + "】对应的货品信息为空！");
+            return false;
+        }
+        List<GoodsPackingDto> goodsPackingDtoList = cscGoodsApiVo.getGoodsPackingDtoList();
+        if (CollectionUtils.isEmpty(goodsPackingDtoList)) {
+            logger.error("行:{}货品【{}】没有包装信息!", (rowNum + 1), cscGoodsApiVo.getGoodsCode());
+            xlsErrorMsg.add("行:" + (rowNum + 1) + "货品【" + cscGoodsApiVo.getGoodsCode() + "】没有包装信息!");
+            return false;
+        }
+        for (GoodsPackingDto goodsPackingDto : goodsPackingDtoList) {
+            if (StringUtils.equals(goodsPackingDto.getLevelDescription(), unit)) {
+                ofcStorageTemplateDto.setGoodsPackingDto(goodsPackingDto);
+                ofcStorageTemplateDto.setPackageId(cscGoodsApiVo.getPackingCode());
+                //主单位数量计算
+                BigDecimal levelSpecification = goodsPackingDto.getLevelSpecification();
+                BigDecimal quantity = ofcStorageTemplateDto.getQuantity();
+                BigDecimal mainUnitNum = quantity.multiply(levelSpecification);
+                ofcStorageTemplateDto.setMainUnitNum(mainUnitNum);
+                break;
+            }
+        }
+        if (null == ofcStorageTemplateDto.getGoodsPackingDto()) {
+            logger.error("行:{}货品单位【{}】选择错误，请重新选择！", (rowNum + 1), unit);
+            xlsErrorMsg.add("行:" + (rowNum + 1) + "货品单位【" + unit + "】选择错误，请重新选择！");
+            return false;
+        }
+        return true;
     }
 
     private boolean dealStoreCode(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto, List<String> xlsErrorMsg, int rowCount) {
