@@ -569,6 +569,7 @@
                 goodsStockData:[],
                 oldWarehouse:'',
                 oldCustomerCode:'',
+                oldCustomerName:'',
                 chosenGoodStock:false,
                 unitsOptions:[],
                 customerDataInfo:{
@@ -789,17 +790,20 @@
                 //计算主单位数量
                 if(!StringUtil.isEmpty(val.unit)){
                     var specification = this.getLevelSpecification(val);
-                    this.specification = specification;
+                    //this.specification = specification;
+                    val.conversionRate = specification;
                     val.goodsSpec = specification + "箱/"+val.unit;
                     val.packageType = val.unit;
                     val.packageName = this.getLevelName(val);
-
+                    this.accountPrimaryQuantity(val);
                 }
             },
             accountPrimaryQuantity:function(val){
                 if(!StringUtil.isEmpty(val.quantity)){
-                    val.primaryQuantity = val.quantity*(this.specification);
-                    val.conversionRate = this.specification;
+                    if(!StringUtil.isEmpty(val.conversionRate)){
+                        val.primaryQuantity = val.quantity*(val.conversionRate);
+                    }
+
                 }
             },
             setCurrentCustInfo:function(val) {
@@ -870,6 +874,7 @@
                 var vueObj=this;
                 this.oldWarehouse = this.orderForm.wareHouse;
                 this.oldCustomerCode = this.orderForm.custCode;
+                this.oldCustomerName = this.orderForm.custName;
                 vueObj.goodDataInfo.goodsForm.goodsName = "";
                 vueObj.goodDataInfo.goodsForm.goodsTypeId = "";
                 vueObj.goodDataInfo.goodsForm.goodsTypeSonId = "";
@@ -967,7 +972,7 @@
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec:'',
-                        unit:'',
+                        unit:'主单位',
                         quantity: '',
                         unitsOptions:val.unitsOptions,
                         levelSpecificationOptions:val.levelSpecificationOptions,
@@ -1117,6 +1122,8 @@
                             }
                             if(cscGoodsVo.goodsPackingDtoList!=null){
                                 if(cscGoodsVo.goodsPackingDtoList.length>0){
+                                    var unitsOptions = [];
+                                    var levelSpecificationOptions = [];
                                     for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
                                         var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
                                         var unit = {};
@@ -1126,10 +1133,10 @@
                                         levelSpecification.label = goodsPacking.levelSpecification;
                                         levelSpecification.value =  goodsPacking.level;
                                         unitsOptions.push(unit);
-                                        goodCode.unitsOptions = unitsOptions;
                                         levelSpecificationOptions.push(levelSpecification);
-                                        goodCode.levelSpecificationOptions = levelSpecificationOptions;
                                     }
+                                    goodCode.unitsOptions = unitsOptions;
+                                    goodCode.levelSpecificationOptions = levelSpecificationOptions;
                                 }
                             }
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
@@ -1656,6 +1663,8 @@
                     _this.goodsData = [];
                 }).catch(function() {
                     _this.orderForm.wareHouse = _this.oldWarehouse;
+                    _this.orderForm.custCode = _this.oldCustomerCode;
+                    _this.orderForm.custName = _this.oldCustomerName;
                 });
             },
             isInteger:function (obj) {
