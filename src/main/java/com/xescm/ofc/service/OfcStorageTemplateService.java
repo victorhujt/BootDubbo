@@ -11,6 +11,7 @@ import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
@@ -36,6 +37,8 @@ public interface OfcStorageTemplateService {
     Wrapper<?> checkStorageTemplate(MultipartFile file, AuthResDto authResDto,OfcStorageTemplate ofcStorageTemplate, Integer sheetNum);
 
     Integer checkStorageTemplate(MultipartFile file);
+
+    String resolveTooLangNum(String cellValue, Cell commonCell);
 
     List<RmcWarehouseRespDto> allWarehouseByRmc();
 

@@ -1405,7 +1405,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @param commonCell 单元格
      * @return 处理结果
      */
-    private String resolveTooLangNum(String cellValue, Cell commonCell) {
+    @Override
+    public String resolveTooLangNum(String cellValue, Cell commonCell) {
         String cellValuePhone;
         if (commonCell != null && Cell.CELL_TYPE_STRING == commonCell.getCellType()) {
             cellValuePhone = PubUtils.trimAndNullAsEmpty(commonCell.getStringCellValue());

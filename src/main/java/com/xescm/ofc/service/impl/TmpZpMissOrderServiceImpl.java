@@ -83,6 +83,8 @@ public class TmpZpMissOrderServiceImpl extends BaseService<TmpZpMissOrder> imple
                         custOrderCodeCellNum = cellNum;
                     } else if (rowNum > 0 && cellNum == custOrderCodeCellNum) {
                         TmpZpMissOrder tmpZpMissOrder = new TmpZpMissOrder();
+                        cellValue = ofcStorageTemplateService.resolveTooLangNum(cellValue, commonCell);
+                        cellValue = PubUtils.trim(cellValue);
                         tmpZpMissOrder.setCustOrderCode(cellValue);
                         tmpZpMissOrder.setErrorDate(now);
                         try {
