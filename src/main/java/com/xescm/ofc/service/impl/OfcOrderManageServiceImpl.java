@@ -658,21 +658,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
         String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
-        OfcStorageTemplateDto forOrderMsg = null;
         for (String orderMapKey : orderMap.keySet()) {
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
-            if (null == forOrderMsg) {
-                forOrderMsg = order.get(0);
-                logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
-                org.springframework.beans.BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
-                org.springframework.beans.BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
-                ofcOrderDTO.setOrderTime(ofcStorageTemplateService.convertStringToDate(forOrderMsg.getOrderTime()));
-                if (!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())) {
-                    ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
-                }
+            OfcStorageTemplateDto forOrderMsg = order.get(0);
+            logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
+            org.springframework.beans.BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
+            org.springframework.beans.BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");
+            ofcOrderDTO.setOrderTime(ofcStorageTemplateService.convertStringToDate(forOrderMsg.getOrderTime()));
+            if (!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())) {
+                ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
             }
-            
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
 
@@ -719,7 +715,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                     info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
                     //主单位数量
-                    info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcStorageTemplateDto.getMainUnitNum()));
+                    info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetailsInfo.getPrimaryQuantity()));
                     ofcGoodsDetailsInfoMap.put(key.toString(), info);
                 }else {
                     ofcGoodsDetailsInfoMap.put(key.toString(), ofcGoodsDetailsInfo);
