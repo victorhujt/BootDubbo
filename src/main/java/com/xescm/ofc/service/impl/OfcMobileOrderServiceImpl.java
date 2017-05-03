@@ -305,6 +305,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         for (OfcMobileOrder mobileOrder : mobileOrders) {
             String mobileOrderCode = mobileOrder.getMobileOrderCode();
             mobileOrder.setMobileOrderStatus(UN_TREATED);
+            mobileOrder.setAccepter("");
+            mobileOrder.setAppcetDate(null);
             int update = ofcMobileOrderMapper.updateByMobileCode(mobileOrder);
             if(update < 1){
                 logger.error("钉钉录单重新更新为未处理失败! 订单号: {}", mobileOrderCode);
