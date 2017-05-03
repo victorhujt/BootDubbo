@@ -1874,6 +1874,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("订单信息推送仓储中心 ==> ofOrderDto:{}", ofOrderDto);
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+            ofOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 //出库
                 ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
