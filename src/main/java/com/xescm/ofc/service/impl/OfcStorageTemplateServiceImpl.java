@@ -332,6 +332,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         Map<String, CscGoodsApiVo> goodsCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consigneeCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consignorCheck = new HashMap<>();
+        Map<String, CscContantAndCompanyResponseDto> storeCodeCheck = new HashMap<>();
         Map<String, CscContantAndCompanyResponseDto> consigneeContactCodeCheck = new HashMap<>();
         Map<String, CscSupplierInfoDto> supplierCheck = new HashMap<>();
         Map<String, CscSupplierInfoDto> supplierCodeCheck = new HashMap<>();
@@ -1047,90 +1048,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 ofcStorageTemplateDto.setGoodsSupplier(goodsSupplier);
                             }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //2017年3月21日 追加字段: 收货人编码(收货方联系人编码), 供应商编码
-                            //收货人编码
-                        } /*else if (StringUtils.equals(StorageImportOutEnum.CONSIGNEE_CONTACT_CODE.getStandardColCode(), standardColCode)) {
-                            if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
-                                logger.error("当前行:{},列:{} 没有收货人编码", rowNum + 1, cellNum + 1);
-                                continue;
-                            }
-                            cellValue = PubUtils.trim(cellValue);
-                            if (!consigneeContactCodeCheck.containsKey(cellValue)) {
-                                CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
-                                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
-                                CscContactDto cscContactDto = new CscContactDto();
-                                cscContantAndCompanyDto.setCustomerCode(ofcStorageTemplate.getCustCode());
-                                cscContactDto.setContactCode(cellValue);
-                                cscContactDto.setPurpose("1");//用途为收货方
-                                cscContantAndCompanyDto.setCscContactDto(cscContactDto);
-                                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                                Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
-                                if (Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()) {
-                                    throw new BusinessException(queryCscCustomerResult.getMessage());
-                                }
-                                List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
-                                //即在客户中心没有找到该收货方
-                                if (null == result || result.size() == 0) {
-                                    logger.error("当前行:{},列:{} 收货方联系人编码校验失败, 请维护", rowNum + 1, cellNum);
-//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "收货方名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "收货人编码【" + cellValue + "】无效！");
-                                    checkPass = false;
-                                    continue;
-                                    //找到该收货方了
-                                }else {
-                                    CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = result.get(0);
-                                    ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
-                                    consigneeContactCodeCheck.put(cellValue, cscContantAndCompanyResponseDto);
-                                }
-                            }else {
-                                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = consigneeContactCodeCheck.get(cellValue);
-                                ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
-                            }
-
-                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-                            //供应商编码
-                        } else if (StringUtils.equals(StorageImportOutEnum.SUPPORT_CODE.getStandardColCode(), standardColCode)) {
-                            if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
-                                logger.error("当前行:{},列:{} 没有供应商编码", rowNum + 1, cellNum + 1);
-                                continue;
-                            }
-                            cellValue = PubUtils.trim(cellValue);
-
-                            if (!supplierCodeCheck.containsKey(cellValue)) {
-                                CscSupplierInfoDto cscSupplierInfoDto = new CscSupplierInfoDto();
-                                cscSupplierInfoDto.setSupplierCode(cellValue);
-                                cscSupplierInfoDto.setCustomerCode(ofcStorageTemplate.getCustCode());
-                                Wrapper<List<CscSupplierInfoDto>> listWrapper = cscSupplierEdasService.querySupplierByAttribute(cscSupplierInfoDto);
-
-                                if (Wrapper.ERROR_CODE == listWrapper.getCode()) {
-                                    logger.error("当前行:{},列:{} 供应商编码校验失败, 请维护, 错误信息:{}", rowNum + 1, cellNum + 1, listWrapper.getMessage());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + ofcStorageTemplateForCheck.getStandardColName() + "为: " + cellValue +"校验出错!");
-                                    checkPass = false;
-                                    continue;
-                                }
-                                List<CscSupplierInfoDto> result = listWrapper.getResult();
-                                //没有校验通过
-                                if (null == result || result.size() == 0) {
-                                    logger.error("当前行:{},列:{} 供应商编码校验失败, 请维护", rowNum + 1, cellNum + 1);
-//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商名称校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "供应商编码【" + cellValue + "】无效！或当前客户下没有该供应商!");
-                                    checkPass = false;
-                                    continue;
-                                    //校验通过
-                                }else {
-                                    logger.info("当前供应商编码:{},校验通过", cellValue);
-                                    supplierCodeCheck.put(cellValue, result.get(0));
-                                    ofcStorageTemplateDto.setCscSupplierInfoDto(result.get(0));
-                                }
-                            }else {
-                                logger.info("当前供应商编码:{},已经校验过, 不用校验", cellValue);
-                                //不用校验, 直接堆
-                                CscSupplierInfoDto cscSupplierInfoDto = supplierCodeCheck.get(cellValue);
-                                ofcStorageTemplateDto.setCscSupplierInfoDto(cscSupplierInfoDto);
-                            }
-                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //发货方名称
-                        }*/ else if (StringUtils.equals(StorageImportInEnum.CONSIGNOR_NAME.getStandardColCode(), standardColCode)) {
+                        } else if (StringUtils.equals(StorageImportInEnum.CONSIGNOR_NAME.getStandardColCode(), standardColCode)) {
                             if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
                                 logger.error("当前行:{},列:{} 没有发货方名称", rowNum + 1, cellNum + 1);
                                 continue;
@@ -1243,7 +1162,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
             logger.info("数量 加之后: {}", countImportNum.intValue());
             //处理门店编码
-            if (checkPass && !this.dealStoreCode(ofcStorageTemplate, ofcStorageTemplateDto, xlsErrorMsg, rowCount)) {
+            if (checkPass && !this.dealStoreCode(ofcStorageTemplate, ofcStorageTemplateDto, storeCodeCheck, xlsErrorMsg, rowCount)) {
                 checkPass = false;
                 continue;
             }
@@ -1323,24 +1242,46 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
     }
 
-    private boolean dealStoreCode(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto, List<String> xlsErrorMsg, int rowCount) {
+    private boolean dealStoreCode(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto, Map<String, CscContantAndCompanyResponseDto> storeCodeCheck, List<String> xlsErrorMsg, int rowCount) {
         logger.info("处理店铺编码 ==> ofcStorageTemplate:{}", ofcStorageTemplate);
         logger.info("处理店铺编码 ==> ofcStorageTemplateDto:{}", ofcStorageTemplateDto);
         logger.info("处理店铺编码 ==> rowCount:{}", rowCount);
         if (!StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_OUT) || PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getStoreCode())) {
+            logger.info("没有门店编码");
             return true;
         }
         String storeCodeForCheck = ofcStorageTemplateDto.getStoreCode();
-        CscContantAndCompanyResponseDto cscConsigneeDto = ofcStorageTemplateDto.getCscConsigneeDto();
-        String storeCode = cscConsigneeDto.getStoreCode();
-        if (PubUtils.isSEmptyOrNull(storeCode)) {
-            xlsErrorMsg.add("行:" + (rowCount + 1) + "收货方【" + cscConsigneeDto.getContactCompanyName() + "】没有门店编码, 请维护！");
-            return false;
+        if (!storeCodeCheck.containsKey(storeCodeForCheck)) {
+            CscContantAndCompanyDto cscContantAndCompanyDto = new CscContantAndCompanyDto();
+            CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+            CscContactDto cscContactDto = new CscContactDto();
+            cscContantAndCompanyDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+            cscContantAndCompanyDto.setStoreCode(storeCodeForCheck);
+            cscContactDto.setPurpose("1");//用途为收货方
+            cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+            cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
+            Wrapper<List<CscContantAndCompanyResponseDto>> queryCscCustomerResult = cscContactEdasService.queryCscReceivingInfoList(cscContantAndCompanyDto);
+            if (Wrapper.ERROR_CODE == queryCscCustomerResult.getCode()) {
+                throw new BusinessException(queryCscCustomerResult.getMessage());
+            }
+            List<CscContantAndCompanyResponseDto> result = queryCscCustomerResult.getResult();
+            //即在客户中心没有找到该收货方
+            if (null == result || result.size() == 0) {
+                logger.error("当前行:{}门店编码校验失败, 请维护", rowCount + 1);
+                xlsErrorMsg.add("行:" + (rowCount + 1) + "门店编码【" + storeCodeForCheck + "】无效！");
+                return false;
+                //找到该收货方了
+            }else {
+                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = result.get(0);
+                ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
+                storeCodeCheck.put(storeCodeForCheck, cscContantAndCompanyResponseDto);
+            }
+        } else {
+            CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto = storeCodeCheck.get(storeCodeForCheck);
+            ofcStorageTemplateDto.setCscConsigneeDto(cscContantAndCompanyResponseDto);
         }
-        if (!StringUtils.equals(storeCodeForCheck, storeCode)) {
-            xlsErrorMsg.add("行:" + (rowCount + 1) + "门店编码【" + storeCodeForCheck +"】不属于收货方【" + cscConsigneeDto.getContactCompanyName() + "】！");
-            return false;
-        }
+
+        logger.info("门店编码{}校验成功!", storeCodeForCheck);
         return true;
     }
 
@@ -1579,10 +1520,18 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 continue;
             }
             String standardColCode = ofcStorageTemplate.getStandardColCode();
+            String reflectColName = ofcStorageTemplate.getReflectColName();
             if (!storageIn && StringUtils.equals(StorageImportOutEnum.STORE_CODE.getStandardColCode(), standardColCode)) {
                 check.add(standardColCode);
                 item.add(standardColCode);
             }
+            if (!storageIn && StringUtils.equals(StorageImportOutEnum.STORE_CODE.getStandardColCode(), standardColCode)
+                    && !PubUtils.isSEmptyOrNull(reflectColName)) {
+                String consigneeName = StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode();
+                check.remove(consigneeName);
+                item.remove(consigneeName);
+            }
+            //2017年5月3日 出库增加逻辑, 有门店编码时, 则收货方非必填
             //如果能找到
             int index = check.indexOf(standardColCode);
             if (index != -1) {
