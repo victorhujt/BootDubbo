@@ -1807,41 +1807,44 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
 
-        //纬度   货品编码、供应商批次、生产日期、失效日期不同包装合并主单位数量
         List<OfcGoodsDetailsInfo> goodsDetailsInfo =new ArrayList<>();
-        Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
-        for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
-            StringBuilder key=new StringBuilder();
-            key.append(ofcGoodsDetails.getGoodsCode());
-            if (!StringUtils.isEmpty(ofcGoodsDetails.getSupportBatch())) {
-                key.append(ofcGoodsDetails.getSupportBatch());
+        //纬度   货品编码、供应商批次、生产日期、失效日期不同包装合并主单位数量 仓储订单
+        if(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)){
+            Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
+            for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
+                StringBuilder key=new StringBuilder();
+                key.append(ofcGoodsDetails.getGoodsCode());
+                if (!StringUtils.isEmpty(ofcGoodsDetails.getSupportBatch())) {
+                    key.append(ofcGoodsDetails.getSupportBatch());
+                }
+                if (!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())) {
+                    key.append(ofcGoodsDetails.getProductionBatch());
+                }
+                if (ofcGoodsDetails.getCreationTime() != null) {
+                    key.append(DateUtils.Date2String(ofcGoodsDetails.getCreationTime(), DateUtils.DateFormatType.TYPE1));
+                }
+                if (ofcGoodsDetails.getInvalidTime() != null) {
+                    key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+                }
+                if (!goodInfo.containsKey(key.toString())) {
+                    goodInfo.put(key.toString(),ofcGoodsDetails);
+                }else{
+                    OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
+                    info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
+                }
             }
-            if (!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())) {
-                key.append(ofcGoodsDetails.getProductionBatch());
-            }
-            if (ofcGoodsDetails.getCreationTime() != null) {
-                key.append(DateUtils.Date2String(ofcGoodsDetails.getCreationTime(), DateUtils.DateFormatType.TYPE1));
-            }
-            if (ofcGoodsDetails.getInvalidTime() != null) {
-                key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
-            }
-            if (!goodInfo.containsKey(key.toString())) {
-                goodInfo.put(key.toString(),ofcGoodsDetails);
-            }else{
-                OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
-                info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
+
+            Iterator iter = goodInfo.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry<String, OfcGoodsDetailsInfo> entry = (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
+                OfcGoodsDetailsInfo ofcGoodsDetails = entry.getValue();
+                if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0) {
+                    continue;
+                }
+                goodsDetailsInfo.add(ofcGoodsDetails);
             }
         }
 
-        Iterator iter = goodInfo.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<String, OfcGoodsDetailsInfo> entry = (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
-            OfcGoodsDetailsInfo ofcGoodsDetails = entry.getValue();
-            if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0) {
-                continue;
-            }
-            goodsDetailsInfo.add(ofcGoodsDetails);
-        }
 
         logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", ofcFundamentalInformation.getOrderCode(), ofcOrderStatus.toString());
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals(REVIEW)) {
@@ -1854,7 +1857,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode)) {
                     this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
                 }
-                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsInfo, ofcWarehouseInformation);
+                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
             }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
@@ -1873,7 +1876,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
             String orderType = ofcFundamentalInformation.getOrderType();
             if (trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
-                pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsInfo);
+                pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
                 //仓储订单推仓储中心
                 pushOrderToWhc(ofcFundamentalInformation, goodsDetailsInfo, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
