@@ -487,7 +487,7 @@
                     } else if(standardColCode == 'consigneeName' && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageOut'){
                         vm.$message.error('收货方名称模板列名必填!');
                         return;
-                    } else if (standardColCode == 'provideTransport' && vm.typeOfTemplate == 'storageIn'&& (!StringUtil.isEmpty(reflectColName) || !StringUtil.isEmpty(colDefaultVal))) {
+                    } else if (standardColCode == 'provideTransport' && vm.typeOfTemplate == 'storageIn'&& (!StringUtil.isEmpty(reflectColName) || (!StringUtil.isEmpty(colDefaultVal) && colDefaultVal == '是'))) {
                         hasProvideTransport = true;
                     } else if (standardColCode == 'consignorName' && hasProvideTransport && StringUtil.isEmpty(reflectColName) && vm.typeOfTemplate == 'storageIn') {
                         vm.$message.error('若您映射了是否提供运输服务, 则发货方名称映射列名必填!');
