@@ -159,7 +159,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
-
         if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)){//下单
             this.orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcMerchandiser, ofcOrderStatus);
@@ -647,6 +646,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     private void addFinanceInformation(OfcFinanceInformation ofcFinanceInformation, OfcFundamentalInformation ofcFundamentalInformation){
         ofcFinanceInformation=upFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
+
         ofcFinanceInformationService.save(ofcFinanceInformation);
     }
 
@@ -836,6 +836,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             upOrderStatus(ofcOrderStatus, ofcFundamentalInformation, authResDtoByToken);
+            //2017年5月5日 增加逻辑 城配开单/城配批量导单/ 【是否提供发票】字段默认值设为是
+            ofcFinanceInformation.setOpenInvoices(STR_YES);
             addFinanceInformation(ofcFinanceInformation, ofcFundamentalInformation);
             //添加基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);

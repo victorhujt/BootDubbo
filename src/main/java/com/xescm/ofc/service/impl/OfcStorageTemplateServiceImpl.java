@@ -1977,7 +1977,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 logger.error("{}的模板列名不能为空!", StorageImportOutEnum.CONSIGNEE_NAME.getStandardColName());
                 throw new BusinessException(StorageImportOutEnum.CONSIGNEE_NAME.getStandardColName()  + "的模板列名不能为空!");
             } else if (StringUtils.equals(standardColCode, StorageImportInEnum.PROVIDE_TRANSPORT.getStandardColCode())
-                    && StringUtils.equals(PubUtils.trimAndNullAsEmpty(reflectColName), "是") && storageIn) {
+                    && (!PubUtils.isSEmptyOrNull(reflectColName) || StringUtils.equals(colDefaultVal, "是")) && storageIn) {
                 setProvideTransport = true;
             } else if (StringUtils.equals(standardColCode, StorageImportInEnum.CONSIGNOR_NAME.getStandardColCode())
                     && PubUtils.isSEmptyOrNull(reflectColName) && setProvideTransport && storageIn) {
