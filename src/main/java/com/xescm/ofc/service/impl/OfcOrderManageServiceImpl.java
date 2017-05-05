@@ -2085,6 +2085,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     tfcTransport.setFromCityCode(departurePlaceCode[1]);
                     if (departurePlaceCode.length > 2) {
                         tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
+                        if (departurePlaceCode.length > 3) {
+                            tfcTransport.setFromStreetCode(departurePlaceCode[3]);
+                        }
                     }
                 }
             }
@@ -2111,6 +2114,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     tfcTransport.setToCityCode(destinationPlaceCode[1]);
                     if (destinationPlaceCode.length > 2) {
                         tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+                        if (destinationPlaceCode.length > 3) {
+                            tfcTransport.setToStreetCode(destinationPlaceCode[3]);
+                        }
                     }
                 }
             }
