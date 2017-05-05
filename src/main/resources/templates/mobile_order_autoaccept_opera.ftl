@@ -197,7 +197,7 @@
                 </el-form-item>
             </el-form>
             <el-table :data="goodsDialog.goodsDialogData" highlight-current-row @current-change="handleGoodsCurrentChange"
-                      @row-dblclick="setCurrentGoodsInfo(goodDataInfo.goodCurrentRow)" style="width: 100%" max-height="350">
+                      @row-dblclick="setSelectGoodsInfo(goodsDialog.currentSelectedRow)" style="width: 100%" max-height="350">
                 <el-table-column type="index" label="序号"></el-table-column>
                 <el-table-column property="goodsType" label="货品种类"></el-table-column>
                 <el-table-column property="goodsCategory" label="货品小类"></el-table-column>
@@ -352,14 +352,14 @@
             <div class="xe-block">
                 <el-checkbox v-model="feeForm.isPickUpGoods" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="上门提货:费用" prop="homeDeliveryFee" class="xe-col-4">
-                    <el-input v-model="feeForm.homeDeliveryFee" v-bind:disabled="!feeForm.isPickUpGoods" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.homeDeliveryFee" v-bind:disabled="!feeForm.isPickUpGoods" @blur="accountTotalFee" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-checkbox v-model="feeForm.isInsure" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="货物保险:费用" prop="cargoInsuranceFee" class="xe-col-4">
-                    <el-input v-model="feeForm.cargoInsuranceFee" v-bind:disabled="!feeForm.isInsure" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.cargoInsuranceFee" v-bind:disabled="!feeForm.isInsure" @blur="accountTotalFee" class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
                 <el-form-item label="声明价值" prop="insureValue" class="xe-col-4">
@@ -370,14 +370,14 @@
             <div class="xe-block">
                 <el-checkbox v-model="feeForm.isTwoDistribution" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="二次配送:费用" prop="twoDistributionFee" class="xe-col-4">
-                    <el-input v-model="feeForm.twoDistributionFee" v-bind:disabled="!feeForm.isTwoDistribution" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.twoDistributionFee" v-bind:disabled="!feeForm.isTwoDistribution" @blur="accountTotalFee"class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
             </div>
             <div class="xe-block">
                 <el-checkbox v-model="feeForm.isCollectFlag" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="代收货款:费用" prop="collectServiceCharge" class="xe-col-4">
-                    <el-input v-model="feeForm.collectServiceCharge" v-bind:disabled="!feeForm.isCollectFlag" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.collectServiceCharge" v-bind:disabled="!feeForm.isCollectFlag" @blur="accountTotalFee"class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
                 <el-form-item label="代收金额" prop="collectLoanAmount" class="xe-col-4">
@@ -388,11 +388,11 @@
             <div class="xe-block">
                 <el-checkbox v-model="feeForm.isReturnList" class="xe-checkbox"></el-checkbox>
                 <el-form-item label="签单返回:费用" prop="returnListFee" class="xe-col-4">
-                    <el-input v-model="feeForm.returnListFee" v-bind:disabled="!feeForm.isReturnList" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.returnListFee" v-bind:disabled="!feeForm.isReturnList" @blur="accountTotalFee"class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
                 <el-form-item label="运费" prop="luggage" class="xe-col-4">
-                    <el-input v-model="feeForm.luggage" class="xe-col-8"></el-input>
+                    <el-input v-model="feeForm.luggage" @blur="accountTotalFee"class="xe-col-8"></el-input>
                     <label for="">元</label>
                 </el-form-item>
             </div>
@@ -514,7 +514,7 @@
                 </el-table-column>
                 <el-table-column property="chargingWays" label="计费方式">
                     <template scope="scope">
-                        <el-select v-model="scope.row.chargingWays">
+                        <el-select v-model="scope.row.chargingWays" @change="accountLuggageFee(scope.row)">
                             <el-option
                                     v-for="item in chargingWayOptions"
                                     :label="item.label"
@@ -525,22 +525,27 @@
                 </el-table-column>
                 <el-table-column property="chargingUnitPrice" label="计费单价">
                     <template scope="scope">
-                        <el-input v-model="scope.row.chargingUnitPrice"></el-input>
+                        <el-input v-model="scope.row.chargingUnitPrice"  @blur="accountLuggageFee(scope.row)"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="quantity" label="数量">
                     <template scope="scope">
-                        <el-input v-model="scope.row.quantity" @blur="accountQuantity(scope.row)"></el-input>
+                        <el-input v-model="scope.row.quantity" @blur="accountLuggageFee(scope.row)"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="weight" label="重量（KG）">
                     <template scope="scope">
-                        <el-input v-model="scope.row.weight" @blur="accountWeight(scope.row)"></el-input>
+                        <el-input v-model="scope.row.weight" @blur="accountLuggageFee(scope.row)"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="cubage" label="体积（m³）">
                     <template scope="scope">
-                        <el-input v-model="scope.row.cubage" @blur="accountCubage(scope.row)"></el-input>
+                        <el-input v-model="scope.row.cubage" @blur="accountLuggageFee(scope.row)"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="luggage" v-if="false"label="运费">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.luggage"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="goodsOperation" label="操作" width="45">
@@ -869,7 +874,8 @@
                         chargingUnitPrice: '',
                         quantity: '',
                         weight: '',
-                        cubage: ''
+                        cubage: '',
+                        luggage:0
                     };
                     this.getGoodsType();
                     this.goodsData.push(newGoods);
@@ -879,6 +885,7 @@
             },
             deleteRow: function(index, rows) {
                 rows.splice(index, 1);
+                this.accountLuggageFee();
             },
             getGoodsType: function () {
                 var vm = this;
@@ -1551,9 +1558,23 @@
             validateCustomField: function (field, msg, callback) {
                 var expr = /^([1-9][\d]{0,5}|0)(\.[\d]{1,2})?$/;
                 if (field != '' && !expr.test(field)) {
-                    callback(new Error(msg))
+                    callback(new Error(msg));
                 } else {
                     callback();
+                }
+            },
+
+            validateFeeIsServiceCharge:function(){
+                var _this = this;
+                var currentAmount = StringUtil.isEmpty(_this.feeForm.currentAmount) ? 0:_this.feeForm.currentAmount;
+                var toPayAmount = StringUtil.isEmpty(_this.feeForm.toPayAmount) ? 0:_this.feeForm.toPayAmount;
+                var returnAmount = StringUtil.isEmpty(_this.feeForm.returnAmount) ? 0:_this.feeForm.returnAmount;
+                var monthlyAmount = StringUtil.isEmpty(_this.feeForm.monthlyAmount) ? 0:_this.feeForm.monthlyAmount;
+                var serviceCharge = StringUtil.isEmpty(_this.feeForm.serviceCharge) ? 0:_this.feeForm.serviceCharge;
+                if(parseFloat(serviceCharge) != (parseFloat(currentAmount) + parseFloat(toPayAmount) + parseFloat(returnAmount) + parseFloat(monthlyAmount))){
+                    return false;
+                }else{
+                    return true;
                 }
             },
             validateTransCode: function(rule, value, callback) {
@@ -1695,6 +1716,10 @@
                 var ferest = this.validateForm('feeForm');
                 console.log(odrest + "    " + ferest);
                 var vm = this;
+                if(!vm.validateFeeIsServiceCharge()){
+                    vm.promptInfo("现结到付回付月结之和必须和费用总计相等!",'error');
+                    return;
+                }
                 if (odrest && ferest) {
                     // 验证商品明细
                     var goodsData = this.goodsData;
@@ -1760,21 +1785,6 @@
                             ,function () {
                                 location.reload();
                             });
-                }
-            },
-            accountQuantity:function(val){
-                if(!StringUtil.isEmpty(val.quantity)){
-                    this.totalQuantity+=parseFloat(val.quantity);
-                }
-            },
-            accountWeight:function(val){
-                if(!StringUtil.isEmpty(val.weight)){
-                    this.totalWeight+=parseFloat(val.weight);
-                }
-            },
-            accountCubage:function(val){
-                if(!StringUtil.isEmpty(val.cubage)){
-                    this.totalCubage+=parseFloat(val.cubage);
                 }
             },
             getCscContantAndCompanyDtoConsignorStrOrConsigneeStr:function(type){
@@ -1845,10 +1855,7 @@
                     } else if (result.code == 200) {
                         _this.promptInfo("手机订单删除成功",'success');
                         _this.isDisabledDelete = false;
-                        var url = "/ofc/autoAcceptMobileOrder";
-                        var html = window.location.href;
-                        var index = html.indexOf("/index#");
-                        window.open(html.substring(0,index) + "/index#" + url);
+                        location.reload();
                     } else if (result.code == 403) {
                         _this.promptInfo("没有权限",'error');
                         _this.isDisabledDelete = false;
@@ -1857,6 +1864,91 @@
                         _this.isDisabledDelete = false;
                     }
                 },"json");
+            },
+            accountLuggageFee:function(val){
+                var _this = this;
+                _this.totalQuantity = 0;
+                _this.totalWeight = 0;
+                _this.totalCubage = 0;
+                _this.feeForm.luggage = 0;
+                if(val != undefined){
+                    var chargingUnitPrice = StringUtil.isEmpty(val.chargingUnitPrice) ? 0:val.chargingUnitPrice;
+                    //件数计费
+                    if(val.chargingWays == "01"){
+                        var quantity = StringUtil.isEmpty(val.quantity) ? 0:val.quantity;
+                        val.luggage = parseFloat(chargingUnitPrice)*parseFloat(quantity);
+                     //重量计费
+                    }else if(val.chargingWays == "02"){
+                        var weight = StringUtil.isEmpty(val.weight) ? 0:val.weight;
+                        val.luggage = parseFloat(chargingUnitPrice)*parseFloat(weight);
+                    //体积计费
+                    }else if(val.chargingWays == "03"){
+                        var cubage = StringUtil.isEmpty(val.cubage) ? 0:val.cubage;
+                        val.luggage = parseFloat(chargingUnitPrice)*parseFloat(cubage);
+                    }
+                }
+
+                if(_this.goodsData.length > 0 ){
+                    for(var i = 0;i<_this.goodsData.length; i++){
+                        _this.feeForm.luggage +=  _this.goodsData[i].luggage;
+                        if(parseFloat(_this.goodsData[i].cubage) >= 0 ){
+                            _this.totalCubage += parseFloat(_this.goodsData[i].cubage);
+                        }
+                        if(parseFloat(_this.goodsData[i].quantity) >= 0 ){
+                            _this.totalQuantity += parseFloat(_this.goodsData[i].quantity);
+                        }
+
+                        if(parseFloat(_this.goodsData[i].weight) >= 0 ){
+                            _this.totalWeight +=  parseFloat(_this.goodsData[i].weight);
+                        }
+                    }
+                }
+                _this.accountTotalFee();
+            },
+            accountTotalFee:function(){
+                var _this = this;
+                _this.feeForm.serviceCharge = 0;
+                _this.feeForm.currentAmount = 0;
+                //上门提货费用
+                if(StringUtil.isEmpty(_this.feeForm.homeDeliveryFee)){
+                    _this.feeForm.homeDeliveryFee = 0;
+                }
+                _this.feeForm.serviceCharge += parseFloat(_this.feeForm.homeDeliveryFee);
+                _this.feeForm.currentAmount += parseFloat(_this.feeForm.homeDeliveryFee);
+
+                //货物保险费用
+                if(StringUtil.isEmpty(_this.feeForm.cargoInsuranceFee)){
+                    _this.feeForm.cargoInsuranceFee = 0;
+                }
+                _this.feeForm.serviceCharge += parseFloat( _this.feeForm.cargoInsuranceFee);
+                _this.feeForm.currentAmount += parseFloat(_this.feeForm.cargoInsuranceFee);
+
+                //二次配送费用
+                if(StringUtil.isEmpty(_this.feeForm.twoDistributionFee)){
+                    _this.feeForm.twoDistributionFee = 0;
+                }
+                _this.feeForm.serviceCharge += parseFloat(_this.feeForm.twoDistributionFee);
+                _this.feeForm.currentAmount += parseFloat(_this.feeForm.twoDistributionFee);
+
+                //代收货款费用
+                if(StringUtil.isEmpty(_this.feeForm.collectServiceCharge)){
+                    _this.feeForm.collectServiceCharge = 0;
+                }
+                _this.feeForm.serviceCharge += parseFloat(_this.feeForm.collectServiceCharge);
+                _this.feeForm.currentAmount += parseFloat(_this.feeForm.collectServiceCharge);
+
+                //签单返回费用
+                if(StringUtil.isEmpty(_this.feeForm.returnListFee)){
+                    _this.feeForm.returnListFee = 0;
+                }
+                _this.feeForm.serviceCharge += parseFloat(_this.feeForm.returnListFee);
+                _this.feeForm.currentAmount += parseFloat(_this.feeForm.returnListFee);
+
+                if(StringUtil.isEmpty(_this.feeForm.luggage)){
+                    _this.feeForm.luggage = 0;
+                }
+                _this.feeForm.serviceCharge += parseFloat(_this.feeForm.luggage);
+                _this.feeForm.currentAmount += parseFloat(_this.feeForm.luggage);
             }
         }
     });
