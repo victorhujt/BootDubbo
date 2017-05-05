@@ -254,7 +254,7 @@
                     var indexNum = item.indexNum;
                     var standardColCode = item.standardColCode;
                     if(standardColCode == 'custOrderCode' || standardColCode == 'merchandiser' || standardColCode == 'warehouseName'
-                            || standardColCode == 'businessType' || standardColCode == 'goodsCode' || standardColCode == 'quantity' || (standardColCode == 'consigneeName' && vm.typeOfTemplate == 'storageOut')){
+                            || standardColCode == 'businessType' || standardColCode == 'goodsCode' || standardColCode == 'unit' || standardColCode == 'quantity' || (standardColCode == 'consigneeName' && vm.typeOfTemplate == 'storageOut')){
                         tableItem.isRequired = true;
                     }
                     tableItem.indexNum = indexNum;
