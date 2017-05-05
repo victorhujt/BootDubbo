@@ -145,6 +145,8 @@ public final class OrderConstConstant {
 
     public static final String STR_NO = "0";
 
+    public static final String MOBILE_PENDING_ORDER_LIST = "MobilePendingOrderList";
+
     public OrderConstConstant() {
     }
 }
