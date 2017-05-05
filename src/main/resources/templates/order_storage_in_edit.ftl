@@ -865,6 +865,11 @@
                 }
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
+                vueObj.goodDataInfo.goodsForm.goodsName = "";
+                vueObj.goodDataInfo.goodsForm.goodsTypeId = "";
+                vueObj.goodDataInfo.goodsForm.goodsTypeSonId = "";
+                vueObj.goodDataInfo.goodsForm.barCode = "";
+                vueObj.goodDataInfo.goodsForm.goodsCode =　"";
                 vueObj.multipleSelection=[];
                 vueObj.goodDataInfo.goodsCodeData=[];
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
@@ -1098,7 +1103,7 @@
                 cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                 cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                 var param = JSON.stringify(cscGoods);
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelects", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+                CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode}, function(data) {
                     if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                         layer.msg("暂时未查询到货品信息！！");
                     } else if (data.code == 200) {
@@ -1337,13 +1342,16 @@
                 cscContactDto.purpose = "2";
                 cscContactDto.phone =this.orderForm.consignorContactPhone;
                 cscContactDto.contactCompanyName = this.orderForm.consignorName;
-                var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
-                cscContactDto.province = consignorAddressCodeMessage[0];
-                cscContactDto.city = consignorAddressCodeMessage[1];
-                cscContactDto.area = consignorAddressCodeMessage[2];
-                if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
-                    cscContactDto.street = consignorAddressCodeMessage[3];
+                if(!StringUtil.isEmpty(this.orderForm.departurePlaceCode)){
+                    var consignorAddressCodeMessage = this.orderForm.departurePlaceCode.split(',');
+                    cscContactDto.province = consignorAddressCodeMessage[0];
+                    cscContactDto.city = consignorAddressCodeMessage[1];
+                    cscContactDto.area = consignorAddressCodeMessage[2];
+                    if(!StringUtil.isEmpty(consignorAddressCodeMessage[3])){
+                        cscContactDto.street = consignorAddressCodeMessage[3];
+                    }
                 }
+
                 cscContactDto.provinceName = this.orderForm.departureProvince;
                 cscContactDto.cityName = this.orderForm.departureCity;
                 cscContactDto.areaName = this.orderForm.departureDistrict;

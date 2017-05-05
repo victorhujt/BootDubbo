@@ -269,7 +269,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     * 运营中心货品筛选(调用客户中心API)
+     * 运营中心货品筛选(调用客户中心API) 运输、城配开单货品筛选
      * @param cscGoods 货品筛选条件
      * @param customerCode 客户编码
      * @return
@@ -291,7 +291,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setCustomerCode(customerCode);
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            cscGood.setFromSys("");//只要WMS渠道的货品
+            // cscGood.setFromSys("WMS");//只要WMS渠道的货品 增加有问题暂时改回传空串
+            cscGood.setFromSys("");//只要WMS渠道的货品 增加有问题暂时改回传空串
             cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageList(cscGood);
             //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
@@ -299,6 +300,41 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
         return cscGoodsLists;
     }
+
+    /**
+     * 仓储下单货品筛选
+     * @param cscGoods
+     * @param customerCode
+     * @return
+     */
+    @RequestMapping(value = "/goodsSelectsStorage",method = RequestMethod.POST)
+    @ResponseBody
+    public Object goodsSelectsStorage(String  cscGoods,String customerCode){
+        logger.info("==>仓储下单货品筛选,cscGoods = {}",cscGoods);
+        logger.info("==>仓储下单货品筛选,customerCode = {}",customerCode);
+        Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists=null;
+        try{
+
+            CscGoodsApiDto cscGood=new CscGoodsApiDto();
+            if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
+                cscGood= JSONObject.parseObject(cscGoods, CscGoodsApiDto.class);
+            }
+
+            cscGood.setCustomerCode(customerCode);
+            cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
+            cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
+            cscGood.setFromSys("WMS");//只要WMS渠道的货品
+            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGood);
+            //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
+        }catch (Exception ex){
+            logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);
+        }
+        return cscGoodsLists;
+    }
+
+
+
+
 
 
     /**

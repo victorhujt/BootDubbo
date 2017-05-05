@@ -27,9 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
-import static com.xescm.ofc.constant.OrderConstConstant.PENDING_AUDIT;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
  *
@@ -123,6 +121,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param details
      * @param orderCode
      */
+    @Transactional
     private void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode, String orderStatus) {
         try {
             BigDecimal quantityCount = new BigDecimal(0);
@@ -176,6 +175,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param orderCode
      * @param goodsAmountDetailDto
      */
+    @Transactional
     private void editGoodsDetailInfo(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
         try {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
@@ -212,6 +212,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param orderCode
      * @param goodsAmountDetailDto
      */
+    @Transactional
     private void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
         try {
 
