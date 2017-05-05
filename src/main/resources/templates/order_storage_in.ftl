@@ -312,14 +312,13 @@
                 </el-table-column>
                 <el-table-column property="unit" label="单位">
                     <template scope="scope">
-                    <#--<el-input v-model="scope.row.unit" :readOnly="true"></el-input>-->
                         <el-select v-model="scope.row.unit"  @change="accountSpecification(scope.row)" placeholder="请选择">
                             <el-option
                                     v-for="item in scope.row.unitsOptions"
                                     :label="item.label"
                                     :value="item.value">
-                                <span style="float: left">{{ item.label }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                                <span style="float: left">{{ item.label }}</span>
                             </el-option>
                         </el-select>
                     </template>
@@ -697,7 +696,6 @@
                 if(!StringUtil.isEmpty(val.unit)){
                     var specification = this.getLevelSpecification(val);
                     val.conversionRate = specification;
-                    val.goodsSpec = specification + "箱/"+val.unit;
                     val.packageType = val.unit;
                     val.packageName = this.getLevelName(val);
                     this.accountPrimaryQuantity(val);
@@ -839,7 +837,7 @@
                         goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
-                        goodsSpec:'',
+                        goodsSpec:val.goodsSpec,
                         unit:'主单位',
                         quantity: '',
                         unitsOptions:val.unitsOptions,

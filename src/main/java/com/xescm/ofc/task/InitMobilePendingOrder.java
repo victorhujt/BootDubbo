@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.xescm.ofc.constant.OrderConstConstant.MOBILE_PENDING_ORDER_LIST;
+
 /**
  * @description: ${TODO}
  * @author: nothing
@@ -29,7 +31,7 @@ public class InitMobilePendingOrder implements CommandLineRunner {
 
         for (int i = 0 ; i < mobileOrders.size(); i++) {
             OfcMobileOrder order = mobileOrders.get(i);
-            ofcMobileOrderService.pushOrderToCache(order.getMobileOrderCode());
+            ofcMobileOrderService.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,order.getMobileOrderCode());
         }
     }
 }
