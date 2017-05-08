@@ -679,12 +679,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if(ofcOrderDTO.getProvideTransport() == null){
                 ofcOrderDTO.setProvideTransport(0);
             }
-//            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
-            Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
+            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
+//            Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
 //            MathContext mathContext = new MathContext(3);
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
-                StringBuilder key=new StringBuilder();
+                detailsInfos.add(ofcGoodsDetailsInfo);
+                /*StringBuilder key=new StringBuilder();
                 key.append(ofcGoodsDetailsInfo.getGoodsCode());
                 if(ofcGoodsDetailsInfo.getSupportBatch()!=null){
                     key.append(ofcGoodsDetailsInfo.getSupportBatch());
@@ -708,9 +709,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     ofcGoodsDetailsInfoMap.put(key.toString(), info);
                 }else {
                     ofcGoodsDetailsInfoMap.put(key.toString(), ofcGoodsDetailsInfo);
-                }
+                }*/
             }
-            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
+//            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
            CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
