@@ -2030,6 +2030,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setBaseName();
 //        tfcTransport.setInterfaceStatus();
         tfcTransport.setMarketOrg(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleOrganization()));
+        tfcTransport.setPlatformType(trimAndNullAsEmpty(ofcFundamentalInformation.getPlatformType()));
         tfcTransport.setProductTeam(trimAndNullAsEmpty(ofcFundamentalInformation.getProductGroup()));
         tfcTransport.setMarketDep(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleDepartment()));
         tfcTransport.setMarketTeam(trimAndNullAsEmpty(ofcFundamentalInformation.getSaleGroup()));

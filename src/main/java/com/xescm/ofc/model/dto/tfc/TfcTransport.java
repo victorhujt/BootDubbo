@@ -194,6 +194,16 @@ public class TfcTransport implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date pickupTime;
 
+    private String platformType;//平台类型
+
+    public String getPlatformType() {
+        return platformType;
+    }
+
+    public void setPlatformType(String platformType) {
+        this.platformType = platformType;
+    }
+
     public Date getPickupTime() {
         return pickupTime;
     }
