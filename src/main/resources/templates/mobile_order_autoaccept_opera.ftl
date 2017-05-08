@@ -833,6 +833,7 @@
         methods: {
             initOrder: function (code) {
                 var vm = this;
+                console.info("==>自动受理的订单号为:"+code);
                 CommonClient.post(sys.rootPath + "/ofc/autoAcceptMobileOrderDetail", {"orderCode": code}, function(result) {
                     var code = result.code;
                     if (code == 200) {
