@@ -91,11 +91,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcMobileOrder.setUploadDate(new Date());
         ofcMobileOrder.setOrderType(OrderConstant.TRANSPORT_ORDER);
         ofcMobileOrder.setMobileOrderStatus(UN_TREATED);
-        int result = save(ofcMobileOrder);
-        if( result >= 1 ){
-            this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,ofcMobileOrder.getMobileOrderCode());
-        }
-
+        save(ofcMobileOrder);
+        logger.info("订单号为{},保存数据库成功,放入redis缓存",ofcMobileOrder.getMobileOrderCode());
+        this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,ofcMobileOrder.getMobileOrderCode());
         return ofcMobileOrder;
     }
 
@@ -364,9 +362,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 从缓存中获取待受理订单
      * @return 订单号
      */
-    public String getOrderFromCache() {
+    public String getOrderFromCache(String key) {
         String orderCode = null;
-        String key = "MobilePendingOrderList";
         boolean existList = redisTemplate.hasKey(key);
         ListOperations<String, String> listOps = redisTemplate.opsForList();
         if (existList && listOps.size(key) > 0) {
@@ -383,9 +380,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      */
     @Transactional
     public OfcMobileOrderVo autoAcceptPendingOrder(String user) {
-        OfcMobileOrderVo mobileOrderVo = null;
+        OfcMobileOrderVo mobileOrderVo;
         // 查询待受理订单
-        String mobileOrderCode = this.getOrderFromCache();
+        String mobileOrderCode = this.getOrderFromCache("MobilePendingOrderList");
         if (!PubUtils.isOEmptyOrNull(mobileOrderCode)) {
             OfcMobileOrder params = new OfcMobileOrder();
             params.setMobileOrderCode(mobileOrderCode);
