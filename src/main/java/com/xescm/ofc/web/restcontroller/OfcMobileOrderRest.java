@@ -180,7 +180,12 @@ public class OfcMobileOrderRest extends BaseController {
             if(TREATED.equals(MobileOrderStatus)){
                 throw new BusinessException("手机订单已经受理！");
             }
-            if(UN_TREATED.equals(MobileOrderStatus)|| TREATING.equals(MobileOrderStatus)){
+
+            if(UN_TREATED.equals(MobileOrderStatus)){
+                throw new BusinessException("手机订单已经超过5分钟未受理，请刷新页面重新加载新的订单！");
+            }
+
+            if(TREATING.equals(MobileOrderStatus)){
                 if(!PubUtils.isSEmptyOrNull(accepter)){
                     if(!accepter.equals(authResDtoByToken.getUserName())){
                         throw new BusinessException("手机订单有其它人在受理,请受理其它手机订单！");
