@@ -851,7 +851,7 @@
                         supportBatch:'',
                         packageType:'',
                         packageName:'',
-                        conversionRate:''
+                        conversionRate:'1'
 
                     };
                     this.goodsData.push(newData);
