@@ -77,14 +77,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         if(StringUtils.isNotEmpty(ofcMobileOrder.getTranCode())){
             OfcMobileOrder condition=new OfcMobileOrder();
             condition.setTranCode(ofcMobileOrder.getTranCode());
-            OfcMobileOrder order=selectOne(condition);
-            if(order!=null&&StringUtils.isNotEmpty(order.getOrderCode())){
-                OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(order.getOrderCode(),"orderCode");
-                if(orderStatus!=null){
-                    if(!HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())){
-                        throw  new BusinessException("运输单号重复");
-                    }
-                }
+            List<OfcMobileOrder> orders= select(condition);
+            if(!CollectionUtils.isEmpty(orders)){
+                throw  new BusinessException("运输单号重复");
             }
         }
         ofcMobileOrder.setMobileOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.MOBILE_PRE,6));
