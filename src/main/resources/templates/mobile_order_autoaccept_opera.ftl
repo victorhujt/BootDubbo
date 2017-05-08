@@ -680,7 +680,7 @@
                     returnListFee: 0,
                     luggage: 0,
                     serviceCharge: 0,
-                    expensePaymentParty: 1,
+                    expensePaymentParty:'1',
                     payment: '6810',
                     openInvoices: false,
                     currentAmount: 0,
