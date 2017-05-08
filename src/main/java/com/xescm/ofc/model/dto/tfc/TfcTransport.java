@@ -162,11 +162,15 @@ public class TfcTransport implements Serializable {
 
     private String fromDistrictCode;//出发县区编码
 
+    private String fromStreetCode;//出发街道编码
+
     private String toProvinceCode;//到达省份编码
 
     private String toCityCode;//到达城市编码
 
     private String toDistrictCode;//到达县区编码
+
+    private String toStreetCode;//到达街道编码
 
     private String faceOrder;
 
@@ -195,6 +199,23 @@ public class TfcTransport implements Serializable {
     private Date pickupTime;
 
     private String platformType;//平台类型
+
+
+    public String getFromStreetCode() {
+        return fromStreetCode;
+    }
+
+    public void setFromStreetCode(String fromStreetCode) {
+        this.fromStreetCode = fromStreetCode;
+    }
+
+    public String getToStreetCode() {
+        return toStreetCode;
+    }
+
+    public void setToStreetCode(String toStreetCode) {
+        this.toStreetCode = toStreetCode;
+    }
 
     public String getPlatformType() {
         return platformType;
