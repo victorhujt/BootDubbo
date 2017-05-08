@@ -3,7 +3,7 @@
 <#list dailyAccountInfo as da>
         <#if da_index==0>
             <#if da.baseName!="">
-            > **${da.baseName}**
+            > **${da.baseName}** 「小伙伴，你们太棒了」
                 <#if  da.additionalOrderPercent?exists && da.additionalOrderPercent!="">
                     - 补录订单  **${da.additionalOrderPercent}**
                 </#if>
@@ -39,7 +39,7 @@
         <#else>
             <#if da_index==dailyAccountInfo?size-1>
                 <#if da.baseName!="">
-                > **${da.baseName}**
+                > **${da.baseName}** 「小伙伴，你们要加油了」
                     <#if  da.additionalOrderPercent?exists && da.additionalOrderPercent!="">
                     - 补录订单  **${da.additionalOrderPercent}**
                     </#if>
