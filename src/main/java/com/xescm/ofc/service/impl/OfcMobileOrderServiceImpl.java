@@ -378,7 +378,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         logger.info("==>开始自动获取待受理订单");
         OfcMobileOrderVo mobileOrderVo;
         // 查询待受理订单
-        String mobileOrderCode = this.getOrderFromCache("MobilePendingOrderList");
+        String mobileOrderCode = this.getOrderFromCache(MOBILE_PENDING_ORDER_LIST);
         logger.info("==>自动获取待受理订单号{}",mobileOrderCode);
         if (!PubUtils.isOEmptyOrNull(mobileOrderCode)) {
             OfcMobileOrder params = new OfcMobileOrder();
