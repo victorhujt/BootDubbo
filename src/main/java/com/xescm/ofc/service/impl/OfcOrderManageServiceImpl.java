@@ -641,6 +641,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
     @Override
     public Wrapper storageOrderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto) {
+        logger.info("仓储批量下单 ==> ofcStorageTemplateDtoList:{}", ofcStorageTemplateDtoList);
+        logger.info("仓储批量下单 ==> authResDto:{}", authResDto);
         Map<String, List<OfcStorageTemplateDto>> orderMap = new HashMap<>();
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
             if (null == ofcStorageTemplateDto) {
@@ -658,7 +660,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
         String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
+
         for (String orderMapKey : orderMap.keySet()) {
+
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
@@ -671,57 +675,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
-
-//            orderBatchNumberList.add(orderBatchNumber);
             ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
             ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
             if (ofcOrderDTO.getProvideTransport() == null) {
                 ofcOrderDTO.setProvideTransport(0);
             }
-//            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
-            Map<String, OfcGoodsDetailsInfo> ofcGoodsDetailsInfoMap = new HashMap<>();
-//            MathContext mathContext = new MathContext(3);
+            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
-                GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
-                if (null == goodsPackingDto) {
-                    String goodsCode = ofcStorageTemplateDto.getGoodsCode();
-                    logger.error("货品:{}没有包装信息", goodsCode);
-                    throw new BusinessException("货品:【" + goodsCode +"】没有包装信息");
-                }
-                ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelName());
-                ofcGoodsDetailsInfo.setPackageType(goodsPackingDto.getLevel());
-                ofcGoodsDetailsInfo.setConversionRate(goodsPackingDto.getLevelSpecification());
-                StringBuilder key=new StringBuilder();
-                key.append(ofcGoodsDetailsInfo.getGoodsCode());
-                if (ofcGoodsDetailsInfo.getSupportBatch() != null) {
-                    key.append(ofcGoodsDetailsInfo.getSupportBatch());
-                }
-                if (!org.apache.commons.lang3.StringUtils.isEmpty(ofcGoodsDetailsInfo.getProductionBatch())) {
-                    key.append(ofcGoodsDetailsInfo.getProductionBatch());
-                }
-                if (ofcGoodsDetailsInfo.getCreationTime() != null) {
-                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getCreationTime(), DateUtils.DateFormatType.TYPE1));
-                }
-                if (ofcGoodsDetailsInfo.getInvalidTime() != null) {
-                    key.append(DateUtils.Date2String(ofcGoodsDetailsInfo.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
-                }
-                
-                if (ofcGoodsDetailsInfoMap.containsKey(key.toString())) {
-                    OfcGoodsDetailsInfo info = ofcGoodsDetailsInfoMap.get(key.toString());
-                    if (null == info.getQuantity() || null == ofcGoodsDetailsInfo.getQuantity()) {
-                        logger.error("货品数量出错!");
-                        throw new BusinessException("货品数量出错!");
-                    }
-                    info.setQuantity(info.getQuantity().add(ofcGoodsDetailsInfo.getQuantity()));
-                    //主单位数量
-                    info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetailsInfo.getPrimaryQuantity()));
-                    ofcGoodsDetailsInfoMap.put(key.toString(), info);
-                }else {
-                    ofcGoodsDetailsInfoMap.put(key.toString(), ofcGoodsDetailsInfo);
-                }
+                detailsInfos.add(ofcGoodsDetailsInfo);
             }
-            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>(ofcGoodsDetailsInfoMap.values());
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
             CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
@@ -1250,7 +1213,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcDailyAccount.setTotalPercent(percent.format(total.doubleValue()));
             ofcDailyAccountsService.save(ofcDailyAccount);
         }
-
         Iterator itera = account.entrySet().iterator();
         while (itera.hasNext()) {
             Map.Entry<String, OfcOrderAccountDTO> entry = (Map.Entry<String, OfcOrderAccountDTO>) itera.next();
@@ -1425,8 +1387,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())) {
                 key.append(ofcGoodsDetails.getProductionBatch());
             }
-            if (ofcGoodsDetails.getCreationTime() != null) {
-                key.append(DateUtils.Date2String(ofcGoodsDetails.getCreationTime(), DateUtils.DateFormatType.TYPE1));
+            if(ofcGoodsDetails.getProductionTime()!=null){
+                key.append(DateUtils.Date2String(ofcGoodsDetails.getProductionTime(), DateUtils.DateFormatType.TYPE1));
             }
             if (ofcGoodsDetails.getInvalidTime() != null) {
                 key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
@@ -2177,6 +2139,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     tfcTransport.setFromCityCode(departurePlaceCode[1]);
                     if (departurePlaceCode.length > 2) {
                         tfcTransport.setFromDistrictCode(departurePlaceCode[2]);
+                        if (departurePlaceCode.length > 3) {
+                            tfcTransport.setFromStreetCode(departurePlaceCode[3]);
+                        }
                     }
                 }
             }
@@ -2203,6 +2168,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     tfcTransport.setToCityCode(destinationPlaceCode[1]);
                     if (destinationPlaceCode.length > 2) {
                         tfcTransport.setToDistrictCode(destinationPlaceCode[2]);
+                        if (destinationPlaceCode.length > 3) {
+                            tfcTransport.setToStreetCode(destinationPlaceCode[3]);
+                        }
                     }
                 }
             }

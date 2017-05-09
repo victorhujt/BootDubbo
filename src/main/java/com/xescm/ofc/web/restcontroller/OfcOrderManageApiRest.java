@@ -83,6 +83,7 @@ public class OfcOrderManageApiRest {
         if(!PubUtils.isSEmptyOrNull(dingDingRobotConfig.getAtMobiles())){
             String[] phones=dingDingRobotConfig.getAtMobiles().split(",");
             atDto.setAtMobiles(phones);
+            atDto.setAtMobiles(phones);
         }
         chatRobotMsgDto.setAt(atDto);
         markdownDto.setText(content);
