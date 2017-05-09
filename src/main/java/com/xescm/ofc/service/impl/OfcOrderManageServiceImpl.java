@@ -1219,12 +1219,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             OfcOrderAccountDTO ofcOrderAccountDTO=entry.getValue();
             if(ofcOrderAccountDTO.getAdditionalOrder()==null){
                 ofcOrderAccountDTO.setAdditionalOrder(new BigDecimal(0.0));
+                ofcOrderAccountDTO.setAdditionalOrderPercent("0%");
             }
             if(ofcOrderAccountDTO.getReceivable()==null){
                 ofcOrderAccountDTO.setReceivable(new BigDecimal(0.0));
+                ofcOrderAccountDTO.setReceivablePercent("0%");
             }
             if(ofcOrderAccountDTO.getPayable()==null){
                 ofcOrderAccountDTO.setPayable(new BigDecimal(0.0));
+                ofcOrderAccountDTO.setPayablePercent("0%");
             }
             BigDecimal total=ofcOrderAccountDTO.getReceivable().add(ofcOrderAccountDTO.getPayable()).subtract(ofcOrderAccountDTO.getAdditionalOrder());
             ofcOrderAccountDTO.setTotal(total.setScale(2));
