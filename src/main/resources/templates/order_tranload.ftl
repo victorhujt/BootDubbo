@@ -729,8 +729,8 @@
           </div>
           <div style="width:230px;margin:0 0 0 15px;float:left;">
             <div class="clearfix col-xs-1" style="margin-top:-6px;margin-left:5px;">
-              <input id="openInvoicesV" type="checkbox" name="" class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
-              <input id="openInvoices" type="hidden" name="openInvoices"  value="0" />
+              <input id="openInvoicesV" type="checkbox" checked name="" class="btn btn-minier btn-inverse no-padding-right" onchange=""/>
+              <input id="openInvoices" type="hidden" name="openInvoices"  value="1" />
             </div>
             <label class="control-label col-width-110" for="name" style="padding:0px 15px;text-align:left">是否开发票</label>
           </div>
@@ -930,6 +930,7 @@
       isclear: true,
       istoday: true,
       start:laydate.now(0, 'YYYY/MM/DD hh:ss'),
+      min:laydate.now(),
       choose: function (dates) {
           $("#pickupTime-error").remove();
       }

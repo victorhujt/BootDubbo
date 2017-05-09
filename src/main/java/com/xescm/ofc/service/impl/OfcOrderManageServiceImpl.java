@@ -1219,12 +1219,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             OfcOrderAccountDTO ofcOrderAccountDTO=entry.getValue();
             if(ofcOrderAccountDTO.getAdditionalOrder()==null){
                 ofcOrderAccountDTO.setAdditionalOrder(new BigDecimal(0.0));
+                ofcOrderAccountDTO.setAdditionalOrderPercent("0%");
             }
             if(ofcOrderAccountDTO.getReceivable()==null){
                 ofcOrderAccountDTO.setReceivable(new BigDecimal(0.0));
+                ofcOrderAccountDTO.setReceivablePercent("0%");
             }
             if(ofcOrderAccountDTO.getPayable()==null){
                 ofcOrderAccountDTO.setPayable(new BigDecimal(0.0));
+                ofcOrderAccountDTO.setPayablePercent("0%");
             }
             BigDecimal total=ofcOrderAccountDTO.getReceivable().add(ofcOrderAccountDTO.getPayable()).subtract(ofcOrderAccountDTO.getAdditionalOrder());
             ofcOrderAccountDTO.setTotal(total.setScale(2));
@@ -1882,6 +1885,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("订单信息推送仓储中心 ==> ofOrderDto:{}", ofOrderDto);
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+            ofOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 //出库
                 ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
