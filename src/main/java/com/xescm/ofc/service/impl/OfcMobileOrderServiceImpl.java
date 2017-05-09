@@ -22,14 +22,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
@@ -69,7 +72,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     private ModelMapper modelMapper = new ModelMapper();
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder) {
@@ -280,7 +283,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * @param orderCode 订单号
      */
     public void pushOrderToCache(String key,String orderCode) {
-        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         listOps.rightPush(key, orderCode);
     }
 
@@ -359,8 +362,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      */
     public String getOrderFromCache(String key) {
         String orderCode = null;
-        boolean existList = redisTemplate.hasKey(key);
-        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        boolean existList = stringRedisTemplate.hasKey(key);
+        ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         if (existList && listOps.size(key) > 0) {
             orderCode = listOps.leftPop(key);
         } else {

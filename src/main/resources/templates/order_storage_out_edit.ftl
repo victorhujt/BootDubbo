@@ -1800,9 +1800,13 @@
                 }).then(function() {
                     _this.goodsData = [];
                 }).catch(function() {
-                    _this.orderForm.wareHouse = _this.oldWarehouse;
+                    var param = {};
                     _this.orderForm.custCode = _this.oldCustomerCode;
                     _this.orderForm.custName = _this.oldCustomerName;
+                    param.custCode =  _this.orderForm.custCode;
+                    param.custName =  _this.orderForm.custName;
+                    _this.setCurrentCustInfo(param);
+                    _this.orderForm.wareHouse = _this.oldWarehouse;
                 });
             },
             isInteger:function (obj) {

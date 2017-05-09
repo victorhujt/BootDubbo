@@ -237,7 +237,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="仓库名称" required prop="wareHouse" class="xe-col-3">
-                    <el-select v-model="orderForm.wareHouse" placeholder="请选择">
+                    <el-select v-model="orderForm.wareHouse" placeholder="请选择" @change="clearGoodsData">
                         <el-option
                                 v-for="item in wareHouseOptions"
                                 :label="item.label"
@@ -1664,9 +1664,13 @@
                 }).then(function() {
                     _this.goodsData = [];
                 }).catch(function() {
-                    _this.orderForm.wareHouse = _this.oldWarehouse;
+                    var param = {};
                     _this.orderForm.custCode = _this.oldCustomerCode;
                     _this.orderForm.custName = _this.oldCustomerName;
+                    param.custCode =  _this.orderForm.custCode;
+                    param.custName =  _this.orderForm.custName;
+                    _this.setCurrentCustInfo(param);
+                    _this.orderForm.wareHouse = _this.oldWarehouse;
                 });
             },
             isInteger:function (obj) {

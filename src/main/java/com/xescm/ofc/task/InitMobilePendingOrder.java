@@ -7,6 +7,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,6 +28,11 @@ public class InitMobilePendingOrder implements CommandLineRunner {
     @Resource
     private OfcMobileOrderService ofcMobileOrderService;
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+
+
     @Override
     public void run(String... strings) throws Exception {
         logger.info("==>手机订单号同步到redis缓存开始执行");
@@ -35,6 +41,7 @@ public class InitMobilePendingOrder implements CommandLineRunner {
         List<OfcMobileOrder> mobileOrders = ofcMobileOrderService.queryOrderList(params);
         if(!CollectionUtils.isEmpty(mobileOrders)){
             logger.info("==>查询到未受理的订单总数为{}",mobileOrders.size());
+            stringRedisTemplate.delete(MOBILE_PENDING_ORDER_LIST);
             for (int i = 0 ; i < mobileOrders.size(); i++) {
                 OfcMobileOrder order = mobileOrders.get(i);
                 ofcMobileOrderService.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,order.getMobileOrderCode());
