@@ -325,7 +325,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             String acceptStatus=mobileOrder.getMobileOrderStatus();
             String status = UN_TREATED.equals(acceptStatus) ? "未受理" : TREATED.equals(acceptStatus)
                     ? "已受理" : TREATING.equals(acceptStatus) ? "受理中" : acceptStatus;
-           if(TREATED.equals(acceptStatus)){
+           if(TREATED.equals(acceptStatus)||UN_TREATED.equals(acceptStatus)){
                throw new BusinessException("订单号:"+mobileOrderCode+"状态为【"+status+"】不可进行删除!");
            }
            //手机订单对应的图片路径
