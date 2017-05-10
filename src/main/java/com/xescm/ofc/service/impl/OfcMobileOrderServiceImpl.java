@@ -162,6 +162,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
         String orderType = OrderConstant.TRANSPORT_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
+        //钉钉手机订单 运输单号是空将订单填充位运输单号
+       if(PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())){
+           ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+       }
         orderCode=ofcFundamentalInformation.getOrderCode();
         // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
