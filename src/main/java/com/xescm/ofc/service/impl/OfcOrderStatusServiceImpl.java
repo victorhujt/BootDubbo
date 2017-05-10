@@ -1,6 +1,9 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderNewstatus;
+import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
@@ -259,7 +262,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto) {
+    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto,boolean switchFlag) {
         try {
 			String orderCode=feedBackOrderDto.getOrderCode();
 			List<FeedBackOrderDetailDto> detailDtos=feedBackOrderDto.getFeedBackOrderDetail();
@@ -292,19 +295,24 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 status.setOrderStatus(HASBEEN_COMPLETED);
                 str = "入库单";
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                if(ofcWarehouseInformation!=null){
-                    if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSE_NO_TRANS){
-                        status.setOrderStatus(HASBEEN_COMPLETED);
-                    }
-                }
                 str = "出库单";
             }
 
+            if(ofcWarehouseInformation!=null){
+                if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
+                    if(switchFlag){
+                        status.setOrderStatus(HASBEEN_COMPLETED);
+                    }else{
+                        status.setOrderStatus(IMPLEMENTATION_IN);
+                    }
+                }else{
+                    status.setOrderStatus(HASBEEN_COMPLETED);
+                }
+            }
             status.setLastedOperTime(new Date());
             status.setStatusDesc("订单号为"+orderCode+str+"已完成");
             status.setOrderCode(orderCode);
             status.setOperator("");
-            status.setOrderStatus(HASBEEN_COMPLETED);
             status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)
                     +" "+"订单号为"+orderCode+str+"已完成");
             status.setOrderCode(orderCode);

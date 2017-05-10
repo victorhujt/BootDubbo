@@ -20,6 +20,9 @@ import java.util.List;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
+import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATION_IN;
+import static com.xescm.ofc.constant.OrderConstConstant.WEARHOUSE_WITH_TRANS;
+import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 
 /**
  *
@@ -37,6 +40,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
     private OfcOrderManageService ofcOrderManageService;
+    @Resource
+    private OfcWarehouseInformationService   ofcWarehouseInformationService;
 
     /**
      * 运输单状态反馈
@@ -45,8 +50,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @return      list
      */
     @Override
-    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName) {
-        //根据订单号获取订单及状态
+    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName,boolean switchFlag) {
+        //根据订单号获取单及状态
         String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
         String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
         Date traceTime = ofcPlanFedBackCondition.getTraceTime();
@@ -117,7 +122,21 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         //签收后标记为已完成
                         orderStatus = new OfcOrderStatus();
                         orderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                        orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+
+                       if(WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())){
+                           OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
+                           ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                           ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
+                           if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
+                               if(switchFlag){
+                                   orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                               }else{
+                                   orderStatus.setOrderStatus(IMPLEMENTATION_IN);
+                               }
+                           }
+                       }else{
+                           orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                       }
                         orderStatus.setLastedOperTime(now);
                         orderStatus.setStatusDesc("运输单已完成");
                         orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) + " " + "运输单订单已完成");

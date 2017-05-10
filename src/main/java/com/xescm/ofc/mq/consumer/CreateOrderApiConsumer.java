@@ -29,9 +29,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
+import static com.xescm.ofc.constant.OrderConstConstant.SWITCH_FLAG;
 
 /**
  * 创单api消费MQ
@@ -143,7 +143,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                         ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody,ofcPlanFedBackTypeRef);
                         for(int i=0;i<ofcPlanFedBackConditions.size();i++){
                             // 保存到数
-                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName);
+                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName,SWITCH_FLAG);
                         }
                     } catch (Exception e) {
                         logger.error("运输单出错:{}",e.getMessage(),e);
@@ -159,7 +159,7 @@ public class CreateOrderApiConsumer implements MessageListener {
 			try {
 			    logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                 FeedBackOrderStatusDto feedBackOrderStatusDto= JacksonUtil.parseJson(messageBody,FeedBackOrderStatusDto.class);
-                ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
+                ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto,SWITCH_FLAG);
 			} catch (Exception e) {
                 logger.error("仓储单状态反馈出现异常{}",e.getMessage(),e);
 			}
