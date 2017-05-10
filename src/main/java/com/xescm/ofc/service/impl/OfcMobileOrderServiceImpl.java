@@ -352,7 +352,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         //删除手机订单
         deleteByKey(mobileOrderCode);
         }catch (Exception e) {
-            throw e;
+            throw new BusinessException("删除手机订单产生异常！");
         }
     }
 

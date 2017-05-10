@@ -266,7 +266,7 @@ public class OfcMobileOrderRest extends BaseController {
             ofcMobileOrderService.deleteMobileOrder(mobileOrderCode);
         } catch (Exception e) {
             logger.error("拍照开单-删除手机订单号发生错误: {}", e);
-            return  WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE,e.getMessage());
+            return  WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
 
         }
         return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
