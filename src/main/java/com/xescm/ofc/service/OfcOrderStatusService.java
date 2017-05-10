@@ -34,7 +34,7 @@ public interface OfcOrderStatusService extends IService<OfcOrderStatus> {
     int save(OfcOrderStatus record);
 
      void feedBackStatusFromWhc(FeedBackOrderStatusDto feedBackOrderStatusDto);
-     void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto,boolean switchFlag);
+     void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto);
 
 
 

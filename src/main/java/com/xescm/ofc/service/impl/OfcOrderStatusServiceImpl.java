@@ -262,7 +262,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto,boolean switchFlag) {
+    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto) {
         try {
 			String orderCode=feedBackOrderDto.getOrderCode();
 			List<FeedBackOrderDetailDto> detailDtos=feedBackOrderDto.getFeedBackOrderDetail();
@@ -274,7 +274,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
             OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
             ofcWarehouseInformation.setOrderCode(orderCode);
-            ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
             OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
 			if(ofcFundamentalInformation==null){
                 throw new BusinessException("订单不存在");
@@ -291,22 +290,18 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
             String str ="";
+            status.setOrderStatus(HASBEEN_COMPLETED);
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
                 status.setOrderStatus(HASBEEN_COMPLETED);
                 str = "入库单";
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 str = "出库单";
-            }
-
-            if(ofcWarehouseInformation!=null){
-                if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
-                    if(switchFlag){
+                if(ofcWarehouseInformation!=null){
+                    if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSE_NO_TRANS){
                         status.setOrderStatus(HASBEEN_COMPLETED);
                     }else{
                         status.setOrderStatus(IMPLEMENTATION_IN);
                     }
-                }else{
-                    status.setOrderStatus(HASBEEN_COMPLETED);
                 }
             }
             status.setLastedOperTime(new Date());
