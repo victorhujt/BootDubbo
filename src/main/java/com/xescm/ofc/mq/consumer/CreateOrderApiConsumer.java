@@ -159,7 +159,7 @@ public class CreateOrderApiConsumer implements MessageListener {
 			try {
 			    logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                 FeedBackOrderStatusDto feedBackOrderStatusDto= JacksonUtil.parseJson(messageBody,FeedBackOrderStatusDto.class);
-                ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto,SWITCH_FLAG);
+                ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
 			} catch (Exception e) {
                 logger.error("仓储单状态反馈出现异常{}",e.getMessage(),e);
 			}
@@ -169,7 +169,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                 try {
                     FeedBackOrderDto feedBackOrderDto= JacksonUtil.parseJson(messageBody,FeedBackOrderDto.class);
-                    ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
+                    ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto,SWITCH_FLAG);
                 } catch (Exception e) {
                     logger.error("仓储单出入库单反馈出现异常{}",e.getMessage(),e);
                 }
