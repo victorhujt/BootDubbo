@@ -292,14 +292,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             String str ="";
             status.setOrderStatus(HASBEEN_COMPLETED);
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
-                status.setOrderStatus(HASBEEN_COMPLETED);
                 str = "入库单";
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 str = "出库单";
                 if(ofcWarehouseInformation!=null){
-                    if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSE_NO_TRANS){
-                        status.setOrderStatus(HASBEEN_COMPLETED);
-                    }else{
+                    if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
                         status.setOrderStatus(IMPLEMENTATION_IN);
                     }
                 }
