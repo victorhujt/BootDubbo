@@ -6,12 +6,15 @@ import com.xescm.ofc.mapper.OfcDailyAccountMapper;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
 import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
 import com.xescm.ofc.service.OfcDailyAccountsService;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -49,6 +52,21 @@ public class OfcDailyAccountsServiceImpl  extends BaseService<OfcDailyAccount> i
 
     @Override
     public List<OfcDailyAccountVo> queryDailyAccount(String date) {
-        return ofcDailyAccountMapper.queryDailyAccount(date);
+        List<OfcDailyAccountVo> OfcDailyAccountVoList =  ofcDailyAccountMapper.queryDailyAccount(date);
+        if(!CollectionUtils.isEmpty(OfcDailyAccountVoList)){
+            //按 应收确认日清 + 应付确认日清 - 事后补录订单 排序
+            Collections.sort(OfcDailyAccountVoList,new Comparator<OfcDailyAccountVo>(){
+                public int compare(OfcDailyAccountVo o1, OfcDailyAccountVo o2) {
+                    if(o1.getTotal().doubleValue()<o2.getTotal().doubleValue()){
+                        return 1;
+                    }else if(o1.getTotal().doubleValue()>o2.getTotal().doubleValue()){
+                        return -1;
+                    }else{
+                        return 0;
+                    }
+                }
+            });
+        }
+        return OfcDailyAccountVoList;
     }
 }
