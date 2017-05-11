@@ -17,6 +17,7 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
@@ -1012,9 +1013,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)-1);
         form.setStartDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
         String beginTime=DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2);
-        form.setStartDate("2017-01-01");
-        form.setEndDate("2017-05-10");
-        beginTime = "2017-01-01";
         //两小时完成的订单统计
         List<OrderCountResult>  twoHourOrderCount=ofcDailyAccountsService.countTwoHoursOrder(form);
         //前一天的订单统计
@@ -1234,7 +1232,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             BigDecimal total=ofcOrderAccountDTO.getReceivable().add(ofcOrderAccountDTO.getPayable()).subtract(ofcOrderAccountDTO.getAdditionalOrder());
             ofcOrderAccountDTO.setTotal(total.setScale(2));
             ofcOrderAccountDTO.setTotalPercent(percent.format(total.doubleValue()));
-            dailyAccountInfo.add(ofcOrderAccountDTO);
+            if(!PublicUtil.isEmpty(ofcOrderAccountDTO.getBaseCode())){
+                dailyAccountInfo.add(ofcOrderAccountDTO);
+            }
         }
 
         //按 应收确认日清 + 应付确认日清 - 事后补录订单 排序
