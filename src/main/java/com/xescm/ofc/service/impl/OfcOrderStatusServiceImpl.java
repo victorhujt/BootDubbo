@@ -259,21 +259,21 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto) {
+    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto,boolean switchFlag) {
         try {
-			String orderCode=feedBackOrderDto.getOrderCode();
-			List<FeedBackOrderDetailDto> detailDtos=feedBackOrderDto.getFeedBackOrderDetail();
-			if(StringUtils.isEmpty(orderCode)){
-				throw new BusinessException("订单号不可以为空");
-			}
-			if(detailDtos==null||(detailDtos!=null&&detailDtos.size()==0)){
+            String orderCode=feedBackOrderDto.getOrderCode();
+            List<FeedBackOrderDetailDto> detailDtos=feedBackOrderDto.getFeedBackOrderDetail();
+            if(StringUtils.isEmpty(orderCode)){
+                throw new BusinessException("订单号不可以为空");
+            }
+            if(detailDtos==null||(detailDtos!=null&&detailDtos.size()==0)){
                 throw new BusinessException("货品详情不能为空");
             }
             OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
             ofcWarehouseInformation.setOrderCode(orderCode);
             ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
             OfcFundamentalInformation ofcFundamentalInformation=ofcFundamentalInformationService.selectByKey(orderCode);
-			if(ofcFundamentalInformation==null){
+            if(ofcFundamentalInformation==null){
                 throw new BusinessException("订单不存在");
             }
 
@@ -287,33 +287,40 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     throw new BusinessException("订单已经取消");
                 }
             }
-
+            String str ="";
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
                 status.setOrderStatus(HASBEEN_COMPLETED);
+                str = "入库单";
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                if(ofcWarehouseInformation!=null){
-                    if(ofcWarehouseInformation.getProvideTransport()==null||ofcWarehouseInformation.getProvideTransport()==WAREHOUSE_NO_TRANS){
-                        status.setOrderStatus(HASBEEN_COMPLETED);
-                    }
-                }
+                str = "出库单";
             }
 
+            if(ofcWarehouseInformation!=null){
+                if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
+                    if(switchFlag){
+                        status.setOrderStatus(HASBEEN_COMPLETED);
+                    }else{
+                        status.setOrderStatus(IMPLEMENTATION_IN);
+                    }
+                }else{
+                    status.setOrderStatus(HASBEEN_COMPLETED);
+                }
+            }
             status.setLastedOperTime(new Date());
-            status.setStatusDesc("订单号"+orderCode+"已完成");
+            status.setStatusDesc("订单号为"+orderCode+str+"已完成");
             status.setOrderCode(orderCode);
             status.setOperator("");
-            status.setOrderStatus(HASBEEN_COMPLETED);
             status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)
-                    +" "+"订单号"+orderCode+"已完成");
+                    +" "+"订单号为"+orderCode+str+"已完成");
             status.setOrderCode(orderCode);
             save(status);
 
             //更新订单完成时间
             ofcFundamentalInformation.setFinishedTime(new Date());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus,String tag){
