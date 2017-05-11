@@ -3,7 +3,6 @@ package com.xescm.ofc.mapper;
 import com.xescm.ofc.domain.OfcDailyAccount;
 import com.xescm.ofc.domain.OrderCountResult;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
-import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
@@ -26,5 +25,6 @@ public interface OfcDailyAccountMapper extends Mapper<OfcDailyAccount> {
      */
     List<OrderCountResult> yesterdayOrderCount(@Param("form") OrderCountForm form);
 
-    List<OfcDailyAccountVo> queryDailyAccount(@Param("dailydate") String dailydate);
+    List<OfcDailyAccount> queryDailyAccount(@Param("dailydate") String dailydate);
+
 }

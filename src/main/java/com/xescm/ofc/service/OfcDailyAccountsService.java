@@ -3,7 +3,6 @@ package com.xescm.ofc.service;
 import com.xescm.ofc.domain.OfcDailyAccount;
 import com.xescm.ofc.domain.OrderCountResult;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
-import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface OfcDailyAccountsService extends IService<OfcDailyAccount>{
 
     List<OrderCountResult> yesterdayOrderCount(OrderCountForm form);
 
-    List<OfcDailyAccountVo> queryDailyAccount(String date);
+    List<OfcDailyAccount> queryDailyAccount(String date);
 
 
 

@@ -4,7 +4,6 @@ import com.xescm.ofc.domain.OfcDailyAccount;
 import com.xescm.ofc.domain.OrderCountResult;
 import com.xescm.ofc.mapper.OfcDailyAccountMapper;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
-import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
 import com.xescm.ofc.service.OfcDailyAccountsService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -51,12 +50,12 @@ public class OfcDailyAccountsServiceImpl  extends BaseService<OfcDailyAccount> i
 
 
     @Override
-    public List<OfcDailyAccountVo> queryDailyAccount(String date) {
-        List<OfcDailyAccountVo> OfcDailyAccountVoList =  ofcDailyAccountMapper.queryDailyAccount(date);
+    public List<OfcDailyAccount> queryDailyAccount(String date) {
+        List<OfcDailyAccount> OfcDailyAccountVoList =  ofcDailyAccountMapper.queryDailyAccount(date);
         if(!CollectionUtils.isEmpty(OfcDailyAccountVoList)){
             //按 应收确认日清 + 应付确认日清 - 事后补录订单 排序
-            Collections.sort(OfcDailyAccountVoList,new Comparator<OfcDailyAccountVo>(){
-                public int compare(OfcDailyAccountVo o1, OfcDailyAccountVo o2) {
+            Collections.sort(OfcDailyAccountVoList,new Comparator<OfcDailyAccount>(){
+                public int compare(OfcDailyAccount o1, OfcDailyAccount o2) {
                     if(o1.getTotal().doubleValue()<o2.getTotal().doubleValue()){
                         return 1;
                     }else if(o1.getTotal().doubleValue()>o2.getTotal().doubleValue()){
