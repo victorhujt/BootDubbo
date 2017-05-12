@@ -1320,7 +1320,7 @@
                                         var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
                                         var unit = {};
                                         var levelSpecification = {};
-                                        unit.label = goodsPacking.levelName;
+                                        unit.label = goodsPacking.levelDescription;
                                         unit.value = goodsPacking.level;
                                         levelSpecification.label = goodsPacking.levelSpecification;
                                         levelSpecification.value =  goodsPacking.level;
