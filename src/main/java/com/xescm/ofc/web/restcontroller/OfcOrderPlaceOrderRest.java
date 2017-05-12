@@ -302,7 +302,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     * 仓储下单货品筛选
+     * 仓储下单货品筛选 不带包装
      * @param cscGoods
      * @param customerCode
      * @return
@@ -324,7 +324,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
             cscGood.setFromSys("WMS");//只要WMS渠道的货品
-            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGood);
+            logger.info("==>仓储下单货品筛选参数为 = {}",JacksonUtil.toJson(cscGood));
+            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzyAndSystem(cscGood);
+            logger.info("==>仓储下单货品筛选结果为 = {}",JacksonUtil.toJson(cscGoodsLists));
             //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);
