@@ -16,12 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
-import static com.xescm.ofc.constant.OrderConstConstant.IMPLEMENTATION_IN;
-import static com.xescm.ofc.constant.OrderConstConstant.WEARHOUSE_WITH_TRANS;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 
 /**
@@ -52,7 +51,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @return      list
      */
     @Override
-    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName,boolean switchFlag) {
+    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName,ConcurrentHashMap cmap) {
         //根据订单号获取单及状态
         String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
         String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
@@ -129,10 +128,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
                             ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
                             if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
-                                if(switchFlag){
+                                if(cmap.containsKey(ofcFundamentalInformation.getOrderCode())){
+                                    logger.info("仓储订单仓储先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
                                     orderStatus.setOrderStatus(HASBEEN_COMPLETED);
                                 }else{
                                     orderStatus.setOrderStatus(IMPLEMENTATION_IN);
+                                    cmap.put(ofcFundamentalInformation.getOrderCode(),"");
+                                    logger.info("===>仓储订单运输先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
                                 }
                             }
                         }else{

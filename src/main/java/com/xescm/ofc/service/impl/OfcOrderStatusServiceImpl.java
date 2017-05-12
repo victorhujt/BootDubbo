@@ -1,6 +1,9 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.*;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcOrderNewstatus;
+import com.xescm.ofc.domain.OfcOrderStatus;
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -35,9 +39,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
-   private OfcWarehouseInformationService ofcWarehouseInformationService;
-   @Resource
-   private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Resource
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
 
 
@@ -236,10 +240,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
 
             if(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")){
-                 type=OFC_WHC_IN_TYPE;
+                type=OFC_WHC_IN_TYPE;
             }
             else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")){
-                 type=OFC_WHC_OUT_TYPE;
+                type=OFC_WHC_OUT_TYPE;
             }
             String statusDesc=translateStatusToDesc(traceStatus,type);
             if(orderStatus.getStatusDesc().indexOf(statusDesc)<0){
@@ -259,7 +263,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto,boolean switchFlag) {
+    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto,ConcurrentHashMap cmap) {
         try {
             String orderCode=feedBackOrderDto.getOrderCode();
             List<FeedBackOrderDetailDto> detailDtos=feedBackOrderDto.getFeedBackOrderDetail();
@@ -297,10 +301,13 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
             if(ofcWarehouseInformation!=null){
                 if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
-                    if(switchFlag){
+                    if(cmap.containsKey(ofcFundamentalInformation.getOrderCode())){
+                        logger.info("仓储订单运输先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
                         status.setOrderStatus(HASBEEN_COMPLETED);
                     }else{
                         status.setOrderStatus(IMPLEMENTATION_IN);
+                        logger.info("===>仓储订单仓储先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
+                        cmap.put(ofcFundamentalInformation.getOrderCode(),"");
                     }
                 }else{
                     status.setOrderStatus(HASBEEN_COMPLETED);
@@ -322,6 +329,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             e.printStackTrace();
         }
     }
+
 
     public void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus,String tag){
         OfcOrderNewstatus orderNewstatus=new OfcOrderNewstatus();
