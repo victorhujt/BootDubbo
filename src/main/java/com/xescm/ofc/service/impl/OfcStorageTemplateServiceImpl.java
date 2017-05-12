@@ -1306,7 +1306,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             return false;
         }
         for (GoodsPackingDto goodsPackingDto : goodsPackingDtoList) {
-            if (StringUtils.equals(goodsPackingDto.getLevelName(), unit)) {
+            if (StringUtils.equals(goodsPackingDto.getLevelDescription(), unit)) {
                 ofcStorageTemplateDto.setGoodsPackingDto(goodsPackingDto);
                 ofcStorageTemplateDto.setPackageId(cscGoodsApiVo.getPackingCode());
                 //主单位数量计算
