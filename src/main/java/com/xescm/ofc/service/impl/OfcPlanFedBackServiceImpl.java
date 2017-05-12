@@ -131,6 +131,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                                 if(cmap.containsKey(ofcFundamentalInformation.getOrderCode())){
                                     logger.info("仓储订单仓储先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
                                     orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                                    if (null == ofcFundamentalInformation.getFinishedTime()) {
+                                        ofcFundamentalInformation.setFinishedTime(now);
+                                    }
                                 }else{
                                     orderStatus.setOrderStatus(IMPLEMENTATION_IN);
                                     cmap.put(ofcFundamentalInformation.getOrderCode(),"");
@@ -139,14 +142,14 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             }
                         }else{
                             orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                            if (null == ofcFundamentalInformation.getFinishedTime()) {
+                                ofcFundamentalInformation.setFinishedTime(now);
+                            }
                         }
                         orderStatus.setLastedOperTime(now);
                         orderStatus.setStatusDesc("运输单已完成");
                         orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) + " " + "运输单订单已完成");
                         orderStatus.setOperator(userName);
-                        if (null == ofcFundamentalInformation.getFinishedTime()) {
-                            ofcFundamentalInformation.setFinishedTime(now);
-                        }
                         ofcFundamentalInformationService.update(ofcFundamentalInformation);
                         logger.info("序号：4-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }

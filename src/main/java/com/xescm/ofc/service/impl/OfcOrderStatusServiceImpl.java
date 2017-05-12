@@ -304,6 +304,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     if(cmap.containsKey(ofcFundamentalInformation.getOrderCode())){
                         logger.info("仓储订单运输先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
                         status.setOrderStatus(HASBEEN_COMPLETED);
+                        //更新订单完成时间
+                        ofcFundamentalInformation.setFinishedTime(new Date());
                     }else{
                         status.setOrderStatus(IMPLEMENTATION_IN);
                         logger.info("===>仓储订单仓储先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
@@ -321,9 +323,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     +" "+"订单号为"+orderCode+str+"已完成");
             status.setOrderCode(orderCode);
             save(status);
-
-            //更新订单完成时间
-            ofcFundamentalInformation.setFinishedTime(new Date());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
         } catch (Exception e) {
             e.printStackTrace();
