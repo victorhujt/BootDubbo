@@ -313,6 +313,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     }
                 }else{
                     status.setOrderStatus(HASBEEN_COMPLETED);
+                    //更新订单完成时间
+                    ofcFundamentalInformation.setFinishedTime(new Date());
                 }
             }
             status.setLastedOperTime(new Date());
