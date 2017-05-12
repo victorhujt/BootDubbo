@@ -325,7 +325,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
             cscGood.setFromSys("WMS");//只要WMS渠道的货品
             logger.info("===>查询货品编码的参数为:{}",JacksonUtil.toJson(cscGood));
-            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGood);
+            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzyAndSystem(cscGood);
             logger.info("===>查询货品的结果为:{}",JacksonUtil.toJson(cscGoodsLists));
             //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
