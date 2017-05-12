@@ -742,7 +742,6 @@
                 }
             },
             selectOrder:function(){
-                debugger;
                 var param={};
                 var vueObj=this;
                 vueObj.orderData=[];
