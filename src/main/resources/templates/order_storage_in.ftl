@@ -838,7 +838,7 @@
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec:val.goodsSpec,
-                        unit:'主单位',
+                        unit:'',
                         quantity: '',
                         unitsOptions:val.unitsOptions,
                         levelSpecificationOptions:val.levelSpecificationOptions,
@@ -849,8 +849,8 @@
                         productionTime:'',
                         invalidTime:'',
                         supportBatch:'',
-                        packageType:'',
-                        packageName:'',
+                        packageType:'主单位',
+                        packageName:'EA',
                         conversionRate:'1'
 
                     };

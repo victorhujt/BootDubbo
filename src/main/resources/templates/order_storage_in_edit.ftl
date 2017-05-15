@@ -1044,7 +1044,7 @@
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
-                        unit:'主单位',
+                        unit:'',
                         quantity: '',
                         unitsOptions:val.unitsOptions,
                         levelSpecificationOptions:val.levelSpecificationOptions,
