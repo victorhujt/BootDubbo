@@ -17,6 +17,7 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
@@ -1279,6 +1280,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     , ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
             throw new BusinessException("创建仓储订单失败!");
         }
+        if (!ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
+            logger.error("该订单不是仓储类型订单");
+            throw new BusinessException("该订单不是仓储类型订单");
+        }
+        if(PublicUtil.isEmpty(ofcWarehouseInformation.getWarehouseCode())){
+            throw new BusinessException("仓库编码不能为空!");
+        }
         if (null == ofcWarehouseInformation.getProvideTransport()) {
             logger.error("ofcWarehouseInformation.getProvideTransport为空");
             throw new BusinessException("创建仓储订单失败!");
@@ -1310,7 +1318,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcFundamentalInformation.setOrderType(WAREHOUSE_DIST_ORDER);
 
         //校验当前登录用户的身份信息,并存放大区和基地信息
-        ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
+        //ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -1425,18 +1433,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
         }
-
-        if (!ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
-            logger.error("该订单不是仓储类型订单");
-            throw new BusinessException("该订单不是仓储类型订单");
-        }
+        ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
 
         if (null == ofcWarehouseInformation.getProvideTransport()) {
             ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
         }
 
-        Wrapper<?> wrapper = null;
-        OfcDistributionBasicInfo dinfo = null;
+        Wrapper<?> wrapper;
+        OfcDistributionBasicInfo dinfo;
         OfcDistributionBasicInfo condition = new OfcDistributionBasicInfo();
         condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
         dinfo = ofcDistributionBasicInfoService.selectOne(condition);
