@@ -324,7 +324,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
             cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
             cscGood.setFromSys("WMS");//只要WMS渠道的货品
-            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGood);
+            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzyAndSystem(cscGood);
             //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
         }catch (Exception ex){
             logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);

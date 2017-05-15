@@ -1280,10 +1280,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     , ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
             throw new BusinessException("创建仓储订单失败!");
         }
-        if (!ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
-            logger.error("该订单不是仓储类型订单");
-            throw new BusinessException("该订单不是仓储类型订单");
-        }
         if(PublicUtil.isEmpty(ofcWarehouseInformation.getWarehouseCode())){
             throw new BusinessException("仓库编码不能为空!");
         }
