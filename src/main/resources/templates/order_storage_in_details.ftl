@@ -553,7 +553,7 @@
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
                                             good.unitPrice=goodDetail.unitPrice;
-                                            good.unit=goodDetail.unit;
+                                            good.unit=goodDetail.packageName;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);

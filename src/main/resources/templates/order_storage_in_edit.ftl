@@ -810,6 +810,9 @@
                                             good.unit = goodDetail.packageName;
                                             vueObj.selectGoods();
                                             good.unitsOptions = vueObj.unitsOptions;
+                                            if(vueObj.unitsOptions.length == 1){
+                                                good.unit = "主单位";
+                                            }
                                             good.levelSpecificationOptions = vueObj.levelSpecificationOptions;
                                             vueObj.goodsData.push(good);
                                         }
@@ -1038,13 +1041,17 @@
                 this.goodDataInfo.chosenGoodCode = false;
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
+                    var unitVar = '';
+                    if(val.unitsOptions.length == 1){
+                        unitVar = "主单位";
+                    }
                     var newData = {
                         goodsType: val.goodsType,
                         goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
-                        unit:'',
+                        unit:unitVar,
                         quantity: '',
                         unitsOptions:val.unitsOptions,
                         levelSpecificationOptions:val.levelSpecificationOptions,
