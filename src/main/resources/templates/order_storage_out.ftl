@@ -428,7 +428,7 @@
                     <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
                 </template>
             </el-table-column>
-            <el-table-column property="productionTime" label="生产日期">
+            <el-table-column property="productionTime" width ="140px" label="生产日期">
                 <template scope="scope">
                     <el-date-picker
                             v-model="scope.row.productionTime"
@@ -442,7 +442,7 @@
                     </el-date-picker>
                 </template>
             </el-table-column>
-            <el-table-column property="invalidTime" label="失效日期">
+            <el-table-column property="invalidTime" width ="140px" label="失效日期">
                 <template scope="scope">
                     <el-date-picker
                             v-model="scope.row.invalidTime"
