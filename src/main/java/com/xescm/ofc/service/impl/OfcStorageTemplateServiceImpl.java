@@ -344,6 +344,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             clazz = Class.forName("com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto");
         } catch (ClassNotFoundException e) {
             logger.error("校验Excel,ClassNotFoundException:{}",e);
+            throw new BusinessException("校验Excel,ClassNotFoundException");
         }
         int numberOfSheets = workbook.getNumberOfSheets();
         //必填列列号

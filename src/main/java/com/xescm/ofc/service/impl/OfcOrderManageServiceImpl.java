@@ -24,6 +24,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
@@ -683,6 +684,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
+                GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
+                ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
+                ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
+                ofcGoodsDetailsInfo.setPackageType(goodsPackingDto.getLevel());
                 detailsInfos.add(ofcGoodsDetailsInfo);
             }
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
