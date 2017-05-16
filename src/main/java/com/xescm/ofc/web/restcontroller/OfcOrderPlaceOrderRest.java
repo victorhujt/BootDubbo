@@ -302,7 +302,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
     /**
-     * 仓储下单货品筛选
+     * 仓储下单货品筛选 不带包装
      * @param cscGoods
      * @param customerCode
      * @return
