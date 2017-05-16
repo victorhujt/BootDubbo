@@ -93,7 +93,7 @@ public class RestConfig {
 
     private String paas;
 
-    private String paasWeb;
+    private String paasDev;
 
     public String getMproxy() {
         return mproxy;
@@ -218,11 +218,11 @@ public class RestConfig {
         this.paas = paas;
     }
 
-    public String getPaasWeb() {
-        return paasWeb;
+    public String getPaasDev() {
+        return paasDev;
     }
 
-    public void setPaasWeb(String paasWeb) {
-        this.paasWeb = paasWeb;
+    public void setPaasDev(String paasDev) {
+        this.paasDev = paasDev;
     }
 }
