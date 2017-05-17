@@ -1,6 +1,8 @@
 package com.xescm.ofc.web.restcontroller;
 
+import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.dingtalk.dto.robot.AtDto;
 import com.xescm.dingtalk.dto.robot.ChatRobotMsgDto;
@@ -8,8 +10,10 @@ import com.xescm.dingtalk.dto.robot.MarkdownDto;
 import com.xescm.dingtalk.enums.robot.MsgTypeEnum;
 import com.xescm.ofc.config.DingDingRobotConfig;
 import com.xescm.ofc.config.RestConfig;
+import com.xescm.ofc.domain.OfcTaskDailyReport;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
 import com.xescm.ofc.service.OfcOrderManageService;
+import com.xescm.ofc.service.OfcTaskDailyReportService;
 import com.xescm.uam.provider.ChatRobotEdasService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -18,10 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -47,6 +48,9 @@ public class OfcOrderManageApiRest {
     private RestConfig restConfig;
     @Resource
     private Configuration configuration;
+    @Resource
+    private OfcTaskDailyReportService ofcTaskDailyReportService;
+
     @ResponseBody
     @RequestMapping(value = "/dailyAccount", method = RequestMethod.POST)
     public void  dailyAccount() {
@@ -101,5 +105,67 @@ public class OfcOrderManageApiRest {
         }else{
             logger.info("钉钉机器人发送失败");
         }
+    }
+
+    /**
+     * 查询钉钉日报待处理任务
+     * @param task
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/queryDailyReportTask", method = RequestMethod.POST)
+    public Wrapper<List<OfcTaskDailyReport>> queryDailyReportTask(@RequestBody OfcTaskDailyReport task) {
+        Wrapper<List<OfcTaskDailyReport>> result = null;
+        try {
+            List<OfcTaskDailyReport> list = ofcTaskDailyReportService.queryDailyReportTask(task);
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
+        } catch (BusinessException e) {
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            logger.error("==>查询钉钉日报任务发生异常.");
+        } catch (Exception e) {
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            logger.error("==>查询钉钉日报任务发生异常：{}", e);
+        }
+        return result;
+    }
+
+    /**
+     * 更新钉钉日报任务状态
+     * @param task
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updateDailyReportTask", method = RequestMethod.POST)
+    public Wrapper<Integer> updateDailyReportTask(@RequestBody OfcTaskDailyReport task) {
+        Wrapper<Integer> result = null;
+        try {
+            Integer line = ofcTaskDailyReportService.updateDailyReportTask(task);
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, line);
+        } catch (BusinessException e) {
+            logger.error("==>查询钉钉日报任务发生异常.");
+        } catch (Exception e) {
+            logger.error("==>查询钉钉日报任务发生异常：{}", e);
+        }
+        return result;
+    }
+
+    /**
+     * 新增钉钉日报任务
+     * @param task
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/insertDailyReportTask", method = RequestMethod.POST)
+    public Wrapper<Integer> insertDailyReportTask(@RequestBody OfcTaskDailyReport task) {
+        Wrapper<Integer> result = null;
+        try {
+            Integer line = ofcTaskDailyReportService.insertDailyReportTask(task);
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, line);
+        } catch (BusinessException e) {
+            logger.error("==>新增钉钉日报任务发生异常.");
+        } catch (Exception e) {
+            logger.error("==>新增钉钉日报任务发生异常：{}", e);
+        }
+        return result;
     }
 }

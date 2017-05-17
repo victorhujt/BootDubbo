@@ -198,6 +198,11 @@
                         <el-input v-model="scope.row.quantity" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
+                <el-table-column property="primaryQuantity" label="主单位数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="realQuantity" label="实际数量">
                     <template scope="scope">
                         <el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>
@@ -213,7 +218,7 @@
                         <el-input v-model="scope.row.productionBatch" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="productionTime" label="生产日期">
+                <el-table-column property="productionTime" width ="140px" label="生产日期">
                     <template scope="scope">
                         <el-date-picker
                                 v-model="scope.row.productionTime"
@@ -224,7 +229,7 @@
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="invalidTime" label="失效日期">
+                <el-table-column property="invalidTime" width ="140px" label="失效日期">
                     <template scope="scope">
                         <el-date-picker
                                 v-model="scope.row.invalidTime"
@@ -451,10 +456,11 @@
                                         good.quantity=goodDetail.quantity;
                                         good.realQuantity=goodDetail.realQuantity;
                                         good.unitPrice=goodDetail.unitPrice;
-                                        good.unit=goodDetail.unit;
+                                        good.unit=goodDetail.packageName;
                                         good.productionBatch=goodDetail.productionBatch;
                                         good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                         good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
+                                        good.primaryQuantity = goodDetail.primaryQuantity;
                                         if(vueObj.supportBatchData.length==0){
                                             vueObj.selectSupplier();
                                         }

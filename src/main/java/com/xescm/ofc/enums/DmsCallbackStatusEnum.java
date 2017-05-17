@@ -16,14 +16,14 @@ public enum DmsCallbackStatusEnum {
      70=回单、（DMS无）
      99=异常、（DMS【上报异常】保存）
      */
-    DMS_STATUS_DELIVERY("10","收货"),
+    DMS_STATUS_DELIVERY("10", "收货"),
     DMS_STATUS_DISPATCH("20", "发运"),
-    DMS_STATUS_TRANSFER_IN("30","中转入"),
-    DMS_STATUS_TRANSFER_OUT("40","中转出"),
-    DMS_STATUS_TRANSIT("50","在途"),
-    DMS_STATUS_SIGNED("60","签收"),
-    DMS_STATUS_RECEIPT("70","回单"),
-    DMS_STATUS_EXCEPTION("99","异常");
+    DMS_STATUS_TRANSFER_IN("30", "中转入"),
+    DMS_STATUS_TRANSFER_OUT("40", "中转出"),
+    DMS_STATUS_TRANSIT("50", "在途"),
+    DMS_STATUS_SIGNED("60", "签收"),
+    DMS_STATUS_RECEIPT("70", "回单"),
+    DMS_STATUS_EXCEPTION("99", "异常");
     DmsCallbackStatusEnum(String code,String description){
         this.code = code;
         this.description = description;

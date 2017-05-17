@@ -208,7 +208,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                           String custOrderCode, String orderCode,
                                           ResultModel resultModel,
                                           List<CreateOrderResult> createOrderResultList) {
-        if(PubUtils.trimAndNullAsEmpty(reason).equals("")) reason = resultModel.getDesc();
+        if (PubUtils.trimAndNullAsEmpty(reason).equals("")) reason = resultModel.getDesc();
         CreateOrderResult createOrderResult = new CreateOrderResult(result, reason, custOrderCode, orderCode);
         createOrderResultList.add(createOrderResult);
     }

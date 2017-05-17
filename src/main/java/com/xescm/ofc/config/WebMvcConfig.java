@@ -61,7 +61,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     	super.addInterceptors(registry);
     	authViewInterceptor.setEnv(env);
 //		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
-		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/platformDaily").excludePathPatterns("/ofc/rule").excludePathPatterns("/ofc/queryDailyAccount");
+        registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/platformDaily", "/ofc/rule", "/ofc/queryDailyAccount", "/ofc/searchOverallOrder");
     }
 
 }
