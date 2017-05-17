@@ -30,6 +30,7 @@ import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
+import com.xescm.ofc.edas.model.dto.ofc.OfcOrderCancelDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
@@ -371,6 +372,33 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     }
 
     /**
+     * 取消调度中心订单
+     * @param orderCode
+     */
+    private void cancelDpcOrder(String orderCode, String cancelUserId, String cancelUserName) {
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+        if (ofcFundamentalInformation != null && ofcDistributionBasicInfo != null) {
+            String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
+            String transCode = ofcDistributionBasicInfo.getTransCode();
+            try {
+                OfcOrderCancelDto dpcCancel = new OfcOrderCancelDto();
+                dpcCancel.setOrderCode(orderCode);
+                dpcCancel.setCustOrderCode(custOrderCode);
+                dpcCancel.setTransCode(transCode);
+                dpcCancel.setCancelUserId(cancelUserId);
+                dpcCancel.setCancelUserName(cancelUserName);
+                String jsonStr = JacksonUtil.toJson(dpcCancel);
+                String key = orderCode + "@" + transCode;
+                mqProducer.sendMsg(jsonStr, mqConfig.getOfc2DpcStatusTopic(), key, null);
+            } catch (Exception e) {
+                logger.error("推送调度中心取消订单MQ发生异常：{}", e);
+                throw new BusinessException("取消订单推送调度中心失败");
+            }
+        }
+    }
+
+    /**
      * 调用仓储中心取消接口
      *
      * @param orderCode 订单编号
@@ -460,6 +488,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             //调用各中心请求直接取消订单
             try {
                 orderCancel(orderCode);
+                // 向调度中心发送取消mq
+                cancelDpcOrder(orderCode, authResDtoByToken.getUserId(), authResDtoByToken.getUserName());
             } catch (Exception e) {
                 throw new BusinessException("调用其他中心取消接口异常:{}", e.getMessage(), e);
             }
