@@ -9,11 +9,11 @@ import java.util.List;
  */
 public enum OrderStatusEnum {
 
-    PEND_AUDIT("10","待审核"),
-    ALREADY_EXAMINE("20","已审核"),
-    IMPLEMENTATION_IN("30","执行中"),
-    BEEN_COMPLETED("40","已完成"),
-    BEEN_CANCELED("50","已取消");
+    PEND_AUDIT("10", "待审核"),
+    ALREADY_EXAMINE("20", "已审核"),
+    IMPLEMENTATION_IN("30", "执行中"),
+    BEEN_COMPLETED("40", "已完成"),
+    BEEN_CANCELED("50", "已取消");
 
     private String code;
 

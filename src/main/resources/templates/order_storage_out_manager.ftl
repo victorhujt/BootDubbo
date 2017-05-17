@@ -710,11 +710,9 @@
                 if(this.beginDate){
                     param.startDate = this.beginDate.getFullYear()+"-"+(this.beginDate.getMonth()+1)+"-"+this.beginDate.getDate()+" 00:00:00";
                 }
-                console.info("起始时间"+param.startDate);
                 if(this.endDate){
                     param.endDate = this.endDate.getFullYear()+"-"+(this.endDate.getMonth()+1)+"-"+this.endDate.getDate()+" 23:59:59";
                 }
-                console.info("结束时间"+param.endDate);
                 param.pageNum = this.orderCurrentPage;
                 param.pageSize=this.pageSize;
                 param.custName =this.customerName;

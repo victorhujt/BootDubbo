@@ -310,7 +310,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String quantityDetail = createOrderGoodsInfo.getQuantity();
         String cubageDetail = createOrderGoodsInfo.getCubage();
         String weightDetail = createOrderGoodsInfo.getWeight();
-        if(!PubUtils.isSEmptyOrNull(quantityDetail)){
+        if (!PubUtils.isSEmptyOrNull(quantityDetail)) {
             String quantityHead = createOrderEntity.getQuantity();
             if (PubUtils.isSEmptyOrNull(quantityHead)) {
                 quantityHead = "0";
@@ -320,7 +320,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             quantityResult = quantityResult.add(quan);
             createOrderEntity.setQuantity(quantityResult.toString());
         }
-        if(!PubUtils.isSEmptyOrNull(weightDetail)){
+        if (!PubUtils.isSEmptyOrNull(weightDetail)) {
             String weightHead = createOrderEntity.getWeight();
             if (PubUtils.isSEmptyOrNull(weightHead)) {
                 weightHead = "0";
@@ -330,9 +330,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             weightHeadResult = weightHeadResult.add(weig);
             createOrderEntity.setWeight(weightHeadResult.toString());
         }
-        if(!PubUtils.isSEmptyOrNull(cubageDetail)){
+        if (!PubUtils.isSEmptyOrNull(cubageDetail)) {
             String cubageHead = createOrderEntity.getCubage();
-            if(PubUtils.isSEmptyOrNull(cubageHead)){
+            if (PubUtils.isSEmptyOrNull(cubageHead)) {
                 cubageHead = "0";
             }
             BigDecimal cuba = new BigDecimal(cubageDetail);
@@ -400,7 +400,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 //            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
-                if(sEmptyOrNull){
+                if (sEmptyOrNull) {
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                 } else {
@@ -409,7 +409,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
                     //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
                     sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
-                    if(sEmptyOrNull){
+                    if (sEmptyOrNull) {
                         this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                     }
                 }
@@ -424,7 +424,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         } else {
 
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
-            if(sEmptyOrNull){
+            if (sEmptyOrNull) {
                 ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
             }
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
@@ -435,7 +435,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //地址编码不为空才走自动审核, 为空的状态还是待审核, 并调用EPC端口补齐
-                if(sEmptyOrNull){
+                if (sEmptyOrNull) {
 
                     //自动审核通过 review:审核；rereview:反审核
                     this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
@@ -445,7 +445,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
                     //如果能匹配成功, 就继续审核, 如果匹配不成功才是未审核
                     sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
-                    if(sEmptyOrNull){
+                    if (sEmptyOrNull) {
                         this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                     }
                 }
@@ -473,12 +473,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private void fixOrEeAddrCode(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         String departuePlaceCode = this.explainAddressByRmc(ofcDistributionBasicInfo.getDepartureProvince()
                 , ofcDistributionBasicInfo.getDepartureCity(), ofcDistributionBasicInfo.getDepartureDistrict());
-        if(!PubUtils.isSEmptyOrNull(departuePlaceCode)){
+        if (!PubUtils.isSEmptyOrNull(departuePlaceCode)) {
             ofcDistributionBasicInfo.setDeparturePlaceCode(departuePlaceCode);
         }
         String destinationCode = this.explainAddressByRmc(ofcDistributionBasicInfo.getDestinationProvince()
                 , ofcDistributionBasicInfo.getDepartureCity(), ofcDistributionBasicInfo.getDestinationDistrict());
-        if(!PubUtils.isSEmptyOrNull(destinationCode)){
+        if (!PubUtils.isSEmptyOrNull(destinationCode)) {
             ofcDistributionBasicInfo.setDestinationCode(destinationCode);
         }
     }
@@ -492,11 +492,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String departurePlace = ofcDistributionBasicInfo.getDeparturePlace();
         String destination = ofcDistributionBasicInfo.getDestination();
         //调用EPC接口进行解析
-        if(!PubUtils.isSEmptyOrNull(departurePlace)){
+        if (!PubUtils.isSEmptyOrNull(departurePlace)) {
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(departurePlace);
             logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
-            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
-                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())){
+            if (null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
+                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())) {
                 logger.info("映射成功!");
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
             } else {
@@ -506,12 +506,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.info("调用Epc接口进行解析结果: {}", departurePlaceResult);
                 Object result = departurePlaceResult.getResult();
                 boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
-                if(departurePlaceResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
+                if (departurePlaceResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass) {
                     logger.error("出发完整地址调用EPC接口解析完整地址失败! destinationResult :{}", departurePlaceResult);
                     if (null == ofcAddressReflect) {
                         ofcAddressReflect = new OfcAddressReflect();
                         ofcAddressReflect.setAddress(departurePlace);
-                        if(ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                        if (ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
                             logger.error("存储出发完整地址映射失败!");
                     }
                 } else {
@@ -519,26 +519,26 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     Object departureProvince = departurePlaceObj.get("province");
                     Object departureCity = departurePlaceObj.get("city");
                     Object departureDistrict = departurePlaceObj.get("district");
-                    if(null != departureProvince){
+                    if (null != departureProvince) {
                         String depProvince = (String) departureProvince;
                         ofcDistributionBasicInfo.setDepartureProvince(depProvince);
-                        if(null != departureCity){
+                        if (null != departureCity) {
                             String depCity = (String) departureCity;
                             ofcDistributionBasicInfo.setDepartureCity(depCity);
-                            if(null != departureDistrict){
+                            if (null != departureDistrict) {
                                 String depDistrict = (String) departureDistrict;
                                 ofcDistributionBasicInfo.setDepartureDistrict(depDistrict);
                                 //调用RMC接口, 查询省市区名称对应的编码, 并赋值
                                 logger.info("调用RMC接口, 查询省市区名称对应的编码, 并赋值");
                                 String departuePlaceCode = this.explainAddressByRmc(depProvince, depCity, depDistrict);
-                                if(PubUtils.isSEmptyOrNull(departuePlaceCode)){
+                                if (PubUtils.isSEmptyOrNull(departuePlaceCode)) {
                                     logger.error("调用RMC接口, 查询出发省市区名称对应的编码失败! ");
                                 }
                                 ofcDistributionBasicInfo.setDeparturePlaceCode(departuePlaceCode);
                                 /*ofcAddressReflect = new OfcAddressReflect();
                                 ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "departure");
                                 int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
-                                if(insert < 1){
+                                if (insert < 1) {
                                     logger.error("存储明细地址映射失败!");
                                     throw new BusinessException("存储明细地址映射失败!");
                                 }*/
@@ -551,11 +551,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
         }
 
-        if(!PubUtils.isSEmptyOrNull(destination)){
+        if (!PubUtils.isSEmptyOrNull(destination)) {
             OfcAddressReflect ofcAddressReflect = ofcAddressReflectService.selectByAddress(destination);
             logger.info("查询本地映射结果: ofcAddressReflect {}", ofcAddressReflect);
-            if(null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
-                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())){
+            if (null != ofcAddressReflect && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getProvince())
+                    && !PubUtils.isSEmptyOrNull(ofcAddressReflect.getCity())) {
                 logger.info("映射成功!");
                 ofcAddressReflectService.reflectAddressToDis(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
             } else {
@@ -565,12 +565,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.info("调用Epc接口进行解析结果: {}", destinationResult);
                 Object result = destinationResult.getResult();
                 boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
-                if(destinationResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass){
+                if (destinationResult.getCode() == Wrapper.ERROR_CODE || !checkEpcAddrPass) {
                     logger.error("到达完整地址调用EPC接口解析完整地址失败! destinationResult :{}", destinationResult);
                     if (null == ofcAddressReflect) {
                         ofcAddressReflect = new OfcAddressReflect();
                         ofcAddressReflect.setAddress(destination);
-                        if(ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                        if (ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
                             logger.error("存储到达完整地址映射失败!");
                     }
                 } else {
@@ -578,26 +578,26 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     Object destinationProvince = destinationObj.get("province");
                     Object destinationCity = destinationObj.get("city");
                     Object destinationDistrict = destinationObj.get("district");
-                    if(null != destinationProvince){
+                    if (null != destinationProvince) {
                         String desProvince = (String) destinationProvince;
                         ofcDistributionBasicInfo.setDestinationProvince(desProvince);
-                        if(null != destinationCity){
+                        if (null != destinationCity) {
                             String desCity = (String) destinationCity;
                             ofcDistributionBasicInfo.setDestinationCity(desCity);
-                            if(null != destinationDistrict){
+                            if (null != destinationDistrict) {
                                 String desDistrict = (String) destinationDistrict;
                                 ofcDistributionBasicInfo.setDestinationDistrict(desDistrict);
                                 //调用RMC接口, 查询省市区名称对应的编码, 并赋值
                                 logger.info("调用RMC接口, 查询省市区名称对应的编码, 并赋值");
                                 String destinationCode = this.explainAddressByRmc(desProvince, desCity, desDistrict);
-                                if(PubUtils.isSEmptyOrNull(destinationCode)){
+                                if (PubUtils.isSEmptyOrNull(destinationCode)) {
                                     logger.error("调用RMC接口, 查询到达省市区名称对应的编码失败! ");
                                 }
                                 ofcDistributionBasicInfo.setDestinationCode(destinationCode);
                                 /*ofcAddressReflect = new OfcAddressReflect();
                                 ofcAddressReflectService.reflectAddressToRef(ofcAddressReflect, ofcDistributionBasicInfo, "destination");
                                 int insert = ofcAddressReflectMapper.insert(ofcAddressReflect);
-                                if(insert < 1){
+                                if (insert < 1) {
                                     logger.error("存储明细地址映射失败!");
                                     throw new BusinessException("存储明细地址映射失败!");
                                 }*/
@@ -651,13 +651,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         rmcAddressNameVo.setProvinceName(province);
         rmcAddressNameVo.setCityName(city);
         rmcAddressNameVo.setDistrictName(district);
-        if(PubUtils.isSEmptyOrNull(province) && PubUtils.isSEmptyOrNull(city) && PubUtils.isSEmptyOrNull(district)){
+        if (PubUtils.isSEmptyOrNull(province) && PubUtils.isSEmptyOrNull(city) && PubUtils.isSEmptyOrNull(district)) {
             logger.error("调用RMC接口, 通过省市区名称取得对应编码, 省市区名称三者必填!");
             return null;
 //            throw new BusinessException("调用RMC接口, 通过省市区名称取得对应编码, 省市区名称三者必填!");
         }
         Wrapper<RmcAddressCodeVo> codeByName = rmcAddressEdasService.findCodeByName(rmcAddressNameVo);
-        if(codeByName.getCode() == Wrapper.ERROR_CODE || codeByName.getResult() == null){
+        if (codeByName.getCode() == Wrapper.ERROR_CODE || codeByName.getResult() == null) {
             logger.error("调用RMC接口, 通过省市区名称取得对应编码,失败! 错误信息:{}", codeByName.getMessage());
             return null;
 //            throw new BusinessException(codeByName.getMessage());
@@ -666,11 +666,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String provinceCode = rmcAddressCodeVo.getProvinceCode();
         String cityCode = rmcAddressCodeVo.getCityCode();
         String districtCode = rmcAddressCodeVo.getDistrictCode();
-        if(!PubUtils.isSEmptyOrNull(provinceCode)){
+        if (!PubUtils.isSEmptyOrNull(provinceCode)) {
             StringBuilder sb = new StringBuilder(provinceCode);
-            if(!PubUtils.isSEmptyOrNull(cityCode)){
+            if (!PubUtils.isSEmptyOrNull(cityCode)) {
                 sb.append(",").append(cityCode);
-                if(!PubUtils.isSEmptyOrNull(districtCode)){
+                if (!PubUtils.isSEmptyOrNull(districtCode)) {
                     sb.append(",").append(districtCode);
                     return sb.toString();
                 }

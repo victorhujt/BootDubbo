@@ -12,9 +12,9 @@ import java.util.List;
 public enum PlatformTypeEnum {
     //1、线下；2、天猫3、京东；4、鲜易网
 
-    OFFLINE("1","线下"),
-    TMALL("2","天猫"),
-    JD("3","京东"),
+    OFFLINE("1", "线下"),
+    TMALL("2", "天猫"),
+    JD("3", "京东"),
     XIAN_YI("4", "鲜易网");
 
     PlatformTypeEnum(String code, String desc) {

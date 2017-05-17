@@ -31,6 +31,10 @@
     <result column="weight_unit_price" property="weightUnitPrice" jdbcType="DECIMAL" />
     <result column="volume_unit_price" property="volumeUnitPrice" jdbcType="DECIMAL" />
     <result column="support_batch" property="supportBatch" jdbcType="VARCHAR" />
+    <result column="package_name" property="packageName" jdbcType="VARCHAR" />
+    <result column="package_type" property="packageType" jdbcType="VARCHAR" />
+    <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
+    <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
   </resultMap>
 
   <!--订单货品列表查询-->
@@ -66,7 +70,11 @@
     oos.charging_ways,
     oos.charging_quantity,
     oos.charging_unit_price,
-    oos.support_batch
+    oos.support_batch,
+    oos.package_name,
+    oos.package_type,
+    oos.conversion_rate,
+    oos.primary_quantity
     FROM
     ofc_goods_details_info oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -122,7 +130,11 @@
       gdi.charging_ways,
       gdi.charging_quantity,
       gdi.charging_unit_price,
-      gdi.support_batch
+      gdi.support_batch,
+      gdi.package_name,
+      gdi.package_type,
+      gdi.conversion_rate,
+      gdi.primary_quantity
     FROM ofc_goods_details_info gdi
     LEFT JOIN
     ofc_fundamental_information ofi

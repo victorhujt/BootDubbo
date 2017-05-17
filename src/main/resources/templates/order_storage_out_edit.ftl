@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <span hidden="true" id = "ofc_web_url">${(OFC_WEB_URL)!}</span>
+    <link rel="stylesheet" href="/components/select2.v3/select2.min.css" />
+    <link rel="stylesheet" href="/components/select2.v3/select2-bootstrap.css" />
     <style lang="css">
         .block {
             margin: 20px 0;
         }
         .el-textarea__inner{
-          font-size:12px;
+            font-size:12px;
         }
         .el-dialog{
-          top:50%!important;
-          margin-top:-300px;
-          margin-bottom:0!important;
+            top:50%!important;
+            margin-top:-300px;
+            margin-bottom:0!important;
         }
         .el-dialog__body{
-          padding:10px 20px 30px;
+            padding:10px 20px 30px;
         }
         .el-dialog__footer{
-          padding:15px 20px;
+            padding:15px 20px;
         }
         .el-dialog--small .el-table{
-          min-height:350px;
+            min-height:350px;
         }
         .el-dialog--small .el-table tr{
-          cursor:pointer;
+            cursor:pointer;
         }
         .xe-block{
             overflow:visible;
@@ -109,43 +112,6 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectConsignee">取 消</el-button>
                 <el-button type="primary" @click="setCurrentConsigneeInfo(consigneeDataInfo.consigneeCurrentRow)">确 定</el-button>
-            </div>
-        </el-dialog>
-
-
-        <el-dialog title="供应商信息" v-model="supplierDataInfo.chosenSupplier" size="small">
-            <el-form :model="supplierDataInfo.supplierForm">
-                <el-form-item label="名称" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.supportName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系人" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.contactName" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" :label-width="formLabelWidth">
-                    <el-input v-model="supplierDataInfo.supplierForm.contactPhone" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item  label="" :label-width="formLabelWidth20">
-                    <el-button type="primary" @click="selectSupplier">筛选</el-button>
-                </el-form-item>
-            </el-form>
-
-            <el-table border :data="supplierDataInfo.supplierData" highlight-current-row @current-change="handlSuppliereCurrentChange"
-                      @row-dblclick="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)" style="width: 100%" max-height="400">
-                <el-table-column type="index"></el-table-column>
-                <el-table-column property="supportName" label="名称"></el-table-column>
-                <el-table-column property="contactName" label="联系人"></el-table-column>
-                <el-table-column property="contactPhone" label="联系电话"></el-table-column>
-                <el-table-column property="fax" label="传真"></el-table-column>
-                <el-table-column property="email" label="邮箱"></el-table-column>
-                <el-table-column property="postCode" label="邮编"></el-table-column>
-                <el-table-column property="supportCode" label="供应商编码"></el-table-column>
-                <el-table-column property="completeAddress" label="地址"></el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleSupplierSizeChange" @current-change="handleSupplierCurrentPage" :current-page="supplierDataInfo.currentSupplierPage" :page-sizes="pageSizes" :page-size="supplierDataInfo.supplierPageSize" layout="total, sizes, prev, pager, next, jumper" :total="supplierDataInfo.totalSupplier">
-            </el-pagination>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="cancelSelectSupplier">取 消</el-button>
-                <el-button type="primary" @click="setCurrentSupplierInfo(supplierDataInfo.supplierCurrentRow)">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -268,7 +234,7 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="仓库名称" required prop="wareHouse" class="xe-col-3">
-                    <el-select v-model="orderForm.wareHouse" placeholder="请选择">
+                    <el-select v-model="orderForm.wareHouse" placeholder="请选择" @change="clearGoodsData">
                         <el-option
                                 v-for="item in wareHouseOptions"
                                 :label="item.label"
@@ -291,14 +257,9 @@
             </div>
             <div class="xe-block">
                 <el-form-item label="供应商名称" class="xe-col-3">
-                    <el-input
-                            placeholder="请选择"
-                            icon="search"
-                            v-model="orderForm.supportName"
-                            v-bind:disabled = "isDisabled"
-                            :readOnly="true"
-                            @click="openSupplier">
-                    </el-input>
+                    <el-input v-model="orderForm.supportName" v-if="supportNameShow"  placeholder="请输入供应商名称"></el-input>
+                    <input class="form-control select2-single" name="custName" id="custName" placeholder="请输入供应商名称" />
+                    <input  hidden name="custCode" id="custCode"  />
                 </el-form-item>
                 <el-form-item label="备注" prop="notes" class="xe-col-3">
                     <el-input type="textarea"  v-model="orderForm.notes"></el-input>
@@ -409,12 +370,50 @@
                 </el-table-column>
                 <el-table-column property="unit" label="单位">
                     <template scope="scope">
-                        <el-input v-model="scope.row.unit" :readOnly="true"></el-input>
+                        <el-select v-model="scope.row.unit"  @change="accountSpecification(scope.row)" placeholder="请选择">
+                            <el-option
+                                    v-for="item in scope.row.unitsOptions"
+                                    :label="item.label"
+                                    :value="item.value">
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                                <span style="float: left">{{ item.label }}</span>
+                            </el-option>
+                        </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column property="quantity" label="出库数量">
+                <el-table-column property="quantity" label="入库数量">
                     <template scope="scope">
-                        <el-input v-model="scope.row.quantity" placeholder="请输入内容"></el-input>
+                        <el-input v-model="scope.row.quantity" @blur="accountPrimaryQuantity(scope.row)" placeholder="请输入内容"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="primaryQuantity" label="主单位数量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="packageType" v-if="false" label="包装类型">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.packageType"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="packageName" v-if="false" label="包装名称">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.packageName"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="conversionRate" v-if="false" label="与主单位的换算规格">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.conversionRate"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="expiryDate" label="保质期限" v-if="false">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.expiryDate"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="" label="" v-if="false">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.levelSpecificationOptions"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
@@ -427,12 +426,7 @@
                         <el-input v-model="scope.row.productionBatch"  placeholder="请输入内容"></el-input>
                     </template>
                 </el-table-column>
-              <el-table-column property="expiryDate" label="保质期限" v-if="false">
-                <template scope="scope">
-                  <el-input v-model="scope.row.expiryDate"></el-input>
-                </template>
-              </el-table-column>
-                <el-table-column property="productionTime" label="生产日期">
+                <el-table-column property="productionTime" width ="140px" label="生产日期">
                     <template scope="scope">
                         <el-date-picker
                                 v-model="scope.row.productionTime"
@@ -440,13 +434,13 @@
                                 type="date"
                                 :clearable="false"
                                 :editable="false"
-                                @change="accountInvalidTime(scope.row)"
                                 placeholder="选择日期"
+                                @change="accountInvalidTime(scope.row)"
                                 :picker-options="pickerOptions1">
                         </el-date-picker>
                     </template>
                 </el-table-column>
-                <el-table-column property="invalidTime" label="失效日期">
+                <el-table-column property="invalidTime" width ="140px" label="失效日期">
                     <template scope="scope">
                         <el-date-picker
                                 v-model="scope.row.invalidTime"
@@ -478,42 +472,82 @@
             </el-table>
             <el-button @click="addGoods">添加货品</el-button>
             <el-button type="primary" @click="submitForm('orderForm')">确认下单</el-button>
-            <#--<el-button type="primary" @click="validateStockCount">校验当前库存</el-button>-->
+        <#--<el-button type="primary" @click="validateStockCount">校验当前库存</el-button>-->
         </el-form>
     </div>
 </div>
 </body>
 <script>
-    new Vue({
+    var scripts = [null,
+        "/components/select2.v3/select2.min.js",
+        "/components/select2.v3/select2_locale_zh-CN.js",
+        null];
+
+    $(".page-content-area").ace_ajax("loadScripts", scripts, function () {
+        $(document).ready(main);
+    });
+
+    function main() {
+        initSupplierName();
+    }
+
+    function custNameSelected() {
+        $("#custName").select2("data", {"code": _this.orderForm.supportCode, "name": _this.orderForm.supportName});
+    }
+
+    function initSupplierName(val) {
+        var customerCode;
+        if("default" == val){
+            customerCode = "xxxxxx";
+        }else{
+            customerCode =  _this.orderForm.custCode;
+        }
+        var ofc_web_url = $("#ofc_web_url").html();
+        var url =  ofc_web_url+"/ofc/distributing/querySupplierSelect2?customerCode="+customerCode;
+        var notice = "没有找到相关供应商";
+        Select2Util.singleSelectInit("#custName",url,notice,"#custCode");
+        $("#custName").on("select2-selecting", function(e) {
+            _this.orderForm.supportName = e.choice.name;
+            _this.orderForm.supportCode = e.choice.code;
+        });
+    }
+
+
+    var _this = new Vue({
         el: '#app',
         data :function() {
-          var validateOrdeTime = function(rule, value, callback){
-            
-            if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
-              callback(new Error('只能选择一周之内的日期!'));
-            }else if(value.getTime()>new Date().getTime()){
-              callback(new Error('不能选择当前日期的往后日期!'));
-            }else{
-              callback();
-            }
-          };
-          var checkPhoneOrMobile = function(rule, value, callback) {
-            if(value!==""){
-              var mp=/^1\d{10}$/;
-              var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
-              var phone = pp.test(value)||mp.test(value);
-              if(phone!==true){
-                callback(new Error('请正确输入联系电话'));
-              }else{
-                callback();
-              }
-            }else{
-                callback();
-            }
-          };
+            var validateOrdeTime = function(rule, value, callback){
+
+                if(value.getTime()<new Date().getTime() - 3600 * 1000 * 24 * 7){
+                    callback(new Error('只能选择一周之内的日期!'));
+                }else if(value.getTime()>new Date().getTime()){
+                    callback(new Error('不能选择当前日期的往后日期!'));
+                }else{
+                    callback();
+                }
+            };
+            var checkPhoneOrMobile = function(rule, value, callback) {
+                if(value!==""){
+                    var mp=/^1\d{10}$/;
+                    var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
+                    var phone = pp.test(value)||mp.test(value);
+                    if(phone!==true){
+                        callback(new Error('请正确输入联系电话'));
+                    }else{
+                        callback();
+                    }
+                }else{
+                    callback();
+                }
+            };
             return {
                 isShow:false,
+                supportNameShow:false,
+                oldCustomerCode:'',
+                oldCustomerName:'',
                 cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
+                unitsOptions:[],
+                levelSpecificationOptions:[],
                 defaultData: {
                     province: {
                         code: "",
@@ -625,10 +659,10 @@
                     value: '614',
                     label: '分拨出库'
                 },
-                {
-                    value: '617',
-                    label: '退车间'
-                }
+                    {
+                        value: '617',
+                        label: '退车间'
+                    }
                 ],
                 goodsMsgOptions: [],
                 pickerOptions1: {
@@ -798,7 +832,9 @@
                                 vueObj.orderForm.orderDate=DateUtil.parse(ofcFundamentalInformation.orderTime);
                                 vueObj.orderForm.merchandiser=ofcFundamentalInformation.merchandiser;
                                 vueObj.orderForm.custName=ofcFundamentalInformation.custName;
+                                vueObj.oldCustomerName=ofcFundamentalInformation.custName;
                                 vueObj.orderForm.custCode=ofcFundamentalInformation.custCode;
+                                vueObj.oldCustomerCode = ofcFundamentalInformation.custCode;
                                 vueObj.orderForm.custOrderCode=ofcFundamentalInformation.custOrderCode;
                                 vueObj.orderForm.businessType=ofcFundamentalInformation.businessType;
                                 vueObj.orderForm.notes=ofcFundamentalInformation.notes;
@@ -810,6 +846,7 @@
                                     wareHouse.value= vueObj.wareHouseCode;
                                     vueObj.wareHouseOptions.push(wareHouse);
                                     vueObj.orderForm.wareHouse=ofcWarehouseInformation.warehouseCode;
+                                    vueObj.oldWarehouse = ofcWarehouseInformation.warehouseCode;
                                     vueObj.orderForm.supportName=ofcWarehouseInformation.supportName;
                                     vueObj.orderForm.supportCode=ofcWarehouseInformation.supportCode;
                                     vueObj.orderForm.shipmentTime=DateUtil.parse(ofcWarehouseInformation.shipmentTime);
@@ -868,16 +905,27 @@
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
+                                            good.primaryQuantity=goodDetail.primaryQuantity;
+                                            good.conversionRate = goodDetail.conversionRate;
                                             good.unitPrice=goodDetail.unitPrice;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
                                             good.supportBatch=goodDetail.supportBatch;
+                                            vueObj.goodDataInfo.goodsForm.goodsCode =  good.goodsCode;
+                                            good.unit = goodDetail.packageName;
+                                            vueObj.selectGoods();
+                                            good.unitsOptions = vueObj.unitsOptions;
+                                            if(vueObj.unitsOptions.length == 1){
+                                                good.unit = "主单位";
+                                            }
+                                            good.levelSpecificationOptions = vueObj.levelSpecificationOptions;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
                                     vueObj.selectSupplier();
                                     vueObj.isShow = true;
+                                    custNameSelected();
                                 }
                             }
 
@@ -890,11 +938,43 @@
             handleCurrentChange:function(val) {
                 this.customerDataInfo.currentRow = val;
             },
-            handlSuppliereCurrentChange:function(val) {
-                this.supplierDataInfo.supplierCurrentRow = val;
-            },
             handleSelectionChange:function(val){
                 this.multipleSelection = val;
+            },
+            accountSpecification:function(val){
+                //计算主单位数量
+                if(!StringUtil.isEmpty(val.unit)){
+                    var specification = this.getLevelSpecification(val);
+                    val.conversionRate = specification;
+                    val.goodsSpec = specification + "箱/"+val.unit;
+                    val.packageType = val.unit;
+                    val.packageName = this.getLevelName(val);
+                    this.accountPrimaryQuantity(val);
+                }
+            },
+            getLevelSpecification:function(val){
+                for(var i =0;i <val.levelSpecificationOptions.length;i++){
+                    var option = val.levelSpecificationOptions[i];
+                    if(val.unit == option.value){
+                        return option.label;
+                    }
+                }
+            },
+            getLevelName:function(val){
+                for(var i =0;i <val.unitsOptions.length;i++){
+                    var option = val.unitsOptions[i];
+                    if(val.unit == option.value){
+                        return option.label;
+                    }
+                }
+            },
+            accountPrimaryQuantity:function(val){
+                if(!StringUtil.isEmpty(val.quantity)){
+                    if(!StringUtil.isEmpty(val.conversionRate)){
+                        val.primaryQuantity = val.quantity*(val.conversionRate);
+                    }
+
+                }
             },
             setCurrentCustInfo:function(val) {
                 var vueObj=this;
@@ -902,6 +982,7 @@
                     this.orderForm.custName = val.custName;
                     this.orderForm.custCode=val.custCode;
                     this.customerDataInfo.chosenCus = false;
+                    initSupplierName();
                     CommonClient.post(sys.rootPath + "/ofc/queryWarehouseByCustomerCode", {"customerCode":vueObj.orderForm.custCode}, function(result) {
                         vueObj.wareHouseOptions = [];// 仓库下拉列表清空
                         vueObj.orderForm.wareHouse = '';       // 清空仓库
@@ -979,6 +1060,9 @@
                 }
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
+                this.oldWarehouse = this.orderForm.wareHouse;
+                this.oldCustomerCode = this.orderForm.custCode;
+                this.oldCustomerName = this.orderForm.custName;
                 vueObj.goodDataInfo.goodsForm.goodsName = "";
                 vueObj.goodDataInfo.goodsForm.goodsTypeId = "";
                 vueObj.goodDataInfo.goodsForm.goodsTypeSonId = "";
@@ -1002,7 +1086,7 @@
             },
             getGoodsCategory:function(val) {
                 var vueObj=this;
-               // val.goodsCategory = null;
+                // val.goodsCategory = null;
                 var typeId=val.goodsType;
                 this.goodsType=typeId;
                 CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"cscGoodsType":typeId},function(data) {
@@ -1020,7 +1104,6 @@
                 this.goodsCurrentRow = val;
             },
             goodsCodeClick:function() {
-                console.log('弹窗');
             },
             selectSupplier:function(){
                 if(StringUtil.isEmpty(this.orderForm.custName)&&StringUtil.isEmpty(this.orderForm.custCode)){
@@ -1043,7 +1126,7 @@
                     var data = eval(result);
                     if (data == undefined || data == null || data.result == undefined || data.result ==null || data.result.size == 0) {
                         if(!vueObj.isShow){
-                            layer.msg("暂时未查询到供应商信息！！");
+                           // layer.msg("暂时未查询到供应商信息！！");
                         }
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,CscSupplierInfoDto) {
@@ -1069,24 +1152,6 @@
                 },"json");
 
             },
-            handleSupplierSizeChange:function(val){
-                this.supplierDataInfo.supplierPageSize = val;
-                this.selectSupplier();
-            },
-            handleSupplierCurrentPage:function(val){
-                this.supplierDataInfo.currentSupplierPage = val;
-                this.selectSupplier();
-            },
-
-            setCurrentSupplierInfo:function(val){
-                if (val != null) {
-                    this.orderForm.supportName=val.supportName;
-                    this.orderForm.supportCode=val.supportCode;
-                    this.supplierDataInfo.chosenSupplier=false;
-                } else {
-                    this.promptInfo("请选择供应商!",'warning');
-                }
-            },
             setCurrentGoodsInfo:function(){
                 if(this.multipleSelection.length<1){
                     this.promptInfo("请至少选择一条货品明细!",'warning');
@@ -1095,31 +1160,39 @@
                 this.goodDataInfo.chosenGoodCode = false;
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
+                    var unitVar = '';
+                    if(val.unitsOptions.length == 1){
+                        unitVar = "主单位";
+                    }
                     var newData = {
                         goodsType: val.goodsType,
                         goodsCategory: val.goodsCategory,
                         goodsCode: val.goodsCode,
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
-                        unit: val.unit,
+                        unit:unitVar,
                         quantity: '',
+                        unitsOptions:val.unitsOptions,
+                        levelSpecificationOptions:val.levelSpecificationOptions,
+                        primaryQuantity:'',
                         unitPrice:'',
                         productionBatch:'',
                         expiryDate:val.expiryDate,
                         productionTime:'',
                         invalidTime:'',
-                        supportBatch:''
+                        supportBatch:'',
+                        packageType:'',
+                        packageName:'',
+                        conversionRate:'1'
+
                     };
                     this.goodsData.push(newData);
                     if(this.supportBatchData.length==0){
-                        this.selectSupplier();
                         this.isShow = true;
+                        this.selectSupplier();
+
                     }
                 }
-            },
-            cancelSelectSupplier:function(){
-                this.supplierDataInfo.supplierData=[];
-                this.supplierDataInfo.chosenSupplier=false;
             },
             selectConsignee:function(){
                 this.consigneeDataInfo.consigneeData=[];
@@ -1212,10 +1285,11 @@
                 this.consigneeDataInfo.chosenSend = false;
             },
             selectGoods:function(){
-                this.goodDataInfo.goodsCodeData=[];
                 var vueObj=this;
+                vueObj.goodDataInfo.goodsCodeData=[];
                 var cscGoods = {};
                 var customerCode = vueObj.orderForm.custCode;
+                var warehouseCode = vueObj.orderForm.wareHouse;
                 cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
                 cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
                 cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
@@ -1224,12 +1298,14 @@
                 cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                 cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                 var param = JSON.stringify(cscGoods);
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode}, function(data) {
+                CommonClient.syncpost(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
                     if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                         layer.msg("暂时未查询到货品信息！！");
                     } else if (data.code == 200) {
                         $.each(data.result.list,function (index,cscGoodsVo) {
                             var goodCode={};
+                            var unitsOptions = [];
+                            var levelSpecificationOptions = [];
                             goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
                             goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
                             goodCode.goodsCode=cscGoodsVo.goodsCode;
@@ -1242,6 +1318,27 @@
                                 goodCode.expiryDate=0;
                             }else{
                                 goodCode.expiryDate=cscGoodsVo.expiryDate;
+                            }
+                            if(cscGoodsVo.goodsPackingDtoList!=null){
+                                if(cscGoodsVo.goodsPackingDtoList.length>0){
+                                    var unitsOptions =[];
+                                    var levelSpecificationOptions = [];
+                                    for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
+                                        var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
+                                        var unit = {};
+                                        var levelSpecification = {};
+                                        unit.label = goodsPacking.levelDescription;
+                                        unit.value = goodsPacking.level;
+                                        levelSpecification.label = goodsPacking.levelSpecification;
+                                        levelSpecification.value =  goodsPacking.level;
+                                        unitsOptions.push(unit);
+                                        levelSpecificationOptions.push(levelSpecification);
+                                    }
+                                    goodCode.unitsOptions = unitsOptions;
+                                    goodCode.levelSpecificationOptions = levelSpecificationOptions;
+                                    vueObj.unitsOptions = unitsOptions;
+                                    vueObj.levelSpecificationOptions = levelSpecificationOptions;
+                                }
                             }
                             vueObj.goodDataInfo.goodsCodeData.push(goodCode);
                         });
@@ -1314,18 +1411,18 @@
                             }
                         },"json");
             },
-          submitForm:function(formName) {
+            submitForm:function(formName) {
                 var _this = this;
-            this.$refs[formName].validate(function(valid){
-              if (valid) {
-                _this.saveStorage();
-              } else {
-                console.log('error submit!!');
-                return false;
-              }
-            });
-          },
-          saveStorage:function(){
+                this.$refs[formName].validate(function(valid){
+                    if (valid) {
+                        _this.saveStorage();
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            saveStorage:function(){
                 if(this.orderForm.businessType=="614"){
                     if(StringUtil.isEmpty(this.orderForm.supportName)){
                         this.promptInfo("业务名称为分拨出库时，供应商必须选择!","warning");
@@ -1333,15 +1430,15 @@
                     }
                 }
 
-              if(this.orderForm.isEditable){
-                  if(StringUtil.isEmpty(this.thirdLevelAddress)){
-                      this.promptInfo("编辑收货方时，请选择三级地址!",'warning');
-                      return;
-                  }
-              }
-              if(StringUtil.isEmpty(this.orderForm.consigneeContactCode)){
-                  this.orderForm.consigneeContactCode="XE";
-              }
+                if(this.orderForm.isEditable){
+                    if(StringUtil.isEmpty(this.thirdLevelAddress)){
+                        this.promptInfo("编辑收货方时，请选择三级地址!",'warning');
+                        return;
+                    }
+                }
+                if(StringUtil.isEmpty(this.orderForm.consigneeContactCode)){
+                    this.orderForm.consigneeContactCode="XE";
+                }
 
                 //订单基本信息
                 var ofcOrderDTOStr = {};
@@ -1353,11 +1450,11 @@
                 var cscContactDto={};
                 //供应商信息
                 var cscSupplierInfoDtoStr={};
-              if(StringUtil.isEmpty(this.orderForm.consigneeName)){
-                  this.promptInfo("收货方不能为空，请选择收货方","warning");
-                  return;
-              }
-              ofcOrderDTOStr=this.orderForm;
+                if(StringUtil.isEmpty(this.orderForm.consigneeName)){
+                    this.promptInfo("收货方不能为空，请选择收货方","warning");
+                    return;
+                }
+                ofcOrderDTOStr=this.orderForm;
                 //是否提供运输
                 if(this.orderForm.isNeedTransport){
                     ofcOrderDTOStr.provideTransport="1";
@@ -1374,7 +1471,7 @@
                     ofcOrderDTOStr.orderTime=DateUtil.format(this.orderForm.orderDate, "yyyy-MM-dd HH:mm:ss");
                 }
 
-              ofcOrderDTOStr.selfTransCode = this.selfTransCode;
+                ofcOrderDTOStr.selfTransCode = this.selfTransCode;
                 //订单基本信息
                 ofcOrderDTOStr.warehouseName=this.getWareHouseNameByCode(this.orderForm.wareHouse);//仓库名称
                 ofcOrderDTOStr.warehouseCode=this.orderForm.wareHouse;//仓库编码
@@ -1389,65 +1486,78 @@
                     this.promptInfo("请添加至少一条货品!",'warning');
                     return;
                 }
+                var  str = "您确认提交订单吗?";
+                var messageReminder = "货品";
+                var reminder = "";
                 //校验金额和格式化日期时间
-              for(var i=0;i<goodsTable.length;i++){
-                  var good=goodsTable[i];
+                for(var i=0;i<goodsTable.length;i++){
+                    var good=goodsTable[i];
 //                  if(StringUtil.isEmpty(good.supportBatch)){
 //                      if(!StringUtil.isEmpty(this.orderForm.supportCode)){
 //                          good.supportBatch=this.orderForm.supportCode;
 //                      }
 //                  }
-                  if(!StringUtil.isEmpty(good.unitPrice)){
-                      if(isNaN(good.unitPrice)){
-                          this.promptInfo("货品单价必须为数字",'error');
-                          return;
-                      }
-                      if(good.unitPrice>99999.99||good.unitPrice<0){
-                          this.promptInfo("货品单价不能大于99999.99或小于0",'warning');
-                          return;
-                      }
-                      if(isNaN(good.unitPrice)){
-                          this.promptInfo("货品数量必须为数字",'error');
-                          return;
-                      }
-                  }
-                  if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
-                      if(!good.quantity){
-                          this.promptInfo("货品出库数量不能为空",'warning');
-                          return;
-                      }
-                      if(isNaN(good.quantity)){
-                          this.promptInfo("货品出库数量必须为数字",'error');
-                          return;
-                      }
-                      if(good.quantity>99999.999){
-                          this.promptInfo("货品数量不能大于99999.999",'warning');
-                          return;
-                      }
-                      if(good.quantity<0){
-                          this.promptInfo("货品数量不能小于0",'error');
-                          return;
-                      }
-                      if(good.quantity==0){
-                          this.promptInfo("货品数量不能小于0",'error');
-                          return;
-                      }
-                  }else{
-                      this.promptInfo("货品数量不能为空",'warning');
-                      return;
-                  }
-                  if( good.productionTime&& good.invalidTime){
-                      if( good.productionTime.getTime()> good.invalidTime.getTime()){
-                          this.promptInfo("生产日期不能大于失效日期",'error');
-                          return;
-                      }
-                  }
-                  goodDetail.push(good);
-              }
+                    if(!StringUtil.isEmpty(good.unitPrice)){
+                        if(isNaN(good.unitPrice)){
+                            this.promptInfo("货品单价必须为数字",'error');
+                            return;
+                        }
+                        if(good.unitPrice>99999.99||good.unitPrice<0){
+                            this.promptInfo("货品单价不能大于99999.99或小于0",'warning');
+                            return;
+                        }
+                        if(isNaN(good.unitPrice)){
+                            this.promptInfo("货品数量必须为数字",'error');
+                            return;
+                        }
+                    }
+                    if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
+                        if(!good.quantity){
+                            this.promptInfo("货品出库数量不能为空",'warning');
+                            return;
+                        }
+                        if(isNaN(good.quantity)){
+                            this.promptInfo("货品出库数量必须为数字",'error');
+                            return;
+                        }
+                        if(good.quantity>99999.999){
+                            this.promptInfo("货品数量不能大于99999.999",'warning');
+                            return;
+                        }
+                        if(good.quantity<0){
+                            this.promptInfo("货品数量不能小于0",'error');
+                            return;
+                        }
+                        if(good.quantity==0){
+                            this.promptInfo("货品数量不能小于0",'error');
+                            return;
+                        }
+                    }else{
+                        this.promptInfo("货品数量不能为空",'warning');
+                        return;
+                    }
+                    if( good.productionTime&& good.invalidTime){
+                        if( good.productionTime.getTime()> good.invalidTime.getTime()){
+                            this.promptInfo("生产日期不能大于失效日期",'error');
+                            return;
+                        }
+                    }
+                    if(!this.isInteger(good.primaryQuantity)){
+                        if(StringUtil.isEmpty(reminder)){
+                            reminder = good.goodsCode;
+                        }else{
+                            reminder = reminder +"," + good.goodsCode;
+                        }
+                    }
+                    goodDetail.push(good);
+                }
 
                 if(goodDetail.length <1){
                     this.promptInfo("请添加至少一条货品!",'warning');
                     return;
+                }
+                if(!StringUtil.isEmpty(reminder)){
+                    str = messageReminder + reminder + "主单位数量为非正整数，你确认下单吗？";
                 }
                 var ofcOrderDto = JSON.stringify(ofcOrderDTOStr);
                 var orderGoodsListStr = JSON.stringify(goodDetail);
@@ -1460,7 +1570,7 @@
                             ,"cscSupplierInfoDtoStr":cscSupplierInfoDtoStr
                             ,"tag":tag
                         }
-                        ,"您确认提交订单吗?"
+                        ,str
                         ,function () {
                             location.reload();
                             var newurl = "/ofc/orderStorageOutManager/";
@@ -1598,14 +1708,14 @@
                     }
                 }
             },
-          reSetCondition:function(){
+            reSetCondition:function(){
                 this.goodDataInfo.goodsForm.goodsName="";
                 this.goodDataInfo.goodsForm.barCode="";
                 this.goodDataInfo.goodsForm.goodsCode="";
                 this.goodDataInfo.goodsForm.goodsTypeSonId="";
                 this.goodDataInfo.goodsForm.goodsTypeId="";
             },
-           addressCallback:function(val){
+            addressCallback:function(val){
                 if(val!=null&&val.length>0){
                     for(var i=0;i<val.length;i++){
                         var addr=val[i];
@@ -1631,7 +1741,7 @@
                 }
             },
             validateStockCount:function(){
-                
+
                 var _this=this;
                 _this.goodsStockData=[];
                 if(StringUtil.isEmpty(_this.orderForm.custCode)){
@@ -1668,7 +1778,48 @@
                         _this.chosenGoodStock=true;
                     }
                 },"json");
+            },
+            clearGoodsData:function(){
+                var _this = this;
+                if(_this.goodsData.length>0){
+                    if(!StringUtil.isEmpty(this.orderForm.custCode)){
+                        if((_this.orderForm.custCode == _this.oldCustomerCode) && (StringUtil.isEmpty( _this.orderForm.wareHouse))){
+                            if(!StringUtil.isEmpty(_this.oldWarehouse)){
+                                _this.orderForm.wareHouse = _this.oldWarehouse;
+                            }
+                        }
+                    }
+                    if(!StringUtil.isEmpty(_this.orderForm.wareHouse)){
+                        var warehouseCode = _this.orderForm.wareHouse;
+                    }
+                    var oldwarehouseCode = _this.oldWarehouse;
+                    if(oldwarehouseCode != warehouseCode){
+                        _this.openChangeWarehouseMessage();
+                    }
+                }
+            },
+            openChangeWarehouseMessage:function(){
+                var _this=this;
+                _this.$confirm('更改客户名称或者仓库名称货品信息将会被清空, 确定要更改吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function() {
+                    _this.goodsData = [];
+                }).catch(function() {
+                    var param = {};
+                    _this.orderForm.custCode = _this.oldCustomerCode;
+                    _this.orderForm.custName = _this.oldCustomerName;
+                    param.custCode =  _this.orderForm.custCode;
+                    param.custName =  _this.orderForm.custName;
+                    _this.setCurrentCustInfo(param);
+                    _this.orderForm.wareHouse = _this.oldWarehouse;
+                });
+            },
+            isInteger:function (obj) {
+                return obj%1 === 0 ;
             }
+
         }
     });
 </script>

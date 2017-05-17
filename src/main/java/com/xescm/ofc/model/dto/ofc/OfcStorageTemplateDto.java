@@ -2,6 +2,7 @@ package com.xescm.ofc.model.dto.ofc;
 
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import lombok.Data;
 
@@ -59,5 +60,11 @@ public class OfcStorageTemplateDto {
     private String consignorName;
     //门店编码
     private String storeCode;
+    //包装代码
+    private String packageId;
+    //货品包装
+    private GoodsPackingDto goodsPackingDto;
+    //主单位数量
+    private BigDecimal mainUnitNum;
 
 }

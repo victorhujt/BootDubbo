@@ -26,7 +26,8 @@ public class MyCorsConfiguration {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/ofc/**").allowedOrigins(restConfig.getUamUrl());// 用户中心
+                registry.addMapping("/ofc/**").allowedOrigins(restConfig.getUamUrl(),restConfig.getPaas(), restConfig.getPaasDev());// 用户中心
+//                registry.addMapping("/ofc/searchOverallOrder").allowedOrigins();
             }
         };
     }

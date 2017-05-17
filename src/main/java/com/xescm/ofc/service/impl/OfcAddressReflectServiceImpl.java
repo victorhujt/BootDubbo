@@ -53,13 +53,13 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
         String street = ofcAddressReflect.getStreet();
         String streetCode = ofcAddressReflect.getStreetCode();
         StringBuilder sb = new StringBuilder();
-        if(!PubUtils.isSEmptyOrNull(provinceCode)){
+        if (!PubUtils.isSEmptyOrNull(provinceCode)) {
             sb.append(provinceCode).append(",");
-            if(!PubUtils.isSEmptyOrNull(cityCode)){
+            if (!PubUtils.isSEmptyOrNull(cityCode)) {
                 sb.append(cityCode).append(",");
-                if(!PubUtils.isSEmptyOrNull(districtCode)){
+                if (!PubUtils.isSEmptyOrNull(districtCode)) {
                     sb.append(districtCode).append(",");
-                    if(!PubUtils.isSEmptyOrNull(streetCode)){
+                    if (!PubUtils.isSEmptyOrNull(streetCode)) {
                         sb.append(streetCode);
                     }
                 }
@@ -69,7 +69,7 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
         if (code.endsWith(",")) {
             code = code.substring(0, code.length());
         }
-        if(StringUtils.equals(tag, "departure")){
+        if (StringUtils.equals(tag, "departure")) {
             ofcDistributionBasicInfo.setDepartureProvince(province);
             ofcDistributionBasicInfo.setDepartureCity(city);
             ofcDistributionBasicInfo.setDepartureDistrict(district);
@@ -94,13 +94,13 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
     @Override
     public void reflectAddressToRef(OfcAddressReflect ofcAddressReflect, OfcDistributionBasicInfo ofcDistributionBasicInfo, String tag) {
         String[] split = new String[0];
-        if(StringUtils.equals(tag, "departure")){
+        if (StringUtils.equals(tag, "departure")) {
             ofcAddressReflect.setProvince(ofcDistributionBasicInfo.getDepartureProvince());
             ofcAddressReflect.setCity(ofcDistributionBasicInfo.getDepartureCity());
             ofcAddressReflect.setDistrict(ofcDistributionBasicInfo.getDepartureDistrict());
             ofcAddressReflect.setStreet(ofcDistributionBasicInfo.getDepartureTowns());
             ofcAddressReflect.setAddress(ofcDistributionBasicInfo.getDeparturePlace());
-            if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())){
+            if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode())) {
                 split = ofcDistributionBasicInfo.getDeparturePlaceCode().split(",");
             }
 
@@ -110,17 +110,17 @@ public class OfcAddressReflectServiceImpl extends BaseService<OfcAddressReflect>
             ofcAddressReflect.setDistrict(ofcDistributionBasicInfo.getDestinationDistrict());
             ofcAddressReflect.setStreet(ofcDistributionBasicInfo.getDestinationTowns());
             ofcAddressReflect.setAddress(ofcDistributionBasicInfo.getDestination());
-            if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())){
+            if (!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDestinationCode())) {
                 split = ofcDistributionBasicInfo.getDestinationCode().split(",");
             }
         }
-        if(split.length > 0){
+        if (split.length > 0) {
             ofcAddressReflect.setProvinceCode(split[0]);
-            if(split.length > 1) {
+            if (split.length > 1) {
                 ofcAddressReflect.setCityCode(split[1]);
-                if(split.length > 2) {
+                if (split.length > 2) {
                     ofcAddressReflect.setDistrictCode(split[2]);
-                    if(split.length > 3) {
+                    if (split.length > 3) {
                         ofcAddressReflect.setStreetCode(split[3]);
                     }
                 }

@@ -147,6 +147,9 @@ public final class OrderConstConstant {
 
     public static  volatile boolean SWITCH_FLAG = false;
 
+    public static final String MOBILE_PENDING_ORDER_LIST = "DdMobilePendingOrderList";
+
+
     public OrderConstConstant() {
     }
 }
