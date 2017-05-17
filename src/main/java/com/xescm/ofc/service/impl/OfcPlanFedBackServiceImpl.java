@@ -16,10 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 
 /**
  *
@@ -38,6 +40,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     @Resource
     private OfcOrderManageService ofcOrderManageService;
 
+    @Resource
+    private OfcWarehouseInformationService   ofcWarehouseInformationService;
+
 
     /**
      * 运输单状态反馈
@@ -46,7 +51,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @return      list
      */
     @Override
-    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName) {
+    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName,ConcurrentHashMap cmap) {
         //根据订单号获取单及状态
         String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
         String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
@@ -118,14 +123,33 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         //签收后标记为已完成
                         orderStatus = new OfcOrderStatus();
                         orderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                        orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                        if(WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())){
+                            OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
+                            ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+                            ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
+                            if(ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS){
+                                if(cmap.containsKey(ofcFundamentalInformation.getOrderCode())){
+                                    logger.info("仓储订单仓储先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
+                                    orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                                    if (null == ofcFundamentalInformation.getFinishedTime()) {
+                                        ofcFundamentalInformation.setFinishedTime(now);
+                                    }
+                                }else{
+                                    orderStatus.setOrderStatus(IMPLEMENTATION_IN);
+                                    cmap.put(ofcFundamentalInformation.getOrderCode(),"");
+                                    logger.info("===>仓储订单运输先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
+                                }
+                            }
+                        }else{
+                            orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                            if (null == ofcFundamentalInformation.getFinishedTime()) {
+                                ofcFundamentalInformation.setFinishedTime(now);
+                            }
+                        }
                         orderStatus.setLastedOperTime(now);
                         orderStatus.setStatusDesc("运输单已完成");
                         orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) + " " + "运输单订单已完成");
                         orderStatus.setOperator(userName);
-                        if (null == ofcFundamentalInformation.getFinishedTime()) {
-                            ofcFundamentalInformation.setFinishedTime(now);
-                        }
                         ofcFundamentalInformationService.update(ofcFundamentalInformation);
                         logger.info("序号：4-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
                     }
