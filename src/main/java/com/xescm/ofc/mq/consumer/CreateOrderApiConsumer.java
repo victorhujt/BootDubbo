@@ -32,6 +32,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 创单api消费MQ
@@ -49,7 +50,7 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     @Resource
     private OfcPlanFedBackService ofcPlanFedBackService;
-    
+
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
 
@@ -58,6 +59,8 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     @Resource
     private MqConfig mqConfig;
+
+    public  static ConcurrentHashMap MAP = new ConcurrentHashMap();
 
     private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
 
@@ -143,7 +146,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                         ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody,ofcPlanFedBackTypeRef);
                         for(int i=0;i<ofcPlanFedBackConditions.size();i++){
                             // 保存到数
-                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName);
+                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName,MAP);
                         }
                     } catch (Exception e) {
                         logger.error("运输单出错:{}",e.getMessage(),e);
@@ -153,27 +156,27 @@ public class CreateOrderApiConsumer implements MessageListener {
             } catch (Exception ex) {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
             }
-         }else if(StringUtils.equals(topicName,mqConfig.getWhcOrderStatusTopic())){
-        	logger.info("仓储单状态反馈的消息体为{}:",messageBody);
-			logger.info("仓储单状态开始消费");
-			try {
-			    logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+        }else if(StringUtils.equals(topicName,mqConfig.getWhcOrderStatusTopic())){
+            logger.info("仓储单状态反馈的消息体为{}:",messageBody);
+            logger.info("仓储单状态开始消费");
+            try {
+                logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
                 FeedBackOrderStatusDto feedBackOrderStatusDto= JacksonUtil.parseJson(messageBody,FeedBackOrderStatusDto.class);
                 ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
-			} catch (Exception e) {
+            } catch (Exception e) {
                 logger.error("仓储单状态反馈出现异常{}",e.getMessage(),e);
-			}
-        }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
-                logger.info("仓储单出入库单实收实出反馈的消息体为{}:",messageBody);
-                logger.info("仓储单出入库单实收实出反馈开始消费");
-                logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
-                try {
-                    FeedBackOrderDto feedBackOrderDto= JacksonUtil.parseJson(messageBody,FeedBackOrderDto.class);
-                    ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
-                } catch (Exception e) {
-                    logger.error("仓储单出入库单反馈出现异常{}",e.getMessage(),e);
-                }
             }
+        }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
+            logger.info("仓储单出入库单实收实出反馈的消息体为{}:",messageBody);
+            logger.info("仓储单出入库单实收实出反馈开始消费");
+            logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+            try {
+                FeedBackOrderDto feedBackOrderDto= JacksonUtil.parseJson(messageBody,FeedBackOrderDto.class);
+                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto,MAP);
+            } catch (Exception e) {
+                logger.error("仓储单出入库单反馈出现异常{}",e.getMessage(),e);
+            }
+        }
         return Action.CommitMessage;
     }
 
