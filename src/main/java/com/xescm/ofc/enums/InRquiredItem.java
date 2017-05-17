@@ -17,7 +17,6 @@ public enum InRquiredItem {
 //    WAREHOUSE_NAME("warehouseName", "仓库编码"),
 //    BUSINESS_TYPE("businessType", "业务类型"),
     GOODS_CODE("goodsCode", "货品编码"),
-    UNIT("unit", "单位"),
     QUANTITY("quantity", "入库数量");
 
 
