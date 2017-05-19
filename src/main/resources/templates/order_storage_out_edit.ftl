@@ -1161,8 +1161,10 @@
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
                     var unitVar = '';
-                    if(val.unitsOptions.length == 1){
-                        unitVar = "主单位";
+                    if(val.unitsOptions != undefined){
+                        if(val.unitsOptions.length == 1){
+                            unitVar = "主单位";
+                        }
                     }
                     var newData = {
                         goodsType: val.goodsType,
@@ -1497,6 +1499,7 @@
 //                          good.supportBatch=this.orderForm.supportCode;
 //                      }
 //                  }
+                    good.unitPrice = StringUtil.trim(good.unitPrice);
                     if(!StringUtil.isEmpty(good.unitPrice)){
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
@@ -1511,6 +1514,7 @@
                             return;
                         }
                     }
+                    good.quantity = StringUtil.trim(good.quantity);
                     if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
                         if(!good.quantity){
                             this.promptInfo("货品出库数量不能为空",'warning');
@@ -1542,6 +1546,7 @@
                             return;
                         }
                     }
+                    good.primaryQuantity = StringUtil.trim(good.primaryQuantity);
                     if(!this.isInteger(good.primaryQuantity)){
                         if(StringUtil.isEmpty(reminder)){
                             reminder = good.goodsCode;
