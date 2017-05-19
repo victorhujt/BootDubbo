@@ -56,16 +56,16 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private AcModifyOrderEdasService acModifyOrderEdasService;
 
     @Transactional
-    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto){
+    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();
         String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
         List<GoodsAmountDetailDto> details = goodsAmountSyncDto.getGoodsAmountDetailDtoList();
-        if(PubUtils.isOEmptyOrNull(custCode)){
+        if (PubUtils.isOEmptyOrNull(custCode)) {
             throw new BusinessException("客户编码不能为空");
-        }else if(PubUtils.isOEmptyOrNull(custOrderCode)){
+        }else if (PubUtils.isOEmptyOrNull(custOrderCode)) {
             throw new BusinessException("客户订单编号不能为空");
-        }else if(PubUtils.isNull(details) || PubUtils.isNotNullAndSmallerSize(details, 1)){
+        }else if (PubUtils.isNull(details) || PubUtils.isNotNullAndSmallerSize(details, 1)) {
             throw new BusinessException("货品信息不能为空");
         }
         // 查询订单
@@ -176,25 +176,25 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param goodsAmountDetailDto
      */
     @Transactional
-    private void editGoodsDetailInfo(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
+    private void editGoodsDetailInfo(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
         try {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
 
-            if(PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)){
+            if (PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {
                 ofcGoodsDetailsInfo=ofcGoodsDetailsInfoList.get(0);
                 String quantity = goodsAmountDetailDto.getQty();
                 String weight = goodsAmountDetailDto.getWeight();
                 String volume = goodsAmountDetailDto.getVolume();
-                if(!PubUtils.isOEmptyOrNull(quantity)){
+                if (!PubUtils.isOEmptyOrNull(quantity)) {
                     ofcGoodsDetailsInfo.setQuantity(new BigDecimal(quantity));
                 }
-                if(!PubUtils.isOEmptyOrNull(weight)){
+                if (!PubUtils.isOEmptyOrNull(weight)) {
                     ofcGoodsDetailsInfo.setWeight(new BigDecimal(weight));
                 }
-                if(!PubUtils.isOEmptyOrNull(volume)){
+                if (!PubUtils.isOEmptyOrNull(volume)) {
                     ofcGoodsDetailsInfo.setCubage(new BigDecimal(volume));
                 }
                 ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
@@ -213,7 +213,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param goodsAmountDetailDto
      */
     @Transactional
-    private void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto){
+    private void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
         try {
 
             String goodsCode = goodsAmountDetailDto.getGoodsCode();
@@ -222,7 +222,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
-            if(PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)){
+            if (PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {
                 OfcGoodsRecordModification ofcGoodsRecordModification = new OfcGoodsRecordModification();
                 ofcGoodsRecordModification.setOrderCode(orderCode);
                 ofcGoodsRecordModification.setGoodsCode(goodsCode);
@@ -233,21 +233,21 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 String modifyWeight = goodsAmountDetailDto.getWeight();
                 String modifyVolume = goodsAmountDetailDto.getVolume();
                 // 调整数量
-                if(!PubUtils.isOEmptyOrNull(modifyQuantity)){
+                if (!PubUtils.isOEmptyOrNull(modifyQuantity)) {
                     String oldQuantity = !PubUtils.isOEmptyOrNull(goodsDetail.getQuantity()) ? goodsDetail.getQuantity().toString() : " ";
                     ofcGoodsRecordModification.setValueBeforeModifyQty(oldQuantity);
                     ofcGoodsRecordModification.setValueAfterModifyQty(modifyQuantity);
                     desc.append("商品").append(goodsCode).append("数量由").append(oldQuantity).append("调整为").append(modifyQuantity).append(";");
                 }
                 // 调整重量
-                if(!PubUtils.isOEmptyOrNull(modifyWeight)){
+                if (!PubUtils.isOEmptyOrNull(modifyWeight)) {
                     String oldWeight = !PubUtils.isOEmptyOrNull(goodsDetail.getWeight()) ? goodsDetail.getWeight().toString() : " ";
                     ofcGoodsRecordModification.setValueBeforeModifyWet(oldWeight);
                     ofcGoodsRecordModification.setValueAfterModifyWet(modifyWeight);
                     desc.append("商品").append(goodsCode).append("重量由").append(oldWeight).append("调整为").append(modifyWeight).append(";");
                 }
                 // 调整体积
-                if(!PubUtils.isOEmptyOrNull(modifyVolume)){
+                if (!PubUtils.isOEmptyOrNull(modifyVolume)) {
                     String oldVolume = !PubUtils.isOEmptyOrNull(goodsDetail.getCubage()) ? goodsDetail.getCubage().toString() : " ";
                     ofcGoodsRecordModification.setValueBeforeModifyVol(oldVolume);
                     ofcGoodsRecordModification.setValueAfterModifyVol(modifyVolume);

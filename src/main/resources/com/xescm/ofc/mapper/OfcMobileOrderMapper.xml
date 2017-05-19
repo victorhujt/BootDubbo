@@ -100,9 +100,7 @@
       <if test="accepter != null" >
         accepter = #{accepter,jdbcType=VARCHAR},
       </if>
-      <if test="appcetDate != null" >
         appcet_date = #{appcetDate,jdbcType=INTEGER},
-      </if>
     </set>
     where mobile_order_code = #{mobileOrderCode,jdbcType=VARCHAR}
   </update>

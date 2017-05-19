@@ -17,6 +17,7 @@ public enum OutRquiredItem {
 //    WAREHOUSE_NAME("warehouseName", "仓库编码"),
 //    BUSINESS_TYPE("businessType", "业务类型"),
     GOODS_CODE("goodsCode", "货品编码"),
+    UNIT("unit", "单位"),
     QUANTITY("quantity", "出库数量"),
     CONSIGNEE_NAME("consigneeName", "收货方名称");
 

@@ -300,7 +300,7 @@
         function getOperatorByStatus(order,index) {
             var value = "";
             if (order.mobileOrderStatus == "0") {
-                 value ="未处理";
+                 value ="未受理";
             }else if (order.mobileOrderStatus == "1"){
                 value ="已受理";
             }else if(order.mobileOrderStatus == "2"){

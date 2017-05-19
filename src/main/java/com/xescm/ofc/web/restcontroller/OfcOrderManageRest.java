@@ -14,11 +14,11 @@ import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.constant.OrderConstant;
+import com.xescm.ofc.domain.OfcDailyAccount;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.vo.ofc.OfcDailyAccountVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.web.controller.BaseController;
@@ -433,7 +433,7 @@ public class OfcOrderManageRest extends BaseController{
     @RequestMapping(value ="queryDailyAccount", method = {RequestMethod.POST})
     @ResponseBody
     public Wrapper<?> queryDailyAccount(){
-        List<OfcDailyAccountVo> OfcDailyAccountVos;
+        List<OfcDailyAccount> OfcDailyAccountVos;
         try{
             OfcDailyAccountVos=ofcDailyAccountsService.queryDailyAccount(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE2));
             logger.info("查询平台日报数据为:{}",OfcDailyAccountVos);

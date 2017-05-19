@@ -506,7 +506,11 @@
                     <td class="center">${(goods.goodsCode)!"" }</td>
                     <td class="center">${(goods.goodsName)!"" }</td>
                     <td class="center">${(goods.goodsSpec)!"" }</td>
-                    <td class="center">${goods.unit!"" }</td>
+                    <#if goods.packageName??>
+                        <td class="center">${goods.unit!"" }</td>
+                        <#else>
+                        <td class="center">${goods.packageName!"" }</td>
+                    </#if>
                     <td class="center">
                         <#if (goods.pack)! == '01'>
                             纸箱

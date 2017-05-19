@@ -233,7 +233,8 @@
                     templateName:''
                 },
                 pageSheetList:[],
-                templateNameList:[]
+                templateNameList:[],
+                checkMainUnitNumErrorMsg:''
             };
         },
         methods: {
@@ -271,7 +272,7 @@
                         tableData.push(rowData)
                     });
                 }else if(response.code == 501 || response.code == 502 || response.code == 503) {
-                    
+
                     vm.errorMsgShow = false;
                     vm.fileList = [];
                     vm.$message.error(response.message);
@@ -328,7 +329,7 @@
                 vm.loading2 = false;
             },
             beforeUpload(file){
-                
+
                 var vm = this;
                 //必须选好客户和模板
                 if(undefined == vm.templateBatchIn.custName || StringUtil.isEmpty(vm.templateBatchIn.custName)){
@@ -399,13 +400,43 @@
                 var vm = this;
                 vm.checkStockFalse = false;
             },
+            checkMainUnitNum(tableData){
+                var vm = this;
+                vm.checkMainUnitNumErrorMsg = "";
+                var pass = true;
+                var check = {};
+                $.each(tableData, function (index, item) {
+                    var mainUnitNum = item.mainUnitNum;
+                    var key = item.custOrderCode + "@" + item.goodsCode;
+                    check[key] = check[key] == null || check[key] == '' ? mainUnitNum : check[key] + mainUnitNum;
+                });
+                var errorNum = 0;
+                for (var key in check) {
+                    if (!RegexUtil.isInteger(check[key])) {
+                        errorNum ++;
+                        if (errorNum > 5) {
+                            vm.checkMainUnitNumErrorMsg += "等订单的货品";
+                            break;
+                        } else {
+                            vm.checkMainUnitNumErrorMsg += "【客户订单号" + key.split('@')[0] + ",货品" + key.split('@')[1] + "】 ";
+                        }
+                        pass = false;
+                    };
+                }
+                vm.checkMainUnitNumErrorMsg += "，经过计算, 主单位数量为非正整数，你确认下单吗？";
+                return pass;
+            },
             orderSaveBtn(){
                 var vm = this;
                 var param = {};
+                var checkPass = vm.checkMainUnitNum(vm.orderTableData);
                 param.orderList = JSON.stringify(vm.orderList);
                 var url = "/ofc/storage_template/confirm";
                 var inOrOut = vm.templateType == "storageIn" ? "入库" : "出库";
-                xescm.common.submit(url, param, "您确定进行批量导入" + inOrOut + "订单吗？请确认数据无误后，继续操作!", function () {
+                var successMsg = "您确定进行批量导入" + inOrOut + "订单吗？请确认数据无误后，继续操作!";
+                var errorMsg = vm.checkMainUnitNumErrorMsg;
+                var msg = checkPass ? successMsg : errorMsg;
+                xescm.common.submit(url, param, msg, function () {
                     var url = vm.templateType == "storageIn" ? "/ofc/orderStorageInManager" : "/ofc/orderStorageOutManager";
                     xescm.common.loadPage(url);
                 });
