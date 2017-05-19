@@ -1135,7 +1135,6 @@
                 if(!StringUtil.isEmpty(this.wareHouseObj.street)){
                     ofcOrderDTOStr.destinationTowns=this.wareHouseObj.street;
                 }
-
                 var  str = "您确认提交订单吗?";
                 var goodsTable =this.goodsData;
                 var goodDetail=[];
@@ -1179,7 +1178,7 @@
                         }
                         if(good.quantity<0){
                             this.promptInfo("货品数量不能小于0",'error');
-                            return;
+                            return
                         }
                         if(good.quantity==0){
                             this.promptInfo("货品数量不能小于0",'error');
@@ -1195,7 +1194,6 @@
                             return;
                         }
                     }
-                    good.primaryQuantity = StringUtil.trim(good.primaryQuantity);
                     if(!this.isInteger(good.primaryQuantity)){
                         if(StringUtil.isEmpty(reminder)){
                             reminder = good.goodsCode;

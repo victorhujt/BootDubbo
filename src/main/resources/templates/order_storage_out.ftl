@@ -1331,7 +1331,6 @@
                             return;
                         }
                     }
-                    good.quantity = StringUtil.trim(good.quantity);
                     if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
                         if(!good.quantity){
                             this.promptInfo("货品出库数量不能为空",'warning');
