@@ -998,6 +998,9 @@
                                     var levelSpecificationOptions = [];
                                     for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
                                         var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
+                                        if(StringUtil.isEmpty(goodsPacking.levelSpecification)||goodsPacking.levelSpecification == "0") {
+                                            continue;
+                                        }
                                         var unit = {};
                                         var levelSpecification = {};
                                         unit.label = goodsPacking.levelDescription;
