@@ -53,5 +53,6 @@ public interface OfcOrderOperMapper {
      * @param userId
      * @return list
      */
-    List<OrderSearchOperResult> queryOrderList(@Param("form")OrderOperForm form, @Param("userId") String userId);
+    List<OrderSearchOperResult> queryOrderList(@Param("form")OrderOperForm form, @Param("userId") String userId, @Param("withUser") Boolean withUser);
+
 }

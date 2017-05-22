@@ -157,7 +157,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             throw new BusinessException("订单管理筛选后端权限校验入参有误");
         }
         List<OrderSearchOperResult> orderSearchOperResults = new ArrayList<>();
-        String userId = null;
+        String userId = authResDto.getUserId();
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(authResDto.getGroupRefCode());
         Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
@@ -179,36 +179,47 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
             throw new BusinessException("基地所属大区未选择!");
         }
-        if (PubUtils.isSEmptyOrNull(areaSerialNo) || PubUtils.isSEmptyOrNull(baseSerialNo)) {
-            userId = authResDto.getUserId();
-        }
+        boolean emptySelect = PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo);
         //2017年5月12日 追加逻辑 增加创建人查看权限
         if (StringUtils.equals(groupType,"1")) {
-            boolean select = StringUtils.equals(userSerialNo, areaSerialNo);
+            boolean accept = StringUtils.equals(userSerialNo, areaSerialNo);
             //鲜易供应链身份
             if (StringUtils.equals("GD1625000003",userSerialNo)) {
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, null);
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, null, false);
                 //大区身份
-            } else if (select || (PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo))) {
+            } else if (accept || emptySelect) {
                 form.setAreaSerialNo(userSerialNo);
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, select ? null : userId);
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, accept ? null : userId, false);
+            } else {//!accept && !emptySelect
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
             }
             //基地身份
         } else if (StringUtils.equals(groupType,"3")) {
-            boolean select = StringUtils.equals(userSerialNo, baseSerialNo);
-            if (select || (PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo))) {
+            boolean accept = StringUtils.equals(userSerialNo, baseSerialNo);
+            if (accept || emptySelect) {
                 form.setBaseSerialNo(userSerialNo);
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, select ? null : userId);
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, accept ? null : userId, false);
+            } else {
+                //反查大区
+                UamGroupDto dto = new UamGroupDto();
+                dto.setSerialNo(userSerialNo);
+                OfcGroupVo ofcGroupVo = this.queryAreaMsgByBase(dto);
+                String userAreaCode = ofcGroupVo.getSerialNo();
+                if (StringUtils.equals(userAreaCode, areaSerialNo)) {
+                    orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, false);
+                } else {
+                    orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
+                }
             }
             //仓库身份, 其他身份
         } else {
-            form.setAreaSerialNo(null);
-            form.setBaseSerialNo(null);
-            orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId);
+            orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
         }
-        if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
-            throw new BusinessException("运营中心订单管理筛选入参: 基地所属大区为空");
-        }
+
+
+
+
+
         return orderSearchOperResults;
     }
 
