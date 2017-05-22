@@ -31,5 +31,12 @@ public class StorageTemplateConstant {
 
     public static final String INTEGER_SIX = "\\d{1,6}";
 
-
+    //包装代码编码
+    public static final String PACKAGE_ID_CODE = "packageId";
+    //包装代码名称
+    public static final String PACKAGE_ID_NAME = "包装代码";
+    //主单位数量编码
+    public static final String MAIN_UNIT_NUM_CODE = "mainUnitNum";
+    //主单位数量名称
+    public static final String MAIN_UNIT_NUM_NAME = "主单位数量";
 }

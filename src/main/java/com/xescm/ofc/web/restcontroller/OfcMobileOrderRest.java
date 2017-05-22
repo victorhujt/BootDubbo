@@ -36,6 +36,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.xescm.ofc.constant.OrderConstConstant.TREATED;
+import static com.xescm.ofc.constant.OrderConstConstant.TREATING;
+import static com.xescm.ofc.constant.OrderConstConstant.UN_TREATED;
+
 /**
  * 手机订单
  * Created by hujintao on 2016/12/15.
@@ -166,6 +170,29 @@ public class OfcMobileOrderRest extends BaseController {
             } else {
                 throw new BusinessException("订单相关信息有误！");
             }
+            //手机订单受理状态校验
+            OfcMobileOrder mobileOrder = ofcMobileOrderService.selectByKey(mobileOrderCode);
+            if(mobileOrder ==null){
+                throw new BusinessException("手机订单号不存在！");
+            }
+            String accepter = mobileOrder.getAccepter();
+            String MobileOrderStatus = mobileOrder.getMobileOrderStatus();
+            if(TREATED.equals(MobileOrderStatus)){
+                throw new BusinessException("手机订单已经受理！");
+            }
+
+            if(UN_TREATED.equals(MobileOrderStatus)){
+                throw new BusinessException("手机订单已经超过5分钟未受理，请刷新页面重新加载新的订单！");
+            }
+
+            if(TREATING.equals(MobileOrderStatus)){
+                if(!PubUtils.isSEmptyOrNull(accepter)){
+                    if(!accepter.equals(authResDtoByToken.getUserName())){
+                        throw new BusinessException("手机订单有其它人在受理,请受理其它手机订单！");
+                    }
+                }
+            }
+
             orderCode = ofcMobileOrderService.placeOrder(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, authResDtoByToken.getGroupRefCode()
                     , cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee, cscSupplierInfoDto);
 
@@ -175,7 +202,7 @@ public class OfcMobileOrderRest extends BaseController {
                 order.setMobileOrderCode(mobileOrderCode);
                 order.setAccepter(authResDtoByToken.getUserName());
                 order.setAppcetDate(new Date());
-                order.setMobileOrderStatus(OrderConstConstant.TREATED);//已处理
+                order.setMobileOrderStatus(TREATED);//已处理
                 order.setOrderCode(orderCode);
                 ofcMobileOrderService.updateByMobileCode(order);
             }
@@ -239,7 +266,7 @@ public class OfcMobileOrderRest extends BaseController {
             ofcMobileOrderService.deleteMobileOrder(mobileOrderCode);
         } catch (Exception e) {
             logger.error("拍照开单-删除手机订单号发生错误: {}", e);
-            return  WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE,e.getMessage());
+            return  WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
 
         }
         return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);

@@ -22,14 +22,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
@@ -69,7 +72,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
     private ModelMapper modelMapper = new ModelMapper();
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public OfcMobileOrder saveOfcMobileOrder(OfcMobileOrder ofcMobileOrder) {
@@ -77,14 +80,9 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         if(StringUtils.isNotEmpty(ofcMobileOrder.getTranCode())){
             OfcMobileOrder condition=new OfcMobileOrder();
             condition.setTranCode(ofcMobileOrder.getTranCode());
-            OfcMobileOrder order=selectOne(condition);
-            if(order!=null&&StringUtils.isNotEmpty(order.getOrderCode())){
-                OfcOrderStatus orderStatus=ofcOrderStatusService.orderStatusSelect(order.getOrderCode(),"orderCode");
-                if(orderStatus!=null){
-                    if(!HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())){
-                        throw  new BusinessException("运输单号重复");
-                    }
-                }
+            List<OfcMobileOrder> orders= select(condition);
+            if(!CollectionUtils.isEmpty(orders)){
+                throw  new BusinessException("运输单号重复");
             }
         }
         ofcMobileOrder.setMobileOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.MOBILE_PRE,6));
@@ -92,6 +90,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcMobileOrder.setOrderType(OrderConstant.TRANSPORT_ORDER);
         ofcMobileOrder.setMobileOrderStatus(UN_TREATED);
         save(ofcMobileOrder);
+        logger.info("订单号为{},保存数据库成功,放入redis缓存",ofcMobileOrder.getMobileOrderCode());
+        this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,ofcMobileOrder.getMobileOrderCode());
         return ofcMobileOrder;
     }
 
@@ -162,6 +162,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
         String orderType = OrderConstant.TRANSPORT_ORDER;
         ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE,6));
+        //钉钉手机订单 运输单号是空将订单填充位运输单号
+       if(PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())){
+           ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+       }
         orderCode=ofcFundamentalInformation.getOrderCode();
         // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
@@ -282,9 +286,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 将待受理订单号放入缓存
      * @param orderCode 订单号
      */
-    public void pushOrderToCache(String orderCode) {
-        String key = "MobilePendingOrderList";
-        ListOperations<String, String> listOps = redisTemplate.opsForList();
+    public void pushOrderToCache(String key,String orderCode) {
+        ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         listOps.rightPush(key, orderCode);
     }
 
@@ -305,12 +308,14 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         for (OfcMobileOrder mobileOrder : mobileOrders) {
             String mobileOrderCode = mobileOrder.getMobileOrderCode();
             mobileOrder.setMobileOrderStatus(UN_TREATED);
+            mobileOrder.setAccepter("");
+            mobileOrder.setAppcetDate(null);
             int update = ofcMobileOrderMapper.updateByMobileCode(mobileOrder);
             if(update < 1){
                 logger.error("钉钉录单重新更新为未处理失败! 订单号: {}", mobileOrderCode);
                 continue;
             }
-            this.pushOrderToCache(mobileOrderCode);
+            this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,mobileOrderCode);
         }
     }
 
@@ -327,7 +332,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             String acceptStatus=mobileOrder.getMobileOrderStatus();
             String status = UN_TREATED.equals(acceptStatus) ? "未受理" : TREATED.equals(acceptStatus)
                     ? "已受理" : TREATING.equals(acceptStatus) ? "受理中" : acceptStatus;
-           if(TREATED.equals(acceptStatus)){
+           if(TREATED.equals(acceptStatus)||UN_TREATED.equals(acceptStatus)){
                throw new BusinessException("订单号:"+mobileOrderCode+"状态为【"+status+"】不可进行删除!");
            }
            //手机订单对应的图片路径
@@ -351,7 +356,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         //删除手机订单
         deleteByKey(mobileOrderCode);
         }catch (Exception e) {
-            throw e;
+            throw new BusinessException("删除手机订单产生异常！");
         }
     }
 
@@ -359,11 +364,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 从缓存中获取待受理订单
      * @return 订单号
      */
-    public String getOrderFromCache() {
+    public String getOrderFromCache(String key) {
         String orderCode = null;
-        String key = "MobilePendingOrderList";
-        boolean existList = redisTemplate.hasKey(key);
-        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        boolean existList = stringRedisTemplate.hasKey(key);
+        ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         if (existList && listOps.size(key) > 0) {
             orderCode = listOps.leftPop(key);
         } else {
@@ -378,9 +382,11 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      */
     @Transactional
     public OfcMobileOrderVo autoAcceptPendingOrder(String user) {
-        OfcMobileOrderVo mobileOrderVo = null;
+        logger.info("==>开始自动获取待受理订单");
+        OfcMobileOrderVo mobileOrderVo;
         // 查询待受理订单
-        String mobileOrderCode = this.getOrderFromCache();
+        String mobileOrderCode = this.getOrderFromCache(MOBILE_PENDING_ORDER_LIST);
+        logger.info("==>自动获取待受理订单号{}",mobileOrderCode);
         if (!PubUtils.isOEmptyOrNull(mobileOrderCode)) {
             OfcMobileOrder params = new OfcMobileOrder();
             params.setMobileOrderCode(mobileOrderCode);
@@ -397,7 +403,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                     params.setMobileOrderStatus(TREATING);
                     int line = this.updateByMobileCode(params);
                     if (line <= 0) {
-                        this.pushOrderToCache(mobileOrderCode);
+                        this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,mobileOrderCode);
                         logger.info("更新拍照开单受理信息错误，订单重新缓存到未受理状态！");
                     }
                 } else { // 受理中、已受理, 重新获取新订单
@@ -414,13 +420,13 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 }
 
             } catch (UnsupportedEncodingException e) {
-                this.pushOrderToCache(mobileOrderCode);
+                this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,mobileOrderCode);
                 throw new BusinessException("获取照片发生错误！");
             } catch (BusinessException e) {
-                this.pushOrderToCache(mobileOrderCode);
+                this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,mobileOrderCode);
                 throw e;
             } catch (Exception e) {
-                this.pushOrderToCache(mobileOrderCode);
+                this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,mobileOrderCode);
                 throw e;
             }
         } else {

@@ -410,6 +410,7 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/orderStorageOutEdit")
     public ModelAndView orderStorageOutEdit(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_out_edit");
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         return modelAndView;
     }
 
@@ -429,6 +430,7 @@ public class OfcJumpontroller extends BaseController{
     @RequestMapping(value = "/ofc/orderStorageInEdit")
     public ModelAndView orderStorageInEdit(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_storage_in_edit");
+        modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         return modelAndView;
     }
 
@@ -482,7 +484,7 @@ public class OfcJumpontroller extends BaseController{
         modelAndView.addObject(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
         AuthResDto userInfo = getAuthResDtoByToken();
         String curUser = userInfo.getUserName();
-        OfcMobileOrderVo mobileOrderVo = null;
+        OfcMobileOrderVo mobileOrderVo;
         List<String> urls = new ArrayList<>();
         String mobileOrderCode = null;
         try {
@@ -495,7 +497,9 @@ public class OfcJumpontroller extends BaseController{
             logger.error("拍照开单自动受理订单发生错误！", e);
         }
         modelAndView.addObject("urls", urls);
+        logger.info("==>放入页面自动获取待受理订单号{}",mobileOrderCode);
         modelAndView.addObject("mobileOrderCode", mobileOrderCode);
+
         setDefaultModel(model);
         return modelAndView;
     }

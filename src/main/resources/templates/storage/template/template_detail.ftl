@@ -113,7 +113,7 @@
                     var tableItem = {};
                     var standardColCode = item.standardColCode;
                     if(standardColCode == 'custOrderCode' || standardColCode == 'merchandiser' || standardColCode == 'warehouseName'
-                            || standardColCode == 'businessType' || standardColCode == 'goodsCode' || standardColCode == 'quantity' || (standardColCode == 'consigneeName' && vm.typeOfTemplate)){
+                            || standardColCode == 'businessType' || standardColCode == 'goodsCode'  || standardColCode == 'unit' || standardColCode == 'quantity' || (standardColCode == 'consigneeName' && vm.typeOfTemplate)){
                         tableItem.isRequired = true;
                     }
                     tableItem.standardColName = item.standardColName;
