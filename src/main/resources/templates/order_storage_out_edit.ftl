@@ -526,11 +526,23 @@
                     callback();
                 }
             };
+            var checkTransCode = function(rule, value, callback) {
+                if(value!==""){
+                    var mp=/^\w+$/;
+                    var tranCode =mp.test(value);
+                    if(tranCode!==true){
+                        callback(new Error('请正确输入运输单号'));
+                    }else{
+                        callback();
+                    }
+                }else{
+                    callback();
+                }
+            };
             var checkPhoneOrMobile = function(rule, value, callback) {
                 if(value!==""){
-                    var mp=/^1\d{10}$/;
-                    var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
-                    var phone = pp.test(value)||mp.test(value);
+                    var pp= /^((0\d{2,3}-\d{7,8})|(1[35874]\d{9}))$/;
+                    var phone = pp.test(value);
                     if(phone!==true){
                         callback(new Error('请正确输入联系电话'));
                     }else{
@@ -779,6 +791,10 @@
                     ],
                     driverName:[
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
+                    ],
+                    transCode:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' },
+                        {validator: checkTransCode,trigger: 'blur'}
                     ],
                     contactNumber:[
                         {validator: checkPhoneOrMobile, trigger: 'blur'},
