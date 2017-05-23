@@ -135,7 +135,7 @@
                     <el-input v-model="goodDataInfo.goodsForm.goodsCode" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth">
-                    <el-button type="primary" @click="selectGoods">筛选</el-button>
+                    <el-button type="primary" :disabled="isCanClick" @click="selectGoods">筛选</el-button>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button @click="reSetCondition">重置</el-button>
@@ -478,6 +478,7 @@
                 }
             };
             return {
+                isCanClick:false,
                 isShow:false,
                 activeNames:'',
                 wareHouseObj:'',
@@ -957,70 +958,78 @@
                 this.consignorDataInfo.chosenSend = false;
             },
             selectGoods:function(){
-                var vueObj=this;
-                vueObj.goodDataInfo.goodsCodeData=[];
-                var cscGoods = {};
-                this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
-                var customerCode = vueObj.orderForm.custCode;
-                var warehouseCode = vueObj.wareHouseObj.warehouseCode;
-                cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
-                cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
-                cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
-                cscGoods.barCode=vueObj.goodDataInfo.goodsForm.barCode;
-                cscGoods.goodsCode=vueObj.goodDataInfo.goodsForm.goodsCode;
-                cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
-                cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
-                var param = JSON.stringify(cscGoods);
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
-                    if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
-                        layer.msg("暂时未查询到货品信息！！");
-                    } else if (data.code == 200) {
-                        $.each(data.result.list,function (index,cscGoodsVo) {
-                            var goodCode={};
-                            var unitsOptions = [];
-                            var levelSpecificationOptions = [];
-                            goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
-                            goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
-                            goodCode.goodsCode=cscGoodsVo.goodsCode;
-                            goodCode.goodsName=cscGoodsVo.goodsName;
-                            goodCode.goodsBrand=cscGoodsVo.brand;
-                            goodCode.goodsSpec=cscGoodsVo.specification;
-                            goodCode.unit=cscGoodsVo.unit;
-                            goodCode.barCode=cscGoodsVo.barCode;
-                            if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
-                                goodCode.expiryDate=0;
-                            }else{
-                                goodCode.expiryDate=cscGoodsVo.expiryDate;
-                            }
-                            if(cscGoodsVo.goodsPackingDtoList!=null){
-                                if(cscGoodsVo.goodsPackingDtoList.length>0){
-                                    var unitsOptions =[];
-                                    var levelSpecificationOptions = [];
-                                    for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
-                                        var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
-                                        if(StringUtil.isEmpty(goodsPacking.levelSpecification)||goodsPacking.levelSpecification == "0") {
-                                            continue;
-                                        }
-                                        var unit = {};
-                                        var levelSpecification = {};
-                                        unit.label = goodsPacking.levelDescription;
-                                        unit.value = goodsPacking.level;
-                                        levelSpecification.label = goodsPacking.levelSpecification;
-                                        levelSpecification.value =  goodsPacking.level;
-                                        unitsOptions.push(unit);
-                                        levelSpecificationOptions.push(levelSpecification);
-                                    }
-                                    goodCode.unitsOptions = unitsOptions;
-                                    goodCode.levelSpecificationOptions = levelSpecificationOptions;
+                var vueObj = this;
+                try{
+                    vueObj.isCanClick = true;
+                    vueObj.goodDataInfo.goodsCodeData=[];
+                    var cscGoods = {};
+                    this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
+                    var customerCode = vueObj.orderForm.custCode;
+                    var warehouseCode = vueObj.wareHouseObj.warehouseCode;
+                    cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
+                    cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
+                    cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
+                    cscGoods.barCode=vueObj.goodDataInfo.goodsForm.barCode;
+                    cscGoods.goodsCode=vueObj.goodDataInfo.goodsForm.goodsCode;
+                    cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
+                    cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
+                    var param = JSON.stringify(cscGoods);
+                    CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
+                        if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                            vueObj.isCanClick = false;
+                            layer.msg("暂时未查询到货品信息！！");
+                        } else if (data.code == 200) {
+                            $.each(data.result.list,function (index,cscGoodsVo) {
+                                var goodCode={};
+                                var unitsOptions = [];
+                                var levelSpecificationOptions = [];
+                                goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
+                                goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
+                                goodCode.goodsCode=cscGoodsVo.goodsCode;
+                                goodCode.goodsName=cscGoodsVo.goodsName;
+                                goodCode.goodsBrand=cscGoodsVo.brand;
+                                goodCode.goodsSpec=cscGoodsVo.specification;
+                                goodCode.unit=cscGoodsVo.unit;
+                                goodCode.barCode=cscGoodsVo.barCode;
+                                if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
+                                    goodCode.expiryDate=0;
+                                }else{
+                                    goodCode.expiryDate=cscGoodsVo.expiryDate;
                                 }
-                            }
-                            vueObj.goodDataInfo.goodsCodeData.push(goodCode);
-                        });
-                        vueObj.goodDataInfo.totalGoods=data.result.total;
-                    } else if (data.code == 403) {
-                        vueObj.promptInfo("没有权限",'error');
-                    }
-                },"json");
+                                if(cscGoodsVo.goodsPackingDtoList!=null){
+                                    if(cscGoodsVo.goodsPackingDtoList.length>0){
+                                        var unitsOptions =[];
+                                        var levelSpecificationOptions = [];
+                                        for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
+                                            var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
+                                            if(StringUtil.isEmpty(goodsPacking.levelSpecification)||goodsPacking.levelSpecification == "0") {
+                                                continue;
+                                            }
+                                            var unit = {};
+                                            var levelSpecification = {};
+                                            unit.label = goodsPacking.levelDescription;
+                                            unit.value = goodsPacking.level;
+                                            levelSpecification.label = goodsPacking.levelSpecification;
+                                            levelSpecification.value =  goodsPacking.level;
+                                            unitsOptions.push(unit);
+                                            levelSpecificationOptions.push(levelSpecification);
+                                        }
+                                        goodCode.unitsOptions = unitsOptions;
+                                        goodCode.levelSpecificationOptions = levelSpecificationOptions;
+                                    }
+                                }
+                                vueObj.goodDataInfo.goodsCodeData.push(goodCode);
+                            });
+                            vueObj.goodDataInfo.totalGoods=data.result.total;
+                            vueObj.isCanClick = false;
+                        } else if (data.code == 403) {
+                            vueObj.isCanClick = false;
+                            vueObj.promptInfo("没有权限",'error');
+                        }
+                    },"json");
+                }catch(e){
+                    vueObj.isCanClick = false;
+                }
             },
             handleGoodSizeChange:function(val){
                 this.goodDataInfo.goodPageSize=val;
