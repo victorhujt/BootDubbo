@@ -16,7 +16,7 @@ public interface OfcOrderOperMapper {
 
 
 
-    List<OrderSearchOperResult> queryStorageOrderList(@Param("form") OrderStorageOperForm form, @Param("userId") String userId);
+    List<OrderSearchOperResult> queryStorageOrderList(@Param("form") OrderStorageOperForm form, @Param("userId") String userId, @Param("withUser") Boolean withUser);
 
     /**
      * 根据订单批次号查询订单列表

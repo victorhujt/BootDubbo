@@ -104,31 +104,31 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
             throw new BusinessException("基地所属大区未选择!");
         }
+        boolean emptySelect = PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo);
         if (StringUtils.equals(groupType,"1")) {
-            boolean select = StringUtils.equals(areaSerialNo, userSerialNo);
+            boolean accept = StringUtils.equals(areaSerialNo, userSerialNo);
             //鲜易供应链身份
             if (StringUtils.equals("GD1625000003",uamGroupDtoResult.getSerialNo())) {
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, null);
-                //大区身份//todo
-            } else if (select || (PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo))) {
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, null, false);
+                //大区身份
+            } else if (accept || emptySelect) {
                 form.setAreaSerialNo(userSerialNo);
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, select ? null : userId);
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, accept);
+            } else {//!accept && !emptySelect
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
             }
             //基地身份
         } else if (StringUtils.equals(groupType,"3")) {
-            boolean select = StringUtils.equals(baseSerialNo, userSerialNo);
-            if (select || (PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo))) {
+            boolean accept = StringUtils.equals(baseSerialNo, userSerialNo);
+            if (accept || emptySelect) {
                 form.setBaseSerialNo(userSerialNo);
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, select ? null : userId);
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, accept);
+            } else {
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
             }
             //仓库身份, 其他身份
         } else {
-            form.setAreaSerialNo(null);
-            form.setBaseSerialNo(null);
-            orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId);
-        }
-        if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
-            throw new BusinessException("运营中心订单管理筛选入参: 基地所属大区为空");
+            orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
         }
         return orderSearchOperResults;
     }
@@ -206,10 +206,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         } else {
             orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
         }
-
-
-
-
 
         return orderSearchOperResults;
     }
