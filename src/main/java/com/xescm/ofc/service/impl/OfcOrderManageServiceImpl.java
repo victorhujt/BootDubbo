@@ -500,7 +500,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return
      */
     @Transactional
-    private boolean cancelAcOrder(String orderCode) {
+    boolean cancelAcOrder(String orderCode) {
         logger.info("订单中心取消订单，调用结算中心取消订单接口==>订单编号:{}", orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
         ofcDistributionBasicInfo.setOrderCode(orderCode);
@@ -1406,6 +1406,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
                 info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
+                BigDecimal undealWeight = ofcGoodsDetails.getWeight();
+                BigDecimal preWeight = info.getWeight();
+                info.setWeight(null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight));
             }
         }
 
