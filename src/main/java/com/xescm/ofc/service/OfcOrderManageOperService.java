@@ -66,6 +66,5 @@ public interface OfcOrderManageOperService {
 
     void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType);
 
-
-
+    Map<String,List<OfcGroupVo>> loadGroupList();
 }

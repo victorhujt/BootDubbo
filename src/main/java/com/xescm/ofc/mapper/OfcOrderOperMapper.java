@@ -14,14 +14,9 @@ import java.util.List;
 @Repository
 public interface OfcOrderOperMapper {
 
-    /**
-     *查询订单列表
-     * @param form
-     * @return list
-     */
-    List<OrderSearchOperResult> queryOrderList(@Param("form") OrderOperForm form);
 
-    List<OrderSearchOperResult> queryStorageOrderList(@Param("form") OrderStorageOperForm form);
+
+    List<OrderSearchOperResult> queryStorageOrderList(@Param("form") OrderStorageOperForm form, @Param("userId") String userId);
 
     /**
      * 根据订单批次号查询订单列表
@@ -51,5 +46,13 @@ public interface OfcOrderOperMapper {
      */
     List<OfcOrderDetailInfoDto> getOrderDetailInfoByQrderCode(@Param("orderCode") String orderCode);
 
+
+    /**
+     *查询订单列表
+     * @param form
+     * @param userId
+     * @return list
+     */
+    List<OrderSearchOperResult> queryOrderList(@Param("form")OrderOperForm form, @Param("userId") String userId, @Param("withUser") Boolean withUser);
 
 }
