@@ -1406,7 +1406,6 @@
                             return;
                         }
                     }
-                    good.primaryQuantity = StringUtil.trim(good.primaryQuantity);
                     if(!this.isInteger(good.primaryQuantity)){
                         if(StringUtil.isEmpty(reminder)){
                             reminder = good.goodsCode;

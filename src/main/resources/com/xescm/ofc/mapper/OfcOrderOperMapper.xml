@@ -336,7 +336,16 @@
       <if test="form.provideTransport!=null">
         AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
       </if>
-
+      <choose>
+        <when test="withUser and userId != null and userId != ''">
+            AND ofi.creator = #{userId, jdbcType=VARCHAR}
+        </when>
+        <otherwise>
+          <if test="userId != null and userId != ''">
+            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+          </if>
+        </otherwise>
+      </choose>
     </where>
     ORDER BY ofi.order_code DESC
   </select>
@@ -404,7 +413,10 @@
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>
       <if test="form.provideTransport!=null">
-        AND owi.provide_transport = #{form.provideTransport,jdbcType=INTEGER}
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <if test="userId != null and userId != ''">
+        OR ofi.creator = #{userId, jdbcType=VARCHAR}
       </if>
          AND  ofi.business_type in
       <foreach item="item" index="index" collection="form.businessTypes"

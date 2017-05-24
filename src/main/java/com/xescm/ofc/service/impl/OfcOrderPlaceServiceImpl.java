@@ -2,6 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
@@ -18,6 +19,9 @@ import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
+import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
+import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
@@ -76,6 +80,9 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     private UamGroupEdasService uamGroupEdasService;
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
+
+    @Resource
+    private RmcWarehouseEdasService rmcWarehouseEdasService;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -542,6 +549,88 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return;
         }
         ofcOrderManageService.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+    }
+
+    /**
+     *
+     * @param warehouseCode 仓库编码
+     * @param ofcFundamentalInformation 订单信息
+     * @return 更新后的订单信息
+     */
+    @Override
+    public void updateBaseAndAreaBywarehouseCode(String warehouseCode, OfcFundamentalInformation ofcFundamentalInformation) {
+
+        if(PubUtils.isSEmptyOrNull(warehouseCode)){
+            throw new BusinessException("仓库编码不能为空");
+        }
+        if(PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderCode())){
+            throw new BusinessException("订单号不能为空");
+        }
+
+        logger.info("==>通过仓库编码更新订单的基地和大区");
+
+        //begin 仓库编码获取仓库所在的基地
+        RmcWarehouseDto dto =new RmcWarehouseDto();
+        dto.setWarehouseCode(warehouseCode);
+        logger.info("==>通过仓库编码查询仓库所在基地的仓库编码为:{}",warehouseCode);
+        Wrapper<RmcWarehouseRespDto> result = rmcWarehouseEdasService.queryRmcWarehouseByCode(dto);
+        RmcWarehouseRespDto  rmcWarehouseRespDto = result.getResult();
+        //end 仓库编码获取仓库所在的基地
+
+        if(result.getCode() == Wrapper.SUCCESS_CODE){
+            if(rmcWarehouseRespDto!=null){
+                logger.info("==>通过仓库编码查询仓库所在基地的的响应结果code为{},基地编码为{},基地名称为{}",result.getCode(),rmcWarehouseRespDto.getBaseCode(),rmcWarehouseRespDto.getBaseName());
+
+                //begin 仓库基地编码获取基地组织信息
+                UamGroupDto baseGroupDto = new UamGroupDto();
+                baseGroupDto.setGroupCode(rmcWarehouseRespDto.getBaseCode());
+                logger.info("==>仓储订单通过仓库查询基地组织信息的参数为:{}",rmcWarehouseRespDto.getBaseCode());
+                Wrapper<UamGroupDto>  baseGroupInfo = uamGroupEdasService.findGroupInfoByGroupCode(baseGroupDto);
+                //end 仓库基地编码获取基地组织信息
+
+                if(baseGroupInfo.getCode() == Wrapper.SUCCESS_CODE){
+                    if(baseGroupInfo.getResult()!=null){
+                        UamGroupDto baseGroup = baseGroupInfo.getResult();
+                        logger.info("==>仓储订单通过仓库查询基地组织信息的响应结果code为{},组织流水号{},组织编码为:{},组织名称为{}",baseGroupInfo.getCode(),baseGroup.getSerialNo(),baseGroup.getGroupCode(),baseGroup.getGroupName());
+                        ofcFundamentalInformation.setBaseCode(baseGroup.getSerialNo());
+                        ofcFundamentalInformation.setBaseName(baseGroup.getGroupName());
+                        //begin 通过基地获取大区组织信息
+                        UamGroupDto  areaGroupDto = new UamGroupDto();
+                        areaGroupDto.setSerialNo(baseGroup.getSerialNo());
+                        logger.info("==>仓储订单仓库基地查询大区组织信息的参数为:{}",baseGroup.getSerialNo());
+                        OfcGroupVo ofcGroupVo = ofcOrderManageOperService.queryAreaMsgByBase(areaGroupDto);
+                        //end 通过基地获取大区组织信息
+
+                        if(null == ofcGroupVo || PubUtils.isSEmptyOrNull(ofcGroupVo.getSerialNo()) || PubUtils.isSEmptyOrNull(ofcGroupVo.getGroupName())){
+                            logger.info("==>仓储订单的基地和大区字段补齐操作,未查到当前订单仓库基地的所属大区",ofcFundamentalInformation.getOrderCode());
+                            ofcFundamentalInformation.setAreaCode("");
+                            ofcFundamentalInformation.setAreaName("");
+                        }else{
+                            logger.info("==>仓储订单通过基地查询大区组织信息组织流水号{},组织名称为{}",ofcGroupVo.getSerialNo(),ofcGroupVo.getGroupName());
+                            ofcFundamentalInformation.setAreaCode(ofcGroupVo.getSerialNo());
+                            ofcFundamentalInformation.setAreaName(ofcGroupVo.getGroupName());
+                        }
+                        int num = ofcFundamentalInformationService.update(ofcFundamentalInformation);
+                        if(num < 1) {
+                            logger.info("仓储订单根据仓库更新基地和大区更新失败!当前订单:{}", ofcFundamentalInformation.getOrderCode());
+                            throw  new BusinessException("根据仓库更新基地和大区更新失败");
+                        }
+                    }else{
+                        logger.info("仓储订单根据仓库查询没有查询到基地信息!当前订单:{}", ofcFundamentalInformation.getOrderCode());
+                        throw  new BusinessException("仓储订单根据仓库查询没有查询到基地信息");
+                    }
+                }else{
+                    logger.info("仓储订单根据仓库查询基地信息失败,失败原因：{}，当前订单:{}",baseGroupInfo.getMessage(), ofcFundamentalInformation.getOrderCode());
+                    throw  new BusinessException(baseGroupInfo.getMessage());
+                }
+            }else{
+                logger.info("没有查询到当前仓库的基地信息!当前订单:{}", ofcFundamentalInformation.getOrderCode());
+                throw  new BusinessException("当前仓库不存在基地信息");
+            }
+        }else{
+            throw  new BusinessException(result.getMessage());
+    }
+
     }
 
 
