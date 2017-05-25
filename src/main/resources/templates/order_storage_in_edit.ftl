@@ -880,6 +880,10 @@
                     if(!StringUtil.isEmpty(val.conversionRate)){
                         val.primaryQuantity = val.quantity*(val.conversionRate);
                     }
+                    if (!StringUtil.isEmpty(val.unitWeight) && !StringUtil.isEmpty(val.primaryQuantity)) {
+                        val.weight = val.primaryQuantity*(val.unitWeight);
+                        val.weight = new Number(val.weight).toFixed(4);
+                    }
                 }
             },
             setCurrentCustInfo:function(val) {
