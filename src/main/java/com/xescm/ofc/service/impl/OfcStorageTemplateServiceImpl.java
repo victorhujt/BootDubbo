@@ -400,7 +400,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 //遍历列
                 for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
                     Cell commonCell = commonRow.getCell(cellNum);
-                    logger.info("开始校验第{}行, 第{}列, 当前单元格的值为:{}", rowNum + 1, cellNum + 1, ToStringBuilder.reflectionToString(commonCell));
                     //空列
 //                    if (null == commonCell && cellNum > 11) {
                     //如果必填列为空则报错提示
