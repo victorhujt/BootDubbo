@@ -1148,14 +1148,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         BigDecimal countImportNum = new BigDecimal(0);
         Map<String, Set<String>> custOrderCodeTransCode = new HashMap<>(); //key:custOrderCode, value: transCode
         Map<String, Set<String>> transCodeCustOrderCode = new HashMap<>(); //key:transCode, value: custOrderCode
-        logger.info("数量初始化: {}", countImportNum.intValue());
         int rowCount = 0;
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
             rowCount ++;
-            logger.info("数量 : {}", ofcStorageTemplateDto.getQuantity());
-            logger.info("数量 加之前: {}", countImportNum.intValue());
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
-            logger.info("数量 加之后: {}", countImportNum.intValue());
             //处理门店编码
             if (checkPass && !this.dealStoreCode(ofcStorageTemplate, ofcStorageTemplateDto, storeCodeCheck, xlsErrorMsg, rowCount)) {
                 checkPass = false;
@@ -1350,9 +1346,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     private boolean dealStoreCode(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto, Map<String, CscContantAndCompanyResponseDto> storeCodeCheck, List<String> xlsErrorMsg, int rowCount) {
-        logger.info("处理店铺编码 ==> ofcStorageTemplate:{}", ofcStorageTemplate);
-        logger.info("处理店铺编码 ==> ofcStorageTemplateDto:{}", ofcStorageTemplateDto);
-        logger.info("处理店铺编码 ==> rowCount:{}", rowCount);
         if (!StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_OUT) || PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getStoreCode())) {
             logger.info("没有门店编码");
             return true;
