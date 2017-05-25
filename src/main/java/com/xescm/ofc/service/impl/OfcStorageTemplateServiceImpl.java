@@ -1130,7 +1130,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             BigDecimal bigDecimal = new BigDecimal(1);
                             goodsPackingDto.setLevelSpecification(bigDecimal);
                             goodsPackingDto.setLevelDescription("EA");
-                            ofcStorageTemplateDto.setUnit("主单位");
+                            ofcStorageTemplateDto.setUnit("EA");
                             ofcStorageTemplateDto.setGoodsPackingDto(goodsPackingDto);
                         }
                         ofcStorageTemplateDto.setMainUnitNum(ofcStorageTemplateDto.getQuantity());
