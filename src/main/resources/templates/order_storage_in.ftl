@@ -160,7 +160,7 @@
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectGood">取 消</el-button>
-                <el-button type="primary" @click="setCurrentGoodsInfo">确 定</el-button>
+                <el-button type="primary" :disabled="isRepeatClick" @click="setCurrentGoodsInfo">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -502,6 +502,7 @@
             };
             return {
                 isCanClick:false,
+                isRepeatClick:false,
                 isShow:false,
                 activeNames:'',
                 wareHouseObj:'',
@@ -761,6 +762,9 @@
                             if(vueObj.wareHouseOptions.length==1){
                                 vueObj.orderForm.wareHouse=vueObj.wareHouseOptions[0].value;
                             }
+                            if(vueObj.orderForm.custCode != vueObj.oldCustomerCode ){
+                                vueObj.clearGoodsData();
+                            }
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
                         } else {
@@ -854,6 +858,7 @@
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
                 }
+                this.isRepeatClick = true;
                 this.goodDataInfo.chosenGoodCode = false;
                 this.unitsOptions = [];
                 this.levelSpecificationOptions = [];
@@ -889,6 +894,7 @@
 
                     };
                     this.goodsData.push(newData);
+                    this.multipleSelection = [];
                     if(this.supportBatchData.length==0){
                         this.isShow = true;
                         this.selectSupplier();
@@ -1356,6 +1362,7 @@
                     this.promptInfo("请先选择仓库名称!",'warning');
                     return;
                 }
+                this.isRepeatClick = false;
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
                 this.oldWarehouse = this.orderForm.wareHouse;
@@ -1464,7 +1471,7 @@
                     }
                     var oldwareHouseObj=JSON.parse(_this.oldWarehouse);
                     var oldwarehouseCode = oldwareHouseObj.warehouseCode;
-                    if(oldwarehouseCode != warehouseCode){
+                    if((oldwarehouseCode != warehouseCode)||(_this.orderForm.custCode != _this.oldCustomerCode && oldwarehouseCode == warehouseCode)){
                         _this.openChangeWarehouseMessage();
                     }
                 }
