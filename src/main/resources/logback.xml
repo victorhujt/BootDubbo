@@ -54,7 +54,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.xescm.ofc.mapper" level="DEBUG">
+    <logger name="com.xescm.ofc.mapper" level="INFO">
         <appender-ref ref="DaoStatistics" />
     </logger>
 
