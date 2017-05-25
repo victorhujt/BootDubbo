@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcInterfaceReceiveLogMapper">
+    <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcInterfaceReceiveLog">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="log_business_type" property="logBusinessType" jdbcType="VARCHAR"/>
+        <result column="log_from_sys" property="logFromSys" jdbcType="VARCHAR"/>
+        <result column="log_to_sys" property="logToSys" jdbcType="VARCHAR"/>
+        <result column="ref_no" property="refNo" jdbcType="VARCHAR"/>
+        <result column="log_type" property="logType" jdbcType="VARCHAR"/>
+        <result column="log_data" property="logData" jdbcType="VARCHAR"/>
+        <result column="log_status" property="logStatus" jdbcType="INTEGER"/>
+        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="process_time" property="processTime" jdbcType="TIMESTAMP"/>
+        <result column="process_count" property="processCount" jdbcType="INTEGER"/>
+        <result column="process_result" property="processResult" jdbcType="VARCHAR"/>
+        <result column="dr" property="dr" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumn">
+      id, log_business_type, log_from_sys, log_to_sys, ref_no, log_type, log_data, log_status, creation_time, process_count, process_result, dr
+    </sql>
+
+    <insert id="insertOfcInterfaceReceiveLog" parameterType="com.xescm.ofc.domain.OfcInterfaceReceiveLog">
+        insert into ofc_interface_receive_log (
+            id, log_business_type, log_from_sys, log_to_sys, ref_no, log_type,
+            log_data, log_status, creation_time, process_count, process_result, dr
+        )
+        values (
+          #{id}, #{logBusinessType}, #{logFromSys}, #{logToSys}, #{refNo}, #{logType},
+          #{logData}, #{logStatus}, #{creationTime}, #{processTime}, #{processResult}, #{dr}
+        )
+
+    </insert>
+
+</mapper>

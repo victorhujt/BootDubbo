@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcTaskInterfaceLogMapper">
+    <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcTaskInterfaceLog">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="NUMERIC"/>
+        <result column="task_type" property="taskType" jdbcType="VARCHAR"/>
+        <result column="ref_no" property="refNo" jdbcType="VARCHAR"/>
+        <result column="task_source" property="taskSource" jdbcType="VARCHAR"/>
+        <result column="source_log_id" property="sourceLogId" jdbcType="VARCHAR"/>
+        <result column="task_data" property="taskData" jdbcType="VARCHAR"/>
+        <result column="task_exe_count" property="taskExeCount" jdbcType="INTEGER"/>
+        <result column="exe_instance_ip" property="exeInstanceIp" jdbcType="VARCHAR"/>
+        <result column="task_status" property="taskStatus" jdbcType="INTEGER"/>
+        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="exe_time" property="exeTime" jdbcType="TIMESTAMP"/>
+        <result column="dr" property="dr" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumn">
+    id, task_type, ref_no, task_source, source_log_id, task_data, task_exe_count, exe_instance_ip, task_status, creation_time, update_time, exe_time, dr
+  </sql>
+
+    <select id="queryTaskInterfaceLog" resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
+      select * from (
+        select
+        <include refid="BaseColumn"/>
+        from ofc_task_interface_log lg
+        where lg.dr = 0
+        and lg.task_type = #{taskType}
+        and lg.task_status = 1
+        and <![CDATA[ lg.task_exe_count <= 3 ]]>
+        <if test="taskSource != null">
+            and task_source = #{taskSource}
+        </if>
+        <if test="condition != null">
+            and MOD(id, #{queueNum}) in (${condition})
+        </if>
+        union all
+        select
+        <include refid="BaseColumn"/>
+        from ofc_task_interface_log lg
+        where lg.dr = 0
+        and lg.task_type = #{taskType}
+        and lg.task_status = 2
+        and <![CDATA[ update_time < (NOW() - 10 / 60 / 24) ]]>
+        and <![CDATA[ lg.task_exe_count <= 3 ]]>
+        <if test="taskSource != null">
+            and task_source = #{taskSource}
+        </if>
+        <if test="condition != null">
+            and MOD(id, #{queueNum}) in (${condition})
+        </if>
+      )tmp
+      where 1 = 1
+        <if test="fetchNum != null">
+            LIMIT #{fetchNum}
+        </if>
+    </select>
+
+</mapper>

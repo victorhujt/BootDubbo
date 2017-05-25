@@ -68,15 +68,20 @@ public class DefaultMqProducer {
      */
     public boolean sendMsg(String msgStr, String topic, String key, String tag) {
         boolean isSend = false;
-        logger.info("MQ: {} 开始生产", topic);
-        Message message = new Message(topic, tag, msgStr.getBytes(StandardCharsets.UTF_8));
-        message.setKey(key);
-        SendResult result = producer.send(message);
-        if (result != null) {
-            isSend = true;
-            logger.info("TOPIC: {}, 生产成功,tag: {}, 生产时间: {}, MsgID: {}, 消息: {}", topic, tag, new Date(), result.getMessageId(), msgStr);
-        } else {
-            logger.error("TOPIC: {} 生产失败", topic);
+        try {
+            logger.info("MQ: {} 开始生产", topic);
+            Message message = new Message(topic, tag, msgStr.getBytes(StandardCharsets.UTF_8));
+            message.setKey(key);
+            SendResult result = producer.send(message);
+            if (result != null) {
+                isSend = true;
+                logger.info("TOPIC: {}, 生产成功,tag: {}, 生产时间: {}, MsgID: {}, 消息: {}", topic, tag, new Date(), result.getMessageId(), msgStr);
+            } else {
+                logger.error("TOPIC: {} 生产失败", topic);
+            }
+        } catch (Exception e) {
+            logger.error("MQ消息发送发生异常：{}", e);
+            throw e;
         }
         return isSend;
     }
