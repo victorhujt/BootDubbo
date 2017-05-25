@@ -9,6 +9,9 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
+        .weight{
+            position:absolute;osition: relative;left: 260px;display: block;top: 3px;
+        }
     </style>
 </head>
 <body>
@@ -131,8 +134,8 @@
                             placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="订单总重量" class="xe-col-3">
-                    <el-input v-model="weight" :readOnly="true"></el-input>
+                <el-form-item label="订单总重量" class="xe-col-3" style="position: relative">
+                    <el-input v-model="weight" :readOnly="true"></el-input><span class="weight">KG</span>
                 </el-form-item>
             </div>
             <div class="xe-block">
@@ -271,7 +274,7 @@
                         <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
-                <el-table-column property="unit" label="重量">
+                <el-table-column property="weight" label="重量">
                     <template scope="scope">
                         <el-input v-model="scope.row.weight" :readOnly="true"></el-input>
                     </template>
@@ -517,7 +520,7 @@
                                         vueObj.transCode = ofcDistributionBasicInfo.transCode;
                                         vueObj.consignorContactPhone=ofcDistributionBasicInfo.consignorContactPhone;
                                         if (null != ofcDistributionBasicInfo.weight) {
-                                            vueObj.weight = ofcDistributionBasicInfo.weight + 'kg';
+                                            vueObj.weight = ofcDistributionBasicInfo.weight;
                                         }
                                         if(ofcDistributionBasicInfo.departureProvince!=null){
                                             vueObj.consignorAddress=ofcDistributionBasicInfo.departureProvince;
