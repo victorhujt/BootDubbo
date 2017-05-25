@@ -200,24 +200,34 @@ public class TfcTransport implements Serializable {
 
     private String platformType;//平台类型
 
-    private String payment_way; //支付方式
+    private String paymentWay; //支付方式
 
-    private String carr_fee_payer;//费用支付方
+    private String carrFeePayer;//费用支付方
 
-    public String getPayment_way() {
-        return payment_way;
+    private String isReceipt; //是否签单返回
+
+    public String getPaymentWay() {
+        return paymentWay;
     }
 
-    public void setPayment_way(String payment_way) {
-        this.payment_way = payment_way;
+    public void setPaymentWay(String paymentWay) {
+        this.paymentWay = paymentWay;
     }
 
-    public String getCarr_fee_payer() {
-        return carr_fee_payer;
+    public String getCarrFeePayer() {
+        return carrFeePayer;
     }
 
-    public void setCarr_fee_payer(String carr_fee_payer) {
-        this.carr_fee_payer = carr_fee_payer;
+    public void setCarrFeePayer(String carrFeePayer) {
+        this.carrFeePayer = carrFeePayer;
+    }
+
+    public String getIsReceipt() {
+        return isReceipt;
+    }
+
+    public void setIsReceipt(String isReceipt) {
+        this.isReceipt = isReceipt;
     }
 
     public String getFromStreetCode() {

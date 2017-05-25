@@ -2249,8 +2249,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setSchedulingState();//
 //        tfcTransport.setTransportPoolName();//
 
-        tfcTransport.setPayment_way(ofcFinanceInformation.getPayment());
-        tfcTransport.setCarr_fee_payer(ofcFinanceInformation.getExpensePaymentParty());
+        tfcTransport.setPaymentWay(ofcFinanceInformation.getPayment());
+        tfcTransport.setCarrFeePayer(ofcFinanceInformation.getExpensePaymentParty());
+        tfcTransport.setIsReceipt(ofcFinanceInformation.getReturnList());
     }
 
     /**
