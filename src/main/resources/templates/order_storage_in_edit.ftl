@@ -907,6 +907,9 @@
                             if(vueObj.wareHouseOptions.length==1){
                                 vueObj.orderForm.wareHouse=vueObj.wareHouseOptions[0].value;
                             }
+                            if(vueObj.orderForm.custCode != vueObj.oldCustomerCode ){
+                                vueObj.clearGoodsData();
+                            }
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
                         } else {
@@ -1605,8 +1608,8 @@
                         var warehouseCode = _this.orderForm.wareHouse;
                     }
                     var oldwarehouseCode = _this.oldWarehouse;
-                    if(oldwarehouseCode != warehouseCode){
-                     _this.openChangeWarehouseMessage();
+                    if((oldwarehouseCode != warehouseCode)||(_this.orderForm.custCode != _this.oldCustomerCode && oldwarehouseCode == warehouseCode)){
+                        _this.openChangeWarehouseMessage();
                     }
                 }
             },
