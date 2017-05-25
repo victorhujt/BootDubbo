@@ -175,7 +175,7 @@
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectGood">取 消</el-button>
-                <el-button type="primary" @click="setCurrentGoodsInfo">确 定</el-button>
+                <el-button type="primary" :disabled="isRepeatClick" @click="setCurrentGoodsInfo">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog title="货品当前库存" v-model="chosenGoodStock" size="small">
@@ -553,6 +553,8 @@
                 }
             };
             return {
+                isRepeatClick:false,
+                isCanClick:false,
                 isShow:false,
                 supportNameShow:false,
                 oldCustomerCode:'',
@@ -1074,6 +1076,7 @@
                     this.promptInfo("请选择客户!",'warning');
                     return;
                 }
+                this.isRepeatClick = false;
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
                 this.oldWarehouse = this.orderForm.wareHouse;
@@ -1173,6 +1176,7 @@
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
                 }
+                this.isRepeatClick = true;
                 this.goodDataInfo.chosenGoodCode = false;
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
@@ -1303,14 +1307,14 @@
                 this.consigneeDataInfo.chosenSend = false;
             },
             selectGoods:function(){
+                debugger;
                 var vueObj = this;
                 try{
                     vueObj.isCanClick = true;
                     vueObj.goodDataInfo.goodsCodeData=[];
                     var cscGoods = {};
-                    this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
                     var customerCode = vueObj.orderForm.custCode;
-                    var warehouseCode = vueObj.wareHouseObj.warehouseCode;
+                    var warehouseCode = vueObj.orderForm.wareHouse;
                     cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
                     cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
                     cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
