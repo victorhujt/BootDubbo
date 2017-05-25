@@ -734,6 +734,7 @@
                     }
                     if (!StringUtil.isEmpty(val.unitWeight) && !StringUtil.isEmpty(val.primaryQuantity)) {
                         val.weight = val.primaryQuantity*(val.unitWeight);
+                        val.weight = new Number(val.weight).toFixed(4);
                     }
                 }
             },
