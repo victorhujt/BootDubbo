@@ -26,6 +26,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
@@ -714,6 +715,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
+                CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+                if (null != cscGoodsApiVo.getWeight()) ofcGoodsDetailsInfo.setWeight(new BigDecimal(cscGoodsApiVo.getWeight()));
                 GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
                 ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
@@ -1416,7 +1419,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //相同货品编码数量相加
         Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
         List<OfcGoodsDetailsInfo> ofcGoodsDetail=new ArrayList<>();
-
+        //订单货品总重量
+        BigDecimal totalWeight = new BigDecimal(0);
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
             StringBuilder key=new StringBuilder();
             key.append(ofcGoodsDetails.getGoodsCode());
@@ -1443,8 +1447,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 BigDecimal preWeight = info.getWeight();
                 info.setWeight(null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight));
             }
+            totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
         }
-
+        ofcDistributionBasicInfo.setWeight(totalWeight);
         Iterator iter = goodInfo.entrySet().iterator();
         while (iter.hasNext()) {
                 Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
@@ -1959,6 +1964,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
             , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo dinfo) {
         logger.info("订单信息推送仓储中心 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("订单信息推送仓储中心 ==> goodsDetailsList:{}", goodsDetailsList);
+        logger.info("订单信息推送仓储中心 ==> ofcWarehouseInformation:{}", ofcWarehouseInformation);
+        logger.info("订单信息推送仓储中心 ==> ofcFinanceInformation:{}", ofcFinanceInformation);
+        logger.info("订单信息推送仓储中心 ==> dinfo:{}", dinfo);
         String json;
         try {
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
@@ -1967,6 +1976,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             ofOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport());
+            ofOrderDto.setWeight(null == dinfo ? new BigDecimal(0) : dinfo.getWeight());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 //出库
                 ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());

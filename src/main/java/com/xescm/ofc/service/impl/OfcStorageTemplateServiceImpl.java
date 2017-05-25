@@ -746,7 +746,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     checkPass = false;
                                     continue;
                                     //校验通过
-                                }else {
+                                } else {
                                     logger.info("当前供应商名称:{},校验通过", cellValue);
                                     supplierCheck.put(cellValue, result.get(0));
                                     ofcStorageTemplateDto.setCscSupplierInfoDto(result.get(0));
