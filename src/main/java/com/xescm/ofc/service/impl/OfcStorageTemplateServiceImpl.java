@@ -1237,12 +1237,14 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private void countWeight(OfcStorageTemplateDto ofcStorageTemplateDto) {
         BigDecimal weight = new BigDecimal(0);
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+        BigDecimal mainUnitNum = ofcStorageTemplateDto.getMainUnitNum();
         String unitWeightStr = cscGoodsApiVo.getWeight();
         BigDecimal unitWeight = new BigDecimal(unitWeightStr);
-        if (unitWeight.compareTo(weight) != 0) {
-            weight = weight.multiply(unitWeight);
-            ofcStorageTemplateDto.setWeight(weight);
+        if (null != unitWeight && unitWeight.compareTo(weight) != 0
+                && mainUnitNum != null && mainUnitNum.compareTo(weight) != 0) {
+            weight = mainUnitNum.multiply(unitWeight);
         }
+        ofcStorageTemplateDto.setWeight(weight);
     }
 
 
