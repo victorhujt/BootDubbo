@@ -530,7 +530,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return
      */
     @Transactional
-    private boolean cancelAcOrder(String orderCode) {
+    boolean cancelAcOrder(String orderCode) {
         logger.info("订单中心取消订单，调用结算中心取消订单接口==>订单编号:{}", orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
         ofcDistributionBasicInfo.setOrderCode(orderCode);
@@ -2248,6 +2248,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setMatchingMode();//
 //        tfcTransport.setSchedulingState();//
 //        tfcTransport.setTransportPoolName();//
+
+        tfcTransport.setPayment_way(ofcFinanceInformation.getPayment());
+        tfcTransport.setCarr_fee_payer(ofcFinanceInformation.getExpensePaymentParty());
     }
 
     /**
