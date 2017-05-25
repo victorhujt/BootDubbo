@@ -1548,8 +1548,9 @@
 //                          good.supportBatch=this.orderForm.supportCode;
 //                      }
 //                  }
-                    good.unitPrice = StringUtil.trim(good.unitPrice);
+
                     if(!StringUtil.isEmpty(good.unitPrice)){
+                        good.unitPrice = StringUtil.trim(good.unitPrice);
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
                             return;
@@ -1563,7 +1564,9 @@
                             return;
                         }
                     }
-                    good.quantity = StringUtil.trim(good.quantity);
+                    if(isNaN(good.quantity)){
+                        good.quantity = StringUtil.trim(good.quantity);
+                    }
                     if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
                         if(!good.quantity){
                             this.promptInfo("货品出库数量不能为空",'warning');

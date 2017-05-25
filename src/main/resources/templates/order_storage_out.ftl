@@ -1367,8 +1367,8 @@
 
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-                    good.unitPrice = StringUtil.trim(good.unitPrice);
                     if(!StringUtil.isEmpty(good.unitPrice)){
+                        good.unitPrice = StringUtil.trim(good.unitPrice);
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
                             return;

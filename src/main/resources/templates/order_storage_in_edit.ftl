@@ -1354,6 +1354,7 @@
                 });
             },
             saveStorage:function(){
+                debugger;
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
@@ -1409,8 +1410,9 @@
                 //校验金额和格式化日期时间
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
-                    good.unitPrice = StringUtil.trim(good.unitPrice);
+
                     if(!StringUtil.isEmpty(good.unitPrice)){
+                        good.unitPrice = StringUtil.trim(good.unitPrice);
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
                             return;
@@ -1424,7 +1426,9 @@
                             return;
                         }
                     }
-                    good.quantity = StringUtil.trim(good.quantity);
+                    if(isNaN(good.quantity)){
+                        good.quantity = StringUtil.trim(good.quantity);
+                    }
                     if(good.quantity>99999.999||good.quantity<0||good.quantity!=""||good.quantity==0){
                         if(!good.quantity){
                             this.promptInfo("货品入库数量不能为空",'warning');
