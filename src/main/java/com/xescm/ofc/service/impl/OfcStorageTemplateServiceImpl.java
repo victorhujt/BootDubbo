@@ -1135,8 +1135,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         }
                         ofcStorageTemplateDto.setMainUnitNum(ofcStorageTemplateDto.getQuantity());
                     }
-
-
+                    this.countWeight(ofcStorageTemplateDto);
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
             }
@@ -1233,6 +1232,17 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         succeedResult.add(countImportNum);
         succeedResult.add(importOrderNum);
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
+    }
+
+    private void countWeight(OfcStorageTemplateDto ofcStorageTemplateDto) {
+        BigDecimal weight = new BigDecimal(0);
+        CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+        String unitWeightStr = cscGoodsApiVo.getWeight();
+        BigDecimal unitWeight = new BigDecimal(unitWeightStr);
+        if (unitWeight.compareTo(weight) != 0) {
+            weight = weight.multiply(unitWeight);
+            ofcStorageTemplateDto.setWeight(weight);
+        }
     }
 
 

@@ -721,6 +721,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
                 ofcGoodsDetailsInfo.setPackageType(goodsPackingDto.getLevel());
+                ofcGoodsDetailsInfo.setWeight(ofcStorageTemplateDto.getWeight());
                 detailsInfos.add(ofcGoodsDetailsInfo);
             }
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
