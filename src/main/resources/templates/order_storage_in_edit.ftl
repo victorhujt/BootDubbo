@@ -157,6 +157,7 @@
                 <el-table-column property="goodsName" label="货品名称"></el-table-column>
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
                 <el-table-column property="unit" label="单位"></el-table-column>
+                <el-table-column property="unitWeight" label="毛重"></el-table-column>
                 <el-table-column property="barCode" label="条形码"></el-table-column>
                 <el-table-column property="expiryDate" v-if="false" label="保质期限"></el-table-column>
             </el-table>
@@ -331,6 +332,11 @@
                         </el-select>
                     </template>
                 </el-table-column>
+                <el-table-column property="goodsName" label="单位毛重">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.unitWeight" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
                 <el-table-column property="quantity" label="入库数量">
                     <template scope="scope">
                         <el-input v-model="scope.row.quantity" @blur="accountPrimaryQuantity(scope.row)" placeholder="请输入内容"></el-input>
@@ -339,6 +345,11 @@
                 <el-table-column property="primaryQuantity" label="主单位数量">
                     <template scope="scope">
                         <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="primaryQuantity" label="重量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.weight"  :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="packageType" v-if="false" label="包装类型">
@@ -816,6 +827,7 @@
                                             good.goodsName=goodDetail.goodsName;
                                             good.goodsSpec=goodDetail.goodsSpec;
                                             good.quantity=goodDetail.quantity;
+                                            good.weight=goodDetail.weight;
                                             good.unitPrice=goodDetail.unitPrice;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
@@ -1081,6 +1093,7 @@
                         goodsName: val.goodsName,
                         goodsSpec: val.goodsSpec,
                         unit:unitVar,
+                        unitWeight:val.unitWeight,
                         quantity: '',
                         unitsOptions:val.unitsOptions,
                         levelSpecificationOptions:val.levelSpecificationOptions,
@@ -1225,6 +1238,7 @@
                                 goodCode.goodsBrand=cscGoodsVo.brand;
                                 goodCode.goodsSpec=cscGoodsVo.specification;
                                 goodCode.unit=cscGoodsVo.unit;
+                                goodCode.unitWeight=cscGoodsVo.weight;
                                 goodCode.barCode=cscGoodsVo.barCode;
                                 if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
                                     goodCode.expiryDate=0;

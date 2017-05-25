@@ -937,6 +937,7 @@
                                             good.primaryQuantity=goodDetail.primaryQuantity;
                                             good.conversionRate = goodDetail.conversionRate;
                                             good.unitPrice=goodDetail.unitPrice;
+                                            good.weight=goodDetail.weight;
                                             good.productionBatch=goodDetail.productionBatch;
                                             good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                             good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
