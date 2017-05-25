@@ -75,6 +75,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.*;
@@ -1447,7 +1448,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 BigDecimal preWeight = info.getWeight();
                 info.setWeight(null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight));
             }
-            totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
+            totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight(), new MathContext(3));
         }
         ofcDistributionBasicInfo.setWeight(totalWeight);
         Iterator iter = goodInfo.entrySet().iterator();
