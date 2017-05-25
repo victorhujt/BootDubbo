@@ -1330,11 +1330,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             return false;
         }
         for (GoodsPackingDto goodsPackingDto : goodsPackingDtoList) {
-            if (StringUtils.equals(goodsPackingDto.getLevelDescription(), unit)) {
+            BigDecimal levelSpecification = goodsPackingDto.getLevelSpecification();
+            if (StringUtils.equals(goodsPackingDto.getLevelDescription(), unit) && 0 != levelSpecification.compareTo(new BigDecimal(0))) {
                 ofcStorageTemplateDto.setGoodsPackingDto(goodsPackingDto);
                 ofcStorageTemplateDto.setPackageId(cscGoodsApiVo.getPackingCode());
                 //主单位数量计算
-                BigDecimal levelSpecification = goodsPackingDto.getLevelSpecification();
                 BigDecimal quantity = ofcStorageTemplateDto.getQuantity();
                 BigDecimal mainUnitNum = quantity.multiply(levelSpecification);
                 ofcStorageTemplateDto.setMainUnitNum(mainUnitNum);
