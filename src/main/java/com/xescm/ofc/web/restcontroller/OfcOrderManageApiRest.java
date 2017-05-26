@@ -55,55 +55,60 @@ public class OfcOrderManageApiRest {
     @RequestMapping(value = "/dailyAccount", method = RequestMethod.POST)
     public void  dailyAccount() {
         logger.info("平台使用情况日报统计开始......");
-        List<OfcOrderAccountDTO> accountDaily=ofcOrderManageService.dailyAccount();
-        if(CollectionUtils.isEmpty(accountDaily)){
-            logger.info("平台使用情况日报统计为空");
-            return;
-        }
-        Map<String, Object> model = new HashMap<>();
-        model.put("dailyAccountInfo",accountDaily);
-        model.put("ofcUrl",restConfig.getOfcWebUrl());
-        String content="";
         try {
-            Template t = configuration.getTemplate("daily_account.ftl");
-            content = FreeMarkerTemplateUtils.processTemplateIntoString(t, model);
-        } catch (IOException e) {
-            logger.error("freeMark获取模板异常",e);
-        } catch (TemplateException e) {
-            logger.error("freeMark获取模板异常",e);
-        }
-        if(PubUtils.isSEmptyOrNull(content)){
-            logger.info("平台使用情况日报统计内容为空");
-            return;
-        }
-        logger.info("平台使用情况日报markDown内容为:{}",content);
-        //发送到钉钉机器人
-        ChatRobotMsgDto chatRobotMsgDto=new ChatRobotMsgDto();
-        chatRobotMsgDto.setWebhookToken(dingDingRobotConfig.getAccessToken());
-        chatRobotMsgDto.setMsgType(MsgTypeEnum.MARKDOWN.getType());
-        MarkdownDto markdownDto=new MarkdownDto();
-        AtDto atDto=new AtDto();
-        atDto.setAtAll(dingDingRobotConfig.isAtAll());
-        if(!PubUtils.isSEmptyOrNull(dingDingRobotConfig.getAtMobiles())){
-            String[] phones=dingDingRobotConfig.getAtMobiles().split(",");
-            atDto.setAtMobiles(phones);
-            atDto.setAtMobiles(phones);
-        }
-        chatRobotMsgDto.setAt(atDto);
-        markdownDto.setText(content);
-        markdownDto.setTitle("平台日报红黑榜");
-        chatRobotMsgDto.setMarkdown(markdownDto);
-        logger.info("发送到钉钉机器人");
-        logger.info("发送到钉钉机器人的参数为:{}",chatRobotMsgDto);
-        Wrapper<Boolean> success=chatRobotEdasService.sendChatRobotMsg(chatRobotMsgDto);
-        if(success.getCode()==Wrapper.SUCCESS_CODE){
-            if(success.getResult()){
-                logger.info("钉钉机器人发送成功");
-            }else{
+            List<OfcOrderAccountDTO> accountDaily = ofcOrderManageService.dailyAccount();
+            if (CollectionUtils.isEmpty(accountDaily)) {
+                logger.info("平台使用情况日报统计为空");
+                return;
+            }
+            Map<String, Object> model = new HashMap<>();
+            model.put("dailyAccountInfo", accountDaily);
+            model.put("ofcUrl", restConfig.getOfcWebUrl());
+            String content = "";
+            try {
+                Template t = configuration.getTemplate("daily_account.ftl");
+                content = FreeMarkerTemplateUtils.processTemplateIntoString(t, model);
+            } catch (IOException e) {
+                logger.error("freeMark获取模板异常", e);
+            } catch (TemplateException e) {
+                logger.error("freeMark获取模板异常", e);
+            }
+            if (PubUtils.isSEmptyOrNull(content)) {
+                logger.info("平台使用情况日报统计内容为空");
+                return;
+            }
+            logger.info("平台使用情况日报markDown内容为:{}", content);
+            //发送到钉钉机器人
+            ChatRobotMsgDto chatRobotMsgDto = new ChatRobotMsgDto();
+            chatRobotMsgDto.setWebhookToken(dingDingRobotConfig.getAccessToken());
+            chatRobotMsgDto.setMsgType(MsgTypeEnum.MARKDOWN.getType());
+            MarkdownDto markdownDto = new MarkdownDto();
+            AtDto atDto = new AtDto();
+            atDto.setAtAll(dingDingRobotConfig.isAtAll());
+            if (!PubUtils.isSEmptyOrNull(dingDingRobotConfig.getAtMobiles())) {
+                String[] phones = dingDingRobotConfig.getAtMobiles().split(",");
+                atDto.setAtMobiles(phones);
+                atDto.setAtMobiles(phones);
+            }
+            chatRobotMsgDto.setAt(atDto);
+            markdownDto.setText(content);
+            markdownDto.setTitle("平台日报红黑榜");
+            chatRobotMsgDto.setMarkdown(markdownDto);
+            logger.info("发送到钉钉机器人");
+            logger.info("发送到钉钉机器人的参数为:{}", chatRobotMsgDto);
+            Wrapper<Boolean> success = chatRobotEdasService.sendChatRobotMsg(chatRobotMsgDto);
+            if (success.getCode() == Wrapper.SUCCESS_CODE) {
+                if (success.getResult()) {
+                    logger.info("钉钉机器人发送成功");
+                } else {
+                    logger.info("钉钉机器人发送失败");
+                }
+            } else {
                 logger.info("钉钉机器人发送失败");
             }
-        }else{
-            logger.info("钉钉机器人发送失败");
+        } catch (Exception e) {
+            logger.error("钉钉日报发生异常：{}", e);
+            e.printStackTrace();
         }
     }
 
