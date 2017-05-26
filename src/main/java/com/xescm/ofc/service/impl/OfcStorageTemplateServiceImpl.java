@@ -1242,7 +1242,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         String unitWeightStr = cscGoodsApiVo.getWeight();
         BigDecimal bigDecimal = null;
         try {
-            bigDecimal = PubUtils.isSEmptyOrNull(unitWeightStr) ? new BigDecimal(0) : new BigDecimal(unitWeightStr);
+            bigDecimal = PubUtils.isSEmptyOrNull(unitWeightStr) || PubUtils.isSEmptyOrNull(unitWeightStr.trim()) ? new BigDecimal(0) : new BigDecimal(unitWeightStr);
         } catch (Exception e) {
             if (e instanceof NumberFormatException) {
                 logger.error("货品{}重量档案有误:{}", e);
