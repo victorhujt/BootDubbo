@@ -1235,11 +1235,21 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     private void countWeight(OfcStorageTemplateDto ofcStorageTemplateDto) {
+        logger.info("计算重量:{}", ofcStorageTemplateDto);
         BigDecimal weight = new BigDecimal(0);
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
         BigDecimal mainUnitNum = ofcStorageTemplateDto.getMainUnitNum();
         String unitWeightStr = cscGoodsApiVo.getWeight();
-        BigDecimal unitWeight = PubUtils.isSEmptyOrNull(unitWeightStr) ? new BigDecimal(0) : new BigDecimal(unitWeightStr);
+        BigDecimal bigDecimal = null;
+        try {
+            bigDecimal = PubUtils.isSEmptyOrNull(unitWeightStr) ? new BigDecimal(0) : new BigDecimal(unitWeightStr);
+        } catch (Exception e) {
+            if (e instanceof NumberFormatException) {
+                logger.error("货品{}重量档案有误:{}", e);
+                throw new BusinessException("货品【" + cscGoodsApiVo.getGoodsCode() + "】的重量不是数字格式，请联系客户中心。");
+            }
+        }
+        BigDecimal unitWeight = bigDecimal;
         if (null != unitWeight && unitWeight.compareTo(weight) != 0
                 && mainUnitNum != null && mainUnitNum.compareTo(weight) != 0) {
             weight = mainUnitNum.multiply(unitWeight);

@@ -716,7 +716,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
                 CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
-                if (null != cscGoodsApiVo.getWeight()) ofcGoodsDetailsInfo.setWeight(new BigDecimal(cscGoodsApiVo.getWeight()));
                 GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
                 ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
