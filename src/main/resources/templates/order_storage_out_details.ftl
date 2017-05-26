@@ -8,6 +8,9 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
+        .weight{
+            position:absolute;osition: relative;left: 260px;display: block;top: 3px;
+        }
     </style>
 </head>
 <body>
@@ -68,6 +71,9 @@
                             :readOnly="true"
                             placeholder="选择日期">
                     </el-date-picker>
+                </el-form-item>
+                <el-form-item label="订单总重量" class="xe-col-3" style="position: relative">
+                    <el-input v-model="weight" :readOnly="true"></el-input><span class="weight">KG</span>
                 </el-form-item>
             </div>
             <div class="xe-block">
@@ -206,6 +212,11 @@
                 <el-table-column property="realQuantity" label="实际数量">
                     <template scope="scope">
                         <el-input v-model="scope.row.realQuantity" :readOnly="true"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column property="weight" label="重量">
+                    <template scope="scope">
+                        <el-input v-model="scope.row.weight" :readOnly="true"></el-input>
                     </template>
                 </el-table-column>
                 <el-table-column property="unitPrice" label="单价">
@@ -424,6 +435,9 @@
                                     vueObj.transCode = ofcDistributionBasicInfo.transCode;
                                     vueObj.isNeedTransport=true;
                                     vueObj.consignorAddress=ofcDistributionBasicInfo.departurePlace;
+                                    if (null != ofcDistributionBasicInfo.weight) {
+                                        vueObj.weight = ofcDistributionBasicInfo.weight;
+                                    }
                                     if(ofcDistributionBasicInfo.destinationProvince!=null){
                                         vueObj.destinationAddress=ofcDistributionBasicInfo.destinationProvince;
                                     }
@@ -457,6 +471,7 @@
                                         good.realQuantity=goodDetail.realQuantity;
                                         good.unitPrice=goodDetail.unitPrice;
                                         good.unit=goodDetail.packageName;
+                                        good.weight=goodDetail.weight;
                                         good.productionBatch=goodDetail.productionBatch;
                                         good.productionTime=DateUtil.parse(goodDetail.productionTime);
                                         good.invalidTime=DateUtil.parse(goodDetail.invalidTime);
