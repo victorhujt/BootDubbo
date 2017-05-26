@@ -152,7 +152,7 @@
                     <el-input v-model="goodDataInfo.goodsForm.goodsCode" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth">
-                    <el-button type="primary" @click="selectGoods">筛选</el-button>
+                    <el-button type="primary" :disabled="isCanClick" @click="selectGoods">筛选</el-button>
                 </el-form-item>
                 <el-form-item label="" :label-width="formLabelWidth20">
                     <el-button @click="reSetCondition">重置</el-button>
@@ -169,6 +169,7 @@
                 <el-table-column property="goodsName" label="货品名称"></el-table-column>
                 <el-table-column property="goodsSpec" label="规格"></el-table-column>
                 <el-table-column property="unit" label="单位"></el-table-column>
+                <el-table-column property="unitWeight" label="毛重"></el-table-column>
                 <el-table-column property="barCode" label="条形码"></el-table-column>
                 <el-table-column property="expiryDate" v-if="false" label="保质期限"></el-table-column>
             </el-table>
@@ -176,7 +177,7 @@
             </el-pagination>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancelSelectGood">取 消</el-button>
-                <el-button type="primary" @click="setCurrentGoodsInfo">确 定</el-button>
+                <el-button type="primary" :disabled="isRepeatClick" @click="setCurrentGoodsInfo">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -383,6 +384,11 @@
                     </el-select>
                 </template>
             </el-table-column>
+            <el-table-column property="goodsName" label="单位毛重">
+                <template scope="scope">
+                    <el-input v-model="scope.row.unitWeight" :readOnly="true"></el-input>
+                </template>
+            </el-table-column>
             <el-table-column property="quantity" label="出库数量">
                 <template scope="scope">
                     <el-input v-model="scope.row.quantity" @blur="accountPrimaryQuantity(scope.row)" placeholder="请输入内容"></el-input>
@@ -391,6 +397,11 @@
             <el-table-column property="primaryQuantity" label="主单位数量">
                 <template scope="scope">
                     <el-input v-model="scope.row.primaryQuantity"  :readOnly="true"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column property="primaryQuantity" label="重量">
+                <template scope="scope">
+                    <el-input v-model="scope.row.weight"  :readOnly="true"></el-input>
                 </template>
             </el-table-column>
             <el-table-column property="packageType" v-if="false" label="包装类型">
@@ -523,11 +534,24 @@
                     callback();
                 }
             };
+
+            var checkTransCode = function(rule, value, callback) {
+                if(value!==""){
+                    var mp=/^\w+$/;
+                    var tranCode =mp.test(value);
+                    if(tranCode!==true){
+                        callback(new Error('请正确输入运输单号'));
+                    }else{
+                        callback();
+                    }
+                }else{
+                    callback();
+                }
+            };
             var checkPhoneOrMobile = function(rule, value, callback) {
                 if(value!==""){
-                    var mp=/^1\d{10}$/;
-                    var pp=/^\d{3,4}-\d{3,8}(-\d{3,4})?$/;
-                    var phone = pp.test(value)||mp.test(value);
+                    var pp= /^((0\d{2,3}-\d{7,8})|(1[35874]\d{9}))$/;
+                    var phone = pp.test(value);
                     if(phone!==true){
                         callback(new Error('请正确输入联系电话'));
                     }else{
@@ -539,6 +563,8 @@
             };
             return {
                 isShow:false,
+                isRepeatClick:false,
+                isCanClick:false,
                 cityUrl: sys.rmcPath +"/rmc/addr/citypicker/findByCodeAndType",
                 defaultData: {
                     province: {
@@ -763,6 +789,10 @@
                     driverName:[
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
                     ],
+                    transCode:[
+                        { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' },
+                        {validator: checkTransCode,trigger: 'blur'}
+                    ],
                     contactNumber:[
                         {validator: checkPhoneOrMobile, trigger: 'blur'},
                         { min: 0, max: 30, message: '长度在 0 到 30 个字符', trigger: 'change' }
@@ -802,7 +832,10 @@
                     if(!StringUtil.isEmpty(val.conversionRate)){
                         val.primaryQuantity = val.quantity*(val.conversionRate);
                     }
-
+                    if (!StringUtil.isEmpty(val.unitWeight) && !StringUtil.isEmpty(val.primaryQuantity)) {
+                        val.weight = val.primaryQuantity*(val.unitWeight);
+                        val.weight = new Number(val.weight).toFixed(4);
+                    }
                 }
             },
             setCurrentCustInfo:function(val) {
@@ -829,6 +862,9 @@
                             });
                             if(vueObj.wareHouseOptions.length==1){
                                 vueObj.orderForm.wareHouse=vueObj.wareHouseOptions[0].value;
+                            }
+                            if(vueObj.orderForm.custCode != vueObj.oldCustomerCode ){
+                                vueObj.clearGoodsData();
                             }
                         } else if (result.code == 403) {
                             vueObj.promptInfo("没有权限",'error');
@@ -869,6 +905,7 @@
                     this.promptInfo("请先选择仓库名称!",'warning');
                     return;
                 }
+                this.isRepeatClick = false;
                 this.goodDataInfo.chosenGoodCode = true;
                 var vueObj=this;
                 this.oldWarehouse = this.orderForm.wareHouse;
@@ -960,14 +997,17 @@
                     this.promptInfo("请至少选择一条货品明细!",'warning');
                     return;
                 }
+                this.isRepeatClick = true;
                 this.goodDataInfo.chosenGoodCode = false;
                 this.unitsOptions = [];
                 this.levelSpecificationOptions = [];
                 for(var i=0;i<this.multipleSelection.length;i++){
                     var val=this.multipleSelection[i];
                     var unitVar = '';
-                    if(val.unitsOptions.length == 1){
-                        unitVar = "主单位";
+                    if(val.unitsOptions != undefined){
+                        if(val.unitsOptions.length == 1){
+                            unitVar = "主单位";
+                        }
                     }
                     var newData = {
                         goodsType: val.goodsType,
@@ -976,6 +1016,7 @@
                         goodsName: val.goodsName,
                         goodsSpec:val.goodsSpec,
                         unit:unitVar,
+                        unitWeight:val.unitWeight,
                         quantity: '',
                         unitsOptions:val.unitsOptions,
                         levelSpecificationOptions:val.levelSpecificationOptions,
@@ -1091,67 +1132,79 @@
                 this.consigneeDataInfo.chosenSend = false;
             },
             selectGoods:function(){
-                var vueObj=this;
-                vueObj.goodDataInfo.goodsCodeData=[];
-                var cscGoods = {};
-                this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
-                var customerCode = vueObj.orderForm.custCode;
-                var warehouseCode = vueObj.wareHouseObj.warehouseCode;
-                cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
-                cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
-                cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
-                cscGoods.barCode=vueObj.goodDataInfo.goodsForm.barCode;
-                cscGoods.goodsCode=vueObj.goodDataInfo.goodsForm.goodsCode;
-                cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
-                cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
-                var param = JSON.stringify(cscGoods);
-                CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
-                    if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
-                        layer.msg("暂时未查询到货品信息！！");
-                    } else if (data.code == 200) {
-                        $.each(data.result.list,function (index,cscGoodsVo) {
-                            var goodCode={};
-                            var unitsOptions = [];
-                            var levelSpecificationOptions = [];
-                            goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
-                            goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
-                            goodCode.goodsCode=cscGoodsVo.goodsCode;
-                            goodCode.goodsName=cscGoodsVo.goodsName;
-                            goodCode.goodsBrand=cscGoodsVo.brand;
-                            goodCode.goodsSpec=cscGoodsVo.specification;
-                            goodCode.unit=cscGoodsVo.unit;
-                            goodCode.barCode=cscGoodsVo.barCode;
-                            if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
-                                goodCode.expiryDate=0;
-                            }else{
-                                goodCode.expiryDate=cscGoodsVo.expiryDate;
-                            }
-                            if(cscGoodsVo.goodsPackingDtoList!=null){
-                                if(cscGoodsVo.goodsPackingDtoList.length>0){
-                                    var unitsOptions = [];
-                                    var levelSpecificationOptions = [];
-                                    for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
-                                        var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
-                                        var unit = {};
-                                        var levelSpecification = {};
-                                        unit.label = goodsPacking.levelDescription;
-                                        unit.value = goodsPacking.level;
-                                        levelSpecification.label = goodsPacking.levelSpecification;
-                                        levelSpecification.value =  goodsPacking.level;
-                                        unitsOptions.push(unit);
-                                        levelSpecificationOptions.push(levelSpecification);
-                                    }
-                                    goodCode.unitsOptions = unitsOptions;
-                                    goodCode.levelSpecificationOptions = levelSpecificationOptions;
+                var vueObj = this;
+                try{
+                    vueObj.isCanClick = true;
+                    vueObj.goodDataInfo.goodsCodeData=[];
+                    var cscGoods = {};
+                    this.wareHouseObj=JSON.parse(this.orderForm.wareHouse);
+                    var customerCode = vueObj.orderForm.custCode;
+                    var warehouseCode = vueObj.wareHouseObj.warehouseCode;
+                    cscGoods.goodsName = vueObj.goodDataInfo.goodsForm.goodsName;
+                    cscGoods.goodsTypeId=vueObj.goodDataInfo.goodsForm.goodsTypeId;
+                    cscGoods.goodsTypeSonId=vueObj.goodDataInfo.goodsForm.goodsTypeSonId;
+                    cscGoods.barCode=vueObj.goodDataInfo.goodsForm.barCode;
+                    cscGoods.goodsCode=vueObj.goodDataInfo.goodsForm.goodsCode;
+                    cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
+                    cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
+                    var param = JSON.stringify(cscGoods);
+                    CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
+                        if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
+                            vueObj.isCanClick = false;
+                            layer.msg("暂时未查询到货品信息！！");
+                        } else if (data.code == 200) {
+                            $.each(data.result.list,function (index,cscGoodsVo) {
+                                var goodCode={};
+                                var unitsOptions = [];
+                                var levelSpecificationOptions = [];
+                                goodCode.goodsType=cscGoodsVo.goodsTypeParentName;
+                                goodCode.goodsCategory=cscGoodsVo.goodsTypeName;
+                                goodCode.goodsCode=cscGoodsVo.goodsCode;
+                                goodCode.goodsName=cscGoodsVo.goodsName;
+                                goodCode.goodsBrand=cscGoodsVo.brand;
+                                goodCode.goodsSpec=cscGoodsVo.specification;
+                                goodCode.unit=cscGoodsVo.unit;
+                                goodCode.unitWeight=cscGoodsVo.weight;
+                                goodCode.barCode=cscGoodsVo.barCode;
+                                if(cscGoodsVo.expiryDate==null||StringUtil.isEmpty(cscGoodsVo.expiryDate)){
+                                    goodCode.expiryDate=0;
+                                }else{
+                                    goodCode.expiryDate=cscGoodsVo.expiryDate;
                                 }
-                            }
-                            vueObj.goodDataInfo.goodsCodeData.push(goodCode);
-                        });
-                        vueObj.goodDataInfo.totalGoods=data.result.total;
-                    } else if (data.code == 403) {
-                        vueObj.promptInfo("没有权限",'error');
-                    }
-                },"json");
+                                if(cscGoodsVo.goodsPackingDtoList!=null){
+                                    if(cscGoodsVo.goodsPackingDtoList.length>0){
+                                        var unitsOptions =[];
+                                        var levelSpecificationOptions = [];
+                                        for(var i = 0;i < cscGoodsVo.goodsPackingDtoList.length;i++){
+                                            var goodsPacking = cscGoodsVo.goodsPackingDtoList[i];
+                                            if(StringUtil.isEmpty(goodsPacking.levelSpecification)||goodsPacking.levelSpecification == "0") {
+                                                continue;
+                                            }
+                                            var unit = {};
+                                            var levelSpecification = {};
+                                            unit.label = goodsPacking.levelDescription;
+                                            unit.value = goodsPacking.level;
+                                            levelSpecification.label = goodsPacking.levelSpecification;
+                                            levelSpecification.value =  goodsPacking.level;
+                                            unitsOptions.push(unit);
+                                            levelSpecificationOptions.push(levelSpecification);
+                                        }
+                                        goodCode.unitsOptions = unitsOptions;
+                                        goodCode.levelSpecificationOptions = levelSpecificationOptions;
+                                    }
+                                }
+                                vueObj.goodDataInfo.goodsCodeData.push(goodCode);
+                            });
+                            vueObj.goodDataInfo.totalGoods=data.result.total;
+                            vueObj.isCanClick = false;
+                        } else if (data.code == 403) {
+                            vueObj.isCanClick = false;
+                            vueObj.promptInfo("没有权限",'error');
+                        }
+                    },"json");
+                }catch(e){
+                    vueObj.isCanClick = false;
+                }
             },
             handleGoodSizeChange:function(val){
                 this.goodDataInfo.goodPageSize=val;
@@ -1315,6 +1368,7 @@
                 for(var i=0;i<goodsTable.length;i++){
                     var good=goodsTable[i];
                     if(!StringUtil.isEmpty(good.unitPrice)){
+                        good.unitPrice = StringUtil.trim(good.unitPrice);
                         if(isNaN(good.unitPrice)){
                             this.promptInfo("货品单价必须为数字",'error');
                             return;
@@ -1359,7 +1413,6 @@
                             return;
                         }
                     }
-
                     if(!this.isInteger(good.primaryQuantity)){
                         if(StringUtil.isEmpty(reminder)){
                             reminder = good.goodsCode;
@@ -1654,7 +1707,7 @@
                     }
                     var oldwareHouseObj=JSON.parse(_this.oldWarehouse);
                     var oldwarehouseCode = oldwareHouseObj.warehouseCode;
-                    if(oldwarehouseCode != warehouseCode){
+                    if((oldwarehouseCode != warehouseCode)||(_this.orderForm.custCode != _this.oldCustomerCode && oldwarehouseCode == warehouseCode)){
                         _this.openChangeWarehouseMessage();
                     }
                 }

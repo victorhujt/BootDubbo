@@ -329,10 +329,9 @@ public class OfcJumpontroller extends BaseController{
     public ModelAndView orderManageOpera(Model model) {
         ModelAndView modelAndView = new ModelAndView("order_manage_opera");
         setDefaultModel(model);
-        AuthResDto authResDto = getAuthResDtoByToken();
         Map<String,List<OfcGroupVo>> groupMap = null;
         try {
-            groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
+            groupMap = ofcOrderManageOperService.loadGroupList();
         } catch (Exception e) {
             logger.error("查询当前登录用户所属组织失败:{},原因:{}",e,e.getMessage());
         }
@@ -341,8 +340,8 @@ public class OfcJumpontroller extends BaseController{
             logger.error("查询当前登录用户所属组织失败或您的权限太低");
             return modelAndView;
         }
-        model.addAttribute("areaList",groupMap.get("area"));
-        model.addAttribute("baseList",groupMap.get("base"));
+        model.addAttribute("areaList", groupMap.get("area"));
+        model.addAttribute("baseList", groupMap.get("base"));
         return modelAndView;
     }
 

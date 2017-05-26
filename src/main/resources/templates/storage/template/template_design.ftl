@@ -208,7 +208,7 @@
                     {indexNum:'7', standardColName:'货品编码', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'goodsCode'},
                     {indexNum:'8', standardColName:'货品名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsName'},
                     {indexNum:'9', standardColName:'规格', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsSpec'},
-                    {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'unit'},
+                    {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unit'},
                     {indexNum:'11', standardColName:'单价', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unitPrice'},
                     {indexNum:'12', standardColName:'入库数量', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'quantity'},
                     {indexNum:'13', standardColName:'批次号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionBatch'},
@@ -270,7 +270,7 @@
                         {indexNum:'7', standardColName:'货品编码', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'goodsCode'},
                         {indexNum:'8', standardColName:'货品名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsName'},
                         {indexNum:'9', standardColName:'规格', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsSpec'},
-                        {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'unit'},
+                        {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unit'},
                         {indexNum:'11', standardColName:'单价', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unitPrice'},
                         {indexNum:'12', standardColName:'入库数量', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'quantity'},
                         {indexNum:'13', standardColName:'批次号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionBatch'},
@@ -307,7 +307,7 @@
                         {indexNum:'7', standardColName:'货品编码', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'goodsCode'},
                         {indexNum:'8', standardColName:'货品名称', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsName'},
                         {indexNum:'9', standardColName:'规格', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'goodsSpec'},
-                        {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'unit'},
+                        {indexNum:'10', standardColName:'单位', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unit'},
                         {indexNum:'11', standardColName:'单价', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'unitPrice'},
                         {indexNum:'12', standardColName:'出库数量', reflectColName:'', isRequired:true, colDefaultVal:'', standardColCode:'quantity'},
                         {indexNum:'13', standardColName:'批次号', reflectColName:'', isRequired:false, colDefaultVal:'', standardColCode:'productionBatch'},
@@ -417,9 +417,6 @@
                         return;
                     } else if(standardColCode == 'goodsCode' && StringUtil.isEmpty(reflectColName)){
                         vm.$message.error('货品编码模板列名必填!');
-                        return;
-                    } else if(standardColCode == 'unit' && StringUtil.isEmpty(reflectColName)){
-                        vm.$message.error('单位模板列名必填!');
                         return;
                     } else if(standardColCode == 'quantity' && StringUtil.isEmpty(reflectColName)){
                         vm.typeOfTemplate == 'storageIn' ? vm.$message.error('入库数量模板列名必填!') : vm.$message.error('出库数量模板列名必填!');

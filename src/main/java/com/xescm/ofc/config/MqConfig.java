@@ -65,13 +65,16 @@ public class MqConfig {
      * 仓储计划单
      */
     private String ofc2WhcOrderTopic;
-    /** 订单推结算 */
-    private String ofc2AcOrderTopic;
-
     /**
-     *  /**
+     * 订单推结算
+     */
+    private String ofc2AcOrderTopic;
+    /**
+     * 订单推调度
+     */
+    private String ofc2DpcStatusTopic;
+    /**
      * 仓储订单状态反馈
-     *
      */
     private String whc2ofcOrderStatusTopic;
     /**
@@ -210,5 +213,13 @@ public class MqConfig {
 
     public void setOfc2AcOrderTopic(String ofc2AcOrderTopic) {
         this.ofc2AcOrderTopic = ofc2AcOrderTopic;
+    }
+
+    public String getOfc2DpcStatusTopic() {
+        return ofc2DpcStatusTopic;
+    }
+
+    public void setOfc2DpcStatusTopic(String ofc2DpcStatusTopic) {
+        this.ofc2DpcStatusTopic = ofc2DpcStatusTopic;
     }
 }

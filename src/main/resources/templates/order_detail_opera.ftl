@@ -507,9 +507,9 @@
                     <td class="center">${(goods.goodsName)!"" }</td>
                     <td class="center">${(goods.goodsSpec)!"" }</td>
                     <#if goods.packageName??>
-                        <td class="center">${goods.unit!"" }</td>
-                        <#else>
                         <td class="center">${goods.packageName!"" }</td>
+                        <#else>
+                        <td class="center">${goods.unit!"" }</td>
                     </#if>
                     <td class="center">
                         <#if (goods.pack)! == '01'>
