@@ -115,7 +115,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 form.setAreaSerialNo(userGroupCode);
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, accept);
             } else {//!accept && !emptySelect
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
             }
             //基地身份
         } else if (StringUtils.equals(groupType,"3")) {
@@ -124,11 +124,11 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 form.setBaseSerialNo(userGroupCode);
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, accept);
             } else {
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
             }
             //仓库身份, 其他身份
         } else {
-            orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
+            orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
         }
         return orderSearchOperResults;
     }
