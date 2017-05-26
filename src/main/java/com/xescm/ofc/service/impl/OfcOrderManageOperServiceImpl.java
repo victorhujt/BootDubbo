@@ -94,7 +94,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (null == uamGroupDtoResult || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getType())) {
             throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果有误");
         }
-        String userGroupCode = uamGroupDtoResult.getGroupCode();
+        String userGroupCode = authResDto.getGroupRefCode();
         String areaSerialNo = form.getAreaSerialNo();
         String baseSerialNo = form.getBaseSerialNo();
         if (PubUtils.isSEmptyOrNull(userGroupCode)) {
@@ -169,7 +169,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (null == uamGroupDtoResult || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getType())) {
             throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果有误");
         }
-        String userGroupCode = uamGroupDtoResult.getGroupCode();
+        String userGroupCode = authResDto.getGroupRefCode();
         if (PubUtils.isSEmptyOrNull(userGroupCode)) {
             throw new BusinessException("当前登录的用户没有所属组织!");
         }
