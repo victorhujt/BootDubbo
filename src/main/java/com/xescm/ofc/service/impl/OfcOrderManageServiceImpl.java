@@ -1445,9 +1445,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
                 info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
-                BigDecimal undealWeight = ofcGoodsDetails.getWeight();
+                BigDecimal undealWeight = null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight();
                 BigDecimal preWeight = info.getWeight();
-                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight);
+                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(undealWeight);
                 info.setWeight(infoWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
             }
             totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
