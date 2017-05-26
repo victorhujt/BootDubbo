@@ -21,4 +21,7 @@ public interface OfcOrderPlaceService{
 
 
     void orderAuthByConsignorAddr(AuthResDto authResDto, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation);
+
+    void updateBaseAndAreaBywarehouseCode(String warehouseCode, OfcFundamentalInformation ofcFundamentalInformation);
+
 }

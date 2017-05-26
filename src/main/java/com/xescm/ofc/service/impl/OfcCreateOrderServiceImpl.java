@@ -477,7 +477,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcDistributionBasicInfo.setDeparturePlaceCode(departuePlaceCode);
         }
         String destinationCode = this.explainAddressByRmc(ofcDistributionBasicInfo.getDestinationProvince()
-                , ofcDistributionBasicInfo.getDepartureCity(), ofcDistributionBasicInfo.getDestinationDistrict());
+                , ofcDistributionBasicInfo.getDestinationCity(), ofcDistributionBasicInfo.getDestinationDistrict());
         if (!PubUtils.isSEmptyOrNull(destinationCode)) {
             ofcDistributionBasicInfo.setDestinationCode(destinationCode);
         }

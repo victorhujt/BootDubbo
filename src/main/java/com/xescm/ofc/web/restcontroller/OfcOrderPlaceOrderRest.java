@@ -303,7 +303,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return cscGoodsLists;
     }
 
-
     /**
      * 仓储下单货品筛选 不带包装
      * @param cscGoods
@@ -344,8 +343,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         }
         return cscGoodsLists;
     }
-
-
 
 
 
@@ -414,10 +411,9 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @RequestMapping(value = "/loadAreaAndBaseByUser",method = RequestMethod.POST)
     @ResponseBody
     public Object loadAreaAndBaseByUser() {
-        AuthResDto authResDto = getAuthResDtoByToken();
-        Map<String, List<OfcGroupVo>> groupMap = null;
+        Map<String, List<OfcGroupVo>> groupMap;
         try {
-            groupMap = ofcOrderManageOperService.queryGroupList(authResDto);
+            groupMap = ofcOrderManageOperService.loadGroupList();
             if (groupMap==null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到大区和基地信息");
             }

@@ -66,5 +66,7 @@ public class OfcStorageTemplateDto {
     private GoodsPackingDto goodsPackingDto;
     //主单位数量
     private BigDecimal mainUnitNum;
+    //货品重量
+    private BigDecimal weight;
 
 }

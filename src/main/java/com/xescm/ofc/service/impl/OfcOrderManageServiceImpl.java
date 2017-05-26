@@ -26,6 +26,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
@@ -530,7 +531,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return
      */
     @Transactional
-    private boolean cancelAcOrder(String orderCode) {
+    boolean cancelAcOrder(String orderCode) {
         logger.info("订单中心取消订单，调用结算中心取消订单接口==>订单编号:{}", orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
         ofcDistributionBasicInfo.setOrderCode(orderCode);
@@ -714,10 +715,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
+                CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+                if (null != cscGoodsApiVo.getWeight()) ofcGoodsDetailsInfo.setWeight(new BigDecimal(cscGoodsApiVo.getWeight()));
                 GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
                 ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
                 ofcGoodsDetailsInfo.setPackageType(goodsPackingDto.getLevel());
+                ofcGoodsDetailsInfo.setWeight(ofcStorageTemplateDto.getWeight());
                 detailsInfos.add(ofcGoodsDetailsInfo);
             }
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
@@ -1167,7 +1171,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
                         ofcDailyAccount.setHaveIncomeOrderAccount(BigDecimal.valueOf(acIncomeSettleDTO.getReceivableOrderNumber()==null?0:acIncomeSettleDTO.getReceivableOrderNumber()));
                         ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()==null?0:acIncomeSettleDTO.getPayableCarNumber()));
-                        BigDecimal p=ofcDailyAccount.getHaveIncomeOrderAccount().divide(ofcDailyAccount.getYesterdayAccount(),2, RoundingMode.HALF_UP);
+                        BigDecimal p = BigDecimal.valueOf(0.0);
                         //应收确认日清：收入确认的订单/开单合计
                         ofcDailyAccount.setReceivable(p.setScale(2));
                         ofcDailyAccount.setReceivablePercent(percent.format(p.doubleValue()));
@@ -1213,6 +1217,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         OfcDailyAccount ofcDailyAccount=new OfcDailyAccount();
                         OfcOrderAccountDTO ofcOrderAccountDTO=new OfcOrderAccountDTO();
                         ofcDailyAccount.setExternalVehicleAccount(BigDecimal.valueOf(deliverEveryRunDTO.getNum()));
+                        ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(0.0));
                         BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount()==null?new BigDecimal(0.0):ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
                         //应付确认日清 应付确认车数量/外部车辆发运数量
                         ofcDailyAccount.setPayable(p.setScale(2));
@@ -1316,6 +1321,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     , ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
             throw new BusinessException("创建仓储订单失败!");
         }
+        if(PublicUtil.isEmpty(ofcWarehouseInformation.getWarehouseCode())){
+            throw new BusinessException("仓库编码不能为空!");
+        }
         if (null == ofcWarehouseInformation.getProvideTransport()) {
             logger.error("ofcWarehouseInformation.getProvideTransport为空");
             throw new BusinessException("创建仓储订单失败!");
@@ -1347,7 +1355,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcFundamentalInformation.setOrderType(WAREHOUSE_DIST_ORDER);
 
         //校验当前登录用户的身份信息,并存放大区和基地信息
-        ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
+        //ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -1413,7 +1421,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //相同货品编码数量相加
         Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
         List<OfcGoodsDetailsInfo> ofcGoodsDetail=new ArrayList<>();
-
+        //订单货品总重量
+        BigDecimal totalWeight = new BigDecimal(0);
         for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
             StringBuilder key=new StringBuilder();
             key.append(ofcGoodsDetails.getGoodsCode());
@@ -1436,9 +1445,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
                 info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
+                BigDecimal undealWeight = ofcGoodsDetails.getWeight();
+                BigDecimal preWeight = info.getWeight();
+                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight);
+                info.setWeight(infoWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
             }
+            totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
         }
-
+        ofcDistributionBasicInfo.setWeight(totalWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
         Iterator iter = goodInfo.entrySet().iterator();
         while (iter.hasNext()) {
                 Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
@@ -1464,11 +1478,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
         }
-
-        if (!ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
-            logger.error("该订单不是仓储类型订单");
-            throw new BusinessException("该订单不是仓储类型订单");
-        }
+        ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
 
         if (null == ofcWarehouseInformation.getProvideTransport()) {
             ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
@@ -1957,6 +1967,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
             , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo dinfo) {
         logger.info("订单信息推送仓储中心 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("订单信息推送仓储中心 ==> goodsDetailsList:{}", goodsDetailsList);
+        logger.info("订单信息推送仓储中心 ==> ofcWarehouseInformation:{}", ofcWarehouseInformation);
+        logger.info("订单信息推送仓储中心 ==> ofcFinanceInformation:{}", ofcFinanceInformation);
+        logger.info("订单信息推送仓储中心 ==> dinfo:{}", dinfo);
         String json;
         try {
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
@@ -1965,6 +1979,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofOrderDto.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
             ofOrderDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             ofOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport());
+            ofOrderDto.setWeight(null == dinfo ? new BigDecimal(0) : dinfo.getWeight());
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 //出库
                 ofOrderDto.setShipmentTime(ofcWarehouseInformation.getShipmentTime());
