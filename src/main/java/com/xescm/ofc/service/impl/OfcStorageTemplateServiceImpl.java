@@ -400,7 +400,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 //遍历列
                 for(int cellNum = 0; cellNum < commonRow.getLastCellNum() + 1; cellNum ++) {
                     Cell commonCell = commonRow.getCell(cellNum);
-                    logger.info("开始校验第{}行, 第{}列, 当前单元格的值为:{}", rowNum + 1, cellNum + 1, ToStringBuilder.reflectionToString(commonCell));
                     //空列
 //                    if (null == commonCell && cellNum > 11) {
                     //如果必填列为空则报错提示
@@ -580,45 +579,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             //如果没校验过就调用CSC接口进行校验
                             //再去空格
                             cellValue = PubUtils.trim(cellValue);
-                            if (!goodsCheck.containsKey(cellValue)) {
-                                CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
-                                cscGoodsApiDto.setGoodsCode(cellValue);
-                                cscGoodsApiDto.setCustomerCode(ofcStorageTemplate.getCustCode());
-                                String warehouseCode = ofcStorageTemplateDto.getWarehouseCode();
-                                if (PubUtils.isSEmptyOrNull(warehouseCode)) {
-                                    logger.error("当前行:{},列:{} 货品编码校验失败, 仓库列需在货品编码列之前", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "【" + ofcStorageTemplateForCheck.getReflectColName() + "】为：【" + cellValue +"】校验出错！请尝试添加【仓库名称】列或将仓库列移动到货品编码列之前!");
-                                    checkPass = false;
-                                    continue;
-                                }
-                                cscGoodsApiDto.setWarehouseCode(warehouseCode);
-                                Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsListFullMatch(cscGoodsApiDto);
-                                if (Wrapper.ERROR_CODE == queryCscGoodsList.getCode()) {
-                                    logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum + 1);
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "【" + ofcStorageTemplateForCheck.getReflectColName() + "】为：【" + cellValue +"】校验出错！");
-                                    checkPass = false;
-                                    continue;
-                                }
-                                List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
-                                //没有校验通过
-                                if (null == cscGoodsApiVoResult || cscGoodsApiVoResult.size() == 0) {
-                                    logger.error("当前行:{},列:{} 货品编码校验失败, 请维护", rowNum + 1, cellNum + 1);
-//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
-                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码【" + cellValue + "】货品档案信息不存在！");
-                                    checkPass = false;
-                                    continue;
-                                    //校验通过
-                                }else {
-                                    logger.info("当前货品编码:{},校验通过", cellValue);
-                                    goodsCheck.put(cellValue, cscGoodsApiVoResult.get(0));
-                                    ofcStorageTemplateDto.setCscGoodsApiVo(cscGoodsApiVoResult.get(0));
-                                }
-                            }else {
-                                logger.info("当前货品编码:{},不用校验", cellValue);
-                                //不用校验, 直接堆
-                                CscGoodsApiVo cscGoodsApiVo = goodsCheck.get(cellValue);
-                                ofcStorageTemplateDto.setCscGoodsApiVo(cscGoodsApiVo);
-                            }
 
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
                             //货品名称
@@ -640,8 +600,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         } else if (StringUtils.equals(StorageImportInEnum.UNIT.getStandardColCode(), standardColCode)) {
                             if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
                                 logger.error("当前行:{},列:{} 没有单位", rowNum + 1, cellNum);
-                                xlsErrorMsg.add("【" + ofcStorageTemplateForCheck.getReflectColName() + "】列第" + (rowNum + 1) + "行数据不能为空，请检查文件！");
-                                checkPass = false;
                                 continue;
                             }
 
@@ -692,7 +650,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getStandardColName());
                                     throw new BusinessException("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "校验失败字段:"+ ofcStorageTemplateForCheck.getStandardColName());
                                 }
-                            }else{
+                            } else {
                                 checkPass = false;
                                 xlsErrorMsg.add("sheet页第" + (sheetNum + 1) + "页,第" + (rowNum + 1) + "行,第" + (cellNum + 1) + "列的值【" + cellValue +"】不符合规范!该货品数量格式不正确! 最大支持3位小数!");
                             }
@@ -787,7 +745,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                     checkPass = false;
                                     continue;
                                     //校验通过
-                                }else {
+                                } else {
                                     logger.info("当前供应商名称:{},校验通过", cellValue);
                                     supplierCheck.put(cellValue, result.get(0));
                                     ofcStorageTemplateDto.setCscSupplierInfoDto(result.get(0));
@@ -1154,12 +1112,30 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                         checkPass = false;
                         continue;
                     }
+                    //处理货品编码
+                    checkPass = this.dealGoodsCode(ofcStorageTemplateDto, ofcStorageTemplate, xlsErrorMsg, rowNum, goodsCheck, checkPass);
+                    if (!checkPass) {
+                        continue;
+                    }
                     //对单位进行处理(对应货品的包装)
                     if (!PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getUnit()) && !this.dealGoodsUnit(ofcStorageTemplate, ofcStorageTemplateDto, xlsErrorMsg, rowNum)) {
                         checkPass = false;
                         continue;
+                    } else if (PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getUnit())) {
+                        GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
+                        if (null == goodsPackingDto) {
+                            goodsPackingDto = new GoodsPackingDto();
+                            goodsPackingDto.setLevel("主单位");
+                            goodsPackingDto.setLevelName("EA");
+                            BigDecimal bigDecimal = new BigDecimal(1);
+                            goodsPackingDto.setLevelSpecification(bigDecimal);
+                            goodsPackingDto.setLevelDescription("EA");
+                            ofcStorageTemplateDto.setUnit("EA");
+                            ofcStorageTemplateDto.setGoodsPackingDto(goodsPackingDto);
+                        }
+                        ofcStorageTemplateDto.setMainUnitNum(ofcStorageTemplateDto.getQuantity());
                     }
-
+                    this.countWeight(ofcStorageTemplateDto);
                     ofcStorageTemplateDtoList.add(ofcStorageTemplateDto);
                 }
             }
@@ -1171,14 +1147,10 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         BigDecimal countImportNum = new BigDecimal(0);
         Map<String, Set<String>> custOrderCodeTransCode = new HashMap<>(); //key:custOrderCode, value: transCode
         Map<String, Set<String>> transCodeCustOrderCode = new HashMap<>(); //key:transCode, value: custOrderCode
-        logger.info("数量初始化: {}", countImportNum.intValue());
         int rowCount = 0;
         for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
             rowCount ++;
-            logger.info("数量 : {}", ofcStorageTemplateDto.getQuantity());
-            logger.info("数量 加之前: {}", countImportNum.intValue());
             countImportNum = countImportNum.add(ofcStorageTemplateDto.getQuantity());
-            logger.info("数量 加之后: {}", countImportNum.intValue());
             //处理门店编码
             if (checkPass && !this.dealStoreCode(ofcStorageTemplate, ofcStorageTemplateDto, storeCodeCheck, xlsErrorMsg, rowCount)) {
                 checkPass = false;
@@ -1262,24 +1234,83 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
     }
 
+    private void countWeight(OfcStorageTemplateDto ofcStorageTemplateDto) {
+        BigDecimal weight = new BigDecimal(0);
+        CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+        BigDecimal mainUnitNum = ofcStorageTemplateDto.getMainUnitNum();
+        String unitWeightStr = cscGoodsApiVo.getWeight();
+        BigDecimal unitWeight = PubUtils.isSEmptyOrNull(unitWeightStr) ? new BigDecimal(0) : new BigDecimal(unitWeightStr);
+        if (null != unitWeight && unitWeight.compareTo(weight) != 0
+                && mainUnitNum != null && mainUnitNum.compareTo(weight) != 0) {
+            weight = mainUnitNum.multiply(unitWeight);
+        }
+        ofcStorageTemplateDto.setWeight(weight);
+    }
+
+
+    private boolean dealGoodsCode(OfcStorageTemplateDto ofcStorageTemplateDto
+            , OfcStorageTemplate ofcStorageTemplate, List<String> xlsErrorMsg, Integer rowNum, Map<String, CscGoodsApiVo> goodsCheck, boolean checkPass) {
+        String goodsCode = ofcStorageTemplateDto.getGoodsCode();
+        if (!goodsCheck.containsKey(goodsCode)) {
+            CscGoodsApiDto cscGoodsApiDto = new CscGoodsApiDto();
+            cscGoodsApiDto.setGoodsCode(goodsCode);
+            cscGoodsApiDto.setCustomerCode(ofcStorageTemplate.getCustCode());
+            String warehouseCode = ofcStorageTemplateDto.getWarehouseCode();
+            if (PubUtils.isSEmptyOrNull(warehouseCode)) {
+                logger.error("当前行:{},列:{} 货品编码校验失败, 仓库列需在货品编码列之前", rowNum + 1);
+                xlsErrorMsg.add("行:" + (rowNum + 1) + "【货品编码】为：【" + goodsCode +"】校验出错！请尝试添加【仓库名称】列或将仓库列移动到货品编码列之前!");
+                checkPass = false;
+            }
+            cscGoodsApiDto.setWarehouseCode(warehouseCode);
+            Wrapper<List<CscGoodsApiVo>> queryCscGoodsList = cscGoodsEdasService.queryCscGoodsListFullMatch(cscGoodsApiDto);
+            logger.info("查询货品接口返回日志 == > queryCscGoodsList:{}", queryCscGoodsList);
+            if (Wrapper.ERROR_CODE == queryCscGoodsList.getCode()) {
+                logger.error("当前行:{},货品编码校验失败, 请维护, 错误信息:{}, {}", rowNum + 1, queryCscGoodsList.getMessage(), queryCscGoodsList.getResult());
+                xlsErrorMsg.add("行:" + (rowNum + 1) + "【货品编码】为：【" + goodsCode +"】校验出错！");
+                checkPass = false;
+            }
+            List<CscGoodsApiVo> cscGoodsApiVoResult = queryCscGoodsList.getResult();
+            //没有校验通过
+            if (null == cscGoodsApiVoResult || cscGoodsApiVoResult.size() == 0) {
+                logger.error("当前行:{},货品编码校验失败, 请维护", rowNum + 1);
+//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "货品编码校验失败, 请维护:"+ ofcStorageTemplateForCheck.getReflectColName());
+                xlsErrorMsg.add("行:" + (rowNum + 1) + "货品编码【" + goodsCode + "】货品档案信息不存在！");
+                checkPass = false;
+                //校验通过
+            }else {
+                logger.info("当前货品编码:{},校验通过", goodsCode);
+                goodsCheck.put(goodsCode, cscGoodsApiVoResult.get(0));
+                ofcStorageTemplateDto.setCscGoodsApiVo(cscGoodsApiVoResult.get(0));
+            }
+        }else {
+            logger.info("当前货品编码:{},不用校验", goodsCode);
+            //不用校验, 直接堆
+            CscGoodsApiVo cscGoodsApiVo = goodsCheck.get(goodsCode);
+            ofcStorageTemplateDto.setCscGoodsApiVo(cscGoodsApiVo);
+        }
+        return checkPass;
+    }
+
     private void dealUsefulCol(List<String> usefulCol) {
         int unitColNum = -1;
+        boolean hasUnit = false;
         for (String col : usefulCol) {
             String colCode = col.split("@")[1];
             if (StringUtils.equals(colCode, StorageImportOutEnum.UNIT.getStandardColCode())) {
+                hasUnit = true;
                 unitColNum = usefulCol.indexOf(col);
             }
         }
+
         if (unitColNum == -1) {
             //说明不存在单位列, 报错
             logger.error("当前模板不存在单位列");
-            throw new BusinessException("当前模板不存在单位列");
         }
         //包装代码列
         String packageId = PACKAGE_ID_NAME + "@" + PACKAGE_ID_CODE;
         //主单位数量列
         String mainUnitNum = MAIN_UNIT_NUM_NAME + "@" + MAIN_UNIT_NUM_CODE;
-        usefulCol.add(unitColNum, packageId);
+        if (hasUnit) usefulCol.add(unitColNum, packageId);
         usefulCol.add(mainUnitNum);
     }
 
@@ -1307,11 +1338,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             return false;
         }
         for (GoodsPackingDto goodsPackingDto : goodsPackingDtoList) {
-            if (StringUtils.equals(goodsPackingDto.getLevelDescription(), unit)) {
+            BigDecimal levelSpecification = goodsPackingDto.getLevelSpecification();
+            if (StringUtils.equals(goodsPackingDto.getLevelDescription(), unit) && 0 != levelSpecification.compareTo(new BigDecimal(0))) {
                 ofcStorageTemplateDto.setGoodsPackingDto(goodsPackingDto);
                 ofcStorageTemplateDto.setPackageId(cscGoodsApiVo.getPackingCode());
                 //主单位数量计算
-                BigDecimal levelSpecification = goodsPackingDto.getLevelSpecification();
                 BigDecimal quantity = ofcStorageTemplateDto.getQuantity();
                 BigDecimal mainUnitNum = quantity.multiply(levelSpecification);
                 ofcStorageTemplateDto.setMainUnitNum(mainUnitNum);
@@ -1327,9 +1358,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     }
 
     private boolean dealStoreCode(OfcStorageTemplate ofcStorageTemplate, OfcStorageTemplateDto ofcStorageTemplateDto, Map<String, CscContantAndCompanyResponseDto> storeCodeCheck, List<String> xlsErrorMsg, int rowCount) {
-        logger.info("处理店铺编码 ==> ofcStorageTemplate:{}", ofcStorageTemplate);
-        logger.info("处理店铺编码 ==> ofcStorageTemplateDto:{}", ofcStorageTemplateDto);
-        logger.info("处理店铺编码 ==> rowCount:{}", rowCount);
         if (!StringUtils.equals(ofcStorageTemplate.getTemplateType(), STORAGE_OUT) || PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getStoreCode())) {
             logger.info("没有门店编码");
             return true;
@@ -2062,10 +2090,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 logger.error("{}的模板列名不能为空!", StorageImportOutEnum.QUANTITY.getStandardColName());
                 throw new BusinessException(storageIn ? StorageImportInEnum.QUANTITY.getStandardColName()
                         : StorageImportOutEnum.QUANTITY.getStandardColName()  + "的模板列名不能为空!");
-            } else if (StringUtils.equals(standardColCode, StorageImportOutEnum.UNIT.getStandardColCode())
-                    && PubUtils.isSEmptyOrNull(reflectColName)) {
-                logger.error("{}的模板列名不能为空!", StorageImportOutEnum.UNIT.getStandardColName());
-                throw new BusinessException(StorageImportInEnum.UNIT.getStandardColName() + "的模板列名不能为空!");
             } else if (StringUtils.equals(standardColCode, StorageImportOutEnum.CONSIGNEE_NAME.getStandardColCode())
                     && PubUtils.isSEmptyOrNull(reflectColName) && !storageIn) {
                 logger.error("{}的模板列名不能为空!", StorageImportOutEnum.CONSIGNEE_NAME.getStandardColName());
