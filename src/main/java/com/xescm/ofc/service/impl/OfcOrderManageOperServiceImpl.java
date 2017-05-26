@@ -114,7 +114,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             } else if (accept || emptySelect) {
                 form.setAreaSerialNo(userGroupCode);
                 boolean choosen = this.dealChoosen(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, accept);
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, !accept);
             } else {//!accept && !emptySelect
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
             }
@@ -124,7 +124,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             if (accept || emptySelect) {
                 form.setBaseSerialNo(userGroupCode);
                 boolean choosen = this.dealChoosen(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, accept);
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, !accept);
             } else {
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
             }
@@ -193,7 +193,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             } else if (accept || emptySelect) {
                 form.setAreaSerialNo(userGroupCode);
                 boolean choosen = this.dealChoosenOper(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, accept);
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, !accept);
             } else {//!accept && !emptySelect
                 orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
             }
@@ -203,7 +203,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             if (accept || emptySelect) {
                 form.setBaseSerialNo(userGroupCode);
                 boolean choosen = this.dealChoosenOper(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, accept);
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, !accept);
             } else {
                 orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
             }
