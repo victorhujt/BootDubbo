@@ -1446,11 +1446,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
                 BigDecimal undealWeight = ofcGoodsDetails.getWeight();
                 BigDecimal preWeight = info.getWeight();
-                info.setWeight(null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight));
+                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight);
+                info.setWeight(infoWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
             }
             totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
         }
-        ofcDistributionBasicInfo.setWeight(totalWeight);
+        ofcDistributionBasicInfo.setWeight(totalWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
         Iterator iter = goodInfo.entrySet().iterator();
         while (iter.hasNext()) {
                 Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
