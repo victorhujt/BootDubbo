@@ -523,11 +523,11 @@
                 supportNameShow:false,
                 wareHouseObj:'',
                 goodsCategoryOptions:[],
+                packageMap:'',
+                packageMap1:'',
                 oldWarehouse:'',
                 oldCustomerCode:'',
                 oldCustomerName:'',
-                unitsOptions:[],
-                levelSpecificationOptions:[],
                 customerDataInfo:{
                     currentCustomerPage:1,
                     customerPageSize:10,
@@ -732,6 +732,8 @@
         beforeMount:function(){
             var vueObj=this;
             var url=window.location.href;
+            vueObj.packageMap = new Map();
+            vueObj.packageMap1 = new Map();
             CommonClient.syncpost(sys.rootPath + "/ofc/getCscGoodsTypeList",{"pid":null},function(result) {
                 var data=eval(result);
                 vueObj.goodsMsgOptions=[];
@@ -746,7 +748,7 @@
                 var param=url.split("?")[1].split("=");
                 if(param[0]=="orderCode"){
                     var orderCode=param[1];
-                    CommonClient.post(sys.rootPath + "/ofc/orderStorageDetails", {"orderCode":orderCode}, function(result) {
+                    CommonClient.syncpost(sys.rootPath + "/ofc/orderStorageDetails", {"orderCode":orderCode}, function(result) {
                         if(result==undefined||result==null||result.result==null){
                             layer.msg("订单详情查询失败");
                             return;
@@ -839,11 +841,17 @@
                                             vueObj.goodDataInfo.goodsForm.goodsCode =  good.goodsCode;
                                             good.unit = goodDetail.packageName;
                                             vueObj.selectGoods();
-                                            good.unitsOptions = vueObj.unitsOptions;
-                                            if(vueObj.unitsOptions.length == 1){
+                                            if(vueObj.packageMap.containsKey(good.goodsCode)){
+                                                good.unitsOptions = vueObj.packageMap.get(good.goodsCode);
+                                            }
+                                            if(vueObj.packageMap1.containsKey(good.goodsCode)){
+                                                good.levelSpecificationOptions = vueObj.packageMap1.get(good.goodsCode);
+                                            }
+                                            console.info( good.unitsOptions.length);
+                                            console.info( good.levelSpecificationOptions.length);
+                                            if(good.unitsOptions.length == 1){
                                                 good.unit = "主单位";
                                             }
-                                            good.levelSpecificationOptions = vueObj.levelSpecificationOptions;
                                             vueObj.goodsData.push(good);
                                         }
                                     }
@@ -1208,6 +1216,8 @@
             },
             selectGoods:function(){
                 var vueObj = this;
+                vueObj.packageMap = new Map();
+                vueObj.packageMap1 = new Map();
                 try{
                     vueObj.isCanClick = true;
                     vueObj.goodDataInfo.goodsCodeData=[];
@@ -1222,7 +1232,7 @@
                     cscGoods.pNum=vueObj.goodDataInfo.currentGoodPage;
                     cscGoods.pSize =vueObj.goodDataInfo.goodPageSize;
                     var param = JSON.stringify(cscGoods);
-                    CommonClient.post(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
+                    CommonClient.syncpost(sys.rootPath + "/ofc/goodsSelectsStorage", {"cscGoods":param,"customerCode":customerCode,"warehouseCode":warehouseCode}, function(data) {
                         if (data == undefined || data == null || data.result ==null || data.result.size == 0 || data.result.list == null) {
                             vueObj.isCanClick = false;
                             layer.msg("暂时未查询到货品信息！！");
@@ -1245,6 +1255,7 @@
                                 }else{
                                     goodCode.expiryDate=cscGoodsVo.expiryDate;
                                 }
+                                debugger;
                                 if(cscGoodsVo.goodsPackingDtoList!=null){
                                     if(cscGoodsVo.goodsPackingDtoList.length>0){
                                         var unitsOptions =[];
@@ -1262,6 +1273,12 @@
                                             levelSpecification.value =  goodsPacking.level;
                                             unitsOptions.push(unit);
                                             levelSpecificationOptions.push(levelSpecification);
+                                        }
+                                        if(!vueObj.packageMap.containsKey(goodCode.goodsCode)){
+                                            vueObj.packageMap.put(goodCode.goodsCode,unitsOptions);
+                                        }
+                                        if(!vueObj.packageMap1.containsKey(goodCode.goodsCode)){
+                                            vueObj.packageMap1.put(goodCode.goodsCode,levelSpecificationOptions);
                                         }
                                         goodCode.unitsOptions = unitsOptions;
                                         goodCode.levelSpecificationOptions = levelSpecificationOptions;
@@ -1354,7 +1371,6 @@
                 });
             },
             saveStorage:function(){
-                debugger;
                 //订单基本信息
                 var ofcOrderDTOStr = {};
                 //发货方信息
