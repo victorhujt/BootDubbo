@@ -104,35 +104,66 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
             throw new BusinessException("基地所属大区未选择!");
         }
-        boolean emptySelect = PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo);
         if (StringUtils.equals(groupType,"1")) {
             boolean accept = StringUtils.equals(areaSerialNo, userGroupCode);
             //鲜易供应链身份
             if (StringUtils.equals("GD1625000003",uamGroupDtoResult.getSerialNo())) {
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, null, false);
                 //大区身份
-            } else if (accept || emptySelect) {
-                form.setAreaSerialNo(userGroupCode);
-                boolean choosen = this.dealChoosen(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, !accept);
-            } else {//!accept && !emptySelect
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
+            } else {
+                orderSearchOperResults = this.queryStorageOrderListOfArea(form, areaSerialNo, baseSerialNo, userGroupCode, userId);
             }
             //基地身份
         } else if (StringUtils.equals(groupType,"3")) {
-            boolean accept = StringUtils.equals(baseSerialNo, userGroupCode);
-            if (accept || emptySelect) {
-                form.setBaseSerialNo(userGroupCode);
-                boolean choosen = this.dealChoosen(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, !accept);
-            } else {
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
-            }
+            orderSearchOperResults = this.queryStorageOrderListOfBase(form, areaSerialNo, baseSerialNo, userGroupCode, userId);
             //仓库身份, 其他身份
         } else {
             orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
         }
         return orderSearchOperResults;
+    }
+
+    private List<OrderSearchOperResult> queryStorageOrderListOfArea(OrderStorageOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
+        List<OrderSearchOperResult> results;
+        boolean choosen = this.dealChoosen(form); //选了是true
+        boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
+        boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
+        boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
+        if (!choosen && areaEmpty && baseEmpty) {
+            form.setAreaSerialNo(userGroupCode);
+            results = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
+        } else if (!areaEqualUser) {
+            results = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
+        } else {
+            results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
+        }
+        return results;
+    }
+
+    private List<OrderSearchOperResult> queryStorageOrderListOfBase(OrderStorageOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
+        List<OrderSearchOperResult> results;
+        //反查大区
+        UamGroupDto groupDto = new UamGroupDto();
+        groupDto.setSerialNo(userGroupCode);
+        OfcGroupVo ofcGroupVo = this.queryAreaMsgByBase(groupDto);
+        String userAreaSerialNo = ofcGroupVo.getSerialNo();
+        boolean choosen = this.dealChoosen(form); //选了是true
+        boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
+        boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
+        boolean areaEqualUser = StringUtils.equals(userAreaSerialNo, areaSerialNo);
+        boolean baseEqualUser = StringUtils.equals(userGroupCode, baseSerialNo);
+        if (!choosen && areaEmpty && baseEmpty) {
+            form.setAreaSerialNo(userAreaSerialNo);
+            form.setBaseSerialNo(userGroupCode);
+            results = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
+        } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
+            results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
+        } else if (areaEqualUser && baseEmpty) {
+            results = ofcOrderOperMapper.queryStorageOrderListUnion(form, userId, true);
+        } else {
+            results = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
+        }
+        return results;
     }
 
     private boolean dealChoosen(OrderStorageOperForm form) {
@@ -182,7 +213,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
             throw new BusinessException("基地所属大区未选择!");
         }
-        boolean emptySelect = PubUtils.isSEmptyOrNull(areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo);
         //2017年5月12日 追加逻辑 增加创建人查看权限
         if (StringUtils.equals(groupType,"1")) {
             boolean accept = StringUtils.equals(userGroupCode, areaSerialNo);
@@ -190,23 +220,12 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             if (StringUtils.equals("GD1625000003",userGroupCode)) {
                 orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, null, false);
                 //大区身份
-            } else if (accept || emptySelect) {
-                form.setAreaSerialNo(userGroupCode);
-                boolean choosen = this.dealChoosenOper(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, !accept);
-            } else {//!accept && !emptySelect
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
+            } else {
+                orderSearchOperResults = this.queryOrderListOfArea(form, areaSerialNo, baseSerialNo, userGroupCode, userId);
             }
             //基地身份
         } else if (StringUtils.equals(groupType,"3")) {
-            boolean accept = StringUtils.equals(userGroupCode, baseSerialNo);
-            if (accept || emptySelect) {
-                form.setBaseSerialNo(userGroupCode);
-                boolean choosen = this.dealChoosenOper(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, !accept);
-            } else {
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
-            }
+            orderSearchOperResults = this.queryOrderListOfBase(form, areaSerialNo, baseSerialNo, userGroupCode, userId);
             //仓库身份, 其他身份
         } else {
             orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
@@ -214,6 +233,50 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
         return orderSearchOperResults;
     }
+
+    private List<OrderSearchOperResult> queryOrderListOfArea(OrderOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
+        List<OrderSearchOperResult> results;
+        boolean choosen = this.dealChoosenOper(form); //选了是true
+        boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
+        boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
+        boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
+        if (!choosen && areaEmpty && baseEmpty) {
+            form.setAreaSerialNo(userGroupCode);
+            results = ofcOrderOperMapper.queryOrderList(form, userId, false);
+        } else if (!areaEqualUser) {
+            results = ofcOrderOperMapper.queryOrderList(form, userId, true);
+        } else {
+            results = ofcOrderOperMapper.queryOrderList(form, null, null);
+        }
+        return results;
+    }
+
+    private List<OrderSearchOperResult> queryOrderListOfBase(OrderOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
+        List<OrderSearchOperResult> results;
+        //反查大区
+        UamGroupDto groupDto = new UamGroupDto();
+        groupDto.setSerialNo(userGroupCode);
+        OfcGroupVo ofcGroupVo = this.queryAreaMsgByBase(groupDto);
+        String userAreaSerialNo = ofcGroupVo.getSerialNo();
+        boolean choosen = this.dealChoosenOper(form); //选了是true
+        boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
+        boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
+        boolean areaEqualUser = StringUtils.equals(userAreaSerialNo, areaSerialNo);
+        boolean baseEqualUser = StringUtils.equals(userGroupCode, baseSerialNo);
+        if (!choosen && areaEmpty && baseEmpty) {
+            form.setAreaSerialNo(userAreaSerialNo);
+            form.setBaseSerialNo(userGroupCode);
+            results = ofcOrderOperMapper.queryOrderList(form, userId, false);
+        } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
+            results = ofcOrderOperMapper.queryOrderList(form, null, null);
+        } else if (areaEqualUser && baseEmpty) {
+            results = ofcOrderOperMapper.queryOrderListUnion(form, userId, true);
+        } else {
+            results = ofcOrderOperMapper.queryOrderList(form, userId, true);
+        }
+        return results;
+    }
+
 
     private boolean dealChoosenOper(OrderOperForm form) {
         if (!PubUtils.isSEmptyOrNull(form.getOrderCode()) || !PubUtils.isSEmptyOrNull(form.getCustOrderCode())) {
