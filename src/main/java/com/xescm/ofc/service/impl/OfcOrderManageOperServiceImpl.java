@@ -114,7 +114,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             } else if (accept || emptySelect) {
                 form.setAreaSerialNo(userGroupCode);
                 boolean choosen = this.dealChoosen(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, !accept);
+                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form,
+                        emptySelect && choosen || accept && !PubUtils.isSEmptyOrNull(baseSerialNo) ? null : userId, !accept);
             } else {//!accept && !emptySelect
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
             }
@@ -126,7 +127,17 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 boolean choosen = this.dealChoosen(form);
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, emptySelect && choosen ? null : userId, !accept);
             } else {
-                orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
+                //反查大区
+                UamGroupDto groupDto = new UamGroupDto();
+                groupDto.setSerialNo(userGroupCode);
+                OfcGroupVo ofcGroupVo = this.queryAreaMsgByBase(groupDto);
+                String userAreaSerialNo = ofcGroupVo.getSerialNo();
+                if (StringUtils.equals(userAreaSerialNo, areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo)) {
+                    form.setBaseSerialNo(userGroupCode);
+                    orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
+                } else {
+                    orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
+                }
             }
             //仓库身份, 其他身份
         } else {
@@ -193,7 +204,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             } else if (accept || emptySelect) {
                 form.setAreaSerialNo(userGroupCode);
                 boolean choosen = this.dealChoosenOper(form);
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, !accept);
+                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form,
+                        emptySelect && choosen || accept && !PubUtils.isSEmptyOrNull(baseSerialNo) ? null : userId, !accept);
             } else {//!accept && !emptySelect
                 orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
             }
@@ -205,7 +217,16 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 boolean choosen = this.dealChoosenOper(form);
                 orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, emptySelect && choosen ? null : userId, !accept);
             } else {
-                orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
+                UamGroupDto groupDto = new UamGroupDto();
+                groupDto.setSerialNo(userGroupCode);
+                OfcGroupVo ofcGroupVo = this.queryAreaMsgByBase(groupDto);
+                String userAreaSerialNo = ofcGroupVo.getSerialNo();
+                if (StringUtils.equals(userAreaSerialNo, areaSerialNo) && PubUtils.isSEmptyOrNull(baseSerialNo)) {
+                    form.setBaseSerialNo(userGroupCode);
+                    orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, false);
+                } else {
+                    orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, userId, true);
+                }
             }
             //仓库身份, 其他身份
         } else {
