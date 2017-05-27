@@ -355,7 +355,8 @@
             vueObj.baseNameOptions=[];
             CommonClient.post(sys.rootPath + "/ofc/loadWarehouseByUser",{},function (result) {
                 if (result == undefined || result == null) {
-                    layer.msg("当前用户下没有仓库信息！");
+                    //layer.msg("当前用户下没有仓库信息！");
+                    console.info("当前用户下没有仓库信息！");
                 } else if (result.code == 200) {
                     if(result.result.length>0){
                         $.each(result.result,function (index,RmcWarehouseRespDto) {
@@ -368,14 +369,16 @@
                             vueObj.wareHouseName = vueObj.wareHouseOptions[0].value;
                         }
                     }else{
-                        layer.msg("当前用户下没有仓库信息！");
+                       // layer.msg("当前用户下没有仓库信息！");
+                        console.info("当前用户下没有仓库信息！");
                     }
                 }
             });
             //大区和基地信息
             CommonClient.syncpost(sys.rootPath + "/ofc/loadAreaAndBaseByUser",{},function (result) {
                 if (result == undefined || result == null) {
-                    layer.msg("当前用户下没有大区和基地信息！");
+                    //layer.msg("当前用户下没有大区和基地信息！");
+                    console.info("当前用户下没有大区和基地信息！");
                 } else if (result.code == 200) {
                     var areaArray=result.result.area;
                     var baseArray=result.result.base;
@@ -390,7 +393,8 @@
                             vueObj.areaName=vueObj.areaNameOptions[0].value;
                         }
                     }else{
-                        layer.msg("当前用户下没有大区信息！");
+                       // layer.msg("当前用户下没有大区信息！");
+                        console.info("当前用户下没有大区信息！");
                     }
 
                     if(baseArray.length>0){
@@ -404,7 +408,8 @@
                             vueObj.baseName=vueObj.baseNameOptions[0].value;
                         }
                     }else{
-                        layer.msg("当前用户下没有基地信息！");
+                        //layer.msg("当前用户下没有基地信息！");
+                        console.info("当前用户下没有基地信息！");
                     }
                 }
             });
