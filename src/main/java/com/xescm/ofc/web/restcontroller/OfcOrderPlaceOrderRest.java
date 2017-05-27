@@ -394,7 +394,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         try {
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             RmcWareHouseQO rmcWareHouseQO=new RmcWareHouseQO();
-            rmcWareHouseQO.setUserId(authResDtoByToken.getUserId());
+           // rmcWareHouseQO.setUserId(authResDtoByToken.getUserId());
             Wrapper<List<RmcWarehouseRespDto>>  warehouseResult=rmcWarehouseEdasService.queryWarehouseList(rmcWareHouseQO);
             if(warehouseResult.getCode()!=warehouseResult.SUCCESS_CODE){
                 logger.error("查询用户下的仓库产生异常{}",warehouseResult.getMessage());
