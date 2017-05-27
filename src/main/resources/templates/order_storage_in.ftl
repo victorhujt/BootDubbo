@@ -895,7 +895,6 @@
 
                     };
                     this.goodsData.push(newData);
-                    this.multipleSelection = [];
                     if(this.supportBatchData.length==0){
                         this.isShow = true;
                         this.selectSupplier();
