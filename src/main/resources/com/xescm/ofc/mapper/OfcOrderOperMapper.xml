@@ -337,7 +337,7 @@
         AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
       </if>
       <choose>
-        <when test="withUser and userId != null and userId != ''">
+        <when test="withUser != null and withUser and userId != null and userId != ''">
             AND ofi.creator = #{userId, jdbcType=VARCHAR}
         </when>
         <otherwise>
@@ -416,7 +416,7 @@
         AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
       </if>
       <choose>
-        <when test="withUser and userId != null and userId != ''">
+        <when test="withUser != null and withUser and userId != null and userId != ''">
           AND ofi.creator = #{userId, jdbcType=VARCHAR}
         </when>
         <otherwise>
