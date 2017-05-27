@@ -159,12 +159,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
-            List<OrderSearchOperResult> results1 = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
-            form.setBaseSerialNo(userGroupCode);
-            List<OrderSearchOperResult> results2 = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
-            results1.removeAll(results2);
-            results1.addAll(results2);
-            results = results1;
+            results = ofcOrderOperMapper.queryStorageOrderListUnion(form, userId, true);
         } else {
             results = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
         }
@@ -275,12 +270,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
             results = ofcOrderOperMapper.queryOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
-            List<OrderSearchOperResult> results1 = ofcOrderOperMapper.queryOrderList(form, userId, true);
-            form.setBaseSerialNo(userGroupCode);
-            List<OrderSearchOperResult> results2 = ofcOrderOperMapper.queryOrderList(form, null, null);
-            results1.removeAll(results2);
-            results1.addAll(results2);
-            results = results1;
+            results = ofcOrderOperMapper.queryOrderListUnion(form, userId, true);
         } else {
             results = ofcOrderOperMapper.queryOrderList(form, userId, true);
         }
