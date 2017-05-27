@@ -716,7 +716,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
                 OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
                 CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
-                if (null != cscGoodsApiVo.getWeight()) ofcGoodsDetailsInfo.setWeight(new BigDecimal(cscGoodsApiVo.getWeight()));
                 GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
                 ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
@@ -1445,9 +1444,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
                 info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
                 info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
-                BigDecimal undealWeight = ofcGoodsDetails.getWeight();
+                BigDecimal undealWeight = null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight();
                 BigDecimal preWeight = info.getWeight();
-                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(null == undealWeight ? new BigDecimal(0): undealWeight);
+                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(undealWeight);
                 info.setWeight(infoWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
             }
             totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
