@@ -881,7 +881,8 @@
     *
     FROM (
     SELECT DISTINCT
-    <include refid="queryStorageOrderListField"/>
+    <include refid="queryStorageOrderListField"/>,
+    owi.warehouse_code,owi.provide_transport
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
@@ -943,6 +944,30 @@
     </where>) temp
     <where>
       1=1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND temp.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND temp.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND temp.cust_name = #{form.custName}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND temp.order_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND temp.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND temp.business_type = #{form.businessType}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND temp.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND temp.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
       <if test="form.orderCode!=null and form.orderCode!=''">
         AND temp.order_code = #{form.orderCode}
       </if>
@@ -957,7 +982,8 @@
     *
     FROM (
     SELECT DISTINCT
-    <include refid="queryOrderListField"/>
+    <include refid="queryOrderListField"/>,
+    ofi.cust_code,owi.warehouse_code,owi.provide_transport
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
@@ -1016,6 +1042,33 @@
     </where>) temp
     <where>
       1=1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND temp.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND temp.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND temp.cust_name = #{form.custName}
+      </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND temp.cust_code = #{form.custCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND temp.order_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND temp.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND temp.business_type = #{form.businessType}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND temp.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND temp.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
       <if test="form.orderCode!=null and form.orderCode!=''">
         AND temp.order_code = #{form.orderCode}
       </if>
