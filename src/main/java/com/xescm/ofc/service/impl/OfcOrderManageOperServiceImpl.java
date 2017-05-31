@@ -131,11 +131,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
         if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userGroupCode);
-            if (!choosen) {
-                results = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
-            } else {
-                results = ofcOrderOperMapper.queryStorageOrderListPrecise(form, userId, false);
-            }
+            results = ofcOrderOperMapper.queryStorageOrderListPrecise(form, userId, false);
         } else if (!areaEqualUser && !areaEmpty) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
         } else {
@@ -159,11 +155,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userAreaSerialNo);
             form.setBaseSerialNo(userGroupCode);
-            if (!choosen) {
-                results = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
-            } else {
-                results = ofcOrderOperMapper.queryStorageOrderListPrecise(form, userId, false);
-            }
+            results = ofcOrderOperMapper.queryStorageOrderListPrecise(form, userId, false);
         } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
@@ -250,11 +242,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
         if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userGroupCode);
-            if (!choosen) {
-                results = ofcOrderOperMapper.queryOrderList(form, userId, false);
-            } else {
-                results = ofcOrderOperMapper.queryOrderListPrecise(form, userId, false);
-            }
+            results = ofcOrderOperMapper.queryOrderListPrecise(form, userId, false);
         } else if (!areaEqualUser && !areaEmpty) {
             results = ofcOrderOperMapper.queryOrderList(form, userId, true);
         } else {
@@ -278,11 +266,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userAreaSerialNo);
             form.setBaseSerialNo(userGroupCode);
-            if (!choosen) {
-                results = ofcOrderOperMapper.queryOrderList(form, userId, false);
-            } else {
-                results = ofcOrderOperMapper.queryOrderListPrecise(form, userId, false);
-            }
+            results = ofcOrderOperMapper.queryOrderListPrecise(form, userId, false);
         } else if ((areaEqualUser && baseEqualUser)) {
             results = ofcOrderOperMapper.queryOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
