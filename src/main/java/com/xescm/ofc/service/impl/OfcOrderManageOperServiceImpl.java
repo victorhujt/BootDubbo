@@ -156,7 +156,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             form.setAreaSerialNo(userAreaSerialNo);
             form.setBaseSerialNo(userGroupCode);
             results = ofcOrderOperMapper.queryStorageOrderListPrecise(form, userId, false);
-        } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
+        } else if (areaEqualUser && baseEqualUser) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
             results = ofcOrderOperMapper.queryStorageOrderListUnion(form, userId, true);
