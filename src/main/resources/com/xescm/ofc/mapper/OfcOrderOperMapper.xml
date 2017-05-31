@@ -110,7 +110,7 @@
     <result column="monthly_amount" property="monthlyAmount" jdbcType="DECIMAL" />
     <result column="luggage" property="luggage" jdbcType="DECIMAL" />
 
-  <!--ofc_order_status-->
+    <!--ofc_order_status-->
     <result column="order_status" property="orderStatus" jdbcType="VARCHAR"></result>
     <result column="status_desc" property="statusDesc" jdbcType="VARCHAR"></result>
     <result column="lasted_oper_time" property="lastedOperTime" jdbcType="TIMESTAMP"></result>
@@ -217,7 +217,7 @@
     <result column="luggage" property="luggage" jdbcType="DECIMAL" />
     <result column="open_invoices" property="openInvoices" jdbcType="VARCHAR" />
   </resultMap>
-  
+
   <resultMap id="orderDetailInfoDto" type="com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailInfoDto">
     <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
     <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
@@ -251,7 +251,46 @@
     product_group, sale_department, sale_group, sale_department_desc, sale_group_desc, 
     creator_name, operator_name, abolisher_name, merchandiser, transport_type
   </sql>
-  
+  <sql id="queryOrderListField">
+    ofi.cust_name,
+      ofi.order_code,
+      ofi.cust_order_code,
+      ofi.order_batch_number,
+      ofi.order_time,
+      ofi.order_type,
+      ofi.business_type,
+      ofi.base_name,
+      ns.order_latest_status as order_status,
+      odbi.consignee_type,
+      odbi.consignee_name,
+      odbi.consignee_contact_name,
+      owi.warehouse_name,
+      ofi.notes,
+      ofi.store_name,
+      ofi.is_exception,
+      ofi.exception_reason
+  </sql>
+
+  <sql id="queryStorageOrderListField">
+    ofi.cust_name,
+    ofi.order_code,
+    ofi.cust_order_code,
+    ofi.order_batch_number,
+    ofi.order_time,
+    ofi.order_type,
+    ofi.business_type,
+    ofi.base_name,
+    ns.order_latest_status as order_status,
+    odbi.consignee_type,
+    odbi.consignee_name,
+    odbi.consignee_contact_name,
+    owi.warehouse_name,
+    ofi.notes,
+    ofi.store_name,
+    ofi.is_exception,
+    ofi.exception_reason
+  </sql>
+
   <resultMap id="Order_Search_Oper_Map" type="com.xescm.ofc.domain.OrderSearchOperResult">
     <result column="cust_name" property="custName" jdbcType="VARCHAR"></result>
     <result column="order_code" property="orderCode" jdbcType="VARCHAR"></result>
@@ -274,27 +313,11 @@
   <!-- 运营-订单管理查询 -->
   <select id="queryOrderList" resultMap="Order_Search_Oper_Map">
     SELECT DISTINCT
-      ofi.cust_name,
-      ofi.order_code,
-      ofi.cust_order_code,
-      ofi.order_batch_number,
-      ofi.order_time,
-      ofi.order_type,
-      ofi.business_type,
-      ofi.base_name,
-      ns.order_latest_status as order_status,
-      odbi.consignee_type,
-      odbi.consignee_name,
-      odbi.consignee_contact_name,
-      owi.warehouse_name,
-      ofi.notes,
-      ofi.store_name,
-      ofi.is_exception,
-      ofi.exception_reason
+    <include refid="queryOrderListField"/>
     FROM
     ofc_fundamental_information ofi
-      LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
-      LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
     <where>
       <if test="form.startDate!=null and form.startDate!=''">
@@ -338,7 +361,7 @@
       </if>
       <choose>
         <when test="withUser != null and withUser and userId != null and userId != ''">
-            AND ofi.creator = #{userId, jdbcType=VARCHAR}
+          AND ofi.creator = #{userId, jdbcType=VARCHAR}
         </when>
         <otherwise>
           <if test="userId != null and userId != ''">
@@ -355,30 +378,14 @@
   <!-- 运营-仓储开单查询 -->
   <select id="queryStorageOrderList" resultMap="Order_Search_Oper_Map">
     SELECT DISTINCT
-    ofi.cust_name,
-    ofi.order_code,
-    ofi.cust_order_code,
-    ofi.order_batch_number,
-    ofi.order_time,
-    ofi.order_type,
-    ofi.business_type,
-    ofi.base_name,
-    ns.order_latest_status as order_status,
-    odbi.consignee_type,
-    odbi.consignee_name,
-    odbi.consignee_contact_name,
-    owi.warehouse_name,
-    ofi.notes,
-    ofi.store_name,
-    ofi.is_exception,
-    ofi.exception_reason
+    <include refid="queryStorageOrderListField"/>
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
     LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
     <where>
-        1=1
+      1=1
       <if test="form.startDate!=null and form.startDate!=''">
         AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
       </if>
@@ -425,7 +432,7 @@
           </if>
         </otherwise>
       </choose>
-         AND  ofi.business_type in
+      AND  ofi.business_type in
       <foreach item="item" index="index" collection="form.businessTypes"
                open="(" separator="," close=")">
         #{item}
@@ -489,39 +496,39 @@
     <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR"/>
     <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR"/>
   </resultMap>
-  
+
   <!--订单追踪-->
   <select id="queryOrder" resultMap="Order_Follow_Oper_Map">
     SELECT
-      ofi.order_code,
-      ofi.cust_order_code,
-      ofi.order_batch_number,
-      ofi.order_time,
-      ofi.cust_name,
-      oos.order_latest_status AS order_status,
-      ofi.order_type,
-      ofi.business_type,
-      ofi.transport_type,
-      ofd.departure_place,
-      ofd.destination,
-      ofd.trans_code,
-      ofd.plate_number,
-      ofd.driver_name,
-      ofd.contact_number,
-      ofd.destination_province,
-      ofd.destination_city,
-      ofd.destination_district,
-      ofd.destination_towns,
-      ofd.departure_province,
-      ofd.departure_city,
-      ofd.departure_district,
-      ofd.departure_towns
+    ofi.order_code,
+    ofi.cust_order_code,
+    ofi.order_batch_number,
+    ofi.order_time,
+    ofi.cust_name,
+    oos.order_latest_status AS order_status,
+    ofi.order_type,
+    ofi.business_type,
+    ofi.transport_type,
+    ofd.departure_place,
+    ofd.destination,
+    ofd.trans_code,
+    ofd.plate_number,
+    ofd.driver_name,
+    ofd.contact_number,
+    ofd.destination_province,
+    ofd.destination_city,
+    ofd.destination_district,
+    ofd.destination_towns,
+    ofd.departure_province,
+    ofd.departure_city,
+    ofd.departure_district,
+    ofd.departure_towns
     FROM
-      ofc_fundamental_information ofi
+    ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info ofd ON ofi.order_code = ofd.order_code
     LEFT JOIN ofc_order_newstatus oos ON ofi.order_code = oos.order_code
     WHERE
-      1 = 1
+    1 = 1
     <choose>
       <when test=" 'orderCode'.toString() == searchType ">
         AND ofi.order_code = #{code}
@@ -601,57 +608,57 @@
     <where>1=1
       <if
               test="form.startDate!=null and form.startDate!=''">
-          AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
-        </if>
-        <if test="form.endDate!=null and form.endDate!=''">
-          AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
-        </if>
-        <if test="form.orderCode!=null and form.orderCode!=''">
-          AND ofi.order_code = #{form.orderCode}
-        </if>
-        <if test="form.custName!=null and form.custName!=''">
-          AND ofi.cust_name = #{form.custName}
-        </if>
-        <if test="form.custOrderCode!=null and form.custOrderCode!=''">
-          AND ofi.cust_order_code = #{form.custOrderCode}
-        </if>
-        <if test="form.orderState!=null and form.orderState!=''">
-          AND  ns.order_latest_status = #{form.orderState}
-        </if>
-        <if test="form.orderType!=null and form.orderType!=''">
-          AND ofi.order_type = #{form.orderType}
-        </if>
-        <if test="form.businessType!=null and form.businessType!=''">
-          AND ofi.business_type = #{form.businessType}
-        </if>
-        <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
-          AND ofi.base_code = #{form.baseSerialNo}
-        </if>
-        <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
-          AND ofi.area_code = #{form.areaSerialNo}
-        </if>
-        <if test="form.warehouseCode!=null and form.warehouseCode!=''">
-          AND owi.warehouse_code = #{form.warehouseCode}
-        </if>
-        <if test="form.provideTransport!=null">
-          AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
-        </if>
-        <choose>
-          <when test="withUser != null and withUser and userId != null and userId != ''">
-            AND ofi.creator = #{userId, jdbcType=VARCHAR}
-          </when>
-          <otherwise>
-            <if test="userId != null and userId != ''">
-              OR ofi.creator = #{userId, jdbcType=VARCHAR}
-            </if>
-          </otherwise>
-        </choose>
-        AND  ofi.business_type in
-        <foreach item="item" index="index" collection="form.businessTypes"
-                 open="(" separator="," close=")">
-          #{item}
-        </foreach>
-      </where>
+        AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND ofi.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND ofi.cust_name = #{form.custName}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND  ns.order_latest_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND ofi.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND ofi.business_type = #{form.businessType}
+      </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+      <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+        AND ofi.area_code = #{form.areaSerialNo}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <choose>
+        <when test="withUser != null and withUser and userId != null and userId != ''">
+          AND ofi.creator = #{userId, jdbcType=VARCHAR}
+        </when>
+        <otherwise>
+          <if test="userId != null and userId != ''">
+            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+          </if>
+        </otherwise>
+      </choose>
+      AND  ofi.business_type in
+      <foreach item="item" index="index" collection="form.businessTypes"
+               open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </where>
     UNION
     SELECT DISTINCT
     ofi.cust_name,
@@ -750,56 +757,56 @@
     LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
     LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
     <where>
-        <if test="form.startDate!=null and form.startDate!=''">AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
-        </if>
-        <if
-                test="form.endDate!=null and form.endDate!=''">
-          AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
-        </if>
-        <if test="form.orderCode!=null and form.orderCode!=''">
-          AND ofi.order_code = #{form.orderCode}
-        </if>
-        <if test="form.custName!=null and form.custName!=''">
-          AND ofi.cust_name = #{form.custName}
-        </if>
-        <if test="form.custCode!=null and form.custCode!=''">
-          AND ofi.cust_code = #{form.custCode}
-        </if>
-        <if test="form.custOrderCode!=null and form.custOrderCode!=''">
-          AND ofi.cust_order_code = #{form.custOrderCode}
-        </if>
-        <if test="form.orderState!=null and form.orderState!=''">
-          AND  ns.order_latest_status = #{form.orderState}
-        </if>
-        <if test="form.orderType!=null and form.orderType!=''">
-          AND ofi.order_type = #{form.orderType}
-        </if>
-        <if test="form.businessType!=null and form.businessType!=''">
-          AND ofi.business_type = #{form.businessType}
-        </if>
-        <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
-          AND ofi.base_code = #{form.baseSerialNo}
-        </if>
-        <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
-          AND ofi.area_code = #{form.areaSerialNo}
-        </if>
-        <if test="form.warehouseCode!=null and form.warehouseCode!=''">
-          AND owi.warehouse_code = #{form.warehouseCode}
-        </if>
-        <if test="form.provideTransport!=null">
-          AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
-        </if>
-        <choose>
-          <when test="withUser != null and withUser and userId != null and userId != ''">
-            AND ofi.creator = #{userId, jdbcType=VARCHAR}
-          </when>
-          <otherwise>
-            <if test="userId != null and userId != ''">
-              OR ofi.creator = #{userId, jdbcType=VARCHAR}
-            </if>
-          </otherwise>
-        </choose>
-      </where>
+      <if test="form.startDate!=null and form.startDate!=''">AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if
+              test="form.endDate!=null and form.endDate!=''">
+        AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND ofi.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND ofi.cust_name = #{form.custName}
+      </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND ofi.cust_code = #{form.custCode}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND  ns.order_latest_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND ofi.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND ofi.business_type = #{form.businessType}
+      </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+      <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+        AND ofi.area_code = #{form.areaSerialNo}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <choose>
+        <when test="withUser != null and withUser and userId != null and userId != ''">
+          AND ofi.creator = #{userId, jdbcType=VARCHAR}
+        </when>
+        <otherwise>
+          <if test="userId != null and userId != ''">
+            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+          </if>
+        </otherwise>
+      </choose>
+    </where>
     UNION
     SELECT DISTINCT
     ofi.cust_name,
@@ -867,6 +874,213 @@
     </where>
 
     ) temp
+    ORDER BY temp.order_code DESC
+  </select>
+  <select id="queryStorageOrderListPrecise" resultMap="Order_Search_Oper_Map">
+    SELECT
+    *
+    FROM (
+    SELECT DISTINCT
+    <include refid="queryStorageOrderListField"/>,
+    owi.warehouse_code,owi.provide_transport
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
+    <where>
+      1=1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND ofi.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND ofi.cust_name = #{form.custName}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND ns.order_latest_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND ofi.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND ofi.business_type = #{form.businessType}
+      </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+      <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+        AND ofi.area_code = #{form.areaSerialNo}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <choose>
+        <when test="withUser != null and withUser and userId != null and userId != ''">
+          AND ofi.creator = #{userId, jdbcType=VARCHAR}
+        </when>
+        <otherwise>
+          <if test="userId != null and userId != ''">
+            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+          </if>
+        </otherwise>
+      </choose>
+      AND ofi.business_type in
+      <foreach item="item" index="index" collection="form.businessTypes"
+               open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </where>) temp
+    <where>
+      1=1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND temp.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND temp.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND temp.cust_name = #{form.custName}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND temp.order_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND temp.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND temp.business_type = #{form.businessType}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND temp.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND temp.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND temp.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND temp.cust_order_code = #{form.custOrderCode}
+      </if>
+      AND temp.business_type in
+      <foreach item="item" index="index" collection="form.businessTypes"
+               open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </where>
+    ORDER BY temp.order_code DESC
+  </select>
+  <select id="queryOrderListPrecise" resultMap="Order_Search_Oper_Map">
+    SELECT
+    *
+    FROM (
+    SELECT DISTINCT
+    <include refid="queryOrderListField"/>,
+    ofi.cust_code,owi.warehouse_code,owi.provide_transport
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+    LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+    LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
+    <where>
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND ofi.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND ofi.cust_name = #{form.custName}
+      </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND ofi.cust_code = #{form.custCode}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND ofi.cust_order_code = #{form.custOrderCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND ns.order_latest_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND ofi.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND ofi.business_type = #{form.businessType}
+      </if>
+      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
+        AND ofi.base_code = #{form.baseSerialNo}
+      </if>
+      <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
+        AND ofi.area_code = #{form.areaSerialNo}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND owi.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <choose>
+        <when test="withUser != null and withUser and userId != null and userId != ''">
+          AND ofi.creator = #{userId, jdbcType=VARCHAR}
+        </when>
+        <otherwise>
+          <if test="userId != null and userId != ''">
+            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+          </if>
+        </otherwise>
+      </choose>
+    </where>) temp
+    <where>
+      1=1
+      <if test="form.startDate!=null and form.startDate!=''">
+        AND temp.order_time <![CDATA[ >= ]]>  #{form.startDate}
+      </if>
+      <if test="form.endDate!=null and form.endDate!=''">
+        AND temp.order_time <![CDATA[ <= ]]>  #{form.endDate}
+      </if>
+      <if test="form.custName!=null and form.custName!=''">
+        AND temp.cust_name = #{form.custName}
+      </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND temp.cust_code = #{form.custCode}
+      </if>
+      <if test="form.orderState!=null and form.orderState!=''">
+        AND temp.order_status = #{form.orderState}
+      </if>
+      <if test="form.orderType!=null and form.orderType!=''">
+        AND temp.order_type = #{form.orderType}
+      </if>
+      <if test="form.businessType!=null and form.businessType!=''">
+        AND temp.business_type = #{form.businessType}
+      </if>
+      <if test="form.warehouseCode!=null and form.warehouseCode!=''">
+        AND temp.warehouse_code = #{form.warehouseCode}
+      </if>
+      <if test="form.provideTransport!=null">
+        AND temp.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <if test="form.orderCode!=null and form.orderCode!=''">
+        AND temp.order_code = #{form.orderCode}
+      </if>
+      <if test="form.custOrderCode!=null and form.custOrderCode!=''">
+        AND temp.cust_order_code = #{form.custOrderCode}
+      </if>
+    </where>
     ORDER BY temp.order_code DESC
   </select>
 

@@ -630,7 +630,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                             }
                             //入库数量 or  出库数量//必填列名
                         } else if (StringUtils.equals(StorageImportInEnum.QUANTITY.getStandardColCode(), standardColCode)) {
-                            cellValue = this.resolveTooLangNum(cellValue, commonCell);
+                            cellValue = this.resolveGoodsNum(cellValue, commonCell);
                             if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
                                 logger.info("【{}】列第{}行数据为空，请检查文件！", ofcStorageTemplateForCheck.getReflectColName(), (rowNum + 1));
                                 cellValue = "0";
@@ -1232,6 +1232,19 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         succeedResult.add(countImportNum);
         succeedResult.add(importOrderNum);
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, succeedResult);
+    }
+
+    private String resolveGoodsNum(String cellValue, Cell commonCell) {
+        String cellValuePhone;
+        if (commonCell != null && Cell.CELL_TYPE_STRING == commonCell.getCellType()) {
+            cellValuePhone = PubUtils.trimAndNullAsEmpty(commonCell.getStringCellValue());
+            cellValue = cellValuePhone;
+        } else if (commonCell != null && Cell.CELL_TYPE_NUMERIC == commonCell.getCellType()) {
+            cellValuePhone = PubUtils.trimAndNullAsEmpty(String.valueOf(commonCell.getNumericCellValue()));
+            DecimalFormat df = new DecimalFormat("0.000");
+            cellValue = df.format(Double.valueOf(cellValuePhone));
+        }
+        return cellValue;
     }
 
     private void countWeight(OfcStorageTemplateDto ofcStorageTemplateDto) {

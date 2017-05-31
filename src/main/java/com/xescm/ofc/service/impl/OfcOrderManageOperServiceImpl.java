@@ -129,10 +129,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
-        if (!choosen && areaEmpty && baseEmpty) {
+        if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userGroupCode);
-            results = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
-        } else if (!areaEqualUser) {
+            results = ofcOrderOperMapper.queryStorageOrderListPrecise(form, userId, false);
+        } else if (!areaEqualUser && !areaEmpty) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
         } else {
             results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
@@ -152,11 +152,11 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userAreaSerialNo, areaSerialNo);
         boolean baseEqualUser = StringUtils.equals(userGroupCode, baseSerialNo);
-        if (!choosen && areaEmpty && baseEmpty) {
+        if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userAreaSerialNo);
             form.setBaseSerialNo(userGroupCode);
-            results = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
-        } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
+            results = ofcOrderOperMapper.queryStorageOrderListPrecise(form, userId, false);
+        } else if (areaEqualUser && baseEqualUser) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
             results = ofcOrderOperMapper.queryStorageOrderListUnion(form, userId, true);
@@ -240,10 +240,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
-        if (!choosen && areaEmpty && baseEmpty) {
+        if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userGroupCode);
-            results = ofcOrderOperMapper.queryOrderList(form, userId, false);
-        } else if (!areaEqualUser) {
+            results = ofcOrderOperMapper.queryOrderListPrecise(form, userId, false);
+        } else if (!areaEqualUser && !areaEmpty) {
             results = ofcOrderOperMapper.queryOrderList(form, userId, true);
         } else {
             results = ofcOrderOperMapper.queryOrderList(form, null, null);
@@ -263,11 +263,11 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userAreaSerialNo, areaSerialNo);
         boolean baseEqualUser = StringUtils.equals(userGroupCode, baseSerialNo);
-        if (!choosen && areaEmpty && baseEmpty) {
+        if (areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userAreaSerialNo);
             form.setBaseSerialNo(userGroupCode);
-            results = ofcOrderOperMapper.queryOrderList(form, userId, false);
-        } else if ((areaEqualUser && baseEqualUser) || (choosen && areaEmpty && baseEmpty)) {
+            results = ofcOrderOperMapper.queryOrderListPrecise(form, userId, false);
+        } else if ((areaEqualUser && baseEqualUser)) {
             results = ofcOrderOperMapper.queryOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
             results = ofcOrderOperMapper.queryOrderListUnion(form, userId, true);
