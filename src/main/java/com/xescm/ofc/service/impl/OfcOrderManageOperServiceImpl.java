@@ -132,7 +132,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (!choosen && areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userGroupCode);
             results = ofcOrderOperMapper.queryStorageOrderList(form, userId, false);
-        } else if (!areaEqualUser) {
+        } else if (!areaEqualUser && !areaEmpty) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
         } else {
             results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
@@ -243,7 +243,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (!choosen && areaEmpty && baseEmpty) {
             form.setAreaSerialNo(userGroupCode);
             results = ofcOrderOperMapper.queryOrderList(form, userId, false);
-        } else if (!areaEqualUser) {
+        } else if (!areaEqualUser && !areaEmpty) {
             results = ofcOrderOperMapper.queryOrderList(form, userId, true);
         } else {
             results = ofcOrderOperMapper.queryOrderList(form, null, null);
