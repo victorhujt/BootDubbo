@@ -5,6 +5,7 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
@@ -93,6 +94,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String custOrderCode = null;
                 String key = null;
                 for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
+                    String platformType = createOrderEntity.getPlatformType();
                     AtomicBoolean lockStatus = new AtomicBoolean(false);
                     try {
                         custOrderCode = createOrderEntity.getCustOrderCode();
@@ -115,7 +117,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                     //订单已存在,获取订单的最新状态,只有待审核的才能更新
                                     if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                         logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
-                                        addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                        if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                                            addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                        }
                                         return "";
                                     }
                                 }
@@ -124,12 +128,16 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                 //调用创建方法
                                 resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                                    addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
+                                    if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                                        addCreateOrderEntityList(result, resultModel.getDesc(), custOrderCode, orderCode, resultModel, createOrderResultList);
+                                    }
                                     reason = resultModel == null ? "" : resultModel.getDesc();
                                     logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, reason);
                                 } else {
                                     result = true;
-                                    addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
+                                    if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                                        addCreateOrderEntityList(result, reason, custOrderCode, orderCode, resultModel, createOrderResultList);
+                                    }
                                     logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
                                 }
                             } else {
@@ -143,7 +151,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         throw ex;
                     } catch (Exception ex) {
                         logger.error("订单中心创建订单接口异常: {}, {}", ex, ex.getMessage());
-                        addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
+                        if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                            addCreateOrderEntityList(false, reason, custOrderCode, null, new ResultModel(ResultModel.ResultEnum.CODE_9999), createOrderResultList);
+                        }
                         saveErroeLog(createOrderEntity.getCustOrderCode(), createOrderEntity.getCustCode(), createOrderEntity.getOrderTime(), ex);
                     } finally {
                         // 释放锁
