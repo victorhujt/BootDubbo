@@ -59,4 +59,7 @@ public interface OfcOrderOperMapper {
 
     List<OrderSearchOperResult> queryOrderListUnion(@Param("form")OrderOperForm form, @Param("userId") String userId, @Param("withUser") Boolean withUser);
 
+    List<OrderSearchOperResult> queryStorageOrderListPrecise(@Param("form")OrderOperForm form, @Param("userId") String userId, @Param("withUser") Boolean withUser);
+
+    List<OrderSearchOperResult> queryOrderListPrecise(@Param("form")OrderOperForm form, @Param("userId") String userId, @Param("withUser") Boolean withUser);
 }
