@@ -365,7 +365,9 @@
         </when>
         <otherwise>
           <if test="userId != null and userId != ''">
-            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+            OR (
+            ofi.creator = #{userId, jdbcType=VARCHAR} AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate} AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+            )
           </if>
         </otherwise>
       </choose>
@@ -428,7 +430,9 @@
         </when>
         <otherwise>
           <if test="userId != null and userId != ''">
-            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+            OR (
+            ofi.creator = #{userId, jdbcType=VARCHAR} AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate} AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+            )
           </if>
         </otherwise>
       </choose>
@@ -649,7 +653,9 @@
           </when>
           <otherwise>
             <if test="userId != null and userId != ''">
-              OR ofi.creator = #{userId, jdbcType=VARCHAR}
+              OR (
+              ofi.creator = #{userId, jdbcType=VARCHAR} AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate} AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+              )
             </if>
           </otherwise>
         </choose>
@@ -802,7 +808,9 @@
           </when>
           <otherwise>
             <if test="userId != null and userId != ''">
-              OR ofi.creator = #{userId, jdbcType=VARCHAR}
+              OR (
+              ofi.creator = #{userId, jdbcType=VARCHAR} AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate} AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+              )
             </if>
           </otherwise>
         </choose>
@@ -932,7 +940,9 @@
         </when>
         <otherwise>
           <if test="userId != null and userId != ''">
-            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+            OR (
+            ofi.creator = #{userId, jdbcType=VARCHAR} AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate} AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+            )
           </if>
         </otherwise>
       </choose>
@@ -1035,7 +1045,9 @@
         </when>
         <otherwise>
           <if test="userId != null and userId != ''">
-            OR ofi.creator = #{userId, jdbcType=VARCHAR}
+            OR (
+            ofi.creator = #{userId, jdbcType=VARCHAR} AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate} AND ofi.order_time <![CDATA[ <= ]]>  #{form.endDate}
+            )
           </if>
         </otherwise>
       </choose>
