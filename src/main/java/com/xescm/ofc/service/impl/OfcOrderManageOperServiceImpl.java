@@ -159,7 +159,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         } else if (areaEqualUser && baseEqualUser) {
             results = ofcOrderOperMapper.queryStorageOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
-            results = ofcOrderOperMapper.queryStorageOrderListUnion(form, userId, true);
+            results = ofcOrderOperMapper.queryStorageOrderListUnion(form, userId, true, userGroupCode);
         } else {
             results = ofcOrderOperMapper.queryStorageOrderList(form, userId, true);
         }
@@ -270,7 +270,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         } else if ((areaEqualUser && baseEqualUser)) {
             results = ofcOrderOperMapper.queryOrderList(form, null, null);
         } else if (areaEqualUser && baseEmpty) {
-            results = ofcOrderOperMapper.queryOrderListUnion(form, userId, true);
+            results = ofcOrderOperMapper.queryOrderListUnion(form, userId, true, userGroupCode);
         } else {
             results = ofcOrderOperMapper.queryOrderList(form, userId, true);
         }
