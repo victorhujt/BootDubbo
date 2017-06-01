@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,7 +31,7 @@ public class CreateOrderApiProducer {
         final String topic = mqConfig.getOfcOrderStatusTopic();
         logger.info("推送创单api返回信息：{},Topic:{},tag:{}", data, topic, tag);
         if (StringUtils.isNotBlank(data)) {
-            Message message = new Message(topic, tag, data.getBytes());
+            Message message = new Message(topic, tag, data.getBytes(StandardCharsets.UTF_8));
             message.setKey(code);
             SendResult sendResult = producer.send(message);
             if (sendResult != null) {
