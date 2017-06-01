@@ -709,8 +709,8 @@
       <if test="form.businessType!=null and form.businessType!=''">
         AND ofi.business_type = #{form.businessType}
       </if>
-      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
-        AND ofi.base_code = #{form.baseSerialNo}
+      <if test="userGroupCode!=null and userGroupCode!=''">
+        AND ofi.base_code = #{userGroupCode}
       </if>
       <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
         AND ofi.area_code = #{form.areaSerialNo}
@@ -859,8 +859,8 @@
       <if test="form.businessType!=null and form.businessType!=''">
         AND ofi.business_type = #{form.businessType}
       </if>
-      <if test="form.baseSerialNo!=null and form.baseSerialNo!=''">
-        AND ofi.base_code = #{form.baseSerialNo}
+      <if test="userGroupCode != null and userGroupCode != ''">
+        AND ofi.base_code = #{userGroupCode}
       </if>
       <if test="form.areaSerialNo!=null and form.areaSerialNo!=''">
         AND ofi.area_code = #{form.areaSerialNo}
