@@ -16,6 +16,7 @@ import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -109,7 +110,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
             logger.error(e.getMessage());
         } catch (Exception e) {
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "更新交货数量发生内部异常");
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "更新交货数量发生未知异常：异常信息=>" + ExceptionUtils.getFullStackTrace(e));
             logger.error("更新交货数量发生未知异常 {}", e);
         }
         return result;
@@ -167,6 +168,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             }
         } catch (Exception e) {
             logger.error("交货量同步更新发生异常. {}", e);
+            throw e;
         }
     }
 
