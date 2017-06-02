@@ -1,5 +1,6 @@
 package com.xescm.ofc.service;
 
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
@@ -48,4 +49,16 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
     */
     @Transactional
     ResultModel createOrderByTask(OfcTaskInterfaceLogDto taskParam) throws Exception;
+
+    /**
+     * <p>Title:      goodsAmountSync. </p>
+     * <p>Description 交货量同步</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/1 19:54
+     * @return
+     */
+    @Transactional
+    Wrapper goodsAmountSync(OfcTaskInterfaceLogDto taskParam) throws Exception;
 }

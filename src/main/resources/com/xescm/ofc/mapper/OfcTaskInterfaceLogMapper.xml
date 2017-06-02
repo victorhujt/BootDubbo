@@ -32,7 +32,9 @@
         where lg.dr = 0
         and lg.task_type = #{taskType}
         and lg.task_status = 1
-        and <![CDATA[ lg.task_exe_count <= 3 ]]>
+        <if test="taskExeCount != null and taskExeCount != ''">
+            and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
+        </if>
         <if test="taskSource != null">
             and task_source = #{taskSource}
         </if>
@@ -47,7 +49,9 @@
         and lg.task_type = #{taskType}
         and lg.task_status = 2
         and <![CDATA[ update_time < (NOW() - 10 / 60 / 24) ]]>
-        and <![CDATA[ lg.task_exe_count <= 3 ]]>
+        <if test="taskExeCount != null and taskExeCount != ''">
+            and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
+        </if>
         <if test="taskSource != null">
             and task_source = #{taskSource}
         </if>

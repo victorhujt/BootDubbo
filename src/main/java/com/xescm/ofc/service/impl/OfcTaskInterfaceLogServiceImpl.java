@@ -1,5 +1,7 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
@@ -9,7 +11,9 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcInterfaceReceiveLogMapper;
 import com.xescm.ofc.mapper.OfcTaskInterfaceLogMapper;
 import com.xescm.ofc.service.CreateOrderService;
+import com.xescm.ofc.service.GoodsAmountSyncService;
 import com.xescm.ofc.service.OfcTaskInterfaceLogService;
+import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +35,8 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
     private OfcInterfaceReceiveLogMapper receiveLogMapper;
     @Resource
     private CreateOrderService createOrderService;
+    @Resource
+    private GoodsAmountSyncService goodsAmountSyncService;
 
     /**
      * <p>Title:      insertOfcTaskInterfaceLog. </p>
@@ -144,5 +150,36 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
             throw e;
         }
         return resultModel;
+    }
+
+    /**
+     * <p>Title:      goodsAmountSync. </p>
+     * <p>Description 交货量同步</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/1 19:55
+     * @return
+     */
+    @Override
+    @Transactional
+    public Wrapper goodsAmountSync(OfcTaskInterfaceLogDto taskParam) throws Exception {
+        Wrapper result;
+        try {
+            String taskData = taskParam.getTaskData();
+            if (taskData != null) {
+                GoodsAmountSyncDto goodsAmountSyncDto = JacksonUtil.parseJson(taskData, GoodsAmountSyncDto.class);
+                result = goodsAmountSyncService.goodsAmountSync(goodsAmountSyncDto);
+            } else {
+                throw new BusinessException("交货量同步任务数据为空！");
+            }
+        } catch (BusinessException e) {
+            logger.error("执行交货量同步任务发生异常: 异常信息=>", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("执行交货量同步任务发生未知异常: 异常信息=>", e);
+            throw e;
+        }
+        return result;
     }
 }

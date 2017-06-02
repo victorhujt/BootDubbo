@@ -110,7 +110,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             logger.error(e.getMessage());
         } catch (Exception e) {
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "更新交货数量发生内部异常");
-            logger.error("更新交货数量发生内部异常 {}", e);
+            logger.error("更新交货数量发生未知异常 {}", e);
         }
         return result;
     }

@@ -116,4 +116,31 @@ public class OfcOrderWorkerApiRest {
         }
         return result;
     }
+
+    /**
+     * <p>Title:      goodsAmountSync. </p>
+     * <p>Description 交货量同步</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/1 19:46
+     * @return
+     */
+    @RequestMapping(value = "/goodsAmountSync", method = RequestMethod.POST)
+    public Wrapper goodsAmountSync(@RequestBody  OfcTaskInterfaceLogDto taskParam) {
+        logger.info("执行交货量同步任务发生异常：taskParam={}", taskParam);
+        Wrapper result;
+        try {
+            result = taskInterfaceLogService.goodsAmountSync(taskParam);
+        } catch (BusinessException e) {
+            String msg = "执行交货量同步任务发生异常：异常信息=>";
+            logger.error(msg + " {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, msg + ExceptionUtils.getFullStackTrace(e));
+        } catch (Exception e) {
+            String msg = "执行交货量同步任务发生未知异常：异常信息=>";
+            logger.error(msg + " {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, msg + ExceptionUtils.getFullStackTrace(e));
+        }
+        return result;
+    }
 }

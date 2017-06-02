@@ -83,9 +83,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
                 String result = null;
                 try {
-                    Long start = System.currentTimeMillis();
                     List<CreateOrderEntity> orderEntities = JacksonUtil.parseJsonWithFormat(messageBody, new TypeReference<List<CreateOrderEntity>>() {});
-                    System.out.println("================>" + (System.currentTimeMillis() - start));
                     for (CreateOrderEntity orderEntity : orderEntities) {
                         String custOrderCode = orderEntity.getCustOrderCode();
                         OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();
@@ -116,22 +114,23 @@ public class CreateOrderApiConsumer implements MessageListener {
 //                        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
 //                    }
                 }
-            }else if(message.getTag().equals("goodsAmountSync")){//众品订单交货量同步接口
+            }else if(message.getTag().equals("goodsAmountSync1")){//众品订单交货量同步接口
                 //接收分拣中心回传的状态
                 logger.info("对接中心订单交货量调整消息体:{}",messageBody);
                 logger.info("订单中心消费对接中心同步交货量开始消费topic:{},tag:{},key{}",topicName,tag,key);
-                GoodsAmountSyncDto goodsAmountSyncDto;
                 try {
-                    goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
-                    goodsAmountSyncService.goodsAmountSync(goodsAmountSyncDto);
+                    GoodsAmountSyncDto goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
+                    String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
+                    OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();
+                    receiveLog.setLogBusinessType(LogBusinessTypeEnum.EDI_GOODS_AMOUNT.getCode());
+                    receiveLog.setLogFromSys(LogSourceSysEnum.EPC.getCode());
+                    receiveLog.setRefNo(custOrderCode);
+                    receiveLog.setLogType(LogInterfaceTypeEnum.MQ.getCode());
+                    receiveLog.setLogData(JacksonUtil.toJson(goodsAmountSyncDto));
+                    receiveLogService.insertOfcInterfaceReceiveLogWithTask(receiveLog);
                 } catch (Exception e) {
                     logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
-                    logger.info("================> 失败消费次数：" + message.getReconsumeTimes());
-                    if (message.getReconsumeTimes() < 16) {
-                        return Action.ReconsumeLater;
-                    } else {
-                        return Action.CommitMessage;
-                    }
+                    return Action.ReconsumeLater;
                 }
             }
 
