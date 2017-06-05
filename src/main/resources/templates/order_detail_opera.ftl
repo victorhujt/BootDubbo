@@ -713,6 +713,14 @@
             value = "加工入库";
         }else if(businessType == "617"){
             value = "退车间";
+        }else if(businessType == "624"){
+            value = "盘盈入库";
+        } else if(businessType == "625"){
+            value = "流通入库";
+        }else if(businessType == "626"){
+            value = "其他入库";
+        }else if(businessType == "614"){
+            value = "分拨出库";
         }
         return value;
     }
