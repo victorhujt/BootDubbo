@@ -169,6 +169,10 @@
                 货品信息
             </div>
             <el-table :data="goodsData" border highlight-current-row  style="width: 100%">
+                <el-table-column
+                        type="index"
+                        width="50">
+                </el-table-column>
                 <el-table-column property="goodsType" label="货品种类">
                     <template scope="scope">
                         <el-input v-model="scope.row.goodsType" :readOnly="true"></el-input>
