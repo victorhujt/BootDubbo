@@ -277,6 +277,9 @@ public class OfcOrderManageRest extends BaseController{
     public Wrapper<?> saveStorage(String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
             ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr,String tag) {
         logger.info("==>仓储开单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
+        logger.info("==>仓储开单或编辑实体 orderGoodsListStr={}", orderGoodsListStr);
+        logger.info("==>仓储开单或编辑实体 cscContantAndCompanyDtoConsignorStr={}", cscContantAndCompanyDtoConsignorStr);
+        logger.info("==>仓储开单或编辑实体 cscContantAndCompanyDtoConsigneeStr={}", cscContantAndCompanyDtoConsigneeStr);
         logger.info("==>仓储开单或编辑标志位 tag={}", tag);
         try {
             if(isSEmptyOrNull(ofcOrderDTOStr)){

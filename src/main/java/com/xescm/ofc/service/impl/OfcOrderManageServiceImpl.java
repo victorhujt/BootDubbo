@@ -1837,8 +1837,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())) {
                     key.append(ofcGoodsDetails.getProductionBatch());
                 }
-                if (ofcGoodsDetails.getCreationTime() != null) {
-                    key.append(DateUtils.Date2String(ofcGoodsDetails.getCreationTime(), DateUtils.DateFormatType.TYPE1));
+                if (ofcGoodsDetails.getProductionTime() != null) {
+                    key.append(DateUtils.Date2String(ofcGoodsDetails.getProductionTime(), DateUtils.DateFormatType.TYPE1));
                 }
                 if (ofcGoodsDetails.getInvalidTime() != null) {
                     key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
