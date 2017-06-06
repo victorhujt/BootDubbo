@@ -10,6 +10,7 @@ import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcInterfaceReceiveLogMapper;
 import com.xescm.ofc.mapper.OfcTaskInterfaceLogMapper;
+import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
 import com.xescm.ofc.service.CreateOrderService;
 import com.xescm.ofc.service.GoodsAmountSyncService;
 import com.xescm.ofc.service.OfcTaskInterfaceLogService;
@@ -70,10 +71,10 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
      * @return
      */
     @Override
-    public List<OfcTaskInterfaceLogDto> queryTaskInterfaceLog(OfcTaskInterfaceLogDto taskParam) {
+    public List<OfcTaskInterfaceLogDto> queryWTaskInterfaceLogForWorker(OfcTaskInterfaceLogDto taskParam) {
         List<OfcTaskInterfaceLogDto> result;
         try {
-            result = taskInterfaceLogMapper.queryTaskInterfaceLog(taskParam);
+            result = taskInterfaceLogMapper.queryWTaskInterfaceLogForWorker(taskParam);
         } catch (Exception e) {
             logger.error("查询worker待处理任务发生异常：参数 -> OfcTaskInterfaceLogDto {}, 异常 -> {}", taskParam, e);
             throw new BusinessException("查询worker待处理任务发生异常");
@@ -178,6 +179,30 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
             throw e;
         } catch (Exception e) {
             logger.error("执行交货量同步任务发生未知异常: 异常信息=>", e);
+            throw e;
+        }
+        return result;
+    }
+
+    /**
+     * <p>Title:      queryTaskInterfaceLog. </p>
+     * <p>Description 查询任务日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/5 15:38
+     * @return
+     */
+    @Override
+    public List<OfcTaskInterfaceLog> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam) {
+        List<OfcTaskInterfaceLog> result;
+        try {
+            result = taskInterfaceLogMapper.queryTaskInterfaceLog(taskParam);
+        } catch (BusinessException e) {
+            logger.error("查询任务日志发生异常：异常信息=>{}", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询任务日志发生未知异常：异常信息=>{}", e);
             throw e;
         }
         return result;

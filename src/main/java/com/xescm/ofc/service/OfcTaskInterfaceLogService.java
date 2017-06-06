@@ -4,6 +4,7 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
+import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
      * @param taskParam 参数
      * @return
      */
-    List<OfcTaskInterfaceLogDto> queryTaskInterfaceLog(OfcTaskInterfaceLogDto taskParam);
+    List<OfcTaskInterfaceLogDto> queryWTaskInterfaceLogForWorker(OfcTaskInterfaceLogDto taskParam);
 
     /**
      * 更新任务状态
@@ -61,4 +62,15 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
      */
     @Transactional
     Wrapper goodsAmountSync(OfcTaskInterfaceLogDto taskParam) throws Exception;
+
+    /**
+     * <p>Title:      queryTaskInterfaceLog. </p>
+     * <p>Description 查询任务日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/5 15:37
+     * @return
+     */
+    List<OfcTaskInterfaceLog> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam);
 }

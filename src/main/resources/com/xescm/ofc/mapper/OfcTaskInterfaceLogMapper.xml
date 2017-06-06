@@ -24,8 +24,10 @@
     id, task_type, ref_no, task_source, source_log_id, task_data, task_exe_count, exe_instance_ip, task_status, creation_time, update_time, exe_time, dr
   </sql>
 
-    <select id="queryTaskInterfaceLog" resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
-      select * from (
+    <!-- worker 查询待处理任务 -->
+    <select id="queryWTaskInterfaceLogForWorker"
+            resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
+        select * from (
         select
         <include refid="BaseColumn"/>
         from ofc_task_interface_log lg
@@ -58,11 +60,47 @@
         <if test="condition != null">
             and MOD(id, #{queueNum}) in (${condition})
         </if>
-      )tmp
-      where 1 = 1
+        )tmp
+        where 1 = 1
         <if test="fetchNum != null">
             LIMIT #{fetchNum}
         </if>
+    </select>
+
+    <!-- 根据条件查询任务日志 -->
+    <select id="queryTaskInterfaceLog" resultType="com.xescm.ofc.domain.OfcTaskInterfaceLog"
+            parameterType="com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo">
+        select
+        <include refid="BaseColumn"/>
+        from ofc_task_interface_log lg
+        <where>
+            1 = 1
+            <if test="taskType != null and taskType != ''">
+                and task_type = #{taskType}
+            </if>
+            <if test="refNo != null and refNo != ''">
+                and ref_no = #{refNo}
+            </if>
+            <if test="taskSource != null and taskSource != ''">
+                and task_source = #{taskSource}
+            </if>
+            <if test="sourceLogId != null and sourceLogId != ''">
+                and source_log_id = #{sourceLogId}
+            </if>
+            <if test="exeInstanceIp != null and exeInstanceIp != ''">
+                and exe_instance_ip = #{exeInstanceIp}
+            </if>
+            <if test="taskStatus != null and taskStatus != ''">
+                and task_status = #{taskStatus}
+            </if>
+            <if test="beginDate != null and beginDate != ''">
+                and creation_time <![CDATA[ >= ]]> #{beginDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and creation_time <![CDATA[ <= ]]> #{endDate}
+            </if>
+        </where>
+        order by id desc
     </select>
 
 </mapper>

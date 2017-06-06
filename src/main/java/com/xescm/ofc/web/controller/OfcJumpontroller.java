@@ -522,4 +522,26 @@ public class OfcJumpontroller extends BaseController{
         setDefaultModel(model);
         return "zp_import";
     }
+
+    /**
+     * 任务日志管理
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/ofc/interface/taskInterfaceLog")
+    public String taskInterfaceLog(Model model) {
+        setDefaultModel(model);
+        return "/interface/task_interface_log";
+    }
+
+    /**
+     * 接收日志管理
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "ofc/interface/interfaceReceiveLog")
+    public String interfaceReceiveLog(Model model) {
+        setDefaultModel(model);
+        return "/interface/interface_receive_log";
+    }
 }
