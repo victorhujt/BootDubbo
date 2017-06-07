@@ -381,7 +381,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private void cancelDpcOrder(String orderCode, String cancelUserId, String cancelUserName) {
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
-        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectByKey(orderCode);
+        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
         if (ofcFundamentalInformation != null && ofcDistributionBasicInfo != null) {
             //排除仓储不带运输的订单
             if (null != ofcWarehouseInformation && null != ofcWarehouseInformation.getProvideTransport()
