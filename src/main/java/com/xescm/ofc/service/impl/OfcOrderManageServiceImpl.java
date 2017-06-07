@@ -381,7 +381,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private void cancelDpcOrder(String orderCode, String cancelUserId, String cancelUserName) {
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectByKey(orderCode);
         if (ofcFundamentalInformation != null && ofcDistributionBasicInfo != null) {
+            //排除仓储不带运输的订单
+            if (null != ofcWarehouseInformation && null != ofcWarehouseInformation.getProvideTransport()
+                    && StringUtils.equals(WAREHOUSE_DIST_ORDER, ofcFundamentalInformation.getOrderType())
+                    && 0 != WEARHOUSE_WITH_TRANS.compareTo(ofcWarehouseInformation.getProvideTransport())) {
+                return;
+            }
             String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
             String transCode = ofcDistributionBasicInfo.getTransCode();
             try {
@@ -490,9 +497,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             StringBuilder notes = new StringBuilder();
             //调用各中心请求直接取消订单
             try {
-                orderCancel(orderCode);
+                this.orderCancel(orderCode);
                 // 向调度中心发送取消mq
-                cancelDpcOrder(orderCode, authResDtoByToken.getUserId(), authResDtoByToken.getUserName());
+                this.cancelDpcOrder(orderCode, authResDtoByToken.getUserId(), authResDtoByToken.getUserName());
             } catch (Exception e) {
                 throw new BusinessException("调用其他中心取消接口异常:{}", e.getMessage(), e);
             }
