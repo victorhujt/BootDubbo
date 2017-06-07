@@ -2,7 +2,6 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
@@ -315,7 +314,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param authResDtoByToken 登录用户
      * @param cscContantAndCompanyDtoConsignor 收货方
      * @param cscContantAndCompanyDtoConsignee 发货方
-     * @param ofcFundamentalInformation 基本信息
+     * @param ofcFundamentalInformation 基本信息OR
      * @param ofcDistributionBasicInfo 运输信息
      * @param ofcWarehouseInformation 仓库信息
      * @param ofcOrderStatus 订单状态
@@ -724,6 +723,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
         ofcOrderStatus.setStatusDesc("待审核");
         ofcOrderStatus.setLastedOperTime(new Date());
+        ofcOrderStatus.setTrace("接收订单");
+        ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
         ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
         ofcOrderStatusService.save(ofcOrderStatus);
     }

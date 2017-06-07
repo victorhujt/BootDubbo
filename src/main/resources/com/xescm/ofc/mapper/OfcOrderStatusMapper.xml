@@ -13,6 +13,8 @@
     <result column="notes" property="notes" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="trace_status" property="traceStatus" jdbcType="VARCHAR" />
+    <result column="trace" property="trace" jdbcType="VARCHAR" />
   </resultMap>
   <delete id="deleteByOrderCode" parameterType="java.lang.String" >
     <!--
@@ -140,7 +142,11 @@
 
   <select id="queryOrderStatus" resultMap="BaseResultMap">
     SELECT
-    oos.notes
+    oos.notes,
+    oos.trace_status,
+    oos.trace,
+    oos.lasted_oper_time,
+    oos.operator
     FROM
     ofc_order_status oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
