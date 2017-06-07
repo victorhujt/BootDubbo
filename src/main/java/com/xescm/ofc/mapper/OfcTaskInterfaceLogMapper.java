@@ -27,5 +27,5 @@ public interface OfcTaskInterfaceLogMapper extends Mapper<OfcTaskInterfaceLog> {
      * @CreateDate    2017/6/5 15:44
      * @return
      */
-    List<OfcTaskInterfaceLog> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam);
+    List<OfcTaskInterfaceLogVo> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam);
 }

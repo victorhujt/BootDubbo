@@ -30,7 +30,7 @@ public class OfcTaskInterfaceLog {
     private String refNo;
 
     /**
-     * 任务来源
+     * 任务来源 {@link com.xescm.ofc.edas.enums.TaskLogSourceEnum}
      */
     @Column(name = "task_source")
     private String taskSource;
@@ -86,7 +86,7 @@ public class OfcTaskInterfaceLog {
      * 执行时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:sdrs",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "exe_time")
     private Date exeTime;
 

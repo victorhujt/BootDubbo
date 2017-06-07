@@ -68,7 +68,7 @@
     </select>
 
     <!-- 根据条件查询任务日志 -->
-    <select id="queryTaskInterfaceLog" resultType="com.xescm.ofc.domain.OfcTaskInterfaceLog"
+    <select id="queryTaskInterfaceLog" resultType="com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo"
             parameterType="com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo">
         select
         <include refid="BaseColumn"/>

@@ -72,5 +72,5 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
      * @CreateDate    2017/6/5 15:37
      * @return
      */
-    List<OfcTaskInterfaceLog> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam);
+    List<OfcTaskInterfaceLogVo> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam);
 }

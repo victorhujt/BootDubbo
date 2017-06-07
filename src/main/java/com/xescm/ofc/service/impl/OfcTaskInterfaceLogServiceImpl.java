@@ -194,8 +194,8 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
      * @return
      */
     @Override
-    public List<OfcTaskInterfaceLog> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam) {
-        List<OfcTaskInterfaceLog> result;
+    public List<OfcTaskInterfaceLogVo> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam) {
+        List<OfcTaskInterfaceLogVo> result;
         try {
             result = taskInterfaceLogMapper.queryTaskInterfaceLog(taskParam);
         } catch (BusinessException e) {

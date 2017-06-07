@@ -1,11 +1,10 @@
 package com.xescm.ofc.web.restcontroller;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.ofc.domain.OfcTaskInterfaceLog;
+import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
 import com.xescm.ofc.service.OfcTaskInterfaceLogService;
@@ -41,13 +40,13 @@ public class OfcOrderInterfaceLogRest extends BaseController {
      */
     @RequestMapping(value = "/queryTaskLog", method = {RequestMethod.POST})
     @ResponseBody
-    public Wrapper<PageInfo<OfcTaskInterfaceLog>> queryTaskLog(Page<OfcTaskInterfaceLog> page, OfcTaskInterfaceLogVo taskParam) {
+    public Wrapper<PageInfo<OfcTaskInterfaceLogVo>> queryTaskLog(Page<OfcTaskInterfaceLogVo> page, OfcTaskInterfaceLogVo taskParam) {
         logger.info("==>查询任务日志：{}", taskParam);
-        Wrapper<PageInfo<OfcTaskInterfaceLog>> result;
+        Wrapper<PageInfo<OfcTaskInterfaceLogVo>> result;
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
-            List<OfcTaskInterfaceLog> taskList = taskInterfaceLogService.queryTaskInterfaceLog(taskParam);
-            PageInfo<OfcTaskInterfaceLog> pageInfo = new PageInfo<>(taskList);
+            List<OfcTaskInterfaceLogVo> taskList = taskInterfaceLogService.queryTaskInterfaceLog(taskParam);
+            PageInfo<OfcTaskInterfaceLogVo> pageInfo = new PageInfo<>(taskList);
             result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (BusinessException e) {
             logger.error("{}", e);

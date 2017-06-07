@@ -92,16 +92,16 @@
                 <el-table-column property="taskType" label="任务类型"></el-table-column>
                 <el-table-column property="refNo" label="业务单号"></el-table-column>
                 <el-table-column property="taskSource" label="任务来源"></el-table-column>
-                <el-table-column property="taskExeCount" label="执行次数"></el-table-column>
+                <el-table-column property="taskExeCount" label="执行次数" width="70px" align="center"></el-table-column>
                 <el-table-column property="exeInstanceIp" label="执行IP"></el-table-column>
-                <el-table-column property="taskStatus" label="任务状态"></el-table-column>
-                <el-table-column property="creationTime" label="创建时间"></el-table-column>
-                <el-table-column property="exeTime" label="执行时间"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="100">
+                <el-table-column property="taskStatus" label="任务状态" width="80px" align="center"></el-table-column>
+                <el-table-column property="creationTime" label="创建时间" align="center"></el-table-column>
+                <el-table-column property="exeTime" label="执行时间" align="center"></el-table-column>
+                <el-table-column fixed="right" label="操作" width="150">
                     <template scope="scope">
-                        <el-button @click="editTaskLog" type="text" size="small">查看</el-button>
-                        <el-button @click="delTaskLog" type="text" size="small">删除</el-button>
-                        <el-button @click="resendTaskLog" type="text" size="small">重新发送</el-button>
+                        <el-button @click="" type="text" size="small">查看</el-button>
+                        <el-button @click="" type="text" size="small" style="color:red;">删除</el-button>
+                        <el-button @click="" v-if="scope.row.taskStatus=='处理失败'" type="text" size="small" style="color:green">重新发送</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -123,8 +123,6 @@
             taskStatusOptions: [],
             taskForm: {
                 dateRange: [new Date(new Date().setHours(0, 0, 0, 0)), new Date(new Date().setHours(23, 59, 59, 59))],
-                beginDate: new Date(new Date().setHours(0, 0, 0, 0)),
-                endDate: new Date(new Date().setHours(23, 59, 59, 59)),
                 taskType: '',
                 refNo: '',
                 taskSource: '',
@@ -166,7 +164,7 @@
             }
         },
         created: function () {
-
+            this.doSearch();
         },
         methods: {
             handleSelectionChange: function (val) {
@@ -174,25 +172,32 @@
             },
             handleSizeChange: function (val) {
                 this.pageInfo.pageSize = val;
+                this.doSearch();
             },
             handleCurrentPage: function (val) {
                 this.pageInfo.pageNum = val;
-            },
-            queryTaskLog: function () {
-
+                this.doSearch();
             },
             doSearch: function () {
-                var param = {};
-                param.pageNum = this.pageInfo.pageNum;
-                param.pageSize = this.pageInfo.pageSize;
-                CommonClient.syncpost(sys.rootPath + "/ofc/interface/queryTaskLog", {}, function (result) {
-                    debugger;
+                var vueObj = this;
+                vueObj.taskData = [];
+                var taskParam = {};
+                taskParam.pageNum = this.pageInfo.pageNum;
+                taskParam.pageSize = this.pageInfo.pageSize;
+//                var ofcTaskInterfaceLogVo = {};
+                taskParam.beginDate = DateUtil.format(this.taskForm.dateRange[0], 'yyyy-MM-dd HH:mm:ss');
+                taskParam.endDate = DateUtil.format(this.taskForm.dateRange[1], 'yyyy-MM-dd HH:mm:ss');
+                taskParam.taskType = this.taskForm.taskType;
+                taskParam.refNo = StringUtil.trim(this.taskForm.refNo);
+                taskParam.taskSource = this.taskForm.taskSource;
+                taskParam.taskStatus = this.taskForm.taskStatus;
+//                taskParam.param = ofcTaskInterfaceLogVo;
+                CommonClient.post(sys.rootPath + "/ofc/interface/queryTaskLog", taskParam, function (result) {
                     if (result == undefined || result == null || result.code == 500) {
-                        //layer.msg("当前用户下没有仓库信息！");
-                        console.info("查询任务日志发生错误！");
+                        vueObj.$message.error('查询任务日志发生错误！');
                     } else if (result.code == 200) {
-                        if (result.result.length > 0) {
-                            $.each(result.result, function (index, OfcTaskInterfaceLog) {
+                        if (result.result.list.length > 0) {
+                            $.each(result.result.list, function (index, OfcTaskInterfaceLog) {
                                 var taskLog = {};
                                 taskLog.id = OfcTaskInterfaceLog.id;
                                 taskLog.taskType = OfcTaskInterfaceLog.taskType;
@@ -205,9 +210,10 @@
                                 taskLog.exeTime = OfcTaskInterfaceLog.exeTime;
                                 vueObj.taskData.push(taskLog);
                             });
+                            vueObj.pageInfo.total = result.result.total;
                         } else {
                             //layer.msg("当前用户下没有仓库信息！");
-                            console.info("当前用户下没有仓库信息！");
+                            console.info("暂时未查询到任务日志信息！");
                         }
                     }
                 });
