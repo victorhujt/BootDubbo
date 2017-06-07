@@ -449,20 +449,12 @@
       ofi.order_type,
       ofi.business_type,
       odb.consignee_name,
-      oos.order_status,
+      oos.`order_latest_status` as order_status,
       owi.warehouse_name,
       ofi.notes
     FROM
       ofc_fundamental_information ofi
-    LEFT JOIN (
-      SELECT
-        temp.lasted_oper_time,temp.order_code,temp.order_status
-        FROM
-          ofc_order_status temp
-        WHERE temp.order_status =
-        (SELECT MAX(order_status) FROM ofc_order_status
-          WHERE temp.order_code = order_code
-        ) ORDER BY temp.order_status DESC) oos
+    LEFT JOIN ofc_order_newstatus oos
      ON ofi.order_code = oos.order_code
     LEFT JOIN ofc_distribution_basic_info odb
     ON odb.order_code = ofi.order_code
