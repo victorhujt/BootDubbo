@@ -384,9 +384,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
         if (ofcFundamentalInformation != null && ofcDistributionBasicInfo != null) {
             //排除仓储不带运输的订单
-            if (null != ofcWarehouseInformation && null != ofcWarehouseInformation.getProvideTransport()
-                    && StringUtils.equals(WAREHOUSE_DIST_ORDER, ofcFundamentalInformation.getOrderType())
-                    && 0 != WEARHOUSE_WITH_TRANS.compareTo(ofcWarehouseInformation.getProvideTransport())) {
+            if (null != ofcWarehouseInformation && StringUtils.equals(WAREHOUSE_DIST_ORDER, ofcFundamentalInformation.getOrderType())
+                    && 0 != WEARHOUSE_WITH_TRANS.compareTo(null == ofcWarehouseInformation.getProvideTransport() ? 0 : ofcWarehouseInformation.getProvideTransport())) {
                 return;
             }
             String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
