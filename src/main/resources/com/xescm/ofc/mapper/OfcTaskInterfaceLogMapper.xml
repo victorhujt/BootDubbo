@@ -74,12 +74,15 @@
         <include refid="BaseColumn"/>
         from ofc_task_interface_log lg
         <where>
-            1 = 1
+            1 = 1 and dr = 0
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
             <if test="taskType != null and taskType != ''">
                 and task_type = #{taskType}
             </if>
             <if test="refNo != null and refNo != ''">
-                and ref_no = #{refNo}
+                and ref_no like concat("%", #{refNo}, "%")
             </if>
             <if test="taskSource != null and taskSource != ''">
                 and task_source = #{taskSource}
@@ -103,4 +106,13 @@
         order by id desc
     </select>
 
+    <update id="delTaskLogById">
+        update ofc_task_interface_log
+        set dr = 1, update_time = CURRENT_TIMESTAMP() where id = #{id}
+    </update>
+
+    <update id="resendTaskLogById">
+        update ofc_task_interface_log
+        set task_status = 1, task_exe_count = task_exe_count - 1, update_time = CURRENT_TIMESTAMP() where id = #{id}
+    </update>
 </mapper>

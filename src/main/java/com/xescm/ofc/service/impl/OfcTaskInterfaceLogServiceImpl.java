@@ -5,6 +5,8 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
+import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
+import com.xescm.ofc.edas.enums.LogStatusEnum;
 import com.xescm.ofc.edas.enums.TaskLogSourceEnum;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.exception.BusinessException;
@@ -198,11 +200,51 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
         List<OfcTaskInterfaceLogVo> result;
         try {
             result = taskInterfaceLogMapper.queryTaskInterfaceLog(taskParam);
+            // 替换枚举
+            for (OfcTaskInterfaceLogVo taskLog : result) {
+                String taskType = taskLog.getTaskType();
+                String taskSource = taskLog.getTaskSource();
+                int status = 0;
+                try {
+                    String taskStatus = taskLog.getTaskStatus();
+                    status = taskStatus != null ? Integer.parseInt(taskStatus) : null;
+                } catch (Exception e) {
+                    logger.error("转换任务日志状态发生异常：异常信息=>{}", e);
+                    throw e;
+                }
+                taskLog.setTaskType(LogBusinessTypeEnum.getLogBusinessTypeByCode(taskType));
+                taskLog.setTaskSource(TaskLogSourceEnum.getTaskLogSourceNameByCode(taskSource));
+                taskLog.setTaskStatus(LogStatusEnum.getLogStatusNameByInnerCode(status));
+            }
         } catch (BusinessException e) {
             logger.error("查询任务日志发生异常：异常信息=>{}", e);
             throw e;
         } catch (Exception e) {
             logger.error("查询任务日志发生未知异常：异常信息=>{}", e);
+            throw e;
+        }
+        return result;
+    }
+
+    @Override
+    public Integer delTaskLogById(Long id) {
+        Integer result;
+        try {
+            result = taskInterfaceLogMapper.delTaskLogById(id);
+        } catch (Exception e) {
+            logger.error("删除任务日志发生异常：异常信息=>{}", e);
+            throw e;
+        }
+        return result;
+    }
+
+    @Override
+    public Integer resendTaskLogById(Long id) {
+        Integer result;
+        try {
+            result = taskInterfaceLogMapper.resendTaskLogById(id);
+        } catch (Exception e) {
+            logger.error("重发任务日志发生异常：异常信息=>{}", e);
             throw e;
         }
         return result;

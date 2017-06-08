@@ -1,9 +1,6 @@
 package com.xescm.ofc.model.vo.ofc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
-import com.xescm.ofc.edas.enums.LogStatusEnum;
-import com.xescm.ofc.edas.enums.TaskLogSourceEnum;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -102,7 +99,7 @@ public class OfcTaskInterfaceLogVo {
     }
 
     public String getTaskType() {
-        return LogBusinessTypeEnum.getLogBusinessTypeByCode(taskType);
+        return taskType;
     }
 
     public void setTaskType(String taskType) {
@@ -118,7 +115,7 @@ public class OfcTaskInterfaceLogVo {
     }
 
     public String getTaskSource() {
-        return TaskLogSourceEnum.getTaskLogSourceNameByCode(taskSource);
+        return taskSource;
     }
 
     public void setTaskSource(String taskSource) {
@@ -158,7 +155,7 @@ public class OfcTaskInterfaceLogVo {
     }
 
     public String getTaskStatus() {
-        return LogStatusEnum.getLogStatusNameByInnerCode(taskStatus);
+        return taskStatus;
     }
 
     public void setTaskStatus(String taskStatus) {

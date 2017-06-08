@@ -28,4 +28,26 @@ public interface OfcTaskInterfaceLogMapper extends Mapper<OfcTaskInterfaceLog> {
      * @return
      */
     List<OfcTaskInterfaceLogVo> queryTaskInterfaceLog(OfcTaskInterfaceLogVo taskParam);
+
+    /**
+     * <p>Title:      delTaskLogById. </p>
+     * <p>Description 删除任务日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/8 16:31
+     * @return
+     */
+    Integer delTaskLogById(Long id);
+
+    /**
+     * <p>Title:      resendTaskLogById. </p>
+     * <p>Description 重发任务日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/8 16:39
+     * @return
+     */
+    Integer resendTaskLogById(Long id);
 }

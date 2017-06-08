@@ -534,6 +534,12 @@ public class OfcJumpontroller extends BaseController{
         return "/interface/task_interface_log";
     }
 
+    @RequestMapping(value = "/ofc/interface/showTaskLogDetail")
+    public String showTaskLogDetail(Model model) {
+        setDefaultModel(model);
+        return "/interface/task_interface_log_detail";
+    }
+
     /**
      * 接收日志管理
      * @param model
