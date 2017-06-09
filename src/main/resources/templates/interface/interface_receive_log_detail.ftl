@@ -29,42 +29,52 @@
         </div>
         <el-form label-width="100px">
             <div class="xe-block">
-                <el-form-item label="任务类型" class="xe-col-3">
-                    <el-input v-model="taskType" :readOnly="true"></el-input>
+                <el-form-item label="业务类型" class="xe-col-3">
+                    <el-input v-model="logBusinessType" :readOnly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="业务单号" class="xe-col-3">
                     <el-input v-model="refNo" :readOnly="true"></el-input>
                 </el-form-item>
-                <el-form-item label="任务来源" class="xe-col-3">
-                    <el-input v-model="taskSource" :readOnly="true"></el-input>
+                <el-form-item label="发送系统" class="xe-col-3">
+                    <el-input v-model="logFromSys" :readOnly="true"></el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
+                <el-form-item label="接收系统" class="xe-col-3">
+                    <el-input v-model="logToSys" :readOnly="true"></el-input>
+                </el-form-item>
+                <el-form-item label="日志类型" class="xe-col-3">
+                    <el-input v-model="logType" :readOnly="true">
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="执行次数" class="xe-col-3">
-                    <el-input v-model="taskExeCount" :readOnly="true"></el-input>
-                </el-form-item>
-                <el-form-item label="执行IP" class="xe-col-3">
-                    <el-input v-model="exeInstanceIp" :readOnly="true">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="任务状态" class="xe-col-3">
-                    <el-input v-model="taskStatus" :readOnly="true">
+                    <el-input v-model="processCount" :readOnly="true">
                     </el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
+                <el-form-item label="执行状态" class="xe-col-3">
+                    <el-input v-model="logStatus" :readOnly="true">
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="创建时间" class="xe-col-3">
                     <el-input v-model="creationTime" :readOnly="true">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="执行时间" class="xe-col-3">
-                    <el-input v-model="exeTime" :readOnly="true">
+                    <el-input v-model="processTime" :readOnly="true">
                     </el-input>
                 </el-form-item>
             </div>
             <div class="xe-block">
-                <el-form-item label="任务日志" style="width: 96%">
-                    <el-input type="textarea" v-model="taskData" :readOnly="true" :autosize="{ maxRows: 25 }"
+                <el-form-item label="日志报文" style="width: 96%">
+                    <el-input type="textarea" v-model="logData" :readOnly="true" :autosize="{ minRows: 5, maxRows: 15 }"
+                              style="width: 100%;">
+                </el-form-item>
+            </div>
+            <div class="xe-block">
+                <el-form-item label="执行结果" style="width: 96%">
+                    <el-input type="textarea" v-model="processResult" :readOnly="true" :autosize="{ minRows: 5, maxRows: 10 }"
                               style="width: 100%;">
                 </el-form-item>
             </div>
@@ -80,15 +90,17 @@
         el: '#app',
         data: function () {
             return {
-                taskType: '',
+                logBusinessType: '',
                 refNo: '',
-                taskSource: '',
-                taskExeCount: '',
-                exeInstanceIp: '',
-                taskStatus: '',
+                logFromSys: '',
+                logToSys: '',
+                logType: '',
+                processCount: '',
+                logStatus: '',
                 creationTime: '',
-                exeTime: '',
-                taskData: ''
+                processTime: '',
+                logData: '',
+                processResult: ''
             };
         },
         beforeMount: function () {
@@ -98,24 +110,26 @@
                 var param = url.split("?")[1].split("=");
                 if (param[0] == "id") {
                     var id = param[1];
-                    CommonClient.post(sys.rootPath + "/ofc/interface/queryTaskLogDetailById/" + id, null, function (result) {
+                    CommonClient.post(sys.rootPath + "/ofc/interface/queryReceiveLogDetailById/" + id, null, function (result) {
                         if (result == undefined || result == null) {
-                            vueObj.$message.error('查询任务日志信息发生错误！');
+                            vueObj.$message.error('查询接收日志信息发生错误！');
                         } else if (result.code == 200) {
                             if (result.result != null) {
                                 var taskLog = result.result;
                                 vueObj.id = taskLog.id;
-                                vueObj.taskType = taskLog.taskType;
+                                vueObj.logBusinessType = taskLog.logBusinessType;
                                 vueObj.refNo = taskLog.refNo;
-                                vueObj.taskSource = taskLog.taskSource;
-                                vueObj.taskExeCount = taskLog.taskExeCount;
-                                vueObj.exeInstanceIp = taskLog.exeInstanceIp;
-                                vueObj.taskStatus = taskLog.taskStatus;
+                                vueObj.logFromSys = taskLog.logFromSys;
+                                vueObj.logToSys = taskLog.logToSys;
+                                vueObj.logType = taskLog.logType;
+                                vueObj.processCount = taskLog.processCount;
+                                vueObj.logStatus = taskLog.logStatus;
                                 vueObj.creationTime = taskLog.creationTime;
-                                vueObj.exeTime = taskLog.exeTime;
-                                vueObj.taskData = vueObj.formatJson(taskLog.taskData);
+                                vueObj.processTime = taskLog.processTime;
+                                vueObj.logData = vueObj.formatJson(taskLog.logData);
+                                vueObj.processResult = taskLog.processResult;
                             } else {
-                                console.info("暂时未查询到任务日志信息！");
+                                console.info("暂时未查询到接收日志信息！");
                             }
                         }
                     });
@@ -124,7 +138,7 @@
         },
         methods: {
             goBack: function () {
-                var newurl = "/ofc/interface/taskInterfaceLog";
+                var newurl = "/ofc/interface/interfaceReceiveLog";
                 var html = window.location.href;
                 var index = html.indexOf("/index#");
                 window.open(html.substring(0, index) + "/index#" + newurl);

@@ -7,7 +7,9 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.vo.ofc.OfcInterfaceReceiveLogVo;
 import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
+import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
 import com.xescm.ofc.service.OfcTaskInterfaceLogService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,8 @@ public class OfcOrderInterfaceLogRest extends BaseController {
 
     @Resource
     private OfcTaskInterfaceLogService taskInterfaceLogService;
+    @Resource
+    private OfcInterfaceReceiveLogService receiveLogService;
 
     /**
      * <p>Title:      queryTaskLog. </p>
@@ -151,6 +155,70 @@ public class OfcOrderInterfaceLogRest extends BaseController {
         } catch (Exception e) {
             logger.error("重发任务日志发生未知异常：异常信息=>{}", e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "重发任务日志失败！");
+        }
+        return result;
+    }
+
+    /**
+     * <p>Title:      queryReceiveLog. </p>
+     * <p>Description 查询接收日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/9 11:34
+     * @return
+     */
+    @RequestMapping(value = "/queryReceiveLog", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<PageInfo<OfcInterfaceReceiveLogVo>> queryReceiveLog(Page<OfcInterfaceReceiveLogVo> page, OfcInterfaceReceiveLogVo logParam) {
+        Wrapper<PageInfo<OfcInterfaceReceiveLogVo>> result;
+        try {
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            List<OfcInterfaceReceiveLogVo> taskList = receiveLogService.queryInterfaceReceiveLog(logParam);
+            PageInfo<OfcInterfaceReceiveLogVo> pageInfo = new PageInfo<>(taskList);
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
+        } catch (BusinessException e) {
+            logger.error("{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("查询任务日志发生未知异常：异常信息=>{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询任务日志发生未知异常!");
+        }
+        return result;
+    }
+
+    /**
+     * <p>Title:      queryReceiveLogDetailById. </p>
+     * <p>Description 查询接收日志明细</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/9 11:36
+     * @return
+     */
+    @RequestMapping(value = "/queryReceiveLogDetailById/{id}", method = {RequestMethod.POST, RequestMethod.GET})
+    @ResponseBody
+    public Wrapper<OfcInterfaceReceiveLogVo> queryReceiveLogDetailById(@PathVariable String id) {
+        Wrapper<OfcInterfaceReceiveLogVo> result;
+        try {
+            if (id != null) {
+                OfcInterfaceReceiveLogVo param = new OfcInterfaceReceiveLogVo();
+                param.setId(id);
+                List<OfcInterfaceReceiveLogVo> taskList = receiveLogService.queryInterfaceReceiveLog(param);
+                if (PubUtils.isNotNullAndBiggerSize(taskList, 0)) {
+                    result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, taskList.get(0));
+                } else {
+                    result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, null);
+                }
+            } else {
+                result = WrapMapper.wrap(Wrapper.ILLEGAL_ARGUMENT_CODE_, Wrapper.ILLEGAL_ARGUMENT_MESSAGE);
+            }
+        } catch (BusinessException e) {
+            logger.error("查询任务日志信息发生异常：异常信息=>{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("查询任务日志信息发生未知异常：异常信息=>{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询任务日志信息发生未知异常!");
         }
         return result;
     }

@@ -5,7 +5,6 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
-import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
 import com.xescm.ofc.edas.enums.LogStatusEnum;
 import com.xescm.ofc.edas.enums.TaskLogSourceEnum;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
@@ -119,6 +118,10 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
                     result = receiveLogMapper.updateByPrimaryKeySelective(receiveLog);
                 }
             }
+            if (LogStatusEnum.SUCCESS.getInnerCode() == taskParam.getTaskStatus()) {
+                // 删除任务表成功日志
+                taskInterfaceLogMapper.delTaskLogById(taskParam.getId());
+            }
         } catch (BusinessException e) {
             logger.error("更新任务状态发生异常：{}", e);
             throw e;
@@ -202,9 +205,8 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
             result = taskInterfaceLogMapper.queryTaskInterfaceLog(taskParam);
             // 替换枚举
             for (OfcTaskInterfaceLogVo taskLog : result) {
-                String taskType = taskLog.getTaskType();
                 String taskSource = taskLog.getTaskSource();
-                int status = 0;
+                int status;
                 try {
                     String taskStatus = taskLog.getTaskStatus();
                     status = taskStatus != null ? Integer.parseInt(taskStatus) : null;
@@ -212,7 +214,6 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
                     logger.error("转换任务日志状态发生异常：异常信息=>{}", e);
                     throw e;
                 }
-                taskLog.setTaskType(LogBusinessTypeEnum.getLogBusinessTypeByCode(taskType));
                 taskLog.setTaskSource(TaskLogSourceEnum.getTaskLogSourceNameByCode(taskSource));
                 taskLog.setTaskStatus(LogStatusEnum.getLogStatusNameByInnerCode(status));
             }
@@ -227,6 +228,7 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
     }
 
     @Override
+    @Transactional
     public Integer delTaskLogById(Long id) {
         Integer result;
         try {
@@ -239,10 +241,12 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
     }
 
     @Override
+    @Transactional
     public Integer resendTaskLogById(Long id) {
         Integer result;
         try {
             result = taskInterfaceLogMapper.resendTaskLogById(id);
+            receiveLogMapper.resendReceiveLogById(id);
         } catch (Exception e) {
             logger.error("重发任务日志发生异常：异常信息=>{}", e);
             throw e;

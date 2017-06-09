@@ -1,6 +1,9 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
+import com.xescm.ofc.model.vo.ofc.OfcInterfaceReceiveLogVo;
+
+import java.util.List;
 
 /**
  * @description: OFC接收日志业务
@@ -21,4 +24,15 @@ public interface OfcInterfaceReceiveLogService extends IService<OfcInterfaceRece
      * @return 执行行数
      */
     Integer insertOfcInterfaceReceiveLogWithTask(OfcInterfaceReceiveLog receiveLog);
+
+    /**
+     * <p>Title:      queryInterfaceReceiveLog. </p>
+     * <p>Description 查询接收日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/6/9 11:09
+     * @return
+     */
+    List<OfcInterfaceReceiveLogVo> queryInterfaceReceiveLog(OfcInterfaceReceiveLogVo logParam);
 }

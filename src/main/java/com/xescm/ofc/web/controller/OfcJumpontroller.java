@@ -534,6 +534,11 @@ public class OfcJumpontroller extends BaseController{
         return "/interface/task_interface_log";
     }
 
+    /**
+     * 任务日志详情页面
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/ofc/interface/showTaskLogDetail")
     public String showTaskLogDetail(Model model) {
         setDefaultModel(model);
@@ -549,5 +554,16 @@ public class OfcJumpontroller extends BaseController{
     public String interfaceReceiveLog(Model model) {
         setDefaultModel(model);
         return "/interface/interface_receive_log";
+    }
+
+    /**
+     * 接收日志详情页面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/ofc/interface/showReceiveLogDetail")
+    public String showReceiveLogDetail(Model model) {
+        setDefaultModel(model);
+        return "/interface/interface_receive_log_detail";
     }
 }

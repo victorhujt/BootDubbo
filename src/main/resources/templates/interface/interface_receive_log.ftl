@@ -1,125 +1,265 @@
-<title>任务日志</title>
-<!--suppress ALL -->
-<head>
-    <style lang="css">
-        .ofc-block {
-            margin: 20px 0;
-        }
-
-        .el-dialog {
-            top: 50% !important;
-            margin-top: -300px;
-            margin-bottom: 0 !important;
-        }
-
-        .el-dialog__body {
-            padding: 10px 20px 30px;
-        }
-
-        .el-dialog__footer {
-            padding: 15px 20px;
-        }
-
-        .el-dialog--small .el-table {
-            min-height: 350px;
-        }
-
-        .el-dialog--small .el-table tr {
-            cursor: pointer;
-        }
-
-        .el-input__icon + .el-input__inner {
-            padding-right: 30px;
-        }
-    </style>
-</head>
+<title>接收日志</title>
 <body>
 <div id="app">
     <div class="xe-pageHeader">
-        任务日志筛选
+        接收日志筛选
     </div>
-    <el-form label-width="100px">
+    <el-form ref="logForm" label-width="100px">
         <div class="xe-block">
             <el-form-item label="创建时间" class="xe-col-3">
-                <el-date-picker
-                        style="width:114px;"
-                        v-model="beginDate"
-                        type="datetime"
-                        :clearable="false"
-                        :editable="false"
-                        placeholder="选择起始时间">
-                </el-date-picker>
-                <label for="" style="width:15px;">至</label>
-                <el-date-picker
-                        style="width:114px;"
-                        v-model="endDate"
-                        type="datetime"
-                        :clearable="false"
-                        :editable="false"
-                        placeholder="选择结束时间">
+                <el-date-picker v-model="logForm.dateRange" type="datetimerange" :picker-options="pickerOptions"
+                                placeholder="选择时间范围" format="yyyy-MM-dd HH:mm" align="left"
+                                style="font-size: 10px;">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="业务单号" class="xe-col-3">
-                <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
+                <el-input v-model="logForm.refNo" placeholder="请输入内容"></el-input>
             </el-form-item>
-            <el-form-item label="任务类型" class="xe-col-3">
-                <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
-            </el-form-item>
-        </div>
-        <div class="xe-block">
-            <el-form-item label="任务来源" class="xe-col-3">
-                <el-input v-model="orderCode" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item label="任务状态" class="xe-col-3">
-                <el-select v-model="wareHouseName" placeholder="请选择">
+            <el-form-item label="业务类型" class="xe-col-3">
+                <el-select v-model="logForm.logBusinessType" clearable placeholder="请选择">
                     <el-option
-                            v-for="item in wareHouseOptions"
+                            v-for="item in logBusinessTypeOptions"
+                            :key="item.value"
                             :label="item.label"
                             :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
         </div>
+        <div class="xe-block">
+            <el-form-item label="发送系统" class="xe-col-3">
+                <el-select v-model="logForm.logFromSys" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in logSourceSysOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="接收系统" class="xe-col-3">
+                <el-select v-model="logForm.logToSys" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in logSourceSysOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="执行状态" class="xe-col-3">
+                <el-select v-model="logForm.logStatus" clearable placeholder="请选择">
+                    <el-option
+                            v-for="item in logStatusOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+        </div>
+        <div class="xe-block">
+            <el-form-item label="" class="xe-col-3">
+                <el-button type="primary" @click="doSearch">筛选</el-button>
+                <el-button @click="resetForm">重置</el-button>
+            </el-form-item>
+        </div>
     </el-form>
     <div class="xe-pageHeader">
-        任务日志列表
+        接收日志列表
     </div>
-    <div class="ofc-block">
-        <el-table :data="orderData" border @selection-change="handleSelectionChange" style="width: 100%">
-            <el-table-column type="index" label="序号"></el-table-column>
-            <el-table-column property="taskType" label="任务类型"></el-table-column>
-            <el-table-column property="refNo" label="业务单号"></el-table-column>
-            <el-table-column property="taskSource" label="任务来源"></el-table-column>
-            <el-table-column property="taskExeCount" label="执行次数"></el-table-column>
-            <el-table-column property="exeInstanceIp" label="执行IP"></el-table-column>
-            <el-table-column property="taskStatus" label="任务状态"></el-table-column>
-            <el-table-column property="creationTime" label="创建时间"></el-table-column>
-            <el-table-column property="exeTime" label="执行时间"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="100">
-                <template scope="scope">
-                    <el-button @click="editTaskLog" type="text" size="small">查看</el-button>
-                    <el-button @click="delTaskLog" type="text" size="small">删除</el-button>
-                    <el-button @click="resendTaskLog" type="text" size="small">重新发送</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage"
-                       :current-page="taskCurrentPage" :page-sizes="pageSizes" :page-size="pageSize"
-                       layout="total, sizes, prev, pager, next" :total="totalTask">
-        </el-pagination>
-    </div>
+    <el-table :data="logData" border @selection-change="handleSelectionChange" style="width: 100%">
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column property="logBusinessType" label="业务类型"></el-table-column>
+        <el-table-column property="refNo" label="业务单号"></el-table-column>
+        <el-table-column property="logFromSys" label="发送系统"></el-table-column>
+        <el-table-column property="logToSys" label="接收系统"></el-table-column>
+        <el-table-column property="logStatus" label="执行状态" width="80px" align="center"></el-table-column>
+        <el-table-column property="processCount" label="执行次数" width="70px" align="center"></el-table-column>
+        <el-table-column property="creationTime" label="创建时间" align="center"></el-table-column>
+        <el-table-column property="processTime" label="执行时间" align="center"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
+            <template scope="scope">
+                <el-button @click.native.prevent="showReceiveLogDetail(scope.$index, scope.row)" type="text"
+                           size="small">查看
+                </el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentPage"
+                   :current-page="pageInfo.pageNum" :page-sizes="pageInfo.xePageSizes"
+                   :page-size="pageInfo.pageSize"
+                   layout="total, sizes, prev, pager, next" :total="pageInfo.total">
+    </el-pagination>
 </div>
 </body>
 <script>
     new Vue({
         el: '#app',
         data: {
-            beginDate: new Date().getTime() - 3600 * 1000 * 24 * 2,
-            endDate: new Date(),
+            logBusinessTypeOptions: [],
+            logSourceSysOptions: [],
+            logStatusOptions: [
+                {label: '待处理', value: '1'},
+                {label: '处理中', value: '2'},
+                {label: '处理成功', value: '3'},
+                {label: '处理失败', value: '4'}
+            ],
+            logForm: {
+                dateRange: [new Date(new Date().setHours(0, 0, 0, 0)), new Date(new Date().setHours(23, 59, 59, 59))],
+                logBusinessType: '',
+                refNo: '',
+                logFromSys: '',
+                logToSys: '',
+                logStatus: ''
+            },
+            pageInfo: {
+                total: 0,
+                pageNum: 1,
+                pageSize: 10,
+                xePageSizes: [10, 20, 50, 100]
+            },
+            logData: [],
+            pickerOptions: {
+                shortcuts: [{
+                    text: '最近一周',
+                    onClick(picker) {
+                        const end = new Date(new Date().setHours(23, 59, 59, 59));
+                        const start = new Date(new Date().setHours(0, 0, 0, 0));
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近一个月',
+                    onClick(picker) {
+                        const end = new Date(new Date().setHours(23, 59, 59, 59));
+                        const start = new Date(new Date().setHours(0, 0, 0, 0));
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近三个月',
+                    onClick(picker) {
+                        const end = new Date(new Date().setHours(23, 59, 59, 59));
+                        const start = new Date(new Date().setHours(0, 0, 0, 0));
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }]
+            }
         },
         beforeMount: function () {
-
+            var vueObj = this;
+            // 业务类型
+            var param = {};
+            param.enumSys = 'OFC';
+            param.enumType = 'LogBusinessTypeEnum';
+            CommonClient.post(sys.rootPath + "/ofc/enum/queryEnums", param, function (result) {
+                if (result == undefined || result == null) {
+                    vueObj.$message.error('查询业务类型发生错误！');
+                } else if (result.code == 200) {
+                    if (result.result.length > 0) {
+                        $.each(result.result, function (index, OfcEnumeration) {
+                            var enumeration = {};
+                            enumeration.label = OfcEnumeration.enumName;
+                            enumeration.value = OfcEnumeration.enumValue;
+                            vueObj.logBusinessTypeOptions.push(enumeration);
+                        });
+                    } else {
+                        console.info("暂时未查询到业务类型信息！");
+                    }
+                }
+            });
+            // 系统类型
+            var param = {};
+            param.enumSys = 'OFC';
+            param.enumType = 'LogSourceSysEnum';
+            CommonClient.post(sys.rootPath + "/ofc/enum/queryEnums", param, function (result) {
+                if (result == undefined || result == null) {
+                    vueObj.$message.error('查询业务类型发生错误！');
+                } else if (result.code == 200) {
+                    if (result.result.length > 0) {
+                        $.each(result.result, function (index, OfcEnumeration) {
+                            var enumeration = {};
+                            enumeration.label = OfcEnumeration.enumName;
+                            enumeration.value = OfcEnumeration.enumValue;
+                            vueObj.logSourceSysOptions.push(enumeration);
+                        });
+                    } else {
+                        console.info("暂时未查询到业务类型信息！");
+                    }
+                }
+            });
         },
-        methods: {}
+        created: function () {
+            this.doSearch();
+        },
+        methods: {
+            handleSelectionChange: function (val) {
+
+            },
+            handleSizeChange: function (val) {
+                this.pageInfo.pageSize = val;
+                this.doSearch();
+            },
+            handleCurrentPage: function (val) {
+                this.pageInfo.pageNum = val;
+                this.doSearch();
+            },
+            doSearch: function () {
+                var vueObj = this;
+                vueObj.logData = [];
+                var taskParam = {};
+                taskParam.pageNum = this.pageInfo.pageNum;
+                taskParam.pageSize = this.pageInfo.pageSize;
+//                var ofcTaskInterfaceLogVo = {};
+                taskParam.beginDate = DateUtil.format(this.logForm.dateRange[0], 'yyyy-MM-dd HH:mm:ss');
+                taskParam.endDate = DateUtil.format(this.logForm.dateRange[1], 'yyyy-MM-dd HH:mm:ss');
+                taskParam.logBusinessType = this.logForm.logBusinessType;
+                taskParam.refNo = StringUtil.trim(this.logForm.refNo);
+                taskParam.logFromSys = this.logForm.logFromSys;
+                taskParam.logToSys = this.logForm.logToSys;
+                taskParam.logStatus = this.logForm.logStatus;
+//                taskParam.param = ofcTaskInterfaceLogVo;
+                CommonClient.post(sys.rootPath + "/ofc/interface/queryReceiveLog", taskParam, function (result) {
+                    if (result == undefined || result == null || result.code == 500) {
+                        vueObj.$message.error('查询接收日志发生错误！');
+                    } else if (result.code == 200) {
+                        if (result.result.list.length > 0) {
+                            $.each(result.result.list, function (index, OfcInterfaceReceiveLog) {
+                                var receiveLog = {};
+                                receiveLog.id = OfcInterfaceReceiveLog.id;
+                                receiveLog.logBusinessType = OfcInterfaceReceiveLog.logBusinessType;
+                                receiveLog.refNo = OfcInterfaceReceiveLog.refNo;
+                                receiveLog.logFromSys = OfcInterfaceReceiveLog.logFromSys;
+                                receiveLog.logToSys = OfcInterfaceReceiveLog.logToSys;
+                                receiveLog.logStatus = OfcInterfaceReceiveLog.logStatus;
+                                receiveLog.processCount = OfcInterfaceReceiveLog.processCount;
+                                receiveLog.creationTime = OfcInterfaceReceiveLog.creationTime;
+                                receiveLog.processTime = OfcInterfaceReceiveLog.processTime;
+                                vueObj.logData.push(receiveLog);
+                            });
+                            vueObj.pageInfo.total = result.result.total;
+                        } else {
+                            console.info("暂时未查询到接收日志信息！");
+                        }
+                    }
+                });
+            },
+            resetForm: function () {
+                this.taskForm.dateRange = [new Date(new Date().setHours(0, 0, 0, 0)), new Date(new Date().setHours(23, 59, 59, 59))];
+                this.logForm.logBusinessType = '';
+                this.logForm.refNo = '';
+                this.logForm.logFromSys = '';
+                this.logForm.logToSys = '';
+                this.logForm.logStatus = '';
+            },
+            showReceiveLogDetail: function (index, row) {
+                var url = "/ofc/interface/showReceiveLogDetail?id=" + row.id;
+                var html = window.location.href;
+                var index = html.indexOf("/index#");
+                window.open(html.substring(0, index) + "/index#" + url);
+            }
+        }
     });
 </script>
