@@ -65,7 +65,14 @@
         <el-table-column property="taskSource" label="任务来源"></el-table-column>
         <el-table-column property="taskExeCount" label="执行次数" width="70px" align="center"></el-table-column>
         <el-table-column property="exeInstanceIp" label="执行IP"></el-table-column>
-        <el-table-column property="taskStatus" label="任务状态" width="80px" align="center"></el-table-column>
+        <el-table-column property="taskStatus" label="任务状态" width="90px" align="center">
+            <template scope="scope">
+                <el-tag v-if="scope.row.taskStatus == '待处理'" type="gray">{{ scope.row.taskStatus }}</el-tag>
+                <el-tag v-else-if="scope.row.taskStatus == '处理中'" type="primary">{{ scope.row.taskStatus }}</el-tag>
+                <el-tag v-else-if="scope.row.taskStatus == '处理失败'" type="danger">{{ scope.row.taskStatus }}</el-tag>
+                <el-tag v-else-if="scope.row.taskStatus == '处理成功'" type="success">{{ scope.row.taskStatus }}</el-tag>
+            </template>
+        </el-table-column>
         <el-table-column property="creationTime" label="创建时间" align="center"></el-table-column>
         <el-table-column property="exeTime" label="执行时间" align="center"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">

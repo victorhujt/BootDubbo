@@ -73,8 +73,15 @@
         <el-table-column property="logBusinessType" label="业务类型"></el-table-column>
         <el-table-column property="refNo" label="业务单号"></el-table-column>
         <el-table-column property="logFromSys" label="发送系统"></el-table-column>
-        <el-table-column property="logToSys" label="接收系统"></el-table-column>
-        <el-table-column property="logStatus" label="执行状态" width="80px" align="center"></el-table-column>
+        <el-table-column property="logToSys" label="接收系统" width="90px"></el-table-column>
+        <el-table-column property="logStatus" label="执行状态" width="90px" align="center">
+            <template scope="scope">
+                <el-tag v-if="scope.row.logStatus == '待处理'" type="gray">{{ scope.row.logStatus }}</el-tag>
+                <el-tag v-else-if="scope.row.logStatus == '处理中'" type="primary">{{ scope.row.logStatus }}</el-tag>
+                <el-tag v-else-if="scope.row.logStatus == '处理失败'" type="danger">{{ scope.row.logStatus }}</el-tag>
+                <el-tag v-else-if="scope.row.logStatus == '处理成功'" type="success">{{ scope.row.logStatus }}</el-tag>
+            </template>
+        </el-table-column>
         <el-table-column property="processCount" label="执行次数" width="70px" align="center"></el-table-column>
         <el-table-column property="creationTime" label="创建时间" align="center"></el-table-column>
         <el-table-column property="processTime" label="执行时间" align="center"></el-table-column>
