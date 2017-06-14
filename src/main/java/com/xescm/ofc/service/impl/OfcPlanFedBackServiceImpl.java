@@ -93,6 +93,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                             + " " + "车辆已发运，发往目的地：");
                     if (!flag) {
                         orderStatus.setLastedOperTime(traceTime);
+                        orderStatus.setTraceStatus("30");
+                        orderStatus.setTrace("发车");
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + "车辆已发运，发往目的地：" + destination);
                         logger.info("序号：2-insertstatus ===== 订单号{}=> 跟踪状态{}", transPortNo, orderStatus.getNotes());
@@ -115,6 +117,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     flag = checkStatus(false, statusList, "end", "客户已签收");
                     if (!flag) {
                         orderStatus.setLastedOperTime(traceTime);
+                        orderStatus.setTraceStatus("50");
+                        orderStatus.setTrace("签收");
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1) + " " + "客户已签收");
                         logger.info("跟踪状态已签收");
                         ofcOrderStatusService.save(orderStatus);
