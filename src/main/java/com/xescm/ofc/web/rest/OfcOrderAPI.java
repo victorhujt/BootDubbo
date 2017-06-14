@@ -2,21 +2,40 @@ package com.xescm.ofc.web.rest;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.epc.edas.dto.SmsCodeApiDto;
+import com.xescm.epc.edas.service.EpcSendMessageEdasService;
+import com.xescm.ofc.domain.OfcIplimitRule;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
-import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.service.OfcIpLimitRuleService;
 import com.xescm.ofc.service.OfcMobileOrderService;
+import com.xescm.ofc.utils.IpUtils;
+import com.xescm.ofc.utils.RedisOperationUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.enums.ResultCodeEnum.*;
 
 /**
  * Created by lyh on 2017/3/31.
@@ -30,10 +49,16 @@ public class OfcOrderAPI {
     @Resource
     private OfcMobileOrderService ofcMobileOrderService;
     @Resource
-    private OfcOrderStatusEdasService ofcOrderStatusEdasService;
+    private OfcOrderStatusEdasService OfcOrderStatusEdasService;
+    @Resource
+    private OfcIpLimitRuleService ofcIpLimitRuleService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private EpcSendMessageEdasService epcSendMessageEdasService;
 
     /**
-     * 订单5分钟后依然未处理完, 重新置为待处理, 并重新缓存到Redis中
+     * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中
      */
     @RequestMapping(value = "dealDingdingOrder", method = {RequestMethod.POST})
     @ResponseBody
@@ -51,17 +76,30 @@ public class OfcOrderAPI {
      * @param code 客户订单号 或者运输单号 或者订单号
      * @return  订单号集合
      */
-    @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.POST})
+    @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.GET})
     @ResponseBody
-    public Wrapper queryOrderByCode(String code) {
+    public Wrapper queryOrderByCode(HttpServletRequest request,String code,String phone,String captchaCode) {
         try {
+            RedisOperationUtils redisOperationUtils = new RedisOperationUtils(stringRedisTemplate);
             if (PubUtils.isSEmptyOrNull(code)) {
                 logger.error("订单查询入参为空!");
-                throw new BusinessException("请输入单号!");
+                throw new BusinessException(PARAMERROR.getType(),PARAMERROR.getName());
+            }
+
+            if(!PubUtils.isSEmptyOrNull(captchaCode) && !PubUtils.isSEmptyOrNull(phone)){
+                if(!redisOperationUtils.hasKey(phone+captchaCode)){
+                    logger.error(CAPTCHACODEERROR.getName());
+                    throw new BusinessException(CAPTCHACODEERROR.getType(),CAPTCHACODEERROR.getName());
+                }else{
+                    redisOperationUtils.deleteKey(captchaCode);
+                }
             }
             logger.info("订单查询 ==> code : {}", code);
+
+            checkLimit(redisOperationUtils,request);
+
             //查询结果是订单号集合
-            Wrapper result = ofcOrderStatusEdasService.queryOrderByCode(code);
+            Wrapper result = OfcOrderStatusEdasService.queryOrderByCode(code);
             if(result == null){
                 logger.error("没有查询到该订单!");
                 throw new BusinessException("不存在符合条件的订单!");
@@ -75,7 +113,7 @@ public class OfcOrderAPI {
                 logger.error("没有查询到该订单!");
                 throw new BusinessException("不存在符合条件的订单!");
             }
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+            return result;
         } catch (BusinessException ex) {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
@@ -90,17 +128,19 @@ public class OfcOrderAPI {
      * @param orderCode 订单号
      * @return 订单的追踪状态
      */
-    @RequestMapping(value = "traceByOrderCode", method = {RequestMethod.POST})
+    @RequestMapping(value = "traceByOrderCode", method = {RequestMethod.GET})
     @ResponseBody
-    public Wrapper<OfcTraceOrderDTO> traceByOrderCode(String orderCode) {
+    public Wrapper<OfcTraceOrderDTO> traceByOrderCode(HttpServletRequest request,String orderCode) {
         Wrapper<OfcTraceOrderDTO> result;
         try {
             if (PubUtils.isSEmptyOrNull(orderCode)) {
                 logger.error("订单跟踪查询入参为空!");
                 throw new BusinessException("请输入单号!");
             }
+            RedisOperationUtils redisOperationUtils = new RedisOperationUtils(stringRedisTemplate);
+            checkLimit(redisOperationUtils,request);
             logger.info("订单跟踪查询 ==> orderCode : {}", orderCode);
-             result = ofcOrderStatusEdasService.traceByOrderCode(orderCode);
+             result = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
             if(result == null){
                 logger.error("没有查询到订单的状态跟踪信息!");
                 throw new BusinessException("没有查询到订单的状态跟踪信息!");
@@ -114,5 +154,179 @@ public class OfcOrderAPI {
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
         return result;
+    }
+
+
+    @RequestMapping(value = "getCaptcha", method = {RequestMethod.GET})
+    public void getCaptcha(HttpServletRequest request, HttpServletResponse response){
+        int width = 200;// 验证码图片宽
+        int height = 60;// 验证码图片高
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics g = null;
+        ServletOutputStream sos = null;
+        try {
+            g = image.getGraphics();
+            Random random = new Random();// 创建
+            g.setColor(getRandColor(200, 250));
+            g.fillRect(0, 0, width, height);
+            g.setColor(getRandColor(0, 255));
+            g.drawRect(0, 0, width - 1, height - 1);
+            g.setColor(getRandColor(160, 200));// 随机产生5条干扰线，使图象中的认证码不易被其它程序探测
+            for (int i = 0; i < 8; i++) {
+                int x = random.nextInt(width);
+                int y = random.nextInt(height);
+                int x1 = random.nextInt(width);
+                int y1 = random.nextInt(height);
+                g.drawLine(x, y, x1, y1);
+            }
+            g.setColor(getRandColor(160, 200));// 随机产生100点，使图象中的认证码不易被其它程序探测到
+            for (int i = 0; i < 100; i++) {
+                int x = random.nextInt(width);
+                int y = random.nextInt(height);
+                g.drawLine(x, y, x, y);
+            }
+            Font font = new Font("Consolas", Font.ITALIC, 50);
+            g.setFont(font);// 设置字体
+            int length = 6; // 设置默认生成4个验证码
+            String s = "abcdefghjklmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 设置包括"a-z"和数0-9"
+            String sRand = "";
+            g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
+            for (int i = 0; i < length; i++) {
+                String ch = String.valueOf(s.charAt(random.nextInt(s.length())));
+                sRand += ch;
+                g.drawString(ch, 30 * i + 15, (random.nextInt(5) - 2) * i + 45);
+            }
+            RedisOperationUtils redisOperationUtils = new RedisOperationUtils(stringRedisTemplate);
+            redisOperationUtils.pushKeyToCache(sRand,"");
+            g.dispose();// 图像生效
+            // 禁止图像缓存
+            response.reset();
+            response.resetBuffer();
+            response.setHeader("Pragma", "No-cache");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setDateHeader("Expires", 0);
+            response.setContentType("image/jpeg");
+            // 创建二进制的输出
+            sos = response.getOutputStream();
+            // 将图像输出到Servlet输出
+            ImageIO.write(image, "jpeg", sos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                response.flushBuffer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                g.dispose();
+            } finally {
+                if (sos != null) {
+                    try {
+                        sos.flush();
+                        sos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    private Color getRandColor(int lower, int upper) {
+        Random random = new Random();
+        if (upper > 255)
+            upper = 255;
+        if (upper < 1)
+            upper = 1;
+        if (lower < 1)
+            lower = 1;
+        if (lower > 255)
+            lower = 255;
+        int r = lower + random.nextInt(upper - lower);
+        int g = lower + random.nextInt(upper - lower);
+        int b = lower + random.nextInt(upper - lower);
+        return new Color(r, g, b);
+    }
+    @RequestMapping(value = "getValidateCode", method = {RequestMethod.GET})
+    @ResponseBody
+    public void getValidateCode(HttpServletRequest request,String phone){
+        String ip = IpUtils.getIpAddr(request);
+        Random random = new Random();// 创建
+        String s = "abcdefghjklmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        String validateCode = "";
+        for (int i = 0; i < 4; i++) {
+            String ch = String.valueOf(s.charAt(random.nextInt(s.length())));
+            validateCode += ch;
+        }
+        logger.info("接收验证码的手机号为:{},验证码为:{}",phone,validateCode);
+        SmsCodeApiDto SmsCodeApiDto = new SmsCodeApiDto();
+        SmsCodeApiDto.setMobile(phone);
+        SmsCodeApiDto.setSmsTempletCode("SMS_70510558");
+        SmsCodeApiDto.setParam(validateCode);
+        RedisOperationUtils redisOperationUtils = new RedisOperationUtils(stringRedisTemplate);
+        Wrapper result = epcSendMessageEdasService.sendSms(SmsCodeApiDto);
+        result.setCode(200);
+        if(result.getCode() == Wrapper.SUCCESS_CODE){
+            logger.info("发送到手机号的验证码成功发送，手机号为:{},验证码为:{}",phone,validateCode);
+            //缓存三分钟
+            redisOperationUtils.pushKeyToCache(phone+validateCode,validateCode,3l,TimeUnit.MINUTES);
+        }
+    }
+
+    public void checkLimit(RedisOperationUtils redisOperationUtils,HttpServletRequest request ){
+        String ip = IpUtils.getIpAddr(request);
+        if(redisOperationUtils.hasKey(ip)){
+            redisOperationUtils.increment(ip, Long.valueOf(1l));
+            throw new BusinessException("您的ip已经被冻结，请稍后再试");
+        }
+
+        OfcIplimitRule ofcIpLimitRule = new OfcIplimitRule();
+        ofcIpLimitRule.setIp(ip);
+        List<OfcIplimitRule> rules = ofcIpLimitRuleService.select(ofcIpLimitRule);
+        if(!CollectionUtils.isEmpty(rules)){
+            OfcIplimitRule ofcIplimitRule = rules.get(0);
+            if(IS_BLACK.equals(ofcIplimitRule.getBlack())){
+                throw new BusinessException("您上黑名单!");
+            }
+        }
+
+        Long currentTime = System.currentTimeMillis();
+        if(redisOperationUtils.hasKey(ip+QUERY_REQUEST_COUNT)){
+            Long reqCount =  redisOperationUtils.getValue(ip+QUERY_REQUEST_COUNT);
+            Long first = redisOperationUtils.getValue(ip+FIRST_REQUEST_TIME);
+            redisOperationUtils.increment(ip+QUERY_REQUEST_COUNT, Long.valueOf(1l));
+            //第一阀值 5分钟请求次数超过设定值
+            logger.info("距离第一次请求的时间为:{}",currentTime - first);
+            logger.info("请求的次数为:{}",reqCount);
+
+            if((currentTime - first) > 2*60*1000 && (currentTime - first) < 5*60*1000){
+                if(reqCount > 20 && reqCount < 200){
+                    logger.error("操作过于频繁,ip为:{}",ip);
+                    throw new BusinessException(OPERATIONSTOOFREQUENT.getType(),OPERATIONSTOOFREQUENT.getName());
+                }
+            }
+
+            if((currentTime - first) > 5*60*1000 && (currentTime - first)< 10*60*1000){
+                //第二阀值
+                if(reqCount > 200 && reqCount < 500) {
+                    redisOperationUtils.pushKeyToCache(ip,"freezing",1l, TimeUnit.MINUTES);//ip缓存十分钟
+                    logger.info("ip缓存10分钟，{}",ip);
+                }
+            }
+
+            if(currentTime - first > 10*60*1000){
+                if(reqCount > 500) {
+                    OfcIplimitRule rule = new OfcIplimitRule();
+                    rule.setBlack(IS_BLACK);
+                    rule.setIp(ip);
+                    ofcIpLimitRuleService.save(rule);
+                    logger.info("ip加入黑名单，{}",ip);
+                }
+            }
+    }else{
+        redisOperationUtils.pushKeyToCache(ip+QUERY_REQUEST_COUNT,String.valueOf(1l),15L,TimeUnit.MINUTES);
+        redisOperationUtils.pushKeyToCache(ip+FIRST_REQUEST_TIME,String.valueOf(System.currentTimeMillis()),15L,TimeUnit.MINUTES);
+    }
     }
 }

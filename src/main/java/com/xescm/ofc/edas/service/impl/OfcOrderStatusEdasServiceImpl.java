@@ -56,6 +56,9 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
             Wrapper<List<QueryOrderStatusDto>> wrapper = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
             return wrapper;
         } catch (IllegalArgumentException ex) {
+
+
+
             logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (BusinessException ex) {

@@ -45,6 +45,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     @Resource
     private OrderFollowOperService orderFollowOperService;
 
+    @Resource
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+
 
 
     @Override
@@ -359,10 +362,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             throw new BusinessException("哎呀,没有查询到相关的订单");
         }
 
+        List<OfcOrderStatusDTO> orderStatusDtos = new ArrayList<>();
         //获取订单的跟踪状态
         List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
         if(!CollectionUtils.isEmpty(ofcOrderStatuses)){
-            List<OfcOrderStatusDTO> orderStatusDtos = new ArrayList<>();
             for (OfcOrderStatus status : ofcOrderStatuses) {
                 if(PubUtils.isSEmptyOrNull(status.getTrace())){
                     continue;
@@ -375,11 +378,26 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 dto.setNotes(status.getNotes());
                 orderStatusDtos.add(dto);
             }
-            return orderStatusDtos;
+        }
+        //查询出车牌号通过车牌号查询出运输的轨迹
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+        if(ofcDistributionBasicInfo != null){
+            String plateNumber = ofcDistributionBasicInfo.getPlateNumber();
+        }
 
-        }else{
+
+
+
+
+
+
+
+
+
+        else{
             throw new BusinessException("哎呀,没有查询到订单的跟踪信息");
         }
+        return orderStatusDtos;
     }
 
 
