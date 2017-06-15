@@ -8,10 +8,12 @@ import com.xescm.epc.edas.dto.SmsCodeApiDto;
 import com.xescm.epc.edas.service.EpcSendMessageEdasService;
 import com.xescm.ofc.config.IpLimitRuleConfig;
 import com.xescm.ofc.domain.OfcIplimitRule;
+import com.xescm.ofc.domain.OfcRuntimeProperty;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.service.OfcIpLimitRuleService;
 import com.xescm.ofc.service.OfcMobileOrderService;
+import com.xescm.ofc.service.OfcRuntimePropertyService;
 import com.xescm.ofc.utils.IpUtils;
 import com.xescm.ofc.utils.RedisOperationUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,6 +61,9 @@ public class OfcOrderAPI {
     @Resource
     private RedisOperationUtils redisOperationUtils;
 
+    @Resource
+    private OfcRuntimePropertyService ofcRuntimePropertyService;
+
     /**
      * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中
      */
@@ -81,39 +86,43 @@ public class OfcOrderAPI {
     @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.GET})
     @ResponseBody
     public Wrapper queryOrderByCode(HttpServletRequest request,String code,String phone,String captchaCode) {
+        Wrapper result = null;
         try {
-            if (PubUtils.isSEmptyOrNull(code)) {
-                logger.error("订单查询入参为空!");
-                throw new BusinessException(PARAMERROR.getType(),PARAMERROR.getName());
-            }
-
-            if(!PubUtils.isSEmptyOrNull(captchaCode) && !PubUtils.isSEmptyOrNull(phone)){
-                if(!redisOperationUtils.hasKey(phone+captchaCode)){
-                    logger.error(CAPTCHACODEERROR.getName());
-                    throw new BusinessException(CAPTCHACODEERROR.getType(),CAPTCHACODEERROR.getName());
-                }else{
-                    redisOperationUtils.deleteKey(captchaCode);
+            if(queryOrderIsSwitch("quey_order_switch")){
+                if (PubUtils.isSEmptyOrNull(code)) {
+                    logger.error("订单查询入参为空!");
+                    throw new BusinessException(PARAMERROR.getType(),PARAMERROR.getName());
                 }
-            }
 
-            logger.info("订单查询 ==> code : {}", code);
-            checkLimit(redisOperationUtils,request);
-            //查询结果是订单号集合
-            Wrapper result = OfcOrderStatusEdasService.queryOrderByCode(code);
-            if(result == null){
-                logger.error("没有查询到该订单!");
-                throw new BusinessException("不存在符合条件的订单!");
+                if(!PubUtils.isSEmptyOrNull(captchaCode) && !PubUtils.isSEmptyOrNull(phone)){
+                    if(!redisOperationUtils.hasKey(phone+captchaCode)){
+                        logger.error(CAPTCHACODEERROR.getName());
+                        throw new BusinessException(CAPTCHACODEERROR.getType(),CAPTCHACODEERROR.getName());
+                    }else{
+                        redisOperationUtils.deleteKey(captchaCode);
+                    }
+                }
+
+                logger.info("订单查询 ==> code : {}", code);
+                checkLimit(redisOperationUtils,request);
+                //查询结果是订单号集合
+                result = OfcOrderStatusEdasService.queryOrderByCode(code);
+                if(result == null){
+                    logger.error("没有查询到该订单!");
+                    throw new BusinessException("不存在符合条件的订单!");
+                }
+                if(result.getCode() == Wrapper.ERROR_CODE){
+                    logger.error("没有查询到该订单!");
+                    throw new BusinessException(result.getMessage());
+                }
+                List<String> orderCodes = (List<String>) result.getResult();
+                if (CollectionUtils.isEmpty(orderCodes)) {
+                    logger.error("没有查询到该订单!");
+                    throw new BusinessException("不存在符合条件的订单!");
+                }
+            }else{
+                throw new BusinessException("查询接口已经关闭!");
             }
-            if(result.getCode() == Wrapper.ERROR_CODE){
-                logger.error("没有查询到该订单!");
-                throw new BusinessException(result.getMessage());
-            }
-            List<String> orderCodes = (List<String>) result.getResult();
-            if (CollectionUtils.isEmpty(orderCodes)) {
-                logger.error("没有查询到该订单!");
-                throw new BusinessException("不存在符合条件的订单!");
-            }
-            return result;
         } catch (BusinessException ex) {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
@@ -121,6 +130,7 @@ public class OfcOrderAPI {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
+         return result;
     }
 
     /**
@@ -133,21 +143,26 @@ public class OfcOrderAPI {
     public Wrapper<OfcTraceOrderDTO> traceByOrderCode(HttpServletRequest request,String orderCode) {
         Wrapper<OfcTraceOrderDTO> result;
         try {
-            if (PubUtils.isSEmptyOrNull(orderCode)) {
-                logger.error("订单跟踪查询入参为空!");
-                throw new BusinessException("请输入单号!");
+            if(queryOrderIsSwitch("quey_order_switch")){
+                if (PubUtils.isSEmptyOrNull(orderCode)) {
+                    logger.error("订单跟踪查询入参为空!");
+                    throw new BusinessException("请输入单号!");
+                }
+                checkLimit(redisOperationUtils,request);
+                logger.info("订单跟踪查询 ==> orderCode : {}", orderCode);
+                result = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
+                if(result == null){
+                    logger.error("没有查询到订单的状态跟踪信息!");
+                    throw new BusinessException("没有查询到订单的状态跟踪信息!");
+                }
+                if(result.getCode() == Wrapper.ERROR_CODE){
+                    logger.error("订单跟踪查询出现异常");
+                    throw new BusinessException(result.getMessage());
+                }
+            }else{
+                throw new BusinessException("查询接口已经关闭!");
             }
-            checkLimit(redisOperationUtils,request);
-            logger.info("订单跟踪查询 ==> orderCode : {}", orderCode);
-             result = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
-            if(result == null){
-                logger.error("没有查询到订单的状态跟踪信息!");
-                throw new BusinessException("没有查询到订单的状态跟踪信息!");
-            }
-            if(result.getCode() == Wrapper.ERROR_CODE){
-                logger.error("订单跟踪查询出现异常");
-                throw new BusinessException(result.getMessage());
-            }
+
         }catch (Exception e){
             logger.error("订单跟踪查询出现异常:{}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
@@ -340,4 +355,23 @@ public class OfcOrderAPI {
         redisOperationUtils.set(ip+FIRST_REQUEST_TIME,String.valueOf(System.currentTimeMillis()),15L,TimeUnit.MINUTES);
     }
     }
+
+    private boolean queryOrderIsSwitch(String name){
+        boolean flag = false;
+        OfcRuntimeProperty ofcRuntimeProperty = ofcRuntimePropertyService.findByName(name);
+        if(ofcRuntimeProperty != null) {
+            String value = ofcRuntimeProperty.getValue();
+            if(!PubUtils.isSEmptyOrNull(value)){
+               flag = "on".equals(value)?true:false;
+            }
+        }
+        return flag;
+    }
+
+
+
+
+
+
+
 }
