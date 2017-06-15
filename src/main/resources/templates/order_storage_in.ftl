@@ -990,7 +990,7 @@
                 this.orderForm.departureProvince=val.proviceName;
                 this.orderForm.departureCity=val.cityName;
                 this.orderForm.departureDistrict=val.areaName;
-                this.orderForm.departureTowns=val.areaName;
+                this.orderForm.departureTowns=val.streetName;
                 this.orderForm.departureDetailAddress=val.departureDetailAddress;
                 this.consignorDataInfo.chosenSend = false;
             },
