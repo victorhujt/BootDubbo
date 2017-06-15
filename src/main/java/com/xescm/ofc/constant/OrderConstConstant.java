@@ -155,7 +155,9 @@ public final class OrderConstConstant {
 
     public static final String IS_BLACK="1";//1:黑名单
 
-    public static final String IS_SEND="1";// 发送验证码
+    public static final String SENDSMS_REQUEST_COUNT="sendSmsRequestCount";//
+
+    public static final String FIRST_SENDSMS_REQUEST_TIME = "firstSendSmsRequestTime";
 
     public static final String FREEZEED_IP="freezeedIp";// 冻结
 
