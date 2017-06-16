@@ -1126,7 +1126,7 @@
                 this.orderForm.destinationProvince=val.provinceName;
                 this.orderForm.destinationCity=val.cityName;
                 this.orderForm.destinationDistrict=val.areaName;
-                this.orderForm.destinationTowns=val.areaName;
+                this.orderForm.destinationTowns=val.streetName;
                 this.orderForm.destinationDetailAddress=val.destinationDetailAddress;
                 this.orderForm.consigneeType=val.type;
                 this.orderForm.consigneeCode=val.consigneeCode;
