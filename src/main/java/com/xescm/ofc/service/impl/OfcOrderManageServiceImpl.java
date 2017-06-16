@@ -276,7 +276,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      *
      * @param orderCode 订单号
      */
-    private void orderCancel(String orderCode) {
+    private void orderCancel(String orderCode,String userName) {
         logger.info("发起订单取消!");
         logger.info("==> orderCode={}", orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
@@ -325,7 +325,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         logger.info("=============> TFC取消耗时：" + (System.currentTimeMillis() - tfcStart)/1000);
                         logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
                         if (response!=null&&response.getCode()==Wrapper.SUCCESS_CODE) {
-                            whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType());
+                            whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType(),userName);
                             logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
                         }
                     } catch (Exception e) {
@@ -334,7 +334,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }else{
                     try {
-                        whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType());
+                        whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType(),userName);
                         logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
 
                     } catch (Exception e) {
@@ -413,7 +413,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param orderCode 订单编号
      * @return void
      */
-    private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode,String orderType) {
+    private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode,String orderType,String userName) {
         logger.info("调用仓储中心取消接口, 订单号:{}，参数type:{},仓库编码:{}，客户编码:{},业务类型:{}", orderCode,type,warehouseCode,customerCode,orderType);
         OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
         cancelOrderDTO.setOrderNo(orderCode);
@@ -421,6 +421,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         cancelOrderDTO.setWarehouseID(warehouseCode);
         cancelOrderDTO.setOrderType(orderType);
         cancelOrderDTO.setCustomerID(customerCode);
+        cancelOrderDTO.setOperationName(userName);
         Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
         logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
         return response;
@@ -496,7 +497,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             StringBuilder notes = new StringBuilder();
             //调用各中心请求直接取消订单
             try {
-                this.orderCancel(orderCode);
+                this.orderCancel(orderCode,authResDtoByToken.getUserName());
                 // 向调度中心发送取消mq
                 this.cancelDpcOrder(orderCode, authResDtoByToken.getUserId(), authResDtoByToken.getUserName());
             } catch (Exception e) {
@@ -2115,7 +2116,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             tfcTransportDetail.setVolume(ofcGoodsDetailsInfo.getCubage() == null ? null : ofcGoodsDetailsInfo.getCubage().doubleValue());
             tfcTransportDetail.setPrice(ofcGoodsDetailsInfo.getUnitPrice() == null ? null : ofcGoodsDetailsInfo.getUnitPrice().doubleValue());
 //            tfcTransportDetail.setMoney();
-            tfcTransportDetail.setUom(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getUnit()));
+            tfcTransportDetail.setUom(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)?ofcGoodsDetailsInfo.getPackageName():ofcGoodsDetailsInfo.getUnit()));
 //            tfcTransportDetail.setContainerQty();
             tfcTransportDetail.setProductionBatch(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getProductionBatch()));
             if (null != ofcGoodsDetailsInfo.getProductionTime()) {
