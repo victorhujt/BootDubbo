@@ -3,7 +3,6 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.epc.edas.service.EpcSendMessageEdasService;
 import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
@@ -43,10 +42,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderScreenMapper ofcOrderScreenMapper;
     @Resource
     private OfcOrderOperMapper ofcOrderOperMapper;
-
-    @Resource
-    private EpcSendMessageEdasService epcSendMessageEdasService;
-
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
 

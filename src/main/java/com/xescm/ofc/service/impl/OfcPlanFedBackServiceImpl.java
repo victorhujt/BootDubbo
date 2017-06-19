@@ -225,13 +225,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     }
 
     private void sendSmsWhileSigned(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
-        logger.info("卡班订单签收时发送短信给发货方 ofcFundamentalInformation:{}", ofcFundamentalInformation);
-        logger.info("卡班订单签收时发送短信给发货方 ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
+        logger.info("订单签收时发送短信给发货方 ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("订单签收时发送短信给发货方 ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
         if (null == ofcDistributionBasicInfo || null == ofcFundamentalInformation) {
             logger.error("入参有误!");
             return;
         }
-        String orderCode = ofcFundamentalInformation.getOrderCode();
+        String transCode = ofcDistributionBasicInfo.getTransCode();
         String phoneNumber = ofcDistributionBasicInfo.getConsignorContactPhone();
         String signedSms = ofcFundamentalInformation.getSignedSms();
         if (!StringUtils.equals(signedSms, STR_YES)) {
@@ -242,9 +242,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             logger.error("发货方电话号码为空!");
             return;
         }
+        if (PubUtils.isSEmptyOrNull(transCode)) {
+            logger.error("运输单号为空!");
+            return;
+        }
         SendSmsDTO sendSmsDTO = new SendSmsDTO();
         sendSmsDTO.setTemplate(SmsTemplatesEnum.SMS_QUERY_ORDER_CODE);
-        sendSmsDTO.setParamStr(orderCode);
+        sendSmsDTO.setCode(transCode);
         sendSmsDTO.setNumber(phoneNumber);
         Wrapper wrapper = sendSmsManager.sendSms(sendSmsDTO);
         logger.info("发送结果 == > wrapper{}", wrapper);

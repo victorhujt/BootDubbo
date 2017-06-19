@@ -287,7 +287,7 @@ public class OfcFundamentalInformation {
     private String consignmentBatchNumber;
 
     /**
-     * 是否需要发送签收短信
+     * 是否需要发送签收短信 1:是 0:否
      * @param signedSms
      */
     @Column(name = "signed_sms")
