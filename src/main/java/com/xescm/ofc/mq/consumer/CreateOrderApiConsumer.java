@@ -19,8 +19,9 @@ import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
-import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
-import com.xescm.ofc.service.*;
+import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
+import com.xescm.ofc.service.OfcOrderStatusService;
+import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
@@ -30,8 +31,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,11 +42,11 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     private Logger logger = LoggerFactory.getLogger(CreateOrderApiConsumer.class);
 
-    @Resource
-    private CreateOrderService createOrderService;
+//    @Resource
+//    private CreateOrderService createOrderService;
 
-    @Resource
-    private CreateOrderApiProducer createOrderApiProducer;
+//    @Resource
+//    private CreateOrderApiProducer createOrderApiProducer;
 
     @Resource
     private OfcPlanFedBackService ofcPlanFedBackService;
@@ -55,8 +54,8 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
 
-    @Resource
-    private GoodsAmountSyncService goodsAmountSyncService;
+//    @Resource
+//    private GoodsAmountSyncService goodsAmountSyncService;
 
     @Resource
     private MqConfig mqConfig;
@@ -65,7 +64,7 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     public  static ConcurrentHashMap MAP = new ConcurrentHashMap();
 
-    private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
+//    private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
