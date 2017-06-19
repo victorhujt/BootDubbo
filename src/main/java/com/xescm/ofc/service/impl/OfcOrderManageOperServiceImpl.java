@@ -3,11 +3,11 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.epc.edas.service.EpcSendMessageEdasService;
 import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.mapper.OfcDailyAccountMapper;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
@@ -45,7 +45,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderOperMapper ofcOrderOperMapper;
 
     @Resource
-    private OfcDailyAccountMapper ofcDailyAccountMapper;
+    private EpcSendMessageEdasService epcSendMessageEdasService;
 
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;

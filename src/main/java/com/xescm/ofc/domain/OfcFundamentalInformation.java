@@ -286,14 +286,12 @@ public class OfcFundamentalInformation {
     @Column(name = "consignment_batch_number")
     private String consignmentBatchNumber;
 
-    public void setConsignmentBatchNumber(String consignmentBatchNumber) {
-        this.consignmentBatchNumber = consignmentBatchNumber;
-    }
-
-    public String getConsignmentBatchNumber() {
-        return consignmentBatchNumber;
-    }
-
+    /**
+     * 是否需要发送签收短信
+     * @param signedSms
+     */
+    @Column(name = "signed_sms")
+    private String signedSms;
 
 
     public void setExceptionReason(String exceptionReason) {

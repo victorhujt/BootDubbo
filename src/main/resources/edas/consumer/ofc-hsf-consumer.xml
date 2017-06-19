@@ -41,9 +41,9 @@
     <!-- Epc返回映射表-->
     <hsf:consumer id="epcRecordMappedEdasService" interface="com.xescm.epc.edas.service.EpcRecordMappedEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="epcOfc2DmsEdasService" interface="com.xescm.epc.edas.service.EpcOfc2DmsEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="epcSendMessageEdasService" interface="com.xescm.epc.edas.service.EpcSendMessageEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <!--Epc调用地址映射-->
     <hsf:consumer id="epcBaiDuEdasService" interface="com.xescm.epc.edas.service.EpcBaiDuEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="epcSendMessageEdasService" interface="com.xescm.epc.edas.service.EpcSendMessageEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
 
     <!--仓储中心-->

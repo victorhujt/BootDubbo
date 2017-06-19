@@ -432,6 +432,18 @@
               <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
               </div>
             </div></div>
+
+            <div style="float:left;">
+                <label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;">发送签收短信</label>
+                <div class="col-width-168 padding-15">
+                    <div class="clearfix" >
+                        <div class="col-width-168 position-relative" style="height:34px;">
+                            <input name="signedSms" id="signedSms" type="checkbox" checked aria-controls="dynamic-table" readonly class="laydate-icon" >
+                            <label for="signedSms" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
       </form>
@@ -1300,9 +1312,11 @@
 
   $("#businessType").change(function(){
     if($("#businessType").val() == 602){
-      $(".toggle").css({"display":"inline-block"})
+      $(".toggle").css({"display":"inline-block"});
+      $("#signedSms").css({"checked":true})
     }else{
       $(".toggle").css({"display":"none"});
+        $("#signedSms").css({"checked":false})
     };
   })
 
@@ -2311,6 +2325,7 @@
       jsonStr.notes = $("#transRequire").val();//
       jsonStr.weight = $("#weightCount").html();
       jsonStr.quantity = $("#quantityCount").html();
+      jsonStr.signedSms = $("#signedSms").val();
       var cubageAmount ="";
       if($("#cubageCountHidden").html()!=""){
         cubageAmount = $("#cubageCountHidden").html();

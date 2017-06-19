@@ -134,6 +134,12 @@ public class OfcOrderDTO {
      * 开单员
      */
     private String merchandiser;
+
+    /**
+     * 是否发送签收短信
+     */
+    private String signedSms;
+
     /**
      * 运输类型
      */
