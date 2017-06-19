@@ -425,15 +425,17 @@
           </div>
         </div>
         <div class="form-group">
-          <div><label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
-            <div class="col-xs-2">
-              <div class="position-relative" style="width:433px;">
-                <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
-              <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+          <div>
+              <label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
+              <div class="col-xs-2"  style="width:463px;">
+                <div class="position-relative">
+                  <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
+                <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+                </div>
               </div>
-            </div></div>
+          </div>
             <div>
-                <label class="control-label col-label no-padding-right" for="signedSms" style="margin-left: 190px;">发送签收短信</label>
+                <label class="control-label col-label no-padding-right" for="signedSms">发送签收短信</label>
                 <div class="col-width-168 padding-15">
                     <div class="clearfix" >
                         <div class="col-width-168 position-relative" style="height:34px;">

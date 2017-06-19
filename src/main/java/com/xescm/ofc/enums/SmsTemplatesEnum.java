@@ -3,7 +3,7 @@ package com.xescm.ofc.enums;
 public enum  SmsTemplatesEnum {
 
     SMS_QUERY_ORDER_CODE("SMS_70510558", "查单验证码"),
-    SMS_ORDER_SIGEND_MSG("", "运输(卡班)签收");
+    SMS_ORDER_SIGEND_MSG("SMS_71256076", "运输(卡班)签收");
 
     SmsTemplatesEnum(String code, String desc) {
         this.code = code;
