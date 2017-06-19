@@ -432,14 +432,12 @@
               <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
               </div>
             </div></div>
-
-            <div style="float:left;">
-                <label class="control-label col-label no-padding-right" for="supplierCode" style="margin-right:8px;">发送签收短信</label>
+            <div>
+                <label class="control-label col-label no-padding-right" for="signedSms" style="margin-left: 190px;">发送签收短信</label>
                 <div class="col-width-168 padding-15">
                     <div class="clearfix" >
                         <div class="col-width-168 position-relative" style="height:34px;">
-                            <input name="signedSms" id="signedSms" type="checkbox" checked aria-controls="dynamic-table" readonly class="laydate-icon" >
-                            <label for="signedSms" class="initBtn" style="height:34px;"><i class="ace-icon fa fa-calendar icon-pic bigger-130" style="color:#333;"></i></label>
+                            <input name="signedSms" id="signedSms" type="checkbox" checked="checked" aria-controls="dynamic-table"  style="margin-left: 6px;" >
                         </div>
                     </div>
                 </div>
@@ -1313,11 +1311,12 @@
   $("#businessType").change(function(){
     if($("#businessType").val() == 602){
       $(".toggle").css({"display":"inline-block"});
-      $("#signedSms").css({"checked":true})
+      $("#signedSms").prop({"checked":true});
     }else{
       $(".toggle").css({"display":"none"});
-        $("#signedSms").css({"checked":false})
+      $("#signedSms").prop({"checked":false});
     };
+
   })
 
     function onlyNumber(value){
@@ -2325,7 +2324,11 @@
       jsonStr.notes = $("#transRequire").val();//
       jsonStr.weight = $("#weightCount").html();
       jsonStr.quantity = $("#quantityCount").html();
-      jsonStr.signedSms = $("#signedSms").val();
+        if ($("#signedSms").prop("checked")) {
+            jsonStr.signedSms = '1';
+        } else {
+            jsonStr.signedSms = '0';
+        }
       var cubageAmount ="";
       if($("#cubageCountHidden").html()!=""){
         cubageAmount = $("#cubageCountHidden").html();
