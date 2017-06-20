@@ -71,6 +71,9 @@ public class OfcOrderAPI {
     @Resource
     private OfcRuntimePropertyService ofcRuntimePropertyService;
 
+    @Resource
+    private CodeGenUtils codeGenUtils;
+
     /**
      * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中
      */
@@ -257,7 +260,7 @@ public class OfcOrderAPI {
         }else{
             redisOperationUtils.set("ip:"+ip+SENDSMS_REQUEST_COUNT,String.valueOf(1L),15L,TimeUnit.MINUTES);
         }
-        String validateCode = new CodeGenUtils().getSmsCode(4);
+        String validateCode = codeGenUtils.getSmsCode(4);
         logger.info("接收验证码的手机号为:{},验证码为:{}",phone,validateCode);
 
         SmsCodeApiDto SmsCodeApiDto = new SmsCodeApiDto();
