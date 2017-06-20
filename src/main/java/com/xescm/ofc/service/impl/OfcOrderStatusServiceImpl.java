@@ -10,10 +10,12 @@ import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.tfc.edas.model.dto.ofc.req.OfcRealTimeTraceReqDTO;
 import com.xescm.tfc.edas.service.TfcQueryGpsInfoEdasService;
@@ -358,50 +360,41 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         String departureTime = "";//发运时间
         String signTime = "";//签收时间
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-        if(ofcFundamentalInformation != null){
-          if(ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)){
-              OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
-              ofcWarehouseInformation.setOrderCode(orderCode);
-              List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
+        CheckUtils.checkArgument(ofcFundamentalInformation == null, ResultCodeEnum.RESULTISNULL);
+        if(ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)){
+          OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+          ofcWarehouseInformation.setOrderCode(orderCode);
+          List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
               if(!CollectionUtils.isEmpty(ofcWarehouseInformations) && ofcWarehouseInformations.size() == 1){
-                  if(ofcWarehouseInformations.get(0).getProvideTransport() != WEARHOUSE_WITH_TRANS){
-                      throw new BusinessException("哎呀,暂不支持不提供运输的仓储订单");
-                  }
+                  CheckUtils.checkArgument(ofcWarehouseInformations.get(0).getProvideTransport() != WEARHOUSE_WITH_TRANS, ResultCodeEnum.ISNOTSUPPORT);
               }
-          }
-        }else{
-            throw new BusinessException("哎呀,没有查询到相关的订单");
         }
-
         OfcTraceOrderDTO ofcTraceOrderDTO = new OfcTraceOrderDTO();
         List<OfcOrderStatusDTO> orderStatusDTOs = new ArrayList<>();
         //获取订单的跟踪状态
         List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
-        if(!CollectionUtils.isEmpty(ofcOrderStatuses)){
-            for (OfcOrderStatus status : ofcOrderStatuses) {
-                if(PubUtils.isSEmptyOrNull(status.getTrace())){
-                    continue;
-                }
-                //发运时间
-                if("30".equals(status.getTraceStatus())){
-                    departureTime = DateUtils.Date2String(status.getLastedOperTime(), DateUtils.DateFormatType.TYPE1);
-                }
-                //签收时间
-                if("50".equals(status.getTraceStatus())){
-                    signTime = DateUtils.Date2String(status.getLastedOperTime(), DateUtils.DateFormatType.TYPE1);
-                }
-                OfcOrderStatusDTO dto = new OfcOrderStatusDTO();
-                dto.setLastOperTime(status.getLastedOperTime());
-                dto.setOperator(PubUtils.isSEmptyOrNull(status.getOperator())?"":status.getOperator());
-                dto.setTrace(status.getTrace());
-                dto.setStatus(status.getTraceStatus());
-                dto.setNotes(status.getNotes());
-                orderStatusDTOs.add(dto);
+        CheckUtils.checkArgument(CollectionUtils.isEmpty(ofcOrderStatuses), ResultCodeEnum.RESULTISNULL);
+        for (OfcOrderStatus status : ofcOrderStatuses) {
+            if(PubUtils.isSEmptyOrNull(status.getTrace())){
+                continue;
             }
-            ofcTraceOrderDTO.setOfcOrderStatusDTOs(orderStatusDTOs);
-        } else{
-            throw new BusinessException("哎呀,没有查询到订单的跟踪信息");
+            //发运时间
+            if("30".equals(status.getTraceStatus())){
+                departureTime = DateUtils.Date2String(status.getLastedOperTime(), DateUtils.DateFormatType.TYPE1);
+            }
+            //签收时间
+            if("50".equals(status.getTraceStatus())){
+                signTime = DateUtils.Date2String(status.getLastedOperTime(), DateUtils.DateFormatType.TYPE1);
+            }
+            OfcOrderStatusDTO dto = new OfcOrderStatusDTO();
+            dto.setLastOperTime(status.getLastedOperTime());
+            dto.setOperator(PubUtils.isSEmptyOrNull(status.getOperator())?"":status.getOperator());
+            dto.setTrace(status.getTrace());
+            dto.setStatus(status.getTraceStatus());
+            dto.setNotes(status.getNotes());
+            orderStatusDTOs.add(dto);
         }
+            ofcTraceOrderDTO.setOfcOrderStatusDTOs(orderStatusDTOs);
         //实时跟踪的状态
         OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
         if(ofcDistributionBasicInfo != null){

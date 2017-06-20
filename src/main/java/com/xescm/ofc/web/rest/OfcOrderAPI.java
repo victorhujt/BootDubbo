@@ -13,9 +13,11 @@ import com.xescm.ofc.domain.OfcIplimitRule;
 import com.xescm.ofc.domain.OfcRuntimeProperty;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.service.OfcIpLimitRuleService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.service.OfcRuntimePropertyService;
+import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.IpUtils;
 import com.xescm.ofc.utils.RedisOperationUtils;
 import net.sf.json.JSONObject;
@@ -94,44 +96,25 @@ public class OfcOrderAPI {
     public Wrapper queryOrderByCode(HttpServletRequest request,String code,String phone,String captchaCode) {
         Wrapper result = null;
         try {
-            if(queryOrderIsSwitch("quey_order_switch")){
-                if (PubUtils.isSEmptyOrNull(code)) {
-                    logger.error("订单查询入参为空!");
-                    throw new BusinessException(PARAMERROR.getType(),PARAMERROR.getName());
-                }
-
-                if(!PubUtils.isSEmptyOrNull(captchaCode) && !PubUtils.isSEmptyOrNull(phone)){
-                    if(!redisOperationUtils.hasKey(phone+captchaCode)){
-                        logger.error(CAPTCHACODEERROR.getName());
-                        throw new BusinessException(CAPTCHACODEERROR.getType(),CAPTCHACODEERROR.getName());
-                    }else{
-                        redisOperationUtils.deleteKey(captchaCode);
-                    }
-                }
-
-                logger.info("订单查询 ==> code : {}", code);
-                checkLimit(redisOperationUtils,request);
-                //查询结果是订单号集合
-                result = OfcOrderStatusEdasService.queryOrderByCode(code);
-                if(result == null){
-                    logger.error("没有查询到该订单!");
-                    throw new BusinessException("不存在符合条件的订单!");
-                }
-                if(result.getCode() == Wrapper.ERROR_CODE){
-                    logger.error("没有查询到该订单!");
-                    throw new BusinessException(result.getMessage());
-                }
-                List<String> orderCodes = (List<String>) result.getResult();
-                if (CollectionUtils.isEmpty(orderCodes)) {
-                    logger.error("没有查询到该订单!");
-                    throw new BusinessException("不存在符合条件的订单!");
-                }
-            }else{
-                throw new BusinessException("查询接口已经关闭!");
+            CheckUtils.checkArgument(!queryOrderIsSwitch(INTERFACE_STATUS), ResultCodeEnum.INTERFACEISCLOSE);
+            CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(code), ResultCodeEnum.PARAMERROR);
+            if(!PubUtils.isSEmptyOrNull(captchaCode) && !PubUtils.isSEmptyOrNull(phone)){
+                logger.error(CAPTCHACODEERROR.getMsg());
+                CheckUtils.checkArgument(redisOperationUtils.hasKey(phone+captchaCode), ResultCodeEnum.CAPTCHACODEERROR);
+                redisOperationUtils.deleteKey(captchaCode);
             }
+            logger.info("订单查询 ==> code : {}", code);
+            checkLimit(redisOperationUtils,request);
+            //查询结果是订单号集合
+            result = OfcOrderStatusEdasService.queryOrderByCode(code);
+            logger.error("没有查询到该订单!");
+            CheckUtils.checkArgument(result == null, ResultCodeEnum.RESULTISNULL);
+            CheckUtils.checkArgument(result.getCode() == Wrapper.ERROR_CODE, ResultCodeEnum.RESULTISNULL);
+            List<String> orderCodes = (List<String>) result.getResult();
+            CheckUtils.checkArgument(CollectionUtils.isEmpty(orderCodes), ResultCodeEnum.RESULTISNULL);
         } catch (BusinessException ex) {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(ResultCodeEnum.getErrorCode(ex.getCode()), ex.getMessage());
         } catch (Exception ex) {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
@@ -150,29 +133,18 @@ public class OfcOrderAPI {
     public Wrapper<OfcTraceOrderDTO> traceByOrderCode(HttpServletRequest request,String orderCode) {
         Wrapper<OfcTraceOrderDTO> result;
         try {
-            if(queryOrderIsSwitch("quey_order_switch")){
-                if (PubUtils.isSEmptyOrNull(orderCode)) {
-                    logger.error("订单跟踪查询入参为空!");
-                    throw new BusinessException("请输入单号!");
-                }
-                checkLimit(redisOperationUtils,request);
-                logger.info("订单跟踪查询 ==> orderCode : {}", orderCode);
-                result = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
-                if(result == null){
-                    logger.error("没有查询到订单的状态跟踪信息!");
-                    throw new BusinessException("没有查询到订单的状态跟踪信息!");
-                }
-                if(result.getCode() == Wrapper.ERROR_CODE){
-                    logger.error("订单跟踪查询出现异常");
-                    throw new BusinessException(result.getMessage());
-                }
-            }else{
-                throw new BusinessException("查询接口已经关闭!");
-            }
-
-        }catch (Exception e){
+            CheckUtils.checkArgument(!queryOrderIsSwitch(INTERFACE_STATUS), ResultCodeEnum.INTERFACEISCLOSE);
+            CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(orderCode), ResultCodeEnum.PARAMERROR);
+            checkLimit(redisOperationUtils,request);
+            logger.info("订单跟踪查询 ==> orderCode : {}", orderCode);
+            result = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
+            CheckUtils.checkArgument(result == null, ResultCodeEnum.RESULTISNULL);
+            CheckUtils.checkArgument(result.getCode() == Wrapper.ERROR_CODE, ResultCodeEnum.RESULTISNULL);
+        }catch (BusinessException e){
             logger.error("订单跟踪查询出现异常:{}", e.getMessage(), e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            return WrapMapper.wrap(ResultCodeEnum.getErrorCode(e.getCode()), e.getMessage());
+        }catch (Exception e){
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单跟踪查询出现异常");
         }
         return result;
     }
@@ -282,13 +254,10 @@ public class OfcOrderAPI {
         if(redisOperationUtils.hasKey(ip+SENDSMS_REQUEST_COUNT)){
             Long reqCount =  redisOperationUtils.getValue(ip+SENDSMS_REQUEST_COUNT);
             redisOperationUtils.increment(ip+SENDSMS_REQUEST_COUNT, 1L);
-            if(reqCount > ipLimitRuleConfig.getSendSmsLimit()){
-                throw new BusinessException("请求发送短接接口频繁!");
-            }
+            CheckUtils.checkArgument(reqCount > ipLimitRuleConfig.getSendSmsLimit(), ResultCodeEnum.OPERATIONSTOOFREQUENT);
         }else{
             redisOperationUtils.set(ip+SENDSMS_REQUEST_COUNT,String.valueOf(1L),15L,TimeUnit.MINUTES);
         }
-
         String s = "0123456789";
         String validateCode = "";
         for (int i = 0; i < 4; i++) {
@@ -307,12 +276,11 @@ public class OfcOrderAPI {
         SmsCodeApiDto.setParam(json.toString());
         SmsCodeApiDto.setCode(validateCode);
         Wrapper result = epcSendMessageEdasService.sendSms(SmsCodeApiDto);
-       // result.setCode(200);
         logger.info("调用短信接口的响应结果为:{}", JacksonUtil.toJson(result));
         if(result.getCode() == Wrapper.SUCCESS_CODE){
             logger.info("发送到手机号的验证码成功发送，手机号为:{},验证码为:{}",phone,validateCode);
             //缓存三分钟
-            redisOperationUtils.set(phone+validateCode,validateCode,3L,TimeUnit.MINUTES);
+            redisOperationUtils.set(ip+phone,validateCode,3L,TimeUnit.MINUTES);
         }
 
          return result;
@@ -322,16 +290,14 @@ public class OfcOrderAPI {
         String ip = IpUtils.getIpAddr(request);
         if(redisOperationUtils.hasKey(ip)){
             redisOperationUtils.increment(ip, 1L);
-            throw new BusinessException("您的ip已经被冻结，请稍后再试");
+            CheckUtils.checkArgument(redisOperationUtils.hasKey(ip), ResultCodeEnum.IPISFREEZE);
         }
         OfcIplimitRule ofcIpLimitRule = new OfcIplimitRule();
         ofcIpLimitRule.setIp(ip);
         List<OfcIplimitRule> rules = ofcIpLimitRuleService.select(ofcIpLimitRule);
         if(!CollectionUtils.isEmpty(rules)){
             OfcIplimitRule ofcIplimitRule = rules.get(0);
-            if(IS_BLACK.equals(ofcIplimitRule.getBlack())){
-                throw new BusinessException("您上黑名单!");
-            }
+            CheckUtils.checkArgument(IS_BLACK.equals(ofcIplimitRule.getBlack()), ResultCodeEnum.IPISFORBIDDEN);
         }
         Long currentTime = System.currentTimeMillis();
         if(redisOperationUtils.hasKey(ip+QUERY_REQUEST_COUNT)){
@@ -343,19 +309,15 @@ public class OfcOrderAPI {
             logger.info("请求的次数为:{}",reqCount);
 
             if((currentTime - first) > ipLimitRuleConfig.getFristMinTime()*60*1000 && (currentTime - first) < ipLimitRuleConfig.getFristMaxTime()*60*1000){
-                if(reqCount > ipLimitRuleConfig.getFirstThresholdMin() && reqCount < ipLimitRuleConfig.getFirstThresholdMax()){
-                    logger.error("操作过于频繁,ip为:{}",ip);
-                    throw new BusinessException(OPERATIONSTOOFREQUENT.getType(),OPERATIONSTOOFREQUENT.getName());
-                }
+                CheckUtils.checkArgument(reqCount > ipLimitRuleConfig.getFirstThresholdMin() && reqCount < ipLimitRuleConfig.getFirstThresholdMax(), ResultCodeEnum.OPERATIONSTOOFREQUENT);
             }
 
             if((currentTime - first) > ipLimitRuleConfig.getSecondMinTime()*60*1000 && (currentTime - first)< ipLimitRuleConfig.getSecondMaxTime()*60*1000){
                 //第二阀值
-                if(reqCount > ipLimitRuleConfig.getSecondThresholdMin() && reqCount < ipLimitRuleConfig.getSecondThresholdMax()) {
-                    redisOperationUtils.set(ip,"freezing",1L, TimeUnit.MINUTES);//ip缓存十分钟
-                    logger.info("ip缓存10分钟，{}",ip);
-                    throw new BusinessException("您的ip已经被冻结，请稍后再试");
-                }
+                redisOperationUtils.set(ip,"freezing",1L, TimeUnit.MINUTES);//ip缓存十分钟
+                logger.info("ip缓存10分钟，{}",ip);
+                CheckUtils.checkArgument(reqCount > ipLimitRuleConfig.getSecondThresholdMin() && reqCount < ipLimitRuleConfig.getSecondThresholdMax(), ResultCodeEnum.IPISFREEZE);
+
             }
 
             if(currentTime - first > ipLimitRuleConfig.getThirdMinTime()*60*1000){

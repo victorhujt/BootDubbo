@@ -161,6 +161,8 @@ public final class OrderConstConstant {
 
     public static final String FREEZEED_IP="freezeedIp";// 冻结
 
+    public static final String INTERFACE_STATUS="quey_order_switch";// 冻结
+
 
 
 

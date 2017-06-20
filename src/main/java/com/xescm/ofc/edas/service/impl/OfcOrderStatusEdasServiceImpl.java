@@ -2,15 +2,16 @@ package com.xescm.ofc.edas.service.impl;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackInventoryDto;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.CheckUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -107,18 +108,11 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
         boolean isExistMore = false;
         List<String> orderCodeList = new ArrayList<>();
         try {
-            if (PubUtils.isSEmptyOrNull(code)) {
-                logger.error("订单查询入参为空!");
-                throw new BusinessException("请输入单号!");
-            }
+            CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(code), ResultCodeEnum.PARAMERROR);
             logger.info("订单查询 ==> code : {}", code);
             //查询结果是订单号集合
             List<String> result = ofcOrderScreenService.searchOverallOrder(code);
-            if (CollectionUtils.isEmpty(result)) {
-                logger.error("没有查询到该订单!");
-                throw new BusinessException("不存在符合条件的订单!");
-            }
-            logger.info("订单查询到的订单集合为 ==> {}", JacksonUtil.toJson(result));
+            CheckUtils.checkArgument(CollectionUtils.isEmpty(result), ResultCodeEnum.RESULTISNULL);
             if(result.size() > 1){
                 isExistMore = true;
                 for (String orderCode:result) {
@@ -136,7 +130,7 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
             }
         } catch (BusinessException ex) {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+            return WrapMapper.wrap(ResultCodeEnum.getErrorCode(ex.getCode()), ex.getMessage());
         } catch (Exception ex) {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
@@ -152,14 +146,11 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
     public Wrapper<OfcTraceOrderDTO> traceByOrderCode(String orderCode) {
             OfcTraceOrderDTO ofcTraceOrderDTO;
         try {
-            if (PubUtils.isSEmptyOrNull(orderCode)) {
-                logger.error("订单跟踪查询入参为空!");
-                throw new BusinessException("请输入单号!");
-            }
+            CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(orderCode), ResultCodeEnum.PARAMERROR);
             ofcTraceOrderDTO = ofcOrderStatusService.queryOrderByCode(orderCode);
-            if(CollectionUtils.isEmpty(ofcTraceOrderDTO.getOfcOrderStatusDTOs())){
-                throw new BusinessException("没有查询到订单的状态跟踪信息!");
-            }
+            CheckUtils.checkArgument(CollectionUtils.isEmpty(ofcTraceOrderDTO.getOfcOrderStatusDTOs()), ResultCodeEnum.RESULTISNULL);
+        }catch (BusinessException e){
+            return WrapMapper.wrap(ResultCodeEnum.getErrorCode(e.getCode()), e.getMessage());
         }catch (Exception e){
             logger.error("订单跟踪查询出现异常:{}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
