@@ -407,7 +407,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             logger.info("调用获取实时位置的接口参数为:{}", JacksonUtil.toJson(reqDTO));
             Wrapper<List<OfcRealTimeTraceDTO>> ofcRealTimeTraceDTOResult  =  tfcQueryGpsInfoEdasService.queryGpsforOfc(reqDTO);
             long endTime = System.currentTimeMillis();
-            logger.info("接口耗时:{}",(endTime - beginTime)+"ms");
+            logger.info("接口耗时:{}ms",(endTime - beginTime));
             if(ofcRealTimeTraceDTOResult.getCode() == Wrapper.SUCCESS_CODE){
                 if(!CollectionUtils.isEmpty(ofcRealTimeTraceDTOResult.getResult())){
                     ofcTraceOrderDTO.setOfcRealTimeTraceDTOs(ofcRealTimeTraceDTOResult.getResult());

@@ -2,19 +2,12 @@ package com.xescm.ofc.enums;
 
 public enum ResultCodeEnum {
 	UNDEFINED(10000, "未定义错误."),
-
 	//系统异常
 	ERROROPER(10001,"用户操作异常"),
-
-
-
 	//业务异常
 	JUMPPAGEERROR(100012,"页面跳转出错"),
-
 	OPERATIONSTOOFREQUENT(10003, "操作过于频繁"),
-
 	PARAMERROR(10004,"查询参数部不能空"),
-
 	CAPTCHACODEERROR(10005,"验证码错误"),
 	RESULTISNULL(10006,"结果集为空"),
 	INTERFACEISCLOSE(10007,"查询接口已经关闭!"),

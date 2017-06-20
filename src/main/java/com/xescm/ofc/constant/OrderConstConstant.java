@@ -155,6 +155,8 @@ public final class OrderConstConstant {
 
     public static final String IS_BLACK="1";//1:黑名单
 
+    public static final String IS_SEND_SMS="1";//1:发送  0:没有
+
     public static final String SENDSMS_REQUEST_COUNT="sendSmsRequestCount";//
 
     public static final String FIRST_SENDSMS_REQUEST_TIME = "firstSendSmsRequestTime";

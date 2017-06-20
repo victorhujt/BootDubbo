@@ -2,6 +2,7 @@ package com.xescm.ofc.edas.service.impl;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
@@ -113,6 +114,7 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
             //查询结果是订单号集合
             List<String> result = ofcOrderScreenService.searchOverallOrder(code);
             CheckUtils.checkArgument(CollectionUtils.isEmpty(result), ResultCodeEnum.RESULTISNULL);
+            logger.info("订单查询的结果集为: {}", JacksonUtil.toJson(result));
             if(result.size() > 1){
                 isExistMore = true;
                 for (String orderCode:result) {

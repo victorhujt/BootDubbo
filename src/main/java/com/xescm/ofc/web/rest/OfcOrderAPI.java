@@ -18,6 +18,7 @@ import com.xescm.ofc.service.OfcIpLimitRuleService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.service.OfcRuntimePropertyService;
 import com.xescm.ofc.utils.CheckUtils;
+import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.IpUtils;
 import com.xescm.ofc.utils.RedisOperationUtils;
 import net.sf.json.JSONObject;
@@ -44,7 +45,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
-import static com.xescm.ofc.enums.ResultCodeEnum.*;
 
 /**
  * Created by lyh on 2017/3/31.
@@ -94,20 +94,20 @@ public class OfcOrderAPI {
     @ResponseBody
     @CrossOrigin(origins = "http://localhost:3000")
     public Wrapper queryOrderByCode(HttpServletRequest request,String code,String phone,String captchaCode) {
-        Wrapper result = null;
+        Wrapper result;
+        String ip = IpUtils.getIpAddr(request);
         try {
             CheckUtils.checkArgument(!queryOrderIsSwitch(INTERFACE_STATUS), ResultCodeEnum.INTERFACEISCLOSE);
             CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(code), ResultCodeEnum.PARAMERROR);
             if(!PubUtils.isSEmptyOrNull(captchaCode) && !PubUtils.isSEmptyOrNull(phone)){
-                logger.error(CAPTCHACODEERROR.getMsg());
-                CheckUtils.checkArgument(redisOperationUtils.hasKey(phone+captchaCode), ResultCodeEnum.CAPTCHACODEERROR);
-                redisOperationUtils.deleteKey(captchaCode);
+                if(redisOperationUtils.hasKey("SMSCODE:"+ip+":"+phone)){
+                    CheckUtils.checkArgument(!(redisOperationUtils.getValue("SMSCODE:"+ip+":"+phone) == Long.parseLong(captchaCode)), ResultCodeEnum.CAPTCHACODEERROR);
+                }
             }
             logger.info("订单查询 ==> code : {}", code);
             checkLimit(redisOperationUtils,request);
             //查询结果是订单号集合
             result = OfcOrderStatusEdasService.queryOrderByCode(code);
-            logger.error("没有查询到该订单!");
             CheckUtils.checkArgument(result == null, ResultCodeEnum.RESULTISNULL);
             CheckUtils.checkArgument(result.getCode() == Wrapper.ERROR_CODE, ResultCodeEnum.RESULTISNULL);
             List<String> orderCodes = (List<String>) result.getResult();
@@ -250,22 +250,16 @@ public class OfcOrderAPI {
     @CrossOrigin(origins = "http://localhost:3000")
     public Wrapper<?> getValidateCode(HttpServletRequest request,String phone) throws Exception {
         String ip = IpUtils.getIpAddr(request);
-        Random random = new Random();// 创建
-        if(redisOperationUtils.hasKey(ip+SENDSMS_REQUEST_COUNT)){
-            Long reqCount =  redisOperationUtils.getValue(ip+SENDSMS_REQUEST_COUNT);
-            redisOperationUtils.increment(ip+SENDSMS_REQUEST_COUNT, 1L);
+        if(redisOperationUtils.hasKey("ip:"+ip+SENDSMS_REQUEST_COUNT)){
+            Long reqCount =  redisOperationUtils.getValue("ip:"+ip+SENDSMS_REQUEST_COUNT);
+            redisOperationUtils.increment("ip:"+ip+SENDSMS_REQUEST_COUNT, 1L);
             CheckUtils.checkArgument(reqCount > ipLimitRuleConfig.getSendSmsLimit(), ResultCodeEnum.OPERATIONSTOOFREQUENT);
         }else{
-            redisOperationUtils.set(ip+SENDSMS_REQUEST_COUNT,String.valueOf(1L),15L,TimeUnit.MINUTES);
+            redisOperationUtils.set("ip:"+ip+SENDSMS_REQUEST_COUNT,String.valueOf(1L),15L,TimeUnit.MINUTES);
         }
-        String s = "0123456789";
-        String validateCode = "";
-        for (int i = 0; i < 4; i++) {
-            String ch = String.valueOf(s.charAt(random.nextInt(s.length())));
-            validateCode += ch;
-        }
-
+        String validateCode = new CodeGenUtils().getSmsCode(4);
         logger.info("接收验证码的手机号为:{},验证码为:{}",phone,validateCode);
+
         SmsCodeApiDto SmsCodeApiDto = new SmsCodeApiDto();
         SmsCodeApiDto.setMobile(phone);
         SmsCodeApiDto.setSmsTempletCode("SMS_70510558");
@@ -275,23 +269,38 @@ public class OfcOrderAPI {
         JSONObject json = JSONObject.fromObject(param);
         SmsCodeApiDto.setParam(json.toString());
         SmsCodeApiDto.setCode(validateCode);
+
+        logger.info("调用短信接口的参数为:{}",JacksonUtil.toJson(SmsCodeApiDto));
+        Long begin = System.currentTimeMillis();
         Wrapper result = epcSendMessageEdasService.sendSms(SmsCodeApiDto);
+        Long end = System.currentTimeMillis();
+        logger.info("短信接口耗时为:{}ms",(end-begin));
         logger.info("调用短信接口的响应结果为:{}", JacksonUtil.toJson(result));
         if(result.getCode() == Wrapper.SUCCESS_CODE){
             logger.info("发送到手机号的验证码成功发送，手机号为:{},验证码为:{}",phone,validateCode);
             //缓存三分钟
-            redisOperationUtils.set(ip+phone,validateCode,3L,TimeUnit.MINUTES);
+            if(redisOperationUtils.hasKey("SMSCODE:"+ip+":"+phone)){
+                redisOperationUtils.set("SMSCODE:"+ip+":"+phone,validateCode);
+            }else{
+                redisOperationUtils.set("SMSCODE:"+ip+":"+phone,validateCode,3L,TimeUnit.MINUTES);
+                redisOperationUtils.set("SMS:"+ip,"isSend",3L, TimeUnit.MINUTES);//ip缓存十分钟
+            }
         }
-
          return result;
     }
 
     public void checkLimit(RedisOperationUtils redisOperationUtils,HttpServletRequest request ){
+        boolean isSend = false;
         String ip = IpUtils.getIpAddr(request);
-        if(redisOperationUtils.hasKey(ip)){
-            redisOperationUtils.increment(ip, 1L);
-            CheckUtils.checkArgument(redisOperationUtils.hasKey(ip), ResultCodeEnum.IPISFREEZE);
+        if(redisOperationUtils.hasKey("SMS:"+ip)){
+            isSend = true;
         }
+        //验证ip是否冻结 缓存redis 10分钟
+        if(redisOperationUtils.hasKey("ip:"+ip)){
+            redisOperationUtils.increment("ip:"+ip+":"+QUERY_REQUEST_COUNT, 1L);
+            CheckUtils.checkArgument(redisOperationUtils.hasKey("ip:"+ip), ResultCodeEnum.IPISFREEZE);
+        }
+        //验证ip是否已经被加入黑名单
         OfcIplimitRule ofcIpLimitRule = new OfcIplimitRule();
         ofcIpLimitRule.setIp(ip);
         List<OfcIplimitRule> rules = ofcIpLimitRuleService.select(ofcIpLimitRule);
@@ -300,26 +309,27 @@ public class OfcOrderAPI {
             CheckUtils.checkArgument(IS_BLACK.equals(ofcIplimitRule.getBlack()), ResultCodeEnum.IPISFORBIDDEN);
         }
         Long currentTime = System.currentTimeMillis();
-        if(redisOperationUtils.hasKey(ip+QUERY_REQUEST_COUNT)){
-            Long reqCount =  redisOperationUtils.getValue(ip+QUERY_REQUEST_COUNT);
-            Long first = redisOperationUtils.getValue(ip+FIRST_REQUEST_TIME);
-            redisOperationUtils.increment(ip+QUERY_REQUEST_COUNT, 1L);
-            //第一阀值 5分钟请求次数超过设定值
-            logger.info("距离第一次请求的时间为:{}",currentTime - first);
+        if(redisOperationUtils.hasKey("ip:"+ip+":"+QUERY_REQUEST_COUNT)){
+            Long reqCount =  redisOperationUtils.getValue("ip:"+ip+":"+QUERY_REQUEST_COUNT);
+            Long first = redisOperationUtils.getValue("ip:"+ip+":"+FIRST_REQUEST_TIME);
+            redisOperationUtils.increment("ip:"+ip+":"+QUERY_REQUEST_COUNT, 1L);
+
+            logger.info("距离第一次请求的时间为:{}",currentTime - first+"ms");
             logger.info("请求的次数为:{}",reqCount);
-
-            if((currentTime - first) > ipLimitRuleConfig.getFristMinTime()*60*1000 && (currentTime - first) < ipLimitRuleConfig.getFristMaxTime()*60*1000){
-                CheckUtils.checkArgument(reqCount > ipLimitRuleConfig.getFirstThresholdMin() && reqCount < ipLimitRuleConfig.getFirstThresholdMax(), ResultCodeEnum.OPERATIONSTOOFREQUENT);
+            //第一阀值
+            if(!isSend){
+                if((currentTime - first) > ipLimitRuleConfig.getFristMinTime()*60*1000 && (currentTime - first) < ipLimitRuleConfig.getFristMaxTime()*60*1000){
+                    CheckUtils.checkArgument(reqCount > ipLimitRuleConfig.getFirstThresholdMin() && reqCount < ipLimitRuleConfig.getFirstThresholdMax(), ResultCodeEnum.OPERATIONSTOOFREQUENT);
+                }
             }
-
+            //第二阀值
             if((currentTime - first) > ipLimitRuleConfig.getSecondMinTime()*60*1000 && (currentTime - first)< ipLimitRuleConfig.getSecondMaxTime()*60*1000){
-                //第二阀值
-                redisOperationUtils.set(ip,"freezing",1L, TimeUnit.MINUTES);//ip缓存十分钟
-                logger.info("ip缓存10分钟，{}",ip);
-                CheckUtils.checkArgument(reqCount > ipLimitRuleConfig.getSecondThresholdMin() && reqCount < ipLimitRuleConfig.getSecondThresholdMax(), ResultCodeEnum.IPISFREEZE);
-
+                if(reqCount > ipLimitRuleConfig.getSecondThresholdMin() && reqCount < ipLimitRuleConfig.getSecondThresholdMax()){
+                    redisOperationUtils.set("ip:"+ip,"freezing",1L, TimeUnit.MINUTES);//ip缓存十分钟
+                    logger.info("ip缓存10分钟，{}",ip);
+                }
             }
-
+            //第三阀值
             if(currentTime - first > ipLimitRuleConfig.getThirdMinTime()*60*1000){
                 if(reqCount > ipLimitRuleConfig.getThirdThresholdMin()) {
                     OfcIplimitRule rule = new OfcIplimitRule();
@@ -329,12 +339,17 @@ public class OfcOrderAPI {
                     logger.info("ip加入黑名单，{}",ip);
                 }
             }
-    }else{
-        redisOperationUtils.set(ip+QUERY_REQUEST_COUNT,String.valueOf(1L),15L,TimeUnit.MINUTES);
-        redisOperationUtils.set(ip+FIRST_REQUEST_TIME,String.valueOf(System.currentTimeMillis()),15L,TimeUnit.MINUTES);
-    }
+        }else{
+            redisOperationUtils.set("ip:"+ip+":"+QUERY_REQUEST_COUNT,String.valueOf(1L),15L,TimeUnit.MINUTES);
+            redisOperationUtils.set("ip:"+ip+":"+FIRST_REQUEST_TIME,String.valueOf(System.currentTimeMillis()),15L,TimeUnit.MINUTES);
+        }
     }
 
+    /**
+     * 开关名查询开关是否开启
+     * @param name
+     * @return true:开启  false:关闭
+     */
     private boolean queryOrderIsSwitch(String name){
         boolean flag = false;
         OfcRuntimeProperty ofcRuntimeProperty = ofcRuntimePropertyService.findByName(name);
@@ -346,11 +361,4 @@ public class OfcOrderAPI {
         }
         return flag;
     }
-
-
-
-
-
-
-
 }
