@@ -1,7 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.edas.model.dto.ofc.OfcOrderStatusDTO;
+import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 
@@ -38,8 +38,5 @@ public interface OfcOrderStatusService extends IService<OfcOrderStatus> {
     void feedBackStatusFromWhc(FeedBackOrderStatusDto feedBackOrderStatusDto);
     void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto, ConcurrentHashMap cmap);
 
-    List<OfcOrderStatusDTO> queryOrderByCode(String code);
-
-
-
+    OfcTraceOrderDTO queryOrderByCode(String code) throws Exception;
 }

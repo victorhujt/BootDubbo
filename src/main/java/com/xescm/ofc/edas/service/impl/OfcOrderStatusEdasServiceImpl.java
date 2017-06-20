@@ -2,17 +2,15 @@ package com.xescm.ofc.edas.service.impl;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
-import com.xescm.ofc.edas.model.dto.ofc.OfcOrderStatusDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackInventoryDto;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.service.OfcOrderNewstatusService;
-import com.xescm.ofc.service.OfcOrderScreenService;
-import com.xescm.ofc.service.OfcOrderStatusService;
+import com.xescm.ofc.service.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +40,9 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
     private OfcOrderStatusService ofcOrderStatusService;
     @Resource
     private OfcOrderScreenService ofcOrderScreenService;
+
+    @Resource
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
 
     @Override
     public Wrapper<List<QueryOrderStatusDto>> queryOrderStatus(QueryOrderStatusDto queryOrderStatusDto) {
@@ -102,6 +104,8 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
      */
     @Override
     public Wrapper queryOrderByCode(String code) {
+        boolean isExistMore = false;
+        List<String> orderCodeList = new ArrayList<>();
         try {
             if (PubUtils.isSEmptyOrNull(code)) {
                 logger.error("订单查询入参为空!");
@@ -114,7 +118,22 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
                 logger.error("没有查询到该订单!");
                 throw new BusinessException("不存在符合条件的订单!");
             }
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+            logger.info("订单查询到的订单集合为 ==> {}", JacksonUtil.toJson(result));
+            if(result.size() > 1){
+                isExistMore = true;
+                for (String orderCode:result) {
+                    OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+                    if(ofcFundamentalInformation != null){
+                        String custName = ofcFundamentalInformation.getCustName();
+                        orderCodeList.add(custName+"_"+orderCode);
+                    }
+                }
+            }
+            if(isExistMore){
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderCodeList);
+            }else{
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+            }
         } catch (BusinessException ex) {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
@@ -137,12 +156,10 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
                 logger.error("订单跟踪查询入参为空!");
                 throw new BusinessException("请输入单号!");
             }
-            List<OfcOrderStatusDTO> ofcOrderStatusDTOs = ofcOrderStatusService.queryOrderByCode(orderCode);
-            if(CollectionUtils.isEmpty(ofcOrderStatusDTOs)){
+            ofcTraceOrderDTO = ofcOrderStatusService.queryOrderByCode(orderCode);
+            if(CollectionUtils.isEmpty(ofcTraceOrderDTO.getOfcOrderStatusDTOs())){
                 throw new BusinessException("没有查询到订单的状态跟踪信息!");
             }
-            ofcTraceOrderDTO = new OfcTraceOrderDTO();
-            ofcTraceOrderDTO.setOfcOrderStatusDTOs(ofcOrderStatusDTOs);
         }catch (Exception e){
             logger.error("订单跟踪查询出现异常:{}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());

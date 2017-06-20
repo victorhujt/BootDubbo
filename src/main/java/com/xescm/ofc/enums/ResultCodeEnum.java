@@ -11,7 +11,7 @@ public enum ResultCodeEnum {
 	//业务异常
 	JUMPPAGEERROR("BEC000001","页面跳转出错"),
 
-	OPERATIONSTOOFREQUENT("OPTF000001","操作过于频繁"),
+	OPERATIONSTOOFREQUENT("OPTF000001", "操作过于频繁"),
 
 	PARAMERROR("PAE000001","查询参数部不能空"),
 

@@ -1,8 +1,10 @@
 package com.xescm.ofc.web.rest;
 
+import com.google.common.collect.Maps;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.exception.BusinessException;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.epc.edas.dto.SmsCodeApiDto;
 import com.xescm.epc.edas.service.EpcSendMessageEdasService;
@@ -16,10 +18,12 @@ import com.xescm.ofc.service.OfcMobileOrderService;
 import com.xescm.ofc.service.OfcRuntimePropertyService;
 import com.xescm.ofc.utils.IpUtils;
 import com.xescm.ofc.utils.RedisOperationUtils;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +37,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -83,8 +88,9 @@ public class OfcOrderAPI {
      * @param code 客户订单号 或者运输单号 或者订单号
      * @return  订单号集合
      */
-    @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.GET})
+    @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.POST})
     @ResponseBody
+    @CrossOrigin(origins = "http://localhost:3000")
     public Wrapper queryOrderByCode(HttpServletRequest request,String code,String phone,String captchaCode) {
         Wrapper result = null;
         try {
@@ -138,8 +144,9 @@ public class OfcOrderAPI {
      * @param orderCode 订单号
      * @return 订单的追踪状态
      */
-    @RequestMapping(value = "traceByOrderCode", method = {RequestMethod.GET})
+    @RequestMapping(value = "traceByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
+    @CrossOrigin(origins = "http://localhost:3000")
     public Wrapper<OfcTraceOrderDTO> traceByOrderCode(HttpServletRequest request,String orderCode) {
         Wrapper<OfcTraceOrderDTO> result;
         try {
@@ -171,7 +178,7 @@ public class OfcOrderAPI {
     }
 
 
-    @RequestMapping(value = "getCaptcha", method = {RequestMethod.GET})
+    @RequestMapping(value = "getCaptcha", method = {RequestMethod.POST})
     public void getCaptcha(HttpServletRequest request, HttpServletResponse response){
         int width = 200;// 验证码图片宽
         int height = 60;// 验证码图片高
@@ -266,9 +273,10 @@ public class OfcOrderAPI {
      * @param request
      * @param phone
      */
-    @RequestMapping(value = "getValidateCode", method = {RequestMethod.GET})
+    @RequestMapping(value = "getValidateCode", method = {RequestMethod.POST})
     @ResponseBody
-    public void getValidateCode(HttpServletRequest request,String phone){
+    @CrossOrigin(origins = "http://localhost:3000")
+    public Wrapper<?> getValidateCode(HttpServletRequest request,String phone) throws Exception {
         String ip = IpUtils.getIpAddr(request);
         Random random = new Random();// 创建
         if(redisOperationUtils.hasKey(ip+SENDSMS_REQUEST_COUNT)){
@@ -281,7 +289,7 @@ public class OfcOrderAPI {
             redisOperationUtils.set(ip+SENDSMS_REQUEST_COUNT,String.valueOf(1L),15L,TimeUnit.MINUTES);
         }
 
-        String s = "abcdefghjklmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        String s = "0123456789";
         String validateCode = "";
         for (int i = 0; i < 4; i++) {
             String ch = String.valueOf(s.charAt(random.nextInt(s.length())));
@@ -292,14 +300,22 @@ public class OfcOrderAPI {
         SmsCodeApiDto SmsCodeApiDto = new SmsCodeApiDto();
         SmsCodeApiDto.setMobile(phone);
         SmsCodeApiDto.setSmsTempletCode("SMS_70510558");
-        SmsCodeApiDto.setParam(validateCode);
+        Map<String, String> param = Maps.newHashMap();
+        param.put("code", validateCode);
+        param.put("product", "鲜易供应链");
+        JSONObject json = JSONObject.fromObject(param);
+        SmsCodeApiDto.setParam(json.toString());
+        SmsCodeApiDto.setCode(validateCode);
         Wrapper result = epcSendMessageEdasService.sendSms(SmsCodeApiDto);
-        //result.setCode(200);
+       // result.setCode(200);
+        logger.info("调用短信接口的响应结果为:{}", JacksonUtil.toJson(result));
         if(result.getCode() == Wrapper.SUCCESS_CODE){
             logger.info("发送到手机号的验证码成功发送，手机号为:{},验证码为:{}",phone,validateCode);
             //缓存三分钟
             redisOperationUtils.set(phone+validateCode,validateCode,3L,TimeUnit.MINUTES);
         }
+
+         return result;
     }
 
     public void checkLimit(RedisOperationUtils redisOperationUtils,HttpServletRequest request ){
@@ -326,7 +342,7 @@ public class OfcOrderAPI {
             logger.info("距离第一次请求的时间为:{}",currentTime - first);
             logger.info("请求的次数为:{}",reqCount);
 
-            if((currentTime - first) > ipLimitRuleConfig.getSecondMinTime()*60*1000 && (currentTime - first) < ipLimitRuleConfig.getFristMaxTime()*60*1000){
+            if((currentTime - first) > ipLimitRuleConfig.getFristMinTime()*60*1000 && (currentTime - first) < ipLimitRuleConfig.getFristMaxTime()*60*1000){
                 if(reqCount > ipLimitRuleConfig.getFirstThresholdMin() && reqCount < ipLimitRuleConfig.getFirstThresholdMax()){
                     logger.error("操作过于频繁,ip为:{}",ip);
                     throw new BusinessException(OPERATIONSTOOFREQUENT.getType(),OPERATIONSTOOFREQUENT.getName());
@@ -338,6 +354,7 @@ public class OfcOrderAPI {
                 if(reqCount > ipLimitRuleConfig.getSecondThresholdMin() && reqCount < ipLimitRuleConfig.getSecondThresholdMax()) {
                     redisOperationUtils.set(ip,"freezing",1L, TimeUnit.MINUTES);//ip缓存十分钟
                     logger.info("ip缓存10分钟，{}",ip);
+                    throw new BusinessException("您的ip已经被冻结，请稍后再试");
                 }
             }
 
