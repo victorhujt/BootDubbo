@@ -3,6 +3,7 @@ package com.xescm.ofc.edas.service.impl;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
+import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackInventoryDto;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.exception.BusinessException;
@@ -82,5 +83,13 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
+    @Override
+    public Wrapper queryOrderByCode(String s) {
+        return null;
+    }
 
+    @Override
+    public Wrapper<OfcTraceOrderDTO> traceByOrderCode(String s) {
+        return null;
+    }
 }

@@ -1,12 +1,15 @@
 package com.xescm.ofc.service.impl;
 
+import com.aliyun.openservices.ons.api.Action;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.constant.OfcKeyConstants;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
+import com.xescm.ofc.utils.RedisLock;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +46,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     @Resource
     private OfcWarehouseInformationService   ofcWarehouseInformationService;
 
+    @Resource
+    private RedisLock redisLock;
+
 
     /**
      * 运输单状态反馈
@@ -51,11 +57,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @return      list
      */
     @Override
-    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName,ConcurrentHashMap cmap) {
+    public Action planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName, ConcurrentHashMap cmap) {
         //根据订单号获取单及状态
         String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
         String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
         Date traceTime = ofcPlanFedBackCondition.getTraceTime();
+        String orderCodeRedisKey = OfcKeyConstants.OFC_MQ_TFC_PLAN_FED_BACK_LOCK + transPortNo + status;
         try{
             if(transPortNo.equals("")){
                 throw new BusinessException("运输单号不可以为空");
@@ -86,9 +93,18 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(transPortNo, "orderCode");
             String orstatus=orderStatus.getNotes();
             boolean flag;
+            boolean redisStatus;
             switch (status) {
                 case "20":
                     logger.info("序号：2 ===== 订单号{}=> 跟踪状态{}", transPortNo, "20-[已发运]");
+                    redisStatus = redisLock.lock(orderCodeRedisKey);
+                    if(redisStatus){
+                        logger.error("当前订单号{}，在{}跟踪状态下正在被别的实例消费",transPortNo,status);
+                        return Action.ReconsumeLater;
+                    }
+                    while (redisLock.lockWithWait(orderCodeRedisKey)){
+
+                    }
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "车辆已发运，发往目的地：");
                     if (!flag) {
@@ -100,6 +116,14 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     break;
                 case "30":
                     logger.info("序号：3 ===== 订单号{}=> 跟踪状态{}", transPortNo, "30-[已到达]");
+                    redisStatus = redisLock.lock(orderCodeRedisKey);
+                    if(redisStatus){
+                        logger.error("当前订单号{}，在{}跟踪状态下正在被别的实例消费",transPortNo,status);
+                        return Action.ReconsumeLater;
+                    }
+                    while (redisLock.lockWithWait(orderCodeRedisKey)){
+
+                    }
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "车辆已到达目的地：");
                     if (!flag) {
@@ -111,6 +135,14 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     break;
                 case "40":
                     logger.info("序号：4 ===== 订单号{}=> 跟踪状态{}", transPortNo, "40-[已签收]");
+                    redisStatus = redisLock.lock(orderCodeRedisKey);
+                    if(redisStatus){
+                        logger.error("当前订单号{}，在{}跟踪状态下正在被别的实例消费",transPortNo,status);
+                        return Action.ReconsumeLater;
+                    }
+                    while (redisLock.lockWithWait(orderCodeRedisKey)){
+
+                    }
                     Date now = new Date();
                     flag = checkStatus(false, statusList, "end", "客户已签收");
                     if (!flag) {
@@ -156,6 +188,14 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     break;
                 case "50":
                     logger.info("序号：5 ===== 订单号{}=> 跟踪状态{}", transPortNo, "50-[已回单]");
+                    redisStatus = redisLock.lock(orderCodeRedisKey);
+                    if(redisStatus){
+                        logger.error("当前订单号{}，在{}跟踪状态下正在被别的实例消费",transPortNo,status);
+                        return Action.ReconsumeLater;
+                    }
+                    while (redisLock.lockWithWait(orderCodeRedisKey)){
+
+                    }
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "客户已回单");
                     if (!flag) {
@@ -167,6 +207,14 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     break;
                 case "32":
                     logger.info("序号：6 ===== 订单号{}=> 跟踪状态{}", transPortNo, "32-[中转入]");
+                    redisStatus = redisLock.lock(orderCodeRedisKey);
+                    if(redisStatus){
+                        logger.error("当前订单号{}，在{}跟踪状态下正在被别的实例消费",transPortNo,status);
+                        return Action.ReconsumeLater;
+                    }
+                    while (redisLock.lockWithWait(orderCodeRedisKey)){
+
+                    }
                     if(trimAndNullAsEmpty(ofcPlanFedBackCondition.getDescription()).equals("")){
                         logger.info("跟踪状态已回单");
                         throw new BusinessException("中转入时状态描述信息不能为空");
@@ -182,6 +230,14 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     break;
                 case "34":
                     logger.info("序号：7 ===== 订单号{}=> 跟踪状态{}", transPortNo, "34-[中转出]");
+                    redisStatus = redisLock.lock(orderCodeRedisKey);
+                    if(redisStatus){
+                        logger.error("当前订单号{}，在{}跟踪状态下正在被别的实例消费",transPortNo,status);
+                        return Action.ReconsumeLater;
+                    }
+                    while (redisLock.lockWithWait(orderCodeRedisKey)){
+
+                    }
                     if(trimAndNullAsEmpty(ofcPlanFedBackCondition.getDescription()).equals("")){
                         logger.info("跟踪状态已回单");
                         throw new BusinessException("中转出时状态描述信息不能为空");
@@ -202,6 +258,11 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     throw new BusinessException("所给运输计划单状态有误:" + status);
             }
             if(!orstatus.equals(orderStatus.getNotes())){
+                redisStatus = redisLock.lock(orderCodeRedisKey);
+                if(redisStatus){
+                    logger.error("当前订单号{}，在{}跟踪状态下未被锁定，将不会完成保存操作",transPortNo,status);
+                    return Action.ReconsumeLater;
+                }
                 ofcOrderStatusService.save(orderStatus);
                 if(StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEEN_COMPLETED)){
                     //订单中心--订单状态推结算中心(执行中和已完成)
@@ -209,7 +270,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 }
             }
         }catch (Exception e){
-            throw new BusinessException(e.getMessage(), e);
+            return Action.ReconsumeLater;
+        }finally {
+            redisLock.deleteKey(orderCodeRedisKey);
         }
         return null;
     }

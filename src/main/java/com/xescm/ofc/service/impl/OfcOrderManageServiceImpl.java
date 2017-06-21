@@ -421,7 +421,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         cancelOrderDTO.setWarehouseID(warehouseCode);
         cancelOrderDTO.setOrderType(orderType);
         cancelOrderDTO.setCustomerID(customerCode);
-        cancelOrderDTO.setOperationName(userName);
+        //cancelOrderDTO.setOperationName(userName);
         Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
         logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
         return response;
