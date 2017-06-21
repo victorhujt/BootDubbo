@@ -143,9 +143,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode) {
         OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(orderCode);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        if(orderNewstatus==null
-                || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+        if (orderNewstatus != null
+                && !trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                && !trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")) {
+                    ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
+                    ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
+                } else {
             ofcOrderStatus = ofcOrderStatusMapper.queryLastUpdateOrderByOrderCode(orderCode);
             if (null == ofcOrderStatus) {
                 logger.error("查不到该订单的状态, 订单号: {}", orderCode);
@@ -156,10 +159,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
             orderNewstatu.setStatusUpdateTime(new Date());
             orderNewstatu.setStatusCreateTime(new Date());
-            ofcOrderNewstatusService.save(orderNewstatus);
-        }else{
-            ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
-            ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
         }
         return ofcOrderStatus;
     }
@@ -167,19 +166,18 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode) {
         OfcOrderNewstatus orderNewstatus=ofcOrderNewstatusService.selectByKey(orderCode);
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
-        if(orderNewstatus==null
-                || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")){
+        if (orderNewstatus != null
+                && !trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
+                && !trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")) {
+                    ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
+                    ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
+                } else {
             ofcOrderStatus = ofcOrderStatusMapper.queryLastTimeOrderByOrderCode(orderCode);
             OfcOrderNewstatus orderNewstatu=new OfcOrderNewstatus();
             orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
             orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
             orderNewstatu.setStatusUpdateTime(new Date());
             orderNewstatu.setStatusCreateTime(new Date());
-            ofcOrderNewstatusService.save(orderNewstatus);
-        }else{
-            ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
-            ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
         }
         return ofcOrderStatus;
     }
