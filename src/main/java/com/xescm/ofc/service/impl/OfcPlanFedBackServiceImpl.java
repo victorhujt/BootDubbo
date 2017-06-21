@@ -1,6 +1,8 @@
 package com.xescm.ofc.service.impl;
 
+import com.google.common.collect.Maps;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
@@ -132,9 +135,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                         orderStatus = new OfcOrderStatus();
                         orderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
                         if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
-                            OfcWarehouseInformation ofcWarehouseInformation=new OfcWarehouseInformation();
+                            OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
                             ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
-                            ofcWarehouseInformation=ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
+                            ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
                             if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
                                 if (cmap.containsKey(ofcFundamentalInformation.getOrderCode())) {
                                     logger.info("仓储订单仓储先完成,订单号为{}",ofcFundamentalInformation.getOrderCode());
@@ -212,7 +215,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             if (!orstatus.equals(orderStatus.getNotes())) {
                 ofcOrderStatusService.save(orderStatus);
                 if (StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEEN_COMPLETED)) {
-                    //卡班订单发送短信
+                    //订单发送签收短信
                     this.sendSmsWhileSigned(ofcFundamentalInformation, ofcDistributionBasicInfo);
                     //订单中心--订单状态推结算中心(执行中和已完成)
                     ofcOrderManageService.pullOfcOrderStatus(orderStatus);
@@ -224,7 +227,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         return null;
     }
 
-    private void sendSmsWhileSigned(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+    private void sendSmsWhileSigned(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) throws Exception {
         logger.info("订单签收时发送短信给发货方 ofcFundamentalInformation:{}", ofcFundamentalInformation);
         logger.info("订单签收时发送短信给发货方 ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
         if (null == ofcDistributionBasicInfo || null == ofcFundamentalInformation) {
@@ -250,6 +253,10 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         sendSmsDTO.setTemplate(SmsTemplatesEnum.SMS_QUERY_ORDER_CODE);
         sendSmsDTO.setCode(transCode);
         sendSmsDTO.setNumber(phoneNumber);
+        Map<String, String> map = Maps.newHashMap();
+        map.put("code", transCode);
+        String param = JacksonUtil.toJson(map);
+        sendSmsDTO.setParamStr(param);
         Wrapper wrapper = sendSmsManager.sendSms(sendSmsDTO);
         logger.info("发送结果 == > wrapper{}", wrapper);
     }
