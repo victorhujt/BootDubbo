@@ -286,7 +286,7 @@ public class OfcOrderAPI {
                 redisOperationUtils.set("SMSCODE:"+ip+":"+phone,validateCode);
             }else{
                 redisOperationUtils.set("SMSCODE:"+ip+":"+phone,validateCode,3L,TimeUnit.MINUTES);
-                redisOperationUtils.set("SMS:"+ip,"isSend",3L, TimeUnit.MINUTES);//ip缓存十分钟
+                redisOperationUtils.set("SMS:"+ip,"isSend",5L, TimeUnit.MINUTES);//ip缓存五分钟
             }
         }
          return result;
@@ -328,8 +328,8 @@ public class OfcOrderAPI {
             //第二阀值
             if((currentTime - first) > ipLimitRuleConfig.getSecondMinTime()*60*1000 && (currentTime - first)< ipLimitRuleConfig.getSecondMaxTime()*60*1000){
                 if(reqCount > ipLimitRuleConfig.getSecondThresholdMin() && reqCount < ipLimitRuleConfig.getSecondThresholdMax()){
-                    redisOperationUtils.set("ip:"+ip,"freezing",1L, TimeUnit.MINUTES);//ip缓存十分钟
-                    logger.info("ip缓存10分钟，{}",ip);
+                    redisOperationUtils.set("ip:"+ip,"freezing",5L, TimeUnit.MINUTES);//ip缓存五分钟
+                    logger.info("ip缓存5分钟，{}",ip);
                 }
             }
             //第三阀值
