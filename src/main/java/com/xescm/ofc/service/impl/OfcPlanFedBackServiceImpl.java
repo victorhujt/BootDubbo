@@ -60,7 +60,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public Action planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName, ConcurrentHashMap cmap) {
         //根据订单号获取单及状态
         String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
-        String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
+        String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getState());
         Date traceTime = ofcPlanFedBackCondition.getTraceTime();
         String orderCodeRedisKey = OfcKeyConstants.OFC_MQ_TFC_PLAN_FED_BACK_LOCK + transPortNo + status;
         try{
