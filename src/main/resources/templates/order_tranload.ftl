@@ -434,7 +434,7 @@
                 </div>
               </div>
           </div>
-            <div>
+            <div id="signedSmsDiv">
                 <label class="control-label col-label no-padding-right" for="signedSms">发送签收短信</label>
                 <div class="col-width-168 padding-15">
                     <div class="clearfix" >
@@ -1313,9 +1313,11 @@
   $("#businessType").change(function(){
     if($("#businessType").val() == 602){
       $(".toggle").css({"display":"inline-block"});
+      $("#signedSmsDiv").show();
       $("#signedSms").prop({"checked":true});
     }else{
       $(".toggle").css({"display":"none"});
+        $("#signedSmsDiv").hide();
       $("#signedSms").prop({"checked":false});
     };
 

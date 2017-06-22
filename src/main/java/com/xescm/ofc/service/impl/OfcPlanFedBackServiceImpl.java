@@ -1,8 +1,8 @@
 package com.xescm.ofc.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
@@ -227,7 +227,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         return null;
     }
 
-    private void sendSmsWhileSigned(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) throws Exception {
+    private void sendSmsWhileSigned(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         logger.info("订单签收时发送短信给发货方 ofcFundamentalInformation:{}", ofcFundamentalInformation);
         logger.info("订单签收时发送短信给发货方 ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
         if (null == ofcDistributionBasicInfo || null == ofcFundamentalInformation) {
@@ -250,12 +250,18 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             return;
         }
         SendSmsDTO sendSmsDTO = new SendSmsDTO();
-        sendSmsDTO.setTemplate(SmsTemplatesEnum.SMS_QUERY_ORDER_CODE);
+        sendSmsDTO.setTemplate(SmsTemplatesEnum.SMS_ORDER_SIGEND_MSG);
         sendSmsDTO.setCode(transCode);
         sendSmsDTO.setNumber(phoneNumber);
         Map<String, String> map = Maps.newHashMap();
         map.put("code", transCode);
-        String param = JacksonUtil.toJson(map);
+        String param;
+        try {
+            param = JSONObject.toJSONString(map);
+        } catch (Exception ex) {
+            logger.error("转换出错{}", ex);
+            return;
+        }
         sendSmsDTO.setParamStr(param);
         Wrapper wrapper = sendSmsManager.sendSms(sendSmsDTO);
         logger.info("发送结果 == > wrapper{}", wrapper);
