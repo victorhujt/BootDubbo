@@ -102,6 +102,12 @@ public class OfcOrderAPI {
         try {
             CheckUtils.checkArgument(!queryOrderIsSwitch(INTERFACE_STATUS), ResultCodeEnum.INTERFACEISCLOSE);
             CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(code), ResultCodeEnum.PARAMERROR);
+            //验证码发送过 手机号和验证码不能为空
+            if(redisOperationUtils.hasKey("SMS:"+ip)){
+                CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(phone), ResultCodeEnum.PARAMERROR);
+                CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(captchaCode), ResultCodeEnum.PARAMERROR);
+            }
+
             if(!PubUtils.isSEmptyOrNull(captchaCode) && !PubUtils.isSEmptyOrNull(phone)){
                 if(redisOperationUtils.hasKey("SMSCODE:"+ip+":"+phone)){
                     CheckUtils.checkArgument(!(redisOperationUtils.getValue("SMSCODE:"+ip+":"+phone) == Long.parseLong(captchaCode)), ResultCodeEnum.CAPTCHACODEERROR);
