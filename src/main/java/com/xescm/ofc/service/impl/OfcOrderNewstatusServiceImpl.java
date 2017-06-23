@@ -6,7 +6,6 @@ import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackInventoryDto;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderNewstatusService;
 import com.xescm.ofc.service.OfcOrderStatusService;
@@ -16,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -27,8 +24,6 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 public class OfcOrderNewstatusServiceImpl extends BaseService<OfcOrderNewstatus> implements OfcOrderNewstatusService {
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Resource
-    private OfcOrderNewstatusMapper ofcOrderNewstatusMapper;
     @Resource
    private OfcOrderStatusService ofcOrderStatusService;
 
@@ -61,13 +56,26 @@ public class OfcOrderNewstatusServiceImpl extends BaseService<OfcOrderNewstatus>
     @Override
     public int update(OfcOrderNewstatus orderNewstatus) {
         if(null!=orderNewstatus && !PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")){
-            Map<String, String> mapperMap = new HashMap<>();
-            mapperMap.put("orderCode", orderNewstatus.getOrderCode());
-            OfcOrderNewstatus orderNewstatu=ofcOrderNewstatusMapper.orderStatusSelectNew(mapperMap);
+            OfcOrderNewstatus orderNewstatu = selectByKey(orderNewstatus.getOrderCode());
             if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
                 if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
                     return super.update(orderNewstatus);
                 }
+        }
+        return 0;
+
+    }
+
+    @Override
+    public int save(OfcOrderNewstatus orderNewstatus) {
+        if(null!=orderNewstatus && !PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")){
+            OfcOrderNewstatus orderNewstatu = selectByKey(orderNewstatus.getOrderCode());
+            if(null!=orderNewstatu){
+                if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
+                    if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
+                        return super.save(orderNewstatus);
+                    }
+            }
         }
         return 0;
 
