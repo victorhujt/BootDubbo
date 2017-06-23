@@ -13,6 +13,8 @@ import com.xescm.ofc.domain.OfcIplimitRule;
 import com.xescm.ofc.domain.OfcRuntimeProperty;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
+import com.xescm.ofc.enums.SmsTemplatesEnum;
+import com.xescm.ofc.model.dto.ofc.SendSmsDTO;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.service.OfcIpLimitRuleService;
 import com.xescm.ofc.service.OfcMobileOrderService;
@@ -21,6 +23,7 @@ import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.IpUtils;
 import com.xescm.ofc.utils.RedisOperationUtils;
+import com.xescm.ofc.utils.SendSmsManager;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -73,6 +76,9 @@ public class OfcOrderAPI {
 
     @Resource
     private CodeGenUtils codeGenUtils;
+
+    @Resource
+    private SendSmsManager sendSmsManager;
 
     /**
      * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中

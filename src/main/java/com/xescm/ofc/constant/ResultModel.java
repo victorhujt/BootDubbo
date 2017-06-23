@@ -63,6 +63,7 @@ public class ResultModel {
         CODE_2000("2000", "订单货品不能为空"),
         CODE_2001("2001", "货品编码不存在"),
         CODE_3001("3001", "收发货方编码不存在"),
+        CODE_SMS_0001("SMS_0001", "入参不可为空"),
         CODE_9999("9999", "系统异常！");
 
         private String code;

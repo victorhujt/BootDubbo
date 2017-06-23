@@ -98,127 +98,133 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Transactional
     public ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException {
         ResultModel resultModel;
+        try {
+            //校验订单日期
+            String orderTime = createOrderEntity.getOrderTime();
+            resultModel = CheckUtils.checkOrderTime(orderTime);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验订单日期【{}】失败：错误信息:{}, {}", orderTime, resultModel.getCode(), resultModel.getDesc());
+                return resultModel;
+            }
 
-        //校验订单日期
-        String orderTime = createOrderEntity.getOrderTime();
-        resultModel = CheckUtils.checkOrderTime(orderTime);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验订单日期【{}】失败：错误信息:{}, {}", orderTime, resultModel.getCode(), resultModel.getDesc());
-            return resultModel;
-        }
+            //校验数据：货主编码 对应客户中心的custId
+            String custCode = createOrderEntity.getCustCode();
 
-        //校验数据：货主编码 对应客户中心的custId
-        String custCode = createOrderEntity.getCustCode();
-
-        //校验货主编码
-        resultModel = CheckUtils.checkCustCode(custCode);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验数据{}失败：{}", "货主编码", resultModel.getCode());
-            return resultModel;
-        }
-        //校验货主名称
+            //校验货主编码
+            resultModel = CheckUtils.checkCustCode(custCode);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据{}失败：{}", "货主编码", resultModel.getCode());
+                return resultModel;
+            }
+            //校验货主名称
 //        if (StringUtils.isBlank(custName)) {
 //            logger.error("校验数据{}失败：{}", "货主名称", custName);
 //            return new ResultModel(ResultModel.ResultEnum.CODE_0008);
 //        }
 
-        QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
-        queryCustomerCodeDto.setCustomerCode(custCode);
-        Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
-        if (customerVoWrapper.getResult() == null) {
-            logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
-            return new ResultModel(ResultModel.ResultEnum.CODE_0009);
-        } else {
-            createOrderEntity.setCustName(customerVoWrapper.getResult().getCustomerName());
-        }
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(custCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+            if (customerVoWrapper.getResult() == null) {
+                logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
+                return new ResultModel(ResultModel.ResultEnum.CODE_0009);
+            } else {
+                createOrderEntity.setCustName(customerVoWrapper.getResult().getCustomerName());
+            }
 
 
+            //校验数据：订单类型
+            String orderType = createOrderEntity.getOrderType();
+            resultModel = CheckUtils.checkOrderType(orderType);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据{}失败：{},订单类型：{}", "订单类型", resultModel.getCode(), orderType);
+                return resultModel;
+            }
+            //校验：业务类型
+            String businessType = createOrderEntity.getBusinessType();
+            resultModel = CheckUtils.checkBusinessType(orderType, businessType);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
+                return resultModel;
+            }
 
-        //校验数据：订单类型
-        String orderType = createOrderEntity.getOrderType();
-        resultModel = CheckUtils.checkOrderType(orderType);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验数据{}失败：{},订单类型：{}", "订单类型", resultModel.getCode(), orderType);
-            return resultModel;
-        }
-        //校验：业务类型
-        String businessType = createOrderEntity.getBusinessType();
-        resultModel = CheckUtils.checkBusinessType(orderType, businessType);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验数据{}失败：{}，订单类型,{},业务类型:{}", "业务类型", resultModel.getCode(), orderType, businessType);
-            return resultModel;
-        }
-
-        //校验：店铺编码，获取该客户下的店铺编码
-        String storeCode = null;
-        //店铺名称
-        String storeName = null;
-        QueryStoreDto storeDto = new QueryStoreDto();
-        storeDto.setCustomerCode(custCode);
-        Wrapper<List<CscStorevo>> cscStoreVoList = cscStoreEdasService.getStoreByCustomerId(storeDto);
-        if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
-            logger.info("获取该客户下的店铺编码接口返回成功，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
-            CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
-            storeCode = cscStorevo.getStoreCode();
-            storeName = cscStorevo.getStoreName();
-        }/* else {
+            //校验：店铺编码，获取该客户下的店铺编码
+            String storeCode = null;
+            //店铺名称
+            String storeName = null;
+            QueryStoreDto storeDto = new QueryStoreDto();
+            storeDto.setCustomerCode(custCode);
+            Wrapper<List<CscStorevo>> cscStoreVoList = cscStoreEdasService.getStoreByCustomerId(storeDto);
+            if (!CollectionUtils.isEmpty(cscStoreVoList.getResult())) {
+                logger.info("获取该客户下的店铺编码接口返回成功，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
+                CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
+                storeCode = cscStorevo.getStoreCode();
+                storeName = cscStorevo.getStoreName();
+            }/* else {
             logger.error("获取该客户下的店铺编码接口返回失败，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
             resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0003);
             return resultModel;
         }*/
-        createOrderEntity.setStoreCode(storeCode);
+            createOrderEntity.setStoreCode(storeCode);
 
-        //校验：【发货方】与【收货方】//2017年3月20日 追加逻辑:收发货方地址没有细化到二级,也能过,订单状态为待审核,不进行自动审核,对地址进行匹配
+            //校验：【发货方】与【收货方】//2017年3月20日 追加逻辑:收发货方地址没有细化到二级,也能过,订单状态为待审核,不进行自动审核,对地址进行匹配
 //        resultModel = CheckUtils.checkWaresDist(createOrderEntity);
 //        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
 //            logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
 //            return resultModel;
 //        }
 
-        // 校验收发货方，如果收发货方编码不为空，则查询收发货方信息；否则校验传入收发货方字段
-        resultModel = checkContactInfo(createOrderEntity);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
-            return resultModel;
-        }
+            // 校验收发货方，如果收发货方编码不为空，则查询收发货方信息；否则校验传入收发货方字段
+            resultModel = checkContactInfo(createOrderEntity);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
+                return resultModel;
+            }
 
-        //仓库编码
-        String warehouseCode = createOrderEntity.getWarehouseCode();
-        QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
-        cscWarehouse.setCustomerCode(custCode);
-        Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
-        resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
-            return resultModel;
-        }
+            //仓库编码
+            String warehouseCode = createOrderEntity.getWarehouseCode();
+            QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
+            cscWarehouse.setCustomerCode(custCode);
+            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+            resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
+                return resultModel;
+            }
 
-        //供应商
-        //checkSupport(createOrderEntity, custCode);
+            //供应商
+            //checkSupport(createOrderEntity, custCode);
 
-        //校验：货品档案信息，校验货品明细
-        resultModel = checkGoodsDetailInfo(createOrderEntity, custCode, orderType);
-        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            logger.error("校验订单商品信息失败：{}", resultModel.getDesc());
-            return resultModel;
-        }
+            //校验：货品档案信息，校验货品明细
+            resultModel = checkGoodsDetailInfo(createOrderEntity, custCode, orderType);
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验订单商品信息失败：{}", resultModel.getDesc());
+                return resultModel;
+            }
 
-        //转换 dto → do
-        CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
-        OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
-        ofcFundamentalInformation.setStoreName(storeName);
-        OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
-        // 设置货品分类编码、名称(配送表字段)
-        this.setOfcDistributionGoodsInfo(createOrderEntity, custCode, ofcDistributionBasicInfo);
-        OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
-        OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
-        OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
-        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
-        //调用创建订单方法
-        resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
-        if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-            //操作成功
-            logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
+            //转换 dto → do
+            CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
+            OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
+            ofcFundamentalInformation.setStoreName(storeName);
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = createOrderTrans.getOfcDistributionBasicInfo();
+            // 设置货品分类编码、名称(配送表字段)
+            this.setOfcDistributionGoodsInfo(createOrderEntity, custCode, ofcDistributionBasicInfo);
+            OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
+            OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
+            OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
+            //调用创建订单方法
+            resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
+            if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                //操作成功
+                logger.info("校验数据成功，执行创单操作成功；orderCode:{}", orderCode);
+            }
+        } catch (BusinessException e) {
+            logger.error("创建订单发生异常：{}", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("创建订单发生未知异常：{}", e);
+            throw e;
         }
         return resultModel;
     }

@@ -13,6 +13,8 @@ import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +27,8 @@ import static com.xescm.ofc.constant.ResultModel.ResultEnum.CODE_0011;
  * Created by hiyond on 2016/11/15.
  */
 public class CheckUtils {
+
+    static Logger logger = LoggerFactory.getLogger(CheckUtils.class);
 
     /**
      * 货主编码
@@ -265,9 +269,18 @@ public class CheckUtils {
         return new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 
+
+    public static void validateParam(Boolean condition, String errorMsg) {
+        if (!condition) {
+            logger.error("参数校验失败, 失败原因:{}", errorMsg);
+            throw new BusinessException(errorMsg);
+        }
+    }
+
     public static void checkArgument(boolean result, ResultCodeEnum message){
         if(result){
             throw new BusinessException(message.code(), message.getMsg());
         }
     }
+
 }

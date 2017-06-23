@@ -21,6 +21,7 @@ import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
 import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
 import com.xescm.ofc.model.dto.coo.MessageDto;
+import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.DateUtils;
@@ -67,6 +68,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcCreateOrderMapper ofcCreateOrderMapper;
     @Resource
     private DistributedLockEdasService distributedLockEdasService;
+    @Resource
+    private CreateOrderApiProducer createOrderApiProducer;
 
     @Override
     public boolean CreateOrders(List<CreateOrderEntity> list) {
@@ -313,4 +316,126 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         return ofcCreateOrderMapper.queryOrderStatusList(queryOrderStatusDto);
     }
 
+    /**
+     * 根据任务表创建订单
+     * @param data
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ResultModel createOrderByTask(String data) throws Exception {
+        logger.info("订单中心创建订单接口开始");
+        ResultModel resultModel;
+        try {
+            CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
+            String custOrderCode = null;
+            String platformType = null;
+            String custCode = null;
+            String orderCode = null;
+            String key = null;
+            AtomicBoolean lockStatus = new AtomicBoolean(false);
+            try {
+                custOrderCode = createOrderEntity.getCustOrderCode();
+                platformType = createOrderEntity.getPlatformType();
+                custCode = createOrderEntity.getCustCode();
+                // 对创建订单操作进行加锁，防止订单创建重复
+                // redis key : OFC:MQ:xeOrderToOfc:<客户编码>:<客户订单号>
+                key = REDIS_LOCK_PREFIX + MQ_TAG_OrderToOfc + ":" + custCode + ":" + custOrderCode;
+                // 验证锁是否存在
+                Wrapper<String> checkLock = distributedLockEdasService.checkLocksExist(key);
+                if (Wrapper.SUCCESS_CODE != checkLock.getCode()) {
+                    // 加锁
+                    Wrapper<Integer> lock = distributedLockEdasService.addLock(key, 5);
+                    if (lock.getCode() == Wrapper.SUCCESS_CODE && lock.getResult().intValue() == 1) {
+                        lockStatus.set(true);
+                        OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+                        if (information != null) {
+                            orderCode = information.getOrderCode();
+                            OfcOrderStatus queryOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
+                            //订单已存在,获取订单的最新状态,只有待审核的才能更新
+                            if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
+                                logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
+                                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                                    this.orderCreateResult(orderCode, custOrderCode, "订单已经审核，跳过创单操作", true);
+                                }
+                                return new ResultModel(ResultModel.ResultEnum.CODE_1001);
+                            }
+                        }
+                        // 如果订单存在（待审核），则更新订单，单号不重新生成
+                        orderCode = orderCode != null ? orderCode : codeGenUtils.getNewWaterCode(GenCodePreffixConstant.ORDER_PRE, 6);
+                        //调用创建方法
+                        resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
+                        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                            logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, resultModel.getDesc());
+                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                                this.orderCreateResult(orderCode, custOrderCode, "订单创建失败:" + resultModel.getDesc(), false);
+                            }
+                        } else {
+                            logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
+                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                                this.orderCreateResult(orderCode, custOrderCode, "订单创建成功！", true);
+                            }
+                        }
+                    } else {
+                        logger.error("接口任务创建订单加锁失败：key={}", key);
+                        throw new BusinessException(ExceptionTypeEnum.LOCK_FAIL.getCode(), ExceptionTypeEnum.LOCK_FAIL.getDesc());
+                    }
+                } else {
+                    logger.error("接口任务创建订单锁存在或检查锁失败：key={}", key);
+                    throw new BusinessException(ExceptionTypeEnum.LOCK_EXIST.getCode(), ExceptionTypeEnum.LOCK_EXIST.getDesc());
+                }
+            } catch (BusinessException ex) {
+                logger.error("订单中心创建订单接口发生异常:{},{}", ex.getMessage(), ex);
+                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                    this.orderCreateResult(orderCode, custOrderCode, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                }
+                throw ex;
+            } catch (Exception ex) {
+                logger.error("订单中心创建订单接口发生未知异常: {}, {}", ex, ex.getMessage());
+                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
+                    this.orderCreateResult(orderCode, custOrderCode, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                }
+                throw ex;
+            } finally {
+                // 释放锁
+                if (lockStatus.get()) {
+                    distributedLockEdasService.clearLock(key);
+                }
+            }
+        } catch (BusinessException ex) {
+            logger.error("订单中心创建订单接口发生异常:{},{}", ex.getMessage(), ex);
+            throw ex;
+        } catch (Exception ex) {
+            logger.error("订单中心创建订单接口发生未知异常:{},{}", ex.getMessage(), ex);
+            throw ex;
+        }
+        return resultModel;
+    }
+
+    /**
+     * 创单结果发送mq
+     * @param orderCode
+     * @param custOrderCode
+     * @param result
+     * @param isSuccess
+     * @throws Exception
+     */
+    private void orderCreateResult(String orderCode, String custOrderCode, String result, boolean isSuccess) throws Exception {
+        CreateOrderResultDto resultDto = new CreateOrderResultDto();
+        String code = isSuccess ? "200" : "500";
+        String typeIdAndReason = "typeId:" + custOrderCode + "||reason:" + result;
+
+        List<MessageDto> messageDtos = new ArrayList<>();
+        MessageDto messageDto = new MessageDto();
+        messageDto.setTypeId(custOrderCode);
+        messageDtos.add(messageDto);
+
+        resultDto.setCode(code);
+        resultDto.setReason(typeIdAndReason);
+        resultDto.setMessage(messageDtos);
+
+        String jsonMsg = JacksonUtil.toJson(resultDto);
+        // 发送创单结果
+        createOrderApiProducer.sendCreateOrderResultMQ(jsonMsg, String.valueOf(jsonMsg.hashCode()));
+    }
 }
