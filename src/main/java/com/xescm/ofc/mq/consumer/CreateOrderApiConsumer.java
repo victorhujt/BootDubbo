@@ -161,7 +161,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                         ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody,ofcPlanFedBackTypeRef);
                         for(int i=0;i<ofcPlanFedBackConditions.size();i++){
                             // 保存到数
-                            Action rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName,MAP);
+                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName,MAP);
                         }
                     } catch (Exception e) {
                         logger.error("运输单出错:{}",e.getMessage(),e);
