@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>出库单详情</title>
+    <title>任务日志详情</title>
     <style lang="css">
         .borderNone .el-input__inner {
             border: none;

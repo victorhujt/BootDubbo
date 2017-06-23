@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>出库单详情</title>
+    <title>接收日志详情</title>
     <style lang="css">
         .borderNone .el-input__inner {
             border: none;
@@ -25,7 +25,7 @@
 <div id="app">
     <div class="list-mian-01">
         <div class="xe-pageHeader">
-            任务日志信息
+            接收日志信息
         </div>
         <el-form label-width="100px">
             <div class="xe-block">

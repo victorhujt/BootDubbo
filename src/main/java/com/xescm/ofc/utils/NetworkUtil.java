@@ -32,9 +32,4 @@ public class NetworkUtil {
 		}
 	}
 
-	public static void main(String[] args) {
-		System.out.println(getLocalIP());
-		System.out.println(getFreeSocketPort());
-		System.out.println(getLocalHostName());
-	}
 }
