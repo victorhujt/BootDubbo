@@ -54,7 +54,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName,ConcurrentHashMap cmap) {
         //根据订单号获取单及状态
         String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
-        String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
+        String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getState());
         Date traceTime = ofcPlanFedBackCondition.getTraceTime();
         try{
             if(transPortNo.equals("")){
@@ -163,6 +163,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "客户已回单");
                     if (!flag) {
+                        orderStatus.setTraceStatus("60");
+                        orderStatus.setTrace("已回单");
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + "客户已回单");
