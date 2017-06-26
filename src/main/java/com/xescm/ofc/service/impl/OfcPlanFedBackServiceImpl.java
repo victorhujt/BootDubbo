@@ -170,6 +170,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                     flag = checkStatus(false, statusList, "start", DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                             + " " + "客户已回单");
                     if (!flag) {
+                        orderStatus.setTraceStatus("60");
+                        orderStatus.setTrace("已回单");
                         orderStatus.setLastedOperTime(traceTime);
                         orderStatus.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                                 + " " + "客户已回单");
