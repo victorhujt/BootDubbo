@@ -65,19 +65,4 @@ public class OfcOrderNewstatusServiceImpl extends BaseService<OfcOrderNewstatus>
         return 0;
 
     }
-
-    @Override
-    public int save(OfcOrderNewstatus orderNewstatus) {
-        if(null!=orderNewstatus && !PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")){
-            OfcOrderNewstatus orderNewstatu = selectByKey(orderNewstatus.getOrderCode());
-            if(null!=orderNewstatu){
-                if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
-                    if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
-                        return super.save(orderNewstatus);
-                    }
-            }
-        }
-        return 0;
-
-    }
 }
