@@ -408,6 +408,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             logger.info("接口耗时:{}ms",(endTime - beginTime));
             if(ofcRealTimeTraceDTOResult.getCode() == Wrapper.SUCCESS_CODE){
                 if(!CollectionUtils.isEmpty(ofcRealTimeTraceDTOResult.getResult())){
+                    logger.info("调用获取实时位置的结果集为:{}",JacksonUtil.toJson(ofcRealTimeTraceDTOResult.getResult()));
                     ofcTraceOrderDTO.setOfcRealTimeTraceDTOs(ofcRealTimeTraceDTOResult.getResult());
                 }
             }
