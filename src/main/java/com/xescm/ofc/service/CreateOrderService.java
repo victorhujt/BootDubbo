@@ -1,6 +1,7 @@
 package com.xescm.ofc.service;
 
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
 import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
@@ -34,4 +35,15 @@ public interface CreateOrderService {
      * @return
      */
     List<QueryOrderStatusDto> queryOrderStatusList(QueryOrderStatusDto queryOrderStatusDto);
+
+    /**
+     * <p>Title:      createOrderByTask. </p>
+     * <p>Description 根据任务创建订单</p>
+     * 
+     * @param         
+     * @Author	      nothing
+     * @CreateDate    2017/5/24 23:59
+     * @return        
+     */
+    ResultModel createOrderByTask(String data) throws Exception;
 }

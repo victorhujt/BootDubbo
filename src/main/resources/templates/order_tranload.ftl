@@ -425,13 +425,25 @@
           </div>
         </div>
         <div class="form-group">
-          <div><label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
-            <div class="col-xs-2">
-              <div class="position-relative" style="width:433px;">
-                <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
-              <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+          <div>
+              <label class="control-label col-label no-padding-right" for="transRequire" style="margin-right:8px;">备注</label>
+              <div class="col-xs-2"  style="width:463px;">
+                <div class="position-relative">
+                  <input name="transRequire" id="transRequire" type="text" placeholder="备注" style="padding-left:8px;width:433px;" />
+                <#--<span style="cursor:pointer line-height:33px;" id="custListDivBlock">  <i class="ace-icon fa fa-user bigger-130 position-absolute icon-pic" style="color:#333;"></i></span>-->
+                </div>
               </div>
-            </div></div>
+          </div>
+            <div id="signedSmsDiv">
+                <label class="control-label col-label no-padding-right" for="signedSms">发送签收短信</label>
+                <div class="col-width-168 padding-15">
+                    <div class="clearfix" >
+                        <div class="col-width-168 position-relative" style="height:34px;">
+                            <input name="signedSms" id="signedSms" type="checkbox" checked="checked" aria-controls="dynamic-table"  style="margin-left: 6px;" >
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
       </form>
@@ -1300,10 +1312,15 @@
 
   $("#businessType").change(function(){
     if($("#businessType").val() == 602){
-      $(".toggle").css({"display":"inline-block"})
+      $(".toggle").css({"display":"inline-block"});
+      $("#signedSmsDiv").show();
+      $("#signedSms").prop({"checked":true});
     }else{
       $(".toggle").css({"display":"none"});
+        $("#signedSmsDiv").hide();
+      $("#signedSms").prop({"checked":false});
     };
+
   })
 
     function onlyNumber(value){
@@ -2311,6 +2328,11 @@
       jsonStr.notes = $("#transRequire").val();//
       jsonStr.weight = $("#weightCount").html();
       jsonStr.quantity = $("#quantityCount").html();
+        if ($("#signedSms").prop("checked")) {
+            jsonStr.signedSms = '1';
+        } else {
+            jsonStr.signedSms = '0';
+        }
       var cubageAmount ="";
       if($("#cubageCountHidden").html()!=""){
         cubageAmount = $("#cubageCountHidden").html();

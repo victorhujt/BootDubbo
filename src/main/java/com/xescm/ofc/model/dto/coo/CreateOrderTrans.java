@@ -75,6 +75,8 @@ public class CreateOrderTrans {
             notes.append(" 订单已创建");
             notes.append(" 操作人: ").append(CREATE_ORDER_BYAPI);
             notes.append(" 操作单位: ").append(CREATE_ORDER_BYAPI);
+            ofcOrderStatus.setTraceStatus(OrderConstConstant.PENDING_AUDIT);
+            ofcOrderStatus.setTrace("接收订单");
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOperator(CREATE_ORDER_BYAPI);
             ofcOrderStatus.setLastedOperTime(nowDate);

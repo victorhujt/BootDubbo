@@ -149,6 +149,18 @@ public final class OrderConstConstant {
 
     public static final String MOBILE_PENDING_ORDER_LIST = "DdMobilePendingOrderList";
 
+    public static final String QUERY_REQUEST_COUNT = "requestCount";
+
+    public static final String FIRST_REQUEST_TIME = "firstRequestTime";
+
+    public static final String IS_BLACK="1";//1:黑名单
+
+    public static final String IS_SEND="1";// 发送验证码
+
+    public static final String FREEZEED_IP="freezeedIp";// 冻结
+
+
+
 
     public OrderConstConstant() {
     }

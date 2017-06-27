@@ -1,9 +1,8 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcOrderNewstatus;
-import com.xescm.ofc.domain.OfcOrderStatus;
-import com.xescm.ofc.domain.OfcWarehouseInformation;
+import com.xescm.core.utils.PubUtils;
+import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.OfcOrderStatusDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
@@ -12,6 +11,7 @@ import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
 import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 
 /**
  * 订单状态
@@ -40,8 +41,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+
     @Resource
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    private OrderFollowOperService orderFollowOperService;
+
+    @Resource
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
 
 
 
@@ -295,6 +300,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 str = "入库单";
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 str = "出库单";
+                status.setTraceStatus("20");
+                status.setTrace("出库");
             }
 
             if(ofcWarehouseInformation!=null){
@@ -327,6 +334,68 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     * @param orderCode 订单号
+     * @return 状态跟踪
+     */
+    @Override
+    public List<OfcOrderStatusDTO> queryOrderByCode(String orderCode) {
+        logger.info("查单的订单号为:{}",orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        if(ofcFundamentalInformation != null){
+          if(ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)){
+              OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+              ofcWarehouseInformation.setOrderCode(orderCode);
+              List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
+              if(!CollectionUtils.isEmpty(ofcWarehouseInformations) && ofcWarehouseInformations.size() == 1){
+                  if(ofcWarehouseInformations.get(0).getProvideTransport() != WEARHOUSE_WITH_TRANS){
+                      throw new BusinessException("哎呀,暂不支持不提供运输的仓储订单");
+                  }
+              }
+          }
+        }else{
+            throw new BusinessException("哎呀,没有查询到相关的订单");
+        }
+
+        List<OfcOrderStatusDTO> orderStatusDtos = new ArrayList<>();
+        //获取订单的跟踪状态
+        List<OfcOrderStatus> ofcOrderStatuses = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
+        if(!CollectionUtils.isEmpty(ofcOrderStatuses)){
+            for (OfcOrderStatus status : ofcOrderStatuses) {
+                if(PubUtils.isSEmptyOrNull(status.getTrace())){
+                    continue;
+                }
+                OfcOrderStatusDTO dto = new OfcOrderStatusDTO();
+                dto.setLastOperTime(status.getLastedOperTime());
+                dto.setOperator(PubUtils.isSEmptyOrNull(status.getOperator())?"":status.getOperator());
+                dto.setTrace(status.getTrace());
+                dto.setStatus(status.getTraceStatus());
+                dto.setNotes(status.getNotes());
+                orderStatusDtos.add(dto);
+            }
+        }
+        //查询出车牌号通过车牌号查询出运输的轨迹
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+        if(ofcDistributionBasicInfo != null){
+            String plateNumber = ofcDistributionBasicInfo.getPlateNumber();
+        }
+
+
+
+
+
+
+
+
+
+
+        else{
+            throw new BusinessException("哎呀,没有查询到订单的跟踪信息");
+        }
+        return orderStatusDtos;
     }
 
 

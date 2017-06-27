@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcIplimitRuleMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcIplimitRule" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="sendSms" property="sendSms" jdbcType="VARCHAR" />
+    <result column="freeze" property="freeze" jdbcType="VARCHAR" />
+    <result column="unFreeze" property="unFreeze" jdbcType="VARCHAR" />
+    <result column="black" property="black" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <update id="updateByIp" parameterType="com.xescm.ofc.domain.OfcIplimitRule">
+    update ofc_ip_limit_rule
+    <set >
+      <if test="sendSms!=null and sendSms!=''">
+        sendSms = #{sendSms,jdbcType=VARCHAR},
+      </if>
+      <if test="freeze!=null and freeze!=''">
+        freeze = #{freeze,jdbcType=VARCHAR},
+      </if>
+      <if test="black!=null and black!=''">
+        black = #{black,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ip = #{ip,jdbcType=VARCHAR}
+  </update>
+
+</mapper>
