@@ -42,20 +42,11 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     private Logger logger = LoggerFactory.getLogger(CreateOrderApiConsumer.class);
 
-//    @Resource
-//    private CreateOrderService createOrderService;
-
-//    @Resource
-//    private CreateOrderApiProducer createOrderApiProducer;
-
     @Resource
     private OfcPlanFedBackService ofcPlanFedBackService;
 
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
-
-//    @Resource
-//    private GoodsAmountSyncService goodsAmountSyncService;
 
     @Resource
     private MqConfig mqConfig;
@@ -63,8 +54,6 @@ public class CreateOrderApiConsumer implements MessageListener {
     private OfcInterfaceReceiveLogService receiveLogService;
 
     public  static ConcurrentHashMap MAP = new ConcurrentHashMap();
-
-//    private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
