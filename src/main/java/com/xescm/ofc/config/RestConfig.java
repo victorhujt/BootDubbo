@@ -81,6 +81,27 @@ public class RestConfig {
      */
     private String acUrl;
 
+    public String getOfficalApiDevUrl() {
+        return officalApiDevUrl;
+    }
+
+    public void setOfficalApiDevUrl(String officalApiDevUrl) {
+        this.officalApiDevUrl = officalApiDevUrl;
+    }
+
+    public String getOfficalApiUrl() {
+
+        return officalApiUrl;
+    }
+
+    public void setOfficalApiUrl(String officalApiUrl) {
+        this.officalApiUrl = officalApiUrl;
+    }
+
+    private String officalApiUrl;
+
+    private String officalApiDevUrl;
+
     /**
      * 订单中心报表
      */

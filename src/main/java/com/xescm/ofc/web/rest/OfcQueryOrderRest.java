@@ -34,8 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -69,6 +69,7 @@ public class OfcQueryOrderRest {
      */
     @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.POST})
     @ResponseBody
+   // @CrossOrigin("http://47.94.11.109")
     public Wrapper queryOrderByCode(HttpServletRequest request, String code, String phone, String captchaCode) {
         Wrapper result;
         String ip = IpUtils.getIpAddr(request);
@@ -110,6 +111,7 @@ public class OfcQueryOrderRest {
      */
     @RequestMapping(value = "traceByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
+   // @CrossOrigin("http://47.94.11.109")
     public Wrapper<OfcTraceOrderDTO> traceByOrderCode(HttpServletRequest request, String orderCode) {
         Wrapper<OfcTraceOrderDTO> result;
         try {
@@ -226,6 +228,7 @@ public class OfcQueryOrderRest {
      */
     @RequestMapping(value = "getValidateCode", method = {RequestMethod.POST})
     @ResponseBody
+    //@CrossOrigin("http://47.94.11.109")
     public Wrapper<?> getValidateCode(HttpServletRequest request,String phone) throws Exception {
         String ip = IpUtils.getIpAddr(request);
         if(redisOperationUtils.hasKey("ip:"+ip+SENDSMS_REQUEST_COUNT)){
