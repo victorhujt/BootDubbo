@@ -226,6 +226,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         } else if (reviewTag.equals(REVIEW)) {
             if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT)) {
+                OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+                //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
+                if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
+                        || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
+                    logger.error("订单没有基地信息, 维持待审核状态");
+                    return String.valueOf(Wrapper.SUCCESS_CODE);
+                }
                 ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
                 ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单审核完成");
@@ -233,7 +240,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderStatus.setLastedOperTime(new Date());
                 ofcOrderStatusService.save(ofcOrderStatus);
 
-                OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
@@ -421,7 +427,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         cancelOrderDTO.setWarehouseID(warehouseCode);
         cancelOrderDTO.setOrderType(orderType);
         cancelOrderDTO.setCustomerID(customerCode);
-        cancelOrderDTO.setOperationName(userName);
+        //cancelOrderDTO.setOperationName(userName);
         Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
         logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
         return response;
@@ -1648,6 +1654,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
             ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
             ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setTrace("接收订单");
+            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);
@@ -1660,6 +1668,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
             ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
             ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setTrace("接收订单");
+            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);
@@ -1881,7 +1891,19 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode)) {
                     this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
                 }
+                //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
+                if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
+                        || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
+                    logger.error("订单没有基地信息, 维持待审核状态");
+                    return String.valueOf(Wrapper.SUCCESS_CODE);
+                }
                 this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
+            }
+            //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
+            if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
+                    || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
+                logger.error("订单没有基地信息, 维持待审核状态");
+                return String.valueOf(Wrapper.SUCCESS_CODE);
             }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
@@ -2126,7 +2148,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
             tfcTransportDetail.setGoodsType(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsType()));
             tfcTransportDetail.setGoodsCategory(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsCategory()));
-            tfcTransportDetail.setPack(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getPack()));
+            tfcTransportDetail.setPack(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getPackageName()));
             tfcTransportDetail.setChargingWays(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getChargingWays()));
             tfcTransportDetails.add(tfcTransportDetail);
         }
@@ -2355,6 +2377,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatus.setOrderStatus(orderStatus);
         logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", orderCode, ofcOrderStatus.toString());
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals(REVIEW)) {
+            OfcFundamentalInformation ofcFundamentalInformation= ofcFundamentalInformationService.selectByKey(orderCode);
+            if (null==ofcFundamentalInformation) {
+                throw new BusinessException("该订单不存在或者已删除");
+            }
+            //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
+            if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
+                    || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
+                logger.error("订单没有基地信息, 维持待审核状态");
+                return String.valueOf(Wrapper.SUCCESS_CODE);
+            }
             String userName = authResDtoByToken.getUserName();
             ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
             ofcOrderStatus.setStatusDesc("已审核");
@@ -2365,10 +2397,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (save == 0) {
                 logger.error("自动审核出错, 更新订单状态为已审核失败");
                 throw new BusinessException("自动审核出错!");
-            }
-            OfcFundamentalInformation ofcFundamentalInformation= ofcFundamentalInformationService.selectByKey(orderCode);
-            if (null==ofcFundamentalInformation) {
-                throw new BusinessException("该订单不存在或者已删除");
             }
             OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
             OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);

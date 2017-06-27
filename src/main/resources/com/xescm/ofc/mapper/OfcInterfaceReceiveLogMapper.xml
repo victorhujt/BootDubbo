@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcInterfaceReceiveLogMapper">
+    <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcInterfaceReceiveLog">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="log_business_type" property="logBusinessType" jdbcType="VARCHAR"/>
+        <result column="log_from_sys" property="logFromSys" jdbcType="VARCHAR"/>
+        <result column="log_to_sys" property="logToSys" jdbcType="VARCHAR"/>
+        <result column="ref_no" property="refNo" jdbcType="VARCHAR"/>
+        <result column="log_type" property="logType" jdbcType="VARCHAR"/>
+        <result column="log_data" property="logData" jdbcType="VARCHAR"/>
+        <result column="log_status" property="logStatus" jdbcType="INTEGER"/>
+        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="process_time" property="processTime" jdbcType="TIMESTAMP"/>
+        <result column="process_count" property="processCount" jdbcType="INTEGER"/>
+        <result column="process_result" property="processResult" jdbcType="VARCHAR"/>
+        <result column="dr" property="dr" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumn">
+      id, log_business_type, log_from_sys, log_to_sys, ref_no, log_type, log_data, log_status, creation_time, process_time, process_count, process_result, dr
+    </sql>
+
+    <insert id="insertOfcInterfaceReceiveLog" parameterType="com.xescm.ofc.domain.OfcInterfaceReceiveLog">
+        insert into ofc_interface_receive_log (
+            id, log_business_type, log_from_sys, log_to_sys, ref_no, log_type,
+            log_data, log_status, creation_time, process_count, process_result, dr
+        )
+        values (
+          #{id}, #{logBusinessType}, #{logFromSys}, #{logToSys}, #{refNo}, #{logType},
+          #{logData}, #{logStatus}, #{creationTime}, #{processTime}, #{processResult}, #{dr}
+        )
+
+    </insert>
+
+    <select id="queryInterfaceReceiveLog" resultType="com.xescm.ofc.model.vo.ofc.OfcInterfaceReceiveLogVo">
+        select
+        lg.id,
+        busType.enum_name as log_business_type,
+        fromType.enum_name as log_from_sys,
+        toType.enum_name as log_to_sys,
+        ref_no,
+        log_type,
+        log_data,
+        log_status,
+        creation_time,
+        process_time,
+        process_count,
+        process_result,
+        dr
+        from ofc_interface_receive_log lg
+        left join (select * from ofc_enumeration where enum_sys = 'OFC') busType on
+        lg.log_business_type = busType.enum_value
+        left join (select * from ofc_enumeration where enum_sys = 'OFC') fromType on
+        lg.log_from_sys = fromType.enum_value
+        left join (select * from ofc_enumeration where enum_sys = 'OFC') toType on
+        lg.log_to_sys = toType.enum_value
+        <where>
+            1 = 1 and dr = 0
+            <if test="id != null and id != ''">
+                and lg.id = #{id}
+            </if>
+            <if test="logBusinessType != null and logBusinessType != ''">
+                and log_business_type = #{logBusinessType}
+            </if>
+            <if test="logFromSys != null and logFromSys != ''">
+                and log_from_sys = #{logFromSys}
+            </if>
+            <if test="logToSys != null and logToSys != ''">
+                and log_to_sys = #{logToSys}
+            </if>
+            <if test="refNo != null and refNo != ''">
+                and ref_no like concat('%', #{refNo}, '%')
+            </if>
+            <if test="logType != null and logType != ''">
+                and log_type = #{logType}
+            </if>
+            <if test="logStatus != null and logStatus != ''">
+                and log_status = #{logStatus}
+            </if>
+            <if test="beginDate != null and beginDate != ''">
+                and creation_time <![CDATA[ >= ]]> #{beginDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and creation_time <![CDATA[ <= ]]> #{endDate}
+            </if>
+        </where>
+        order by creation_time desc
+    </select>
+
+    <update id="resendReceiveLogById">
+        update ofc_interface_receive_log set log_status = 1, process_count = process_count - 1, process_time = null, process_result = null where id = (select source_log_id from ofc_task_interface_log where id = #{id})
+    </update>
+</mapper>

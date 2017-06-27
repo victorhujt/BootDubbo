@@ -64,6 +64,16 @@ public class OfcOrderStatus {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS",timezone = "GMT+8")
     @Column(name = "creation_time")
     private String creationTime;
+    /**
+     *运输单的状态追踪
+     */
+    @Column(name = "trace_status")
+    private String traceStatus;
+    /**
+     *运输单的追踪
+     */
+    @Column(name = "trace")
+    private String trace;
 
     public String getId() {
         return id;

@@ -239,6 +239,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
             ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
             ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setTrace("接收订单");
+            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);

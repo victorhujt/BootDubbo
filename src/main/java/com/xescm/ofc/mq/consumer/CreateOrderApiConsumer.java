@@ -7,18 +7,19 @@ import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
-import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.config.MqConfig;
+import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
 import com.xescm.ofc.domain.OfcPlanFedBackCondition;
 import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
+import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
+import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
+import com.xescm.ofc.edas.enums.LogSourceSysEnum;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
-import com.xescm.ofc.enums.ExceptionTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.mq.producer.CreateOrderApiProducer;
-import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.service.GoodsAmountSyncService;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
@@ -29,8 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,11 +42,11 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     private Logger logger = LoggerFactory.getLogger(CreateOrderApiConsumer.class);
 
-    @Resource
-    private CreateOrderService createOrderService;
+//    @Resource
+//    private CreateOrderService createOrderService;
 
-    @Resource
-    private CreateOrderApiProducer createOrderApiProducer;
+//    @Resource
+//    private CreateOrderApiProducer createOrderApiProducer;
 
     @Resource
     private OfcPlanFedBackService ofcPlanFedBackService;
@@ -54,15 +54,17 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
 
-    @Resource
-    private GoodsAmountSyncService goodsAmountSyncService;
+//    @Resource
+//    private GoodsAmountSyncService goodsAmountSyncService;
 
     @Resource
     private MqConfig mqConfig;
+    @Resource
+    private OfcInterfaceReceiveLogService receiveLogService;
 
     public  static ConcurrentHashMap MAP = new ConcurrentHashMap();
 
-    private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
+//    private List<String> keyList = Collections.synchronizedList(new ArrayList<String>());
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
@@ -72,7 +74,7 @@ public class CreateOrderApiConsumer implements MessageListener {
         String userName ="";
         String key = message.getKey();
         String messageBody = null;
-        messageBody = new String(message.getBody());
+        messageBody = new String(message.getBody(), StandardCharsets.UTF_8);
         logger.info("OFC消费MQ开始。。。MessageBody:" + messageBody + ",topicName:" + topicName + ",tag:" + tag );
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
@@ -80,41 +82,54 @@ public class CreateOrderApiConsumer implements MessageListener {
                 logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
                 String result = null;
                 try {
-                    if(!keyList.contains(key)) {
-                        result = createOrderService.createOrder(messageBody);
-                        keyList.add(key);
+                    List<CreateOrderEntity> orderEntities = JacksonUtil.parseJsonWithFormat(messageBody, new TypeReference<List<CreateOrderEntity>>() {});
+                    for (CreateOrderEntity orderEntity : orderEntities) {
+                        String custOrderCode = orderEntity.getCustOrderCode();
+                        OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();
+                        receiveLog.setLogBusinessType(LogBusinessTypeEnum.EDI_ORDER.getCode());
+                        receiveLog.setLogFromSys(LogSourceSysEnum.EPC.getCode());
+                        receiveLog.setRefNo(custOrderCode);
+                        receiveLog.setLogType(LogInterfaceTypeEnum.MQ.getCode());
+                        receiveLog.setLogData(JacksonUtil.toJson(orderEntity));
+                        receiveLogService.insertOfcInterfaceReceiveLogWithTask(receiveLog);
                     }
+//                    if(!keyList.contains(key)) {
+//                        result = createOrderService.createOrder(messageBody);
+//                        keyList.add(key);
+//                    }
                 } catch (BusinessException ex) {
                     logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
-                    if (!PubUtils.isOEmptyOrNull(ex) && ExceptionTypeEnum.LOCK_FAIL.getCode().equals(ex.getCode())) {
+//                    if (!PubUtils.isOEmptyOrNull(ex) && ExceptionTypeEnum.LOCK_FAIL.getCode().equals(ex.getCode())) {
                         return Action.ReconsumeLater;
-                    }
+//                    }
                 } catch (Exception ex) {
                     logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
+                    return Action.ReconsumeLater;
                 } finally {
                     logger.info("创单api消费MQ获取message处理结束");
                     //调用MQ生产者
-                    if (StringUtils.isNotBlank(result)) {
-                        String code = String.valueOf(result.hashCode());
-                        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
-                    }
+//                    if (StringUtils.isNotBlank(result)) {
+//                        String code = String.valueOf(result.hashCode());
+//                        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
+//                    }
                 }
             }else if(message.getTag().equals("goodsAmountSync")){//众品订单交货量同步接口
                 //接收分拣中心回传的状态
                 logger.info("对接中心订单交货量调整消息体:{}",messageBody);
                 logger.info("订单中心消费对接中心同步交货量开始消费topic:{},tag:{},key{}",topicName,tag,key);
-                GoodsAmountSyncDto goodsAmountSyncDto;
                 try {
-                    goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
-                    goodsAmountSyncService.goodsAmountSync(goodsAmountSyncDto);
+                    GoodsAmountSyncDto goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
+                    String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
+                    OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();
+                    receiveLog.setLogBusinessType(LogBusinessTypeEnum.EDI_GOODS_AMOUNT.getCode());
+                    receiveLog.setLogFromSys(LogSourceSysEnum.EPC.getCode());
+                    receiveLog.setRefNo(custOrderCode);
+                    receiveLog.setLogType(LogInterfaceTypeEnum.MQ.getCode());
+                    receiveLog.setLogData(JacksonUtil.toJson(goodsAmountSyncDto));
+                    receiveLogService.insertOfcInterfaceReceiveLogWithTask(receiveLog);
                 } catch (Exception e) {
                     logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
-                    logger.info("================> 失败消费次数：" + message.getReconsumeTimes());
-                    if (message.getReconsumeTimes() < 16) {
-                        return Action.ReconsumeLater;
-                    } else {
-                        return Action.CommitMessage;
-                    }
+                    return Action.ReconsumeLater;
                 }
             }
 
