@@ -67,7 +67,7 @@ public class OfcQueryOrderRest {
      * @param code 客户订单号 或者运输单号 或者订单号
      * @return  订单号集合
      */
-    @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.GET})
+    @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.POST})
     @ResponseBody
     public Wrapper queryOrderByCode(HttpServletRequest request, String code, String phone, String captchaCode) {
         Wrapper result;
