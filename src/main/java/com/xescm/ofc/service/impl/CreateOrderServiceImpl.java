@@ -121,7 +121,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                     if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                         logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
                                         if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                                            addCreateOrderEntityList(true, "订单已经审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
+                                            addCreateOrderEntityList(true, "订单已经创建并审核，跳过创单操作", custOrderCode, orderCode, new ResultModel(ResultModel.ResultEnum.CODE_1001), createOrderResultList);
                                         }
                                         return "";
                                     }
