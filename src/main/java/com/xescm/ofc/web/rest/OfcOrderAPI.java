@@ -13,8 +13,6 @@ import com.xescm.ofc.domain.OfcIplimitRule;
 import com.xescm.ofc.domain.OfcRuntimeProperty;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
-import com.xescm.ofc.enums.SmsTemplatesEnum;
-import com.xescm.ofc.model.dto.ofc.SendSmsDTO;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.service.OfcIpLimitRuleService;
 import com.xescm.ofc.service.OfcMobileOrderService;
@@ -23,13 +21,11 @@ import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.utils.IpUtils;
 import com.xescm.ofc.utils.RedisOperationUtils;
-import com.xescm.ofc.utils.SendSmsManager;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,7 +48,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 /**
  * Created by lyh on 2017/3/31.
  */
-@RequestMapping(value = "/api/ofc", produces = {"application/json;charset=UTF-8"})
+@RequestMapping(value = "/www/ofc", produces = {"application/json;charset=UTF-8"})
 @Controller
 public class OfcOrderAPI {
 
@@ -77,8 +73,6 @@ public class OfcOrderAPI {
     @Resource
     private CodeGenUtils codeGenUtils;
 
-    @Resource
-    private SendSmsManager sendSmsManager;
 
     /**
      * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中
@@ -101,7 +95,7 @@ public class OfcOrderAPI {
      */
     @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.POST})
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
+   // @CrossOrigin(origins = "http://localhost:3000")
     public Wrapper queryOrderByCode(HttpServletRequest request,String code,String phone,String captchaCode) {
         Wrapper result;
         String ip = IpUtils.getIpAddr(request);
@@ -144,7 +138,7 @@ public class OfcOrderAPI {
      */
     @RequestMapping(value = "traceByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
+   // @CrossOrigin(origins = "http://localhost:3000")
     public Wrapper<OfcTraceOrderDTO> traceByOrderCode(HttpServletRequest request,String orderCode) {
         Wrapper<OfcTraceOrderDTO> result;
         try {
@@ -262,7 +256,7 @@ public class OfcOrderAPI {
      */
     @RequestMapping(value = "getValidateCode", method = {RequestMethod.POST})
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
+    //@CrossOrigin(origins = "http://localhost:3000")
     public Wrapper<?> getValidateCode(HttpServletRequest request,String phone) throws Exception {
         String ip = IpUtils.getIpAddr(request);
         if(redisOperationUtils.hasKey("ip:"+ip+SENDSMS_REQUEST_COUNT)){
