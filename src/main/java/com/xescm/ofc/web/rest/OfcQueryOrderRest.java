@@ -66,7 +66,6 @@ public class OfcQueryOrderRest {
      */
     @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.POST})
     @ResponseBody
-   // @CrossOrigin("http://47.94.11.109")
     public Wrapper queryOrderByCode(HttpServletRequest request, String code, String phone, String captchaCode) {
         Wrapper result;
         String ip = IpUtils.getIpAddr(request);
@@ -108,7 +107,6 @@ public class OfcQueryOrderRest {
      */
     @RequestMapping(value = "traceByOrderCode", method = {RequestMethod.POST})
     @ResponseBody
-   // @CrossOrigin("http://47.94.11.109")
     public Wrapper<OfcTraceOrderDTO> traceByOrderCode(HttpServletRequest request, String orderCode) {
         Wrapper<OfcTraceOrderDTO> result;
         try {
@@ -205,7 +203,6 @@ public class OfcQueryOrderRest {
      */
     @RequestMapping(value = "getValidateCode", method = {RequestMethod.POST})
     @ResponseBody
-    //@CrossOrigin("http://47.94.11.109")
     public Wrapper<?> getValidateCode(HttpServletRequest request,String phone) throws Exception {
         String ip = IpUtils.getIpAddr(request);
         if(redisOperationUtils.hasKey("ip:"+ip+SENDSMS_REQUEST_COUNT)){
