@@ -1,6 +1,9 @@
 package com.xescm.ofc.web.interceptor;
 
+import com.xescm.base.model.wrap.WrapMapper;
+import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.exception.BusinessException;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcRuntimeProperty;
 import com.xescm.ofc.enums.ResultCodeEnum;
@@ -15,8 +18,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 import static com.xescm.ofc.constant.OrderConstConstant.INTERFACE_STATUS;
 
@@ -46,9 +51,13 @@ public class LimitRuleInterceptor implements HandlerInterceptor {
         }catch (BusinessException be){
             isSuccess = false;
             logger.error("调用次数校验异常:{}", be.getMessage(), be);
+            logger.info(JacksonUtil.toJson(WrapMapper.wrap(ResultCodeEnum.getErrorCode(be.getCode()), be.getMessage())));
+            handleException(httpServletRequest,httpServletResponse, JacksonUtil.toJson(WrapMapper.wrap(ResultCodeEnum.getErrorCode(be.getCode()), be.getMessage())));
         }catch (Exception e){
             isSuccess = false;
             logger.error("调用次数校验异常:{}", e.getMessage(), e);
+            logger.info(JacksonUtil.toJson(WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE)));
+            handleException(httpServletRequest,httpServletResponse, JacksonUtil.toJson(WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE)));
         }
         return isSuccess;
     }
@@ -73,5 +82,13 @@ public class LimitRuleInterceptor implements HandlerInterceptor {
             }
         }
         return flag;
+    }
+
+    private boolean handleException(HttpServletRequest req, ServletResponse res, String msg) throws IOException {
+            res.resetBuffer();
+            res.setContentType("application/json");
+            res.getWriter().write(msg);
+            res.flushBuffer();
+        return false;
     }
 }

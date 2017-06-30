@@ -25,7 +25,6 @@
 package com.xescm.ofc.config;
 
 import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
-import com.xescm.ofc.web.interceptor.LimitRuleInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -45,8 +44,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Resource
     private AuthViewInterceptor authViewInterceptor;
-    @Resource
-    private LimitRuleInterceptor limitRuleInterceptor;
+//    @Resource
+//    private LimitRuleInterceptor limitRuleInterceptor;
 	
 	@Value("${env}")
 	private String env;
@@ -65,7 +64,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     	authViewInterceptor.setEnv(env);
 //		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
         registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/platformDaily", "/ofc/rule", "/ofc/queryDailyAccount", "/ofc/searchOverallOrder");
-        registry.addInterceptor(limitRuleInterceptor).addPathPatterns("/www/ofc/queryOrderByCode","/www/ofc/traceByOrderCode");
+       // registry.addInterceptor(limitRuleInterceptor).addPathPatterns("/www/ofc/queryOrderByCode","/www/ofc/traceByOrderCode");
     }
 
 }
