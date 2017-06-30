@@ -13,27 +13,24 @@ import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.service.OfcIpLimitRuleService;
-import com.xescm.ofc.utils.CheckUtils;
-import com.xescm.ofc.utils.CodeGenUtils;
-import com.xescm.ofc.utils.IpUtils;
-import com.xescm.ofc.utils.RedisOperationUtils;
+import com.xescm.ofc.utils.*;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -132,77 +129,57 @@ public class OfcQueryOrderRest {
 
 
     @RequestMapping(value = "getCaptcha", method = {RequestMethod.POST})
-    public void getCaptcha(HttpServletRequest request, HttpServletResponse response){
-        int width = 200;// 验证码图片宽
-        int height = 60;// 验证码图片高
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-        Graphics g = null;
-        ServletOutputStream sos = null;
+    @ResponseBody
+    public Wrapper<?> getCaptcha(HttpServletRequest request, HttpServletResponse response){
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        Map<String,String> result = new HashedMap();
+        String str = null;
         try {
-            g = image.getGraphics();
-            Random random = new Random();// 创建
-            g.setColor(getRandColor(200, 250));
-            g.fillRect(0, 0, width, height);
-            g.setColor(getRandColor(0, 255));
-            g.drawRect(0, 0, width - 1, height - 1);
-            g.setColor(getRandColor(160, 200));// 随机产生5条干扰线，使图象中的认证码不易被其它程序探测
-            for (int i = 0; i < 8; i++) {
-                int x = random.nextInt(width);
-                int y = random.nextInt(height);
-                int x1 = random.nextInt(width);
-                int y1 = random.nextInt(height);
-                g.drawLine(x, y, x1, y1);
-            }
-            g.setColor(getRandColor(160, 200));// 随机产生100点，使图象中的认证码不易被其它程序探测到
-            for (int i = 0; i < 100; i++) {
-                int x = random.nextInt(width);
-                int y = random.nextInt(height);
-                g.drawLine(x, y, x, y);
-            }
-            Font font = new Font("Consolas", Font.ITALIC, 50);
-            g.setFont(font);// 设置字体
-            int length = 6; // 设置默认生成4个验证码
-            String s = "abcdefghjklmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 设置包括"a-z"和数0-9"
-            String sRand = "";
-            g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
-            for (int i = 0; i < length; i++) {
-                String ch = String.valueOf(s.charAt(random.nextInt(s.length())));
-                sRand += ch;
-                g.drawString(ch, 30 * i + 15, (random.nextInt(5) - 2) * i + 45);
-            }
-            g.dispose();// 图像生效
-            // 禁止图像缓存
-            response.reset();
-            response.resetBuffer();
-            response.setHeader("Pragma", "No-cache");
-            response.setHeader("Cache-Control", "no-cache");
-            response.setDateHeader("Expires", 0);
-            response.setContentType("image/jpeg");
-            // 创建二进制的输出
-            sos = response.getOutputStream();
-            // 将图像输出到Servlet输出
-            ImageIO.write(image, "jpeg", sos);
-        } catch (IOException e) {
+            str = RandomGraphic.createInstance(4).drawInputstr(4,RandomGraphic.GRAPHIC_PNG,output);
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                response.flushBuffer();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                g.dispose();
-            } finally {
-                if (sos != null) {
-                    try {
-                        sos.flush();
-                        sos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        }
+        System.out.println("----------------str:"+str);
+        result.put("str",str);
+        byte[] captcha = output.toByteArray();
+        BASE64Encoder encoder = new BASE64Encoder();
+        String imagestr =  encoder.encode(captcha);// 返回Base64编码过的字节数组字符串
+        System.out.println("----------------:"+imagestr);
+        result.put("imagestr","data:image/png;base64,"+imagestr);
+        System.out.println("----------------:"+captcha.toString());
+        /*String path = "D:/myimg.png";
+        String path2 = "D:/myimg2.png";
+        byte[] data = captcha;
+        if(data.length<3||path.equals("")) return null;
+        try{
+            FileImageOutputStream imageOutput = new FileImageOutputStream(new File(path));
+            imageOutput.write(data, 0, data.length);
+            imageOutput.close();
+            System.out.println("Make Picture success,Please find image in " + path);
+        } catch(Exception ex) {
+            System.out.println("Exception: " + ex);
+            ex.printStackTrace();
+        }*/
+
+        BASE64Decoder decoder = new BASE64Decoder();
+        /*try {
+            // Base64解码
+            byte[] bytes = decoder.decodeBuffer(imagestr);
+            for (int i = 0; i < bytes.length; ++i) {
+                if (bytes[i] < 0) {// 调整异常数据
+                    bytes[i] += 256;
                 }
             }
-        }
+            // 生成jpeg图片
+            OutputStream out = new FileOutputStream(path2);
+            out.write(bytes);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+
+        }*/
+        return WrapMapper.wrap(200,"生成验证码成功",result);
     }
 
     private Color getRandColor(int lower, int upper) {
