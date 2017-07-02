@@ -13,24 +13,23 @@ import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.service.OfcIpLimitRuleService;
-import com.xescm.ofc.utils.*;
+import com.xescm.ofc.service.OfcValidationCodeService;
+import com.xescm.ofc.utils.CheckUtils;
+import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.IpUtils;
+import com.xescm.ofc.utils.RedisOperationUtils;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -52,6 +51,8 @@ public class OfcQueryOrderRest {
     private OfcIpLimitRuleService ofcIpLimitRuleService;
     @Resource
     private EpcSendMessageEdasService epcSendMessageEdasService;
+    @Resource
+    private OfcValidationCodeService ofcValidationCodeService;
     @Resource
     private IpLimitRuleConfig ipLimitRuleConfig;
     @Resource
@@ -128,55 +129,8 @@ public class OfcQueryOrderRest {
 
     @RequestMapping(value = "getCaptcha", method = {RequestMethod.POST})
     @ResponseBody
-    public Wrapper<?> getCaptcha(HttpServletRequest request, HttpServletResponse response){
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        Map<String,String> result = new HashedMap();
-        String str = null;
-        try {
-            str = RandomGraphic.createInstance(4).drawInputstr(4,RandomGraphic.GRAPHIC_PNG,output);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("----------------str:"+str);
-        result.put("str",str);
-        byte[] captcha = output.toByteArray();
-        BASE64Encoder encoder = new BASE64Encoder();
-        String imagestr =  encoder.encode(captcha);// 返回Base64编码过的字节数组字符串
-        System.out.println("----------------:"+imagestr);
-        result.put("imagestr","data:image/png;base64,"+imagestr);
-        System.out.println("----------------:"+captcha.toString());
-        /*String path = "D:/myimg.png";
-        String path2 = "D:/myimg2.png";
-        byte[] data = captcha;
-        if(data.length<3||path.equals("")) return null;
-        try{
-            FileImageOutputStream imageOutput = new FileImageOutputStream(new File(path));
-            imageOutput.write(data, 0, data.length);
-            imageOutput.close();
-            System.out.println("Make Picture success,Please find image in " + path);
-        } catch(Exception ex) {
-            System.out.println("Exception: " + ex);
-            ex.printStackTrace();
-        }*/
-
-        BASE64Decoder decoder = new BASE64Decoder();
-        /*try {
-            // Base64解码
-            byte[] bytes = decoder.decodeBuffer(imagestr);
-            for (int i = 0; i < bytes.length; ++i) {
-                if (bytes[i] < 0) {// 调整异常数据
-                    bytes[i] += 256;
-                }
-            }
-            // 生成jpeg图片
-            OutputStream out = new FileOutputStream(path2);
-            out.write(bytes);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-
-        }*/
+    public Wrapper<?> getCaptcha(){
+        Map<String,String> result = ofcValidationCodeService.getValidationCode();
         return WrapMapper.wrap(200,"生成验证码成功",result);
     }
 
