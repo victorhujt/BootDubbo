@@ -23,14 +23,12 @@ package com.xescm.ofc.utils;/**
 
  */
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Random;
 
 /**
@@ -402,56 +400,6 @@ public class RandomGraphic {
             g.setColor(getColor(alpha));
             g.drawOval(x,y,random.nextInt(3),random.nextInt(3));
         }
-    }
-
-
-
-    public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
-
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        String str = RandomGraphic.createInstance(4).drawInputstr(4,RandomGraphic.GRAPHIC_PNG,output);
-        System.out.println("----------------str:"+str);
-        byte[] captcha = output.toByteArray();
-        BASE64Encoder encoder = new BASE64Encoder();
-
-        String imagestr =  encoder.encode(captcha);// 返回Base64编码过的字节数组字符串
-        System.out.println("----------------:"+imagestr);
-        System.out.println("----------------:"+captcha.toString());
-        String path = "D:/myimg.png";
-        String path2 = "D:/myimg2.png";
-        byte[] data = captcha;
-        if(data.length<3||path.equals("")) return;
-        try{
-            FileImageOutputStream imageOutput = new FileImageOutputStream(new File(path));
-            imageOutput.write(data, 0, data.length);
-            imageOutput.close();
-            System.out.println("Make Picture success,Please find image in " + path);
-        } catch(Exception ex) {
-            System.out.println("Exception: " + ex);
-            ex.printStackTrace();
-        }
-
-        BASE64Decoder decoder = new BASE64Decoder();
-        try {
-            // Base64解码
-            byte[] bytes = decoder.decodeBuffer(imagestr);
-            for (int i = 0; i < bytes.length; ++i) {
-                if (bytes[i] < 0) {// 调整异常数据
-                    bytes[i] += 256;
-                }
-            }
-            // 生成jpeg图片
-            OutputStream out = new FileOutputStream(path2);
-            out.write(bytes);
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-
-        }
-        //
-        // System.out.println(RandomGraphic.createInstance(4).drawAlpha(RandomGraphic.GRAPHIC_JPEG,new FileOutputStream("D:/myimg2.png")));
-
     }
 
 }
