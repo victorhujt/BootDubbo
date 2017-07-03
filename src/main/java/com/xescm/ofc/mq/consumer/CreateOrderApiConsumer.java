@@ -82,25 +82,14 @@ public class CreateOrderApiConsumer implements MessageListener {
                         receiveLog.setLogData(JacksonUtil.toJson(orderEntity));
                         receiveLogService.insertOfcInterfaceReceiveLogWithTask(receiveLog);
                     }
-//                    if(!keyList.contains(key)) {
-//                        result = createOrderService.createOrder(messageBody);
-//                        keyList.add(key);
-//                    }
                 } catch (BusinessException ex) {
                     logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
-//                    if (!PubUtils.isOEmptyOrNull(ex) && ExceptionTypeEnum.LOCK_FAIL.getCode().equals(ex.getCode())) {
                         return Action.ReconsumeLater;
-//                    }
                 } catch (Exception ex) {
                     logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
                     return Action.ReconsumeLater;
                 } finally {
                     logger.info("创单api消费MQ获取message处理结束");
-                    //调用MQ生产者
-//                    if (StringUtils.isNotBlank(result)) {
-//                        String code = String.valueOf(result.hashCode());
-//                        createOrderApiProducer.sendCreateOrderResultMQ(result, code);
-//                    }
                 }
             }else if(message.getTag().equals("goodsAmountSync")){//众品订单交货量同步接口
                 //接收分拣中心回传的状态

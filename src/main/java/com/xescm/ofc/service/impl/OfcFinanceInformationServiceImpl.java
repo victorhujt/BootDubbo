@@ -24,7 +24,9 @@ public class OfcFinanceInformationServiceImpl extends BaseService<OfcFinanceInfo
         return ofcFinanceInformationMapper.queryByOrderCode(orderCode);
     }
 
-
-
+    @Override
+    public int updateByOrderCode(Object key) {
+        return ofcFinanceInformationMapper.updateByOrderCode(key);
+    }
 
 }

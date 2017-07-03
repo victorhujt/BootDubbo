@@ -674,13 +674,13 @@
         <div class="form-group">
           <div style="width:280px;margin:0 0 0 15px;float:left;">
             <div class="clearfix col-xs-1" style="margin-top:4px;">
-              <input id="returnListV" type="checkbox" name=""  class="btn btn-minier btn-inverse no-padding-right"/>
-              <input id="returnList" type="hidden" name="returnList"  value="0" />
+              <input id="returnListV" type="checkbox" name="" checked class="btn btn-minier btn-inverse no-padding-right"/>
+              <input id="returnList" type="hidden" name="returnList"  value="1" />
             </div>
             <label class="control-label col-width-110" for="name" style="padding:0px 15px 0; 10px">签单返回:费用</label>
             <div style="width:140px;float:left;">
               <div  class="col-width-100 margin-right-15">
-                <input class="col-width-100" id="returnListFee" disabled="true" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
+                <input class="col-width-100" id="returnListFee" value="0" style="color: #000" name="returnListFee" type="text" class="form-control input-sm" placeholder="" aria-controls="dynamic-table" onblur="countCostCheck()">
               </div>
               <label class="control-label" for="name" style="height:34px;line-height:34px;">元</label>
             </div>
@@ -2237,6 +2237,7 @@
       if($(this).prop("checked")){
         $("#returnList").val("1");
         $("#returnListFee").removeAttr("disabled");//要变成Enable，JQuery只能这么写
+        $("#returnListFee").val("0");
       }else{
         $("#returnList").val("0");
         $("#returnListFee").attr("disabled","disabled");
