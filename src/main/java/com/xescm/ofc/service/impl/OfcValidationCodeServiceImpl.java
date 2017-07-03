@@ -30,14 +30,13 @@ public class OfcValidationCodeServiceImpl implements OfcValidationCodeService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("----------------str:"+str);
+        logger.info("-----------str:{}",str);
         result.put("str",str);
         byte[] captcha = output.toByteArray();
         String imagestr = Base64Utils.Encrypt(captcha);// 返回Base64编码过的字节数组字符串
-        System.out.println("----------------:"+imagestr);
+        logger.info("-----------imagestr:{}",imagestr);
         result.put("imagestr","data:image/png;base64,"+imagestr);
-        System.out.println("----------------:"+captcha.toString());
-
+        logger.info("-----------captcha:{}",captcha.toString());
         return result;
     }
 }

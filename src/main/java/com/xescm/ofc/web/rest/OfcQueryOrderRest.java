@@ -29,10 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static com.xescm.ofc.constant.OrderConstConstant.SENDSMS_REQUEST_COUNT;
@@ -126,28 +124,15 @@ public class OfcQueryOrderRest {
         return result;
     }
 
-
+    /**
+     * 获取随机的图片验证码
+     * @return
+     */
     @RequestMapping(value = "getCaptcha", method = {RequestMethod.POST})
     @ResponseBody
     public Wrapper<?> getCaptcha(){
         Map<String,String> result = ofcValidationCodeService.getValidationCode();
         return WrapMapper.wrap(200,"生成验证码成功",result);
-    }
-
-    private Color getRandColor(int lower, int upper) {
-        Random random = new Random();
-        if (upper > 255)
-            upper = 255;
-        if (upper < 1)
-            upper = 1;
-        if (lower < 1)
-            lower = 1;
-        if (lower > 255)
-            lower = 255;
-        int r = lower + random.nextInt(upper - lower);
-        int g = lower + random.nextInt(upper - lower);
-        int b = lower + random.nextInt(upper - lower);
-        return new Color(r, g, b);
     }
 
     /**
