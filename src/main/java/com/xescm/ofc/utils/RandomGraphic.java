@@ -228,12 +228,12 @@ public class RandomGraphic {
         // 获取图形上下文
         Graphics g = image.getGraphics();
         // 设定背景色
-        g.setColor(getColor(100));
+        g.setColor(getColor(10));
         g.fillRect(0, 0, width, height);
         // 设定字体
         g.setFont(new Font("宋体", Font.BOLD, 18));
         // 随机产生155条干扰线，使图象中的认证码不易被其它程序探测到
-        g.setColor(getRandColor(160, 200));
+        g.setColor(getRandColor(150, 200));
         for (int i = 0; i < 155; i++) {
             int x = random.nextInt(width);
             int y = random.nextInt(height);
@@ -281,20 +281,20 @@ public class RandomGraphic {
         // 获取图形上下文
         Graphics g = image.getGraphics();
         // 设定背景色
-        g.setColor(getColor(80));
+        g.setColor(getColor(220));
         g.fillRect(0, 0, width, height);
         //设置干扰点
         CreateRandomPoint(width, height,50,g,255);
         // 设定字体
-        g.setFont(new Font("宋体", Font.BOLD, 18));
+        g.setFont(new Font("Times New Roman", Font.BOLD, 18));
         // 随机产生155条干扰线，使图象中的认证码不易被其它程序探测到
-        g.setColor(getRandColor(160, 200));
-        for (int i = 0; i < 135; i++) {
+        g.setColor(getRandColor(160, 220));
+        for (int i = 0; i < 15; i++) {
             int x = random.nextInt(width);
             int y = random.nextInt(height);
             int xl = random.nextInt(12);
             int yl = random.nextInt(12);
-            g.setColor(getColor(200));
+            g.setColor(getColor(100));
             g.drawLine(x, y, x + xl, y + yl);
         }
         // 绘制charValue,每个字符颜色随机
