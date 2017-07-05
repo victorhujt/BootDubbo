@@ -11,6 +11,7 @@ import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
+import com.xescm.ofc.model.dto.ofc.OfcStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
@@ -19,6 +20,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -46,8 +48,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderManageOperService ofcOrderManageOperService;
 
     @Override
-    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OrderStorageOperForm form, String tag) {
-        if (tag.equals("in")) {
+    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcStorageDTO ofcStorageDTO) {
+        if (ofcStorageDTO.getTag().equals("in")) {
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("620");
                 businessTypes.add("621");
@@ -56,8 +58,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("624");
                 businessTypes.add("625");
                 businessTypes.add("626");
-                form.setBusinessTypes(businessTypes);
-        } else if (tag.equals("out")) {
+            ofcStorageDTO.setBusinessTypes(businessTypes);
+        } else if (ofcStorageDTO.getTag().equals("out")) {
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("610");
                 businessTypes.add("611");
@@ -65,8 +67,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("613");
                 businessTypes.add("614");
                 businessTypes.add("617");
-                form.setBusinessTypes(businessTypes);
+            ofcStorageDTO.setBusinessTypes(businessTypes);
         }
+        OrderStorageOperForm form = new OrderStorageOperForm();
+        BeanUtils.copyProperties(ofcStorageDTO,form);
         return queryStorageOrderList(authResDto,form);
     }
 
