@@ -13,21 +13,14 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisOperationUtils {
 
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
+   @Resource
+   private StringRedisTemplate stringRedisTemplate;
 
-    public RedisOperationUtils(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
-
-    public RedisOperationUtils() {
-    }
-
-    public void pushKeyToCache(String key, String value){
+    public void set(String key, String value){
         ValueOperations<String, String> valueOps = stringRedisTemplate.opsForValue();
         valueOps.set(key,value);
     }
-    public void pushKeyToCache(String key,String value,Long time,TimeUnit timeUnit){
+    public void set(String key,String value,Long time,TimeUnit timeUnit){
         ValueOperations<String, String> valueOps = stringRedisTemplate.opsForValue();
         valueOps.set(key,value,time, timeUnit);
     }
@@ -43,14 +36,9 @@ public class RedisOperationUtils {
     }
 
     public Long getValue(String key){
-        if(hasKey(key)){
-            ValueOperations<String, String> valueOps = stringRedisTemplate.opsForValue();
-           return  Long.parseLong(valueOps.get(key));
-        }
-        return null;
+        ValueOperations<String, String> valueOps = stringRedisTemplate.opsForValue();
+        return  Long.parseLong(valueOps.get(key));
     }
-
-
 
     public void deleteKey(String key){
         stringRedisTemplate.delete(key);

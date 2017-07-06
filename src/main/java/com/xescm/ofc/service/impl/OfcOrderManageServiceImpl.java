@@ -724,6 +724,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcOrderDTO.setOrderType(WAREHOUSE_DIST_ORDER);
             if (ofcOrderDTO.getProvideTransport() == null) {
                 ofcOrderDTO.setProvideTransport(0);
+            } else if (1 == ofcOrderDTO.getProvideTransport()) {
+                // 仓储带运输，默认签收回单，金额为0
+                ofcOrderDTO.setReturnList("1");
+                ofcOrderDTO.setReturnListFee(new BigDecimal(0));
             }
             List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
@@ -1332,6 +1336,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
+        OfcFinanceInformation ofcFinanceInformation = modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
         OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
         if (null == ofcFundamentalInformation || null == ofcWarehouseInformation) {
             logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
@@ -1628,6 +1633,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         }
 
+        // 服务费用
+        ofcFinanceInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        ofcFinanceInformation.setOperTime(ofcFundamentalInformation.getOperTime());
         //仓储信息
         ofcWarehouseInformation.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcWarehouseInformation.setCreationTime(ofcFundamentalInformation.getCreationTime());
@@ -1636,8 +1644,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
+            ofcFinanceInformationService.save(ofcFinanceInformation);
         } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
             ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+            ofcFinanceInformationService.updateByOrderCode(ofcFinanceInformation);
         }
 
         //添加开单员
@@ -1680,7 +1690,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
             //调用自动审核
             this.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetail, ofcDistributionBasicInfo, ofcWarehouseInformation
-                    , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
+                    , ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }

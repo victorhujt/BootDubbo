@@ -1697,7 +1697,8 @@
       orderInfo.transportType = "20";//运输类型默认整车
       orderInfo.pickUpGoods = "0";//是否上门提货 默认否
       orderInfo.twoDistribution = "0";//是否二次配送 默认否
-      orderInfo.returnList = "0";//是否签单返回 默认否
+      orderInfo.returnList = "1";//是否签单返回 默认是
+      orderInfo.returnListFee = "0"; // 签单返回费用0
       orderInfo.insure = "0";//是否货物保险 默认否
       orderInfo.collectFlag = "0";//是否代收货款 默认否
 //      orderInfo.merchandiser = $("#merchandiser").val();
