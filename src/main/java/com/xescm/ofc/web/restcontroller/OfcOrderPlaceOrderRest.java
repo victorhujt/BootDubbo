@@ -25,14 +25,12 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
-import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.whc.edas.dto.WmsDetailsDTO;
@@ -52,7 +50,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -384,45 +381,10 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     }
 
 
-    /**
-     * 加载当前用户下的仓库信息
-     * @return
-     */
-    @RequestMapping(value = "/loadWarehouseByUser",method = RequestMethod.POST)
-    @ResponseBody
-    public Object loadWarehouseByUser(){
-        try {
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            RmcWareHouseQO rmcWareHouseQO=new RmcWareHouseQO();
-           // rmcWareHouseQO.setUserId(authResDtoByToken.getUserId());
-            Wrapper<List<RmcWarehouseRespDto>>  warehouseResult=rmcWarehouseEdasService.queryWarehouseList(rmcWareHouseQO);
-            if(warehouseResult.getCode()!=warehouseResult.SUCCESS_CODE){
-                logger.error("查询用户下的仓库产生异常{}",warehouseResult.getMessage());
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,warehouseResult.getMessage());
-            }
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", warehouseResult.getResult());
-        }catch (Exception ex) {
-            logger.error("查询用户下的仓库产生异常{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        }
-    }
 
 
-    @RequestMapping(value = "/loadAreaAndBaseByUser",method = RequestMethod.POST)
-    @ResponseBody
-    public Object loadAreaAndBaseByUser() {
-        Map<String, List<OfcGroupVo>> groupMap;
-        try {
-            groupMap = ofcOrderManageOperService.loadGroupList();
-            if (groupMap==null) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到大区和基地信息");
-            }
-        } catch (Exception ex) {
-            logger.error("查询用户下的大区和基地信息异常{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        }
-           return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",groupMap);
-    }
+
+
 
     /**
      * 下单收发货方筛选

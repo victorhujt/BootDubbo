@@ -10,7 +10,6 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
-import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import com.xescm.ofc.model.vo.ofc.OfcBatchOrderVo;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
@@ -56,30 +55,7 @@ public class OfcOrderManageOperaRest extends BaseController {
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
 
-    /**
-     * 查询订单
-     *
-     * @param page  分页
-     * @param form      查询实体
-     * @return Object
-     */
-    @RequestMapping(value = "/queryOrderStorageDataOper", method = {RequestMethod.POST})
-    @ResponseBody
-    public Object queryOrderStorageDataOper(Page<OrderOperForm> page, OrderStorageOperForm form, String tag) {
-        try {
-            PageHelper.startPage(page.getPageNum(), page.getPageSize());
-            AuthResDto authResDto = getAuthResDtoByToken();
-            List<OrderSearchOperResult> dataList = ofcOrderManageOperService.queryOrderStorageDataOper(authResDto, form, tag);
-            PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
-        } catch (BusinessException ex) {
-            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-        }
-    }
+
 
     @RequestMapping(value = "/queryOrderDataOper", method = {RequestMethod.POST})
     @ResponseBody
@@ -356,30 +332,7 @@ public class OfcOrderManageOperaRest extends BaseController {
         }
     }
 
-    /**
-     * 根据所选大区查询基地
-     */
-    @RequestMapping(value = "queryBaseListByArea", method = {RequestMethod.POST})
-    @ResponseBody
-    public Wrapper<?> queryBaseListByArea(String areaCode) {
-        logger.info("运营中心订单管理根据所选大区查询基地,入参:areaCode = {}", areaCode);
-        if (PubUtils.isSEmptyOrNull(areaCode)) {
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该大区编码为空!无法查询其基地!");
-        }
-        UamGroupDto uamGroupDto = new UamGroupDto();
-        uamGroupDto.setSerialNo(areaCode);
-        List<OfcGroupVo> ofcGroupVoList;
-        try {
-            ofcGroupVoList = ofcOrderManageOperService.getBaseListByCurArea(uamGroupDto);
-        } catch (BusinessException ex) {
-            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选大区查询基地查询成功", ofcGroupVoList);
-    }
+
 
     /**
      * 根据所选基地反查大区

@@ -1,13 +1,12 @@
-package com.xescm.ofc.web.restcontroller;
+package com.xescm.ofc.web.restcontroller.operationWorkbench.storageOrder;
 
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
-import com.xescm.base.model.dto.component.req.Select2ReqDto;
-import com.xescm.base.model.dto.component.resp.Select2RespDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
@@ -19,16 +18,14 @@ import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.uam.model.dto.group.UamGroupDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -48,8 +45,8 @@ import java.util.Map;
         description = "仓储订单接口",
         produces = "application/json;charset=UTF-8"
 )
-public class StorageInfoController extends BaseController {
-    private Logger logger = LoggerFactory.getLogger(StorageInfoController.class);
+public class OfcStorageInfoController extends BaseController {
+    private Logger logger = LoggerFactory.getLogger(OfcStorageInfoController.class);
 
     @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
@@ -93,6 +90,7 @@ public class StorageInfoController extends BaseController {
             }
         } catch (Exception ex) {
             logger.error("查询用户下的大区和基地信息异常{}", ex.getMessage(), ex);
+
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",groupMap);
@@ -131,25 +129,38 @@ public class StorageInfoController extends BaseController {
         }
     }
 
+
     /**
-     * 查询客户名称Select2
-     *
-     * @param select2ReqDto
-     * @return
+     * 根据所选大区查询基地
      */
-    @RequestMapping(value = "/queryCustomerSelect2", method = RequestMethod.GET)
+    @RequestMapping(
+            value = {"/queryBaseListByArea/{areaCode}"},
+            method = {RequestMethod.POST}
+    )
     @ResponseBody
-    public Object queryCustomerByName(Select2ReqDto select2ReqDto) {
-        Wrapper<PageInfo<Select2RespDto>> result;
-        try {
-            result = cscCustomerEdasService.queryCustomerListPageWithSelect2(select2ReqDto);
-        } catch (BusinessException ex) {
-            logger.error("==>查询客户名称Select2根据客户名称查询客户发生错误：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("==>查询客户名称Select2根据客户名称查询客户发生异常：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询客户名称Select2根据客户名称查询客户发生异常！");
+    @ApiOperation(
+            notes = "根据大区编号查询基地",
+            httpMethod = "POST",
+            value = "根据大区编号查询基地"
+    )
+    public Wrapper<?> queryBaseListByArea(@PathVariable String areaCode) {
+        logger.info("运营中心订单管理根据所选大区查询基地,入参:areaCode = {}", areaCode);
+        if (PubUtils.isSEmptyOrNull(areaCode)) {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该大区编码为空!无法查询其基地!");
         }
-        return result;
+        UamGroupDto uamGroupDto = new UamGroupDto();
+        uamGroupDto.setSerialNo(areaCode);
+        List<OfcGroupVo> ofcGroupVoList;
+        try {
+            ofcGroupVoList = ofcOrderManageOperService.getBaseListByCurArea(uamGroupDto);
+        } catch (BusinessException ex) {
+            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选大区查询基地查询成功", ofcGroupVoList);
     }
+
 }
