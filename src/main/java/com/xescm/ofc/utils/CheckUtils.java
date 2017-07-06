@@ -1,13 +1,14 @@
 package com.xescm.ofc.utils;
 
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.ofc.constant.ResultModel;
-import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import org.apache.commons.lang3.ArrayUtils;
@@ -275,4 +276,11 @@ public class CheckUtils {
             throw new BusinessException(errorMsg);
         }
     }
+
+    public static void checkArgument(boolean result, ResultCodeEnum message){
+        if(result){
+            throw new BusinessException(message.code(), message.getMsg());
+        }
+    }
+
 }

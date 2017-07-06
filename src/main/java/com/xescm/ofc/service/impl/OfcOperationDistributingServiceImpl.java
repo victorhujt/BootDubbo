@@ -271,7 +271,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
             resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO, ofcGoodsDetailsInfos, ORDER_TAG_OPER_DISTRI, authResDtoByToken, ofcOrderDTO != null ? ofcOrderDTO.getCustCode() : new OfcOrderDTO().toString()
                     , consignor, consignee, new CscSupplierInfoDto());
-            if (ResultCodeEnum.ERROROPER.getName().equals(resultMessage)) {
+            if (ResultCodeEnum.ERROROPER.getMsg().equals(resultMessage)) {
                 return resultMessage;
             }
         }

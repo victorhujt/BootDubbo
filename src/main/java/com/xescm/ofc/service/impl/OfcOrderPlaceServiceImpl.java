@@ -188,8 +188,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return "您已成功下单!";
         } else if (ORDER_TAG_NORMAL_EDIT.equals(tag)  || ORDER_TAG_OPER_TRANEDIT.equals(tag)) {
             return "您的订单修改成功!";
-        } else {
-            return ResultCodeEnum.ERROROPER.getName();
+        }else {
+            return ResultCodeEnum.ERROROPER.getMsg();
         }
     }
 

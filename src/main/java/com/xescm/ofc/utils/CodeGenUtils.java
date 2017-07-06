@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static com.xescm.ofc.constant.OrderConstConstant.OFC_ENV;
@@ -65,4 +66,14 @@ public class CodeGenUtils {
 		return valuePrefix+zeroStr+newValue;
 	}
 
+	public String getSmsCode(int size){
+		Random random = new Random();// 创建
+		String s = "0123456789";
+		String validateCode = "";
+		for (int i = 0; i < size; i++) {
+			String ch = String.valueOf(s.charAt(random.nextInt(s.length())));
+			validateCode += ch;
+		}
+		return validateCode;
+	}
 }
