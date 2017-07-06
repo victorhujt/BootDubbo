@@ -7,21 +7,27 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcStorageDTO;
+import com.xescm.ofc.model.dto.ofc.RealGoodsDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.whc.edas.dto.WmsDetailsDTO;
+import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -56,6 +62,12 @@ public class OfcStorageInfoController extends BaseController {
 
     @Resource
     private CscCustomerEdasService cscCustomerEdasService;
+
+    @Resource
+    private OfcOrderManageService ofcOrderManageService;
+
+    @Resource
+    private WhcOrderCancelEdasService whcOrderCancelEdasService;
 
 
     /**
@@ -143,7 +155,7 @@ public class OfcStorageInfoController extends BaseController {
             httpMethod = "POST",
             value = "根据大区编号查询基地"
     )
-    public Wrapper<?> queryBaseListByArea(@PathVariable String areaCode) {
+    public Wrapper<?> queryBaseListByArea(@ApiParam(name = "areaCode",value = "大区编码") @PathVariable String areaCode) {
         logger.info("运营中心订单管理根据所选大区查询基地,入参:areaCode = {}", areaCode);
         if (PubUtils.isSEmptyOrNull(areaCode)) {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "该大区编码为空!无法查询其基地!");
@@ -162,5 +174,80 @@ public class OfcStorageInfoController extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选大区查询基地查询成功", ofcGroupVoList);
     }
+
+    /**
+     * 订单的复制
+     * @param orderCode
+     * @return
+     */
+
+
+    @RequestMapping(
+            value = {"/copyOrderOper/{orderCode}"},
+            method = {RequestMethod.POST}
+    )
+    @ResponseBody
+    @ApiOperation(
+            notes = "复制订单",
+            httpMethod = "POST",
+            value = "复制订单"
+    )
+    public Wrapper<?> copyOrder(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode){
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        String result;
+        try{
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            logger.info("被复制的订单号为:{}",orderCode);
+            result = ofcOrderManageService.copyOrder(orderCode,authResDtoByToken);
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单复制出现异常orderCode：{},{}", "", orderCode,ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,result);
+    }
+
+    /**
+     *
+     * @param realGoodsDTO
+     *
+     */
+    @RequestMapping(value = "/queryRealGood",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(
+            notes = "实收详情",
+            httpMethod = "POST",
+            value = "实收详情"
+    )
+    public Wrapper<?> queryRealGood(@ApiParam(name = "realGoodsDTO",value = "实收详情DTO")@RequestBody RealGoodsDTO realGoodsDTO){
+        Wrapper<?> response;
+        try{
+            if(realGoodsDTO == null){
+                throw new BusinessException("实收详情DTO不能为空！");
+            }
+            if(PublicUtil.isEmpty(realGoodsDTO.getOrderCode())){
+                throw new BusinessException("订单编号不能为空！");
+            }
+            if(PublicUtil.isEmpty(realGoodsDTO.getBusinessType())){
+                throw new BusinessException("业务类型不能为空！");
+            }
+            WmsDetailsDTO wmsDetailsDTO=new WmsDetailsDTO();
+            wmsDetailsDTO.setOrderNo(realGoodsDTO.getOrderCode());
+            wmsDetailsDTO.setBillType(realGoodsDTO.getBusinessType());
+            response=whcOrderCancelEdasService.queryDetailsWmsByBillType(wmsDetailsDTO);
+            if(response==null){
+                throw new BusinessException("查询实收实出货品明细出现异常");
+            }
+            if(response.getCode()!=Wrapper.SUCCESS_CODE){
+                throw new BusinessException(response.getMessage());
+            }
+        }catch(Exception ex){
+            logger.error("查询实收实出货品明细出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, response.getResult());
+    }
+
 
 }
