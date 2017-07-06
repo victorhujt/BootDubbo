@@ -157,6 +157,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private TfcQueryEveryDeliveryService tfcQueryEveryDeliveryService;
     @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
+    @Resource
     private DefaultMqProducer mqProducer;
     @Resource
     private MqConfig mqConfig;
@@ -223,6 +225,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderStatus.setLastedOperTime(null);
                 ofcOrderStatus.setStatusDesc("待审核");
                 ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单反审核完成");
+                ofcOrderStatusService.save(ofcOrderStatus);
             }
         } else if (reviewTag.equals(REVIEW)) {
             if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT)) {
@@ -482,6 +485,33 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } else {
             throw new BusinessException("计划单状态不在可删除范围内");
         }
+    }
+
+    @Override
+    /**
+     *  @param orderCode         订单编号
+     */
+    public String orderDelete(String orderCode) {
+        logger.info("删除的订单号为:{}",orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        if (ofcFundamentalInformation == null) {
+            throw new BusinessException("订单号不存在");
+        }
+        OfcOrderNewstatus ofcOrderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
+        if (ofcOrderNewstatus != null) {
+            if (!ofcOrderNewstatus.getOrderLatestStatus().equals(PENDING_AUDIT)) {
+                throw new BusinessException("订单状态只有待审核状态才可以删除");
+            }
+            ofcFundamentalInformationService.deleteByKey(orderCode);
+            ofcDistributionBasicInfoService.deleteByOrderCode(orderCode);
+            ofcOrderStatusService.deleteByOrderCode(orderCode);
+            ofcWarehouseInformationService.deleteByOrderCode(orderCode);
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setOrderCode(orderCode);
+            ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
+            return String.valueOf(Wrapper.SUCCESS_CODE);
+        }
+        return null;
     }
 
     /**

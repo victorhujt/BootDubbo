@@ -27,14 +27,11 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
-import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import com.xescm.whc.edas.dto.WmsDetailsDTO;
-import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -79,10 +76,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
 
-    @Resource
-    private OfcOrderManageOperService ofcOrderManageOperService;
-    @Resource
-    private WhcOrderCancelEdasService whcOrderCancelEdasService;
 
 
 
@@ -600,36 +593,5 @@ public class OfcOrderPlaceOrderRest extends BaseController{
 
     }
 
-    /**
-     *
-     * @param orderCode 订单号
-     * @param businessType  业务类型 CK 出库 RK 入库
-     */
-    @RequestMapping(value = "/queryRealGood",method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> queryRealGood(String orderCode,String businessType){
-        Wrapper<?> response=null;
-        try{
-            if(PublicUtil.isEmpty(orderCode)){
-                throw new BusinessException("订单编号不能为空！");
-            }
-            if(PublicUtil.isEmpty(businessType)){
-                throw new BusinessException("业务类型不能为空！");
-            }
-            WmsDetailsDTO wmsDetailsDTO=new WmsDetailsDTO();
-            wmsDetailsDTO.setOrderNo(orderCode);
-            wmsDetailsDTO.setBillType(businessType);
-            response=whcOrderCancelEdasService.queryDetailsWmsByBillType(wmsDetailsDTO);
-            if(response==null){
-                throw new BusinessException("查询实收实出货品明细出现异常");
-            }
-            if(response.getCode()!=Wrapper.SUCCESS_CODE){
-                throw new BusinessException(response.getMessage());
-            }
-        }catch(Exception ex){
-            logger.error("查询实收实出货品明细出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, response.getResult());
-    }
+
 }
