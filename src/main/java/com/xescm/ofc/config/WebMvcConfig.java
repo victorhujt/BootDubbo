@@ -24,7 +24,7 @@
 
 package com.xescm.ofc.config;
 
-import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
+import com.xescm.ofc.web.interceptor.VueViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -42,10 +42,13 @@ import javax.annotation.Resource;
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
-    @Resource
-    private AuthViewInterceptor authViewInterceptor;
+   // @Resource
+   // private AuthViewInterceptor authViewInterceptor;
 //    @Resource
 //    private LimitRuleInterceptor limitRuleInterceptor;
+
+    @Resource
+   private VueViewInterceptor vueViewInterceptor;
 	
 	@Value("${env}")
 	private String env;
@@ -60,11 +63,18 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // 多个拦截器组成一个拦截器链
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
-    	super.addInterceptors(registry);
-    	authViewInterceptor.setEnv(env);
-//		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
-        registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/platformDaily", "/ofc/rule", "/ofc/queryDailyAccount", "/ofc/searchOverallOrder");
+    	//super.addInterceptors(registry);
+        //vueViewInterceptor.setEnv(env);
+		//registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
+       //registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/platformDaily", "/ofc/rule", "/ofc/queryDailyAccount", "/ofc/searchOverallOrder");
        // registry.addInterceptor(limitRuleInterceptor).addPathPatterns("/www/ofc/queryOrderByCode","/www/ofc/traceByOrderCode");
+
+        super.addInterceptors(registry);
+        vueViewInterceptor.setEnv(env);
+        vueViewInterceptor.setEnv(env);
+        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**");
+        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/page/ofc/**");
+        // registry.addInterceptor(vueViewInterceptor).addPathPatterns("/page/csc/**");
     }
 
 }
