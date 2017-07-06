@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -305,6 +306,9 @@ public class OfcOrderManageRest extends BaseController{
                         throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
                     }
                 }
+                // 带运输仓储单默认签收回单，费用为0
+                ofcOrderDTO.setReturnList("1");
+                ofcOrderDTO.setReturnListFee(new BigDecimal(0));
             }
 
             //发货方信息

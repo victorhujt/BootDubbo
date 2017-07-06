@@ -286,36 +286,9 @@ public class OfcOperationDistributing extends BaseController {
     @RequestMapping(value = "/queryCustomerSelect2", method = RequestMethod.GET)
     @ResponseBody
     public Object queryCustomerByName(Select2ReqDto select2ReqDto) {
-        Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
+        Wrapper<PageInfo<Select2RespDto>> result;
         try {
-            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
-            queryParam.setCustomerName(select2ReqDto.getName());
-            queryParam.setPageNum(select2ReqDto.getPageNum());
-            queryParam.setPageSize(select2ReqDto.getPageSize());
-            Wrapper<PageInfo<CscCustomerVo>> pageInfoWrapper = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
-            result.setCode(pageInfoWrapper.getCode());
-            result.setMessage(pageInfoWrapper.getMessage());
-            PageInfo<CscCustomerVo> resultForRevert = pageInfoWrapper.getResult();
-            if (null == resultForRevert || CollectionUtils.isEmpty(resultForRevert.getList())) {
-                logger.error("查询客户名称Select2失败, resultForRevert:{}", ToStringBuilder.reflectionToString(resultForRevert));
-                throw new BusinessException("查询客户名称Select2失败");
-            }
-            PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
-            BeanUtils.copyProperties(pageInfo, resultForRevert);
-            pageInfo.setList(null);
-            List<Select2RespDto> select2RespDtoList = new ArrayList<>();
-            for (CscCustomerVo cscCustomerVo : resultForRevert.getList()) {
-                Select2RespDto select2RespDto = new Select2RespDto();
-                select2RespDto.setId(cscCustomerVo.getId());
-                select2RespDto.setCode(cscCustomerVo.getCustomerCode());
-                select2RespDto.setName(cscCustomerVo.getCustomerName());
-                select2RespDtoList.add(select2RespDto);
-            }
-            pageInfo.setList(select2RespDtoList);
-            if (Wrapper.ERROR_CODE == result.getCode()) {
-                logger.error("查询客户列表失败,查询结果有误!");
-            }
-            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
+            result = cscCustomerEdasService.queryCustomerListPageWithSelect2(select2ReqDto);
         } catch (BusinessException ex) {
             logger.error("==>查询客户名称Select2根据客户名称查询客户发生错误：{}", ex);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());

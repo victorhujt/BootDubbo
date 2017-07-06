@@ -11,4 +11,6 @@ public interface OfcFinanceInformationMapper extends MyMapper<OfcFinanceInformat
 
     OfcFinanceInformation queryByOrderCode(@Param("orderCode") String orderCode);
 
+    int updateByOrderCode(Object key);
+
 }
