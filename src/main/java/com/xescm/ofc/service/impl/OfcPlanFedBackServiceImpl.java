@@ -61,7 +61,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(OfcPlanFedBackCondition ofcPlanFedBackCondition, String userName,ConcurrentHashMap cmap) {
         //根据订单号获取单及状态
         String transPortNo= trimAndNullAsEmpty(ofcPlanFedBackCondition.getOrderCode());
-        String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getState());
+        String status= trimAndNullAsEmpty(ofcPlanFedBackCondition.getStatus());
         Date traceTime = ofcPlanFedBackCondition.getTraceTime();
         try{
             if (transPortNo.equals("")) {
