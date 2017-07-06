@@ -17,7 +17,7 @@ public class OfcPlanFedBackCondition {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date traceTime;//跟踪时间
-    private String state;//跟踪状态
+    private String status;//跟踪状态
     private String notes;//备注
     private String description;//状态描述
 
