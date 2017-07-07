@@ -164,6 +164,15 @@ public class OfcOrderInterfaceLogController extends BaseController {
         return result;
     }
 
+    /**
+     * <p>Title:      queryInterfaceReceiveLogPage. </p>
+     * <p>Description 分页查询接收日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/7/7 10:38
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/queryInterfaceReceiveLogPage", method = {RequestMethod.POST})
     @ApiOperation(value = "分页查询接收日志", httpMethod = "POST", notes = "返回接收日志列表")
@@ -180,6 +189,42 @@ public class OfcOrderInterfaceLogController extends BaseController {
         } catch (Exception e) {
             logger.error("查询任务日志发生未知异常：异常信息=>{}", e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询任务日志发生未知异常!");
+        }
+        return result;
+    }
+
+    /**
+     * <p>Title:      queryInterfaceReceiveLogDetailById. </p>
+     * <p>Description 根据接收日志id查询日志详情</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/7/7 10:40
+     * @return
+     */
+    @RequestMapping(value = "/queryInterfaceReceiveLogDetailById/{id}", method = {RequestMethod.POST})
+    @ResponseBody
+    public Wrapper<OfcInterfaceReceiveLogVo> queryInterfaceReceiveLogDetailById(@PathVariable String id) {
+        Wrapper<OfcInterfaceReceiveLogVo> result;
+        try {
+            if (id != null) {
+                OfcInterfaceReceiveLogVo param = new OfcInterfaceReceiveLogVo();
+                param.setId(id);
+                List<OfcInterfaceReceiveLogVo> taskList = ofcInterfaceReceiveLogService.queryInterfaceReceiveLog(param);
+                if (PubUtils.isNotNullAndBiggerSize(taskList, 0)) {
+                    result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, taskList.get(0));
+                } else {
+                    result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, null);
+                }
+            } else {
+                result = WrapMapper.wrap(Wrapper.ILLEGAL_ARGUMENT_CODE_, Wrapper.ILLEGAL_ARGUMENT_MESSAGE);
+            }
+        } catch (BusinessException e) {
+            logger.error("查询任务日志信息发生异常：异常信息=>{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("查询任务日志信息发生未知异常：异常信息=>{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询任务日志信息发生未知异常!");
         }
         return result;
     }
