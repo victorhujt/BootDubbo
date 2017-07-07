@@ -112,7 +112,9 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
             CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(code), ResultCodeEnum.PARAMERROR);
             logger.info("订单查询 ==> code : {}", code);
             //查询结果是订单号集合
+            long searchOverallOrderBeginTime = System.currentTimeMillis();
             List<String> result = ofcOrderScreenService.searchOverallOrder(code);
+            logger.info("订单号：{}searchOverallOrder cost的time为:{}ms",code,(System.currentTimeMillis()-searchOverallOrderBeginTime));
             CheckUtils.checkArgument(CollectionUtils.isEmpty(result), ResultCodeEnum.RESULTISNULL);
             logger.info("订单查询的结果集为: {}", JacksonUtil.toJson(result));
             if(result.size() > 1){
@@ -149,7 +151,9 @@ public class OfcOrderStatusEdasServiceImpl implements OfcOrderStatusEdasService 
             OfcTraceOrderDTO ofcTraceOrderDTO;
         try {
             CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(orderCode), ResultCodeEnum.PARAMERROR);
+            long beginTime = System.currentTimeMillis();
             ofcTraceOrderDTO = ofcOrderStatusService.queryOrderByCode(orderCode);
+            logger.info("订单号:{}traceByOrderCode总共cost time:{}ms",orderCode,(System.currentTimeMillis() - beginTime));
             CheckUtils.checkArgument(CollectionUtils.isEmpty(ofcTraceOrderDTO.getOfcOrderStatusDTOs()), ResultCodeEnum.RESULTISNULL);
         }catch (BusinessException e){
             return WrapMapper.wrap(ResultCodeEnum.getErrorCode(e.getCode()), e.getMessage());
