@@ -376,6 +376,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             if(PubUtils.isSEmptyOrNull(status.getTrace())){
                 continue;
             }
+
             //发运时间
             if("30".equals(status.getTraceStatus())){
                 departureTime = DateUtils.Date2String(status.getLastedOperTime(), DateUtils.DateFormatType.TYPE1);
@@ -398,18 +399,20 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         if(ofcDistributionBasicInfo != null){
             String plateNumber = ofcDistributionBasicInfo.getPlateNumber();
             OfcRealTimeTraceReqDTO reqDTO = new OfcRealTimeTraceReqDTO();
-            reqDTO.setPlateNumber(plateNumber);
-            reqDTO.setStartTime(departureTime);
-            reqDTO.setEndTime(signTime);
-            long beginTime = System.currentTimeMillis();
-            logger.info("调用获取实时位置的接口参数为:{}", JacksonUtil.toJson(reqDTO));
-            Wrapper<List<OfcRealTimeTraceDTO>> ofcRealTimeTraceDTOResult  =  tfcQueryGpsInfoEdasService.queryGpsforOfc(reqDTO);
-            long endTime = System.currentTimeMillis();
-            logger.info("调用获取实时位置的接口接口耗时:{}ms",(endTime - beginTime));
-            if(ofcRealTimeTraceDTOResult.getCode() == Wrapper.SUCCESS_CODE){
-                if(!CollectionUtils.isEmpty(ofcRealTimeTraceDTOResult.getResult())){
-                    logger.info("调用获取实时位置的结果集大小为:{}",ofcRealTimeTraceDTOResult.getResult().size());
-                    ofcTraceOrderDTO.setOfcRealTimeTraceDTOs(ofcRealTimeTraceDTOResult.getResult());
+            if(!(PubUtils.isSEmptyOrNull(plateNumber) && PubUtils.isSEmptyOrNull(departureTime))){
+                reqDTO.setPlateNumber(plateNumber);
+                reqDTO.setStartTime(departureTime);
+                reqDTO.setEndTime(signTime);
+                long beginTime = System.currentTimeMillis();
+                logger.info("调用获取实时位置的接口参数为:{}", JacksonUtil.toJson(reqDTO));
+                Wrapper<List<OfcRealTimeTraceDTO>> ofcRealTimeTraceDTOResult  =  tfcQueryGpsInfoEdasService.queryGpsforOfc(reqDTO);
+                long endTime = System.currentTimeMillis();
+                logger.info("调用获取实时位置的接口接口耗时:{}ms",(endTime - beginTime));
+                if(ofcRealTimeTraceDTOResult.getCode() == Wrapper.SUCCESS_CODE){
+                    if(!CollectionUtils.isEmpty(ofcRealTimeTraceDTOResult.getResult())){
+                        logger.info("调用获取实时位置的结果集大小为:{}",ofcRealTimeTraceDTOResult.getResult().size());
+                        ofcTraceOrderDTO.setOfcRealTimeTraceDTOs(ofcRealTimeTraceDTOResult.getResult());
+                    }
                 }
             }
         }
