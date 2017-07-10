@@ -615,7 +615,7 @@
                     if(order.orderStatusName!="待审核"){
                         //vueObj.promptInfo("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！","warning");
                         //vueObj.isDisabledAudit=false;
-                        Console.info("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！");
+                        console.info("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！");
                         continue;
                     }
                     this.auditOrderOrNotAuditOper(order.orderCode,"review");
