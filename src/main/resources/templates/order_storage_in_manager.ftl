@@ -703,10 +703,12 @@
                         if(tag=="rereview"){
                             vueObj.promptInfo("订单反审核成功","success");
                             vueObj.isDisabledRepeatAudit=false;
+                            vueObj.resetCondition();
                             vueObj.selectOrder();
                         }else if(tag=="review"){
                             vueObj.promptInfo("订单审核成功","success");
                             vueObj.isDisabledAudit=false;
+                            vueObj.resetCondition();
                             vueObj.selectOrder();
                         }
                     }
