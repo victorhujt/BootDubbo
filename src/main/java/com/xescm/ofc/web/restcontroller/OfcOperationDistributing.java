@@ -10,7 +10,10 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.csc.model.dto.*;
+import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
+import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
 import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
@@ -27,9 +30,6 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -397,53 +396,7 @@ public class OfcOperationDistributing extends BaseController {
         return result;
     }
 
-    @RequestMapping(value = "/querySupplierSelect2", method = RequestMethod.GET)
-    @ResponseBody
-    public Object querySupplierByName(Select2ReqDto select2ReqDto,HttpServletRequest req,String customerCode) {
-        String url=req.getRequestURI();
-        Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
-        try {
-            if(PubUtils.isSEmptyOrNull(customerCode)){
-                throw new BusinessException("客户编码不能为空");
-            }
-            CscSupplierInfoDto queryParam = new CscSupplierInfoDto();
-            queryParam.setCustomerCode(customerCode);
-            queryParam.setPNum(select2ReqDto.getPageNum());
-            queryParam.setPSize(select2ReqDto.getPageSize());
-            queryParam.setSupplierName(select2ReqDto.getName());
-            Wrapper<PageInfo<CscSupplierInfoDto>> pageInfoWrapper =  cscSupplierEdasService.querySupplierByAttributePageList(queryParam);
-            result.setCode(pageInfoWrapper.getCode());
-            result.setMessage(pageInfoWrapper.getMessage());
-            PageInfo<CscSupplierInfoDto> resultForRevert = pageInfoWrapper.getResult();
-            if (null == resultForRevert || CollectionUtils.isEmpty(resultForRevert.getList())) {
-                logger.error("查询供应商名称Select2失败, resultForRevert:{}", ToStringBuilder.reflectionToString(resultForRevert));
-                throw new BusinessException("查询供应商名称Select2失败");
-            }
-            PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
-            BeanUtils.copyProperties(pageInfo, resultForRevert);
-            pageInfo.setList(null);
-            List<Select2RespDto> select2RespDtoList = new ArrayList<>();
-            for (CscSupplierInfoDto cscSupplierInfoDto : resultForRevert.getList()) {
-                Select2RespDto select2RespDto = new Select2RespDto();
-                select2RespDto.setId(cscSupplierInfoDto.getSupplierId());
-                select2RespDto.setCode(cscSupplierInfoDto.getSupplierCode());
-                select2RespDto.setName(cscSupplierInfoDto.getSupplierName());
-                select2RespDtoList.add(select2RespDto);
-            }
-            pageInfo.setList(select2RespDtoList);
-            if (Wrapper.ERROR_CODE == result.getCode()) {
-                logger.error("查询供应商列表失败,查询结果有误!");
-            }
-            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
-        } catch (BusinessException ex) {
-            logger.error("==>查询供应商列名称Select2根据客户编码查询供应商发生错误：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("==>查询供应商列名称Select2根据供应商列名称查询客户发生异常：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询供应商列名称Select2根据客户编码查询供应商列发生异常！");
-        }
-        return result;
-    }
+
 
 
 
