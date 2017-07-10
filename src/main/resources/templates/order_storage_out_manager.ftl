@@ -5,21 +5,21 @@
             margin: 20px 0;
         }
         .el-dialog{
-          top:50%!important;
-          margin-top:-300px;
-          margin-bottom:0!important;
+            top:50%!important;
+            margin-top:-300px;
+            margin-bottom:0!important;
         }
         .el-dialog__body{
-          padding:10px 20px 30px;
+            padding:10px 20px 30px;
         }
         .el-dialog__footer{
-          padding:15px 20px;
+            padding:15px 20px;
         }
         .el-dialog--small .el-table{
-          min-height:350px;
+            min-height:350px;
         }
         .el-dialog--small .el-table tr{
-          cursor:pointer;
+            cursor:pointer;
         }
         .el-table__body-wrapper{
             overflow-y: auto;
@@ -227,7 +227,7 @@
             needTranSportOptions:[
                 {label:"是",value:'1'},
                 {label:"否",value:'0'}
-                ],
+            ],
             customerPageSize:10,
             wareHouseName:'',
             businessType:'',
@@ -259,33 +259,33 @@
                 value: '614',
                 label: '分拨出库'
             },
-            {
-                value: '617',
-                label: '退车间'
-            }
+                {
+                    value: '617',
+                    label: '退车间'
+                }
             ],
             areaNameOptions:[],
             multipleSelection: [],
             baseNameOptions:[],
             orderStatusOptions:[
                 { value: '10',
-                  label: '待审核'
+                    label: '待审核'
                 },
                 {
-                value: '20',
-                label: '已审核'
+                    value: '20',
+                    label: '已审核'
                 },
                 {
-                value: '30',
-                label: '执行中'
+                    value: '30',
+                    label: '执行中'
                 },
                 {
-                value: '40',
-                label: '已完成'
+                    value: '40',
+                    label: '已完成'
                 },
                 {
-                value: '50',
-                label: '已取消'
+                    value: '50',
+                    label: '已取消'
                 }],
             orderData:[]
         },
@@ -316,23 +316,23 @@
             //大区和基地信息
             CommonClient.syncpost(sys.rootPath + "/ofc/loadAreaAndBaseByUser",{},function (result) {
                 if (result == undefined || result == null) {
-                   // layer.msg("当前用户下没有大区和基地信息！");
+                    // layer.msg("当前用户下没有大区和基地信息！");
                     console.info("当前用户下没有大区和基地信息！");
                 } else if (result.code == 200) {
                     var areaArray=result.result.area;
                     var baseArray=result.result.base;
                     if(areaArray.length>0){
                         $.each(areaArray,function (index,OfcGroupVo) {
-                                var area={};
-                                area.label=OfcGroupVo.groupName;
-                                area.value= OfcGroupVo.serialNo;
-                                vueObj.areaNameOptions.push(area);
+                            var area={};
+                            area.label=OfcGroupVo.groupName;
+                            area.value= OfcGroupVo.serialNo;
+                            vueObj.areaNameOptions.push(area);
                         });
                         if(vueObj.areaNameOptions.length==1){
                             vueObj.areaName=vueObj.areaNameOptions[0].value;
                         }
                     }else{
-                       // layer.msg("当前用户下没有大区信息！");
+                        // layer.msg("当前用户下没有大区信息！");
                         console.info("当前用户下没有大区信息！");
                     }
 
@@ -347,7 +347,7 @@
                             vueObj.baseName=vueObj.baseNameOptions[0].value;
                         }
                     }else{
-                       // layer.msg("当前用户下没有基地信息！");
+                        // layer.msg("当前用户下没有基地信息！");
                         console.info("当前用户下没有基地信息！");
                     }
                 }
@@ -362,10 +362,10 @@
                 this.selectCustomer();
             },
             orderDetails:function (val) {
-                    var url = "/ofc/orderStorageOutDetails/"+"?orderCode="+val;
-                    var html = window.location.href;
-                    var index = html.indexOf("/index#");
-                    window.open(html.substring(0,index) + "/index#" + url);
+                var url = "/ofc/orderStorageOutDetails/"+"?orderCode="+val;
+                var html = window.location.href;
+                var index = html.indexOf("/index#");
+                window.open(html.substring(0,index) + "/index#" + url);
             },
             handleCustomerCurrentPage:function(val) {
                 this.customerCurrentPage = val;
@@ -550,12 +550,14 @@
                 for(var i=0;i<orders.length;i++){
                     var order=orders[i];
                     if(order.orderStatusName!="待审核"){
-                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！","warning");
-                        vueObj.isDisabledAudit=false;
-                        return;
+                       // vueObj.promptInfo("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！","warning");
+                        //vueObj.isDisabledAudit=false;
+                      //  return;
+                        console.info("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！");
                     }
+                    this.auditOrderOrNotAuditOper(order.orderCode,"review");
                 }
-                this.auditOrderOrNotAuditOper(order.orderCode,"review");
+
             },
             repeatAuditOrder:function(){
                 if(this.multipleSelection.length<1){
@@ -628,26 +630,33 @@
             auditOrderOrNotAuditOper:function (orderCode,tag) {
                 var vueObj=this;
                 var flag=false;
-                CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
-                    if (result == undefined || result == null ) {
-                    }else if(result.code==200){
-                        flag=true;
-                    }else{
-                        if(result.message==null||result.message==""){
+                try{
+                    CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
+                        if (result == undefined || result == null ) {
+                        }else if(result.code==200){
+                            flag=true;
                         }else{
+                            if(result.message==null||result.message==""){
+                            }else{
+                            }
+                        }
+                    });
+                    if(flag){
+                        if(tag=="rereview"){
+                            vueObj.promptInfo("订单反审核成功","success");
+                            vueObj.isDisabledRepeatAudit=false;
+                            vueObj.resetCondition();
+                            vueObj.selectOrder();
+                        }else if(tag=="review"){
+                            vueObj.promptInfo("订单审核成功","success");
+                            vueObj.isDisabledAudit=false;
+                            vueObj.resetCondition();
+                            vueObj.selectOrder();
                         }
                     }
-                });
-                if(flag){
-                    if(tag=="rereview"){
-                        vueObj.promptInfo("订单反审核成功","success");
-                        vueObj.isDisabledRepeatAudit=false;
-                        vueObj.selectOrder();
-                    }else if(tag=="review"){
-                        vueObj.promptInfo("订单审核成功","success");
-                        vueObj.isDisabledAudit=false;
-                        vueObj.selectOrder();
-                    }
+                }catch(e){
+                    vueObj.isDisabledRepeatAudit=false;
+                    vueObj.isDisabledAudit=false;
                 }
             },
             valiateSelectOrder:function(){

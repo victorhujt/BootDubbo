@@ -613,12 +613,14 @@
                 for(var i=0;i<orders.length;i++){
                     var order=orders[i];
                     if(order.orderStatusName!="待审核"){
-                        vueObj.promptInfo("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！","warning");
-                        vueObj.isDisabledAudit=false;
-                        return;
+                        //vueObj.promptInfo("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！","warning");
+                        //vueObj.isDisabledAudit=false;
+                        console.info("订单编号"+order.orderCode+"不能执行审核，仅能对订单状态为【待审核】的订单执行审核操作！");
+                        continue;
                     }
+                    this.auditOrderOrNotAuditOper(order.orderCode,"review");
                 }
-                this.auditOrderOrNotAuditOper(order.orderCode,"review");
+
             },
             repeatAuditOrder:function(){
                 if(this.multipleSelection.length<1){
@@ -635,8 +637,9 @@
                         vueObj.isDisabledRepeatAudit=false;
                         return;
                     }
+                    this.auditOrderOrNotAuditOper(order.orderCode,"rereview");
                 }
-                this.auditOrderOrNotAuditOper(order.orderCode,"rereview");
+
             },
             cancelOrder:function(){
                 var vueObj=this;
@@ -685,27 +688,35 @@
             auditOrderOrNotAuditOper:function (orderCode,tag) {
                 var vueObj=this;
                 var flag=false;
-                CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
-                    if (result == undefined || result == null ) {
-                    }else if(result.code==200){
-                        flag=true;
-                    }else{
-                        if(result.message==null||result.message==""){
+                try{
+                    CommonClient.syncpost(sys.rootPath + "/ofc/auditOrderOrNotAuditOper", {"orderCode":orderCode,"reviewTag":tag}, function(result) {
+                        if (result == undefined || result == null ) {
+                        }else if(result.code==200){
+                            flag=true;
                         }else{
+                            if(result.message==null||result.message==""){
+                            }else{
+                            }
+                        }
+                    });
+                    if(flag){
+                        if(tag=="rereview"){
+                            vueObj.promptInfo("订单反审核成功","success");
+                            vueObj.isDisabledRepeatAudit=false;
+                            vueObj.resetCondition();
+                            vueObj.selectOrder();
+                        }else if(tag=="review"){
+                            vueObj.promptInfo("订单审核成功","success");
+                            vueObj.isDisabledAudit=false;
+                            vueObj.resetCondition();
+                            vueObj.selectOrder();
                         }
                     }
-                });
-                if(flag){
-                    if(tag=="rereview"){
-                        vueObj.promptInfo("订单反审核成功","success");
-                        vueObj.isDisabledRepeatAudit=false;
-                        vueObj.selectOrder();
-                    }else if(tag=="review"){
-                        vueObj.promptInfo("订单审核成功","success");
-                        vueObj.isDisabledAudit=false;
-                        vueObj.selectOrder();
-                    }
+                }catch(e){
+                    vueObj.isDisabledRepeatAudit=false;
+                    vueObj.isDisabledAudit=false;
                 }
+
             },
             valiateSelectOrder:function(){
                 if(this.multipleSelection.length<1){
