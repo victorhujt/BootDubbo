@@ -11,9 +11,7 @@ import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
-import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
-import com.xescm.csc.model.vo.CscGoodsTypeVo;
 import com.xescm.csc.provider.*;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
@@ -517,29 +515,5 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return flag;
     }
 
-    /**
-     * 货品类别(调用客户中心API)
-     */
-    @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
-    @ApiImplicitParams({
-            //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
-    })
-    @RequestMapping(value = "/getCscGoodsTypeList",method = RequestMethod.POST)
-    public void getCscGoodsTypeList(String cscGoodsType, HttpServletResponse response){
-        logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
-        //调用外部接口,最低传CustomerCode
-        try{
-            CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
-            if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
-                cscGoodType.setPid(cscGoodsType);
-            }
-            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
-            logger.info("===========================" + CscGoodsType);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().print(JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
-            logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
-        }catch (Exception ex){
-            logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
-        }
-    }
+
 }

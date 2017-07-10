@@ -6,9 +6,13 @@ import com.xescm.base.model.dto.component.req.Select2ReqDto;
 import com.xescm.base.model.dto.component.resp.Select2RespDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
+import com.xescm.csc.model.vo.CscGoodsTypeVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
+import com.xescm.csc.provider.CscGoodsTypeEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
@@ -51,6 +55,9 @@ public class OfcOperCommonController extends BaseController{
 
     @Resource
     private CscSupplierEdasService cscSupplierEdasService;
+
+    @Resource
+    private CscGoodsTypeEdasService cscGoodsTypeEdasService;
 
     /**
      * Select2查询客户
@@ -178,7 +185,7 @@ public class OfcOperCommonController extends BaseController{
     @RequestMapping(value = "/querySupplierSelect2/{customerCode}", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(notes = "返回供应商列表", httpMethod = "POST", value = "Select2查询供应商")
-    public Wrapper<PageInfo<Select2RespDto>> querySupplierByName(@ApiParam(name = "select2ReqDto", value = "select2查询信息") Select2ReqDto select2ReqDto,@PathVariable String customerCode) {
+    public Wrapper<PageInfo<Select2RespDto>> querySupplierByName(@ApiParam(name = "select2ReqDto", value = "select2查询信息") @RequestBody  Page<Select2ReqDto> page,@PathVariable String customerCode) {
         Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
         try {
             if(PubUtils.isSEmptyOrNull(customerCode)){
@@ -186,9 +193,9 @@ public class OfcOperCommonController extends BaseController{
             }
             CscSupplierInfoDto queryParam = new CscSupplierInfoDto();
             queryParam.setCustomerCode(customerCode);
-            queryParam.setPNum(select2ReqDto.getPageNum());
-            queryParam.setPSize(select2ReqDto.getPageSize());
-            queryParam.setSupplierName(select2ReqDto.getName());
+            queryParam.setPNum(page.getPageNum());
+            queryParam.setPSize(page.getPageSize());
+            queryParam.setSupplierName(page.getParam().getName());
             Wrapper<PageInfo<CscSupplierInfoDto>> pageInfoWrapper =  cscSupplierEdasService.querySupplierByAttributePageList(queryParam);
             result.setCode(pageInfoWrapper.getCode());
             result.setMessage(pageInfoWrapper.getMessage());
@@ -223,5 +230,29 @@ public class OfcOperCommonController extends BaseController{
         return result;
     }
 
+    /**
+     * 货品类别(调用客户中心API)
+     */
 
+    @RequestMapping(value = "/getCscGoodsTypeList/{cscGoodsType}",method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(value="下单货品筛选",  httpMethod = "POST", notes="根据查询条件筛选货品")
+
+    public Wrapper<?> getCscGoodsTypeList(@ApiParam(name = "cscGoodsType", value = "查询条件筛选货品") @PathVariable String cscGoodsType){
+        logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
+        //调用外部接口,最低传CustomerCode
+        try{
+            CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
+            if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
+                cscGoodType.setPid(cscGoodsType);
+            }
+            Wrapper<List<CscGoodsTypeVo>> CscGoodsType = cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
+            logger.info("===========================" + CscGoodsType);
+            logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
+           return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, CscGoodsType);
+        }catch (Exception ex){
+            logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "根据查询条件筛选货品发生异常！");
+        }
+    }
 }

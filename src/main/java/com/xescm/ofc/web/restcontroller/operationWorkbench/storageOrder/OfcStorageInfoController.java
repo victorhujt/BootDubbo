@@ -221,7 +221,7 @@ public class OfcStorageInfoController extends BaseController {
      * @param realGoodsDTO
      *
      */
-    @RequestMapping(value = "/queryRealGood",method = RequestMethod.POST)
+    @RequestMapping(value ="/queryRealGood",method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(
             notes = "实收详情",
@@ -302,7 +302,29 @@ public class OfcStorageInfoController extends BaseController {
 
     }
 
-
+    @RequestMapping(value = "/orderStorageDetails/{orderCode}", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(
+            notes = "仓单详情",
+            httpMethod = "POST",
+            value = "仓单详情"
+    )
+    public Object orderStorageDetails(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable  String orderCode){
+        Map result=null;
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            result=ofcOrderManageService.orderStorageDetails(orderCode);
+            if(result==null){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到订单详情");
+            }
+        }catch (Exception e){
+            logger.error("查询订单详情出现异常:{}",e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
+    }
 
 
 }
