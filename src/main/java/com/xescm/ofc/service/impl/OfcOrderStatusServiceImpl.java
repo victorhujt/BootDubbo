@@ -215,6 +215,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                         updateOrderNewStatus(ofcOrderStatus, tag);
                     }
                 ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
+                ofcOrderStatus.setCreationTime(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
                 return super.save(ofcOrderStatus);
             }else {
                 throw new BusinessException("订单状态为空，保存订单状态失败");
