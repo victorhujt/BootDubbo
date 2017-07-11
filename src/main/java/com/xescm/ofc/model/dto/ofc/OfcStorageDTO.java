@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Created by victor on 2017/7/5.
+ * Created by hujintao on 2017/7/5.
  */
 @ApiModel("筛选产品信息Dto")
 @Data

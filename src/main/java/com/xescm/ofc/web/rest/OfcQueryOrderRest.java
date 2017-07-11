@@ -66,6 +66,8 @@ public class OfcQueryOrderRest {
     @RequestMapping(value = "queryOrderByCode", method = {RequestMethod.POST})
     @ResponseBody
     public Wrapper queryOrderByCode(HttpServletRequest request, String code, String phone, String captchaCode) {
+        logger.info("查单的单号为:{}",code);
+        long beginTime = System.currentTimeMillis();
         Wrapper result;
         String ip = IpUtils.getIpAddr(request);
         try {
@@ -82,9 +84,13 @@ public class OfcQueryOrderRest {
                 }
             }
             logger.info("订单查询 ==> code : {}", code);
+            long checkLimitBeginTime = System.currentTimeMillis();
             ofcIpLimitRuleService.checkLimit(redisOperationUtils,request);
+            logger.info("订单号：{}查单规则的校验cost的time为:{}ms",code,(System.currentTimeMillis() - checkLimitBeginTime));
             //查询结果是订单号集合
+            long queryOrderByCodeBeginTime = System.currentTimeMillis();
             result = OfcOrderStatusEdasService.queryOrderByCode(code);
+            logger.info("订单号：{}queryOrderByCode cost的time为:{}ms",code,(System.currentTimeMillis() -queryOrderByCodeBeginTime));
             CheckUtils.checkArgument(result == null, ResultCodeEnum.RESULTISNULL);
             CheckUtils.checkArgument(result.getCode() == Wrapper.ERROR_CODE, ResultCodeEnum.RESULTISNULL);
             List<String> orderCodes = (List<String>) result.getResult();
@@ -96,6 +102,7 @@ public class OfcQueryOrderRest {
             logger.error("订单查询出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
+        logger.info("订单号：{}总共cost的time为:{}ms",code,(System.currentTimeMillis() - beginTime));
         return result;
     }
 
@@ -110,7 +117,9 @@ public class OfcQueryOrderRest {
         Wrapper<OfcTraceOrderDTO> result;
         try {
             CheckUtils.checkArgument(PubUtils.isSEmptyOrNull(orderCode), ResultCodeEnum.PARAMERROR);
+            long checkLimitBeginTime = System.currentTimeMillis();
             ofcIpLimitRuleService.checkLimit(redisOperationUtils,request);
+            logger.info("订单号：{}查单规则的校验cost的time为:{}ms",orderCode,(System.currentTimeMillis() - checkLimitBeginTime));
             logger.info("订单跟踪查询 ==> orderCode : {}", orderCode);
             result = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
             CheckUtils.checkArgument(result == null, ResultCodeEnum.RESULTISNULL);
