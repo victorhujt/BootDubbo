@@ -1881,7 +1881,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
 
-        List<OfcGoodsDetailsInfo> goodsDetailsInfo =new ArrayList<>();
+        List<OfcGoodsDetailsInfo> goodsDetailsInfo = new ArrayList<>();
         //纬度   货品编码、供应商批次、生产日期、失效日期不同包装合并主单位数量 仓储订单
         if(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)){
             Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
