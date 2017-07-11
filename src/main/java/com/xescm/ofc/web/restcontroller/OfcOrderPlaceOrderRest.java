@@ -286,46 +286,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return cscGoodsLists;
     }
 
-    /**
-     * 仓储下单货品筛选 不带包装
-     * @param cscGoods
-     * @param customerCode
-     * @return
-     */
-    @RequestMapping(value = "/goodsSelectsStorage",method = RequestMethod.POST)
-    @ResponseBody
-    public Object goodsSelectsStorage(String  cscGoods,String customerCode,String warehouseCode){
-        logger.info("==>仓储下单货品筛选,cscGoods = {}",cscGoods);
-        logger.info("==>仓储下单货品筛选,customerCode = {}",customerCode);
-        Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists=null;
-        try{
-            if(PubUtils.isSEmptyOrNull(customerCode)){
-                throw new Exception("客户编码不能为空");
-            }
 
-            if(PubUtils.isSEmptyOrNull(warehouseCode)){
-                throw new Exception("仓库编码不能为空");
-            }
-
-            CscGoodsApiDto cscGood=new CscGoodsApiDto();
-            if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
-                cscGood= JSONObject.parseObject(cscGoods, CscGoodsApiDto.class);
-            }
-
-            cscGood.setCustomerCode(customerCode);
-            cscGood.setWarehouseCode(warehouseCode);
-            cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
-            cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            cscGood.setFromSys("WMS");//只要WMS渠道的货品
-            logger.info("===>查询货品编码的参数为:{}",JacksonUtil.toJson(cscGood));
-            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGood);
-            logger.info("===>查询货品的结果为:{}",JacksonUtil.toJson(cscGoodsLists));
-            //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
-        }catch (Exception ex){
-            logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);
-        }
-        return cscGoodsLists;
-    }
 
 
 

@@ -8,7 +8,6 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
-import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscStoreEdasService;
@@ -29,7 +28,6 @@ import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.whc.edas.dto.ResponseMsg;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,13 +38,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -263,94 +259,7 @@ public class OfcOrderManageRest extends BaseController{
         }
     }
 
-    /**
-     *
-     * @param ofcOrderDTOStr 订单信息
-     * @param orderGoodsListStr  货品信息
-     * @param cscContantAndCompanyDtoConsignorStr  发货方信息
-     * @param cscContantAndCompanyDtoConsigneeStr  收货方信息
-     * @param cscSupplierInfoDtoStr 供应商信息
-     * @param tag
-     * @return
-     */
-    @RequestMapping(value ="saveStorage", method = {RequestMethod.POST})
-    @ResponseBody
-    public Wrapper<?> saveStorage(String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
-            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr,String tag) {
-        logger.info("==>仓储开单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
-        logger.info("==>仓储开单或编辑实体 orderGoodsListStr={}", orderGoodsListStr);
-        logger.info("==>仓储开单或编辑实体 cscContantAndCompanyDtoConsignorStr={}", cscContantAndCompanyDtoConsignorStr);
-        logger.info("==>仓储开单或编辑实体 cscContantAndCompanyDtoConsigneeStr={}", cscContantAndCompanyDtoConsigneeStr);
-        logger.info("==>仓储开单或编辑标志位 tag={}", tag);
-        try {
-            if(isSEmptyOrNull(ofcOrderDTOStr)){
-               throw new BusinessException("订单的基本信息不能为空");
-            }
-            if(isSEmptyOrNull(orderGoodsListStr)){
-                throw new BusinessException("请至少添加一条货品信息");
-            }
-            //订单基本信息
-            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
-            //货品详情信息
-            List<OfcGoodsDetailsInfo>   ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
 
-            CscContantAndCompanyDto consignor=null;
-            CscContantAndCompanyDto consignee=null;
-            if(ofcOrderDTO.getProvideTransport()==1) {
-                if (trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("61")) {
-                    if (isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
-                        throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
-                    }
-                } else if (trimAndNullAsEmpty(ofcOrderDTO.getBusinessType()).substring(0, 2).equals("62")) {
-                    if (isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)) {
-                        throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
-                    }
-                }
-                // 带运输仓储单默认签收回单，费用为0
-                ofcOrderDTO.setReturnList("1");
-                ofcOrderDTO.setReturnListFee(new BigDecimal(0));
-            }
-
-            //发货方信息
-            if((isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr))){
-                consignor=new CscContantAndCompanyDto();
-            }else{
-                logger.info(cscContantAndCompanyDtoConsignorStr);
-                consignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
-            }
-
-            if (isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)) {
-                consignee=new CscContantAndCompanyDto();
-            }else{
-                //收货方信息
-                logger.info(cscContantAndCompanyDtoConsigneeStr);
-                consignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-            }
-
-            //供应商信息
-            CscSupplierInfoDto cscSupplierInfoDto=null;
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,consignor,consignee,cscSupplierInfoDto,authResDtoByToken);
-            if(result.getCode()!=Wrapper.SUCCESS_CODE){
-                if(!StringUtils.isEmpty(result.getMessage())){
-                    throw new BusinessException(result.getMessage());
-                }else{
-                    throw new BusinessException(Wrapper.ERROR_MESSAGE);
-                }
-            }
-        } catch (BusinessException ex){
-            logger.error("仓储订单下单或编辑出现异常:{}", ex.getMessage(), ex);
-            if(!StringUtils.isEmpty(ex.getMessage())){
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-            }else{
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-            }
-        } catch (Exception ex) {
-                logger.error("仓储订单下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
-    }
 
     /**
      *

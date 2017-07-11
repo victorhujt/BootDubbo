@@ -37,7 +37,9 @@ import com.xescm.ofc.edas.model.dto.ofc.OfcOrderCancelDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
+import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.ofc.model.dto.tfc.TfcTransport;
 import com.xescm.ofc.model.dto.tfc.TfcTransportDetail;
@@ -775,12 +777,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
             ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
-            Wrapper save = this.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
-                    , cscConsignorDto, cscConsigneeDto, forOrderMsg.getCscSupplierInfoDto(), authResDto);
-            if (save.getCode() == Wrapper.ERROR_CODE) {
-                logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
-                return save;
-            }
+//            Wrapper save = this.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
+//                    , cscConsignorDto, cscConsigneeDto, forOrderMsg.getCscSupplierInfoDto(), authResDto);
+//            if (save.getCode() == Wrapper.ERROR_CODE) {
+//                logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
+//                return save;
+//            }
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
@@ -1348,7 +1350,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * 生成仓储订单
      *
      * @param ofcOrderDTO                      订单信息
-     * @param goodsDetailsList                 货品信息
+     * @param goodsDetailsListDTO                 货品信息
      * @param reviewTag                        操作标志位
      * @param cscContantAndCompanyDtoConsignor 发货方信息
      * @param cscContantAndCompanyDtoConsignee 收货方信息
@@ -1357,16 +1359,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return 操作结果
      */
     @Override
-    public Wrapper<?> saveStorageOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> goodsDetailsList, String reviewTag
+    public Wrapper<?> saveStorageOrder(OfcSaveStorageDTO ofcOrderDTO, List<OfcGoodsDetailsInfoDTO> goodsDetailsListDTO, String reviewTag
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee
             , CscSupplierInfoDto cscSupplierInfoDto, AuthResDto authResDtoByToken) {
         logger.info("开始创建仓储订单 ofcOrderDTO:{}, goodsDetailsList:{}, reviewTag:{}, cscContantAndCompanyDtoConsignor:{}" +
-                ", cscContantAndCompanyDtoConsignee:{}, cscSupplierInfoDto:{}, authResDtoByToken:{}", ofcOrderDTO, goodsDetailsList
+                ", cscContantAndCompanyDtoConsignee:{}, cscSupplierInfoDto:{}, authResDtoByToken:{}", ofcOrderDTO, goodsDetailsListDTO
                 , reviewTag, cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee, cscSupplierInfoDto, authResDtoByToken);
-        OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
-        OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
-        OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
+        OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO.getFundamentalInformation(), OfcFundamentalInformation.class);
+        OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO.getWarehouseInformation(), OfcWarehouseInformation.class);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO.getDistributionBasicInfo(), OfcDistributionBasicInfo.class);
         OfcFinanceInformation ofcFinanceInformation = modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
+        List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<>();
+        for(OfcGoodsDetailsInfoDTO  dto: goodsDetailsListDTO){
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            org.springframework.beans.BeanUtils.copyProperties(dto,ofcGoodsDetailsInfo);
+            goodsDetailsList.add(ofcGoodsDetailsInfo);
+        }
         OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
         if (null == ofcFundamentalInformation || null == ofcWarehouseInformation) {
             logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
@@ -1411,7 +1419,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         int custOrderCode = 0;
         if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
@@ -1543,7 +1550,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
         dinfo = ofcDistributionBasicInfoService.selectOne(condition);
 
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || ORDER_TAG_STOCK_IMPORT.equals(trimAndNullAsEmpty(reviewTag))) {//
+//        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || ORDER_TAG_STOCK_IMPORT.equals(trimAndNullAsEmpty(reviewTag))) {//
             //编辑时不提供运输改为提供运输时 收货方即是仓库的信息   前台不好处理  后台通过仓库编码获取仓库的信息
             StringBuilder sb = new StringBuilder();
             RmcWarehouseDto rmcWarehouseDto = new RmcWarehouseDto();
@@ -1610,7 +1617,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                     throw new BusinessException(wrapper.getMessage());
                 }
-            }else{
+            } else {
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                     wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if (Wrapper.ERROR_CODE == wrapper.getCode()) {
@@ -1618,24 +1625,24 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }
             }
-
-        } else {
-            if (!trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
-                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                        throw new BusinessException(wrapper.getMessage());
-                    }
-                }else{
-                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                        wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-                        if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                            throw new BusinessException(wrapper.getMessage());
-                        }
-                    }
-                }
-            }
-        }
+      //  }
+//        } else {
+//            if (!trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
+//                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+//                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+//                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+//                        throw new BusinessException(wrapper.getMessage());
+//                    }
+//                }else{
+//                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+//                        wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+//                        if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+//                            throw new BusinessException(wrapper.getMessage());
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         //2017年3月25日 modified by lyh 编辑后将之前无法识别的地址信息匹配表补充完整
         this.fixAddressWhenEdit(reviewTag, ofcDistributionBasicInfo);

@@ -11,7 +11,7 @@ import java.util.List;
  */
 @ApiModel("筛选产品信息Dto")
 @Data
-public class OfcStorageDTO {
+public class OfcQueryStorageDTO {
     @ApiModelProperty("客户名称")
     private String custName;
     @ApiModelProperty("客户编码")

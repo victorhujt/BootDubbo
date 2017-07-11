@@ -11,7 +11,7 @@ import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
-import com.xescm.ofc.model.dto.ofc.OfcStorageDTO;
+import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
@@ -48,8 +48,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderManageOperService ofcOrderManageOperService;
 
     @Override
-    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcStorageDTO ofcStorageDTO) {
-        if (ofcStorageDTO.getTag().equals("in")) {
+    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcQueryStorageDTO ofcQueryStorageDTO) {
+        if (ofcQueryStorageDTO.getTag().equals("in")) {
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("620");
                 businessTypes.add("621");
@@ -58,8 +58,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("624");
                 businessTypes.add("625");
                 businessTypes.add("626");
-            ofcStorageDTO.setBusinessTypes(businessTypes);
-        } else if (ofcStorageDTO.getTag().equals("out")) {
+            ofcQueryStorageDTO.setBusinessTypes(businessTypes);
+        } else if (ofcQueryStorageDTO.getTag().equals("out")) {
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("610");
                 businessTypes.add("611");
@@ -67,10 +67,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("613");
                 businessTypes.add("614");
                 businessTypes.add("617");
-            ofcStorageDTO.setBusinessTypes(businessTypes);
+            ofcQueryStorageDTO.setBusinessTypes(businessTypes);
         }
         OrderStorageOperForm form = new OrderStorageOperForm();
-        BeanUtils.copyProperties(ofcStorageDTO,form);
+        BeanUtils.copyProperties(ofcQueryStorageDTO,form);
         return queryStorageOrderList(authResDto,form);
     }
 

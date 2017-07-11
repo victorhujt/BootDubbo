@@ -8,15 +8,14 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscGoodsTypeVo;
-import com.xescm.csc.provider.CscContactEdasService;
-import com.xescm.csc.provider.CscCustomerEdasService;
-import com.xescm.csc.provider.CscGoodsTypeEdasService;
-import com.xescm.csc.provider.CscSupplierEdasService;
+import com.xescm.csc.provider.*;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
@@ -59,6 +58,8 @@ public class OfcOperCommonController extends BaseController{
 
     @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
+    @Resource
+    private CscGoodsEdasService cscGoodsEdasService;
 
     /**
      * Select2查询客户
@@ -196,7 +197,11 @@ public class OfcOperCommonController extends BaseController{
             queryParam.setCustomerCode(customerCode);
             queryParam.setPNum(page.getPageNum());
             queryParam.setPSize(page.getPageSize());
-            queryParam.setSupplierName(page.getParam().getName());
+            if(page.getParam() != null){
+                if(!PubUtils.isSEmptyOrNull(page.getParam().getName())){
+                    queryParam.setSupplierName(page.getParam().getName());
+                }
+            }
             Wrapper<PageInfo<CscSupplierInfoDto>> pageInfoWrapper =  cscSupplierEdasService.querySupplierByAttributePageList(queryParam);
             result.setCode(pageInfoWrapper.getCode());
             result.setMessage(pageInfoWrapper.getMessage());
@@ -235,11 +240,16 @@ public class OfcOperCommonController extends BaseController{
      * 货品类别(调用客户中心API)
      */
 
-    @RequestMapping(value = "/getCscGoodsTypeList/{cscGoodsType}",method = RequestMethod.POST)
-    @ResponseBody
-    @ApiOperation(value="下单货品筛选",  httpMethod = "POST", notes="根据查询条件筛选货品")
 
-    public Wrapper<?> getCscGoodsTypeList(@ApiParam(name = "cscGoodsType", value = "查询条件筛选货品") @PathVariable String cscGoodsType){
+
+    @ApiOperation(
+            notes = "筛选货品",
+            httpMethod = "POST",
+            value = "筛选货品"
+    )
+    @RequestMapping(value = "/getCscGoodsTypeList/{cscGoodsType}", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> getCscGoodsTypeList(@ApiParam(name = "cscGoodsType",value = "类id" ) @PathVariable String cscGoodsType) {
         logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
         //调用外部接口,最低传CustomerCode
         try{
@@ -250,7 +260,7 @@ public class OfcOperCommonController extends BaseController{
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
             logger.info("===========================" + CscGoodsType);
             logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
-           return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, CscGoodsType);
+            return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, CscGoodsType);
         }catch (Exception ex){
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "根据查询条件筛选货品发生异常！");
@@ -283,5 +293,40 @@ public class OfcOperCommonController extends BaseController{
             return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+    }
+
+    /**
+     * 仓储下单货品筛选 不带包装
+     * @param page
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/goodsSelectsStorage",method = RequestMethod.POST)
+    @ApiOperation(notes = "查询带包装的货品列表", httpMethod = "POST", value = "查询货品")
+    @ResponseBody
+    public Object goodsSelectsStorage(@RequestBody  Page<CscGoodsApiDto> page){
+        Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists = null;
+        try{
+            CscGoodsApiDto cscGoodsApiDto = page.getParam();
+            if(cscGoodsApiDto == null){
+                throw new BusinessException("查询货品的dto不能为空");
+            }
+            logger.info("==>仓储下单货品筛选,cscGoods = {}",JacksonUtil.toJson(cscGoodsApiDto));
+            if(PubUtils.isSEmptyOrNull(cscGoodsApiDto.getCustomerCode())){
+                throw new BusinessException("客户编码不能为空");
+            }
+
+            if(PubUtils.isSEmptyOrNull(cscGoodsApiDto.getWarehouseCode())){
+                throw new BusinessException("仓库编码不能为空");
+            }
+            cscGoodsApiDto.setFromSys("WMS");//只要WMS渠道的货品
+            cscGoodsApiDto.setPNum(page.getPageNum());
+            cscGoodsApiDto.setPSize(page.getPageSize());
+            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoodsApiDto);
+            logger.info("===>查询货品的结果为:{}",JacksonUtil.toJson(cscGoodsLists));
+        }catch (Exception ex){
+            logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);
+        }
+        return cscGoodsLists;
     }
 }

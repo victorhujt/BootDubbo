@@ -6,7 +6,7 @@ import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
-import com.xescm.ofc.model.dto.ofc.OfcStorageDTO;
+import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 
@@ -23,7 +23,7 @@ public interface OfcOrderManageOperService {
 
     List<OrderScreenResult> queryOrderOper(OrderOperForm form);
 
-    List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto,OfcStorageDTO ofcStorageDTO);
+    List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto,OfcQueryStorageDTO ofcQueryStorageDTO);
 
     /**
      * 查询订单列表

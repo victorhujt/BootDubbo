@@ -8,7 +8,8 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
+import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
@@ -55,7 +56,7 @@ public interface OfcOrderManageService {
 
     RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String pickup);
 
-    Wrapper<?> saveStorageOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> goodsDetailsList, String reviewTag,CscContantAndCompanyDto cscContantAndCompanyDtoConsignor,CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto,
+    Wrapper<?> saveStorageOrder(OfcSaveStorageDTO ofcSaveStorageDTO, List<OfcGoodsDetailsInfoDTO> goodsDetailsList, String reviewTag, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto,
                                 AuthResDto authResDtoByToken);
 
     String copyOrder(String orderCode,AuthResDto authResDtoByToken);
