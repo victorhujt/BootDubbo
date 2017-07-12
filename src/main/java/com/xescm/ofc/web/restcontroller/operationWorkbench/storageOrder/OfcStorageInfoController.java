@@ -47,9 +47,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
-import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_STOCK_EDIT;
-import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_STOCK_IMPORT;
-import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_STOCK_SAVE;
 
 /**
  * Created by hujintao on 2017/7/5.
@@ -335,21 +332,21 @@ public class OfcStorageInfoController extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
 
-    @RequestMapping(value ="saveStorage/{tag}", method = {RequestMethod.POST})
+    @RequestMapping(value ="saveStorage", method = {RequestMethod.POST})
     @ResponseBody
-    public Wrapper<?> saveStorage(@RequestBody OfcSaveStorageDTO ofcSaveStorageDTO, @PathVariable String tag) {
+    public Wrapper<?> saveStorage(@ApiParam(name = "ofcSaveStorageDTO",value = "仓单Dto") @RequestBody OfcSaveStorageDTO ofcSaveStorageDTO) {
         try {
             if (ofcSaveStorageDTO == null) {
                 throw new BusinessException("订单的基本信息不能为空");
             }
 
-            if(PubUtils.isSEmptyOrNull(tag)){
-                throw new BusinessException("下单标志不能为空");
-            }
-
-            if(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag)){
-                throw new BusinessException("下单标志类型错误");
-            }
+//            if(PubUtils.isSEmptyOrNull(tag)){
+//                throw new BusinessException("下单标志不能为空");
+//            }
+//
+//            if(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag)){
+//                throw new BusinessException("下单标志类型错误");
+//            }
 
             //货品信息
             List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = ofcSaveStorageDTO.getGoodsDetailsInfo();
@@ -368,7 +365,7 @@ public class OfcStorageInfoController extends BaseController {
             CscSupplierInfoDto supplier=ofcSaveStorageDTO.getSupplier();
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             logger.info("==>仓储开单或编辑实体 OfcSaveStorageDTO={}", JacksonUtil.toJson(ofcSaveStorageDTO));
-            logger.info("==>仓储开单或编辑标志位 tag={}", tag);
+           // logger.info("==>仓储开单或编辑标志位 tag={}", tag);
             if(ofcWarehouseInformationDTO.getProvideTransport() == 1) {
                 if (trimAndNullAsEmpty(OfcFundamentalInformationDTO.getBusinessType()).substring(0, 2).equals("61")) {
                     if(consignee == null) {
@@ -391,7 +388,7 @@ public class OfcStorageInfoController extends BaseController {
             if (consignee == null) {
                 consignee=new CscContantAndCompanyDto();
             }
-            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO,ofcGoodsDetailsInfos,tag,consignor,consignee,supplier,authResDtoByToken);
+            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO,ofcGoodsDetailsInfos,"",consignor,consignee,supplier,authResDtoByToken);
             if(result.getCode()!=Wrapper.SUCCESS_CODE){
                 if(!org.apache.commons.lang.StringUtils.isEmpty(result.getMessage())){
                     throw new BusinessException(result.getMessage());
@@ -412,7 +409,4 @@ public class OfcStorageInfoController extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
     }
-
-
-
 }

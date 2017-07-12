@@ -20,6 +20,7 @@ import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.csc.CscGoodsApiDTO;
 import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
+import com.xescm.ofc.model.dto.ofc.GoodsCategoryDTO;
 import com.xescm.ofc.service.OfcOperCommonService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
@@ -248,15 +249,15 @@ public class OfcOperCommonController extends BaseController{
             httpMethod = "POST",
             value = "筛选货品"
     )
-    @RequestMapping(value = "/getCscGoodsTypeList/{cscGoodsType}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getCscGoodsTypeList", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> getCscGoodsTypeList(@ApiParam(name = "cscGoodsType",value = "类id" ) @PathVariable String cscGoodsType) {
+    public Wrapper<?> getCscGoodsTypeList(@ApiParam(name = "cscGoodsType",value = "类id" ) @RequestBody GoodsCategoryDTO cscGoodsType) {
         logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
         //调用外部接口,最低传CustomerCode
         try{
             CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
-            if(!PubUtils.trimAndNullAsEmpty(cscGoodsType).equals("")){
-                cscGoodType.setPid(cscGoodsType);
+            if(!PubUtils.trimAndNullAsEmpty(cscGoodsType.getCscGoodsType()).equals("")){
+                cscGoodType.setPid(cscGoodsType.getCscGoodsType());
             }
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
             logger.info("===========================" + CscGoodsType);
@@ -353,4 +354,19 @@ public class OfcOperCommonController extends BaseController{
         }
         return cscGoodsLists;
     }
+
+    @RequestMapping(value = "/getMerchandiser",method = RequestMethod.POST)
+    @ResponseBody
+    public Object getMerchandiser() {
+        String userName;
+        try {
+            userName = getAuthResDtoByToken().getUserName();
+        } catch (Exception ex) {
+            logger.error("获取当前用户异常{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",userName);
+    }
+
+
 }

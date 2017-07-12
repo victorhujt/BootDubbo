@@ -28,6 +28,8 @@ public class OfcSaveStorageDTO {
     private List<OfcGoodsDetailsInfoDTO> goodsDetailsInfo;
     @ApiModelProperty("订单运输信息")
     private OfcDistributionBasicInfoDTO distributionBasicInfo;
+    @ApiModelProperty("开单员")
+    private String merchandiser;
 
 
 }
