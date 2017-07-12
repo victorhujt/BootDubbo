@@ -167,19 +167,24 @@
     </select>
 
     <select id="searchOverallOrder" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT
-        ofi.order_code
-        FROM
-        ofc_fundamental_information ofi
-        LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
-        LEFT JOIN ofc_order_newstatus oos ON ofi.order_code = oos.order_code
-        WHERE
-        <if test="code != '' and code != null">
-            (ofi.order_code = #{code,jdbcType=VARCHAR}
-            OR ofi.cust_order_code = #{code,jdbcType=VARCHAR}
-            OR odbi.trans_code = #{code,jdbcType=VARCHAR})
-            AND oos.order_latest_status != '50'
-        </if>
+        select order_code from (
+            select ofi.order_code from ofc_fundamental_information ofi
+            left join ofc_order_newstatus oos on ofi.order_code = oos.order_code
+            where 1 = 1
+            <if test="code != '' and code != null">
+                and (ofi.order_code = #{code,jdbcType=VARCHAR}
+                or ofi.cust_order_code = #{code,jdbcType=VARCHAR})
+                and oos.order_latest_status != '50'
+            </if>
+            union all
+            select odbi.order_code from ofc_distribution_basic_info odbi
+            left join ofc_order_newstatus oos on odbi.order_code = oos.order_code
+            where 1 = 1
+            <if test="code != '' and code != null">
+                and odbi.trans_code = #{code,jdbcType=VARCHAR}
+                and oos.order_latest_status != '50'
+            </if>
+        )tmp
     </select>
 
 </mapper>
