@@ -24,6 +24,7 @@
 
 package com.xescm.ofc.config;
 
+import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
 import com.xescm.ofc.web.interceptor.VueViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +43,8 @@ import javax.annotation.Resource;
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
-   // @Resource
-   // private AuthViewInterceptor authViewInterceptor;
+    @Resource
+    private AuthViewInterceptor authViewInterceptor;
 //    @Resource
 //    private LimitRuleInterceptor limitRuleInterceptor;
 

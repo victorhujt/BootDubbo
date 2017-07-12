@@ -18,7 +18,9 @@ import com.xescm.csc.model.vo.CscGoodsTypeVo;
 import com.xescm.csc.provider.*;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.csc.CscGoodsApiDTO;
 import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
+import com.xescm.ofc.service.OfcOperCommonService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.Api;
@@ -49,15 +51,14 @@ public class OfcOperCommonController extends BaseController{
     private CscCustomerEdasService cscCustomerEdasService;
     @Resource
     private CscContactEdasService cscContactEdasService;
-
     @Resource
     private OfcOrderManageService ofcOrderManageService;
-
     @Resource
     private CscSupplierEdasService cscSupplierEdasService;
-
     @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
+    @Resource
+    private OfcOperCommonService ofcOperCommonService;
     @Resource
     private CscGoodsEdasService cscGoodsEdasService;
 
@@ -272,7 +273,7 @@ public class OfcOperCommonController extends BaseController{
      */
     @RequestMapping(value = "/queryConsignByPage", method = RequestMethod.POST)
     @ResponseBody
-    @ApiOperation(notes = "返回收发货方列表", httpMethod = "POST", value = "Select2查询客户")
+    @ApiOperation(notes = "返回收发货方列表", httpMethod = "POST", value = "分页查询收发货方")
     public Wrapper queryConsignByPage(@RequestBody CscContantAndCompanyDto cscContantAndCompanyDto) {
         logger.info("==>分页查询收发货方,cscContantAndCompanyDto = {}",cscContantAndCompanyDto);
         //调用外部接口,最低传CustomerCode和purpose
@@ -290,6 +291,29 @@ public class OfcOperCommonController extends BaseController{
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
             logger.error("分页查询收发货方:{}", e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+    }
+
+    /**
+     * 分页查询货品列表
+     */
+    @RequestMapping(value = "/queryGoodsByPage", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(notes = "返回货品列表", httpMethod = "POST", value = "Select2查询客户")
+    public Wrapper queryGoodsByPage(@RequestBody CscGoodsApiDTO cscGoodsApiDto) {
+        logger.info("==>分页查询货品列表,cscGoodsApiDto = {}",cscGoodsApiDto);
+        //调用外部接口,最低传CustomerCode和purpose
+        PageInfo<CscGoodsApiVo> result;
+        getAuthResDtoByToken();
+        try {
+            result = ofcOperCommonService.queryGoodsByPage(cscGoodsApiDto);
+        } catch (BusinessException e) {
+            logger.error("分页查询货品列表:{}", e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("分页查询货品列表:{}", e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
