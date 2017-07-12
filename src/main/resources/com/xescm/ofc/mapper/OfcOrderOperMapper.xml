@@ -268,7 +268,9 @@
       ofi.notes,
       ofi.store_name,
       ofi.is_exception,
-      ofi.exception_reason
+      ofi.exception_reason,
+      ofi.creation_time,
+      ofi.area_name
   </sql>
 
   <sql id="queryStorageOrderListField">

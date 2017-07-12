@@ -26,6 +26,8 @@ public class OrderSearchOperResult {
 
     private String businessType;
 
+    private String areaName;
+
     private String baseName;
 
     private String orderStatus;
@@ -46,6 +48,8 @@ public class OrderSearchOperResult {
 
     private String exceptionReason;
 
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String creationTime;
 
 }
