@@ -49,7 +49,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Resource
    private VueViewInterceptor vueViewInterceptor;
-	
+
 	@Value("${env}")
 	private String env;
 	
@@ -63,18 +63,13 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // 多个拦截器组成一个拦截器链
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
-    	//super.addInterceptors(registry);
-        //vueViewInterceptor.setEnv(env);
-		//registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
-       //registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/platformDaily", "/ofc/rule", "/ofc/queryDailyAccount", "/ofc/searchOverallOrder");
-       // registry.addInterceptor(limitRuleInterceptor).addPathPatterns("/www/ofc/queryOrderByCode","/www/ofc/traceByOrderCode");
-
-        super.addInterceptors(registry);
-        vueViewInterceptor.setEnv(env);
+    	super.addInterceptors(registry);
+    	authViewInterceptor.setEnv(env);
         vueViewInterceptor.setEnv(env);
         registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**");
         registry.addInterceptor(vueViewInterceptor).addPathPatterns("/page/ofc/**");
-        // registry.addInterceptor(vueViewInterceptor).addPathPatterns("/page/csc/**");
+//		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
+        registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/searchOverallOrder");
     }
 
 }
