@@ -9,6 +9,7 @@ import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.Api;
@@ -16,13 +17,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 订单管理
@@ -55,5 +54,28 @@ public class OfcOrderManageController extends BaseController {
             logger.error("运营平台查询订单出错：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/queryUamGroupByType/{type}", method = {RequestMethod.POST})
+    @ApiOperation(value = "根据类型查询组织信息", httpMethod = "POST", notes = "返回组织信息")
+    public Wrapper<List<OfcGroupVo>> queryUamGroupByType(@ApiParam(name = "type", value = "类型") @PathVariable String type) {
+        logger.info("==>queryUamGroup   type:{}", type);
+        Wrapper<List<OfcGroupVo>> result;
+        try {
+            Map<String, List<OfcGroupVo>> res = ofcOrderManageOperService.loadGroupList();
+            if (res.keySet().size() > 0) {
+                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, res.get(type));
+            } else {
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询结果为空！");
+            }
+        } catch (BusinessException ex) {
+            logger.error("查询组织信息发生异常：异常详情{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("查询组织信息发生未知异常：异常详情{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return result;
     }
 }
