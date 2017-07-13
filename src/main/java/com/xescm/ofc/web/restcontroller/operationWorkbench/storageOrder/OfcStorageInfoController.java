@@ -19,7 +19,6 @@ import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.*;
-import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
@@ -27,7 +26,6 @@ import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.whc.edas.dto.WmsDetailsDTO;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import io.swagger.annotations.Api;
@@ -47,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
 
 /**
  * Created by hujintao on 2017/7/5.
@@ -105,23 +104,6 @@ public class OfcStorageInfoController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/loadAreaAndBaseByUser",method = RequestMethod.POST)
-    @ResponseBody
-    public Object loadAreaAndBaseByUser() {
-        Map<String, List<OfcGroupVo>> groupMap;
-        try {
-            groupMap = ofcOrderManageOperService.loadGroupList();
-            if (groupMap==null) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到大区和基地信息");
-            }
-        } catch (Exception ex) {
-            logger.error("查询用户下的大区和基地信息异常{}", ex.getMessage(), ex);
-
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",groupMap);
-    }
-
     /**
      * 查询订单
      *
@@ -156,38 +138,7 @@ public class OfcStorageInfoController extends BaseController {
     }
 
 
-    /**
-     * 根据所选大区查询基地
-     */
-    @RequestMapping(
-            value = {"/queryBaseListByArea/{areaCode}"},
-            method = {RequestMethod.POST}
-    )
-    @ResponseBody
-    @ApiOperation(
-            notes = "根据大区编号查询基地",
-            httpMethod = "POST",
-            value = "根据大区编号查询基地"
-    )
-    public Wrapper<?> queryBaseListByArea(@ApiParam(name = "areaCode",value = "大区编码") @PathVariable String areaCode) {
-        logger.info("运营中心订单管理根据所选大区查询基地,入参:areaCode = {}", areaCode);
-        if (PubUtils.isSEmptyOrNull(areaCode)) {
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该大区编码为空!无法查询其基地!");
-        }
-        UamGroupDto uamGroupDto = new UamGroupDto();
-        uamGroupDto.setSerialNo(areaCode);
-        List<OfcGroupVo> ofcGroupVoList;
-        try {
-            ofcGroupVoList = ofcOrderManageOperService.getBaseListByCurArea(uamGroupDto);
-        } catch (BusinessException ex) {
-            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.info("根据所选大区查询基地出错：{", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选大区查询基地查询成功", ofcGroupVoList);
-    }
+
 
     /**
      * 订单的复制
@@ -332,21 +283,21 @@ public class OfcStorageInfoController extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
 
-    @RequestMapping(value ="saveStorage", method = {RequestMethod.POST})
+    @RequestMapping(value ="saveStorage/{tag}", method = {RequestMethod.POST})
     @ResponseBody
-    public Wrapper<?> saveStorage(@ApiParam(name = "ofcSaveStorageDTO",value = "仓单Dto") @RequestBody OfcSaveStorageDTO ofcSaveStorageDTO) {
+    public Wrapper<?> saveStorage(@ApiParam(name = "ofcSaveStorageDTO",value = "仓单Dto") @RequestBody OfcSaveStorageDTO ofcSaveStorageDTO,  @PathVariable String tag) {
         try {
             if (ofcSaveStorageDTO == null) {
                 throw new BusinessException("订单的基本信息不能为空");
             }
 
-//            if(PubUtils.isSEmptyOrNull(tag)){
-//                throw new BusinessException("下单标志不能为空");
-//            }
-//
-//            if(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag)){
-//                throw new BusinessException("下单标志类型错误");
-//            }
+            if(PubUtils.isSEmptyOrNull(tag)){
+                throw new BusinessException("下单标志不能为空");
+            }
+
+            if(!(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag))){
+                throw new BusinessException("下单标志类型错误");
+            }
 
             //货品信息
             List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = ofcSaveStorageDTO.getGoodsDetailsInfo();
@@ -388,7 +339,7 @@ public class OfcStorageInfoController extends BaseController {
             if (consignee == null) {
                 consignee=new CscContantAndCompanyDto();
             }
-            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO,ofcGoodsDetailsInfos,"",consignor,consignee,supplier,authResDtoByToken);
+            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO,ofcGoodsDetailsInfos,tag,consignor,consignee,supplier,authResDtoByToken);
             if(result.getCode()!=Wrapper.SUCCESS_CODE){
                 if(!org.apache.commons.lang.StringUtils.isEmpty(result.getMessage())){
                     throw new BusinessException(result.getMessage());
