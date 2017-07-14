@@ -275,6 +275,7 @@
 
   <sql id="queryStorageOrderListField">
     ofi.cust_name,
+    ofi.cust_code,
     ofi.order_code,
     ofi.cust_order_code,
     ofi.order_batch_number,
