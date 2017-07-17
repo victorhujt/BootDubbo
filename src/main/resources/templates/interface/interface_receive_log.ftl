@@ -68,7 +68,7 @@
     <div class="xe-pageHeader">
         接收日志列表
     </div>
-    <el-table :data="logData" border @selection-change="handleSelectionChange" style="width: 100%">
+    <el-table :data="logData" border style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column property="logBusinessType" label="业务类型"></el-table-column>
         <el-table-column property="refNo" label="业务单号"></el-table-column>
@@ -202,9 +202,6 @@
             this.doSearch();
         },
         methods: {
-            handleSelectionChange: function (val) {
-
-            },
             handleSizeChange: function (val) {
                 this.pageInfo.pageSize = val;
                 this.doSearch();
@@ -216,12 +213,9 @@
             doSearch: function () {
                 var vueObj = this;
                 vueObj.logData = [];
-                vueObj.pageInfo.pageNum = 1;
-                vueObj.pageInfo.pageSize = 10;
-                vueObj.pageInfo.total = 0;
                 var taskParam = {};
-                taskParam.pageNum = this.pageInfo.pageNum;
-                taskParam.pageSize = this.pageInfo.pageSize;
+                taskParam.pageNum = vueObj.pageInfo.pageNum;
+                taskParam.pageSize = vueObj.pageInfo.pageSize;
 //                var ofcTaskInterfaceLogVo = {};
                 taskParam.beginDate = DateUtil.format(this.logForm.dateRange[0], 'yyyy-MM-dd HH:mm:ss');
                 taskParam.endDate = DateUtil.format(this.logForm.dateRange[1], 'yyyy-MM-dd HH:mm:ss');

@@ -58,7 +58,7 @@
     <div class="xe-pageHeader">
         任务日志列表
     </div>
-    <el-table :data="taskData" border @selection-change="handleSelectionChange" style="width: 100%">
+    <el-table :data="taskData" border style="width: 100%">
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column property="taskType" label="任务类型"></el-table-column>
         <el-table-column property="refNo" label="业务单号"></el-table-column>
@@ -173,10 +173,12 @@
         created: function () {
             this.doSearch();
         },
+        watch: {
+            "pageInfo.pageNum": function (val, oldVal) {
+                console.log("==========" + val);
+            }
+        },
         methods: {
-            handleSelectionChange: function (val) {
-
-            },
             handleSizeChange: function (val) {
                 this.pageInfo.pageSize = val;
                 this.doSearch();
@@ -188,12 +190,9 @@
             doSearch: function () {
                 var vueObj = this;
                 vueObj.taskData = [];
-                vueObj.pageInfo.pageNum = 1;
-                vueObj.pageInfo.pageSize = 10;
-                vueObj.pageInfo.total = 0;
                 var taskParam = {};
-                taskParam.pageNum = this.pageInfo.pageNum;
-                taskParam.pageSize = this.pageInfo.pageSize;
+                taskParam.pageNum = vueObj.pageInfo.pageNum;
+                taskParam.pageSize = vueObj.pageInfo.pageSize;
 //                var ofcTaskInterfaceLogVo = {};
                 taskParam.beginDate = DateUtil.format(this.taskForm.dateRange[0], 'yyyy-MM-dd HH:mm:ss');
                 taskParam.endDate = DateUtil.format(this.taskForm.dateRange[1], 'yyyy-MM-dd HH:mm:ss');
