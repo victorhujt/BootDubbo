@@ -216,8 +216,6 @@
             doSearch: function () {
                 var vueObj = this;
                 vueObj.logData = [];
-                vueObj.pageInfo.pageNum = 1;
-                vueObj.pageInfo.pageSize = 10;
                 vueObj.pageInfo.total = 0;
                 var taskParam = {};
                 taskParam.pageNum = this.pageInfo.pageNum;
