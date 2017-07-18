@@ -167,7 +167,7 @@
     </select>
 
     <select id="searchOverallOrder" parameterType="java.lang.String" resultType="java.lang.String">
-        select order_code from (
+        select distinct order_code from (
             select ofi.order_code from ofc_fundamental_information ofi
             left join ofc_order_newstatus oos on ofi.order_code = oos.order_code
             where 1 = 1
