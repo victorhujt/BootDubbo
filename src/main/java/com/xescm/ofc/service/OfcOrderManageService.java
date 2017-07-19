@@ -71,7 +71,7 @@ public interface OfcOrderManageService {
 
     void fixAddressWhenEdit(String orderTagStockEdit, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
-    public String orderAutoAuditForTran(String orderCode,String orderStatus,String reviewTag, AuthResDto authResDtoByToken);
+    public String orderAutoAuditForTran(String orderCode,String reviewTag, AuthResDto authResDtoByToken);
 
     /**
      * 更新大区、基地

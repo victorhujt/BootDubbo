@@ -51,12 +51,12 @@ public class VueViewInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object arg2, Exception ex)
-            throws Exception {
+        throws Exception {
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object arg2, ModelAndView mv)
-            throws Exception {
+        throws Exception {
     }
 
     @Override
@@ -65,7 +65,7 @@ public class VueViewInterceptor implements HandlerInterceptor {
         logger.info("拦截到VUE 请求....");
 
         Map<String, Object> resultMap = Maps.newHashMap();
-        String errorMsg = "{\"code\":403 ,\"message\" :\"无权访问\"}";
+        String errorMsg = "{\"code\":100009 ,\"message\" :\"登录超时请重新登录\"}";
         resultMap.put("code", 403);
         resultMap.put("message", "无权访问");
 
@@ -98,12 +98,13 @@ public class VueViewInterceptor implements HandlerInterceptor {
                     }
                 } else {
                     logger.error("==> 解析token失败,权限验证失败!");
-                    throw new BusinessException("100009", "TOKEN解析失败");
+                    throw new BusinessException("100009", "登录超时请重新登录");
                 }
             }
 
             if (PublicUtil.isEmpty(authHeader)) {
-                throw new BusinessException("request Header is null");
+                logger.error("request Header is null");
+                throw new BusinessException("100009", "登录超时请重新登录");
             }
 
             final String token = authHeader.substring(7);
@@ -122,7 +123,8 @@ public class VueViewInterceptor implements HandlerInterceptor {
             }
 
             if (PublicUtil.isEmpty(authResDto)) {
-                throw new BusinessException("jwt验签失败,DTO为空");
+                logger.error("request authResDto is null");
+                throw new BusinessException("100009", "登录超时请重新登录");
             }
 
             ThreadLocalMap.put(UamConstant.TOKEN_USER, authResDto.getLoginName());
@@ -130,6 +132,7 @@ public class VueViewInterceptor implements HandlerInterceptor {
         } catch (BusinessException e) {
             try {
                 resultMap.put("message", e.getMessage());
+                resultMap.put("code", Integer.parseInt(e.getCode()));
                 String errorMessage = JacksonUtil.toJson(resultMap);
                 handleException(request, response, errorMessage);
             } catch (Exception ex) {
@@ -137,7 +140,6 @@ public class VueViewInterceptor implements HandlerInterceptor {
             }
             return false;
         } catch (Exception e) {
-            logger.error("Exception = {}", e.getMessage(), e);
             handleException(request, response, errorMsg);
             return false;
         }
@@ -164,4 +166,5 @@ public class VueViewInterceptor implements HandlerInterceptor {
     public void setEnv(String env) {
         this.env = env;
     }
+
 }

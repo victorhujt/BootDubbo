@@ -10,13 +10,17 @@ import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +41,8 @@ public class OfcOrderManageController extends BaseController {
 
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
+    @Resource
+    private OfcOrderManageService ofcOrderManageService;
 
     @ResponseBody
     @RequestMapping(value = "/queryOrdersPage", method = {RequestMethod.POST})
@@ -114,8 +120,54 @@ public class OfcOrderManageController extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选大区查询基地查询成功", ofcGroupVoList);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/queryOrderDetailByOrderCode/{orderCode}", method = {RequestMethod.POST})
+    @ApiOperation(value = "根据类型查询组织信息", httpMethod = "POST", notes = "返回组织信息")
+    public Wrapper<OfcOrderInfoDTO> queryOrderDetailByOrderCode(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
+        logger.info("==>queryOrderDetailByOrderCode   orderCode:{}", orderCode);
+        Wrapper<OfcOrderInfoDTO> result;
+        try {
+            if (PubUtils.isNull(orderCode)) {
+                result = WrapMapper.wrap(Wrapper.ILLEGAL_ARGUMENT_CODE_, Wrapper.ILLEGAL_ARGUMENT_MESSAGE);
+            } else {
+                OfcOrderInfoDTO orderInfoDTO = ofcOrderManageOperService.queryOrderDetailByOrderCode(orderCode);
+                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderInfoDTO);
+            }
+        } catch (BusinessException ex) {
+            logger.error("查询订单明细信息发生异常：异常详情{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            logger.error("查询订单明细信息发生未知异常：异常详情{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return result;
+    }
 
-
-
-
+    /**
+     * 审核与反审核订单
+     *
+     * @param auditOrderDTO 审核参数
+     * @return      Wrapper
+     */
+    @ResponseBody
+    @RequestMapping(value = "/auditTransportOrder", method = RequestMethod.POST)
+    @ApiOperation(value = "审核、反审核订单", httpMethod = "POST", notes = "审核、反审核结果")
+    public Wrapper<String> auditTransportOrder(@ApiParam(name = "auditOrderDTO", value = "订单审核实体") @RequestBody AuditOrderDTO auditOrderDTO) {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        try {
+            if (auditOrderDTO != null && StringUtils.isBlank(auditOrderDTO.getOrderCode())) {
+                throw new BusinessException("订单编号不能为空！");
+            } else if (StringUtils.isBlank(auditOrderDTO.getReviewTag())) {
+                throw new BusinessException("订单标识不能为空！");
+            }
+            String result = ofcOrderManageService.orderAutoAuditForTran(auditOrderDTO.getOrderCode(), auditOrderDTO.getReviewTag(), authResDtoByToken);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单审核成功", result);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
 }
