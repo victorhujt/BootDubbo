@@ -10,9 +10,11 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.ofc.domain.OrderSearchOperResult;
@@ -457,6 +459,37 @@ public class OfcStorageInfoController extends BaseController {
         }
     }
 
+    /**
+     * 根据客户名称分页查询客户
+     *
+     * @param customer 客户名称
+     * @return
+     */
+    @RequestMapping(value = "/queryCustomerByName", method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryCustomerByName(@RequestBody Page<String> customer) {
+        logger.info("城配开单根据客户名称查询客户==> custName={}", customer.getParam());
+        logger.info("城配开单根据客户名称查询客户==> pageNum={}", customer.getPageNum());
+        logger.info("城配开单根据客户名称查询客户==> pageSize={}", customer.getPageSize());
+        Wrapper<PageInfo<CscCustomerVo>> result;
+        try {
+            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
+            queryParam.setCustomerName(customer.getParam());
+            queryParam.setPageNum(customer.getPageNum());
+            queryParam.setPageSize(customer.getPageSize());
+            result = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
+            if (Wrapper.ERROR_CODE == result.getCode()) {
+                logger.error("查询客户列表失败,查询结果有误!");
+            }
+        } catch (BusinessException ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
+        }
+        return result;
+    }
 
 
 }
