@@ -360,4 +360,103 @@ public class OfcStorageInfoController extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
     }
+
+    /**
+     * 仓储订单的审核与反审核  暂用该方法    如果改版后的方法兼容  该方法可去除
+     * @param auditOrderDTO
+     * @return
+     */
+    @RequestMapping(value = "/auditOrderOrNotAuditOper", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(
+            notes = "审核订单",
+            httpMethod = "POST",
+            value = "审核订单"
+    )
+    public Wrapper<?> auditOrderOrNotAuditOper(@ApiParam(name = "AuditOrderDTO",value = "审核订单的DTO") @RequestBody AuditOrderDTO auditOrderDTO) {
+        try {
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            if (auditOrderDTO == null) {
+                throw new Exception("审核DTO不能为空！");
+            }
+            if (StringUtils.isBlank(auditOrderDTO.getOrderCode())) {
+                throw new Exception("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(auditOrderDTO.getReviewTag())) {
+                throw new Exception("订单标识不能为空！");
+            }
+            String result = ofcOrderManageService.auditStorageOrder(auditOrderDTO.getOrderCode(),auditOrderDTO.getReviewTag(), authResDtoByToken);
+            if(!result.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "审核或反审核出现异常");
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+    }
+
+    /**
+     * 订单取消
+     * @param orderCode     订单编号
+     * @return  Wrapper
+     */
+    @ApiOperation(
+            notes = "取消订单",
+            httpMethod = "POST",
+            value = "取消订单"
+    )
+    @RequestMapping(value = "/orderCancelOper/{orderCode}", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode) {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            String result = ofcOrderManageService.orderCancel(orderCode,authResDtoByToken);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", "", orderCode, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单取消出现异常");
+        }
+    }
+
+    /**
+     * 订单删除
+     *
+     * @param orderCode     订单编号
+     * @return  Wrapper
+     */
+    @RequestMapping(value = "/orderDeleteOper/{orderCode}", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(
+            notes = "删除订单",
+            httpMethod = "POST",
+            value = "删除订单"
+    )
+    public Wrapper<?> orderDeleteOper(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode) {
+        try {
+            if (StringUtils.isBlank(orderCode)) {
+                throw new Exception("订单编号不能为空！");
+            }
+            String result = ofcOrderManageService.orderDelete(orderCode);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
+
+
 }
