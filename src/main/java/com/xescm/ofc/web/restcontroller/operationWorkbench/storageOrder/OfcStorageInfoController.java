@@ -365,7 +365,7 @@ public class OfcStorageInfoController extends BaseController {
 
     /**
      * 仓储订单的审核与反审核  暂用该方法    如果改版后的方法兼容  该方法可去除
-     * @param auditOrderDTO
+     * @param auditOrderDTOs
      * @return
      */
     @RequestMapping(value = "/auditOrderOrNotAuditOper", method = RequestMethod.POST)
@@ -375,23 +375,36 @@ public class OfcStorageInfoController extends BaseController {
             httpMethod = "POST",
             value = "审核订单"
     )
-    public Wrapper<?> auditOrderOrNotAuditOper(@ApiParam(name = "AuditOrderDTO",value = "审核订单的DTO") @RequestBody AuditOrderDTO auditOrderDTO) {
+    public Wrapper<?> auditOrderOrNotAuditOper(@ApiParam(name = "AuditOrderDTO",value = "审核订单的DTO") @RequestBody List<AuditOrderDTO> auditOrderDTOs) {
         try {
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            if (auditOrderDTO == null) {
+
+            if(CollectionUtils.isEmpty(auditOrderDTOs)){
                 throw new Exception("审核DTO不能为空！");
             }
-            if (StringUtils.isBlank(auditOrderDTO.getOrderCode())) {
-                throw new Exception("订单编号不能为空！");
+            int count = 0;
+            for(AuditOrderDTO auditOrderDTO:auditOrderDTOs){
+                if (auditOrderDTO == null) {
+                    throw new Exception("审核DTO不能为空！");
+                }
+                if (StringUtils.isBlank(auditOrderDTO.getOrderCode())) {
+                    throw new Exception("订单编号不能为空！");
+                }
+                if (StringUtils.isBlank(auditOrderDTO.getReviewTag())) {
+                    throw new Exception("订单标识不能为空！");
+                }
+                String result = ofcOrderManageService.auditStorageOrder(auditOrderDTO.getOrderCode(),auditOrderDTO.getReviewTag(), authResDtoByToken);
+                if(!result.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
+                    return WrapMapper.wrap(Wrapper.ERROR_CODE, "审核或反审核出现异常");
+                } else{
+                    count++;
+                }
             }
-            if (StringUtils.isBlank(auditOrderDTO.getReviewTag())) {
-                throw new Exception("订单标识不能为空！");
+            if(count > 0){
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+            }else{
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
             }
-            String result = ofcOrderManageService.auditStorageOrder(auditOrderDTO.getOrderCode(),auditOrderDTO.getReviewTag(), authResDtoByToken);
-            if(!result.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "审核或反审核出现异常");
-            }
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
@@ -403,7 +416,7 @@ public class OfcStorageInfoController extends BaseController {
 
     /**
      * 订单取消
-     * @param orderCode     订单编号
+     * @param orderCodes     订单编号
      * @return  Wrapper
      */
     @ApiOperation(
@@ -413,19 +426,32 @@ public class OfcStorageInfoController extends BaseController {
     )
     @RequestMapping(value = "/orderCancelOper/{orderCode}", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode) {
+    public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @RequestBody List<String> orderCodes) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
-            if (StringUtils.isBlank(orderCode)) {
+            if(CollectionUtils.isEmpty(orderCodes)){
                 throw new Exception("订单编号不能为空！");
             }
-            String result = ofcOrderManageService.orderCancel(orderCode,authResDtoByToken);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+            int count = 0;
+            for(int i = 0; i<orderCodes.size();i++){
+                String orderCode = orderCodes.get(i);
+                if (StringUtils.isBlank(orderCode)) {
+                    continue;
+                }
+                String result = ofcOrderManageService.orderCancel(orderCode,authResDtoByToken);
+                if(!PubUtils.isSEmptyOrNull(result) && "200".equals(result)){
+                    count++;
+                }
+            }
+            if(count > 0){
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+            }else{
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单删除失败");
+            }
         } catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},{}", "", orderCode, ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单取消出现异常,{}", "", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单取消出现异常orderCode：{},orderStatus：{},{}", "", orderCode, ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单取消出现异常");
         }
     }
@@ -433,23 +459,38 @@ public class OfcStorageInfoController extends BaseController {
     /**
      * 订单删除
      *
-     * @param orderCode     订单编号
+     * @param orderCodes     订单编号
      * @return  Wrapper
      */
-    @RequestMapping(value = "/orderDeleteOper/{orderCode}", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderDeleteOper", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(
             notes = "删除订单",
             httpMethod = "POST",
             value = "删除订单"
     )
-    public Wrapper<?> orderDeleteOper(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode) {
+    public Wrapper<?> orderDeleteOper(@ApiParam(name = "orderCode",value = "订单号" ) @RequestBody List<String>  orderCodes) {
         try {
-            if (StringUtils.isBlank(orderCode)) {
+           if(CollectionUtils.isEmpty(orderCodes)){
                 throw new Exception("订单编号不能为空！");
             }
-            String result = ofcOrderManageService.orderDelete(orderCode);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+            int count = 0;
+
+            for(int i = 0; i<orderCodes.size();i++){
+                String orderCode = orderCodes.get(i);
+                if (StringUtils.isBlank(orderCode)) {
+                    continue;
+                }
+                String result = ofcOrderManageService.orderDelete(orderCode);
+                if(!PubUtils.isSEmptyOrNull(result) && "200".equals(result)){
+                    count++;
+                }
+            }
+            if(count > 0){
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+            }else{
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单删除失败");
+            }
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单删除出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
