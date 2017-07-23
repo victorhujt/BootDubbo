@@ -14,10 +14,8 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.*;
 import com.xescm.ofc.constant.OrderConstConstant;
-import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.OfcDistributionBasicInfoService;
@@ -28,7 +26,6 @@ import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -141,88 +138,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,result);
     }
 
-    /**
-     * 订单中心下单
-     * @param ofcOrderDTOStr        订单基本信息、收发货方信息
-     * @param orderGoodsListStr     货品信息
-     * @param cscContantAndCompanyDtoConsignorStr   发货人信息
-     * @param cscContantAndCompanyDtoConsigneeStr   收货人信息
-     * @param cscSupplierInfoDtoStr                 供应商信息
-     * @param tag           标识下单、编辑、运输开单
-     * @return      Wrapper
-     */
-    @RequestMapping("/orderPlaceCon")
-    @ResponseBody
-    public Wrapper<?> orderPlace(String ofcOrderDTOStr,String orderGoodsListStr,String cscContantAndCompanyDtoConsignorStr
-            ,String cscContantAndCompanyDtoConsigneeStr,String cscSupplierInfoDtoStr, String tag){
-        logger.info("==>订单中心下单或编辑实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
-        logger.info("==>订单中心下单或编辑标志位 tag={}", tag);
-        String resultMessage;
-        try {
-            orderGoodsListStr = orderGoodsListStr.replace("~`","");
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            if(PubUtils.isSEmptyOrNull(ofcOrderDTOStr)){
-                ofcOrderDTOStr = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
-            }
-            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
-                cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
-            }
-            if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsigneeStr)){
-                cscContantAndCompanyDtoConsigneeStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
-            }
-            if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
-                cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
-            }
 
-           // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
-            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
-            if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
-                ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
-            }
-            OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
-            logger.info(cscContantAndCompanyDtoConsignorStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignor = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsignorStr, CscContantAndCompanyDto.class);
-            logger.info(cscContantAndCompanyDtoConsigneeStr);
-            CscContantAndCompanyDto cscContantAndCompanyDtoConsignee = JacksonUtil.parseJsonWithFormat(cscContantAndCompanyDtoConsigneeStr, CscContantAndCompanyDto.class);
-            if(cscContantAndCompanyDtoConsignor==null){
-                throw new BusinessException("发货人信息不允许为空！");
-            }
-            if(cscContantAndCompanyDtoConsignee==null){
-                throw new BusinessException("收货人信息不允许为空！");
-            }
-
-            CscSupplierInfoDto cscSupplierInfoDto = JacksonUtil.parseJsonWithFormat(cscSupplierInfoDtoStr,CscSupplierInfoDto.class);
-            //校验业务类型，如果是卡班，必须要有运输单号
-            if(StringUtils.equals(ofcOrderDTO.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
-                if(StringUtils.isBlank(ofcOrderDTO.getTransCode())){
-                    throw new Exception("业务类型是卡班，运输单号是必填项");
-                }
-            }
-
-            if (null == ofcOrderDTO.getProvideTransport()){
-                ofcOrderDTO.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
-            }
-            if (null == ofcOrderDTO.getUrgent()){
-                ofcOrderDTO.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
-            }
-
-            if(null == ofcOrderDTO.getOrderTime()){
-                throw new BusinessException("请选择订单日期");
-            }
-
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO,ofcGoodsDetailsInfos,tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
-                    ,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,cscSupplierInfoDto);
-        } catch (BusinessException ex){
-            logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("订单中心下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
-
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,resultMessage);
-    }
 
 
     /**
@@ -250,47 +166,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
     }
-
-    /**
-     * 运营中心货品筛选(调用客户中心API) 运输、城配开单货品筛选
-     * @param cscGoods 货品筛选条件
-     * @param customerCode 客户编码
-     * @return
-     */
-    @RequestMapping(value = "/goodsSelects",method = RequestMethod.POST)
-    @ResponseBody
-    public Object goodsSelectByCsc(String  cscGoods,String customerCode){
-        //调用外部接口,最低传CustomerCode
-        logger.info("==>下单货品筛选,cscGoods = {}",cscGoods);
-        logger.info("==>下单货品筛选,customerCode = {}",customerCode);
-        Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists=null;
-        try{
-            if(PubUtils.isSEmptyOrNull(customerCode)){
-                throw new Exception("客户编码不能为空");
-            }
-
-            CscGoodsApiDto cscGood=new CscGoodsApiDto();
-            if(!PubUtils.trimAndNullAsEmpty(cscGoods).equals("")){
-                cscGood= JSONObject.parseObject(cscGoods, CscGoodsApiDto.class);
-            }
-
-            cscGood.setCustomerCode(customerCode);
-            cscGood.setGoodsCode(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsCode()));
-            cscGood.setGoodsName(PubUtils.trimAndNullAsEmpty(cscGood.getGoodsName()));
-            //cscGood.setFromSys("WMS");//只要WMS渠道的货品
-            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageList(cscGood);
-            //response.getWriter().print(JacksonUtil.toJsonWithFormat(cscGoodsLists.getResult()));
-        }catch (Exception ex){
-            logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
-        }
-        return cscGoodsLists;
-    }
-
-
-
-
-
-
 
 
     /**
@@ -448,33 +323,7 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         return flag;
     }
 
-    /**
-     * 校验运输单号
-     * @param transCode 运输单号
-     * @param selfTransCode 校验用运输单号
-     * @return
-     */
-    @RequestMapping(value = "/checkTransCode",method = RequestMethod.POST)
-    @ResponseBody
-    public boolean checkTransCode(String transCode, String selfTransCode){
-        logger.info("校验运输单号==> custOrderCode={}", transCode);
-        logger.info("校验运输单号==> selfCustOrderCode={}", selfTransCode);
 
-        OfcDistributionBasicInfo ofcDistributionBasicInfo=new OfcDistributionBasicInfo();
-        ofcDistributionBasicInfo.setTransCode(transCode);
-        ofcDistributionBasicInfo.setSelfTransCode(selfTransCode);
-        boolean flag = false;
-        try {
-            int count = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (count < 1){
-                flag = true;
-            }
-
-        } catch (Exception e) {
-            logger.error("校验运输单号出错:{}　", e.getMessage(),e);
-        }
-        return flag;
-    }
 
 
 }
