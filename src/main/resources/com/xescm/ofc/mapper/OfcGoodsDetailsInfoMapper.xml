@@ -31,6 +31,7 @@
     <result column="weight_unit_price" property="weightUnitPrice" jdbcType="DECIMAL" />
     <result column="volume_unit_price" property="volumeUnitPrice" jdbcType="DECIMAL" />
     <result column="support_batch" property="supportBatch" jdbcType="VARCHAR" />
+    <result column="support_name" property="supportName" jdbcType="VARCHAR" />
     <result column="package_name" property="packageName" jdbcType="VARCHAR" />
     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
@@ -71,6 +72,7 @@
     oos.charging_quantity,
     oos.charging_unit_price,
     oos.support_batch,
+    oos.support_name,
     oos.package_name,
     oos.package_type,
     oos.conversion_rate,
@@ -131,6 +133,7 @@
       gdi.charging_quantity,
       gdi.charging_unit_price,
       gdi.support_batch,
+      gdi.support_name,
       gdi.package_name,
       gdi.package_type,
       gdi.conversion_rate,

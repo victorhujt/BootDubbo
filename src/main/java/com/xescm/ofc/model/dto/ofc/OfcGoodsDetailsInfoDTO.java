@@ -170,6 +170,11 @@ public class OfcGoodsDetailsInfoDTO {
      * 货品供应商批次
      */
     private String supportBatch;
+
+    /**
+     * 货品供应商批次名称
+     */
+    private String supportName;
     /**
      * 包装名称
      */
