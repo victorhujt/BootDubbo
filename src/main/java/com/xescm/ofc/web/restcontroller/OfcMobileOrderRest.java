@@ -221,54 +221,7 @@ public class OfcMobileOrderRest extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
-    /**
-     * 拍照开单-自动受理订单
-     *
-     * @return
-     */
-    @RequestMapping(value = "/autoAcceptMobileOrderDetail")
-    @ResponseBody
-    public Wrapper<OfcMobileOrderVo> autoAcceptMobileOrderDetail(String orderCode) {
-        logger.info("==>拍照开单-自动受理订单 orderCode={}", orderCode);
-        Wrapper<OfcMobileOrderVo> result;
-        try {
-            OfcMobileOrder params = new OfcMobileOrder();
-            params.setMobileOrderCode(orderCode);
-            OfcMobileOrderVo mobileOrderVo = ofcMobileOrderService.selectOneOfcMobileOrder(params);
-            if (PubUtils.isNull(mobileOrderVo)) {
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "暂无待受理订单！");
-            } else {
-                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, mobileOrderVo);
-            }
-        } catch (BusinessException e) {
-            logger.error("拍照开单-自动受理订单发生错误: {}", e);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
-        } catch (Exception e) {
-            logger.error("拍照开单-自动受理订单发生错误: {}", e);
-            result = WrapMapper.error();
-        }
-        return result;
-    }
 
-    /**
-     *
-     * @param mobileOrderCode 手机订单号
-     * @return
-     */
-    @RequestMapping(value = "/deleteMobileOrder")
-    @ResponseBody
-    public Wrapper<?> deleteMobileOrder(String mobileOrderCode) {
-        logger.info("==>拍照开单-删除的手机订单号为: mobileOrderCode={}", mobileOrderCode);
-        try {
-            if(PubUtils.isSEmptyOrNull(mobileOrderCode)){
-                throw new BusinessException("删除手机订单时订单号不能为空！");
-            }
-            ofcMobileOrderService.deleteMobileOrder(mobileOrderCode);
-        } catch (Exception e) {
-            logger.error("拍照开单-删除手机订单号发生错误: {}", e);
-            return  WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
 
-        }
-        return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
-    }
+
 }

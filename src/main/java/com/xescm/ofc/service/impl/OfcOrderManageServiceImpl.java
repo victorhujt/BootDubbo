@@ -427,15 +427,21 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      */
     private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode,String orderType,String userName) {
         logger.info("调用仓储中心取消接口, 订单号:{}，参数type:{},仓库编码:{}，客户编码:{},业务类型:{}", orderCode,type,warehouseCode,customerCode,orderType);
-        OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
-        cancelOrderDTO.setOrderNo(orderCode);
-        cancelOrderDTO.setBillType(type);
-        cancelOrderDTO.setWarehouseID(warehouseCode);
-        cancelOrderDTO.setOrderType(orderType);
-        cancelOrderDTO.setCustomerID(customerCode);
-        //cancelOrderDTO.setOperationName(userName);
-        Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
-        logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
+        Wrapper response = null;
+        try {
+            OfcCancelOrderDTO cancelOrderDTO = new OfcCancelOrderDTO();
+            cancelOrderDTO.setOrderNo(orderCode);
+            cancelOrderDTO.setBillType(type);
+            cancelOrderDTO.setWarehouseID(warehouseCode);
+            cancelOrderDTO.setOrderType(orderType);
+            cancelOrderDTO.setCustomerID(customerCode);
+            //cancelOrderDTO.setOperationName(userName);
+            response = whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
+            logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}", response.getCode(), orderCode);
+        } catch (Exception e) {
+            logger.error("仓储中心取消订单发生异常：异常详情 => {}", e);
+            throw new BusinessException("取消订单失败：仓储中心取消订单发生异常!");
+        }
         return response;
     }
 
@@ -2413,16 +2419,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     /**
      * 众品订单审核
      *
-     * @param orderStatus               订单状态
      * @param reviewTag                 审核标志位
      * @param authResDtoByToken         当前登录用户
      * @return String
      */
     @Override
-    public String orderAutoAuditForTran(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
-        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-        ofcOrderStatus.setOrderCode(orderCode);
-        ofcOrderStatus.setOrderStatus(orderStatus);
+    public String orderAutoAuditForTran(String orderCode, String reviewTag, AuthResDto authResDtoByToken) {
+        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
         logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", orderCode, ofcOrderStatus.toString());
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals(REVIEW)) {
             OfcFundamentalInformation ofcFundamentalInformation= ofcFundamentalInformationService.selectByKey(orderCode);

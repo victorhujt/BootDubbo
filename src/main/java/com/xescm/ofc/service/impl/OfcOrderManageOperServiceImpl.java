@@ -3,17 +3,16 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.domain.OrderFollowOperResult;
-import com.xescm.ofc.domain.OrderScreenResult;
-import com.xescm.ofc.domain.OrderSearchOperResult;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
+import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
-import com.xescm.ofc.service.OfcOrderManageOperService;
+import com.xescm.ofc.service.*;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
@@ -46,6 +45,22 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderOperMapper ofcOrderOperMapper;
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
+    @Resource
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Resource
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+    @Resource
+    private OfcFinanceInformationService ofcFinanceInformationService;
+    @Resource
+    private OfcOrderStatusService ofcOrderStatusService;
+    @Resource
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    @Resource
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Resource
+    private OrderFollowOperService orderFollowOperService;
+    @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
 
     @Override
     public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcQueryStorageDTO ofcQueryStorageDTO) {
@@ -511,5 +526,43 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         return xebest;
     }
 
-
+    @Override
+    public OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode) {
+        OfcOrderInfoDTO orderInfoDTO = new OfcOrderInfoDTO();
+        try {
+            //订单基本信息
+            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+            ofcFundamentalInformation.setOrderCode(orderCode);
+            ofcFundamentalInformation = ofcFundamentalInformationService.selectOne(ofcFundamentalInformation);
+            //订单配送基本信息
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
+            ofcDistributionBasicInfo.setOrderCode(orderCode);
+            ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectOne(ofcDistributionBasicInfo);
+            //财务信息
+            OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+            //仓储信息
+            OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
+            //订单状态集合
+            List<OfcOrderStatus> ofcOrderStatusList = orderFollowOperService.queryOrderStatus(orderCode, "orderCode");
+            //最新订单状态
+            OfcOrderNewstatus orderNewstatus = new OfcOrderNewstatus();
+            orderNewstatus.setOrderCode(orderCode);
+            orderNewstatus = ofcOrderNewstatusService.selectOne(orderNewstatus);
+            //货品信息
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setOrderCode(orderCode);
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+            orderInfoDTO.setOfcFundamentalInformation(ofcFundamentalInformation);
+            orderInfoDTO.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
+            orderInfoDTO.setOfcFinanceInformation(ofcFinanceInformation);
+            orderInfoDTO.setOfcWarehouseInformation(ofcWarehouseInformation);
+            orderInfoDTO.setCurrentStatus(orderNewstatus);
+            orderInfoDTO.setOrderStatusList(ofcOrderStatusList);
+            orderInfoDTO.setGoodsDetailsInfoList(ofcGoodsDetailsInfoList);
+        } catch (Exception ex) {
+            logger.error("查询订单明细信息发生异常：异常详情{}", ex);
+            throw ex;
+        }
+        return orderInfoDTO;
+    }
 }

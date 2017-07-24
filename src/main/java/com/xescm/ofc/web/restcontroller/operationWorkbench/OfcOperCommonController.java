@@ -26,7 +26,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
@@ -275,4 +274,34 @@ public class OfcOperCommonController extends BaseController{
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功",userName);
     }
+
+    /**
+     * 运营中心货品筛选(调用客户中心API) 运输、城配开单货品筛选
+     * @param page 货品筛选条件
+     * @return
+     */
+    @RequestMapping(value = "/goodsSelects",method = RequestMethod.POST)
+    @ResponseBody
+    public Object goodsSelectByCsc(@RequestBody Page<CscGoodsApiDto> page){
+        //调用外部接口,最低传CustomerCode
+        Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists  = null;
+        try{
+            if (page == null) {
+                throw new Exception("货品筛选dto不能为空");
+            }
+            CscGoodsApiDto cscGoodsApiDto = page.getParam();
+            if(PubUtils.isSEmptyOrNull(cscGoodsApiDto.getCustomerCode())){
+                throw new Exception("客户编码不能为空");
+            }
+            cscGoodsApiDto.setPSize(page.getPageSize());
+            cscGoodsApiDto.setPNum(page.getPageNum());
+            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageList(cscGoodsApiDto);
+        }catch (Exception ex){
+            logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
+        }
+        return cscGoodsLists;
+    }
+
+
+
 }

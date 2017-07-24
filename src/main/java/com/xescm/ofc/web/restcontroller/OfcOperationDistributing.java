@@ -13,7 +13,6 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
-import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
 import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
@@ -208,39 +207,7 @@ public class OfcOperationDistributing extends BaseController {
     }
 
 
-    /**
-     * 根据客户名称分页查询客户
-     *
-     * @param custName 客户名称
-     * @param pageNum  页数
-     * @param pageSize 每页大小
-     * @return
-     */
-    @RequestMapping(value = "/queryCustomerByName", method = RequestMethod.POST)
-    @ResponseBody
-    public Object queryCustomerByName(String custName, int pageNum, int pageSize) {
-        logger.info("城配开单根据客户名称查询客户==> custName={}", custName);
-        logger.info("城配开单根据客户名称查询客户==> pageNum={}", pageNum);
-        logger.info("城配开单根据客户名称查询客户==> pageSize={}", pageSize);
-        Wrapper<PageInfo<CscCustomerVo>> result;
-        try {
-            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
-            queryParam.setCustomerName(custName);
-            queryParam.setPageNum(pageNum);
-            queryParam.setPageSize(pageSize);
-            result = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
-            if (Wrapper.ERROR_CODE == result.getCode()) {
-                logger.error("查询客户列表失败,查询结果有误!");
-            }
-        } catch (BusinessException ex) {
-            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
-        }
-        return result;
-    }
+
 
     /**
      * 根据客户编码查询客户
