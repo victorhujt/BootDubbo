@@ -295,73 +295,73 @@ public class OfcOperationDistributing extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "上传成功！", excelSheet);
     }
 
-    /**
-     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
-     *
-     * @param paramHttpServletRequest HttpServletRequest
-     * @return 根据不同结果返回不同泛型
-     */
-    @RequestMapping(value = "/excelCheckBySheet", method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest) {
-        Wrapper<?> result = null;
-        try {
-            AuthResDto authResDto = getAuthResDtoByToken();
-            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
-            MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
-            String fileName = multipartHttpServletRequest.getParameter("fileName");
-            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
-            String modelType = multipartHttpServletRequest.getParameter("templatesType");
-            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
-            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
-            int potIndex = fileName.lastIndexOf(".") + 1;
-            if (-1 == potIndex) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "该文件没有扩展名!");
-            }
-            String suffix = fileName.substring(potIndex, fileName.length());
-            String customerCode = multipartHttpServletRequest.getParameter("customerCode");
-            String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile, suffix, sheetNum, authResDto, customerCode, modelType, modelMappingCode);
-
-            //如果校验失败
-            if (checkResult.getCode() == Wrapper.ERROR_CODE) {
-                int tenThousand = 100000;
-                OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
-                List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
-                List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
-                if (cscGoodsImportDtoList.size() > 0) {
-                    StringBuilder batchgoodsKey = new StringBuilder(BATCH_GOODS);
-                    batchgoodsKey.append(System.nanoTime());
-                    batchgoodsKey.append((int) (Math.random() * tenThousand));
-                    ValueOperations<String, String> ops = rt.opsForValue();
-                    ops.set(batchgoodsKey.toString(), JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
-                    rt.expire(batchgoodsKey.toString(), 5L, TimeUnit.MINUTES);
-                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey.toString());
-                }
-                if (cscContantAndCompanyInportDtoList.size() > 0) {
-                    StringBuilder batchconsingeeKey = new StringBuilder(BATCH_CONSIGNEE);
-                    batchconsingeeKey.append(System.nanoTime());
-                    batchconsingeeKey.append((int) (Math.random() * tenThousand));
-                    ValueOperations<String, String> ops = rt.opsForValue();
-                    ops.set(batchconsingeeKey.toString(), JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
-                    rt.expire(batchconsingeeKey.toString(), 5L, TimeUnit.MINUTES);
-                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey.toString());
-                }
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE, checkResult.getMessage(), ofcCheckExcelErrorVo);
-            } else if (checkResult.getCode() == Wrapper.SUCCESS_CODE) {
-                Map<String, JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
-                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
-                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, checkResult.getMessage(), resultJSON);
-            }
-        } catch (BusinessException e) {
-            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
-        } catch (Exception e) {
-            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-        }
-        return result;
-    }
+//    /**
+//     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
+//     *
+//     * @param paramHttpServletRequest HttpServletRequest
+//     * @return 根据不同结果返回不同泛型
+//     */
+//    @RequestMapping(value = "/excelCheckBySheet", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest) {
+//        Wrapper<?> result = null;
+//        try {
+//            AuthResDto authResDto = getAuthResDtoByToken();
+//            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
+//            MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
+//            String fileName = multipartHttpServletRequest.getParameter("fileName");
+//            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
+//            String modelType = multipartHttpServletRequest.getParameter("templatesType");
+//            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
+//            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
+//            int potIndex = fileName.lastIndexOf(".") + 1;
+//            if (-1 == potIndex) {
+//                return WrapMapper.wrap(Wrapper.ERROR_CODE, "该文件没有扩展名!");
+//            }
+//            String suffix = fileName.substring(potIndex, fileName.length());
+//            String customerCode = multipartHttpServletRequest.getParameter("customerCode");
+//            String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
+//            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile, suffix, sheetNum, authResDto, customerCode, modelType, modelMappingCode);
+//
+//            //如果校验失败
+//            if (checkResult.getCode() == Wrapper.ERROR_CODE) {
+//                int tenThousand = 100000;
+//                OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
+//                List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
+//                List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
+//                if (cscGoodsImportDtoList.size() > 0) {
+//                    StringBuilder batchgoodsKey = new StringBuilder(BATCH_GOODS);
+//                    batchgoodsKey.append(System.nanoTime());
+//                    batchgoodsKey.append((int) (Math.random() * tenThousand));
+//                    ValueOperations<String, String> ops = rt.opsForValue();
+//                    ops.set(batchgoodsKey.toString(), JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
+//                    rt.expire(batchgoodsKey.toString(), 5L, TimeUnit.MINUTES);
+//                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey.toString());
+//                }
+//                if (cscContantAndCompanyInportDtoList.size() > 0) {
+//                    StringBuilder batchconsingeeKey = new StringBuilder(BATCH_CONSIGNEE);
+//                    batchconsingeeKey.append(System.nanoTime());
+//                    batchconsingeeKey.append((int) (Math.random() * tenThousand));
+//                    ValueOperations<String, String> ops = rt.opsForValue();
+//                    ops.set(batchconsingeeKey.toString(), JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
+//                    rt.expire(batchconsingeeKey.toString(), 5L, TimeUnit.MINUTES);
+//                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey.toString());
+//                }
+//                result = WrapMapper.wrap(Wrapper.ERROR_CODE, checkResult.getMessage(), ofcCheckExcelErrorVo);
+//            } else if (checkResult.getCode() == Wrapper.SUCCESS_CODE) {
+//                Map<String, JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
+//                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
+//                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, checkResult.getMessage(), resultJSON);
+//            }
+//        } catch (BusinessException e) {
+//            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
+//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+//        } catch (Exception e) {
+//            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
+//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+//        }
+//        return result;
+//    }
 
 
 

@@ -3,6 +3,7 @@ package com.xescm.ofc.service;
 import com.github.pagehelper.PageInfo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.ofc.model.dto.csc.CscGoodsApiDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -10,4 +11,5 @@ import com.xescm.ofc.model.dto.csc.CscGoodsApiDTO;
  */
 public interface OfcOperCommonService {
     PageInfo<CscGoodsApiVo> queryGoodsByPage(CscGoodsApiDTO cscGoodsApiDto);
+    String getFileSuffix(MultipartFile file);
 }

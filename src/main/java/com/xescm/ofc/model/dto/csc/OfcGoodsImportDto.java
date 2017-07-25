@@ -14,6 +14,7 @@ public class OfcGoodsImportDto implements Serializable {
     private String goodsName;
     private String goodsType;
     private String smallGoodsType;
+    private String hiddenSecondGoodsTypeList;
     private String keeptemperate;
     private String brand;
     private String specification;
@@ -24,6 +25,18 @@ public class OfcGoodsImportDto implements Serializable {
     private String creatorId;
     private String state;
     private String barCode;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getHiddenSecondGoodsTypeList() {
+        return hiddenSecondGoodsTypeList;
+    }
+
+    public void setHiddenSecondGoodsTypeList(String hiddenSecondGoodsTypeList) {
+        this.hiddenSecondGoodsTypeList = hiddenSecondGoodsTypeList;
+    }
 
     public String getUnitPrice() {
         return unitPrice;

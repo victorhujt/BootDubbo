@@ -26,7 +26,6 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
-import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
@@ -37,10 +36,7 @@ import com.xescm.ofc.edas.model.dto.ofc.OfcOrderCancelDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.model.dto.form.OrderCountForm;
-import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
-import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
+import com.xescm.ofc.model.dto.ofc.*;
 import com.xescm.ofc.model.dto.tfc.TfcTransport;
 import com.xescm.ofc.model.dto.tfc.TfcTransportDetail;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
@@ -744,9 +740,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
         String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
-
+        int index = 0;
         for (String orderMapKey : orderMap.keySet()) {
-
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
@@ -768,30 +763,45 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderDTO.setReturnList("1");
                 ofcOrderDTO.setReturnListFee(new BigDecimal(0));
             }
-            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
+            List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfoDTOList = new ArrayList<>();
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
-                CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+                OfcGoodsDetailsInfoDTO ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
                 GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
                 ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
                 ofcGoodsDetailsInfo.setPackageType(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setWeight(ofcStorageTemplateDto.getWeight());
-                detailsInfos.add(ofcGoodsDetailsInfo);
+                ofcGoodsDetailsInfoDTOList.add(ofcGoodsDetailsInfo);
             }
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
             CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
             ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
-//            Wrapper save = this.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
-//                    , cscConsignorDto, cscConsigneeDto, forOrderMsg.getCscSupplierInfoDto(), authResDto);
-//            if (save.getCode() == Wrapper.ERROR_CODE) {
-//                logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
-//                return save;
-//            }
+
+            OfcSaveStorageDTO ofcSaveStorageDTO = this.convertToOfcSaveStorageDTO(ofcOrderDTO);
+            //ofcOrderDTO, detailsInfos
+            Wrapper save = this.saveStorageOrder(ofcSaveStorageDTO, ofcGoodsDetailsInfoDTOList, ORDER_TAG_STOCK_IMPORT
+                    , cscConsignorDto, cscConsigneeDto, forOrderMsg.getCscSupplierInfoDto(), authResDto);
+            if (save.getCode() == Wrapper.ERROR_CODE) {
+                logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
+                return save;
+            }
+            index++ ;
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
+    }
+
+    public OfcSaveStorageDTO convertToOfcSaveStorageDTO(OfcOrderDTO ofcOrderDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
+        OfcSaveStorageDTO ofcSaveStorageDTO = new OfcSaveStorageDTO();
+        OfcFundamentalInformationDTO ofcFundamentalInformationDTO = modelMapper.map(ofcOrderDTO, OfcFundamentalInformationDTO.class);
+        OfcWarehouseInformationDTO ofcWarehouseInformationDTO = modelMapper.map(ofcOrderDTO, OfcWarehouseInformationDTO.class);
+        OfcDistributionBasicInfoDTO ofcDistributionBasicInfoDTO = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfoDTO.class);
+        ofcSaveStorageDTO.setFundamentalInformation(ofcFundamentalInformationDTO);
+        ofcSaveStorageDTO.setWarehouseInformation(ofcWarehouseInformationDTO);
+        ofcSaveStorageDTO.setDistributionBasicInfo(ofcDistributionBasicInfoDTO);
+        return ofcSaveStorageDTO;
     }
 
 
@@ -2136,6 +2146,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException(e.getMessage());
         }
     }
+
 
     /**
      * 订单中心实体转运输中心接口DTO

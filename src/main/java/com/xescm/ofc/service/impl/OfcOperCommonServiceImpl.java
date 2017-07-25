@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
@@ -42,6 +43,16 @@ public class OfcOperCommonServiceImpl implements OfcOperCommonService {
             throw new BusinessException("调用csc接口查询货品出错");
         }
         return pageInfoWrapper.getResult();
+    }
+
+    @Override
+    public String getFileSuffix(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        int potIndex = fileName.lastIndexOf(".") + 1;
+        if (-1 == potIndex) {
+            throw new BusinessException("该文件没有扩展名!");
+        }
+        return fileName.substring(potIndex, fileName.length());
     }
 
     private void checkGoodsApiDto(CscGoodsApiDTO cscGoodsApiDto) {
