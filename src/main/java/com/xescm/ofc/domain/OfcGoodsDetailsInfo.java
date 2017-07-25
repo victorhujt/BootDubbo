@@ -206,6 +206,12 @@ public class OfcGoodsDetailsInfo {
      */
     @Column(name = "support_batch")
     private String supportBatch;
+
+    /**
+     * 货品供应商名称
+     */
+    @Column(name = "support_name")
+    private String supportName;
     /**
      * 包装名称
      */
