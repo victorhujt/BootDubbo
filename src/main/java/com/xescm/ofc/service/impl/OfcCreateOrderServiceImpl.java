@@ -368,11 +368,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @throws BusinessException    异常
      */
     @Transactional
-    private ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
-                                    OfcDistributionBasicInfo ofcDistributionBasicInfo,
-                                    OfcFinanceInformation ofcFinanceInformation,
-                                    OfcWarehouseInformation ofcWarehouseInformation,
-                                    List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList, OfcOrderStatus ofcOrderStatus) throws BusinessException {
+    ResultModel createOrders(OfcFundamentalInformation ofcFundamentalInformation,
+                             OfcDistributionBasicInfo ofcDistributionBasicInfo,
+                             OfcFinanceInformation ofcFinanceInformation,
+                             OfcWarehouseInformation ofcWarehouseInformation,
+                             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList, OfcOrderStatus ofcOrderStatus) throws BusinessException {
         //订单记录表只添加不修改
         //插入或更新订单中心基本信息
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
@@ -508,7 +508,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             } else {
                 logger.info("映射失败!");
                 logger.info("开始调用Epc接口进行解析!");
-                Wrapper departurePlaceResult = epcBaiDuEdasService.showLocationStr(departurePlace);
+                String province = ofcDistributionBasicInfo.getDepartureProvince();
+                String city = ofcDistributionBasicInfo.getDepartureCity();
+                String district = ofcDistributionBasicInfo.getDepartureDistrict();
+                String town = ofcDistributionBasicInfo.getDepartureTowns();
+                province = PubUtils.isSEmptyOrNull(province) ? "" : province;
+                city = PubUtils.isSEmptyOrNull(city) ? "" : city;
+                district = PubUtils.isSEmptyOrNull(district) ? "" : district;
+                town = PubUtils.isSEmptyOrNull(town) ? "" : town;
+                String addr = province + city + district + town + departurePlace;
+                Wrapper departurePlaceResult = epcBaiDuEdasService.showLocationStr(addr);
                 logger.info("调用Epc接口进行解析结果: {}", departurePlaceResult);
                 Object result = departurePlaceResult.getResult();
                 boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
@@ -567,7 +576,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             } else {
                 logger.info("映射失败!");
                 logger.error("开始调用Epc接口进行解析! ");
-                Wrapper destinationResult = epcBaiDuEdasService.showLocationStr(destination);
+                String province = ofcDistributionBasicInfo.getDestinationProvince();
+                String city = ofcDistributionBasicInfo.getDestinationCity();
+                String district = ofcDistributionBasicInfo.getDestinationDistrict();
+                String town = ofcDistributionBasicInfo.getDestinationTowns();
+                province = PubUtils.isSEmptyOrNull(province) ? "" : province;
+                city = PubUtils.isSEmptyOrNull(city) ? "" : city;
+                district = PubUtils.isSEmptyOrNull(district) ? "" : district;
+                town = PubUtils.isSEmptyOrNull(town) ? "" : town;
+                String addr = province + city + district + town + destination;
+                Wrapper destinationResult = epcBaiDuEdasService.showLocationStr(addr);
                 logger.info("调用Epc接口进行解析结果: {}", destinationResult);
                 Object result = destinationResult.getResult();
                 boolean checkEpcAddrPass = this.checkEpcAddrPass(result);
