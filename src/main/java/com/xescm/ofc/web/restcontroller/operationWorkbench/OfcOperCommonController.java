@@ -1,6 +1,7 @@
 package com.xescm.ofc.web.restcontroller.operationWorkbench;
 
 import com.github.pagehelper.PageInfo;
+import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.dto.component.req.Select2ReqDto;
 import com.xescm.base.model.dto.component.resp.Select2RespDto;
 import com.xescm.base.model.wrap.WrapMapper;
@@ -334,4 +335,21 @@ public class OfcOperCommonController extends BaseController{
         return result;
     }
 
+    @RequestMapping(value = "/getOperatorUrl", method = RequestMethod.POST)
+    @ResponseBody
+    public Wrapper<AuthResDto> getOperatorUrl() {
+        logger.info("查询当前操作人");
+        Wrapper<AuthResDto> result;
+        try {
+            AuthResDto authResDtoByToken = getAuthResDtoByToken();
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, authResDtoByToken);
+        } catch (BusinessException ex) {
+            logger.error("==>查询当前操作人发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==>查询当前操作人发生错误：{}", ex);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询当前操作人发生错误！");
+        }
+        return result;
+    }
 }

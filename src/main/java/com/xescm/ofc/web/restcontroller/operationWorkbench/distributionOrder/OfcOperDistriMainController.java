@@ -10,8 +10,12 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
+import com.xescm.csc.model.dto.CscGoodsImportDto;
+import com.xescm.csc.provider.CscContactCompanyEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.csc.OfcGoodsImportDto;
+import com.xescm.ofc.model.dto.ofc.OfcBatchCreateByRedisDTO;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionExcelImportDTO;
 import com.xescm.ofc.model.dto.ofc.OfcDistributionUploadDTO;
 import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
@@ -22,6 +26,7 @@ import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
@@ -59,6 +64,10 @@ public class OfcOperDistriMainController extends BaseController{
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private OfcOperCommonService ofcOperCommonService;
+    @Resource
+    private CscGoodsEdasService cscGoodsEdasService;
+    @Resource
+    private CscContactCompanyEdasService cscContactCompanyEdasService;
 
     @ResponseBody
     @RequestMapping(value = "/placeOrdersListCon", method = {RequestMethod.POST})
@@ -162,16 +171,19 @@ public class OfcOperDistriMainController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/getGoodsList", method = {RequestMethod.POST})
     @ApiOperation(value = "批量创建货品获取货品LIST ", httpMethod = "POST", notes = "城配开单确认下单")
-    public Wrapper<List<OfcGoodsImportDto>> getGoodsList(@RequestBody String batchgoodsKey) {
-        logger.info("批量创建货品获取货品LIST==> batchgoodsKey={}", batchgoodsKey);
+    public Wrapper<List<OfcGoodsImportDto>> getGoodsList(@RequestBody OfcBatchCreateByRedisDTO redisDTO) {
+        logger.info("批量创建货品获取货品LIST==> redisDTO={}", redisDTO);
         List<OfcGoodsImportDto> result;
         try {
-            ValueOperations<String,String> ops  = stringRedisTemplate.opsForValue();
-            batchgoodsKey = ops.get(batchgoodsKey);
-            if(PublicUtil.isEmpty(batchgoodsKey)){
-                throw new com.xescm.core.exception.BusinessException("页面已过期");
+            if (StringUtils.isEmpty(redisDTO.getBatchgoodsKey())) {
+                throw new BusinessException("批量创建货品获取货品LIST出错!");
             }
-            result = JSONObject.parseArray(batchgoodsKey, OfcGoodsImportDto.class);
+            ValueOperations<String,String> ops  = stringRedisTemplate.opsForValue();
+            String goodsList = ops.get(redisDTO.getBatchgoodsKey());
+            if(PublicUtil.isEmpty(goodsList)){
+                throw new BusinessException("页面已过期");
+            }
+            result = JSONObject.parseArray(goodsList, OfcGoodsImportDto.class);
         } catch (BusinessException ex) {
             logger.error("批量创建货品获取货品LIST失败!{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
@@ -180,6 +192,77 @@ public class OfcOperDistriMainController extends BaseController{
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "批量创建货品获取货品LIST失败!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/batchCreateGoods/{batchgoodsKey}", method = {RequestMethod.POST})
+    @ApiOperation(value = "批量创建货品", httpMethod = "POST", notes = "城配开单确认下单")
+    public Wrapper batchCreateGoods(@RequestBody List<CscGoodsImportDto> cscGoodsImportDtos, @PathVariable String batchgoodsKey) {
+        logger.info("批量创建货品==> batchgoodsKey={}", batchgoodsKey);
+        logger.info("批量创建货品==> cscGoodsImportDtos={}", cscGoodsImportDtos);
+        try {
+            Wrapper wrapper = cscGoodsEdasService.batchCreateGoods(cscGoodsImportDtos, batchgoodsKey);
+            if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
+                logger.error("批量创建货品出错{}", wrapper);
+                throw new BusinessException("批量创建货品出错!");
+            }
+        } catch (BusinessException ex) {
+            logger.error("批量创建货品失败!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("批量创建货品失败!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "批量创建货品失败!");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/getConsigneesList", method = {RequestMethod.POST})
+    @ApiOperation(value = "批量创建收货方获取货品LIST ", httpMethod = "POST", notes = "城配开单确认下单")
+    public Wrapper<List<CscContantAndCompanyInportDto>> getConsigneesList(@RequestBody OfcBatchCreateByRedisDTO redisDTO) {
+        logger.info("批量创建货品获取货品LIST==> redisDTO={}", redisDTO);
+        List<CscContantAndCompanyInportDto> result;
+        try {
+            if (StringUtils.isEmpty(redisDTO.getBatchconsingeeKey())) {
+                throw new BusinessException("批量创建收货方获取货品LIST出错!");
+            }
+            ValueOperations<String,String> ops  = stringRedisTemplate.opsForValue();
+            String consigneeList = ops.get(redisDTO.getBatchconsingeeKey());
+            if(PublicUtil.isEmpty(consigneeList)){
+                throw new BusinessException("页面已过期");
+            }
+            result = JSONObject.parseArray(consigneeList, CscContantAndCompanyInportDto.class);
+        } catch (BusinessException ex) {
+            logger.error("批量创建收货方获取货品LIST出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("批量创建收货方获取货品LIST出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "批量创建收货方获取货品LIST出错!");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/batchCreateConsignees/{batchgoodsKey}", method = {RequestMethod.POST})
+    @ApiOperation(value = "批量创建收货方", httpMethod = "POST", notes = "城配开单确认下单")
+    public Wrapper batchCreateConsignees(@RequestBody List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtos, @PathVariable String batchconsingeeKey) {
+        logger.info("批量创建收货方==> batchconsingeeKey={}", batchconsingeeKey);
+        logger.info("批量创建收货方==> cscContantAndCompanyInportDtos={}", cscContantAndCompanyInportDtos);
+        try {
+            Wrapper wrapper = cscContactCompanyEdasService.batchCreateConsignees(cscContantAndCompanyInportDtos, batchconsingeeKey);
+            if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
+                logger.error("批量创建收货方出错{}", wrapper);
+                throw new BusinessException("批量创建收货方出错!");
+            }
+        } catch (BusinessException ex) {
+            logger.error("批量创建收货方出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("批量创建收货方出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "批量创建收货方出错!");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
 }
