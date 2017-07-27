@@ -156,6 +156,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private TfcQueryEveryDeliveryService tfcQueryEveryDeliveryService;
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
+
     @Resource
     private DefaultMqProducer mqProducer;
     @Resource
@@ -1032,6 +1033,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("订单状态开始推结算中心成功 integerWrapper{}", integerWrapper);
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}", e, e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -1386,6 +1388,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO.getWarehouseInformation(), OfcWarehouseInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO.getDistributionBasicInfo(), OfcDistributionBasicInfo.class);
         OfcFinanceInformation ofcFinanceInformation = modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
+
+        //取供应商的名称
+        if(!PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getSupportCode())){
+            CscSupplierInfoDto dto = new CscSupplierInfoDto();
+            dto.setCustomerCode(ofcFundamentalInformation.getCustCode());
+            dto.setSupplierCode(ofcWarehouseInformation.getSupportCode());
+            List<CscSupplierInfoDto> supplierListInfo = getSupplierInfo(dto);
+            ofcWarehouseInformation.setSupportName(supplierListInfo.get(0).getSupplierName());
+        }
         List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<>();
         for(OfcGoodsDetailsInfoDTO  dto: goodsDetailsListDTO){
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
@@ -2505,4 +2516,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
         return String.valueOf(Wrapper.SUCCESS_CODE);
     }
+
+    /**
+     * 获取供应商相关的信息
+     * @param dto
+     * @return
+     */
+    private List<CscSupplierInfoDto> getSupplierInfo(CscSupplierInfoDto dto){
+        Wrapper<List<CscSupplierInfoDto>> suppliers= cscSupplierEdasService.querySupplierByAttribute(dto);
+        if(suppliers.getCode() == Wrapper.SUCCESS_CODE){
+            if (!CollectionUtils.isEmpty(suppliers.getResult())) {
+              return suppliers.getResult();
+            }
+        }
+        return null;
+    }
+
+
+
 }

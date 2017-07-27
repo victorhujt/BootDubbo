@@ -56,10 +56,10 @@ public class OfcOperTransPortOrderController extends BaseController {
             }
             if(CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())){
                 throw new BusinessException("请至少添加一条货品！");
-            };
+            }
             if(CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())){
                 throw new BusinessException("请至少添加一条货品！");
-            };
+            }
             if(ofcOrderDTOStr.getConsignor() == null){
                 throw new BusinessException("发货人信息不允许为空！");
             }
