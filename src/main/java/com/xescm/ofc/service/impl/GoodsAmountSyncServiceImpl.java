@@ -9,6 +9,8 @@ import com.xescm.ac.provider.AcModifyOrderEdasService;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.dpc.edas.dto.DpcSyncOrderInfoDto;
+import com.xescm.dpc.edas.service.DpcTransportDocEdasService;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.*;
@@ -55,6 +57,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private OfcOrderManageService ofcOrderManageService;
     @Resource
     private AcModifyOrderEdasService acModifyOrderEdasService;
+    @Resource
+    private DpcTransportDocEdasService dpcTransportDocEdasService;
 
     @Transactional
     public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
@@ -163,8 +167,20 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 if (!PubUtils.isNull(orderInfo) && !PubUtils.isNull(orderDistInfo) && !PubUtils.isNull(orderFinanceInfo)) {
                     ofcOrderManageService.pushOrderToAc(orderInfo, orderFinanceInfo, orderDistInfo, detailsInfos, null);
                 }
-                //再次推送TFC
+                // 推送TFC
                 tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+                try {
+                    // 推送调度中心
+                    DpcSyncOrderInfoDto syncOrderInfoDto = new DpcSyncOrderInfoDto();
+                    syncOrderInfoDto.setOrderNo(orderCode);
+                    syncOrderInfoDto.setGoodsNum(quantityCount);
+                    syncOrderInfoDto.setWeight(weightCount);
+                    syncOrderInfoDto.setVolume(cubageCount.toString());
+                    dpcTransportDocEdasService.syncOrderInfo(syncOrderInfoDto);
+                } catch (Exception e) {
+                    logger.error("推送调度中心交货量同步发生异常：异常详情 => {}", e);
+                    throw new BusinessException("推送调度中心交货量同步发生异常!");
+                }
             }
         } catch (Exception e) {
             logger.error("交货量同步更新发生异常. {}", e);
