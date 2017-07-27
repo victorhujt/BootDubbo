@@ -13,18 +13,15 @@ import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.CscStoreEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.constant.OrderConstant;
-import com.xescm.ofc.domain.OfcDailyAccount;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
-import com.xescm.ofc.utils.DateUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.whc.edas.dto.ResponseMsg;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +35,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -65,15 +61,11 @@ public class OfcOrderManageRest extends BaseController{
     @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Resource
-    private RmcCompanyInfoEdasService rmcCompanyInfoEdasService;
-    @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
     private CscStoreEdasService cscStoreEdasService;
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-    @Resource
-    private  OfcDailyAccountsService ofcDailyAccountsService;
 
     /**
      * 订单删除
@@ -345,21 +337,4 @@ public class OfcOrderManageRest extends BaseController{
         }
         return "order_manage_opera";
     }
-
-    @RequestMapping(value ="queryDailyAccount", method = {RequestMethod.POST})
-    @ResponseBody
-    public Wrapper<?> queryDailyAccount(){
-        List<OfcDailyAccount> OfcDailyAccountVos;
-        try{
-            OfcDailyAccountVos=ofcDailyAccountsService.queryDailyAccount(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE2));
-            logger.info("查询平台日报数据为:{}",OfcDailyAccountVos);
-        }catch (Exception e){
-            logger.error("查询平台日报数据异常:{}",e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"查询平台日报数据异常");
-        }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"查询平台日报数据成功",OfcDailyAccountVos);
-    }
-
-
-
 }

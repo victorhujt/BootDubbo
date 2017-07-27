@@ -6,7 +6,6 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.config.RestConfig;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
 import com.xescm.ofc.domain.OfcMobileOrder;
@@ -50,9 +49,6 @@ public class OfcMobileOrderController extends BaseController {
     private OfcMobileOrderService ofcMobileOrderService;
 
     @Resource
-    private RestConfig restConfig;
-
-    @Resource
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
 
     /**
@@ -86,7 +82,7 @@ public class OfcMobileOrderController extends BaseController {
         logger.info("==>手机订单详情code code={}", code);
         OfcMobileOrder condition = new OfcMobileOrder();
         condition.setMobileOrderCode(code);
-        OfcMobileOrderVo mobileOrder = null;
+        OfcMobileOrderVo mobileOrder;
         try {
             mobileOrder = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, mobileOrder);

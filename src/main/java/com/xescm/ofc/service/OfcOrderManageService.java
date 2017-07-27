@@ -1,13 +1,11 @@
 package com.xescm.ofc.service;
 
-import com.xescm.ac.model.dto.ofc.AcPlanDto;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
 import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
@@ -63,15 +61,13 @@ public interface OfcOrderManageService {
 
     void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus);
 
-    void pullOfcOrderPlanCode(AcPlanDto acPlanDto);
 
      Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList, String custCode, String warehouseCode);
 
-     List<OfcOrderAccountDTO>  dailyAccount();
 
     void fixAddressWhenEdit(String orderTagStockEdit, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
-    public String orderAutoAuditForTran(String orderCode,String reviewTag, AuthResDto authResDtoByToken);
+     String orderAutoAuditForTran(String orderCode,String reviewTag, AuthResDto authResDtoByToken);
 
     /**
      * 更新大区、基地

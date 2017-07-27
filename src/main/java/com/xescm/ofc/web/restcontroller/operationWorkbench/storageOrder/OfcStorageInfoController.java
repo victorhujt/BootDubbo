@@ -139,16 +139,11 @@ public class OfcStorageInfoController extends BaseController {
         }
     }
 
-
-
-
     /**
      * 订单的复制
      * @param orderCode
      * @return
      */
-
-
     @RequestMapping(
             value = {"/copyOrderOper/{orderCode}"},
             method = {RequestMethod.POST}
@@ -203,7 +198,7 @@ public class OfcStorageInfoController extends BaseController {
             wmsDetailsDTO.setOrderNo(realGoodsDTO.getOrderCode());
             wmsDetailsDTO.setBillType(realGoodsDTO.getBusinessType());
             response=whcOrderCancelEdasService.queryDetailsWmsByBillType(wmsDetailsDTO);
-            if(response==null){
+            if (response == null) {
                 throw new BusinessException("查询实收实出货品明细出现异常");
             }
             if(response.getCode()!=Wrapper.SUCCESS_CODE){
@@ -475,7 +470,6 @@ public class OfcStorageInfoController extends BaseController {
                 throw new Exception("订单编号不能为空！");
             }
             int count = 0;
-
             for(int i = 0; i<orderCodes.size();i++){
                 String orderCode = orderCodes.get(i);
                 if (StringUtils.isBlank(orderCode)) {
@@ -531,6 +525,4 @@ public class OfcStorageInfoController extends BaseController {
         }
         return result;
     }
-
-
 }

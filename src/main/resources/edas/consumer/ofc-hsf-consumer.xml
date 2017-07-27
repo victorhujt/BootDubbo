@@ -12,7 +12,6 @@
     <hsf:consumer id="uamGroupEdasService" interface="com.xescm.uam.provider.UamGroupEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="uamUserEdasService" interface="com.xescm.uam.provider.UamUserEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="distributedLockEdasService" interface="com.xescm.uam.provider.DistributedLockEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="chatRobotEdasService" interface="com.xescm.uam.provider.ChatRobotEdasService" group="xescm-uam-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
 
     <!-- 客户中心 -->
@@ -26,7 +25,6 @@
     <hsf:consumer id="cscContactCompanyEdasService" interface="com.xescm.csc.provider.CscContactCompanyEdasService" group="xescm-csc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <!-- 结算中心 -->
     <hsf:consumer id="acOrderEdasService" interface="com.xescm.ac.provider.AcOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="acSettleStatisticsEdasService" interface="com.xescm.ac.provider.AcSettleStatisticsEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="acModifyOrderEdasService" interface="com.xescm.ac.provider.AcModifyOrderEdasService" group="xescm-ac-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
     <!-- 资源中心 -->
@@ -40,7 +38,7 @@
     <hsf:consumer id="epcOrderCancelEdasService" interface="com.xescm.epc.edas.service.EpcOrderCancelEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <!-- Epc返回映射表-->
     <hsf:consumer id="epcRecordMappedEdasService" interface="com.xescm.epc.edas.service.EpcRecordMappedEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="epcOfc2DmsEdasService" interface="com.xescm.epc.edas.service.EpcOfc2DmsEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <!--<hsf:consumer id="epcOfc2DmsEdasService" interface="com.xescm.epc.edas.service.EpcOfc2DmsEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>-->
     <!--Epc调用地址映射-->
     <hsf:consumer id="epcBaiDuEdasService" interface="com.xescm.epc.edas.service.EpcBaiDuEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="epcSendMessageEdasService" interface="com.xescm.epc.edas.service.EpcSendMessageEdasService" group="xescm-epc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
@@ -51,7 +49,6 @@
 
     <!--运输中心-->
     <hsf:consumer id="cancelOrderEdasService" interface="com.xescm.tfc.edas.service.CancelOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-    <hsf:consumer id="tfcQueryEveryDeliveryService" interface="com.xescm.tfc.edas.service.TfcQueryEveryDeliveryService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="tfcUpdateOrderEdasService" interface="com.xescm.tfc.edas.service.TfcUpdateOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="tfcQueryGpsInfoEdasService" interface="com.xescm.tfc.edas.service.TfcQueryGpsInfoEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
