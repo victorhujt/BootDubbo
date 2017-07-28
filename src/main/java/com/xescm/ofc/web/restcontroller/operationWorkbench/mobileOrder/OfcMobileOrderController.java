@@ -137,23 +137,16 @@ public class OfcMobileOrderController extends BaseController {
         logger.info("校验运输单号==> selfTransCode={}", checkTransCodeDTO.getSelfTransCode());
         OfcDistributionBasicInfo ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
         ofcDistributionBasicInfo.setTransCode(checkTransCodeDTO.getTransCode());
-        if (PubUtils.isSEmptyOrNull(checkTransCodeDTO.getSelfTransCode())) {
+        if (!PubUtils.isSEmptyOrNull(checkTransCodeDTO.getSelfTransCode())) {
             ofcDistributionBasicInfo.setSelfTransCode(checkTransCodeDTO.getSelfTransCode());
         }
-        boolean flag = false;
         try {
             int count = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (count < 1) {
-                flag = true;
-            }
+            if (count > 0) return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
         } catch (Exception e) {
             logger.error("校验运输单号出错:{}　", e.getMessage(), e);
         }
-        if (flag) {
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
-        } else {
-            return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
-        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
     }
 
     /**

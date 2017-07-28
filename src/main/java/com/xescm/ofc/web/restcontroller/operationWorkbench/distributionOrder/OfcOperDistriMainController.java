@@ -221,7 +221,7 @@ public class OfcOperDistriMainController extends BaseController{
     @RequestMapping(value = "/getConsigneesList", method = {RequestMethod.POST})
     @ApiOperation(value = "批量创建收货方获取货品LIST ", httpMethod = "POST", notes = "城配开单确认下单")
     public Wrapper<List<CscContantAndCompanyInportDto>> getConsigneesList(@RequestBody OfcBatchCreateByRedisDTO redisDTO) {
-        logger.info("批量创建货品获取货品LIST==> redisDTO={}", redisDTO);
+        logger.info("批量创建收货方获取货品LIST==> redisDTO={}", redisDTO);
         List<CscContantAndCompanyInportDto> result;
         try {
             if (StringUtils.isEmpty(redisDTO.getBatchconsingeeKey())) {
@@ -244,7 +244,7 @@ public class OfcOperDistriMainController extends BaseController{
     }
 
     @ResponseBody
-    @RequestMapping(value = "/batchCreateConsignees/{batchgoodsKey}", method = {RequestMethod.POST})
+    @RequestMapping(value = "/batchCreateConsignees/{batchconsingeeKey}", method = {RequestMethod.POST})
     @ApiOperation(value = "批量创建收货方", httpMethod = "POST", notes = "城配开单确认下单")
     public Wrapper batchCreateConsignees(@RequestBody List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtos, @PathVariable String batchconsingeeKey) {
         logger.info("批量创建收货方==> batchconsingeeKey={}", batchconsingeeKey);
@@ -263,6 +263,58 @@ public class OfcOperDistriMainController extends BaseController{
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "批量创建收货方出错!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/storeTempOrderMsg", method = {RequestMethod.POST})
+    @ApiOperation(value = "存贮临时订单信息", httpMethod = "POST", notes = "城配开单确认下单")
+    public Wrapper<String> storeTempOrderMsg(@RequestBody String importMsg) {
+        logger.info("存贮临时订单信息==> importMsg={}", importMsg);
+        String result;
+        try {
+            if (StringUtils.isEmpty(importMsg)) {
+                throw new BusinessException("存贮临时订单信息出错!");
+            }
+            StringBuilder importMsgKey = new StringBuilder("temp_order");
+            importMsgKey.append(System.nanoTime());
+            importMsgKey.append((int) (Math.random() * 1000));
+            ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+            ops.set(importMsgKey.toString(), importMsg);
+            stringRedisTemplate.expire(importMsgKey.toString(), 5L, TimeUnit.MINUTES);
+            result = importMsgKey.toString();
+        } catch (BusinessException ex) {
+            logger.error("存贮临时订单信息出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("存贮临时订单信息出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "存贮临时订单信息出错!");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getTempOrderMsg", method = {RequestMethod.POST})
+    @ApiOperation(value = "获取临时订单信息 ", httpMethod = "POST", notes = "城配开单确认下单")
+    public Wrapper<String> getTempOrderMsg(@RequestBody String importMsgKey) {
+        logger.info("获取临时订单信息==> importMsgKey={}", importMsgKey);
+        String result;
+        try {
+            if (StringUtils.isEmpty(importMsgKey)) {
+                throw new BusinessException("获取临时订单信息出错!");
+            }
+            ValueOperations<String,String> ops  = stringRedisTemplate.opsForValue();
+            result = ops.get(importMsgKey);
+            if(PublicUtil.isEmpty(result)){
+                throw new BusinessException("页面已过期");
+            }
+        } catch (BusinessException ex) {
+            logger.error("获取临时订单信息出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("批量创建收货方获取货品LIST出错!{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "批量创建收货方获取货品LIST出错!");
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, result);
     }
 
 }
