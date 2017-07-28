@@ -116,7 +116,7 @@ public class OfcMobileOrderController extends BaseController {
             }
         } catch (BusinessException e) {
             logger.error("拍照开单-自动受理订单发生错误: {}", e);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+            result =  WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
             logger.error("拍照开单-自动受理订单发生错误: {}", e);
             result = WrapMapper.error();
@@ -183,20 +183,25 @@ public class OfcMobileOrderController extends BaseController {
     @RequestMapping(value = "/autoAcceptMobileOrder", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> autoAcceptMobileOrder() {
+        Wrapper<?> result = null;
         try {
             AuthResDto userInfo = getAuthResDtoByToken();
             String curUser = userInfo.getUserName();
             OfcMobileOrderVo mobileOrderVo = ofcMobileOrderService.autoAcceptPendingOrder(curUser);
             if (mobileOrderVo != null && !CollectionUtils.isEmpty(mobileOrderVo.getUrls())) {
                 logger.info("==>放入页面自动获取待受理订单号{}", mobileOrderVo.getOrderCode());
-                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, mobileOrderVo);
+                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, mobileOrderVo);
             } else {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
             }
-        } catch (Exception e) {
+        }  catch (BusinessException e) {
+            logger.error("拍照开单-自动受理订单发生错误: {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        }
+        catch (Exception e) {
             logger.error("拍照开单自动受理订单发生错误！", e);
         }
-        return null;
+        return  result;
     }
 
     /**
@@ -282,6 +287,7 @@ public class OfcMobileOrderController extends BaseController {
         } catch (BusinessException ex) {
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+
         } catch (Exception ex) {
             if (ex.getCause().getMessage().trim().startsWith("Duplicate entry")) {
                 logger.error("订单中心下单或编辑出现异常:{}", "获取订单号发生重复!", ex);
