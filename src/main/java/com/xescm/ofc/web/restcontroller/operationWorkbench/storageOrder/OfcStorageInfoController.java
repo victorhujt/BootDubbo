@@ -264,7 +264,7 @@ public class OfcStorageInfoController extends BaseController {
             value = "仓单详情"
     )
     public Object orderStorageDetails(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable  String orderCode){
-        Map result=null;
+        Map result;
         try {
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单编号不能为空！");
