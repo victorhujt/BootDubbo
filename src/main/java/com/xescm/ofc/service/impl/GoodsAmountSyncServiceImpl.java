@@ -8,6 +8,7 @@ import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.ac.provider.AcModifyOrderEdasService;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.dpc.edas.dto.DpcSyncOrderInfoDto;
 import com.xescm.dpc.edas.service.DpcTransportDocEdasService;
@@ -18,7 +19,6 @@ import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -88,7 +88,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                         // 订单取消或者已完成，不调整；待审核只修改订单中心
                         if (HASBEEN_COMPLETED.equals(orderStatus) || HASBEEN_CANCELED.equals(orderStatus)) {
                             logger.info("订单{}当前状态为{},不允许调整数量!", orderCode, orderStatus);
-                            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "订单已经完成或取消,不允许调整数量!");
+                            throw new BusinessException("订单{"+orderCode+"}当前状态为{"+orderStatus+"},不允许调整数量!");
+//                            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "订单已经完成或取消,不允许调整数量!");
                         } else if (PENDING_AUDIT.equals(orderStatus)) { // 待审核只调整OFC
                             modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
                             result = WrapMapper.ok();
@@ -98,8 +99,9 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                                 modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
                                 result = WrapMapper.ok();
                             } else {
-                                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "客户订单"+custOrderCode+"已经结算，无法调整数量.");
                                 logger.error("订单{}已经结算，无法调整数量.", orderCode);
+                                throw new BusinessException("订单{"+orderCode+"}已经结算，无法调整数量.");
+//                                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "客户订单"+custOrderCode+"已经结算，无法调整数量.");
                             }
                         }
                     } else {
@@ -107,15 +109,18 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                     }
                 }
             } else {
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "未查询到客户订单"+custOrderCode+"信息.");
                 logger.error("未查询到客户订单{}信息.", custOrderCode);
+                throw new BusinessException("未查询到客户订单{"+custOrderCode+"}信息.");
+//                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "未查询到客户订单"+custOrderCode+"信息.");
             }
         } catch (BusinessException e) {
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
             logger.error(e.getMessage());
+            throw e;
         } catch (Exception e) {
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "更新交货数量发生未知异常：异常信息=>" + ExceptionUtils.getFullStackTrace(e));
+//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "更新交货数量发生未知异常：异常信息=>" + ExceptionUtils.getFullStackTrace(e));
             logger.error("更新交货数量发生未知异常 {}", e);
+            throw e;
         }
         return result;
     }
@@ -127,7 +132,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param orderCode
      */
     @Transactional
-    private void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode, String orderStatus) {
+    void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, List<GoodsAmountDetailDto> details, String orderCode, String orderStatus) {
         try {
             BigDecimal quantityCount = new BigDecimal(0);
             BigDecimal weightCount = new BigDecimal(0);
@@ -176,7 +181,12 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                     syncOrderInfoDto.setGoodsNum(quantityCount);
                     syncOrderInfoDto.setWeight(weightCount);
                     syncOrderInfoDto.setVolume(cubageCount.toString());
-                    dpcTransportDocEdasService.syncOrderInfo(syncOrderInfoDto);
+                    Wrapper<Boolean> res = dpcTransportDocEdasService.syncOrderInfo(syncOrderInfoDto);
+                    if (res != null && res.getCode() == Wrapper.SUCCESS_CODE && res.getResult()) {
+                        logger.info("调度中心更新交货量同步成功！");
+                    } else {
+                        throw new BusinessException("调度中心更新交货量失败：{}" + JacksonUtil.toJson(res));
+                    }
                 } catch (Exception e) {
                     logger.error("推送调度中心交货量同步发生异常：异常详情 => {}", e);
                     throw new BusinessException("推送调度中心交货量同步发生异常!");
@@ -194,7 +204,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param goodsAmountDetailDto
      */
     @Transactional
-    private void editGoodsDetailInfo(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
+    void editGoodsDetailInfo(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
         try {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
@@ -231,7 +241,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param goodsAmountDetailDto
      */
     @Transactional
-    private void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
+    void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
         try {
 
             String goodsCode = goodsAmountDetailDto.getGoodsCode();
