@@ -89,19 +89,22 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                         if (HASBEEN_COMPLETED.equals(orderStatus) || HASBEEN_CANCELED.equals(orderStatus)) {
                             logger.info("订单{}当前状态为{},不允许调整数量!", orderCode, orderStatus);
                             throw new BusinessException("订单{"+orderCode+"}当前状态为{"+orderStatus+"},不允许调整数量!");
-//                            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "订单已经完成或取消,不允许调整数量!");
                         } else if (PENDING_AUDIT.equals(orderStatus)) { // 待审核只调整OFC
                             modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
                             result = WrapMapper.ok();
                         } else {
                             Wrapper<Boolean> acStatus = acModifyOrderEdasService.queryOrderIncomeStatus(orderCode);
                             if (!PubUtils.isNull(acStatus) && Wrapper.SUCCESS_CODE == acStatus.getCode()) {
-                                modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
-                                result = WrapMapper.ok();
+                                if (!acStatus.getResult()) {
+                                    modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
+                                    result = WrapMapper.ok();
+                                } else {
+                                    logger.error("订单{}已经结算，无法调整数量: {}", orderCode, acStatus.getMessage());
+                                    throw new BusinessException("订单{"+orderCode+"}已经结算，无法调整数量: {"+acStatus.getMessage()+"}");
+                                }
                             } else {
-                                logger.error("订单{}已经结算，无法调整数量.", orderCode);
-                                throw new BusinessException("订单{"+orderCode+"}已经结算，无法调整数量.");
-//                                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "客户订单"+custOrderCode+"已经结算，无法调整数量.");
+                                logger.error("结算中心验证订单是否可以取消接口发生异常！");
+                                throw new BusinessException("结算中心验证订单是否可以取消接口发生异常！");
                             }
                         }
                     } else {
@@ -111,14 +114,11 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             } else {
                 logger.error("未查询到客户订单{}信息.", custOrderCode);
                 throw new BusinessException("未查询到客户订单{"+custOrderCode+"}信息.");
-//                result = WrapMapper.wrap(Wrapper.ERROR_CODE, "未查询到客户订单"+custOrderCode+"信息.");
             }
         } catch (BusinessException e) {
-//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
             logger.error(e.getMessage());
             throw e;
         } catch (Exception e) {
-//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "更新交货数量发生未知异常：异常信息=>" + ExceptionUtils.getFullStackTrace(e));
             logger.error("更新交货数量发生未知异常 {}", e);
             throw e;
         }
