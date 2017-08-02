@@ -91,16 +91,16 @@ public class OfcStorageInfoController extends BaseController {
      */
     @RequestMapping(value = "/loadWarehouseByUser",method = RequestMethod.POST)
     @ResponseBody
-    public Object loadWarehouseByUser(){
+    public Object loadWarehouseByUser() {
         try {
             RmcWareHouseQO rmcWareHouseQO=new RmcWareHouseQO();
             Wrapper<List<RmcWarehouseRespDto>> warehouseResult=rmcWarehouseEdasService.queryWarehouseList(rmcWareHouseQO);
-            if(warehouseResult.getCode()!=warehouseResult.SUCCESS_CODE){
+            if (warehouseResult.getCode()!=warehouseResult.SUCCESS_CODE) {
                 logger.error("查询用户下的仓库产生异常{}",warehouseResult.getMessage());
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,warehouseResult.getMessage());
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", warehouseResult.getResult());
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             logger.error("查询用户下的仓库产生异常{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
@@ -154,7 +154,7 @@ public class OfcStorageInfoController extends BaseController {
             httpMethod = "POST",
             value = "复制订单"
     )
-    public Wrapper<?> copyOrder(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode){
+    public Wrapper<?> copyOrder(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         String result;
         try{
@@ -182,16 +182,16 @@ public class OfcStorageInfoController extends BaseController {
             httpMethod = "POST",
             value = "实收详情"
     )
-    public Wrapper<?> queryRealGood(@ApiParam(name = "realGoodsDTO",value = "实收详情DTO")@RequestBody RealGoodsDTO realGoodsDTO){
+    public Wrapper<?> queryRealGood(@ApiParam(name = "realGoodsDTO",value = "实收详情DTO")@RequestBody RealGoodsDTO realGoodsDTO) {
         Wrapper<?> response;
         try{
-            if(realGoodsDTO == null){
+            if (realGoodsDTO == null) {
                 throw new BusinessException("实收详情DTO不能为空！");
             }
-            if(PublicUtil.isEmpty(realGoodsDTO.getOrderCode())){
+            if (PublicUtil.isEmpty(realGoodsDTO.getOrderCode())) {
                 throw new BusinessException("订单编号不能为空！");
             }
-            if(PublicUtil.isEmpty(realGoodsDTO.getBusinessType())){
+            if (PublicUtil.isEmpty(realGoodsDTO.getBusinessType())) {
                 throw new BusinessException("业务类型不能为空！");
             }
             WmsDetailsDTO wmsDetailsDTO=new WmsDetailsDTO();
@@ -201,10 +201,10 @@ public class OfcStorageInfoController extends BaseController {
             if (response == null) {
                 throw new BusinessException("查询实收实出货品明细出现异常");
             }
-            if(response.getCode()!=Wrapper.SUCCESS_CODE){
+            if (response.getCode()!=Wrapper.SUCCESS_CODE) {
                 throw new BusinessException(response.getMessage());
             }
-        }catch(Exception ex){
+        } catch(Exception ex) {
             logger.error("查询实收实出货品明细出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
@@ -218,9 +218,9 @@ public class OfcStorageInfoController extends BaseController {
      */
     @RequestMapping(value = "/queryWarehouseByCustomerCode/{customerCode}",method = RequestMethod.POST)
     @ResponseBody
-    public Object queryWarehouseByCustomerCode(@ApiParam(name = "customerCode",value = "客户编码" ) @PathVariable String customerCode){
+    public Object queryWarehouseByCustomerCode(@ApiParam(name = "customerCode",value = "客户编码" ) @PathVariable String customerCode) {
         try {
-            if(PublicUtil.isEmpty(customerCode)){
+            if (PublicUtil.isEmpty(customerCode)) {
                 throw new BusinessException("客户编码不可以为空！");
             }
             //客户编码查询出绑定的仓库编码
@@ -228,28 +228,28 @@ public class OfcStorageInfoController extends BaseController {
             QueryWarehouseDto dto=new QueryWarehouseDto();
             dto.setCustomerCode(customerCode);
             Wrapper<List<CscWarehouseDto>>  warehouse=cscWarehouseEdasService.getCscWarehouseByCustomerId(dto);
-            if(warehouse.getCode()==warehouse.SUCCESS_CODE){
+            if (warehouse.getCode()==warehouse.SUCCESS_CODE) {
                 //通过查询出的仓库编码查询出仓库的信息
-                if(!PublicUtil.isEmpty(warehouse.getResult())){
+                if (!PublicUtil.isEmpty(warehouse.getResult())) {
                     RmcWarehouseDto rmcWarehouseDto=new RmcWarehouseDto();
-                    for (CscWarehouseDto cscWarehouseDto : warehouse.getResult()){
+                    for (CscWarehouseDto cscWarehouseDto : warehouse.getResult()) {
                         rmcWarehouseDto.setWarehouseCode(cscWarehouseDto.getWarehouseCode());
                         Wrapper<RmcWarehouseRespDto> resp=rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouseDto);
-                        if(resp.getCode()==Wrapper.SUCCESS_CODE){
+                        if (resp.getCode()==Wrapper.SUCCESS_CODE) {
                             warehouseRespDtoList.add(resp.getResult());
-                        }else{
+                        } else {
                             logger.error("通过仓库编码查询仓库信息产生异常{},仓库编码为{}",resp.getMessage(),rmcWarehouseDto.getWarehouseCode());
                         }
                     }
-                }else{
+                } else {
                     logger.info("客户没有开通仓库{}",warehouse.getMessage());
                 }
-            }else{
+            } else {
                 logger.error("通过客户编码查询客户绑定的仓库编码产生异常{}",warehouse.getMessage());
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,warehouse.getMessage());
             }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", warehouseRespDtoList);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             logger.error("客户编码查询绑定的仓库信息出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
@@ -263,17 +263,17 @@ public class OfcStorageInfoController extends BaseController {
             httpMethod = "POST",
             value = "仓单详情"
     )
-    public Object orderStorageDetails(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable  String orderCode){
+    public Object orderStorageDetails(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable  String orderCode) {
         Map result;
         try {
             if (StringUtils.isBlank(orderCode)) {
                 throw new Exception("订单编号不能为空！");
             }
             result=ofcOrderManageService.orderStorageDetails(orderCode);
-            if(result==null){
+            if (result==null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"没有查询到订单详情");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("查询订单详情出现异常:{}",e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
         }
@@ -288,17 +288,17 @@ public class OfcStorageInfoController extends BaseController {
                 throw new BusinessException("订单的基本信息不能为空");
             }
 
-            if(PubUtils.isSEmptyOrNull(tag)){
+            if (PubUtils.isSEmptyOrNull(tag)) {
                 throw new BusinessException("下单标志不能为空");
             }
 
-            if(!(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag))){
+            if (!(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag))) {
                 throw new BusinessException("下单标志类型错误");
             }
 
             //货品信息
             List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = ofcSaveStorageDTO.getGoodsDetailsInfo();
-            if(CollectionUtils.isEmpty(ofcGoodsDetailsInfos)){
+            if (CollectionUtils.isEmpty(ofcGoodsDetailsInfos)) {
                 throw new BusinessException("仓储下单时货品信息不能为空");
             }
             //订单基本信息
@@ -314,9 +314,9 @@ public class OfcStorageInfoController extends BaseController {
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             logger.info("==>仓储开单或编辑实体 OfcSaveStorageDTO={}", JacksonUtil.toJson(ofcSaveStorageDTO));
            // logger.info("==>仓储开单或编辑标志位 tag={}", tag);
-            if(ofcWarehouseInformationDTO.getProvideTransport() == 1) {
+            if (ofcWarehouseInformationDTO.getProvideTransport() == 1) {
                 if (trimAndNullAsEmpty(OfcFundamentalInformationDTO.getBusinessType()).substring(0, 2).equals("61")) {
-                    if(consignee == null) {
+                    if (consignee == null) {
                         throw new BusinessException("需要提供运输时,配送基本信息收货方不能为空");
                     }
                 } else if (trimAndNullAsEmpty(OfcFundamentalInformationDTO.getBusinessType()).substring(0, 2).equals("62")) {
@@ -330,25 +330,25 @@ public class OfcStorageInfoController extends BaseController {
                 ofcFinanceInformationDTO.setReturnListFee(new BigDecimal(0));
             }
             //发货方信息
-            if(consignor == null){
+            if (consignor == null) {
                 consignor=new CscContantAndCompanyDto();
             }
             if (consignee == null) {
                 consignee=new CscContantAndCompanyDto();
             }
             Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO,ofcGoodsDetailsInfos,tag,consignor,consignee,supplier,authResDtoByToken);
-            if(result.getCode()!=Wrapper.SUCCESS_CODE){
-                if(!org.apache.commons.lang.StringUtils.isEmpty(result.getMessage())){
+            if (result.getCode()!=Wrapper.SUCCESS_CODE) {
+                if (!org.apache.commons.lang.StringUtils.isEmpty(result.getMessage())) {
                     throw new BusinessException(result.getMessage());
-                }else{
+                } else {
                     throw new BusinessException(Wrapper.ERROR_MESSAGE);
                 }
             }
-        } catch (BusinessException ex){
+        } catch (BusinessException ex) {
             logger.error("仓储订单下单或编辑出现异常:{}", ex.getMessage(), ex);
-            if(!org.apache.commons.lang.StringUtils.isEmpty(ex.getMessage())){
+            if (!org.apache.commons.lang.StringUtils.isEmpty(ex.getMessage())) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
-            }else{
+            } else {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
             }
         } catch (Exception ex) {
@@ -374,11 +374,11 @@ public class OfcStorageInfoController extends BaseController {
         try {
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
 
-            if(CollectionUtils.isEmpty(auditOrderDTOs)){
+            if (CollectionUtils.isEmpty(auditOrderDTOs)) {
                 throw new Exception("审核DTO不能为空！");
             }
             int count = 0;
-            for(AuditOrderDTO auditOrderDTO:auditOrderDTOs){
+            for (AuditOrderDTO auditOrderDTO:auditOrderDTOs) {
                 if (auditOrderDTO == null) {
                     throw new Exception("审核DTO不能为空！");
                 }
@@ -389,15 +389,15 @@ public class OfcStorageInfoController extends BaseController {
                     throw new Exception("订单标识不能为空！");
                 }
                 String result = ofcOrderManageService.auditStorageOrder(auditOrderDTO.getOrderCode(),auditOrderDTO.getReviewTag(), authResDtoByToken);
-                if(!result.equals(String.valueOf(Wrapper.SUCCESS_CODE))){
+                if (!result.equals(String.valueOf(Wrapper.SUCCESS_CODE))) {
                     return WrapMapper.wrap(Wrapper.ERROR_CODE, "审核或反审核出现异常");
-                } else{
+                } else {
                     count++;
                 }
             }
-            if(count > 0){
+            if (count > 0) {
                 return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
-            }else{
+            } else {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
             }
         } catch (BusinessException ex) {
@@ -424,23 +424,23 @@ public class OfcStorageInfoController extends BaseController {
     public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @RequestBody List<String> orderCodes) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         try {
-            if(CollectionUtils.isEmpty(orderCodes)){
+            if (CollectionUtils.isEmpty(orderCodes)) {
                 throw new Exception("订单编号不能为空！");
             }
             int count = 0;
-            for(int i = 0; i<orderCodes.size();i++){
+            for (int i = 0; i<orderCodes.size();i++) {
                 String orderCode = orderCodes.get(i);
                 if (StringUtils.isBlank(orderCode)) {
                     continue;
                 }
                 String result = ofcOrderManageService.orderCancel(orderCode,authResDtoByToken);
-                if(!PubUtils.isSEmptyOrNull(result) && "200".equals(result)){
+                if (!PubUtils.isSEmptyOrNull(result) && "200".equals(result)) {
                     count++;
                 }
             }
-            if(count > 0){
+            if (count > 0) {
                 return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
-            }else{
+            } else {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单删除失败");
             }
         } catch (BusinessException ex) {
@@ -466,23 +466,23 @@ public class OfcStorageInfoController extends BaseController {
     )
     public Wrapper<?> orderDeleteOper(@ApiParam(name = "orderCode",value = "订单号" ) @RequestBody List<String>  orderCodes) {
         try {
-           if(CollectionUtils.isEmpty(orderCodes)){
+           if (CollectionUtils.isEmpty(orderCodes)) {
                 throw new Exception("订单编号不能为空！");
             }
             int count = 0;
-            for(int i = 0; i<orderCodes.size();i++){
+            for (int i = 0; i<orderCodes.size();i++) {
                 String orderCode = orderCodes.get(i);
                 if (StringUtils.isBlank(orderCode)) {
                     continue;
                 }
                 String result = ofcOrderManageService.orderDelete(orderCode);
-                if(!PubUtils.isSEmptyOrNull(result) && "200".equals(result)){
+                if (!PubUtils.isSEmptyOrNull(result) && "200".equals(result)) {
                     count++;
                 }
             }
-            if(count > 0){
+            if (count > 0) {
                 return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
-            }else{
+            } else {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单删除失败");
             }
         } catch (BusinessException ex) {

@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
@@ -18,7 +17,6 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.jackson.type.TypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.xescm.ofc.constant.StorageTemplateConstant.ERROR_CUST;
@@ -51,20 +48,20 @@ public class OfcBatchImportController extends BaseController{
     @RequestMapping(value = "/save")
     @ResponseBody
     public Wrapper storageTemplateSave (@RequestBody List<OfcStorageTemplate> ofcStorageTemplates) {
-        logger.info("模板配置保存 ==> ofcStorageTemplates:{}",ofcStorageTemplates);
+        logger.info("模板配置保存 ==> ofcStorageTemplates:{}", ofcStorageTemplates);
         if (CollectionUtils.isEmpty(ofcStorageTemplates)) {
-            logger.error("模板配置保存入参为空 ==> ofcStorageTemplates:{}",ofcStorageTemplates);
+            logger.error("模板配置保存入参为空 ==> ofcStorageTemplates:{}", ofcStorageTemplates);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!");
         }
         try {
             ofcStorageTemplateService.checkTemplateListRequired(ofcStorageTemplates);
             AuthResDto authResDto = getAuthResDtoByToken();
-            ofcStorageTemplateService.saveTemplate(ofcStorageTemplates,authResDto);
+            ofcStorageTemplateService.saveTemplate(ofcStorageTemplates, authResDto);
         } catch (BusinessException e) {
-            logger.error("模板配置保存失败!{},{}",e,e.getMessage());
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            logger.error("模板配置保存失败!{},{}", e, e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            logger.error("模板配置保存失败!{},{}",e,e.getMessage());
+            logger.error("模板配置保存失败!{},{}", e, e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!未知异常!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
@@ -90,10 +87,10 @@ public class OfcBatchImportController extends BaseController{
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
             pageInfo = new PageInfo<>(ofcStorageTemplateList);
         } catch (BusinessException e) {
-            logger.error("模板配置筛选失败!{},{}",e,e.getMessage());
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            logger.error("模板配置筛选失败!{},{}", e, e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            logger.error("模板配置筛选失败!{},{}",e,e.getMessage());
+            logger.error("模板配置筛选失败!{},{}", e, e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置筛选失败!未知异常!");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,pageInfo);
@@ -123,7 +120,7 @@ public class OfcBatchImportController extends BaseController{
     @RequestMapping(value = "/editConfirm")
     @ResponseBody
     public Wrapper storageTemplateEditConfirm(@RequestBody OfcStorageTemplateEditDTO ofcStorageTemplateEditDTO) {
-        logger.info("模板配置编辑确认 ==> ofcStorageTemplateEditDTO:{}",ofcStorageTemplateEditDTO);
+        logger.info("模板配置编辑确认 ==> ofcStorageTemplateEditDTO:{}", ofcStorageTemplateEditDTO);
         if (null == ofcStorageTemplateEditDTO || CollectionUtils.isEmpty(ofcStorageTemplateEditDTO.getTemplateList()) || null == ofcStorageTemplateEditDTO.getLastTemplateType()) {
             logger.error("模板配置编辑确认错误, 入参为空, templateList:null or '' ");
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置编辑确认错误");
@@ -132,10 +129,10 @@ public class OfcBatchImportController extends BaseController{
         try {
             ofcStorageTemplateService.templateEditConfirm(ofcStorageTemplateEditDTO.getTemplateList(), authResDto, ofcStorageTemplateEditDTO.getLastTemplateType());
         } catch (BusinessException e) {
-            logger.error("模板配置编辑确认错误, {}",e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            logger.error("模板配置编辑确认错误, {}", e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            logger.error("模板配置编辑确认错误, {}",e);
+            logger.error("模板配置编辑确认错误, {}", e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置编辑确认错误");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
@@ -156,10 +153,10 @@ public class OfcBatchImportController extends BaseController{
             }
             ofcStorageTemplateService.delTemplateByCode(templateCondition.getTemplateCode());
         } catch (BusinessException e) {
-            logger.error("模板配置删除错误, {}",e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            logger.error("模板配置删除错误, {}", e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            logger.error("模板配置删除错误, {}",e);
+            logger.error("模板配置删除错误, {}", e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
@@ -180,7 +177,7 @@ public class OfcBatchImportController extends BaseController{
             }
             modelAndView.addObject("templateCode",templateCode);
         } catch (Exception e) {
-            logger.error("模板配置详情跳转错误, {}",e);
+            logger.error("模板配置详情跳转错误, {}", e);
             return new ModelAndView("/error/error-500");
         }
         return modelAndView;
@@ -202,10 +199,10 @@ public class OfcBatchImportController extends BaseController{
         try {
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateDetail(templateCondition);
         } catch (BusinessException e) {
-            logger.error("模板配置详情数据错误, {}",e);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            logger.error("模板配置详情数据错误, {}", e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            logger.error("模板配置详情数据错误, {}",e);
+            logger.error("模板配置详情数据错误, {}", e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置详情数据错误");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,ofcStorageTemplateList);
@@ -252,10 +249,10 @@ public class OfcBatchImportController extends BaseController{
         try {
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplate(templateCondition);
         } catch (BusinessException e) {
-            logger.error("模板配置保存失败!{},{}",e,e.getMessage());
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
+            logger.error("模板配置保存失败!{},{}", e, e.getMessage());
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            logger.error("模板配置保存失败!{},{}",e,e.getMessage());
+            logger.error("模板配置保存失败!{},{}", e, e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"根据客户编码查询配置模板列表入参错误");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, ofcStorageTemplateList);
@@ -288,10 +285,10 @@ public class OfcBatchImportController extends BaseController{
                 result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultList);
             }
         } catch (BusinessException e) {
-            logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);
+            logger.error("仓储开单Excel导入校验出错:{}", e.getMessage(), e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         } catch (Exception e) {
-            logger.error("仓储开单Excel导入校验出错:{}",e.getMessage(),e);
+            logger.error("仓储开单Excel导入校验出错:{}", e.getMessage(), e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
         }
         logger.info("导单结果:{}", ToStringBuilder.reflectionToString(result));
