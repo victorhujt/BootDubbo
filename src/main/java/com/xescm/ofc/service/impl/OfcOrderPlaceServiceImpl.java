@@ -980,7 +980,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcDist.setOrderCode(orderCode);
         List<OfcDistributionBasicInfo> select = ofcDistributionBasicInfoService.select(ofcDist);
         if (select.size() > 0) {//有运输信息
-            ofcDistributionBasicInfoService.updateAddressByOrderCode(ofcDistributionBasicInfo);
+            ofcDistributionBasicInfoService.update(ofcDistributionBasicInfo);
         }
         //2017年3月25日 modified by lyh 增加逻辑: 编辑后将之前无法识别的地址信息匹配表补充完整
         ofcOrderManageService.fixAddressWhenEdit(ORDER_TAG_STOCK_EDIT, ofcDistributionBasicInfo);
