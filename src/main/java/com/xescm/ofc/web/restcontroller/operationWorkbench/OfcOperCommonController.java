@@ -54,8 +54,6 @@ public class OfcOperCommonController extends BaseController{
     @Resource
     private CscContactEdasService cscContactEdasService;
     @Resource
-    private OfcOrderManageService ofcOrderManageService;
-    @Resource
     private CscSupplierEdasService cscSupplierEdasService;
     @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
@@ -103,15 +101,15 @@ public class OfcOperCommonController extends BaseController{
     public Wrapper<PageInfo<Select2RespDto>> querySupplierByName(@ApiParam(name = "select2ReqDto", value = "select2查询信息") @RequestBody  Page<Select2ReqDto> page,@PathVariable String customerCode) {
         Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
         try {
-            if(PubUtils.isSEmptyOrNull(customerCode)){
+            if (PubUtils.isSEmptyOrNull(customerCode)) {
                 throw new BusinessException("客户编码不能为空");
             }
             CscSupplierInfoDto queryParam = new CscSupplierInfoDto();
             queryParam.setCustomerCode(customerCode);
             queryParam.setPNum(page.getPageNum());
             queryParam.setPSize(page.getPageSize());
-            if(page.getParam() != null){
-                if(!PubUtils.isSEmptyOrNull(page.getParam().getName())){
+            if (page.getParam() != null) {
+                if (!PubUtils.isSEmptyOrNull(page.getParam().getName())) {
                     queryParam.setSupplierName(page.getParam().getName());
                 }
             }
@@ -167,14 +165,14 @@ public class OfcOperCommonController extends BaseController{
         //调用外部接口,最低传CustomerCode
         try{
             CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
-            if(!PubUtils.trimAndNullAsEmpty(cscGoodsType.getCscGoodsType()).equals("")){
+            if (!PubUtils.trimAndNullAsEmpty(cscGoodsType.getCscGoodsType()).equals("")) {
                 cscGoodType.setPid(cscGoodsType.getCscGoodsType());
             }
             Wrapper<List<CscGoodsTypeVo>> CscGoodsType = cscGoodsTypeEdasService.getCscGoodsTypeList(cscGoodType);
             logger.info("===========================" + CscGoodsType);
             logger.info("###############返回货品类别列表为{}####################",JacksonUtil.toJsonWithFormat(CscGoodsType.getResult()));
             return  WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, CscGoodsType);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, "根据查询条件筛选货品发生异常！");
         }
@@ -240,19 +238,19 @@ public class OfcOperCommonController extends BaseController{
     @RequestMapping(value = "/goodsSelectsStorage",method = RequestMethod.POST)
     @ApiOperation(notes = "查询带包装的货品列表", httpMethod = "POST", value = "查询货品")
     @ResponseBody
-    public Object goodsSelectsStorage(@RequestBody  Page<CscGoodsApiDto> page){
+    public Object goodsSelectsStorage(@RequestBody  Page<CscGoodsApiDto> page) {
         Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists = null;
         try{
             CscGoodsApiDto cscGoodsApiDto = page.getParam();
-            if(cscGoodsApiDto == null){
+            if (cscGoodsApiDto == null) {
                 throw new BusinessException("查询货品的dto不能为空");
             }
             logger.info("==>仓储下单货品筛选,cscGoods = {}",JacksonUtil.toJson(cscGoodsApiDto));
-            if(PubUtils.isSEmptyOrNull(cscGoodsApiDto.getCustomerCode())){
+            if (PubUtils.isSEmptyOrNull(cscGoodsApiDto.getCustomerCode())) {
                 throw new BusinessException("客户编码不能为空");
             }
 
-            if(PubUtils.isSEmptyOrNull(cscGoodsApiDto.getWarehouseCode())){
+            if (PubUtils.isSEmptyOrNull(cscGoodsApiDto.getWarehouseCode())) {
                 throw new BusinessException("仓库编码不能为空");
             }
             cscGoodsApiDto.setFromSys("WMS");//只要WMS渠道的货品
@@ -260,7 +258,7 @@ public class OfcOperCommonController extends BaseController{
             cscGoodsApiDto.setPSize(page.getPageSize());
             cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoodsApiDto);
             logger.info("===>查询货品的结果为:{}",JacksonUtil.toJson(cscGoodsLists));
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);
         }
         return cscGoodsLists;
@@ -286,7 +284,7 @@ public class OfcOperCommonController extends BaseController{
      */
     @RequestMapping(value = "/goodsSelects",method = RequestMethod.POST)
     @ResponseBody
-    public Object goodsSelectByCsc(@RequestBody Page<CscGoodsApiDto> page){
+    public Object goodsSelectByCsc(@RequestBody Page<CscGoodsApiDto> page) {
         //调用外部接口,最低传CustomerCode
         Wrapper<PageInfo<CscGoodsApiVo>> cscGoodsLists  = null;
         try{
@@ -294,13 +292,13 @@ public class OfcOperCommonController extends BaseController{
                 throw new Exception("货品筛选dto不能为空");
             }
             CscGoodsApiDto cscGoodsApiDto = page.getParam();
-            if(PubUtils.isSEmptyOrNull(cscGoodsApiDto.getCustomerCode())){
+            if (PubUtils.isSEmptyOrNull(cscGoodsApiDto.getCustomerCode())) {
                 throw new Exception("客户编码不能为空");
             }
             cscGoodsApiDto.setPSize(page.getPageSize());
             cscGoodsApiDto.setPNum(page.getPageNum());
             cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageList(cscGoodsApiDto);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             logger.error("订单中心筛选货品出现异常:{}", ex.getMessage(), ex);
         }
         return cscGoodsLists;

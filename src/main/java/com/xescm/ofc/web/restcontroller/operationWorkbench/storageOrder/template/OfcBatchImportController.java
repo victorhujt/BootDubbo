@@ -50,29 +50,20 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/save")
     @ResponseBody
-    public Wrapper storageTemplateSave (@RequestBody List<OfcStorageTemplate> ofcStorageTemplates){
+    public Wrapper storageTemplateSave (@RequestBody List<OfcStorageTemplate> ofcStorageTemplates) {
         logger.info("模板配置保存 ==> ofcStorageTemplates:{}",ofcStorageTemplates);
-        if(CollectionUtils.isEmpty(ofcStorageTemplates)){
+        if (CollectionUtils.isEmpty(ofcStorageTemplates)) {
             logger.error("模板配置保存入参为空 ==> ofcStorageTemplates:{}",ofcStorageTemplates);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!");
         }
-//        TypeReference<List<OfcStorageTemplate>> typeReference = new TypeReference<List<OfcStorageTemplate>>() {
-//        };
-//        List<OfcStorageTemplate> ofcStorageTemplates;
-//        try {
-//            ofcStorageTemplates = JacksonUtil.parseJson(templateList, typeReference);
-//        } catch (Exception e) {
-//            logger.error("模板配置保存,json转换异常,{},{}",e,e.getMessage());
-//            return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!内部异常!");
-//        }
         try {
             ofcStorageTemplateService.checkTemplateListRequired(ofcStorageTemplates);
             AuthResDto authResDto = getAuthResDtoByToken();
             ofcStorageTemplateService.saveTemplate(ofcStorageTemplates,authResDto);
-        }catch (BusinessException e) {
+        } catch (BusinessException e) {
             logger.error("模板配置保存失败!{},{}",e,e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("模板配置保存失败!{},{}",e,e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置保存失败!未知异常!");
         }
@@ -86,9 +77,9 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/select")
     @ResponseBody
-    public Wrapper storageTemplateSelect (@RequestBody TemplateCondition templateCondition){
+    public Wrapper storageTemplateSelect (@RequestBody TemplateCondition templateCondition) {
         logger.info("模板配置筛选 ==> templateCondition:{}",templateCondition);
-        if(null == templateCondition){
+        if (null == templateCondition) {
             logger.error("模板配置筛选入参为空 ==> templateCondition:null");
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置筛选失败!");
         }
@@ -98,10 +89,10 @@ public class OfcBatchImportController extends BaseController{
             new PageHelper().startPage(templateCondition.getPageNum(),templateCondition.getPageSize());
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
             pageInfo = new PageInfo<>(ofcStorageTemplateList);
-        }catch (BusinessException e) {
+        } catch (BusinessException e) {
             logger.error("模板配置筛选失败!{},{}",e,e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("模板配置筛选失败!{},{}",e,e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置筛选失败!未知异常!");
         }
@@ -114,9 +105,9 @@ public class OfcBatchImportController extends BaseController{
      * @param templateCode 模板编码
      */
     @RequestMapping(value = "/edit/{templateCode}")
-    public String storageTemplateEdit(@PathVariable String templateCode, Model model){
+    public String storageTemplateEdit(@PathVariable String templateCode, Model model) {
         logger.info("模板配置编辑 ==> templateCode:{}",templateCode);
-        if(PubUtils.isSEmptyOrNull(templateCode)){
+        if (PubUtils.isSEmptyOrNull(templateCode)) {
             logger.error("模板配置编辑错误, 入参为空, templateCode:null or '' ");
             return "/error/error-500";
         }
@@ -131,9 +122,9 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/editConfirm")
     @ResponseBody
-    public Wrapper storageTemplateEditConfirm(@RequestBody OfcStorageTemplateEditDTO ofcStorageTemplateEditDTO){
+    public Wrapper storageTemplateEditConfirm(@RequestBody OfcStorageTemplateEditDTO ofcStorageTemplateEditDTO) {
         logger.info("模板配置编辑确认 ==> ofcStorageTemplateEditDTO:{}",ofcStorageTemplateEditDTO);
-        if(null == ofcStorageTemplateEditDTO || CollectionUtils.isEmpty(ofcStorageTemplateEditDTO.getTemplateList()) || null == ofcStorageTemplateEditDTO.getLastTemplateType()){
+        if (null == ofcStorageTemplateEditDTO || CollectionUtils.isEmpty(ofcStorageTemplateEditDTO.getTemplateList()) || null == ofcStorageTemplateEditDTO.getLastTemplateType()) {
             logger.error("模板配置编辑确认错误, 入参为空, templateList:null or '' ");
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置编辑确认错误");
         }
@@ -156,10 +147,10 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Wrapper storageTemplateDel(@RequestBody TemplateCondition templateCondition){
+    public Wrapper storageTemplateDel(@RequestBody TemplateCondition templateCondition) {
         logger.info("模板配置删除 ==> templateCondition:{}",templateCondition);
         try {
-            if(templateCondition == null || PubUtils.isSEmptyOrNull(templateCondition.getTemplateCode())){
+            if (templateCondition == null || PubUtils.isSEmptyOrNull(templateCondition.getTemplateCode())) {
                 logger.error("模板配置删除错误, 入参为空, temlpateCode:null or '' ");
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
             }
@@ -179,11 +170,11 @@ public class OfcBatchImportController extends BaseController{
      * @param templateCode 模板编码
      */
     @RequestMapping(value = "/detail/{templateCode}")
-    public ModelAndView storageTemplateDetail(@PathVariable String templateCode){
+    public ModelAndView storageTemplateDetail(@PathVariable String templateCode) {
         logger.info("模板配置详情跳转 ==> templateCode:{}",templateCode);
         ModelAndView modelAndView = new ModelAndView("/storage/template/template_detail");
         try {
-            if(PubUtils.isSEmptyOrNull(templateCode)){
+            if (PubUtils.isSEmptyOrNull(templateCode)) {
                 logger.error("模板配置详情跳转错误, 入参为空, templateCode:null or '' ");
                 return new ModelAndView("/error/error-500");
             }
@@ -201,9 +192,9 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/detail")
     @ResponseBody
-    public Wrapper storageTemplateDetailData(@RequestBody TemplateCondition templateCondition){
+    public Wrapper storageTemplateDetailData(@RequestBody TemplateCondition templateCondition) {
         logger.info("模板配置详情数据 ==> templateCondition:{}",templateCondition);
-        if(null == templateCondition || PubUtils.isSEmptyOrNull(templateCondition.getTemplateCode())){
+        if (null == templateCondition || PubUtils.isSEmptyOrNull(templateCondition.getTemplateCode())) {
             logger.error("模板配置详情数据错误, 入参为空, templateList:null or '' ");
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"模板配置详情数据错误");
         }
@@ -225,7 +216,7 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/warehouse")
     @ResponseBody
-    public Wrapper loadWarehouse(){
+    public Wrapper loadWarehouse() {
         List<RmcWarehouseRespDto> rmcWarehouseRespDtos = ofcStorageTemplateService.allWarehouseByRmc();
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,rmcWarehouseRespDtos);
     }
@@ -235,8 +226,8 @@ public class OfcBatchImportController extends BaseController{
      * 跳转入库开单批量导单
      */
     @RequestMapping(value = "/batch_import/{templateType}")
-    public ModelAndView batchIn(Model model, @PathVariable("templateType") String templateType){
-        if(PubUtils.isSEmptyOrNull(templateType)){
+    public ModelAndView batchIn(Model model, @PathVariable("templateType") String templateType) {
+        if (PubUtils.isSEmptyOrNull(templateType)) {
             logger.error("跳转入库开单批量导单,templateType为空, templateType:{}", templateType);
             return new ModelAndView("/error/error-500");
         }
@@ -251,19 +242,19 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/templist")
     @ResponseBody
-    public Wrapper templateListByCustCode(@RequestBody TemplateCondition templateCondition){
-        if(null == templateCondition || PubUtils.isSEmptyOrNull(templateCondition.getTemplateType())
-                || PubUtils.isSEmptyOrNull(templateCondition.getCustCode())){
+    public Wrapper templateListByCustCode(@RequestBody TemplateCondition templateCondition) {
+        if (null == templateCondition || PubUtils.isSEmptyOrNull(templateCondition.getTemplateType())
+                || PubUtils.isSEmptyOrNull(templateCondition.getCustCode())) {
             logger.error("根据客户编码查询配置模板列表入参错误 templateCondition:{}", templateCondition);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"根据客户编码查询配置模板列表入参错误");
         }
         List<OfcStorageTemplate> ofcStorageTemplateList;
         try {
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplate(templateCondition);
-        }catch (BusinessException e) {
+        } catch (BusinessException e) {
             logger.error("模板配置保存失败!{},{}",e,e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("模板配置保存失败!{},{}",e,e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"根据客户编码查询配置模板列表入参错误");
         }
@@ -280,19 +271,19 @@ public class OfcBatchImportController extends BaseController{
         logger.info("仓储开单批量导单: {}", ofcStorageTemplate);
         Wrapper<?> result = null;
         try {
-            if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getCustCode())){
+            if (PubUtils.isSEmptyOrNull(ofcStorageTemplate.getCustCode())) {
                 return WrapMapper.wrap(ERROR_CUST, "请先选择客户");
-            }else if(PubUtils.isSEmptyOrNull(ofcStorageTemplate.getTemplateCode())){
+            } else if (PubUtils.isSEmptyOrNull(ofcStorageTemplate.getTemplateCode())) {
                 return WrapMapper.wrap(ERROR_TEMPLATE, "请选择模板");
             }
             AuthResDto authResDto = getAuthResDtoByToken();
             Integer activeSheetNum = ofcStorageTemplateService.checkStorageTemplate(file);
             Wrapper<?> checkResult = ofcStorageTemplateService.checkStorageTemplate(file, authResDto, ofcStorageTemplate, activeSheetNum);
 
-            if(checkResult.getCode() == Wrapper.ERROR_CODE){
+            if (checkResult.getCode() == Wrapper.ERROR_CODE) {
                 List<String> errorMsg = (List<String>) checkResult.getResult();
                 result =  WrapMapper.wrap(Wrapper.ERROR_CODE,checkResult.getMessage(),errorMsg);
-            }else if(checkResult.getCode() == Wrapper.SUCCESS_CODE){
+            } else if (checkResult.getCode() == Wrapper.SUCCESS_CODE) {
                 List<Object> resultList = (List<Object>) checkResult.getResult();
                 result =  WrapMapper.wrap(Wrapper.SUCCESS_CODE,checkResult.getMessage(),resultList);
             }
@@ -313,7 +304,7 @@ public class OfcBatchImportController extends BaseController{
      * 跳转入库开单批量导单
      */
     @RequestMapping(value = "batch_out")
-    public ModelAndView batchOut(){
+    public ModelAndView batchOut() {
         return new ModelAndView("/storage/out/batch_import_out");
     }
 
@@ -323,25 +314,25 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/confirm")
     @ResponseBody
-    public Wrapper confirm(@RequestBody List<OfcStorageTemplateDto> orderList){
+    public Wrapper confirm(@RequestBody List<OfcStorageTemplateDto> orderList) {
         logger.info("仓储开单批量导单确认下单 ==> orderList:{}", orderList);
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             //下单
             Wrapper placeOrderResult = ofcStorageTemplateService.orderConfirm(orderList, authResDto);
-            if(Wrapper.ERROR_CODE == placeOrderResult.getCode()){
+            if (Wrapper.ERROR_CODE == placeOrderResult.getCode()) {
                 return placeOrderResult;
             }
             logger.info("批量下单成功,开始进行批量审核");
             //审核
             Wrapper auditOrderResult = ofcStorageTemplateService.storageTemplateAudit(placeOrderResult.getResult(), authResDto);
-            if(Wrapper.ERROR_CODE == auditOrderResult.getCode()){
+            if (Wrapper.ERROR_CODE == auditOrderResult.getCode()) {
                 return auditOrderResult;
             }
-        }catch (BusinessException e) {
+        } catch (BusinessException e) {
             logger.error("仓储开单批量导单确认下单出错, 错误信息:{},{}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("仓储开单批量导单确认下单出错, 错误信息:{},{}", e.getMessage(), e);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
