@@ -27,7 +27,7 @@ public class MyCorsConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/ofc/**").allowedOrigins(restConfig.getUamUrl(),restConfig.getPaas(), restConfig.getPaasDev());// 用户中心
-//                registry.addMapping("/ofc/searchOverallOrder").allowedOrigins();
+                registry.addMapping("/page/ofc/**").allowedOrigins(restConfig.getUamUrl(),restConfig.getPaas(), restConfig.getPaasDev());// 用户中心
                 registry.addMapping("/www/ofc/**").allowedOrigins(restConfig.getOfficalApiUrl(), restConfig.getOfficalApiShortUrl(), restConfig.getOfficalApiDevUrl());
             }
         };
