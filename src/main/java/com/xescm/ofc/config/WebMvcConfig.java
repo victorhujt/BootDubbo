@@ -67,10 +67,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     	super.addInterceptors(registry);
     	authViewInterceptor.setEnv(env);
         vueViewInterceptor.setEnv(env);
-        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**");
         registry.addInterceptor(vueViewInterceptor).addPathPatterns("/page/ofc/**");
 //		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
-        registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/searchOverallOrder");
+        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/searchOverallOrder");
     }
 
 }
