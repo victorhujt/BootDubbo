@@ -116,11 +116,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.error("校验数据{}失败：{}", "货主编码", resultModel.getCode());
                 return resultModel;
             }
-            //校验货主名称
-//        if (StringUtils.isBlank(custName)) {
-//            logger.error("校验数据{}失败：{}", "货主名称", custName);
-//            return new ResultModel(ResultModel.ResultEnum.CODE_0008);
-//        }
 
             QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
             queryCustomerCodeDto.setCustomerCode(custCode);
@@ -131,7 +126,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             } else {
                 createOrderEntity.setCustName(customerVoWrapper.getResult().getCustomerName());
             }
-
 
             //校验数据：订单类型
             String orderType = createOrderEntity.getOrderType();
@@ -160,19 +154,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 CscStorevo cscStorevo = cscStoreVoList.getResult().get(0);
                 storeCode = cscStorevo.getStoreCode();
                 storeName = cscStorevo.getStoreName();
-            }/* else {
-            logger.error("获取该客户下的店铺编码接口返回失败，custCode:{},接口返回值:{}", custCode, ToStringBuilder.reflectionToString(cscStoreVoList));
-            resultModel = new ResultModel(ResultModel.ResultEnum.CODE_0003);
-            return resultModel;
-        }*/
-            createOrderEntity.setStoreCode(storeCode);
+            }
 
-            //校验：【发货方】与【收货方】//2017年3月20日 追加逻辑:收发货方地址没有细化到二级,也能过,订单状态为待审核,不进行自动审核,对地址进行匹配
-//        resultModel = CheckUtils.checkWaresDist(createOrderEntity);
-//        if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-//            logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
-//            return resultModel;
-//        }
+            createOrderEntity.setStoreCode(storeCode);
 
             // 校验收发货方，如果收发货方编码不为空，则查询收发货方信息；否则校验传入收发货方字段
             resultModel = checkContactInfo(createOrderEntity);
@@ -380,7 +364,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
 
-
         boolean sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
         this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
@@ -403,7 +386,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 ofcGoodsDetailsInfo.setOrderCode(orderCode);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
-//            ofcOrderStatusService.save(ofcOrderStatus);
             try {
                 //自动审核通过 review:审核；rereview:反审核
                 if (sEmptyOrNull) {
@@ -420,8 +402,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                 }
                 logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
-                //推结算
-               // ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
@@ -826,11 +806,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             String consignor_address = createOrderEntity.getConsignorAddress();
             String provide_transport = createOrderEntity.getProvideTransport();
             if ("60".equals(orderType) || "61".equals(orderType)) {
-                if ("61".equals(orderType)) {
-                    if (!StringUtils.equals(provide_transport, "1")) {
-                        return new ResultModel("1000", "是否需要运输信息不能为空");
-                    }
-                }
                 if (StringUtils.isBlank(consignor_name)) {
                     return new ResultModel("1000", "发货方名称信息不能为空");
                 } else if (StringUtils.isBlank(consignor_contact)) {
@@ -866,11 +841,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             String consignee_address = createOrderEntity.getConsigneeAddress();
             String provide_transport = createOrderEntity.getProvideTransport();
             if ("60".equals(orderType) || "61".equals(orderType)) {
-                if ("61".equals(orderType)) {
-                    if (!StringUtils.equals(provide_transport, "1")) {
-                        return new ResultModel("1000", "是否需要运输信息不能为空");
-                    }
-                }
                 if (StringUtils.isBlank(consignee_name)) {
                     return new ResultModel("1000", "收货方名称信息不能为空");
                 } else if (StringUtils.isBlank(consignee_contact)) {

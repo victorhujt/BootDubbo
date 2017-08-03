@@ -230,8 +230,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
                 if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
                         || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
-                    logger.error("订单没有基地信息, 维持待审核状态");
-                    return String.valueOf(Wrapper.SUCCESS_CODE);
+                    OfcWarehouseInformation warehouseInfo = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+                    ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(warehouseInfo.getWarehouseCode(),ofcFundamentalInformation);
+                    if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
+                        || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
+                        logger.error("订单没有基地信息, 维持待审核状态");
+                        return String.valueOf(Wrapper.SUCCESS_CODE);
+                    }
                 }
                 ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
@@ -1899,8 +1904,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 // 大区、基地都为空则更新大区基地
                 String baseCode = ofcFundamentalInformation.getBaseCode();
                 String areaCode = ofcFundamentalInformation.getAreaCode();
-                if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode)) {
+                String orderType = ofcFundamentalInformation.getOrderType();
+                if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && TRANSPORT_ORDER.equals(orderType)) {
                     this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                } else if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && WAREHOUSE_DIST_ORDER.equals(orderType)) {
+                    ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
                 }
                 //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
                 if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
