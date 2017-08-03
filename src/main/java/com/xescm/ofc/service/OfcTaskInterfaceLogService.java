@@ -2,6 +2,7 @@ package com.xescm.ofc.service;
 
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
@@ -95,4 +96,15 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
      * @return
      */
     Integer resendTaskLogById(Long id);
+
+    /**
+     * <p>Title:      queryOrderStatus. </p>
+     * <p>Description 查询订单状态</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/7/20 17:16
+     * @return
+     */
+    OfcOrderNewstatus queryOrderStatus(OfcTaskInterfaceLogDto taskParam) throws Exception;
 }

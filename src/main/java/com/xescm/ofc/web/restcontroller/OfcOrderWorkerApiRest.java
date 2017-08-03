@@ -2,7 +2,9 @@ package com.xescm.ofc.web.restcontroller;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.service.OfcTaskInterfaceLogService;
@@ -128,7 +130,7 @@ public class OfcOrderWorkerApiRest {
      */
     @RequestMapping(value = "/goodsAmountSync", method = RequestMethod.POST)
     public Wrapper goodsAmountSync(@RequestBody  OfcTaskInterfaceLogDto taskParam) {
-        logger.info("执行交货量同步任务发生异常：taskParam={}", taskParam);
+        logger.info("交货量同步：taskParam={}", taskParam);
         Wrapper result;
         try {
             result = taskInterfaceLogService.goodsAmountSync(taskParam);
@@ -138,6 +140,68 @@ public class OfcOrderWorkerApiRest {
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, msg + ExceptionUtils.getFullStackTrace(e));
         } catch (Exception e) {
             String msg = "执行交货量同步任务发生未知异常：异常信息=>";
+            logger.error(msg + " {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, msg + ExceptionUtils.getFullStackTrace(e));
+        }
+        return result;
+    }
+
+    /**
+     * <p>Title:      deleteTaskInterfaceLog. </p>
+     * <p>Description 删除任务日志</p>
+     * 
+     * @param         
+     * @Author	      nothing
+     * @CreateDate    2017/7/20 18:00
+     * @return        
+     */
+    @RequestMapping(value = "/deleteTaskInterfaceLog", method = RequestMethod.POST)
+    public Wrapper deleteTaskInterfaceLog(@RequestBody Long taskId) {
+        logger.info("删除任务日志: taskId={}", taskId);
+        Wrapper result;
+        try {
+            Integer line = taskInterfaceLogService.delTaskLogById(taskId);
+            if (!PubUtils.isNull(line)) {
+                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+            } else {
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            }
+        } catch (BusinessException e) {
+            logger.error("删除任务日志发生异常：异常详情 => {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        } catch (Exception e) {
+            logger.error("删除任务日志发生未知异常：异常详情 => {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return result;
+    }
+
+    /**
+     * <p>Title:      queryOrderStatus. </p>
+     * <p>Description 查询订单状态</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/7/20 17:54
+     * @return
+     */
+    @RequestMapping(value = "/queryOrderStatus", method = RequestMethod.POST)
+    public Wrapper<OfcOrderNewstatus> queryOrderStatus(@RequestBody OfcTaskInterfaceLogDto taskParam) {
+        logger.info("查询订单状态：taskParam={}", taskParam);
+        Wrapper<OfcOrderNewstatus> result;
+        try {
+            OfcOrderNewstatus status = taskInterfaceLogService.queryOrderStatus(taskParam);
+            if (status != null) {
+                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, status);
+            } else {
+                result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            }
+        } catch (BusinessException e) {
+            String msg = "查询订单状态发生异常：异常信息=>";
+            logger.error(msg + " {}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, msg + ExceptionUtils.getFullStackTrace(e));
+        } catch (Exception e) {
+            String msg = "查询订单状态发生未知异常：异常信息=>";
             logger.error(msg + " {}", e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, msg + ExceptionUtils.getFullStackTrace(e));
         }
