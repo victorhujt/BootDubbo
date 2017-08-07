@@ -295,12 +295,16 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 logger.error("城配开单批量下单循环入口, JSON转换异常, {}", e);
             }
             // 检查客户订单号是否重复
-            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-            ofcFundamentalInformation.setCustCode(ofcOrderDTO.getCustCode());
-            ofcFundamentalInformation.setCustOrderCode(ofcOrderDTO.getCustOrderCode());
-            int count = ofcFundamentalInfoService.checkCustOrderCode(ofcFundamentalInformation);
-            if (count >= 1) {
-                throw new BusinessException("客户订单编号" + ofcFundamentalInformation.getCustOrderCode() + "已经存在!您不能重复下单!");
+            String custCode = ofcOrderDTO.getCustCode();
+            String custOrderCode = ofcOrderDTO.getCustOrderCode();
+            if (!PubUtils.isNull(custCode) && !PubUtils.isNull(custOrderCode)) {
+                OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+                ofcFundamentalInformation.setCustCode(custCode);
+                ofcFundamentalInformation.setCustOrderCode(custOrderCode);
+                int count = ofcFundamentalInfoService.checkCustOrderCode(ofcFundamentalInformation);
+                if (count >= 1) {
+                    throw new BusinessException("客户订单编号" + ofcFundamentalInformation.getCustOrderCode() + "已经存在!您不能重复下单!");
+                }
             }
         }
     }
