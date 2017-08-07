@@ -53,23 +53,22 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Resource
     private OfcInterfaceReceiveLogService receiveLogService;
 
-    public  static ConcurrentHashMap MAP = new ConcurrentHashMap();
+    private  static ConcurrentHashMap MAP = new ConcurrentHashMap();
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
         logger.info("OFC消费MQ开始。。。");
         String topicName = message.getTopic();
-        String tag=message.getTag();
-        String userName ="";
+        String tag = message.getTag();
+        String userName = "";
         String key = message.getKey();
-        String messageBody = null;
+        String messageBody;
         messageBody = new String(message.getBody(), StandardCharsets.UTF_8);
         logger.info("OFC消费MQ开始。。。MessageBody:" + messageBody + ",topicName:" + topicName + ",tag:" + tag );
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
-            if(message.getTag().equals("xeOrderToOfc")){
+            if (message.getTag().equals("xeOrderToOfc")) {
                 logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
-                String result = null;
                 try {
                     List<CreateOrderEntity> orderEntities = JacksonUtil.parseJsonWithFormat(messageBody, new TypeReference<List<CreateOrderEntity>>() {});
                     for (CreateOrderEntity orderEntity : orderEntities) {
@@ -82,21 +81,18 @@ public class CreateOrderApiConsumer implements MessageListener {
                         receiveLog.setLogData(JacksonUtil.toJson(orderEntity));
                         receiveLogService.insertOfcInterfaceReceiveLogWithTask(receiveLog);
                     }
-                } catch (BusinessException ex) {
-                    logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
-                        return Action.ReconsumeLater;
                 } catch (Exception ex) {
                     logger.error("创单api消费MQ异常：{}", ex.getMessage(), ex);
                     return Action.ReconsumeLater;
                 } finally {
                     logger.info("创单api消费MQ获取message处理结束");
                 }
-            }else if(message.getTag().equals("goodsAmountSync")){//众品订单交货量同步接口
+            } else if (message.getTag().equals("goodsAmountSync")) {//众品订单交货量同步接口
                 //接收分拣中心回传的状态
-                logger.info("对接中心订单交货量调整消息体:{}",messageBody);
-                logger.info("订单中心消费对接中心同步交货量开始消费topic:{},tag:{},key{}",topicName,tag,key);
+                logger.info("对接中心订单交货量调整消息体:{}", messageBody);
+                logger.info("订单中心消费对接中心同步交货量开始消费topic:{},tag:{},key{}", topicName, tag, key);
                 try {
-                    GoodsAmountSyncDto goodsAmountSyncDto = JSON.parseObject(messageBody,GoodsAmountSyncDto.class);
+                    GoodsAmountSyncDto goodsAmountSyncDto = JSON.parseObject(messageBody, GoodsAmountSyncDto.class);
                     String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
                     OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();
                     receiveLog.setLogBusinessType(LogBusinessTypeEnum.EDI_GOODS_AMOUNT.getCode());
@@ -106,68 +102,66 @@ public class CreateOrderApiConsumer implements MessageListener {
                     receiveLog.setLogData(JacksonUtil.toJson(goodsAmountSyncDto));
                     receiveLogService.insertOfcInterfaceReceiveLogWithTask(receiveLog);
                 } catch (Exception e) {
-                    logger.error("订单中心消费对接中心同步交货量出错:{}",e.getMessage(),e);
+                    logger.error("订单中心消费对接中心同步交货量出错:{}", e.getMessage(), e);
                     return Action.ReconsumeLater;
                 }
             }
-
-        }else if(StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())){
-            logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
-
+        } else if (StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())) {
+            logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
             try {
-                if(message.getTag().equals("DeliveryTag")){
-                    logger.info("调度单：{}",message);
+                if (message.getTag().equals("DeliveryTag")) {
+                    logger.info("调度单：{}", message);
                     List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions = null;
                     TypeReference<List<OfcSchedulingSingleFeedbackCondition>> ofcSchedulingTypeRef = new TypeReference<List<OfcSchedulingSingleFeedbackCondition>>() {
                     };
                     try {
-                        ofcSchedulingSingleFeedbackConditions= JacksonUtil.parseJsonWithFormat(messageBody , ofcSchedulingTypeRef);
-                        for(int i=0;i<ofcSchedulingSingleFeedbackConditions.size();i++){
+                        ofcSchedulingSingleFeedbackConditions = JacksonUtil.parseJsonWithFormat(messageBody, ofcSchedulingTypeRef);
+                        for (int i = 0; i < ofcSchedulingSingleFeedbackConditions.size(); i++) {
                             // 保存到数
                             Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.schedulingSingleFeedbackNew(ofcSchedulingSingleFeedbackConditions.get(i),userName);
                         }
                     } catch (Exception e) {
-                        logger.error("运输单状态反馈出错:{}",e.getMessage(),e);
+                        logger.error("运输单状态反馈出错:{}", e.getMessage(), e);
                     }
-                }else if(message.getTag().equals("TransportTag")){
-                    logger.info("运输单消费 :{}",message);
+                } else if (message.getTag().equals("TransportTag")) {
+                    logger.info("运输单消费 :{}", message);
                     // 将获取的json格式字符串转换成相应对象
                     List<OfcPlanFedBackCondition> ofcPlanFedBackConditions = null;
                     TypeReference<List<OfcPlanFedBackCondition>> ofcPlanFedBackTypeRef = new TypeReference<List<OfcPlanFedBackCondition>>() {
                     };
                     try {
-                        ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody,ofcPlanFedBackTypeRef);
-                        for(int i=0;i<ofcPlanFedBackConditions.size();i++){
+                        ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody, ofcPlanFedBackTypeRef);
+                        for (int i = 0; i < ofcPlanFedBackConditions.size(); i++) {
                             // 保存到数
-                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i),userName,MAP);
+                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i), userName,MAP);
                         }
                     } catch (Exception e) {
-                        logger.error("运输单出错:{}",e.getMessage(),e);
+                        logger.error("运输单出错:{}", e.getMessage(), e);
                     }
                 }
 
             } catch (Exception ex) {
-                logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}",message.getTag(), topicName, key,ex.getMessage(),ex);
+                logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}", message.getTag(), topicName, key, ex.getMessage(), ex);
             }
-        }else if(StringUtils.equals(topicName,mqConfig.getWhcOrderStatusTopic())){
-            logger.info("仓储单状态反馈的消息体为{}:",messageBody);
+        } else if (StringUtils.equals(topicName, mqConfig.getWhcOrderStatusTopic())) {
+            logger.info("仓储单状态反馈的消息体为{}:", messageBody);
             logger.info("仓储单状态开始消费");
             try {
-                logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
-                FeedBackOrderStatusDto feedBackOrderStatusDto= JacksonUtil.parseJson(messageBody,FeedBackOrderStatusDto.class);
+                logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
+                FeedBackOrderStatusDto feedBackOrderStatusDto = JacksonUtil.parseJson(messageBody, FeedBackOrderStatusDto.class);
                 ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
             } catch (Exception e) {
-                logger.error("仓储单状态反馈出现异常{}",e.getMessage(),e);
+                logger.error("仓储单状态反馈出现异常{}", e.getMessage(), e);
             }
-        }else if(StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())){
-            logger.info("仓储单出入库单实收实出反馈的消息体为{}:",messageBody);
+        } else if (StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())) {
+            logger.info("仓储单出入库单实收实出反馈的消息体为{}:", messageBody);
             logger.info("仓储单出入库单实收实出反馈开始消费");
-            logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}",message.getTag(), topicName, key);
+            logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
             try {
-                FeedBackOrderDto feedBackOrderDto= JacksonUtil.parseJson(messageBody,FeedBackOrderDto.class);
+                FeedBackOrderDto feedBackOrderDto = JacksonUtil.parseJson(messageBody, FeedBackOrderDto.class);
                 ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto,MAP);
             } catch (Exception e) {
-                logger.error("仓储单出入库单反馈出现异常{}",e.getMessage(),e);
+                logger.error("仓储单出入库单反馈出现异常{}", e.getMessage(), e);
             }
         }
         return Action.CommitMessage;
