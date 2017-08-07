@@ -267,7 +267,7 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
             String taskData = taskParam.getTaskData();
             if (!PubUtils.isSEmptyOrNull(taskData)) {
                 CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(taskData, CreateOrderEntity.class);
-                String custCode = createOrderEntity.getSecCustCode();
+                String custCode = createOrderEntity.getCustCode();
                 String custOrderCode = createOrderEntity.getCustOrderCode();
                 OfcFundamentalInformation ofcFundamentalInfo = ofcFundamentalInfoService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
                 if (ofcFundamentalInfo != null) {
@@ -284,5 +284,17 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
             throw e;
         }
         return orderStatus;
+    }
+
+    @Override
+    public List<OfcTaskInterfaceLogDto> queryFailTaskInterfaceLog(OfcTaskInterfaceLogDto taskParam) {
+        List<OfcTaskInterfaceLogDto> result;
+        try {
+            result = taskInterfaceLogMapper.queryFailTaskInterfaceLog(taskParam);
+        } catch (Exception e) {
+            logger.error("查询worker失败任务发生异常：参数 -> OfcTaskInterfaceLogDto {}, 异常 -> {}", taskParam, e);
+            throw new BusinessException("查询worker失败任务发生异常");
+        }
+        return result;
     }
 }

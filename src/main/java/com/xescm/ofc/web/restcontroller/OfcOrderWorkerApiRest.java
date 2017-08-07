@@ -177,6 +177,32 @@ public class OfcOrderWorkerApiRest {
     }
 
     /**
+     * <p>Title:      queryOfcFailTaskInterfaceLog. </p>
+     * <p>Description 查询失败任务日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/8/7 15:18
+     * @return
+     */
+    @RequestMapping(value = "/queryOfcFailTaskInterfaceLog", method = RequestMethod.POST)
+    public Wrapper<List<OfcTaskInterfaceLogDto>> queryOfcFailTaskInterfaceLog(@RequestBody OfcTaskInterfaceLogDto taskParam) {
+        logger.info("查询worker失败任务：taskParam={}", taskParam);
+        Wrapper<List<OfcTaskInterfaceLogDto>> result;
+        try {
+            List<OfcTaskInterfaceLogDto> list = taskInterfaceLogService.queryFailTaskInterfaceLog(taskParam);
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
+        } catch (BusinessException e) {
+            logger.error("{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("查询worker失败任务发生异常：{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询worker失败任务发生异常");
+        }
+        return result;
+    }
+
+    /**
      * <p>Title:      queryOrderStatus. </p>
      * <p>Description 查询订单状态</p>
      *
@@ -191,11 +217,7 @@ public class OfcOrderWorkerApiRest {
         Wrapper<OfcOrderNewstatus> result;
         try {
             OfcOrderNewstatus status = taskInterfaceLogService.queryOrderStatus(taskParam);
-            if (status != null) {
-                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, status);
-            } else {
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-            }
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, status);
         } catch (BusinessException e) {
             String msg = "查询订单状态发生异常：异常信息=>";
             logger.error(msg + " {}", e);

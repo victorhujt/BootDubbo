@@ -107,4 +107,15 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
      * @return
      */
     OfcOrderNewstatus queryOrderStatus(OfcTaskInterfaceLogDto taskParam) throws Exception;
+
+    /**
+     * <p>Title:      queryFailTaskInterfaceLog. </p>
+     * <p>Description 查询失败任务日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/8/7 15:11
+     * @return
+     */
+    List<OfcTaskInterfaceLogDto> queryFailTaskInterfaceLog(OfcTaskInterfaceLogDto taskParam);
 }

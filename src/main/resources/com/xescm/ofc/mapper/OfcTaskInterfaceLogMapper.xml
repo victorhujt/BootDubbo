@@ -32,8 +32,10 @@
         <include refid="BaseColumn"/>
         from ofc_task_interface_log lg
         where lg.dr = 0
-        and lg.task_type = #{taskType}
         and lg.task_status = 1
+        <if test="taskType != null and taskType != ''">
+            and lg.task_type = #{taskType}
+        </if>
         <if test="taskExeCount != null and taskExeCount != ''">
             and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
         </if>
@@ -48,9 +50,11 @@
         <include refid="BaseColumn"/>
         from ofc_task_interface_log lg
         where lg.dr = 0
-        and lg.task_type = #{taskType}
         and lg.task_status = 2
-        and <![CDATA[ update_time < (NOW() - 10 / 60 / 24) ]]>
+        <if test="taskType != null and taskType != ''">
+            and lg.task_type = #{taskType}
+        </if>
+            and <![CDATA[ update_time < (NOW() - 10 / 60 / 24) ]]>
         <if test="taskExeCount != null and taskExeCount != ''">
             and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
         </if>
@@ -65,6 +69,37 @@
         <if test="fetchNum != null">
             LIMIT #{fetchNum}
         </if>
+    </select>
+
+    <!-- 查询失败处理日志 -->
+    <select id="queryFailTaskInterfaceLog"
+            resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
+        select
+        <include refid="BaseColumn"/>
+        from ofc_task_interface_log lg
+        where lg.dr = 0
+        <if test="taskType != null and taskType != ''">
+            and lg.task_type in (${taskType})
+        </if>
+        <if test="taskStatus != null and taskStatus != ''">
+            and lg.task_status = #{taskStatus}
+        </if>
+        <if test="creationTime != null and creationTime != ''">
+            and lg.creation_time <![CDATA[ >= ]] #{creationTime}
+        </if>
+        <if test="taskExeCount != null and taskExeCount != ''">
+            and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
+        </if>
+        <if test="taskSource != null">
+            and task_source = #{taskSource}
+        </if>
+        <if test="condition != null">
+            and MOD(id, #{queueNum}) in (${condition})
+        </if>
+        <if test="fetchNum != null">
+            LIMIT #{fetchNum}
+        </if>
+        order by creation_time asc
     </select>
 
     <!-- 根据条件查询任务日志 -->
