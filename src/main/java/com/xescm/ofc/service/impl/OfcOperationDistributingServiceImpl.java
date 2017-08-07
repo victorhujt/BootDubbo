@@ -12,11 +12,13 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.OfcExcelCheckService;
+import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOperationDistributingService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import org.apache.commons.lang.StringUtils;
@@ -50,7 +52,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     private OfcOrderPlaceService ofcOrderPlaceService;
     @Resource
     private OfcExcelCheckService ofcExcelCheckService;
-
+    @Resource
+    private OfcFundamentalInformationService ofcFundamentalInfoService;
 
 
     /**
@@ -243,6 +246,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     @Transactional
     public String distributingOrderPlace(JSONArray jsonArray,AuthResDto authResDtoByToken,String batchNumber) {
         String resultMessage = null;
+        // 检查客户订单号是否重复
+        this.checkCustOrderCode(jsonArray);
+        // 导入
         for (Object aJsonArray : jsonArray) {
             String json = aJsonArray.toString();
             OfcOrderDTO ofcOrderDTO = null;
@@ -276,6 +282,27 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
         }
         return resultMessage;
+    }
+
+    // 检查客户订单号重复
+    private void checkCustOrderCode(JSONArray jsonArray) {
+        for (Object aJsonArray : jsonArray) {
+            String json = aJsonArray.toString();
+            OfcOrderDTO ofcOrderDTO = null;
+            try {
+                ofcOrderDTO = JacksonUtil.parseJsonWithFormat(json, OfcOrderDTO.class);
+            } catch (Exception e) {
+                logger.error("城配开单批量下单循环入口, JSON转换异常, {}", e);
+            }
+            // 检查客户订单号是否重复
+            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+            ofcFundamentalInformation.setCustCode(ofcOrderDTO.getCustCode());
+            ofcFundamentalInformation.setCustOrderCode(ofcOrderDTO.getCustOrderCode());
+            int count = ofcFundamentalInfoService.checkCustOrderCode(ofcFundamentalInformation);
+            if (count >= 1) {
+                throw new BusinessException("客户订单编号" + ofcFundamentalInformation.getCustOrderCode() + "已经存在!您不能重复下单!");
+            }
+        }
     }
 
     /**
