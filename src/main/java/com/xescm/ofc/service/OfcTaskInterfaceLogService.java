@@ -110,12 +110,23 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
 
     /**
      * <p>Title:      queryFailTaskInterfaceLog. </p>
-     * <p>Description 查询失败任务日志</p>
+     * <p>Description 查询失败两天内任务日志</p>
      *
      * @param
      * @Author	      nothing
      * @CreateDate    2017/8/7 15:11
      * @return
      */
-    List<OfcTaskInterfaceLogDto> queryFailTaskInterfaceLog(OfcTaskInterfaceLogDto taskParam);
+    List<OfcTaskInterfaceLogDto> queryFailTaskInTwoDays(OfcTaskInterfaceLogDto taskParam);
+
+    /**
+     * <p>Title:      queryFailTaskOverThirtyDays. </p>
+     * <p>Description 查询失败超三十天任务</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/8/8 10:07
+     * @return
+     */
+    List<OfcTaskInterfaceLogDto> queryFailTaskOverThirtyDays(OfcTaskInterfaceLogDto taskParam);
 }

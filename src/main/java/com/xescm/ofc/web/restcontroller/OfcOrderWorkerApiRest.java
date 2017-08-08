@@ -177,7 +177,7 @@ public class OfcOrderWorkerApiRest {
     }
 
     /**
-     * <p>Title:      queryOfcFailTaskInterfaceLog. </p>
+     * <p>Title:      queryFailTaskInTwoDays. </p>
      * <p>Description 查询失败任务日志</p>
      *
      * @param
@@ -185,12 +185,12 @@ public class OfcOrderWorkerApiRest {
      * @CreateDate    2017/8/7 15:18
      * @return
      */
-    @RequestMapping(value = "/queryOfcFailTaskInterfaceLog", method = RequestMethod.POST)
-    public Wrapper<List<OfcTaskInterfaceLogDto>> queryOfcFailTaskInterfaceLog(@RequestBody OfcTaskInterfaceLogDto taskParam) {
+    @RequestMapping(value = "/queryFailTaskInTwoDays", method = RequestMethod.POST)
+    public Wrapper<List<OfcTaskInterfaceLogDto>> queryFailTaskInTwoDays(@RequestBody OfcTaskInterfaceLogDto taskParam) {
         logger.info("查询worker失败任务：taskParam={}", taskParam);
         Wrapper<List<OfcTaskInterfaceLogDto>> result;
         try {
-            List<OfcTaskInterfaceLogDto> list = taskInterfaceLogService.queryFailTaskInterfaceLog(taskParam);
+            List<OfcTaskInterfaceLogDto> list = taskInterfaceLogService.queryFailTaskInTwoDays(taskParam);
             result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
         } catch (BusinessException e) {
             logger.error("{}", e);
@@ -198,6 +198,23 @@ public class OfcOrderWorkerApiRest {
         } catch (Exception e) {
             logger.error("查询worker失败任务发生异常：{}", e);
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询worker失败任务发生异常");
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/queryFailTaskOverThirtyDays", method = RequestMethod.POST)
+    public Wrapper<List<OfcTaskInterfaceLogDto>> queryFailTaskOverThirtyDays(@RequestBody OfcTaskInterfaceLogDto taskParam) {
+        logger.info("查询worker失败超三十天任务：taskParam={}", taskParam);
+        Wrapper<List<OfcTaskInterfaceLogDto>> result;
+        try {
+            List<OfcTaskInterfaceLogDto> list = taskInterfaceLogService.queryFailTaskOverThirtyDays(taskParam);
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
+        } catch (BusinessException e) {
+            logger.error("{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("查询worker失败超三十天任务发生异常：{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询worker失败超三十天任务发生异常");
         }
         return result;
     }

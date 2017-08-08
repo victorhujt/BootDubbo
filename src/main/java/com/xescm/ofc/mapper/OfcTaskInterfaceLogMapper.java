@@ -19,11 +19,18 @@ public interface OfcTaskInterfaceLogMapper extends Mapper<OfcTaskInterfaceLog> {
     List<OfcTaskInterfaceLogDto> queryWTaskInterfaceLogForWorker(OfcTaskInterfaceLogDto taskParam);
 
     /**
-     * worker 查询失败任务日志
+     * worker 查询两天内失败任务
      * @param taskParam
      * @return
      */
-    List<OfcTaskInterfaceLogDto> queryFailTaskInterfaceLog(OfcTaskInterfaceLogDto taskParam);
+    List<OfcTaskInterfaceLogDto> queryFailTaskInTwoDays(OfcTaskInterfaceLogDto taskParam);
+
+    /**
+     * worker 查询超三十天失败任务
+     * @param taskParam
+     * @return
+     */
+    List<OfcTaskInterfaceLogDto> queryFailTaskOverThirtyDays(OfcTaskInterfaceLogDto taskParam);
 
     /**
      * <p>Title:      queryTaskInterfaceLog. </p>

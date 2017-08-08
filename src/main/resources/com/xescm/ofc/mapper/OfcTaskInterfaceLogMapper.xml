@@ -71,35 +71,26 @@
         </if>
     </select>
 
-    <!-- 查询失败处理日志 -->
-    <select id="queryFailTaskInterfaceLog"
+    <!-- 查询失败两天内任务日志 -->
+    <select id="queryFailTaskInTwoDays"
             resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
         select
         <include refid="BaseColumn"/>
         from ofc_task_interface_log lg
         where lg.dr = 0
-        <if test="taskType != null and taskType != ''">
-            and lg.task_type in (${taskType})
-        </if>
-        <if test="taskStatus != null and taskStatus != ''">
-            and lg.task_status = #{taskStatus}
-        </if>
-        <if test="creationTime != null and creationTime != ''">
-            and lg.creation_time <![CDATA[ >= ]] #{creationTime}
-        </if>
-        <if test="taskExeCount != null and taskExeCount != ''">
-            and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
-        </if>
-        <if test="taskSource != null">
-            and task_source = #{taskSource}
-        </if>
-        <if test="condition != null">
-            and MOD(id, #{queueNum}) in (${condition})
-        </if>
-        <if test="fetchNum != null">
-            LIMIT #{fetchNum}
-        </if>
-        order by creation_time asc
+        and task_status = '4'
+        and timestampdiff(DAY, creation_time, CURRENT_TIMESTAMP()) <![CDATA[ <= ]]> 2
+    </select>
+
+    <!-- 查询失败超三十天任务日志 -->
+    <select id="queryFailTaskOverThirtyDays"
+            resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
+        select
+        <include refid="BaseColumn"/>
+        from ofc_task_interface_log lg
+        where lg.dr = 0
+        and task_status = '4'
+        and timestampdiff(DAY, creation_time, CURRENT_TIMESTAMP()) <![CDATA[ > ]]> 30
     </select>
 
     <!-- 根据条件查询任务日志 -->

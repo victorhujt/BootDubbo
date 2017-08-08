@@ -287,10 +287,22 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
     }
 
     @Override
-    public List<OfcTaskInterfaceLogDto> queryFailTaskInterfaceLog(OfcTaskInterfaceLogDto taskParam) {
+    public List<OfcTaskInterfaceLogDto> queryFailTaskInTwoDays(OfcTaskInterfaceLogDto taskParam) {
         List<OfcTaskInterfaceLogDto> result;
         try {
-            result = taskInterfaceLogMapper.queryFailTaskInterfaceLog(taskParam);
+            result = taskInterfaceLogMapper.queryFailTaskInTwoDays(taskParam);
+        } catch (Exception e) {
+            logger.error("查询worker失败任务发生异常：参数 -> OfcTaskInterfaceLogDto {}, 异常 -> {}", taskParam, e);
+            throw new BusinessException("查询worker失败任务发生异常");
+        }
+        return result;
+    }
+
+    @Override
+    public List<OfcTaskInterfaceLogDto> queryFailTaskOverThirtyDays(OfcTaskInterfaceLogDto taskParam) {
+        List<OfcTaskInterfaceLogDto> result;
+        try {
+            result = taskInterfaceLogMapper.queryFailTaskOverThirtyDays(taskParam);
         } catch (Exception e) {
             logger.error("查询worker失败任务发生异常：参数 -> OfcTaskInterfaceLogDto {}, 异常 -> {}", taskParam, e);
             throw new BusinessException("查询worker失败任务发生异常");
