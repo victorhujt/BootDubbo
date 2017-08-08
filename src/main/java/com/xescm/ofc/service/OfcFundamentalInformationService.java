@@ -32,4 +32,6 @@ public interface OfcFundamentalInformationService extends IService<OfcFundamenta
     int checkCustOrderCodeRepeat(String custOrderCode);
 
     List<OfcFundamentalInformation> queryFundamentalByBatchNumber(String orderBatchNumber);
+
+
 }
