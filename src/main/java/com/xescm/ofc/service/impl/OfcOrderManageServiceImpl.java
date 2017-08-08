@@ -779,6 +779,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
 
+    /**
+     *
+     * 通过收货地地址匹配基地
+     * @param ofcDistributionBasicInfo
+     * @return
+     */
+    @Override
+    public boolean consigneeAdressIsCoverBase(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
+        rmcServiceCoverageForOrderVo = this.copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcServiceCoverageForOrderVo);
+        RmcServiceCoverageForOrderVo rmcPickup = this.rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+        return rmcPickup !=null ? !PubUtils.isSEmptyOrNull(rmcPickup.getSerialNo())? true:false :false;
+    }
+
     public OfcSaveStorageDTO convertToOfcSaveStorageDTO(OfcOrderDTO ofcOrderDTO) {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
         OfcSaveStorageDTO ofcSaveStorageDTO = new OfcSaveStorageDTO();
@@ -1397,10 +1411,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //                }
 //            }
 //        }
-
+        //落地配的需求  需求号834 modified by hujt 2017/8/8
+        if (StringUtils.equals(ofcFundamentalInformation.getGroundDistribution(), IS_NEED_GROUND_DISTRIBUTION)) {
+            boolean isCover = this.consigneeAdressIsCoverBase(ofcDistributionBasicInfo);
+            if (!isCover) {
+                throw new BusinessException("落地配订单收货地无基地");
+            }
+        }
         //2017年3月25日 modified by lyh 编辑后将之前无法识别的地址信息匹配表补充完整
         this.fixAddressWhenEdit(reviewTag, ofcDistributionBasicInfo);
-
         //配送基本信息
         ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
         ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
