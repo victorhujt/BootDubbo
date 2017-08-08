@@ -841,14 +841,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         logger.info("城配开单下单 ==> authResDtoByToken:{}", authResDtoByToken);
         logger.info("城配开单下单 ==> ofcOrderStatus:{}", ofcOrderStatus);
         logger.info("城配开单下单 ==> ofcMerchandiser:{}", ofcMerchandiser);
-        int custOrderCode = 0;
         StringBuilder notes = new StringBuilder();
-        if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
-            custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
-        }
-
         //根据客户订单编号查询唯一性
-        if (custOrderCode > 1) {
+        boolean isDup = false;
+        String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
+        String custCode = ofcFundamentalInformation.getCustCode();
+        if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
+            checkOrderCode(custOrderCode, custCode);
+        }
+        if (isDup) {
             throw new BusinessException("客户订单编号" + ofcFundamentalInformation.getCustOrderCode() + "已经存在!您不能重复下单!");
         } else {
 

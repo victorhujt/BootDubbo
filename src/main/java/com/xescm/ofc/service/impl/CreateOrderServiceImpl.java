@@ -345,7 +345,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 Wrapper<String> checkLock = distributedLockEdasService.checkLocksExist(key);
                 if (Wrapper.SUCCESS_CODE != checkLock.getCode()) {
                     // 加锁
-                    Wrapper<Integer> lock = distributedLockEdasService.addLock(key, 5);
+                    Wrapper<Integer> lock = distributedLockEdasService.addLock(key, 80);
                     if (lock.getCode() == Wrapper.SUCCESS_CODE && lock.getResult().intValue() == 1) {
                         lockStatus.set(true);
                         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
