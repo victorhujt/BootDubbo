@@ -74,7 +74,12 @@ public interface OfcOrderManageService {
      * @param ofcFundamentalInformation
      * @param ofcDistributionBasicInfo
      */
-    public void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo);
+     void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
     Wrapper storageOrderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto);
+
+
+    boolean consigneeAdressIsCoverBase(OfcDistributionBasicInfo ofcDistributionBasicInfo);
+
+
 }

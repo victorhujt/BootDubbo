@@ -31,4 +31,8 @@ public class OrderOperForm extends BaseForm {
     private  String warehouseCode;
 
     private Integer provideTransport;
+
+    private String groundDistribution;
+
+
 }

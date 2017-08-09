@@ -263,6 +263,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) || ofcDistributionBasicInfo.getDeparturePlaceCode().length() <= 12) {
                 throw new BusinessException("四级地址编码为空!");
             }
+            //运输订单增加落地配运输类型  收货地址匹配基地 需求号834 hujt 2017/8/8
+            if (StringUtils.equals(ofcFundamentalInformation.getBusinessType(), WITH_THE_GROUND_DISTRIBUTION)){
+                boolean isCover = ofcOrderManageService.consigneeAdressIsCoverBase(ofcDistributionBasicInfo);
+                if (!isCover) {
+                    throw new BusinessException("落地配订单收货地无基地");
+                }
+            }
             addFinanceInformation(ofcFinanceInformation,ofcFundamentalInformation);
             addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
         } else {
@@ -975,6 +982,15 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if (Wrapper.ERROR_CODE == wrapper.getCode()) {
             throw new BusinessException(wrapper.getMessage());
         }
+
+        //运输订单增加落地配运输类型  收货地址匹配基地 需求号834 hujt 2017/8/8
+        if (StringUtils.equals(ofcFundamentalInformation.getBusinessType(), WITH_THE_GROUND_DISTRIBUTION)){
+            boolean isCover = ofcOrderManageService.consigneeAdressIsCoverBase(ofcDistributionBasicInfo);
+            if (!isCover) {
+                throw new BusinessException("落地配订单收货地无基地");
+            }
+        }
+
         Date now = new Date();
         OfcDistributionBasicInfo ofcDist = new OfcDistributionBasicInfo();
         ofcDist.setOrderCode(orderCode);

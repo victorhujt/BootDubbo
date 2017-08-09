@@ -45,4 +45,6 @@ public class OfcQueryStorageDTO {
     private Date startDate;
     @ApiModelProperty("订单日期范围结束时间")
     private Date endDate;
+    @ApiModelProperty("是否落地配(0 = 否 1 = 是)")
+    private String groundDistribution;
 }

@@ -359,6 +359,9 @@
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>
+      <if test="form.groundDistribution!=null and form.groundDistribution!=''">
+        AND ofi.ground_distribution = #{form.groundDistribution}
+      </if>
       <choose>
         <when test="form.provideTransport!=null and form.provideTransport == 1">
           AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
@@ -432,6 +435,9 @@
       </if>
       <if test="form.provideTransport!=null">
         AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <if test="form.groundDistribution!=null and form.groundDistribution!=''" >
+        AND ofi.ground_distribution = #{form.groundDistribution, jdbcType=INTEGER}
       </if>
       <choose>
         <when test="withUser != null and withUser and userId != null and userId != ''">
