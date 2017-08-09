@@ -91,7 +91,7 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
 
     /**
      * <p>Title:      updateTaskInterfaceLogStatus. </p>
-     * <p>Description 更新任务状态</p>
+     * <p>Description 更新任务最新状态、执行时间、执行次数</p>
      *
      * @param
      * @Author	      nothing
@@ -128,6 +128,27 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
                 // 删除任务表成功日志
                 taskInterfaceLogMapper.delTaskLogById(taskParam.getId());
             }
+        } catch (BusinessException e) {
+            logger.error("更新任务状态发生异常：{}", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("更新任务状态发生未知异常：{}", e);
+            throw e;
+        }
+        return result;
+    }
+
+    @Transactional
+    public Integer updateTaskInterfaceLogStatusOnly(OfcTaskInterfaceLogDto taskParam) {
+        Integer result;
+        try {
+            // 更新任务表状态
+            OfcTaskInterfaceLog taskLog = new OfcTaskInterfaceLog();
+            taskLog.setId(taskParam.getId());
+            taskLog.setTaskExeCount(taskParam.getTaskExeCount());
+            taskLog.setTaskStatus(taskParam.getTaskStatus());
+            taskLog.setCreationTime(taskParam.getCreationTime());
+            result = taskInterfaceLogMapper.updateByPrimaryKeySelective(taskLog);
         } catch (BusinessException e) {
             logger.error("更新任务状态发生异常：{}", e);
             throw e;

@@ -61,7 +61,7 @@ public class OfcOrderWorkerApiRest {
 
     /**
      * <p>Title:      updateTaskInterfaceLogStatus. </p>
-     * <p>Description 更新任务状态</p>
+     * <p>Description 更新任务最新状态、执行时间、执行次数</p>
      *
      * @param
      * @Author	      nothing
@@ -74,6 +74,30 @@ public class OfcOrderWorkerApiRest {
         Wrapper<Integer> result;
         try {
             Integer res = taskInterfaceLogService.updateTaskInterfaceLogStatus(taskParam);
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, res);
+        } catch (BusinessException e) {
+            logger.error("{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+        } catch (Exception e) {
+            logger.error("更新任务状态发生异常：{}", e);
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "更新任务状态发生异常");
+        }
+        return result;
+    }
+    /**
+     * <p>Title:      updateTaskInterfaceLogStatusOnly. </p>
+     * <p>Description 更新任务状态</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @return
+     */
+    @RequestMapping(value = "/updateTaskInterfaceLogStatusOnly", method = RequestMethod.POST)
+    public Wrapper<Integer> updateTaskInterfaceLogStatusOnly(@RequestBody  OfcTaskInterfaceLogDto taskParam) {
+        logger.info("更新任务状态：taskParam={}", taskParam);
+        Wrapper<Integer> result;
+        try {
+            Integer res = taskInterfaceLogService.updateTaskInterfaceLogStatusOnly(taskParam);
             result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, res);
         } catch (BusinessException e) {
             logger.error("{}", e);

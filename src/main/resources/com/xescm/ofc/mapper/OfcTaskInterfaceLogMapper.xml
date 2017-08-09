@@ -139,6 +139,6 @@
     </delete>
 
     <update id="resendTaskLogById">
-        update ofc_task_interface_log set task_status = 1, task_exe_count = task_exe_count - 1, update_time = CURRENT_TIMESTAMP(), exe_time = null where id = #{id};
+        update ofc_task_interface_log set task_status = 1, update_time = CURRENT_TIMESTAMP(), exe_time = null where id = #{id};
     </update>
 </mapper>

@@ -33,13 +33,20 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
     List<OfcTaskInterfaceLogDto> queryWTaskInterfaceLogForWorker(OfcTaskInterfaceLogDto taskParam);
 
     /**
-     * 更新任务状态
+     * 更新任务最新状态、执行时间、执行次数
      * @param taskParam
      * @return
      */
     @Transactional
     Integer updateTaskInterfaceLogStatus(OfcTaskInterfaceLogDto taskParam);
 
+    /**
+     * 更新任务状态(只更新状态)
+     * @param taskParam
+     * @return
+     */
+    @Transactional
+    Integer updateTaskInterfaceLogStatusOnly(OfcTaskInterfaceLogDto taskParam);
    /**
     * <p>Title:      createOrderByTask. </p>
     * <p>Description 根据待处理任务创建订单</p>
