@@ -123,9 +123,19 @@ public class OfcGoodsDetailsInfoDTO {
     private String goodsType;
 
     /**
-     * 货品类别
+     * 货品种类编码(大类编码)
+     */
+    private String goodsTypeCode;
+
+    /**
+     * 货品类别(小类)
      */
     private String goodsCategory;
+
+    /**
+     * 货品类别编码(小类)
+     */
+    private String goodsCategoryCode;
 
     /**
      * 包装

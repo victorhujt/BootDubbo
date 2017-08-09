@@ -54,13 +54,6 @@ public class OfcGoodsDetailsInfo {
     @Column(name = "real_quantity")
     private BigDecimal realQuantity;
 
-    public BigDecimal getRealQuantity() {
-        return realQuantity;
-    }
-
-    public void setRealQuantity(BigDecimal realQuantity) {
-        this.realQuantity = realQuantity;
-    }
 
     /**
      * 单价
@@ -150,10 +143,22 @@ public class OfcGoodsDetailsInfo {
     private String goodsType;
 
     /**
-     * 货品类别
+     * 货品种类编码(大类)
+     */
+    @Column(name = "goods_type_code")
+    private String goodsTypeCode;
+
+    /**
+     * 货品类别(小类)
      */
     @Column(name = "goods_category")
     private String goodsCategory;
+
+    /**
+     * 货品类别编码(小类)
+     */
+    @Column(name = "goods_category_code")
+    private String goodsCategoryCode;
 
     /**
      * 包装

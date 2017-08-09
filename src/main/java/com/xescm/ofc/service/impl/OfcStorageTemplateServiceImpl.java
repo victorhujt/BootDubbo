@@ -428,9 +428,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
                     //再去空格
                     cellValue = PubUtils.trim(cellValue);
-
+                    //第一行, 将所有表格中固定的字段名称和位置固定
+                    if (rowNum == 0) {
                     //至此, 已经能拿到每一列的值
-                    if (rowNum == 0) {//第一行, 将所有表格中固定的字段名称和位置固定
                         if (PubUtils.isSEmptyOrNull(cellValue)) {
                             break;
                         }
