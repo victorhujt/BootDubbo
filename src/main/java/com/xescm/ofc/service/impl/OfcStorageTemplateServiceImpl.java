@@ -2126,6 +2126,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     && PubUtils.isSEmptyOrNull(reflectColName) && setProvideTransport && storageIn) {
                 logger.error("若您映射了是否提供运输服务,{}的模板列名不能为空!", StorageImportInEnum.CONSIGNOR_NAME.getStandardColName());
                 throw new BusinessException("若您映射了是否提供运输服务," + StorageImportInEnum.CONSIGNOR_NAME.getStandardColName()  + "的模板列名不能为空!");
+            }else if (StringUtils.equals(standardColCode, StorageImportOutEnum.GROUND_DISTRIBUTION.getStandardColCode())
+                    && (!PubUtils.isSEmptyOrNull(reflectColName) || StringUtils.equals(colDefaultVal, "是")) && !storageIn){
+                if (StringUtils.equals(standardColCode, StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColCode())
+                        && (PubUtils.isSEmptyOrNull(colDefaultVal) || StringUtils.equals(colDefaultVal, "否"))
+                        ) {
+                    logger.error("若您映射了提供落地配,{}的模板列名默认值必须为提供运输!", StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColName());
+                    throw new BusinessException("若您映射了提供落地配," + StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColName()  + "的模板列名必须为提供运输服务!");
+                }
+
             }
         }
         logger.info("校验模板必填成功!");
