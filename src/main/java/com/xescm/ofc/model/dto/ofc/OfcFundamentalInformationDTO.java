@@ -152,4 +152,8 @@ public class OfcFundamentalInformationDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date lastedOperTime;
+    /**
+     * 是否落地配  1 是  0 否
+     */
+    private String groundDistribution;
 }
