@@ -44,7 +44,7 @@ public class OfcOrderAPI {
         }
     }
 
-    @RequestMapping(value = "loadYesterdayOrder", method = {RequestMethod.POST})
+    @RequestMapping(value = "loadYesterdayOrder", method = {RequestMethod.GET})
     @ResponseBody
     public void loadYesterdayOrder() {
         logger.info("加载昨日订单");
@@ -55,7 +55,7 @@ public class OfcOrderAPI {
         }
     }
 
-    @RequestMapping(value = "dealExceptOrder", method = {RequestMethod.POST})
+    @RequestMapping(value = "dealExceptOrder", method = {RequestMethod.GET})
     @ResponseBody
     public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO) {
         logger.info("开始处理异常订单 == > {}", ofcExceptOrderDTO);

@@ -63,7 +63,7 @@
     SELECT
     ofi.order_code orderCode
     FROM ofc_fundamental_information ofi
-    LEFT JOIN IN ofc_except_order oeo ON ofi.order_code = oeo.orderCode
+    LEFT JOIN ofc_except_order oeo ON ofi.order_code = oeo.order_code
     <where>
       oeo.deal_status = 100
       AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
@@ -78,7 +78,7 @@
     SELECT
     <include refid="resultModel"/>
     FROM ofc_fundamental_information ofi
-    LEFT JOIN IN ofc_except_order oeo ON ofi.order_code = oeo.orderCode
+    LEFT JOIN ofc_except_order oeo ON ofi.order_code = oeo.order_code
     <where>
       <if test="startDate != null and startDate != ''">
         AND oeo.creation_time <![CDATA[ >= ]]>  #{startDate}
@@ -139,9 +139,9 @@
     SELECT
     <include refid="resultModel"/>
     FROM ofc_fundamental_information ofi
-    LEFT JOIN IN ofc_except_order oeo ON ofi.order_code = oeo.orderCode
+    LEFT JOIN ofc_except_order oeo ON ofi.order_code = oeo.order_code
     WHERE
-    oeo.order_code = {orderCode}
+    oeo.order_code = #{orderCode}
     AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
   </select>
 

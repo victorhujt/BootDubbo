@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/page/ofc/except/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/ofc/except/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "OfcExceptOrderRestController", tags = "OfcExceptOrderRestController", description = "异常订单", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class OfcExceptOrderRestController extends BaseController{
 

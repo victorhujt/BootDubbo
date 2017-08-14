@@ -6,7 +6,7 @@ import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.edas.model.dto.ofc.OfcOrderPotDTO;
+import com.xescm.ofc.model.dto.ofc.OfcOrderPotDTO;
 import com.xescm.ofc.service.OfcExceptOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

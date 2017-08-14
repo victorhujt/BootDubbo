@@ -241,25 +241,13 @@
     ofc_fundamental_information ofi
     <where>
       <if test="orderTimePre!=null and orderTimePre!=''">
-        AND ofi.order_time <![CDATA[ >= ]]>  #{orderTimePre}
+        AND ofi.creation_time <![CDATA[ >= ]]>  #{orderTimePre}
       </if>
       <if test="orderTimeSuf!=null and orderTimeSuf!=''">
-        AND ofi.order_time <![CDATA[ <= ]]>  #{orderTimeSuf}
+        AND ofi.creation_time <![CDATA[ <= ]]>  #{orderTimeSuf}
       </if>
       <if test="orderCode!=null and orderCode!=''">
         AND ofi.order_code = #{orderCode}
-      </if>
-      <if test="custOrderCode!=null and custOrderCode!=''">
-        AND ofi.cust_order_code = #{custOrderCode}
-      </if>
-      <if test="orderStatus!=null and orderStatus!=''">
-        AND oos.order_status = #{orderStatus}
-      </if>
-      <if test="orderType!=null and orderType!=''">
-        AND ofi.order_type = #{orderType}
-      </if>
-      <if test="businessType!=null and businessType!=''">
-        AND ofi.business_type = #{businessType}
       </if>
       AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
     </where>

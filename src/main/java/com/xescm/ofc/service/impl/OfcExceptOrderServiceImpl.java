@@ -2,7 +2,7 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.edas.model.dto.ofc.OfcOrderPotDTO;
+import com.xescm.ofc.model.dto.ofc.OfcOrderPotDTO;
 import com.xescm.ofc.enums.OrderPotEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcExceptOrderMapper;
@@ -55,6 +55,10 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         if (null == ofcExceptOrderDTO || StringUtils.isEmpty(ofcExceptOrderDTO.getExceptPot())
                 || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) throw new BusinessException("处理异常订单失败");
         List<String> orderCodes = this.loadUndealOrders(ofcExceptOrderDTO);
+        if (CollectionUtils.isEmpty(orderCodes)) {
+            logger.debug("暂无待处理订单...");
+            return;
+        }
         OfcEnumeration ofcEnumeration = new OfcEnumeration();
         ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
         List<OfcEnumeration> ofcEnumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
@@ -396,10 +400,12 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         now.set(Calendar.HOUR_OF_DAY, 0);
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
-        orderScreenCondition.setOrderTimePre(now.getTime());
-        now.set(Calendar.DAY_OF_MONTH, 1);
         now.set(Calendar.SECOND, -1);
         orderScreenCondition.setOrderTimeSuf(now.getTime());
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        orderScreenCondition.setOrderTimePre(now.getTime());
         List<String> yesterdayOrders = ofcFundamentalInformationMapper.queryOrderCodeList(orderScreenCondition);
         if (CollectionUtils.isEmpty(yesterdayOrders)) {
             logger.error("加载昨日订单失败! 订单号列表为空!");
@@ -407,9 +413,10 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         }
         ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
         for (String potCode : OrderPotEnum.getCodeList()) {
-            String potKey = "orderPot:" + potCode + ":" + com.xescm.ofc.utils.DateUtils.Date2String(nowDate, com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
-            ops.set(potKey, JacksonUtil.toJsonWithFormat(yesterdayOrders));
+            String potKey = "orderPot:" + potCode + ":" + com.xescm.ofc.utils.DateUtils.Date2String(now.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
+            if (StringUtils.isNotEmpty(ops.get(potKey))) continue;
             stringRedisTemplate.expire(potKey, 10L, TimeUnit.DAYS);
+            ops.set(potKey, JacksonUtil.toJsonWithFormat(yesterdayOrders));
         }
         return yesterdayOrders.size();
     }
@@ -450,7 +457,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         }
         ofcExceptOrder.setProvideTransport(provideTransport);
         String transCode = null;
-        if (null != orderInfoDTO.getOfcDistributionBasicInfo() && StringUtils.isEmpty(orderInfoDTO.getOfcDistributionBasicInfo().getTransCode())) {
+        if (null != orderInfoDTO.getOfcDistributionBasicInfo() && !StringUtils.isEmpty(orderInfoDTO.getOfcDistributionBasicInfo().getTransCode())) {
             transCode = orderInfoDTO.getOfcDistributionBasicInfo().getTransCode();
         }
         ofcExceptOrder.setTransCode(transCode);
