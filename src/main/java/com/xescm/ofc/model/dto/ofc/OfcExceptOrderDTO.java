@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Data
-public class ExceptOrderDTO {
+public class OfcExceptOrderDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
@@ -16,9 +16,9 @@ public class ExceptOrderDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endDate;
     private String areaName;
-    private String areaCode;
+    private String areaSerialNo;
     private String baseName;
-    private String baseCode;
+    private String baseSerialNo;
     private String custCode;
     private String custName;
     private String orderType;
@@ -29,6 +29,7 @@ public class ExceptOrderDTO {
     private String transCode;
     private String exceptReason;
     private String exceptPot;
+    private String dealStatus;
     private Integer pageSize;
     private Integer pageNum;
 }

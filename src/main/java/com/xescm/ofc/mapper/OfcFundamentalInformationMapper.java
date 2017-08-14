@@ -1,6 +1,7 @@
 package com.xescm.ofc.mapper;
 
 import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.utils.MyMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -32,5 +33,7 @@ public interface OfcFundamentalInformationMapper extends MyMapper<OfcFundamental
 
 
     int checkCustOrderCodeRepeat(@Param("custOrderCode") String custOrderCode);
+
+    List<String> queryOrderCodeList(OrderScreenCondition orderScreenCondition);
 
 }

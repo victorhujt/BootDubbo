@@ -1,6 +1,8 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -52,7 +54,13 @@ public class OfcExceptOrder {
      * 业务类型
      */
     @Column(name = "business_type")
-    private String businessType;
+    private String businessType;// two_distribution
+
+    /**
+     * 业务类型
+     */
+    @Column(name = "two_distribution")
+    private String twoDistribution;
 
     /**
      * 运输单号
@@ -93,13 +101,16 @@ public class OfcExceptOrder {
     /**
      * 订单来源
      */
-    private String source;
+    @Column(name = "order_source")
+    private String orderSource;
 
     /**
      * 订单创建日期
      */
-    @Column(name = "creat_time")
-    private Date creatTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @Column(name = "creation_time")
+    private Date creationTime;
 
     /**
      * 状态
@@ -127,11 +138,6 @@ public class OfcExceptOrder {
     @Column(name = "record_time")
     private Date recordTime;
 
-    /**
-     * 异常结点
-     */
-    @Column(name = "except_pot")
-    private String exceptPot;
 
     /**
      * 异常原因
@@ -144,6 +150,24 @@ public class OfcExceptOrder {
      */
     @Column(name = "deal_status")
     private String dealStatus;
+
+    /**
+     * 有效标志位(0有效, 1无效)
+     */
+    @Column(name = "yn")
+    private String yn;
+
+    /**
+     * 操作人ID
+     */
+    @Column(name = "operator_id")
+    private String operatorId;
+
+    /**
+     * 操作人名称
+     */
+    @Column(name = "operator_name")
+    private String operatorName;
 
     public OfcExceptOrder(){}
 

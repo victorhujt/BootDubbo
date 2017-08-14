@@ -12,21 +12,24 @@
     <result column="cust_name" jdbcType="VARCHAR" property="custName" />
     <result column="order_type" jdbcType="VARCHAR" property="orderType" />
     <result column="business_type" jdbcType="VARCHAR" property="businessType" />
+    <result column="two_distribution" jdbcType="VARCHAR" property="twoDistribution" />
     <result column="trans_code" jdbcType="VARCHAR" property="transCode" />
     <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
     <result column="area_name" jdbcType="VARCHAR" property="areaName" />
     <result column="base_code" jdbcType="VARCHAR" property="baseCode" />
     <result column="base_name" jdbcType="VARCHAR" property="baseName" />
-    <result column="source" jdbcType="VARCHAR" property="source" />
-    <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+    <result column="order_source" jdbcType="VARCHAR" property="orderSource" />
+    <result column="creation_time" jdbcType="TIMESTAMP" property="creationTime" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="pot_type" jdbcType="VARCHAR" property="potType" />
     <result column="pot_time" jdbcType="TIMESTAMP" property="potTime" />
     <result column="record_msg" jdbcType="VARCHAR" property="recordMsg" />
     <result column="record_time" jdbcType="TIMESTAMP" property="recordTime" />
-    <result column="except_pot" jdbcType="VARCHAR" property="exceptPot" />
     <result column="except_reason" jdbcType="VARCHAR" property="exceptReason" />
     <result column="deal_status" jdbcType="VARCHAR" property="dealStatus" />
+    <result column="operator_id" jdbcType="VARCHAR" property="operatorId" />
+    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+    <result column="yn" jdbcType="VARCHAR" property="yn" />
   </resultMap>
   <sql id="resultModel">
     oeo.order_code orderCode,
@@ -41,50 +44,53 @@
     oeo.base_code baseCode,
     oeo.base_name baseName,
     oeo.source source,
-    oeo.creat_time creatTime,
+    oeo.creation_time creationTime,
     oeo.status status,
     oeo.pot_type potType,
     oeo.pot_time potTime,
     oeo.record_msg recordMsg,
     oeo.record_time recordTime,
-    oeo.except_pot exceptPot,
     oeo.except_reason exceptReason,
     oeo.deal_status dealStatus
   </sql>
 
-  <select id="selectUndealedOrderCode" resultType="java.lang.String">
+  <select id="selectUndealedOrderCodeByType" parameterType="com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO" resultType="java.lang.String">
     SELECT
     ofi.order_code orderCode
-    FROM
-    FROM ofc_fundamental_information ofi
-    LEFT JOIN IN ofc_except_order oeo ON ofi.order_code = oeo.orderCode
-    WHERE
-    oeo.deal_status = 00
-    AND ofi.abolish_mark = 0
-  </select>
-  <select id="selectByDTO" parameterType="com.xescm.ofc.model.dto.ofc.ExceptOrderDTO" resultType="com.xescm.ofc.domain.OfcExceptOrder">
-    SELECT
-    <include refid="resultModel"/>
     FROM ofc_fundamental_information ofi
     LEFT JOIN IN ofc_except_order oeo ON ofi.order_code = oeo.orderCode
     <where>
+      oeo.deal_status = 100
+      AND ofi.abolish_mark = 0
+      <if test="exceptPot != null and exceptPot != ''">
+        AND oeo.pot_type = {exceptPot, jdbcType=VARCHAR}
+      </if>
+    </where>
+    GROUP BY oeo.order_code
+  </select>
+
+  <select id="selectExceptOrderByDTO" parameterType="com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO" resultType="com.xescm.ofc.domain.OfcExceptOrder">
+    SELECT
+    <include refid="resultModel"/>
+    FROM  ofc_except_order oeo
+    <where>
       <if test="startDate != null and startDate != ''">
-        AND oeo.order_time <![CDATA[ >= ]]>  #{startDate}
+        AND oeo.creation_time <![CDATA[ >= ]]>  #{startDate}
       </if>
       <if test="endDate != null and endDate != ''">
-        AND oeo.order_time <![CDATA[ <= ]]>  #{endDate}
+        AND oeo.creation_time <![CDATA[ <= ]]>  #{endDate}
       </if>
       <if test = "areaName != null and areaName != ''">
         AND oeo.area_name = #{areaName, jdbcType=VARCHAR}
       </if>
-      <if test = "areaCode != null and areaCode != ''">
-        AND oeo.area_code = #{areaCode, jdbcType=VARCHAR}
+      <if test = "areaSerialNo != null and areaSerialNo != ''">
+        AND oeo.area_code = #{areaSerialNo, jdbcType=VARCHAR}
       </if>
       <if test = "baseName != null and baseName != ''">
         AND oeo.base_name = #{baseName, jdbcType=VARCHAR}
       </if>
-      <if test = "baseCode != null and baseCode != ''">
-        AND oeo.base_code = #{baseCode, jdbcType=VARCHAR}
+      <if test = "baseSerialNo != null and baseSerialNo != ''">
+        AND oeo.base_code = #{baseSerialNo, jdbcType=VARCHAR}
       </if>
       <if test = "custCode != null and custCode != ''">
         AND oeo.cust_code = #{custCode, jdbcType=VARCHAR}
@@ -114,9 +120,21 @@
         AND oeo.except_reason = #{exceptReason, jdbcType=VARCHAR}
       </if>
       <if test = "exceptPot != null and exceptPot != ''">
-        AND oeo.except_pot = #{exceptPot, jdbcType=VARCHAR}
+        AND oeo.pot_type = #{exceptPot, jdbcType=VARCHAR}
       </if>
-      and ofi.abolish_mark = 0
+      <if test = "dealStatus != null and dealStatus != ''">
+        AND oeo.deal_status = #{dealStatus, jdbcType=VARCHAR}
+      </if>
+      and oeo.yn = 0
     </where>
   </select>
+  <select id="selectByOrderCode" resultType="com.xescm.ofc.domain.OfcExceptOrder">
+    SELECT
+    <include refid="resultModel"/>
+    FROM
+    ofc_except_order oeo
+    WHERE
+    oeo.order_code = {orderCode}
+  </select>
+
 </mapper>

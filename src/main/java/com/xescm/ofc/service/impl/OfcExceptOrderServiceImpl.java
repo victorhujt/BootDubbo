@@ -1,21 +1,30 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ofc.domain.OfcExceptOrder;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.core.utils.JacksonUtil;
+import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.OfcOrderPotDTO;
+import com.xescm.ofc.enums.OrderPotEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcExceptOrderMapper;
-import com.xescm.ofc.model.dto.ofc.ExceptOrderDTO;
+import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
+import com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
+import com.xescm.ofc.service.OfcEnumerationService;
 import com.xescm.ofc.service.OfcExceptOrderService;
 import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
+import com.xescm.ofc.service.OfcOrderManageOperService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.codehaus.jackson.type.TypeReference;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
@@ -28,16 +37,42 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
     @Resource
     private OfcExceptOrderMapper ofcExceptOrderMapper;
     @Resource
+    private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
+    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private OfcEnumerationService ofcEnumerationService;
+    @Resource
+    private OfcOrderManageOperService ofcOrderManageOperService;
+
+    private List<OfcExceptOrder> normalOrderToRemove = new ArrayList<>();
 
     @Override
-    public void dealExceptOrder() {
-        List<String> orderCodes = ofcExceptOrderMapper.selectUndealedOrderCode();
+    public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO) throws Exception {
+        logger.debug("处理异常订单==> {}", ofcExceptOrderDTO);
+        if (null == ofcExceptOrderDTO || StringUtils.isEmpty(ofcExceptOrderDTO.getExceptPot())
+                || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) throw new BusinessException("处理异常订单入参有误");
+        List<String> orderCodes = this.loadUndealOrders(ofcExceptOrderDTO);
+        OfcEnumeration ofcEnumeration = new OfcEnumeration();
+        ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
+        List<OfcEnumeration> ofcEnumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+        ofcEnumeration.setEnumType("OfcTimeEnum");
+        Map<String, OfcEnumeration> ofcTimeEnumMap = this.loadOfcTimeEnumMap(ofcEnumeration);
+        ofcEnumeration.setEnumType("OfcTimeEnum");
         for (String orderCode : orderCodes) {
-            List<OfcExceptOrder> ofcExceptOrders = ofcExceptOrderMapper.selectByExample(new OfcExceptOrder(orderCode));
-            for (OfcExceptOrder ofcExceptOrder : ofcExceptOrders) {
+            List<OfcExceptOrder> ofcExceptOrders = ofcExceptOrderMapper.selectByOrderCode(orderCode);
+            ListIterator<OfcExceptOrder> iterator = ofcExceptOrders.listIterator();
+            if (iterator.hasNext()) {
+                OfcExceptOrder ofcExceptOrder = iterator.next();
+                String dealStatus = ofcExceptOrder.getDealStatus();
+                if (StringUtils.equals(dealStatus, IS_EXCEPTION.getCode()) || StringUtils.equals(dealStatus, DEALING.getCode())) continue;
                 ofcExceptOrder.setDealStatus(DEALING.getCode());
-                if (super.update(ofcExceptOrder) < 1) logger.error("异常订单更新为处理中失败...");
+                if (super.update(ofcExceptOrder) < 1) {
+                    logger.error("异常订单更新为处理中失败...");
+                    continue;
+                }
             }
             if (CollectionUtils.isEmpty(ofcExceptOrders)) {
                 logger.error("该订单号{}下无状态", orderCode);
@@ -45,129 +80,194 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             }
             // 运输订单
             if (StringUtils.equals(ofcExceptOrders.get(0).getOrderType(), TRANSPORT_ORDER)) {
-                this.dealTransOrder(ofcExceptOrders);
+                this.dealTransOrder(ofcExceptOrders, ofcEnumerations, ofcTimeEnumMap);
                 // 仓储订单
             } else if (StringUtils.equals(ofcExceptOrders.get(0).getOrderType(), WAREHOUSE_DIST_ORDER)) {
-                this.dealStoreOrder(ofcExceptOrders);
+                this.dealStoreOrder(ofcExceptOrders, ofcEnumerations, ofcTimeEnumMap);
             }
         }
+        this.removeFromCodeList();
     }
 
-    @Override
-    public List<OfcExceptOrder> selectByDTO(ExceptOrderDTO exceptOrderDTO) {
-        if (null == exceptOrderDTO) throw new BusinessException("运营平台查询异常订单出错");
-        List<OfcExceptOrder> result = ofcExceptOrderMapper.selectByDTO(exceptOrderDTO);
-        logger.info("运营平台查询异常订单{}", result);
-        if (CollectionUtils.isEmpty(result)) throw new BusinessException("运营平台查询异常订单出错");
+    private Map<String,OfcEnumeration> loadOfcTimeEnumMap(OfcEnumeration ofcEnumeration) {
+        List<OfcEnumeration> ofcTimeEnum = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+        Map<String,OfcEnumeration> result = new HashMap<>();
+        for (OfcEnumeration enumeration : ofcTimeEnum) {
+            result.put(enumeration.getEnumValue(), enumeration);
+        }
         return result;
     }
 
-    private void dealStoreOrder(List<OfcExceptOrder> ofcExceptOrders) {
+    private List<String> loadUndealOrders(OfcExceptOrderDTO ofcExceptOrderDTO) throws Exception {
+        logger.debug("loadUndealOrders ==> {}", ofcExceptOrderDTO);
+        if (null == ofcExceptOrderDTO || StringUtils.isEmpty(ofcExceptOrderDTO.getExceptPot())) throw new BusinessException("入参有误");
+        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
+        String potKeyPrefix = "orderPot:" + ofcExceptOrderDTO.getExceptPot() + ":";
+        Date now = new Date();
+        TypeReference<List<String>> typeReference = new TypeReference<List<String>>() {
+        };
+        List<String> result = new ArrayList<>();
+        for (int i = 1; i <= 10; i ++) {
+            Calendar calendar = DateUtils.toCalendar(now);
+            calendar.add(Calendar.DAY_OF_MONTH, -i);
+            String suffix = com.xescm.ofc.utils.DateUtils.Date2String(calendar.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
+            String undealCodes = stringStringValueOperations.get(potKeyPrefix + suffix);
+            if (StringUtils.isEmpty(undealCodes)) continue;
+            result.addAll(JacksonUtil.parseJson(undealCodes, typeReference));
+        }
+        return result;
+    }
+
+    @Override
+    public List<OfcExceptOrder> selectByDTO(OfcExceptOrderDTO ofcExceptOrderDTO) {
+        if (null == ofcExceptOrderDTO) throw new BusinessException("运营平台查询异常订单出错");
+        List<OfcExceptOrder> result = ofcExceptOrderMapper.selectExceptOrderByDTO(ofcExceptOrderDTO);
+        logger.debug("运营平台查询异常订单{}", result);
+        if (CollectionUtils.isEmpty(result)) throw new BusinessException("暂无异常订单");
+        return result;
+    }
+
+
+
+    private void dealStoreOrder(List<OfcExceptOrder> ofcExceptOrders, List<OfcEnumeration> ofcEnumerations, Map<String, OfcEnumeration> ofcTimeEnum) {
         if (CollectionUtils.isEmpty(ofcExceptOrders)) {
             throw new BusinessException("入参为空");
         }
         OfcExceptOrder ofcExceptOrder = ofcExceptOrders.get(0);
         String businessType = ofcExceptOrder.getBusinessType();
-        boolean isZhongPin = this.isZhongPin(ofcExceptOrder);
-        boolean isNormalCust = this.isNormalCust(ofcExceptOrder);
+        boolean isZhongPin = this.isZhongPin(ofcExceptOrder, ofcEnumerations);
+        boolean isNormalCust = this.isNormalCust(ofcExceptOrder, ofcEnumerations);
         boolean goodsTypeHasChilledPork = this.checkGoodsTypeHasChilledPork(ofcExceptOrder);
         boolean provideTransport = StringUtils.equals(ofcExceptOrder.getProvideTransport(), STR_YES);
+        int calendarHour = Integer.valueOf(ofcTimeEnum.get("CALENDAR_HOUR").getEnumValue());
         // 入库
         if (StringUtils.equals(businessType.substring(0,2), STOCK_IN_ORDER)) {
             // 入库 提供运输 众品 冷鲜肉 入库时效6小时 城配调度时效12小时
             if (provideTransport && isZhongPin && goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode(), 6);
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 12);
+                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 入库 提供运输 众品 非冷鲜肉 入库时效6小时 城配调度时效48小时
             if (provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode(), 6);
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 48);
+                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_48").getEnumValue()), calendarHour);
             }
             // 入库 提供运输 普通客户 入库时效6小时 城配调度时效12小时
             if (provideTransport && isNormalCust) {
-                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode(), 6);
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 12);
+                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 入库 不提供运输 众品 冷鲜肉 入库时效6小时
-            if (!provideTransport && isZhongPin && goodsTypeHasChilledPork) this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode(), 6);
+            if (!provideTransport && isZhongPin && goodsTypeHasChilledPork) {
+                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+            }
             // 入库 不提供运输 众品 非冷鲜肉 入库时效6小时
-            if (!provideTransport && isZhongPin && !goodsTypeHasChilledPork) this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode(), 6);
+            if (!provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
+                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+            }
             // 入库 不提供运输 普通客户 入库时效6小时
-            if (!provideTransport && isNormalCust) this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode(), 6);
+            if (!provideTransport && isNormalCust) {
+                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+            }
             // 出库
         } else if (StringUtils.equals(businessType.substring(0,2), STOCK_OUT_ORDER)) {
             // 出库 提供运输 众品 冷鲜肉 出库时效6小时 城配调度时效12小时
             if (provideTransport && isZhongPin && goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode(), 6);
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 12);
+                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 出库 提供运输 众品 非冷鲜肉 出库时效6小时 城配调度时效48小时
             if (provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode(), 6);
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 48);
+                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_48").getEnumValue()), calendarHour);
             }
             // 出库 提供运输 普通客户 出库时效6小时 城配调度时效12小时
             if (provideTransport && isNormalCust)  {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode(), 6);
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 12);
+                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 出库 不提供运输 众品 冷鲜肉 出库时效6小时
             if (!provideTransport && isZhongPin && goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode(), 6);
+                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
             }
             // 出库 不提供运输 众品 非冷鲜肉 出库时效6小时
             if (!provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode(), 6);
+                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
             }
             // 出库 不提供运输 普通客户 出库时效6小时
             if (!provideTransport && isNormalCust) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode(), 6);
+                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
             }
         }
     }
 
-    private void dealTransOrder(List<OfcExceptOrder> ofcExceptOrders) {
+    private void dealTransOrder(List<OfcExceptOrder> ofcExceptOrders, List<OfcEnumeration> ofcEnumerations, Map<String, OfcEnumeration> ofcTimeEnum) {
         if (CollectionUtils.isEmpty(ofcExceptOrders)) {
             throw new BusinessException("入参为空");
         }
         OfcExceptOrder ofcExceptOrder = ofcExceptOrders.get(0);
         String businessType = ofcExceptOrder.getBusinessType();
-        boolean isZhongPin = this.isZhongPin(ofcExceptOrder);
+        boolean isZhongPin = this.isZhongPin(ofcExceptOrder, ofcEnumerations);
         boolean goodsTypeHasChilledPork = this.checkGoodsTypeHasChilledPork(ofcExceptOrder);
-        boolean isNormalCust = this.isNormalCust(ofcExceptOrder);
+        boolean isNormalCust = this.isNormalCust(ofcExceptOrder, ofcEnumerations);
+        int calendarHour = Integer.valueOf(ofcTimeEnum.get("CALENDAR_HOUR").getEnumValue());
         //     城配
         if (StringUtils.equals(businessType, WITH_THE_CITY)) {
             // 众品 冷鲜肉 城配调度时效12小时
             if (isZhongPin && goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 12);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 众品 非冷鲜肉 城配调度时效48小时
             if (isZhongPin && !goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 48);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_48").getEnumValue()), calendarHour);
             }
             // 普通客户 城配调度时效12小时
             if (isNormalCust) {
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 12);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             //     干线
         } else if (StringUtils.equals(businessType, WITH_THE_TRUNK)) {
             // 众品 冷鲜肉 干线调度时效12小时
             if (isZhongPin && goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 12);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 众品 非冷鲜肉 干线调度时效48小时
             if (isZhongPin && !goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 48);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_48").getEnumValue()), calendarHour);
             }
             // 普通客户 干线调度时效24小时
             if (isNormalCust) {
-                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 24);
+                this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                        , Integer.valueOf(ofcTimeEnum.get("HOUR_24").getEnumValue()), calendarHour);
             }
             //     卡班
         } else if (StringUtils.equals(businessType, WITH_THE_KABAN)) {
             // 卡班调度时效96小时
-            this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode(), 96);
+            this.checkDelay(ofcExceptOrders, DELIVERY.getPotCode()
+                    , Integer.valueOf(ofcTimeEnum.get("HOUR_96").getEnumValue()), calendarHour);
         }
     }
 
@@ -187,27 +287,28 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         return result;
     }
 
-    private boolean isZhongPin(OfcExceptOrder ofcExceptOrder) {
-        return ofcExceptOrder.getCustName().contains("众品");
+    private boolean isZhongPin(OfcExceptOrder ofcExceptOrder, List<OfcEnumeration> ofcEnumerations) {
+        if (null == ofcExceptOrder) throw new BusinessException("入参为空!");
+        OfcEnumeration ofcEnumeration = new OfcEnumeration();
+        ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
+        for (OfcEnumeration enumeration : ofcEnumerations) {
+            boolean isZhongPin = StringUtils.equals(enumeration.getEnumName(), ofcExceptOrder.getCustName())
+                    && StringUtils.equals(enumeration.getEnumValue(), ofcExceptOrder.getCustCode());
+            if (isZhongPin) return true;
+        }
+        return false;
     }
 
-    /**
-     * 普通客户
-     * @param ofcExceptOrder 订单信息
-     * @return 结果
-     */
-    private boolean isNormalCust(OfcExceptOrder ofcExceptOrder) {
+    private boolean isNormalCust(OfcExceptOrder ofcExceptOrder, List<OfcEnumeration> ofcEnumerations) {
         // 目前普通客户定义为, 非众品客户即为普通客户
-        return !isZhongPin(ofcExceptOrder);
+        return !isZhongPin(ofcExceptOrder, ofcEnumerations);
     }
 
-    private void checkDelay(List<OfcExceptOrder> ofcExceptOrders, String pot, Integer allowHour) {
+    private void checkDelay(List<OfcExceptOrder> ofcExceptOrders, String pot, Integer allowHour, Integer delayTimeLevel) {
         for (OfcExceptOrder ofcExceptOrder : ofcExceptOrders) {
             if (StringUtils.equals(ofcExceptOrder.getPotType(), pot)) {
-                ofcExceptOrder = this.dealExceptPot(ofcExceptOrder, allowHour);
-                if ((StringUtils.isNotEmpty(ofcExceptOrder.getExceptPot())
-                        || StringUtils.isNotEmpty(ofcExceptOrder.getExceptReason()))
-                        && super.update(ofcExceptOrder) < 1) {
+                ofcExceptOrder = this.dealExceptPot(ofcExceptOrder, allowHour, delayTimeLevel);
+                if (super.update(ofcExceptOrder) < 1) {
                     logger.error("更新失败!");
                     throw new BusinessException("更新失败!");
                 }
@@ -215,46 +316,114 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         }
     }
 
-    private OfcExceptOrder dealExceptPot(OfcExceptOrder ofcExceptOrder, Integer allowHour) {
-//        String potType = ofcExceptOrder.getPotType();
-        Calendar calendarOfOrder = DateUtils.toCalendar(ofcExceptOrder.getCreatTime());
+    private OfcExceptOrder dealExceptPot(OfcExceptOrder ofcExceptOrder, Integer allowHour, Integer delayTimeLevel) {
+        logger.debug("dealExceptPot ==> ofcExceptOrder{}", ofcExceptOrder);
+        logger.debug("dealExceptPot ==> allowHour{}", allowHour);
+        logger.debug("dealExceptPot ==> delayTimeLevel{}", delayTimeLevel);
+        if (null == ofcExceptOrder || null == allowHour || null == delayTimeLevel) {
+            throw new BusinessException("dealExceptPot入参有误");
+        }
+        Calendar orderCreateTime = DateUtils.toCalendar(ofcExceptOrder.getCreationTime());
         Date potTime = ofcExceptOrder.getPotTime();
-        calendarOfOrder.add(Calendar.HOUR, allowHour);
-        Calendar compareTime = null == potTime ? DateUtils.toCalendar(new Date()) : DateUtils.toCalendar(potTime);
-        if (compareTime.compareTo(calendarOfOrder) > 0) {// 超时
-            ofcExceptOrder.setExceptPot(STORAGE_IN.getPotCode());
-            ofcExceptOrder.setExceptReason(String.valueOf((compareTime.getTime().getTime() - calendarOfOrder.getTime().getTime())));
+        orderCreateTime.add(delayTimeLevel, allowHour);
+        Calendar deadLineTime = null == potTime ? DateUtils.toCalendar(new Date()) : DateUtils.toCalendar(potTime);
+        if (deadLineTime.compareTo(orderCreateTime) > 0) {// 超时
+            ofcExceptOrder.setExceptReason(String.valueOf((deadLineTime.getTime().getTime() - orderCreateTime.getTime().getTime())));
             ofcExceptOrder.setDealStatus(IS_EXCEPTION.getCode());
+        } else if (null != potTime && (potTime.compareTo(orderCreateTime.getTime())) <= 0) {
+            // 已接收到时效信息, 且时效正常
+            // 从Redis里删掉该订单号, 从异常表里删掉这条记录
+            normalOrderToRemove.add(ofcExceptOrder);
+        } else {
+            // 处于正常时效中, 还未接收到结点时间信息
+            ofcExceptOrder.setDealStatus(UN_DEAL.getCode());
         }
-        /*
-        switch (potType) {
-            case "storageIn": {
-                break;
-            }
-            case "storageOut": {
-                break;
-            }
-            case "delivery": {
-                break;
-            }
-            case "dispatch": {
-                break;
-            }
-            case "arrived": {
-                break;
-            }
-            case "receipt": {
-                break;
-            }
-            default: {
-                throw new BusinessException("");
-            }
-        }
-        */
         return ofcExceptOrder;
     }
 
-    private String coutTimeSub(Calendar first, Calendar second) {
+    private void removeFromCodeList() {
+        logger.debug("normalOrderToRemove===>{}", normalOrderToRemove);
+        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
+        TypeReference<List<String>> typeReference = new TypeReference<List<String>>() {
+        };
+        for (OfcExceptOrder ofcExceptOrder : normalOrderToRemove) {
+            String orderCode = ofcExceptOrder.getOrderCode();
+            String potType = ofcExceptOrder.getPotType();
+            Date creatTime = ofcExceptOrder.getCreationTime();
+            if (StringUtils.isEmpty(orderCode) || StringUtils.isEmpty(potType) || null == creatTime) {
+                logger.error("removeFromCodeList入参有误");
+                continue;
+            }
+            StringBuilder key = new StringBuilder("orderPot:").append(potType).append(":");
+            key.append(com.xescm.ofc.utils.DateUtils.Date2String(creatTime, com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2));
+            String orderCodeList = stringStringValueOperations.get(key.toString());
+            List<String> orderCodes = new ArrayList<>();
+            try {
+                orderCodes = JacksonUtil.parseJson(orderCodeList, typeReference);
+            } catch (Exception e) {
+                logger.error("orderCodeList转换异常");
+            }
+            if (!orderCodes.remove(orderCode)) {
+                logger.error("移除订单{}失败" ,orderCode);
+                throw new BusinessException("移除订单失败");
+            }
+            try {
+                stringStringValueOperations.set(key.toString(), JacksonUtil.toJsonWithFormat(orderCodes));
+            } catch (Exception e) {
+                logger.error("orderCodes转换异常");
+            }
+        }
+    }
+
+    @Override
+    public int loadYesterdayOrder() throws Exception {
+        OrderScreenCondition orderScreenCondition = new OrderScreenCondition();
+        Date nowDate = new Date();
+        Calendar now = DateUtils.toCalendar(nowDate);
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        orderScreenCondition.setOrderTimePre(now.getTime());
+        now.set(Calendar.DAY_OF_MONTH, 1);
+        now.set(Calendar.SECOND, -1);
+        orderScreenCondition.setOrderTimeSuf(now.getTime());
+        List<String> yesterdayOrders = ofcFundamentalInformationMapper.queryOrderCodeList(orderScreenCondition);
+        if (CollectionUtils.isEmpty(yesterdayOrders)) throw new BusinessException("加载昨日订单失败! 订单号列表为空!");
+        ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+        for (String potCode : OrderPotEnum.getCodeList()) {
+            String potKey = "orderPot:" + potCode + ":" + com.xescm.ofc.utils.DateUtils.Date2String(nowDate, com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
+            ops.set(potKey, JacksonUtil.toJsonWithFormat(yesterdayOrders));
+            stringRedisTemplate.expire(potKey, 10L, TimeUnit.DAYS);
+        }
+        return yesterdayOrders.size();
+    }
+
+    @Override
+    public int insertUndealOrder(OfcOrderPotDTO ofcOrderPotDTO) {
+        logger.debug("ofcOrderPotDTO == > {}", ofcOrderPotDTO);
+        OfcExceptOrder ofcExceptOrder = new OfcExceptOrder();
+        BeanUtils.copyProperties(ofcOrderPotDTO, ofcExceptOrder);
+        ofcExceptOrder.setPotType(ofcOrderPotDTO.getPotCode());
+        ofcExceptOrder.setPotTime(ofcOrderPotDTO.getPotTime());
+        ofcExceptOrder.setTwoDistribution(ofcOrderPotDTO.getTwoDistribution());
+        String orderCode = ofcOrderPotDTO.getOrderCode();
+        OfcOrderInfoDTO orderInfoDTO = ofcOrderManageOperService.queryOrderDetailByOrderCode(orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = orderInfoDTO.getOfcFundamentalInformation();
+        BeanUtils.copyProperties(ofcFundamentalInformation, ofcExceptOrder);
+        String provideTransport = null;
+        if (null != orderInfoDTO.getOfcWarehouseInformation() && null != orderInfoDTO.getOfcWarehouseInformation().getProvideTransport()) {
+            provideTransport = orderInfoDTO.getOfcWarehouseInformation().getProvideTransport().toString();
+        }
+        ofcExceptOrder.setProvideTransport(provideTransport);
+        String transCode = null;
+        if (null != orderInfoDTO.getOfcDistributionBasicInfo() && StringUtils.isEmpty(orderInfoDTO.getOfcDistributionBasicInfo().getTransCode())) {
+            transCode = orderInfoDTO.getOfcDistributionBasicInfo().getTransCode();
+        }
+        ofcExceptOrder.setTransCode(transCode);
+        return ofcExceptOrderMapper.insert(ofcExceptOrder);
+    }
+
+    /*private String coutTimeSub(Calendar first, Calendar second) {
         long sub = first.getTime().getTime() - second.getTime().getTime();
         long day = sub / (24 * 60 * 60 * 1000);
         long hour = (sub / (60 * 60 * 1000) - day * 24);
@@ -266,5 +435,5 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         if (min != 0) sb.append(min).append("分");
         if (s != 0) sb.append(s).append("秒");
         return sb.toString();
-    }
+    }*/
 }
