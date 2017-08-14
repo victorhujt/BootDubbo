@@ -4,7 +4,9 @@ import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
+import com.xescm.ofc.edas.model.dto.ofc.OfcOrderPotDTO;
 import com.xescm.ofc.service.OfcExceptOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,9 @@ public class OfcExceptOrderConsumer implements MessageListener {
         logger.info("OfcOrderTrackConsumer => topic = {}, tag = {}, key = {}, messageBody = {}", topic, tag, key, messageBody);
         if (topic.equals(mqConfig.getTfc2OfcOrderPoTopic()) || topic.equals(mqConfig.getWhc2OfcOrderPoTopic())) {
             try {
-                // TODO 插入订单状态
+                OfcOrderPotDTO potDTO = JacksonUtil.parseJson(messageBody, OfcOrderPotDTO.class);
+                int insertNum = ofcExceptOrderService.insertUndealOrder(potDTO);
+                logger.debug("insertNum==>{}", insertNum);
             } catch (Exception e) {
                 logger.error("消费订单状态发生异常：异常详情 => {}", e);
                 return Action.ReconsumeLater;

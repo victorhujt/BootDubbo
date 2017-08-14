@@ -295,8 +295,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
         ofcWarehouse.setOrderCode(orderCode);
         OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
-        Wrapper response=null;
-        Wrapper whcresponse=null;
+        Wrapper response = null;
+        Wrapper whcresponse = null;
         try {
             if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
                 long start = System.currentTimeMillis();

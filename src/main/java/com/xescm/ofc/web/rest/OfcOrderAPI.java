@@ -1,5 +1,7 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO;
+import com.xescm.ofc.service.OfcExceptOrderService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import org.slf4j.Logger;
@@ -24,7 +26,8 @@ public class OfcOrderAPI {
     private OfcMobileOrderService ofcMobileOrderService;
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
-
+    @Resource
+    private OfcExceptOrderService ofcExceptOrderService;
 
 
     /**
@@ -41,18 +44,26 @@ public class OfcOrderAPI {
         }
     }
 
-
-    @RequestMapping(value = "dealExceptOrder", method = {RequestMethod.POST})
+    @RequestMapping(value = "loadYesterdayOrder", method = {RequestMethod.POST})
     @ResponseBody
-    public void dealExceptOrder() {
-        logger.info("处理常订单...");
+    public void loadYesterdayOrder() {
+        logger.info("加载昨日订单");
         try {
-//            ofcFundamentalInformationService.dealExceptOrder();
-        } catch (Exception e) {
-            logger.error(e.getMessage());
+            ofcExceptOrderService.loadYesterdayOrder();
+        } catch (Exception ex) {
+            logger.error("加载昨日订单异常==>{}", ex);
         }
     }
 
-
+    @RequestMapping(value = "dealExceptOrder", method = {RequestMethod.POST})
+    @ResponseBody
+    public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO) {
+        logger.info("开始处理异常订单 == > {}", ofcExceptOrderDTO);
+        try {
+            ofcExceptOrderService.dealExceptOrder(ofcExceptOrderDTO);
+        } catch (Exception ex) {
+            logger.error("开始处理异常订单异常==>{}", ex);
+        }
+    }
 
 }
