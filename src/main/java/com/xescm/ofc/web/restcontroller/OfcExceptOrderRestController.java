@@ -6,7 +6,7 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OfcExceptOrder;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.ofc.ExceptOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO;
 import com.xescm.ofc.service.OfcExceptOrderService;
 import com.xescm.ofc.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ public class OfcExceptOrderRestController extends BaseController{
 
     @RequestMapping(value = "select", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<PageInfo<OfcExceptOrder>> selectExceptOrders(ExceptOrderDTO exceptOrderDTO) {
+    public Wrapper<PageInfo<OfcExceptOrder>> selectExceptOrders(OfcExceptOrderDTO exceptOrderDTO) {
         logger.info("运营平台查询异常订单{}", exceptOrderDTO);
         try {
             if (null == exceptOrderDTO) throw new BusinessException("运营平台查询异常订单出错");
