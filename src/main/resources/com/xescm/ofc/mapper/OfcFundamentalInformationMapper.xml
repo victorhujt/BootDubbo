@@ -249,6 +249,9 @@
       <if test="orderCode!=null and orderCode!=''">
         AND ofi.order_code = #{orderCode}
       </if>
+      <if test="orderType != null and orderType != ''">
+        AND ofi.order_type = #{orderType}
+      </if>
       AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
     </where>
   </select>

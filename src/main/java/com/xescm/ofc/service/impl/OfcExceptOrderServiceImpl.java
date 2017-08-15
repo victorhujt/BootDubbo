@@ -47,7 +47,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
 
-    private List<OfcExceptOrder> normalOrderToRemove = new ArrayList<>();
+    private Set<OfcExceptOrder> normalOrderToRemove = new HashSet<>();
 
     @Override
     public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO) throws Exception {
@@ -66,21 +66,26 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         Map<String, OfcEnumeration> ofcTimeEnumMap = this.loadOfcTimeEnumMap(ofcEnumeration);
         for (String orderCode : orderCodes) {
             List<OfcExceptOrder> ofcExceptOrders = ofcExceptOrderMapper.selectByOrderCode(orderCode);
+            ofcExceptOrderDTO.setOrderCode(orderCode);
             if (CollectionUtils.isEmpty(ofcExceptOrders)) {
                 logger.debug("该订单号{}下无状态", orderCode);
                 ofcExceptOrders = this.dealOrderHaventReceive(ofcExceptOrderDTO);
             }
-            ListIterator<OfcExceptOrder> iterator = ofcExceptOrders.listIterator();
-            if (iterator.hasNext()) {
-                OfcExceptOrder ofcExceptOrder = iterator.next();
-                String dealStatus = ofcExceptOrder.getDealStatus();
-                if (StringUtils.equals(dealStatus, IS_EXCEPTION.getCode()) || StringUtils.equals(dealStatus, DEALING.getCode())) continue;
-                ofcExceptOrder.setDealStatus(DEALING.getCode());
-                if (super.update(ofcExceptOrder) < 1) {
-                    logger.error("异常订单更新为处理中失败...");
-                    continue;
-                }
+            if (null == ofcExceptOrders || !this.potTypeEqualOrderType(ofcExceptOrderDTO, ofcExceptOrders.get(0))) {
+                logger.debug("订单格式与当前处理格式不符, 不予处理....");
+                continue;
             }
+//            ListIterator<OfcExceptOrder> iterator = ofcExceptOrders.listIterator();
+//            if (iterator.hasNext()) {
+//                OfcExceptOrder ofcExceptOrder = iterator.next();
+//                String dealStatus = ofcExceptOrder.getDealStatus();
+//                if (StringUtils.equals(dealStatus, IS_EXCEPTION.getCode())) continue;
+//                ofcExceptOrder.setDealStatus(DEALING.getCode());
+//                if (ofcExceptOrderMapper.updateByOrderCode(ofcExceptOrder) < 1) {
+//                    logger.error("异常订单更新为处理中失败...");
+//                    continue;
+//                }
+//            }
             // 运输订单
             if (StringUtils.equals(ofcExceptOrders.get(0).getOrderType(), TRANSPORT_ORDER)) {
                 this.dealTransOrder(ofcExceptOrders, ofcEnumerations, ofcTimeEnumMap);
@@ -92,13 +97,32 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         this.removeFromCodeList();
     }
 
+    private boolean potTypeEqualOrderType(OfcExceptOrderDTO ofcExceptOrderDTO, OfcExceptOrder ofcExceptOrder) {
+        String exceptPot = ofcExceptOrderDTO.getExceptPot();
+        String orderType = ofcExceptOrder.getOrderType();
+        if ((StringUtils.equals(exceptPot, STORAGE_IN.getPotCode()) || StringUtils.equals(exceptPot, STORAGE_OUT.getPotCode()))
+                && StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
+            return true;
+        } else if ((StringUtils.equals(exceptPot, DELIVERY.getPotCode()) || StringUtils.equals(exceptPot, DISPATCH.getPotCode())
+                || StringUtils.equals(exceptPot, ARRIVED.getPotCode()) || StringUtils.equals(exceptPot, SIGNED.getPotCode())
+                || StringUtils.equals(exceptPot, RECEIPT.getPotCode())) && StringUtils.equals(orderType, TRANSPORT_ORDER)) {
+            return true;
+        }
+        return false;
+    }
+
     private List<OfcExceptOrder> dealOrderHaventReceive(OfcExceptOrderDTO ofcExceptOrderDTO) {
         List<OfcExceptOrder> result = new ArrayList<>();
         String orderCode = ofcExceptOrderDTO.getOrderCode();
         OfcOrderPotDTO ofcOrderPotDTO = new OfcOrderPotDTO();
-        ofcExceptOrderDTO.setOrderCode(orderCode);
+        ofcOrderPotDTO.setOrderCode(orderCode);
         OfcExceptOrder ofcExceptOrder = this.getOrderDetail(ofcOrderPotDTO);
+        if (!this.potTypeEqualOrderType(ofcExceptOrderDTO, ofcExceptOrder)) {
+            logger.debug("订单格式与当前处理格式不符, 不予处理....");
+            return null;
+        }
         ofcExceptOrder.setPotType(ofcExceptOrderDTO.getExceptPot());
+        if (ofcExceptOrderMapper.insert(ofcExceptOrder) < 1) logger.error("ofcExceptOrder插入失败...");
         result.add(ofcExceptOrder);
         return result;
     }
@@ -107,7 +131,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         List<OfcEnumeration> ofcTimeEnum = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
         Map<String,OfcEnumeration> result = new HashMap<>();
         for (OfcEnumeration enumeration : ofcTimeEnum) {
-            result.put(enumeration.getEnumValue(), enumeration);
+            result.put(enumeration.getEnumName(), enumeration);
         }
         return result;
     }
@@ -294,6 +318,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         for (OfcGoodsDetailsInfo good : ofcGoodsDetailsInfos) {
             String goodsType = good.getGoodsType();// 大类
             String goodsCategory = good.getGoodsCategory();// 小类
+            // fixme
             if ((StringUtils.equals(goodsType, "畜禽类") && StringUtils.equals(goodsCategory, "冷鲜猪肉"))
                     || (StringUtils.equals(goodsType, "xxxx") && StringUtils.equals(goodsCategory, "xxxx"))) {
                 result = true;
@@ -324,7 +349,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         for (OfcExceptOrder ofcExceptOrder : ofcExceptOrders) {
             if (StringUtils.equals(ofcExceptOrder.getPotType(), pot)) {
                 ofcExceptOrder = this.dealExceptPot(ofcExceptOrder, allowHour, delayTimeLevel);
-                if (super.update(ofcExceptOrder) < 1) {
+                if (ofcExceptOrderMapper.updateByOrderCode(ofcExceptOrder) < 1) {
                     logger.error("更新失败!");
                     throw new BusinessException("处理异常订单失败!");
                 }
@@ -347,6 +372,8 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         if (deadLineTime.compareTo(orderCreateTime) > 0) {// 超时
             ofcExceptOrder.setExceptReason(String.valueOf((deadLineTime.getTime().getTime() - orderCreateTime.getTime().getTime())));
             ofcExceptOrder.setDealStatus(IS_EXCEPTION.getCode());
+            // 已经异常, 从Redis里删掉该订单号, 从异常表里删掉这条记录
+            normalOrderToRemove.add(ofcExceptOrder);
         } else if (null != potTime && (potTime.compareTo(orderCreateTime.getTime())) <= 0) {
             // 已接收到时效信息, 且时效正常
             // 从Redis里删掉该订单号, 从异常表里删掉这条记录
@@ -380,9 +407,14 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             } catch (Exception e) {
                 logger.error("orderCodeList转换异常");
             }
-            if (!orderCodes.remove(orderCode)) {
+            boolean orderCodesEmpty = CollectionUtils.isEmpty(orderCodes);
+            if (!orderCodesEmpty && !orderCodes.remove(orderCode)) {
                 logger.error("移除订单{}失败" ,orderCode);
                 throw new BusinessException("处理异常订单失败");
+            }
+            if (orderCodesEmpty) {
+                stringRedisTemplate.delete(key.toString());
+                return;
             }
             try {
                 stringStringValueOperations.set(key.toString(), JacksonUtil.toJsonWithFormat(orderCodes));
@@ -406,8 +438,11 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
         orderScreenCondition.setOrderTimePre(now.getTime());
-        List<String> yesterdayOrders = ofcFundamentalInformationMapper.queryOrderCodeList(orderScreenCondition);
-        if (CollectionUtils.isEmpty(yesterdayOrders)) {
+        orderScreenCondition.setOrderType(TRANSPORT_ORDER);// 运输订单
+        List<String> yesterdayTransOrders = ofcFundamentalInformationMapper.queryOrderCodeList(orderScreenCondition);
+        orderScreenCondition.setOrderType(WAREHOUSE_DIST_ORDER);// 仓储订单
+        List<String> yesterdayStorageOrders = ofcFundamentalInformationMapper.queryOrderCodeList(orderScreenCondition);
+        if (CollectionUtils.isEmpty(yesterdayTransOrders) && CollectionUtils.isEmpty(yesterdayStorageOrders)) {
             logger.error("加载昨日订单失败! 订单号列表为空!");
             throw new BusinessException("处理异常订单失败");
         }
@@ -416,9 +451,14 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             String potKey = "orderPot:" + potCode + ":" + com.xescm.ofc.utils.DateUtils.Date2String(now.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
             if (StringUtils.isNotEmpty(ops.get(potKey))) continue;
             stringRedisTemplate.expire(potKey, 10L, TimeUnit.DAYS);
-            ops.set(potKey, JacksonUtil.toJsonWithFormat(yesterdayOrders));
+            if (StringUtils.equals(potCode, STORAGE_IN.getPotCode())
+                    || StringUtils.equals(potCode, STORAGE_OUT.getPotCode())) {
+                ops.set(potKey, JacksonUtil.toJsonWithFormat(yesterdayStorageOrders));
+            } else {
+                ops.set(potKey, JacksonUtil.toJsonWithFormat(yesterdayTransOrders));
+            }
         }
-        return yesterdayOrders.size();
+        return yesterdayTransOrders.size() + yesterdayStorageOrders.size();
     }
 
     @Override
@@ -444,7 +484,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         ofcExceptOrder.setPotTime(ofcOrderPotDTO.getPotTime());
         ofcExceptOrder.setTwoDistribution(ofcOrderPotDTO.getTwoDistribution());
         String orderCode = ofcOrderPotDTO.getOrderCode();
-        OfcOrderInfoDTO orderInfoDTO = ofcOrderManageOperService.queryOrderDetailByOrderCode(orderCode);
+        OfcOrderInfoDTO orderInfoDTO = ofcOrderManageOperService.queryOrderMainDetailByOrderCode(orderCode);
         OfcFundamentalInformation ofcFundamentalInformation = orderInfoDTO.getOfcFundamentalInformation();
         if (null == ofcFundamentalInformation) {
             logger.error("查无该订单号{}信息", orderCode);

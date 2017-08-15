@@ -18,4 +18,6 @@ public interface OfcExceptOrderMapper extends Mapper<OfcExceptOrder> {
     List<OfcExceptOrder> selectExceptOrderByDTO(OfcExceptOrderDTO exceptOrderDTO);
 
     List<OfcExceptOrder> selectByOrderCode(@Param(value = "orderCode") String orderCode);
+
+    int updateByOrderCode(OfcExceptOrder ofcExceptOrder);
 }

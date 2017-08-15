@@ -75,4 +75,6 @@ public interface OfcOrderManageOperService {
      * @return
      */
     OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode);
+
+    OfcOrderInfoDTO queryOrderMainDetailByOrderCode(String orderCode);
 }
