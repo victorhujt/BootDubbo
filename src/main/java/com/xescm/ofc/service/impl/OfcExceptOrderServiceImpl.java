@@ -159,6 +159,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
     @Override
     public List<OfcExceptOrder> selectByDTO(OfcExceptOrderDTO ofcExceptOrderDTO) {
         if (null == ofcExceptOrderDTO) throw new BusinessException("运营平台查询异常订单出错");
+        ofcExceptOrderDTO.setDealStatus(IS_EXCEPTION.getCode());
         List<OfcExceptOrder> result = ofcExceptOrderMapper.selectExceptOrderByDTO(ofcExceptOrderDTO);
         logger.debug("运营平台查询异常订单{}", result);
         if (CollectionUtils.isEmpty(result)) throw new BusinessException("暂无异常订单");
