@@ -7,14 +7,14 @@ import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.exception.BusinessException;
+import com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO;
+import com.xescm.ofc.service.OfcExceptOrderService;
+import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcTaskInterfaceLogService;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,6 +32,10 @@ public class OfcOrderWorkerApiRest {
 
     @Resource
     private OfcTaskInterfaceLogService taskInterfaceLogService;
+    @Resource
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Resource
+    private OfcExceptOrderService ofcExceptOrderService;
 
     /**
      * <p>Title:      queryOfcTaskInterfaceLog. </p>
@@ -269,5 +273,27 @@ public class OfcOrderWorkerApiRest {
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, msg + ExceptionUtils.getFullStackTrace(e));
         }
         return result;
+    }
+
+    @RequestMapping(value = "loadYesterdayOrder", method = {RequestMethod.POST})
+    @ResponseBody
+    public void loadYesterdayOrder() {
+        logger.info("加载昨日订单");
+        try {
+            ofcExceptOrderService.loadYesterdayOrder();
+        } catch (Exception ex) {
+            logger.error("加载昨日订单异常==>{}", ex);
+        }
+    }
+
+    @RequestMapping(value = "dealExceptionOrder", method = {RequestMethod.POST})
+    @ResponseBody
+    public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO) {
+        logger.info("开始处理异常订单 == > {}", ofcExceptOrderDTO);
+        try {
+            ofcExceptOrderService.dealExceptOrder(ofcExceptOrderDTO);
+        } catch (Exception ex) {
+            logger.error("开始处理异常订单异常==>{}", ex);
+        }
     }
 }
