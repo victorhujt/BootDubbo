@@ -213,6 +213,7 @@
       </if>
       AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
     </where>
+    ORDER BY oeo.creation_time DESC
   </select>
 
   <select id="selectByOrderCode" resultType="com.xescm.ofc.domain.OfcExceptOrder">

@@ -75,17 +75,6 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                 logger.debug("订单格式与当前处理格式不符, 不予处理....");
                 continue;
             }
-//            ListIterator<OfcExceptOrder> iterator = ofcExceptOrders.listIterator();
-//            if (iterator.hasNext()) {
-//                OfcExceptOrder ofcExceptOrder = iterator.next();
-//                String dealStatus = ofcExceptOrder.getDealStatus();
-//                if (StringUtils.equals(dealStatus, IS_EXCEPTION.getCode())) continue;
-//                ofcExceptOrder.setDealStatus(DEALING.getCode());
-//                if (ofcExceptOrderMapper.updateByOrderCode(ofcExceptOrder) < 1) {
-//                    logger.error("异常订单更新为处理中失败...");
-//                    continue;
-//                }
-//            }
             // 运输订单
             if (StringUtils.equals(ofcExceptOrders.get(0).getOrderType(), TRANSPORT_ORDER)) {
                 this.dealTransOrder(ofcExceptOrders, ofcEnumerations, ofcTimeEnumMap);
@@ -321,7 +310,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             String goodsCategory = good.getGoodsCategory();// 小类
             // fixme
             if ((StringUtils.equals(goodsType, "畜禽类") && StringUtils.equals(goodsCategory, "冷鲜猪肉"))
-                    || (StringUtils.equals(goodsType, "xxxx") && StringUtils.equals(goodsCategory, "xxxx"))) {
+                    /*|| (StringUtils.equals(goodsTypeCode, "xxxx") && StringUtils.equals(goodsCategoryCode, "xxxx"))*/) {
                 result = true;
                 break;
             }
