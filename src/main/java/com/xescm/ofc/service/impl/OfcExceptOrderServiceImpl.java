@@ -357,6 +357,37 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         }
         Calendar orderCreateTime = DateUtils.toCalendar(ofcExceptOrder.getCreationTime());
         Date potTime = ofcExceptOrder.getPotTime();
+        String potType = ofcExceptOrder.getPotType();
+        switch (potType) {
+            case "storageIn": { // 入库
+                ofcExceptOrder = this.dealNormalExceptPot(ofcExceptOrder, allowHour, delayTimeLevel, orderCreateTime, potTime);
+                break;
+            }
+            case "storageOut": { // 出库
+                ofcExceptOrder = this.dealNormalExceptPot(ofcExceptOrder, allowHour, delayTimeLevel, orderCreateTime, potTime);
+                break;
+            }
+            case "delivery": { // 调度
+                ofcExceptOrder = this.dealNormalExceptPot(ofcExceptOrder, allowHour, delayTimeLevel, orderCreateTime, potTime);
+                break;
+            }
+            case "dispatch": { // 发运
+                break;
+            }
+            case "arrived": { // 到达
+                break;
+            }
+            case "signed": { // 签收
+                break;
+            }
+            case "receipt": { // 回单
+                break;
+            }
+        }
+        return ofcExceptOrder;
+    }
+
+    private OfcExceptOrder dealNormalExceptPot(OfcExceptOrder ofcExceptOrder, Integer allowHour, Integer delayTimeLevel, Calendar orderCreateTime, Date potTime) {
         orderCreateTime.add(delayTimeLevel, allowHour);
         Calendar deadLineTime = null == potTime ? DateUtils.toCalendar(new Date()) : DateUtils.toCalendar(potTime);
         if (deadLineTime.compareTo(orderCreateTime) > 0) {// 超时
