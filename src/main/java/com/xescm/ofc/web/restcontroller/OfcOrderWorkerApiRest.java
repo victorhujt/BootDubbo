@@ -276,7 +276,6 @@ public class OfcOrderWorkerApiRest {
     }
 
     @RequestMapping(value = "loadYesterdayOrder", method = {RequestMethod.POST})
-    @ResponseBody
     public void loadYesterdayOrder() {
         logger.info("加载昨日订单");
         try {
@@ -287,8 +286,7 @@ public class OfcOrderWorkerApiRest {
     }
 
     @RequestMapping(value = "dealExceptionOrder", method = {RequestMethod.POST})
-    @ResponseBody
-    public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO) {
+    public void dealExceptOrder(@RequestBody OfcExceptOrderDTO ofcExceptOrderDTO) {
         logger.info("开始处理异常订单 == > {}", ofcExceptOrderDTO);
         try {
             ofcExceptOrderService.dealExceptOrder(ofcExceptOrderDTO);
