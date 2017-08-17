@@ -34,4 +34,7 @@ public class CreateOrderApiConstant {
     //SAP货主编码 fixme
     public static final String SAP_CUST_CODE = "";
 
+    /** 大成万达货主编码 */
+    public static final String DACHEN_CUST_CODE = "100259";
+
 }
