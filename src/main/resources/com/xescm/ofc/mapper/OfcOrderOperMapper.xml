@@ -341,8 +341,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND  ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
@@ -784,8 +788,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND  ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
@@ -1022,8 +1030,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
