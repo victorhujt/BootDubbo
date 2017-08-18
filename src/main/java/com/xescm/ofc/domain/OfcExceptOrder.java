@@ -118,7 +118,8 @@ public class OfcExceptOrder {
     /**
      * 状态
      */
-    private String status;
+    @Column(name = "ofc_status")
+    private String ofcStatus;
 
     /**
      * 结点类型

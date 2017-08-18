@@ -20,7 +20,7 @@
     <result column="base_name" jdbcType="VARCHAR" property="baseName" />
     <result column="order_source" jdbcType="VARCHAR" property="orderSource" />
     <result column="creation_time" jdbcType="TIMESTAMP" property="creationTime" />
-    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="ofc_status" jdbcType="VARCHAR" property="ofcStatus" />
     <result column="from_sys" jdbcType="VARCHAR" property="fromSys" />
     <result column="pot_type" jdbcType="VARCHAR" property="potType" />
     <result column="pot_time" jdbcType="TIMESTAMP" property="potTime" />
@@ -47,7 +47,7 @@
     oeo.base_name baseName,
     oeo.order_source orderSource,
     oeo.creation_time creationTime,
-    oeo.status status,
+    oeo.ofc_status ofcStatus,
     oeo.from_sys fromSys,
     oeo.pot_type potType,
     oeo.pot_time potTime,
@@ -101,8 +101,8 @@
       <if test="creationTime != null">
         oeo.creation_time = #{creationTime},
       </if>
-      <if test="status != null and status != ''">
-        oeo.status = #{status},
+      <if test="ofcStatus != null and ofcStatus != ''">
+        oeo.ofc_status = #{ofcStatus},
       </if>
       <if test="fromSys != null and fromSys != ''">
         oeo.from_sys = #{fromSys},
