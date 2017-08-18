@@ -40,7 +40,7 @@ public class OfcOperCommonServiceImpl implements OfcOperCommonService {
         Wrapper<PageInfo<CscGoodsApiVo>> pageInfoWrapper = cscGoodsEdasService.queryCscGoodsPageList(dto);
         if (null == pageInfoWrapper || pageInfoWrapper.getCode() != Wrapper.SUCCESS_CODE) {
             logger.error("调用csc接口查询货品出错! ");
-            throw new BusinessException("调用csc接口查询货品出错");
+            throw new BusinessException("没有查询到货品信息");
         }
         return pageInfoWrapper.getResult();
     }

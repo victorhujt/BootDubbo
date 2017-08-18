@@ -2,6 +2,8 @@ package com.xescm.ofc.model.dto.form;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Created by hiyond on 2016/11/24.
  */
@@ -33,6 +35,8 @@ public class OrderOperForm extends BaseForm {
     private Integer provideTransport;
 
     private String groundDistribution;
+
+    private List<String> orderStateList;
 
 
 }

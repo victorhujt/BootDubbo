@@ -227,7 +227,17 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
             throw new BusinessException("基地所属大区未选择!");
         }
-        //2017年5月12日 追加逻辑 增加创建人查看权限
+        // 2017.8.17 订单状态支持多选
+        if (!PubUtils.isSEmptyOrNull(form.getOrderState())){
+            String orderStateStr = form.getOrderState();
+            String[] orderStateArray = orderStateStr.split(",");
+            List<String> strList = new ArrayList<>();
+            for (int i = 0; i < orderStateArray.length; i++){
+                strList.add(orderStateArray[i]);
+            }
+            form.setOrderStateList(strList);
+        }
+        // 2017年5月12日 追加逻辑 增加创建人查看权限
         if (StringUtils.equals(groupType,"1")) {
             boolean accept = StringUtils.equals(userGroupCode, areaSerialNo);
             //鲜易供应链身份
