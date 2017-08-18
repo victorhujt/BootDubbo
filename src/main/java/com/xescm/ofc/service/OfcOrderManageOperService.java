@@ -6,7 +6,8 @@ import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
-import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
+import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
+import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 
@@ -23,7 +24,7 @@ public interface OfcOrderManageOperService {
 
     List<OrderScreenResult> queryOrderOper(OrderOperForm form);
 
-    List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OrderStorageOperForm form, String tag);
+    List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto,OfcQueryStorageDTO ofcQueryStorageDTO);
 
     /**
      * 查询订单列表
@@ -67,4 +68,11 @@ public interface OfcOrderManageOperService {
     void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType);
 
     Map<String,List<OfcGroupVo>> loadGroupList();
+
+    /**
+     * 根据订单编号查询订单信息
+     * @param orderCode 订单号
+     * @return
+     */
+    OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode);
 }

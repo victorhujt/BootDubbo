@@ -10,7 +10,9 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.csc.model.dto.*;
+import com.xescm.csc.model.dto.CscContantAndCompanyInportDto;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
@@ -27,9 +29,6 @@ import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
@@ -42,7 +41,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -209,39 +207,7 @@ public class OfcOperationDistributing extends BaseController {
     }
 
 
-    /**
-     * 根据客户名称分页查询客户
-     *
-     * @param custName 客户名称
-     * @param pageNum  页数
-     * @param pageSize 每页大小
-     * @return
-     */
-    @RequestMapping(value = "/queryCustomerByName", method = RequestMethod.POST)
-    @ResponseBody
-    public Object queryCustomerByName(String custName, int pageNum, int pageSize) {
-        logger.info("城配开单根据客户名称查询客户==> custName={}", custName);
-        logger.info("城配开单根据客户名称查询客户==> pageNum={}", pageNum);
-        logger.info("城配开单根据客户名称查询客户==> pageSize={}", pageSize);
-        Wrapper<PageInfo<CscCustomerVo>> result;
-        try {
-            QueryCustomerNameAvgueDto queryParam = new QueryCustomerNameAvgueDto();
-            queryParam.setCustomerName(custName);
-            queryParam.setPageNum(pageNum);
-            queryParam.setPageSize(pageSize);
-            result = cscCustomerEdasService.queryCustomerByNameAvgue(queryParam);
-            if (Wrapper.ERROR_CODE == result.getCode()) {
-                logger.error("查询客户列表失败,查询结果有误!");
-            }
-        } catch (BusinessException ex) {
-            logger.error("==>城配开单根据客户名称查询客户发生错误：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("==>城配开单根据客户名称查询客户发生异常：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
-        }
-        return result;
-    }
+
 
     /**
      * 根据客户编码查询客户
@@ -329,121 +295,75 @@ public class OfcOperationDistributing extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "上传成功！", excelSheet);
     }
 
-    /**
-     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
-     *
-     * @param paramHttpServletRequest HttpServletRequest
-     * @return 根据不同结果返回不同泛型
-     */
-    @RequestMapping(value = "/excelCheckBySheet", method = RequestMethod.POST)
-    @ResponseBody
-    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest) {
-        Wrapper<?> result = null;
-        try {
-            AuthResDto authResDto = getAuthResDtoByToken();
-            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
-            MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
-            String fileName = multipartHttpServletRequest.getParameter("fileName");
-            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
-            String modelType = multipartHttpServletRequest.getParameter("templatesType");
-            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
-            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
-            int potIndex = fileName.lastIndexOf(".") + 1;
-            if (-1 == potIndex) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "该文件没有扩展名!");
-            }
-            String suffix = fileName.substring(potIndex, fileName.length());
-            String customerCode = multipartHttpServletRequest.getParameter("customerCode");
-            String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
-            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile, suffix, sheetNum, authResDto, customerCode, modelType, modelMappingCode);
+//    /**
+//     * 根据用户选择的Sheet页进行校验并加载正确或错误信息
+//     *
+//     * @param paramHttpServletRequest HttpServletRequest
+//     * @return 根据不同结果返回不同泛型
+//     */
+//    @RequestMapping(value = "/excelCheckBySheet", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Wrapper<?> excelCheckBySheet(HttpServletRequest paramHttpServletRequest) {
+//        Wrapper<?> result = null;
+//        try {
+//            AuthResDto authResDto = getAuthResDtoByToken();
+//            MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) paramHttpServletRequest;
+//            MultipartFile uploadFile = multipartHttpServletRequest.getFile("file");
+//            String fileName = multipartHttpServletRequest.getParameter("fileName");
+//            //模板类型: 交叉(MODEL_TYPE_ACROSS), 明细列表(MODEL_TYPE_BORADWISE)
+//            String modelType = multipartHttpServletRequest.getParameter("templatesType");
+//            //模板映射: 标准, 呷哺呷哺, 尹乐宝等
+//            String modelMappingCode = multipartHttpServletRequest.getParameter("templatesMapping");
+//            int potIndex = fileName.lastIndexOf(".") + 1;
+//            if (-1 == potIndex) {
+//                return WrapMapper.wrap(Wrapper.ERROR_CODE, "该文件没有扩展名!");
+//            }
+//            String suffix = fileName.substring(potIndex, fileName.length());
+//            String customerCode = multipartHttpServletRequest.getParameter("customerCode");
+//            String sheetNum = multipartHttpServletRequest.getParameter("sheetNum");
+//            Wrapper<?> checkResult = ofcOperationDistributingService.checkExcel(uploadFile, suffix, sheetNum, authResDto, customerCode, modelType, modelMappingCode);
+//
+//            //如果校验失败
+//            if (checkResult.getCode() == Wrapper.ERROR_CODE) {
+//                int tenThousand = 100000;
+//                OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
+//                List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
+//                List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
+//                if (cscGoodsImportDtoList.size() > 0) {
+//                    StringBuilder batchgoodsKey = new StringBuilder(BATCH_GOODS);
+//                    batchgoodsKey.append(System.nanoTime());
+//                    batchgoodsKey.append((int) (Math.random() * tenThousand));
+//                    ValueOperations<String, String> ops = rt.opsForValue();
+//                    ops.set(batchgoodsKey.toString(), JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
+//                    rt.expire(batchgoodsKey.toString(), 5L, TimeUnit.MINUTES);
+//                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey.toString());
+//                }
+//                if (cscContantAndCompanyInportDtoList.size() > 0) {
+//                    StringBuilder batchconsingeeKey = new StringBuilder(BATCH_CONSIGNEE);
+//                    batchconsingeeKey.append(System.nanoTime());
+//                    batchconsingeeKey.append((int) (Math.random() * tenThousand));
+//                    ValueOperations<String, String> ops = rt.opsForValue();
+//                    ops.set(batchconsingeeKey.toString(), JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
+//                    rt.expire(batchconsingeeKey.toString(), 5L, TimeUnit.MINUTES);
+//                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey.toString());
+//                }
+//                result = WrapMapper.wrap(Wrapper.ERROR_CODE, checkResult.getMessage(), ofcCheckExcelErrorVo);
+//            } else if (checkResult.getCode() == Wrapper.SUCCESS_CODE) {
+//                Map<String, JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
+//                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
+//                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, checkResult.getMessage(), resultJSON);
+//            }
+//        } catch (BusinessException e) {
+//            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
+//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
+//        } catch (Exception e) {
+//            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
+//            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+//        }
+//        return result;
+//    }
 
-            //如果校验失败
-            if (checkResult.getCode() == Wrapper.ERROR_CODE) {
-                int tenThousand = 100000;
-                OfcCheckExcelErrorVo ofcCheckExcelErrorVo = (OfcCheckExcelErrorVo) checkResult.getResult();
-                List<OfcGoodsImportDto> cscGoodsImportDtoList = ofcCheckExcelErrorVo.getCscGoodsImportDtoList();
-                List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = ofcCheckExcelErrorVo.getCscContantAndCompanyInportDtoList();
-                if (cscGoodsImportDtoList.size() > 0) {
-                    StringBuilder batchgoodsKey = new StringBuilder(BATCH_GOODS);
-                    batchgoodsKey.append(System.nanoTime());
-                    batchgoodsKey.append((int) (Math.random() * tenThousand));
-                    ValueOperations<String, String> ops = rt.opsForValue();
-                    ops.set(batchgoodsKey.toString(), JacksonUtil.toJsonWithFormat(cscGoodsImportDtoList));
-                    rt.expire(batchgoodsKey.toString(), 5L, TimeUnit.MINUTES);
-                    ofcCheckExcelErrorVo.setBatchgoodsKey(batchgoodsKey.toString());
-                }
-                if (cscContantAndCompanyInportDtoList.size() > 0) {
-                    StringBuilder batchconsingeeKey = new StringBuilder(BATCH_CONSIGNEE);
-                    batchconsingeeKey.append(System.nanoTime());
-                    batchconsingeeKey.append((int) (Math.random() * tenThousand));
-                    ValueOperations<String, String> ops = rt.opsForValue();
-                    ops.set(batchconsingeeKey.toString(), JacksonUtil.toJsonWithFormat(cscContantAndCompanyInportDtoList));
-                    rt.expire(batchconsingeeKey.toString(), 5L, TimeUnit.MINUTES);
-                    ofcCheckExcelErrorVo.setBatchconsingeeKey(batchconsingeeKey.toString());
-                }
-                result = WrapMapper.wrap(Wrapper.ERROR_CODE, checkResult.getMessage(), ofcCheckExcelErrorVo);
-            } else if (checkResult.getCode() == Wrapper.SUCCESS_CODE) {
-                Map<String, JSONArray> resultMap = (Map<String, JSONArray>) checkResult.getResult();
-                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
-                result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, checkResult.getMessage(), resultJSON);
-            }
-        } catch (BusinessException e) {
-            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
-        } catch (Exception e) {
-            logger.error("城配开单Excel导入校验出错:{}", e.getMessage(), e);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
-        }
-        return result;
-    }
 
-    @RequestMapping(value = "/querySupplierSelect2", method = RequestMethod.GET)
-    @ResponseBody
-    public Object querySupplierByName(Select2ReqDto select2ReqDto,HttpServletRequest req,String customerCode) {
-        String url=req.getRequestURI();
-        Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
-        try {
-            if(PubUtils.isSEmptyOrNull(customerCode)){
-                throw new BusinessException("客户编码不能为空");
-            }
-            CscSupplierInfoDto queryParam = new CscSupplierInfoDto();
-            queryParam.setCustomerCode(customerCode);
-            queryParam.setPNum(select2ReqDto.getPageNum());
-            queryParam.setPSize(select2ReqDto.getPageSize());
-            queryParam.setSupplierName(select2ReqDto.getName());
-            Wrapper<PageInfo<CscSupplierInfoDto>> pageInfoWrapper =  cscSupplierEdasService.querySupplierByAttributePageList(queryParam);
-            result.setCode(pageInfoWrapper.getCode());
-            result.setMessage(pageInfoWrapper.getMessage());
-            PageInfo<CscSupplierInfoDto> resultForRevert = pageInfoWrapper.getResult();
-            if (null == resultForRevert || CollectionUtils.isEmpty(resultForRevert.getList())) {
-                logger.error("查询供应商名称Select2失败, resultForRevert:{}", ToStringBuilder.reflectionToString(resultForRevert));
-                throw new BusinessException("查询供应商名称Select2失败");
-            }
-            PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
-            BeanUtils.copyProperties(pageInfo, resultForRevert);
-            pageInfo.setList(null);
-            List<Select2RespDto> select2RespDtoList = new ArrayList<>();
-            for (CscSupplierInfoDto cscSupplierInfoDto : resultForRevert.getList()) {
-                Select2RespDto select2RespDto = new Select2RespDto();
-                select2RespDto.setId(cscSupplierInfoDto.getSupplierId());
-                select2RespDto.setCode(cscSupplierInfoDto.getSupplierCode());
-                select2RespDto.setName(cscSupplierInfoDto.getSupplierName());
-                select2RespDtoList.add(select2RespDto);
-            }
-            pageInfo.setList(select2RespDtoList);
-            if (Wrapper.ERROR_CODE == result.getCode()) {
-                logger.error("查询供应商列表失败,查询结果有误!");
-            }
-            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
-        } catch (BusinessException ex) {
-            logger.error("==>查询供应商列名称Select2根据客户编码查询供应商发生错误：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
-        } catch (Exception ex) {
-            logger.error("==>查询供应商列名称Select2根据供应商列名称查询客户发生异常：{}", ex);
-            result = WrapMapper.wrap(Wrapper.ERROR_CODE, "查询供应商列名称Select2根据客户编码查询供应商列发生异常！");
-        }
-        return result;
-    }
 
 
 
