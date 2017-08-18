@@ -237,6 +237,7 @@ public class OfcGoodsDetailsInfo {
     @Column(name = "conversion_rate")
     private BigDecimal conversionRate;
 
+    /** 主单位数量 */
     @Column(name = "primary_quantity")
     private BigDecimal primaryQuantity;
     /**

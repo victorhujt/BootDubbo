@@ -1,6 +1,7 @@
 package com.xescm.ofc.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
@@ -229,19 +230,24 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 cscGoods.setCustomerCode(custCode);
                 cscGoods.setGoodsCode(goodsCode);
-                Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
                 if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
+                    Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
                     if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
                         for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
                             goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
                             goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
                         }
                     }
-                } else {    // 仓储订单 - 货品必须存在
-                    resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
-                    if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                        logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
-                        return resultModel;
+                } else if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {    // 仓储订单 - 货品必须存在
+                    cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
+                    cscGoods.setFromSys("WMS");
+                    Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoods);
+                    if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
+                        PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
+                        // TODO 计算出入库数量
+                    } else {
+                        // TODO 推送CSC待创建商品
+
                     }
                 }
                 //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
