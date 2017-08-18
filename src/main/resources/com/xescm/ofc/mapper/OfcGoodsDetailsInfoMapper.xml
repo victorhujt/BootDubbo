@@ -39,6 +39,9 @@
     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
     <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
+    <result column="line_no" property="lineNo" jdbcType="INTEGER" />
+    <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
+
   </resultMap>
 
   <!--订单货品列表查询-->
@@ -81,7 +84,9 @@
     oos.package_name,
     oos.package_type,
     oos.conversion_rate,
-    oos.primary_quantity
+    oos.primary_quantity,
+    oos.line_no,
+    oos.manufacture_batch_lotatt
     FROM
     ofc_goods_details_info oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -144,7 +149,9 @@
       gdi.package_name,
       gdi.package_type,
       gdi.conversion_rate,
-      gdi.primary_quantity
+      gdi.primary_quantity,
+      gdi.line_no,
+      gdi.manufacture_batch_lotatt
     FROM ofc_goods_details_info gdi
     LEFT JOIN
     ofc_fundamental_information ofi

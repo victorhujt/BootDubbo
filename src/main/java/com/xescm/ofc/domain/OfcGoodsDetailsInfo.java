@@ -239,6 +239,16 @@ public class OfcGoodsDetailsInfo {
 
     @Column(name = "primary_quantity")
     private BigDecimal primaryQuantity;
+    /**
+     * 行号
+     */
+    @Column(name = "line_no")
+    private Integer lineNo;
+    /**
+     * 厂商批次
+     */
+    @Column(name = "manufacture_batch_lotatt")
+    private String manufactureBatchLotatt;
 
 
 
