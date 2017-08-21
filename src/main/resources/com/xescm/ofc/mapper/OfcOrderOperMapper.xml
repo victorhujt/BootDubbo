@@ -257,6 +257,7 @@
       ofi.cust_order_code,
       ofi.order_batch_number,
       ofi.order_time,
+      odbi.weight,
       ofi.order_type,
       ofi.business_type,
       ofi.base_name,
