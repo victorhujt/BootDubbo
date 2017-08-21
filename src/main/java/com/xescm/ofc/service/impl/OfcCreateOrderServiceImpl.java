@@ -12,6 +12,7 @@ import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.edas.company.CscQueryStoreCodeReqDto;
+import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
@@ -27,6 +28,7 @@ import com.xescm.ofc.mapper.OfcCreateOrderMapper;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
+import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.rmc.edas.domain.vo.RmcAddressCodeVo;
@@ -43,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +93,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private OfcAddressReflectMapper ofcAddressReflectMapper;
     @Resource
     private CscContactCompanyEdasService cscContactCompanyEdasService;
+    @Resource
+    private DefaultMqProducer mqProducer;
 
     @Override
     public int queryCountByOrderStatus(String orderCode, String orderStatus) {
@@ -224,6 +229,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private ResultModel checkGoodsDetailInfo(CreateOrderEntity createOrderEntity, String custCode, String orderType) {
         ResultModel resultModel;
         List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+        List<CreateOrderGoodsInfo> tempList = new ArrayList<>();
         if (PubUtils.isNotNullAndBiggerSize(createOrderGoodsInfos, 0)) {
             for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
                 String goodsCode = goodsInfo.getGoodsCode();
@@ -241,13 +247,37 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 } else if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {    // 仓储订单 - 货品必须存在
                     cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
                     cscGoods.setFromSys("WMS");
+                    cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
                     Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoods);
                     if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                         PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
+                        CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
+                        List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
+                        if (!CollectionUtils.isEmpty(packages)) {
+                            for (GoodsPackingDto packingDto : packages){
+                                if (StringUtils.equals(packingDto.getLevelName(),goodsInfo.getUnit())) {
+                                    goodsInfo.setConversionRate(packingDto.getLevelSpecification());
+                                    goodsInfo.setPackageName(packingDto.getLevelName());
+                                    goodsInfo.setPackageType(packingDto.getLevel());
+                                    goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
+                                }
+                            }
+                        } else {
+                            //没有匹配到包装直接返回错误
+                            return new ResultModel(ResultModel.ResultEnum.CODE_NO_PACKAGE);
+                        }
                         // TODO 计算出入库数量
                     } else {
                         // TODO 推送CSC待创建商品
-
+                        tempList.add(goodsInfo);
+                    }
+                    try {
+                        if (tempList.size() > 0) {
+                            String msgStr = JacksonUtil.toJson(tempList);
+                            mqProducer.sendMsg(msgStr,"","","");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定

@@ -64,6 +64,7 @@ public class ResultModel {
         CODE_2001("2001", "货品编码不存在！"),
         CODE_3001("3001", "收发货方编码不存在！"),
         CODE_SMS_0001("SMS_0001", "入参不可为空！"),
+        CODE_NO_PACKAGE("4001", "货品没有匹配到包装信息！"),
         CODE_9999("9999", "系统异常！");
 
         private String code;

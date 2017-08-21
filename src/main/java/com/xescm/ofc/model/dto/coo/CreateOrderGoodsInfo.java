@@ -3,6 +3,7 @@ package com.xescm.ofc.model.dto.coo;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 订单中心创建订单（鲜易网）
@@ -75,6 +76,112 @@ public class CreateOrderGoodsInfo implements Serializable {
      * 失效日期
      */
     private String invalidTime;
+
+
+    /**
+     * 货品供应商批次
+     */
+    private String supportBatch;
+
+    /**
+     * 货品供应商名称
+     */
+    private String supportName;
+    /**
+     * 包装名称
+     */
+    private String packageName;
+
+    /**
+     *包装类型
+     * @return
+     */
+    private String packageType;
+
+    /**
+     * 与主单位的换算规格
+     * @return
+     */
+    private BigDecimal conversionRate;
+
+    /** 主单位数量 */
+    private BigDecimal primaryQuantity;
+    /**
+     * 行号
+     */
+    private Integer lineNo;
+    /**
+     * 厂商批次
+     */
+    private String manufactureBatchLotatt;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getSupportBatch() {
+        return supportBatch;
+    }
+
+    public void setSupportBatch(String supportBatch) {
+        this.supportBatch = supportBatch;
+    }
+
+    public String getSupportName() {
+        return supportName;
+    }
+
+    public void setSupportName(String supportName) {
+        this.supportName = supportName;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getPackageType() {
+        return packageType;
+    }
+
+    public void setPackageType(String packageType) {
+        this.packageType = packageType;
+    }
+
+    public BigDecimal getConversionRate() {
+        return conversionRate;
+    }
+
+    public void setConversionRate(BigDecimal conversionRate) {
+        this.conversionRate = conversionRate;
+    }
+
+    public BigDecimal getPrimaryQuantity() {
+        return primaryQuantity;
+    }
+
+    public void setPrimaryQuantity(BigDecimal primaryQuantity) {
+        this.primaryQuantity = primaryQuantity;
+    }
+
+    public Integer getLineNo() {
+        return lineNo;
+    }
+
+    public void setLineNo(Integer lineNo) {
+        this.lineNo = lineNo;
+    }
+
+    public String getManufactureBatchLotatt() {
+        return manufactureBatchLotatt;
+    }
+
+    public void setManufactureBatchLotatt(String manufactureBatchLotatt) {
+        this.manufactureBatchLotatt = manufactureBatchLotatt;
+    }
 
     public String getGoodsCode() {
         return goodsCode;
