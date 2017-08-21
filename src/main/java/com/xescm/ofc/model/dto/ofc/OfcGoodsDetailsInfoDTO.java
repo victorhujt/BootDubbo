@@ -203,4 +203,12 @@ public class OfcGoodsDetailsInfoDTO {
     private BigDecimal conversionRate;
 
     private BigDecimal primaryQuantity;
+    /**
+     * 行号
+     */
+    private Integer lineNo;
+    /**
+     * 厂商批次号
+     */
+    private String manufactureBatchLotatt;
 }
