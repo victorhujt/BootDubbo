@@ -2001,7 +2001,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFromSystem(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderSource()));
         tfcTransport.setTransportNo(trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()));
 //        tfcTransport.setStatus();
-        tfcTransport.setBillType(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()));
+        tfcTransport.setBillType(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()));
         tfcTransport.setItemType(trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsType()));
         tfcTransport.setCustomerCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()));
         tfcTransport.setCustomerName(trimAndNullAsEmpty(ofcFundamentalInformation.getCustName()));
