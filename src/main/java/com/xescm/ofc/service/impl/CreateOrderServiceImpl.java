@@ -342,7 +342,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 key = REDIS_LOCK_PREFIX + MQ_TAG_OrderToOfc + ":" + custCode + ":" + custOrderCode;
                 // 验证锁是否存在
                 Wrapper<String> checkLock = distributedLockEdasService.checkLocksExist(key);
-                if (Wrapper.SUCCESS_CODE != checkLock.getCode()) {
+             //   if (Wrapper.SUCCESS_CODE != checkLock.getCode()) {
                     // 加锁
                     Wrapper<Integer> lock = distributedLockEdasService.addLock(key, 80);
                     if (lock.getCode() == Wrapper.SUCCESS_CODE && lock.getResult().intValue() == 1) {
@@ -379,10 +379,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         logger.error("接口任务创建订单加锁失败：key={}", key);
                         throw new BusinessException(ExceptionTypeEnum.LOCK_FAIL.getCode(), ExceptionTypeEnum.LOCK_FAIL.getDesc());
                     }
-                } else {
-                    logger.error("接口任务创建订单锁存在或检查锁失败：key={}", key);
-                    throw new BusinessException(ExceptionTypeEnum.LOCK_EXIST.getCode(), ExceptionTypeEnum.LOCK_EXIST.getDesc());
-                }
+//                } else {
+//                    logger.error("接口任务创建订单锁存在或检查锁失败：key={}", key);
+//                    throw new BusinessException(ExceptionTypeEnum.LOCK_EXIST.getCode(), ExceptionTypeEnum.LOCK_EXIST.getDesc());
+//                }
             } catch (BusinessException ex) {
                 logger.error("订单中心创建订单接口发生异常:{},{}", ex.getMessage(), ex);
                 if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {

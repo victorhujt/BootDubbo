@@ -82,6 +82,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("613");
                 businessTypes.add("614");
                 businessTypes.add("617");
+                businessTypes.add("618");
             ofcQueryStorageDTO.setBusinessTypes(businessTypes);
         }
         OrderStorageOperForm form = new OrderStorageOperForm();

@@ -75,14 +75,14 @@ public class CheckUtils {
         //Set<String> checkSet = new HashSet<String>();
         Set<String> checkSet = new HashSet<>();
         if ("60".equals(orderType)) {
-            String[] checkArray = {"600", "601", "602"};
+            String[] checkArray = {"600", "601", "602","603"};
             if (ArrayUtils.contains(checkArray, businessType)) {
                 return new ResultModel(ResultModel.ResultEnum.CODE_0000);
             }
         }
 
         if ("61".equals(orderType)) {
-            String[] checkArray = {"610", "611", "612", "613", "614", "617", "620", "621", "622", "623", "624", "625", "626"};
+            String[] checkArray = {"610", "611", "612", "613", "614", "617", "618","620", "621", "622", "623", "624", "625", "626"};
             if (ArrayUtils.contains(checkArray, businessType)) {
                 return new ResultModel(ResultModel.ResultEnum.CODE_0000);
             }

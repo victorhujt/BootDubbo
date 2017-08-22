@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.ac.domain.AcDistributionBasicInfo;
 import com.xescm.ac.domain.AcFinanceInformation;
 import com.xescm.ac.domain.AcFundamentalInformation;
@@ -16,6 +17,7 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
@@ -24,6 +26,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
@@ -237,12 +240,34 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode, "orderCode");
+                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+                if (!CollectionUtils.isEmpty(goodsDetailsList)) {
+                    for (OfcGoodsDetailsInfo good:goodsDetailsList) {
+                        CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                        cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+                        // cscGoods.setFromSys("WMS");
+                        cscGoods.setGoodsCode(good.getGoodsCode());
+                        cscGoods.setPNum(1);
+                        cscGoods.setPSize(10);
+                        Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
+                        if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
+                                PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
+                            CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
+                            List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
+                            if (CollectionUtils.isEmpty(packages)) {
+                                throw new BusinessException("商品没有对应的包装信息");
+                            }
+                        } else {
+                            throw new BusinessException("订单包含的商品信息不存在");
+                        }
+                    }
+                }
+
                 OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
                 if (ofcFinanceInformation == null) {
                     ofcFinanceInformation = new OfcFinanceInformation();
                 }
-                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                 if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {//提供运输
                     //仓储订单推仓储中心
                     pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
