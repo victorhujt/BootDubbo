@@ -194,20 +194,20 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                         , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 入库 不提供运输 众品 冷鲜肉 入库时效6小时
-            if (!provideTransport && isZhongPin && goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
-                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
-            }
+//            if (!provideTransport && isZhongPin && goodsTypeHasChilledPork) {
+//                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+//                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+//            }
             // 入库 不提供运输 众品 非冷鲜肉 入库时效6小时
-            if (!provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
-                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
-            }
+//            if (!provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
+//                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+//                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+//            }
             // 入库 不提供运输 普通客户 入库时效6小时
-            if (!provideTransport && isNormalCust) {
-                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
-                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
-            }
+//            if (!provideTransport && isNormalCust) {
+//                this.checkDelay(ofcExceptOrders, STORAGE_IN.getPotCode()
+//                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+//            }
             // 出库
         } else if (StringUtils.equals(businessType.substring(0,2), STOCK_OUT_ORDER)) {
             // 出库 提供运输 众品 冷鲜肉 出库时效6小时 城配调度时效12小时
@@ -232,20 +232,20 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                         , Integer.valueOf(ofcTimeEnum.get("HOUR_12").getEnumValue()), calendarHour);
             }
             // 出库 不提供运输 众品 冷鲜肉 出库时效6小时
-            if (!provideTransport && isZhongPin && goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
-                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
-            }
+//            if (!provideTransport && isZhongPin && goodsTypeHasChilledPork) {
+//                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+//                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+//            }
             // 出库 不提供运输 众品 非冷鲜肉 出库时效6小时
-            if (!provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
-                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
-            }
+//            if (!provideTransport && isZhongPin && !goodsTypeHasChilledPork) {
+//                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+//                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+//            }
             // 出库 不提供运输 普通客户 出库时效6小时
-            if (!provideTransport && isNormalCust) {
-                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
-                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
-            }
+//            if (!provideTransport && isNormalCust) {
+//                this.checkDelay(ofcExceptOrders, STORAGE_OUT.getPotCode()
+//                        , Integer.valueOf(ofcTimeEnum.get("HOUR_6").getEnumValue()), calendarHour);
+//            }
         }
     }
 
