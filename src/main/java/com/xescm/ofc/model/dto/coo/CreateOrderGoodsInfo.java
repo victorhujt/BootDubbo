@@ -14,6 +14,29 @@ import java.math.BigDecimal;
 public class CreateOrderGoodsInfo implements Serializable {
 
     private static final long serialVersionUID = 7909253575176134994L;
+    /*客户名称*/
+    private String custName;
+
+    public String getCustName() {
+        return custName;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
+
+    public String getCustCode() {
+        return custCode;
+    }
+
+    public void setCustCode(String custCode) {
+        this.custCode = custCode;
+    }
+
+    /**客户编码*/
+
+    private String custCode;
+
     /**
      * 货品代码 (必填)
      */

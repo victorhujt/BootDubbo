@@ -275,16 +275,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
                                 }else {
                                     //没有匹配到包装直接返回错误
-                                    return  new ResultModel(ResultModel.ResultEnum.CODE_NO_PACKAGE);
+                                  //  return  new ResultModel(ResultModel.ResultEnum.CODE_NO_PACKAGE);
                                 }
                             }
                         } else {
                             //没有匹配到包装直接返回错误
-                            return new ResultModel(ResultModel.ResultEnum.CODE_NO_PACKAGE);
+                        //    return new ResultModel(ResultModel.ResultEnum.CODE_NO_PACKAGE);
                         }
                         // TODO 计算出入库数量
                     } else {
                         // TODO 推送CSC待创建商品
+                        goodsInfo.setCustName(createOrderEntity.getCustName());
+                        goodsInfo.setCustCode(custCode);
                         tempList.add(goodsInfo);
                     }
                 }
