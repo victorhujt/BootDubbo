@@ -97,7 +97,7 @@ public class OfcOperCommonController extends BaseController{
     @RequestMapping(value = "/querySupplierSelect2/{customerCode}", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(notes = "返回供应商列表", httpMethod = "POST", value = "Select2查询供应商")
-    public Wrapper<PageInfo<Select2RespDto>> querySupplierByName(@ApiParam(name = "select2ReqDto", value = "select2查询信息") @RequestBody  Page<Select2ReqDto> page,@PathVariable String customerCode) {
+    public Wrapper<PageInfo<Select2RespDto>> querySupplierByName(@ApiParam(name = "select2ReqDto", value = "select2查询信息") @RequestBody  Page<String> page,@PathVariable String customerCode) {
         Wrapper<PageInfo<Select2RespDto>> result = new Wrapper<>();
         try {
             if (PubUtils.isSEmptyOrNull(customerCode)) {
@@ -108,8 +108,8 @@ public class OfcOperCommonController extends BaseController{
             queryParam.setPNum(page.getPageNum());
             queryParam.setPSize(page.getPageSize());
             if (page.getParam() != null) {
-                if (!PubUtils.isSEmptyOrNull(page.getParam().getName())) {
-                    queryParam.setSupplierName(page.getParam().getName());
+                if (!PubUtils.isSEmptyOrNull(page.getParam())) {
+                    queryParam.setSupplierName(page.getParam());
                 }
             }
             Wrapper<PageInfo<CscSupplierInfoDto>> pageInfoWrapper =  cscSupplierEdasService.querySupplierByAttributePageList(queryParam);
