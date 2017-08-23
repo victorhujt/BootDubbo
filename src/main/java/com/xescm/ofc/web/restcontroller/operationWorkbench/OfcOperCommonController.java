@@ -118,7 +118,7 @@ public class OfcOperCommonController extends BaseController{
             PageInfo<CscSupplierInfoDto> resultForRevert = pageInfoWrapper.getResult();
             if (null == resultForRevert || CollectionUtils.isEmpty(resultForRevert.getList())) {
                 logger.error("查询供应商名称Select2失败, resultForRevert:{}", ToStringBuilder.reflectionToString(resultForRevert));
-                throw new BusinessException("查询供应商名称Select2失败");
+                throw new BusinessException("没有查询到供应商");
             }
             PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
             org.apache.commons.beanutils.BeanUtils.copyProperties(pageInfo, resultForRevert);
