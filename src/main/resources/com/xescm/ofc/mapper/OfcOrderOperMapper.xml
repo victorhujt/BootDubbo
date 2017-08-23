@@ -575,9 +575,10 @@
     odbi.carrier_name, ofi.notes, finc.service_charge, finc.order_amount, finc.payment_amount, finc.collect_loan_amount, finc.collect_service_charge,
     finc.collect_flag, finc.count_flag, finc.print_invoice, finc.buyer_payment_method, finc.insure, finc.insure_value, finc.pick_up_goods, finc.home_delivery_fee,
     finc.cargo_insurance_fee, finc.insurance, finc.two_distribution, finc.two_distribution_fee, finc.return_list, finc.return_list_fee, finc.expense_payment_party,
-    finc.payment, finc.current_amount, finc.to_pay_amount, finc.return_amount, finc.monthly_amount, finc.luggage, finc.open_invoices
+    finc.payment, finc.current_amount, finc.to_pay_amount, finc.return_amount, finc.monthly_amount, finc.luggage, finc.open_invoices,owi.warehouse_code,
+    owi.warehouse_name
     FROM ofc_fundamental_information ofi LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code LEFT JOIN ofc_finance_information finc
-    ON ofi.order_code = finc.order_code
+    ON ofi.order_code = finc.order_code LEFT JOIN ofc_warehouse_information owi ON owi.order_code = ofi.order_code
     WHERE ofi.order_code IN
     <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
       #{orderCode}
