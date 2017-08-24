@@ -225,13 +225,5 @@
     oeo.order_code = #{orderCode}
     AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
   </select>
-  <select id="selectByOrderCode" resultType="com.xescm.ofc.domain.OfcExceptOrder">
-    SELECT
-    <include refid="resultModel"/>
-    FROM
-    ofc_except_order oeo
-    WHERE
-    oeo.order_code = {orderCode}
-  </select>
 
 </mapper>
