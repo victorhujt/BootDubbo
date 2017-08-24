@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xescm.ofc.mapper.OfcExceptOrderMapper">
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcExceptOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="cust_order_code" jdbcType="VARCHAR" property="custOrderCode" />
+    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+    <result column="cust_name" jdbcType="VARCHAR" property="custName" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="business_type" jdbcType="VARCHAR" property="businessType" />
+    <result column="trans_code" jdbcType="VARCHAR" property="transCode" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="base_code" jdbcType="VARCHAR" property="baseCode" />
+    <result column="base_name" jdbcType="VARCHAR" property="baseName" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="pot_type" jdbcType="VARCHAR" property="potType" />
+    <result column="pot_time" jdbcType="TIMESTAMP" property="potTime" />
+    <result column="record_msg" jdbcType="VARCHAR" property="recordMsg" />
+    <result column="record_time" jdbcType="TIMESTAMP" property="recordTime" />
+    <result column="except_pot" jdbcType="VARCHAR" property="exceptPot" />
+    <result column="except_reason" jdbcType="VARCHAR" property="exceptReason" />
+    <result column="deal_status" jdbcType="VARCHAR" property="dealStatus" />
+  </resultMap>
+  <sql id="resultModel">
+    oeo.order_code orderCode,
+    oeo.cust_order_code custOrderCode,
+    oeo.cust_code custCode,
+    oeo.cust_name custName,
+    oeo.order_type orderType,
+    oeo.business_type businessType,
+    oeo.trans_code transCode,
+    oeo.area_code areaCode,
+    oeo.area_name areaName,
+    oeo.base_code baseCode,
+    oeo.base_name baseName,
+    oeo.source source,
+    oeo.creat_time creatTime,
+    oeo.status status,
+    oeo.pot_type potType,
+    oeo.pot_time potTime,
+    oeo.record_msg recordMsg,
+    oeo.record_time recordTime,
+    oeo.except_pot exceptPot,
+    oeo.except_reason exceptReason,
+    oeo.deal_status dealStatus
+  </sql>
+
+  <select id="selectUndealedOrderCode" resultType="java.lang.String">
+    SELECT
+    ofi.order_code orderCode
+    FROM
+    FROM ofc_fundamental_information ofi
+    LEFT JOIN IN ofc_except_order oeo ON ofi.order_code = oeo.orderCode
+    WHERE
+    oeo.deal_status = 00
+    AND ofi.abolish_mark = 0
+  </select>
+  <select id="selectByDTO" parameterType="com.xescm.ofc.model.dto.ofc.ExceptOrderDTO" resultType="com.xescm.ofc.domain.OfcExceptOrder">
+    SELECT
+    <include refid="resultModel"/>
+    FROM ofc_fundamental_information ofi
+    LEFT JOIN IN ofc_except_order oeo ON ofi.order_code = oeo.orderCode
+    <where>
+      <if test="startDate != null and startDate != ''">
+        AND oeo.order_time <![CDATA[ >= ]]>  #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        AND oeo.order_time <![CDATA[ <= ]]>  #{endDate}
+      </if>
+      <if test = "areaName != null and areaName != ''">
+        AND oeo.area_name = #{areaName, jdbcType=VARCHAR}
+      </if>
+      <if test = "areaCode != null and areaCode != ''">
+        AND oeo.area_code = #{areaCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "baseName != null and baseName != ''">
+        AND oeo.base_name = #{baseName, jdbcType=VARCHAR}
+      </if>
+      <if test = "baseCode != null and baseCode != ''">
+        AND oeo.base_code = #{baseCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "custCode != null and custCode != ''">
+        AND oeo.cust_code = #{custCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "custName != null and custName != ''">
+        AND oeo.cust_name = #{custName, jdbcType=VARCHAR}
+      </if>
+      <if test = "orderType != null and orderType != ''">
+        AND oeo.order_type = #{orderType, jdbcType=VARCHAR}
+      </if>
+      <if test = "businessType != null and businessType != ''">
+        AND oeo.business_type = #{businessType, jdbcType=VARCHAR}
+      </if>
+      <if test = "orderSource != null and orderSource != ''">
+        AND oeo.order_source = #{orderSource, jdbcType=VARCHAR}
+      </if>
+      <if test = "orderCode != null and orderCode != ''">
+        AND oeo.order_code = #{orderCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "custOrderCode != null and custOrderCode != ''">
+        AND oeo.cust_order_code = #{custOrderCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "transCode != null and transCode != ''">
+        AND oeo.trans_code = #{transCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "exceptReason != null and exceptReason != ''">
+        AND oeo.except_reason = #{exceptReason, jdbcType=VARCHAR}
+      </if>
+      <if test = "exceptPot != null and exceptPot != ''">
+        AND oeo.except_pot = #{exceptPot, jdbcType=VARCHAR}
+      </if>
+      and ofi.abolish_mark = 0
+    </where>
+  </select>
+</mapper>

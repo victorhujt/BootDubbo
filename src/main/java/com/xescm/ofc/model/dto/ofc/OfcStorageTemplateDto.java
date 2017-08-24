@@ -68,5 +68,7 @@ public class OfcStorageTemplateDto {
     private BigDecimal mainUnitNum;
     //货品重量
     private BigDecimal weight;
+    //是否落地配
+    private String groundDistribution;
 
 }

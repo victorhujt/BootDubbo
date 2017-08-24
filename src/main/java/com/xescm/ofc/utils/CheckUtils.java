@@ -82,7 +82,7 @@ public class CheckUtils {
         }
 
         if ("61".equals(orderType)) {
-            String[] checkArray = {"610", "611", "612", "613", "620", "621", "622", "623"};
+            String[] checkArray = {"610", "611", "612", "613", "614", "617", "620", "621", "622", "623", "624", "625", "626"};
             if (ArrayUtils.contains(checkArray, businessType)) {
                 return new ResultModel(ResultModel.ResultEnum.CODE_0000);
             }
@@ -148,7 +148,7 @@ public class CheckUtils {
         String provide_transport = createOrderEntity.getProvideTransport();
         if ("60".equals(orderType) || "61".equals(orderType)) {
             if ("61".equals(orderType)) {
-                if (!StringUtils.equals(provide_transport, "1")) {
+                if (PubUtils.isNull(provide_transport)) {
                     return new ResultModel("1000", "是否需要运输信息不能为空");
                 }
             }

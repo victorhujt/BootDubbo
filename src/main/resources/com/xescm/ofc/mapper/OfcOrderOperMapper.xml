@@ -268,11 +268,14 @@
       ofi.notes,
       ofi.store_name,
       ofi.is_exception,
-      ofi.exception_reason
+      ofi.exception_reason,
+      ofi.creation_time,
+      ofi.area_name
   </sql>
 
   <sql id="queryStorageOrderListField">
     ofi.cust_name,
+    ofi.cust_code,
     ofi.order_code,
     ofi.cust_order_code,
     ofi.order_batch_number,
@@ -338,8 +341,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND  ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
@@ -356,9 +363,17 @@
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>
-      <if test="form.provideTransport!=null">
-        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      <if test="form.groundDistribution!=null and form.groundDistribution!=''">
+        AND ofi.ground_distribution = #{form.groundDistribution}
       </if>
+      <choose>
+        <when test="form.provideTransport!=null and form.provideTransport == 1">
+          AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+        </when>
+        <otherwise>
+          AND (owi.provide_transport = 0 OR owi.provide_transport is null)
+        </otherwise>
+      </choose>
       <choose>
         <when test="withUser != null and withUser and userId != null and userId != ''">
           AND ofi.creator = #{userId, jdbcType=VARCHAR}
@@ -398,6 +413,9 @@
       <if test="form.custName!=null and form.custName!=''">
         AND ofi.cust_name = #{form.custName}
       </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND ofi.cust_code = #{form.custCode}
+      </if>
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
@@ -421,6 +439,9 @@
       </if>
       <if test="form.provideTransport!=null">
         AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <if test="form.groundDistribution!=null and form.groundDistribution!=''" >
+        AND ofi.ground_distribution = #{form.groundDistribution, jdbcType=INTEGER}
       </if>
       <choose>
         <when test="withUser != null and withUser and userId != null and userId != ''">
@@ -768,8 +789,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND  ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
@@ -1006,8 +1031,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}

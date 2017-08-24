@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * <p>Title:    MqConfig. </p>
- * <p>Description TODO </p>
+ * <p>Description 订单中心MQ推送配置</p>
  * <p>Company:    MT</p>
  *
  * @Author         <a>向铭涛</a>
@@ -35,191 +35,64 @@ public class MqConfig {
 
     public final static String MQ_PREFIX="mq";
 
-
-    private String accessKey;  //阿里云公钥
-    private String secretKey;  //阿里云密钥
+    /** 阿里云地址 */
+    private String onsAddr;
+    /** 阿里云公钥 */
+    private String accessKey;
+    /** 阿里云密钥 */
+    private String secretKey;
+    /** topic名称 */
     private String consumerTopicNames;
+    /** 生产者ID */
+    private String producerId;
+    /** 消费者ID */
+    private String consumerId;
+    /** 异常订单消费者ID */
+    private String consumerExceptOrderId;
 
-    /**
-     * 仓储订单状态
-     */
-    private String whcOrderStatusTopic;
-    /**
-     * 对接订单
-     */
+    /** 对接订单 */
     private String epcOrderTopic;
-    /**
-     * 运输订单状态
-     */
-    private String tfcOrderStatusTopic;
-    /**
-     * 订单状态反馈
-     */
+
+    /** 订单状态反馈 */
     private String ofcOrderStatusTopic;
 
-    /**
-     * 运输计划单
-     */
+    /** 仓储订单状态 */
+    private String whcOrderStatusTopic;
+
+    /** 运输订单状态 */
+    private String tfcOrderStatusTopic;
+
+    /** 订单推送tfc */
     private String ofc2TfcOrderTopic;
-    /**
-     * 仓储计划单
-     */
+
+    /** 订单推送whc */
     private String ofc2WhcOrderTopic;
-    /**
-     * 订单推结算
-     */
+
+    /** 订单推送ac */
     private String ofc2AcOrderTopic;
-    /**
-     * 订单推调度
-     */
+
+    /** 取消订单推送dpc */
     private String ofc2DpcStatusTopic;
-    /**
-     * 仓储订单状态反馈
-     */
-    private String whc2ofcOrderStatusTopic;
-    /**
-     * DMS回传状态topic
-     */
+
+    /** DMS回传状态Topic */
     public String dmsCallbackStatusTopic;
+
+    /** 仓储订单Topic */
     private String whc2OfcOrderTopic;
-    private String producerId; //XX发布者
-    private String consumerId; //XX消费者
-    private String onsAddr;  //阿里云地址
 
+    /** 仓储订单状态反馈 */
+    private String whc2ofcOrderStatusTopic;
 
-    public String getAccessKey() {
-        return accessKey;
-    }
+    /** 订单待创建货品Topic */
+    private String ofc2CscGoodsInfoTopic;
 
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
+    /**----------------异常订单topic----------------**/
 
-    public String getSecretKey() {
-        return secretKey;
-    }
+    /** 运输中心推送订单状态 */
+    private String tfc2OfcOrderPoTopic;
+    /** 仓储中心推送订单状态 */
+    private String whc2OfcOrderPoTopic;
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
+    /**----------------异常订单topic----------------**/
 
-    public String getConsumerTopicNames() {
-        return consumerTopicNames;
-    }
-
-    public void setConsumerTopicNames(String consumerTopicNames) {
-        this.consumerTopicNames = consumerTopicNames;
-    }
-
-    public String getWhcOrderStatusTopic() {
-        return whcOrderStatusTopic;
-    }
-
-    public void setWhcOrderStatusTopic(String whcOrderStatusTopic) {
-        this.whcOrderStatusTopic = whcOrderStatusTopic;
-    }
-
-    public String getEpcOrderTopic() {
-        return epcOrderTopic;
-    }
-
-    public void setEpcOrderTopic(String epcOrderTopic) {
-        this.epcOrderTopic = epcOrderTopic;
-    }
-
-    public String getTfcOrderStatusTopic() {
-        return tfcOrderStatusTopic;
-    }
-
-    public void setTfcOrderStatusTopic(String tfcOrderStatusTopic) {
-        this.tfcOrderStatusTopic = tfcOrderStatusTopic;
-    }
-
-    public String getOfcOrderStatusTopic() {
-        return ofcOrderStatusTopic;
-    }
-
-    public void setOfcOrderStatusTopic(String ofcOrderStatusTopic) {
-        this.ofcOrderStatusTopic = ofcOrderStatusTopic;
-    }
-
-    public String getOfc2TfcOrderTopic() {
-        return ofc2TfcOrderTopic;
-    }
-
-    public void setOfc2TfcOrderTopic(String ofc2TfcOrderTopic) {
-        this.ofc2TfcOrderTopic = ofc2TfcOrderTopic;
-    }
-
-    public String getOfc2WhcOrderTopic() {
-        return ofc2WhcOrderTopic;
-    }
-
-    public void setOfc2WhcOrderTopic(String ofc2WhcOrderTopic) {
-        this.ofc2WhcOrderTopic = ofc2WhcOrderTopic;
-    }
-
-    public String getWhc2ofcOrderStatusTopic() {
-        return whc2ofcOrderStatusTopic;
-    }
-
-    public void setWhc2ofcOrderStatusTopic(String whc2ofcOrderStatusTopic) {
-        this.whc2ofcOrderStatusTopic = whc2ofcOrderStatusTopic;
-    }
-
-    public String getDmsCallbackStatusTopic() {
-        return dmsCallbackStatusTopic;
-    }
-
-    public void setDmsCallbackStatusTopic(String dmsCallbackStatusTopic) {
-        this.dmsCallbackStatusTopic = dmsCallbackStatusTopic;
-    }
-
-    public String getWhc2OfcOrderTopic() {
-        return whc2OfcOrderTopic;
-    }
-
-    public void setWhc2OfcOrderTopic(String whc2OfcOrderTopic) {
-        this.whc2OfcOrderTopic = whc2OfcOrderTopic;
-    }
-
-    public String getProducerId() {
-        return producerId;
-    }
-
-    public void setProducerId(String producerId) {
-        this.producerId = producerId;
-    }
-
-    public String getConsumerId() {
-        return consumerId;
-    }
-
-    public void setConsumerId(String consumerId) {
-        this.consumerId = consumerId;
-    }
-
-    public String getOnsAddr() {
-        return onsAddr;
-    }
-
-    public void setOnsAddr(String onsAddr) {
-        this.onsAddr = onsAddr;
-    }
-
-    public String getOfc2AcOrderTopic() {
-        return ofc2AcOrderTopic;
-    }
-
-    public void setOfc2AcOrderTopic(String ofc2AcOrderTopic) {
-        this.ofc2AcOrderTopic = ofc2AcOrderTopic;
-    }
-
-    public String getOfc2DpcStatusTopic() {
-        return ofc2DpcStatusTopic;
-    }
-
-    public void setOfc2DpcStatusTopic(String ofc2DpcStatusTopic) {
-        this.ofc2DpcStatusTopic = ofc2DpcStatusTopic;
-    }
 }

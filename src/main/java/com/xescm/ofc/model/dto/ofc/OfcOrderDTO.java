@@ -1,6 +1,8 @@
 package com.xescm.ofc.model.dto.ofc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -429,5 +431,13 @@ public class OfcOrderDTO {
     private String selfCustCode;
 
     private String consignmentBatchNumber;
+
+
+    private CscContantAndCompanyDto consignor;
+
+    private CscContantAndCompanyDto consignee;
+
+    private CscSupplierInfoDto supplier;
+
 
 }

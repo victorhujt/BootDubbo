@@ -293,6 +293,27 @@ public class OfcFundamentalInformation {
     @Column(name = "signed_sms")
     private String signedSms;
 
+    /**
+     * 是否落地配 1:是 0:否
+
+     * @param groundDistribution
+     */
+    @Column(name = "ground_distribution")
+    private String groundDistribution;
+
+
+    public String getGroundDistribution() {
+        return groundDistribution;
+    }
+
+    public void setGroundDistribution(String groundDistribution) {
+        this.groundDistribution = groundDistribution;
+    }
+
+
+
+
+
 
     public void setExceptionReason(String exceptionReason) {
         this.exceptionReason = exceptionReason;
