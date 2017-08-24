@@ -67,7 +67,7 @@
                 and log_to_sys = #{logToSys}
             </if>
             <if test="refNo != null and refNo != ''">
-                and ref_no like concat('%', #{refNo}, '%')
+                and ref_no like concat(#{refNo}, '%')
             </if>
             <if test="logType != null and logType != ''">
                 and log_type = #{logType}
