@@ -368,14 +368,10 @@
       <if test="form.groundDistribution!=null and form.groundDistribution!=''">
         AND ofi.ground_distribution = #{form.groundDistribution}
       </if>
-      <choose>
-        <when test="form.provideTransport!=null and form.provideTransport == 1">
-          AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
-        </when>
-        <otherwise>
-          AND (owi.provide_transport = 0 OR owi.provide_transport is null)
-        </otherwise>
-      </choose>
+
+      <if test="form.provideTransport!=null">
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
       <choose>
         <when test="withUser != null and withUser and userId != null and userId != ''">
           AND ofi.creator = #{userId, jdbcType=VARCHAR}
