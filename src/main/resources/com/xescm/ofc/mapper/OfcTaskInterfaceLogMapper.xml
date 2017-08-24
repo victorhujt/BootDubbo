@@ -84,7 +84,7 @@
                 and task_type = #{taskType}
             </if>
             <if test="refNo != null and refNo != ''">
-                and ref_no like concat(#{refNo}, "%")
+                and ref_no like concat(#{refNo}, '%')
             </if>
             <if test="taskSource != null and taskSource != ''">
                 and task_source = #{taskSource}
