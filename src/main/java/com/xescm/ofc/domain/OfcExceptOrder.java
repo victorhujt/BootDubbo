@@ -112,10 +112,14 @@ public class OfcExceptOrder {
     @Column(name = "creation_time")
     private Date creationTime;
 
+    @Column(name = "from_sys")
+    private String fromSys;
+
     /**
      * 状态
      */
-    private String status;
+    @Column(name = "ofc_status")
+    private String ofcStatus;
 
     /**
      * 结点类型

@@ -57,10 +57,10 @@
      <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
      <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
 
-     <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
-     <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
-     <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
-     <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />-->
+    <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
+    <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+    <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />-->
     <result column="is_exception" property="isException" jdbcType="VARCHAR" />
     <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR" />
 
@@ -237,29 +237,19 @@
     ofc_fundamental_information ofi
     <where>
       <if test="orderTimePre!=null and orderTimePre!=''">
-        AND ofi.order_time <![CDATA[ >= ]]>  #{orderTimePre}
+        AND ofi.creation_time <![CDATA[ >= ]]>  #{orderTimePre}
       </if>
       <if test="orderTimeSuf!=null and orderTimeSuf!=''">
-        AND ofi.order_time <![CDATA[ <= ]]>  #{orderTimeSuf}
+        AND ofi.creation_time <![CDATA[ <= ]]>  #{orderTimeSuf}
       </if>
       <if test="orderCode!=null and orderCode!=''">
         AND ofi.order_code = #{orderCode}
       </if>
-      <if test="custOrderCode!=null and custOrderCode!=''">
-        AND ofi.cust_order_code = #{custOrderCode}
-      </if>
-      <if test="orderStatus!=null and orderStatus!=''">
-        AND oos.order_status = #{orderStatus}
-      </if>
-      <if test="orderType!=null and orderType!=''">
+      <if test="orderType != null and orderType != ''">
         AND ofi.order_type = #{orderType}
-      </if>
-      <if test="businessType!=null and businessType!=''">
-        AND ofi.business_type = #{businessType}
       </if>
       AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
     </where>
   </select>
-
 
 </mapper>

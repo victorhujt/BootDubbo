@@ -24,8 +24,6 @@ public class OfcOrderAPI {
 
     @Resource
     private OfcMobileOrderService ofcMobileOrderService;
-    @Resource
-    private OfcExceptOrderService ofcExceptOrderService;
 
     /**
      * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中
@@ -40,19 +38,5 @@ public class OfcOrderAPI {
             logger.error(e.getMessage());
         }
     }
-
-
-    @RequestMapping(value = "dealExceptOrder", method = {RequestMethod.POST})
-    @ResponseBody
-    public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO) {
-        logger.info("处理常订单...");
-        try {
-            ofcExceptOrderService.dealExceptOrder(ofcExceptOrderDTO);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-
 
 }
