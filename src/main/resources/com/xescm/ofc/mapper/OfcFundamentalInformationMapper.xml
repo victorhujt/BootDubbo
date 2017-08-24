@@ -234,6 +234,26 @@
     WHERE
     ofi.cust_order_code = #{custOrderCode}
   </select>
-
+  <select id="queryOrderCodeList" parameterType="com.xescm.ofc.domain.OrderScreenCondition" resultType="java.lang.String">
+    SELECT
+    ofi.order_code orderCode
+    FROM
+    ofc_fundamental_information ofi
+    <where>
+      <if test="orderTimePre!=null and orderTimePre!=''">
+        AND ofi.creation_time <![CDATA[ >= ]]>  #{orderTimePre}
+      </if>
+      <if test="orderTimeSuf!=null and orderTimeSuf!=''">
+        AND ofi.creation_time <![CDATA[ <= ]]>  #{orderTimeSuf}
+      </if>
+      <if test="orderCode!=null and orderCode!=''">
+        AND ofi.order_code = #{orderCode}
+      </if>
+      <if test="orderType != null and orderType != ''">
+        AND ofi.order_type = #{orderType}
+      </if>
+      AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+    </where>
+  </select>
 
 </mapper>

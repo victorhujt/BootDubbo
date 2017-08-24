@@ -852,7 +852,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if (isDup) {
             throw new BusinessException("客户订单编号" + ofcFundamentalInformation.getCustOrderCode() + "已经存在!您不能重复下单!");
         } else {
-
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
             //2017年4月7日 追加逻辑:城配开单运输单号为订单号
             ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());

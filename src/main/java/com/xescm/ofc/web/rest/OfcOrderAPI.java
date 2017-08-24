@@ -22,8 +22,6 @@ public class OfcOrderAPI {
     @Resource
     private OfcMobileOrderService ofcMobileOrderService;
 
-
-
     /**
      * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中
      */
@@ -37,6 +35,5 @@ public class OfcOrderAPI {
             logger.error(e.getMessage());
         }
     }
-
 
 }
