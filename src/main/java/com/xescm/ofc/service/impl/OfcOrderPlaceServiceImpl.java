@@ -127,7 +127,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
+            goodsAmountCount = goodsAmountCount.add(null == ofcGoodsDetails.getQuantity() ? new BigDecimal(0) : ofcGoodsDetails.getQuantity());
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
         return goodsAmountCount;
