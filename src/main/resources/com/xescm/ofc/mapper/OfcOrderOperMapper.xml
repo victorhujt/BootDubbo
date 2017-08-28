@@ -1004,7 +1004,7 @@
     FROM (
     SELECT DISTINCT
     <include refid="queryOrderListField"/>,
-    ofi.cust_code,owi.warehouse_code,owi.provide_transport
+    owi.warehouse_code,owi.provide_transport
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
