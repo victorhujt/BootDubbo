@@ -345,7 +345,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 if (Wrapper.SUCCESS_CODE != checkLock.getCode()) {
                     // 加锁
                     Wrapper<Integer> lock = distributedLockEdasService.addLock(key, 80);
-                    if (lock.getCode() == Wrapper.SUCCESS_CODE && lock.getResult().intValue() == 1) {
+//                    if (lock.getCode() == Wrapper.SUCCESS_CODE && lock.getResult().intValue() == 1) {
                         lockStatus.set(true);
                         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
                         if (information != null) {
@@ -375,10 +375,10 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                 this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, "订单创建成功！", true);
                             }
                         }
-                    } else {
-                        logger.error("接口任务创建订单加锁失败：key={}", key);
-                        throw new BusinessException(ExceptionTypeEnum.LOCK_FAIL.getCode(), ExceptionTypeEnum.LOCK_FAIL.getDesc());
-                    }
+//                    } else {
+//                        logger.error("接口任务创建订单加锁失败：key={}", key);
+//                        throw new BusinessException(ExceptionTypeEnum.LOCK_FAIL.getCode(), ExceptionTypeEnum.LOCK_FAIL.getDesc());
+//                    }
                 } else {
                     logger.error("接口任务创建订单锁存在或检查锁失败：key={}", key);
                     throw new BusinessException(ExceptionTypeEnum.LOCK_EXIST.getCode(), ExceptionTypeEnum.LOCK_EXIST.getDesc());
