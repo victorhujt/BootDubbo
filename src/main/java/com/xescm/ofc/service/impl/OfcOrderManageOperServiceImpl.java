@@ -10,7 +10,6 @@ import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
-import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
@@ -83,6 +82,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("613");
                 businessTypes.add("614");
                 businessTypes.add("617");
+                businessTypes.add("618");
             ofcQueryStorageDTO.setBusinessTypes(businessTypes);
         }
         OrderStorageOperForm form = new OrderStorageOperForm();
