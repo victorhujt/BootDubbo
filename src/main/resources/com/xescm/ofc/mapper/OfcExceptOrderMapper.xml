@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xescm.ofc.mapper.OfcExceptOrderMapper">
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcExceptOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="cust_order_code" jdbcType="VARCHAR" property="custOrderCode" />
+    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+    <result column="cust_name" jdbcType="VARCHAR" property="custName" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="business_type" jdbcType="VARCHAR" property="businessType" />
+    <result column="two_distribution" jdbcType="VARCHAR" property="twoDistribution" />
+    <result column="trans_code" jdbcType="VARCHAR" property="transCode" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="base_code" jdbcType="VARCHAR" property="baseCode" />
+    <result column="base_name" jdbcType="VARCHAR" property="baseName" />
+    <result column="order_source" jdbcType="VARCHAR" property="orderSource" />
+    <result column="creation_time" jdbcType="TIMESTAMP" property="creationTime" />
+    <result column="ofc_status" jdbcType="VARCHAR" property="ofcStatus" />
+    <result column="from_sys" jdbcType="VARCHAR" property="fromSys" />
+    <result column="pot_type" jdbcType="VARCHAR" property="potType" />
+    <result column="pot_time" jdbcType="TIMESTAMP" property="potTime" />
+    <result column="record_msg" jdbcType="VARCHAR" property="recordMsg" />
+    <result column="record_time" jdbcType="TIMESTAMP" property="recordTime" />
+    <result column="except_reason" jdbcType="VARCHAR" property="exceptReason" />
+    <result column="deal_status" jdbcType="VARCHAR" property="dealStatus" />
+    <result column="operator_id" jdbcType="VARCHAR" property="operatorId" />
+    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+    <result column="yn" jdbcType="VARCHAR" property="yn" />
+  </resultMap>
+  <sql id="resultModel">
+    oeo.order_code orderCode,
+    oeo.cust_order_code custOrderCode,
+    oeo.cust_code custCode,
+    oeo.cust_name custName,
+    oeo.order_type orderType,
+    oeo.business_type businessType,
+    oeo.two_distribution twoDistribution,
+    oeo.trans_code transCode,
+    oeo.area_code areaCode,
+    oeo.area_name areaName,
+    oeo.base_code baseCode,
+    oeo.base_name baseName,
+    oeo.order_source orderSource,
+    oeo.creation_time creationTime,
+    oeo.ofc_status ofcStatus,
+    oeo.from_sys fromSys,
+    oeo.pot_type potType,
+    oeo.pot_time potTime,
+    oeo.record_msg recordMsg,
+    oeo.record_time recordTime,
+    oeo.except_reason exceptReason,
+    oeo.deal_status dealStatus,
+    oeo.operator_id operatorId,
+    oeo.operator_name operatorName
+  </sql>
+  <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.OfcExceptOrder">
+    UPDATE
+    ofc_except_order oeo
+    <set>
+      <if test="custOrderCode != null and custOrderCode != ''">
+        oeo.cust_order_code = #{custOrderCode},
+      </if>
+      <if test="custCode != null and custCode != ''">
+        oeo.cust_code = #{custCode},
+      </if>
+      <if test="custName != null and custName != ''">
+        oeo.cust_name = #{custName},
+      </if>
+      <if test="orderType != null and orderType != ''">
+        oeo.order_type = #{orderType},
+      </if>
+      <if test="businessType != null and businessType != ''">
+        oeo.business_type = #{businessType},
+      </if>
+      <if test="twoDistribution != null and twoDistribution != ''">
+        oeo.two_distribution = #{twoDistribution},
+      </if>
+      <if test="transCode != null and transCode != ''">
+        oeo.trans_code = #{transCode},
+      </if>
+      <if test="areaCode != null and areaCode != ''">
+        oeo.area_code = #{areaCode},
+      </if>
+      <if test="areaName != null and areaName != ''">
+        oeo.area_name = #{areaName},
+      </if>
+      <if test="baseCode != null and baseCode != ''">
+        oeo.base_code = #{baseCode},
+      </if>
+      <if test="baseName != null and baseName != ''">
+        oeo.base_name = #{baseName},
+      </if>
+      <if test="orderSource != null and orderSource != ''">
+        oeo.order_source = #{orderSource},
+      </if>
+      <if test="creationTime != null">
+        oeo.creation_time = #{creationTime},
+      </if>
+      <if test="ofcStatus != null and ofcStatus != ''">
+        oeo.ofc_status = #{ofcStatus},
+      </if>
+      <if test="fromSys != null and fromSys != ''">
+        oeo.from_sys = #{fromSys},
+      </if>
+      <if test="potType != null and potType != ''">
+        oeo.pot_type = #{potType},
+      </if>
+      <if test="potTime != null">
+        oeo.pot_time = #{potTime},
+      </if>
+      <if test="recordMsg != null and recordMsg != ''">
+        oeo.record_msg = #{recordMsg},
+      </if>
+      <if test="recordTime != null">
+        oeo.record_time = #{recordTime},
+      </if>
+      <if test="exceptReason != null and exceptReason != ''">
+        oeo.except_reason = #{exceptReason},
+      </if>
+      <if test="dealStatus != null and dealStatus != ''">
+        oeo.deal_status = #{dealStatus},
+      </if>
+      <if test="operatorId != null and operatorId != ''">
+        oeo.operator_id = #{operatorId},
+      </if>
+      <if test="operatorName != null and operatorName != ''">
+        oeo.operator_name = #{operatorName},
+      </if>
+      <if test="yn != null and yn != ''">
+        oeo.yn = #{yn}
+      </if>
+    </set>
+    WHERE
+     oeo.order_code = #{orderCode, jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectUndealedOrderCodeByType" parameterType="com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO" resultType="java.lang.String">
+    SELECT
+    ofi.order_code orderCode
+    FROM ofc_fundamental_information ofi
+    LEFT JOIN ofc_except_order oeo ON ofi.order_code = oeo.order_code
+    <where>
+      oeo.deal_status = 100
+      AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+      <if test="exceptPot != null and exceptPot != ''">
+        AND oeo.pot_type = {exceptPot, jdbcType=VARCHAR}
+      </if>
+    </where>
+    GROUP BY oeo.order_code
+  </select>
+
+  <select id="selectExceptOrderByDTO" parameterType="com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO" resultType="com.xescm.ofc.domain.OfcExceptOrder">
+    SELECT
+    <include refid="resultModel"/>
+    FROM ofc_fundamental_information ofi
+    LEFT JOIN ofc_except_order oeo ON ofi.order_code = oeo.order_code
+    <where>
+      <if test="startDate != null and startDate != ''">
+        AND oeo.creation_time <![CDATA[ >= ]]>  #{startDate}
+      </if>
+      <if test="endDate != null and endDate != ''">
+        AND oeo.creation_time <![CDATA[ <= ]]>  #{endDate}
+      </if>
+      <if test = "areaName != null and areaName != ''">
+        AND oeo.area_name = #{areaName, jdbcType=VARCHAR}
+      </if>
+      <if test = "areaSerialNo != null and areaSerialNo != ''">
+        AND oeo.area_code = #{areaSerialNo, jdbcType=VARCHAR}
+      </if>
+      <if test = "baseName != null and baseName != ''">
+        AND oeo.base_name = #{baseName, jdbcType=VARCHAR}
+      </if>
+      <if test = "baseSerialNo != null and baseSerialNo != ''">
+        AND oeo.base_code = #{baseSerialNo, jdbcType=VARCHAR}
+      </if>
+      <if test = "custCode != null and custCode != ''">
+        AND oeo.cust_code = #{custCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "custName != null and custName != ''">
+        AND oeo.cust_name = #{custName, jdbcType=VARCHAR}
+      </if>
+      <if test = "orderType != null and orderType != ''">
+        AND oeo.order_type = #{orderType, jdbcType=VARCHAR}
+      </if>
+      <if test = "businessType != null and businessType != ''">
+        AND oeo.business_type = #{businessType, jdbcType=VARCHAR}
+      </if>
+      <if test = "orderSource != null and orderSource != ''">
+        AND oeo.order_source = #{orderSource, jdbcType=VARCHAR}
+      </if>
+      <if test = "orderCode != null and orderCode != ''">
+        AND oeo.order_code = #{orderCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "custOrderCode != null and custOrderCode != ''">
+        AND oeo.cust_order_code = #{custOrderCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "transCode != null and transCode != ''">
+        AND oeo.trans_code = #{transCode, jdbcType=VARCHAR}
+      </if>
+      <if test = "exceptReason != null and exceptReason != ''">
+        AND oeo.except_reason = #{exceptReason, jdbcType=VARCHAR}
+      </if>
+      <if test = "exceptPot != null and exceptPot != ''">
+        AND oeo.pot_type = #{exceptPot, jdbcType=VARCHAR}
+      </if>
+      <if test = "dealStatus != null and dealStatus != ''">
+        AND oeo.deal_status = #{dealStatus, jdbcType=VARCHAR}
+      </if>
+      AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+    </where>
+    ORDER BY oeo.creation_time DESC
+  </select>
+
+  <select id="selectByOrderCode" resultType="com.xescm.ofc.domain.OfcExceptOrder">
+    SELECT
+    <include refid="resultModel"/>
+    FROM ofc_fundamental_information ofi
+    LEFT JOIN ofc_except_order oeo ON ofi.order_code = oeo.order_code
+    WHERE
+    oeo.order_code = #{orderCode}
+    AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+  </select>
+
+</mapper>
