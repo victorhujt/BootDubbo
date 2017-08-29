@@ -43,7 +43,7 @@
         OR odbi.trans_code =#{transCode}
       </if>
     </where>
-    ORDER BY oos.lasted_oper_time ASC
+    ORDER BY oos.lasted_oper_time,oos.order_status ASC
   </select>
   <!--订单最新状态-->
   <select id="orderStatusSelect" parameterType="java.util.Map" resultMap="BaseResultMap">
@@ -165,7 +165,7 @@
         <otherwise></otherwise>
       </choose>
     </where>
-    ORDER BY oos.lasted_oper_time ASC
+    ORDER BY oos.lasted_oper_time,oos.order_status ASC
   </select>
 
   <!--获取最新状态-->

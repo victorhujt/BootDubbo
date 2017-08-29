@@ -419,7 +419,7 @@ public class OfcStorageInfoController extends BaseController {
             httpMethod = "POST",
             value = "取消订单"
     )
-    @RequestMapping(value = "/orderCancelOper/{orderCode}", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderCancelOper", method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @RequestBody List<String> orderCodes) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();

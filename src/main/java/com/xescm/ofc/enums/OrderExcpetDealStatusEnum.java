@@ -2,9 +2,9 @@ package com.xescm.ofc.enums;
 
 public enum OrderExcpetDealStatusEnum {
 
-    UN_DEAL("未处理", "00"),
-    DEALING("处理中", "01"),
-    IS_EXCEPTION("已标记异常", "02");
+    UN_DEAL("未处理", "100"),
+    DEALING("处理中", "101"),
+    IS_EXCEPTION("已标记异常", "102");
 
     private String desc;
     private String code;

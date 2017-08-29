@@ -253,10 +253,12 @@
   </sql>
   <sql id="queryOrderListField">
     ofi.cust_name,
+    ofi.cust_code,
       ofi.order_code,
       ofi.cust_order_code,
       ofi.order_batch_number,
       ofi.order_time,
+      odbi.weight,
       ofi.order_type,
       ofi.business_type,
       ofi.base_name,
@@ -366,14 +368,10 @@
       <if test="form.groundDistribution!=null and form.groundDistribution!=''">
         AND ofi.ground_distribution = #{form.groundDistribution}
       </if>
-      <choose>
-        <when test="form.provideTransport!=null and form.provideTransport == 1">
-          AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
-        </when>
-        <otherwise>
-          AND (owi.provide_transport = 0 OR owi.provide_transport is null)
-        </otherwise>
-      </choose>
+
+      <if test="form.provideTransport!=null">
+        AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
       <choose>
         <when test="withUser != null and withUser and userId != null and userId != ''">
           AND ofi.creator = #{userId, jdbcType=VARCHAR}
@@ -1006,7 +1004,7 @@
     FROM (
     SELECT DISTINCT
     <include refid="queryOrderListField"/>,
-    ofi.cust_code,owi.warehouse_code,owi.provide_transport
+    owi.warehouse_code,owi.provide_transport
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code

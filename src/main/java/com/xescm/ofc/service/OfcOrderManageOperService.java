@@ -6,6 +6,8 @@ import com.xescm.ofc.domain.OrderFollowOperResult;
 import com.xescm.ofc.domain.OrderScreenResult;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
+import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
@@ -75,4 +77,6 @@ public interface OfcOrderManageOperService {
      * @return
      */
     OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode);
+
+    OfcOrderInfoDTO queryOrderMainDetailByOrderCode(String orderCode);
 }

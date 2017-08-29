@@ -1,6 +1,12 @@
 package com.xescm.ofc.enums;
 
 
+import com.xescm.ofc.model.dto.ofc.OfcKVDTO;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 订单环节
  */
@@ -63,6 +69,26 @@ public enum OrderPotEnum {
     OrderPotEnum(String potDesc, String potCode) {
         this.potCode = potCode;
         this.potDesc = potDesc;
+    }
+
+    public static List<String> getCodeList() {
+        List<String> result = new ArrayList<>();
+        for (OrderPotEnum orderPotEnum : Arrays.asList(OrderPotEnum.values())) {
+            result.add(orderPotEnum.getPotCode());
+        }
+        return result;
+    }
+
+    public static List<OfcKVDTO> getList() {
+        List<OfcKVDTO> result = new ArrayList<>();
+        List<OrderPotEnum> orderPotEnums = Arrays.asList(OrderPotEnum.values());
+        for (OrderPotEnum orderPotEnum : orderPotEnums) {
+            OfcKVDTO kvdto = new OfcKVDTO();
+            kvdto.setCode(orderPotEnum.getPotCode());
+            kvdto.setName(orderPotEnum.getPotDesc());
+            result.add(kvdto);
+        }
+        return result;
     }
 
 }

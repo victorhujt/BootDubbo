@@ -144,6 +144,32 @@ public class OfcOrderManageController extends BaseController {
     }
 
     /**
+     * 根据所选基地反查大区
+     */
+    @RequestMapping(value = "queryAreaMsgByBase/{baseCode}", method = {RequestMethod.POST})
+    @ResponseBody
+    @ApiOperation(value = "根据所选基地反查大区", httpMethod = "POST", notes = "返回组织信息")
+    public Wrapper<?> queryAreaMsgByBase(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String baseCode) {
+        logger.info("根据所选基地反查大区,入参:baseCode = {}", baseCode);
+        if (PubUtils.isSEmptyOrNull(baseCode)) {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "该基地编码为空!无法查询其所属大区!");
+        }
+        UamGroupDto uamGroupDto = new UamGroupDto();
+        uamGroupDto.setSerialNo(baseCode);
+        OfcGroupVo ofcGroupVo;
+        try {
+            ofcGroupVo = ofcOrderManageOperService.queryAreaMsgByBase(uamGroupDto);
+        } catch (BusinessException ex) {
+            logger.info("根据所选基地反查大区出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.info("根据所选基地反查大区出错：{", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选基地反查大区查询成功", ofcGroupVo);
+    }
+
+    /**
      * 审核与反审核订单
      *
      * @param auditOrderDTO 审核参数
