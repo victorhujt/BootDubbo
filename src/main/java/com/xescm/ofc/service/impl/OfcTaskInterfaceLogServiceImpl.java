@@ -2,8 +2,11 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
+import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
 import com.xescm.ofc.edas.enums.LogStatusEnum;
 import com.xescm.ofc.edas.enums.TaskLogSourceEnum;
@@ -11,10 +14,9 @@ import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcInterfaceReceiveLogMapper;
 import com.xescm.ofc.mapper.OfcTaskInterfaceLogMapper;
+import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
-import com.xescm.ofc.service.CreateOrderService;
-import com.xescm.ofc.service.GoodsAmountSyncService;
-import com.xescm.ofc.service.OfcTaskInterfaceLogService;
+import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,10 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
     private CreateOrderService createOrderService;
     @Resource
     private GoodsAmountSyncService goodsAmountSyncService;
+    @Resource
+    private OfcFundamentalInformationService ofcFundamentalInfoService;
+    @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
 
     /**
      * <p>Title:      insertOfcTaskInterfaceLog. </p>
@@ -85,7 +91,7 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
 
     /**
      * <p>Title:      updateTaskInterfaceLogStatus. </p>
-     * <p>Description 更新任务状态</p>
+     * <p>Description 更新任务最新状态、执行时间、执行次数</p>
      *
      * @param
      * @Author	      nothing
@@ -122,6 +128,27 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
                 // 删除任务表成功日志
                 taskInterfaceLogMapper.delTaskLogById(taskParam.getId());
             }
+        } catch (BusinessException e) {
+            logger.error("更新任务状态发生异常：{}", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("更新任务状态发生未知异常：{}", e);
+            throw e;
+        }
+        return result;
+    }
+
+    @Transactional
+    public Integer updateTaskInterfaceLogStatusOnly(OfcTaskInterfaceLogDto taskParam) {
+        Integer result;
+        try {
+            // 更新任务表状态
+            OfcTaskInterfaceLog taskLog = new OfcTaskInterfaceLog();
+            taskLog.setId(taskParam.getId());
+            taskLog.setTaskExeCount(taskParam.getTaskExeCount());
+            taskLog.setTaskStatus(taskParam.getTaskStatus());
+            taskLog.setCreationTime(taskParam.getCreationTime());
+            result = taskInterfaceLogMapper.updateByPrimaryKeySelective(taskLog);
         } catch (BusinessException e) {
             logger.error("更新任务状态发生异常：{}", e);
             throw e;
@@ -180,10 +207,10 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
                 throw new BusinessException("交货量同步任务数据为空！");
             }
         } catch (BusinessException e) {
-            logger.error("执行交货量同步任务发生异常: 异常信息=>", e);
+            logger.error("执行交货量同步任务发生异常: 异常信息=> {}", e);
             throw e;
         } catch (Exception e) {
-            logger.error("执行交货量同步任务发生未知异常: 异常信息=>", e);
+            logger.error("执行交货量同步任务发生未知异常: 异常信息=> {}", e);
             throw e;
         }
         return result;
@@ -250,6 +277,56 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
         } catch (Exception e) {
             logger.error("重发任务日志发生异常：异常信息=>{}", e);
             throw e;
+        }
+        return result;
+    }
+
+    @Override
+    public OfcOrderNewstatus queryOrderStatus(OfcTaskInterfaceLogDto taskParam) throws Exception {
+        OfcOrderNewstatus orderStatus = null;
+        try {
+            String taskData = taskParam.getTaskData();
+            if (!PubUtils.isSEmptyOrNull(taskData)) {
+                CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(taskData, CreateOrderEntity.class);
+                String custCode = createOrderEntity.getCustCode();
+                String custOrderCode = createOrderEntity.getCustOrderCode();
+                OfcFundamentalInformation ofcFundamentalInfo = ofcFundamentalInfoService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
+                if (ofcFundamentalInfo != null) {
+                    OfcOrderNewstatus param = new OfcOrderNewstatus();
+                    param.setOrderCode(ofcFundamentalInfo.getOrderCode());
+                    orderStatus = ofcOrderNewstatusService.selectOne(param);
+                }
+            }
+        } catch (BusinessException e) {
+            logger.error("查询订单状态发生异常：异常详情 => {}", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("查询订单状态发生未知异常：异常详情 => {}", e);
+            throw e;
+        }
+        return orderStatus;
+    }
+
+    @Override
+    public List<OfcTaskInterfaceLogDto> queryFailTaskInTwoDays(OfcTaskInterfaceLogDto taskParam) {
+        List<OfcTaskInterfaceLogDto> result;
+        try {
+            result = taskInterfaceLogMapper.queryFailTaskInTwoDays(taskParam);
+        } catch (Exception e) {
+            logger.error("查询worker失败任务发生异常：参数 -> OfcTaskInterfaceLogDto {}, 异常 -> {}", taskParam, e);
+            throw new BusinessException("查询worker失败任务发生异常");
+        }
+        return result;
+    }
+
+    @Override
+    public List<OfcTaskInterfaceLogDto> queryFailTaskOverThirtyDays(OfcTaskInterfaceLogDto taskParam) {
+        List<OfcTaskInterfaceLogDto> result;
+        try {
+            result = taskInterfaceLogMapper.queryFailTaskOverThirtyDays(taskParam);
+        } catch (Exception e) {
+            logger.error("查询worker失败任务发生异常：参数 -> OfcTaskInterfaceLogDto {}, 异常 -> {}", taskParam, e);
+            throw new BusinessException("查询worker失败任务发生异常");
         }
         return result;
     }

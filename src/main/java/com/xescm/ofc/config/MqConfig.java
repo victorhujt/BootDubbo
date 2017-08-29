@@ -79,7 +79,7 @@ public class MqConfig {
 
     /** 仓储订单Topic */
     private String whc2OfcOrderTopic;
-
+    
     /** 仓储订单状态反馈 */
     private String whc2ofcOrderStatusTopic;
 

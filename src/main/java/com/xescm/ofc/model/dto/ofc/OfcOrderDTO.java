@@ -439,5 +439,13 @@ public class OfcOrderDTO {
 
     private CscSupplierInfoDto supplier;
 
+    private String baseName;
+
+    private String baseCode;
+
+    private String areaName;
+
+    private String areaCode;
+
 
 }

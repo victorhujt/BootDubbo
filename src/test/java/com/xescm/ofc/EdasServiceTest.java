@@ -3,9 +3,13 @@ package com.xescm.ofc;
 import com.taobao.hsf.lightapi.ServiceFactory;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
+import com.xescm.ofc.edas.model.dto.ofc.OfcOrderInfoDto;
+import com.xescm.ofc.edas.service.OfcOrderInfoEdasService;
 import com.xescm.uam.provider.DistributedLockEdasService;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -49,5 +53,15 @@ public class EdasServiceTest extends HsfBaseTest {
         }
         executorService.shutdown();
         executorService.awaitTermination(500, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void getOrderInfoByOrderCode() throws Exception {
+        OfcOrderInfoEdasService ofcOrderInfoEdasService = super.getConsumer(OfcOrderInfoEdasService.class, "com.xescm.ofc.edas.service.OfcOrderInfoEdasService", "1.0", "xescm-ofc-dev", null);
+        List<String> orderList = new ArrayList<>();
+        orderList.add("SO170525000439");
+        orderList.add("SO170703000005");
+        Wrapper<List<OfcOrderInfoDto>> res = ofcOrderInfoEdasService.getOrderInfoByOrderCode(orderList);
+        System.out.println(JacksonUtil.toJson(res));
     }
 }

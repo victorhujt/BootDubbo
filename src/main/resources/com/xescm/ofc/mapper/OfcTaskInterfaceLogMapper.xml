@@ -32,8 +32,10 @@
         <include refid="BaseColumn"/>
         from ofc_task_interface_log lg
         where lg.dr = 0
-        and lg.task_type = #{taskType}
         and lg.task_status = 1
+        <if test="taskType != null and taskType != ''">
+            and lg.task_type = #{taskType}
+        </if>
         <if test="taskExeCount != null and taskExeCount != ''">
             and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
         </if>
@@ -48,9 +50,11 @@
         <include refid="BaseColumn"/>
         from ofc_task_interface_log lg
         where lg.dr = 0
-        and lg.task_type = #{taskType}
         and lg.task_status = 2
-        and <![CDATA[ update_time < (NOW() - 10 / 60 / 24) ]]>
+        <if test="taskType != null and taskType != ''">
+            and lg.task_type = #{taskType}
+        </if>
+            and <![CDATA[ update_time < (NOW() - 10 / 60 / 24) ]]>
         <if test="taskExeCount != null and taskExeCount != ''">
             and lg.task_exe_count <![CDATA[ <= ]]> #{taskExeCount}
         </if>
@@ -65,6 +69,28 @@
         <if test="fetchNum != null">
             LIMIT #{fetchNum}
         </if>
+    </select>
+
+    <!-- 查询失败两天内任务日志 -->
+    <select id="queryFailTaskInTwoDays"
+            resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
+        select
+        <include refid="BaseColumn"/>
+        from ofc_task_interface_log lg
+        where lg.dr = 0
+        and task_status = '4'
+        and timestampdiff(DAY, creation_time, CURRENT_TIMESTAMP()) <![CDATA[ <= ]]> 2
+    </select>
+
+    <!-- 查询失败超三十天任务日志 -->
+    <select id="queryFailTaskOverThirtyDays"
+            resultType="com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto">
+        select
+        <include refid="BaseColumn"/>
+        from ofc_task_interface_log lg
+        where lg.dr = 0
+        and task_status = '4'
+        and timestampdiff(DAY, creation_time, CURRENT_TIMESTAMP()) <![CDATA[ > ]]> 30
     </select>
 
     <!-- 根据条件查询任务日志 -->
@@ -84,7 +110,7 @@
                 and task_type = #{taskType}
             </if>
             <if test="refNo != null and refNo != ''">
-                and ref_no like concat("%", #{refNo}, "%")
+                and ref_no like concat(#{refNo}, '%')
             </if>
             <if test="taskSource != null and taskSource != ''">
                 and task_source = #{taskSource}
@@ -113,6 +139,6 @@
     </delete>
 
     <update id="resendTaskLogById">
-        update ofc_task_interface_log set task_status = 1, task_exe_count = task_exe_count - 1, update_time = CURRENT_TIMESTAMP(), exe_time = null where id = #{id};
+        update ofc_task_interface_log set task_status = 1, update_time = CURRENT_TIMESTAMP(), exe_time = null where id = #{id};
     </update>
 </mapper>

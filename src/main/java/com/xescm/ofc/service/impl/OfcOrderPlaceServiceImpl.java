@@ -127,7 +127,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
+            goodsAmountCount = goodsAmountCount.add(null == ofcGoodsDetails.getQuantity() ? new BigDecimal(0) : ofcGoodsDetails.getQuantity());
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
         return goodsAmountCount;
@@ -548,6 +548,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     @Override
     public void orderAuthByConsignorAddr(AuthResDto authResDto, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation) {
+        String baseCode = ofcFundamentalInformation.getBaseCode();
+        String baseName = ofcFundamentalInformation.getBaseName();
+        if (!StringUtils.isEmpty(baseCode) && !StringUtils.isEmpty(baseName)) {
+            UamGroupDto uamGroupDto = new UamGroupDto();
+            uamGroupDto.setSerialNo(baseCode);
+            OfcGroupVo ofcGroupVo = ofcOrderManageOperService.queryAreaMsgByBase(uamGroupDto);
+            ofcFundamentalInformation.setAreaCode(ofcGroupVo.getSerialNo());
+            ofcFundamentalInformation.setAreaName(ofcGroupVo.getGroupName());
+            return;
+        }
         if (trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)) {
             this.getAreaAndBaseMsg(authResDto, ofcFundamentalInformation);
             return;

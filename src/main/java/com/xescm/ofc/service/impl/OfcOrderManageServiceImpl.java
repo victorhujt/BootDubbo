@@ -313,8 +313,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
         ofcWarehouse.setOrderCode(orderCode);
         OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
-        Wrapper response=null;
-        Wrapper whcresponse=null;
+        Wrapper response = null;
+        Wrapper whcresponse = null;
         try {
             if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
                 long start = System.currentTimeMillis();
@@ -370,7 +370,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                     }
                 }
-
             }
         } catch (Exception e) {
             logger.info("取消订单，调用结算中心、运输中心、仓储中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
@@ -2038,7 +2037,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFromSystem(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderSource()));
         tfcTransport.setTransportNo(trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()));
 //        tfcTransport.setStatus();
-        tfcTransport.setBillType(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()));
+        tfcTransport.setBillType(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()));
         tfcTransport.setItemType(trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsType()));
         tfcTransport.setCustomerCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()));
         tfcTransport.setCustomerName(trimAndNullAsEmpty(ofcFundamentalInformation.getCustName()));

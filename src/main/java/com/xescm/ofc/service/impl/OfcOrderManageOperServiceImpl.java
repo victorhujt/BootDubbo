@@ -576,4 +576,23 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         }
         return orderInfoDTO;
     }
+
+    @Override
+    public OfcOrderInfoDTO queryOrderMainDetailByOrderCode(String orderCode) {
+        //订单基本信息
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation.setOrderCode(orderCode);
+        ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(ofcFundamentalInformation);
+        //订单配送基本信息
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.queryByOrderCode(orderCode);
+        //订单仓储基本信息
+        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
+        OfcOrderInfoDTO ofcOrderInfoDTO = new OfcOrderInfoDTO();
+        ofcOrderInfoDTO.setOfcFundamentalInformation(ofcFundamentalInformation);
+        ofcOrderInfoDTO.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
+        ofcOrderInfoDTO.setOfcWarehouseInformation(ofcWarehouseInformation);
+        return ofcOrderInfoDTO;
+    }
+
+
 }
