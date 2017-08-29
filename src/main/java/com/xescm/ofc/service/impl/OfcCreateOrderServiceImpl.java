@@ -104,6 +104,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     @Resource
     private CscContactEdasService cscContactEdasService;
 
+    @Resource
+    private OfcEnumerationService ofcEnumerationService;
+
     @Override
     public int queryCountByOrderStatus(String orderCode, String orderStatus) {
         return createOrdersMapper.queryCountByOrderStatus(orderCode, orderStatus);

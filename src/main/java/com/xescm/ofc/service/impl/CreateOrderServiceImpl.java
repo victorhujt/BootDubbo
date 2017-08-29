@@ -10,6 +10,7 @@ import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
+import com.xescm.ofc.domain.OfcEnumeration;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
@@ -71,6 +72,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private DistributedLockEdasService distributedLockEdasService;
     @Resource
     private CreateOrderApiProducer createOrderApiProducer;
+    @Resource
+    private OfcEnumerationService ofcEnumerationService;
 
     @Override
     public boolean CreateOrders(List<CreateOrderEntity> list) {
@@ -423,7 +426,16 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         String jsonMsg;
         String tag;
         // 大成
-        if (CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+        String specialCust = "";
+        OfcEnumeration ofcEnumeration = new OfcEnumeration();
+        ofcEnumeration.setEnumSys("OFC");
+        ofcEnumeration.setEnumType("SpecialCustEnum");
+        ofcEnumeration.setEnumName("大成万达（天津）有限公司");
+        List<OfcEnumeration> enumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+        if (!CollectionUtils.isEmpty(enumerations)) {
+            specialCust = enumerations.get(0).getEnumValue();
+        }
+        if (specialCust.equals(custCode)) {
             LockStockOrderDTO resultDto = new LockStockOrderDTO();
             resultDto.setOrderNo(custOrderCode);
             resultDto.setOrderType(orderType);
