@@ -5,6 +5,9 @@ package com.xescm.ofc.constant;
  */
 public class StorageTemplateConstant {
 
+    //未知错误
+    public static final Integer ERROR = 499;
+
     //未选客户错误
     public static final Integer ERROR_CUST = 501;
 

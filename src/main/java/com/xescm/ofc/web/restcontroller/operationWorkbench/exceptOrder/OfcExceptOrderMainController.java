@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.restcontroller.exceptOrder;
+package com.xescm.ofc.web.restcontroller.operationWorkbench.exceptOrder;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,9 +24,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/ofc/except/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/page/ofc/except/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "OfcExceptOrderRestController", tags = "OfcExceptOrderRestController", description = "异常订单", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class OfcExceptOrderRestController extends BaseController{
+public class OfcExceptOrderMainController extends BaseController{
 
     @Resource
     private OfcExceptOrderService ofcExceptOrderService;
@@ -86,4 +86,3 @@ public class OfcExceptOrderRestController extends BaseController{
     }
 
 }
-

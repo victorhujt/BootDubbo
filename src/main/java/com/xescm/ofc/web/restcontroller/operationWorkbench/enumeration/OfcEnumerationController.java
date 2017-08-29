@@ -1,4 +1,4 @@
-package com.xescm.ofc.web.restcontroller.exceptOrder;
+package com.xescm.ofc.web.restcontroller.operationWorkbench.enumeration;
 
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -24,7 +24,7 @@ import java.util.List;
  * @CreateDate    2017/7/6 13:12
  */
 @RestController
-@RequestMapping(value = "/ofc/enum", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/page/ofc/enum", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "OfcEnumerationController", tags = "OfcEnumerationController", description = "自定义枚举类型", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class OfcEnumerationController {
 

@@ -5,9 +5,9 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
+import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
@@ -30,7 +30,7 @@ public interface OfcStorageTemplateService {
 
     void  delTemplateByCode(String temlpateCode);
 
-    void templateEditConfirm(String templateName, AuthResDto authResDto, String lastTemplateType) throws Exception;
+    void templateEditConfirm(List<OfcStorageTemplate> templateName, AuthResDto authResDto, String lastTemplateType) throws Exception;
 
     List<OfcStorageTemplate> selectTemplateDetail(TemplateCondition templateCondition);
 
@@ -42,7 +42,7 @@ public interface OfcStorageTemplateService {
 
     List<RmcWarehouseRespDto> allWarehouseByRmc();
 
-    Wrapper orderConfirm(String orderList, AuthResDto authResDto) throws Exception;
+    Wrapper orderConfirm(List<OfcStorageTemplateDto> orderList, AuthResDto authResDto) throws Exception;
 
     Wrapper storageTemplateAudit(Object result, AuthResDto authResDto);
 
@@ -52,7 +52,7 @@ public interface OfcStorageTemplateService {
 
     Date convertStringToDate(String orderTime);
 
-    OfcGoodsDetailsInfo convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto);
+    OfcGoodsDetailsInfoDTO convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto);
 
     CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto);
 

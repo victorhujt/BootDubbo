@@ -3,10 +3,11 @@ package com.xescm.ofc.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 @Data
 @Table(name = "ofc_storage_template")
-public class OfcStorageTemplate {
+public class OfcStorageTemplate implements Serializable{
     /**
      * 主键
      */
