@@ -497,7 +497,6 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         orderScreenCondition.setOrderTimePre(now.getTime());
         orderScreenCondition.setOrderType(TRANSPORT_ORDER);// 运输订单
         List<OfcExceptOrder> undealedOrders = ofcFundamentalInformationMapper.queryByCondition(orderScreenCondition);
-        StringBuilder key = new StringBuilder();
         if (CollectionUtils.isEmpty(undealedOrders)) {
             logger.error("加载昨日订单失败! 订单号列表为空!");
             throw new BusinessException("处理异常订单失败");
@@ -505,13 +504,18 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         int undealedSize = undealedOrders.size();
         String ordersKey = "orderPot:" + com.xescm.ofc.utils.DateUtils.Date2String(now.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
+        StringBuilder key = new StringBuilder();
+        List<OfcExceptOrder> value = new ArrayList<>();
         for (int index = 1; index <= undealedSize; index ++) {
-            OfcExceptOrder ofcExceptOrder = undealedOrders.get(index);
+            OfcExceptOrder ofcExceptOrder = undealedOrders.get(index - 1);
             String orderCode = ofcExceptOrder.getOrderCode();
             key.append(orderCode).append(",");
             String aPartKey = key.toString();
-            if (aPartKey.split(",").length / 50 == 0 || index == undealedSize) {
-                listOps.rightPush(aPartKey, JacksonUtil.toJson(ofcExceptOrder));
+            value.add(ofcExceptOrder);
+            if (aPartKey.split(",").length / 50 > 0 || index == undealedSize) {
+                stringRedisTemplate.delete(aPartKey);
+                stringRedisTemplate.delete(ordersKey);
+                listOps.rightPush(aPartKey, JacksonUtil.toJson(value));
                 listOps.rightPush(ordersKey, aPartKey);
                 stringRedisTemplate.expire(aPartKey, 10L, TimeUnit.DAYS);
                 stringRedisTemplate.expire(ordersKey, 10L, TimeUnit.DAYS);
