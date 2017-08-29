@@ -251,5 +251,38 @@
       AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
     </where>
   </select>
+    <select id="queryByCondition" resultType="com.xescm.ofc.domain.OfcExceptOrder">
+      SELECT
+      ofi.order_code orderCode,
+      ofi.cust_order_code custOrderCode,
+      ofi.cust_code custCode,
+      ofi.cust_name custName,
+      ofi.order_type orderType,
+      ofi.business_type businessType,
+      ofi.order_source orderSource,
+      ofi.area_code areaCode,
+      ofi.area_name areaName,
+      ofi.base_code baseCode,
+      ofi.base_name baseName,
+      ofi.creation_time creationTime,
+      odbi.trans_code transCode,
+      owi.provide_transport provideTransport
+      FROM
+      ofc_fundamental_information ofi
+      LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+      LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+      <where>
+      <if test="orderTimePre!=null and orderTimePre!=''">
+        AND ofi.order_time <![CDATA[ >= ]]>  #{orderTimePre}
+      </if>
+      <if test="orderTimeSuf!=null and orderTimeSuf!=''">
+        AND ofi.order_time <![CDATA[ <= ]]>  #{orderTimeSuf}
+      </if>
+      <if test="orderCode!=null and orderCode!=''">
+        AND ofi.order_code = #{orderCode}
+      </if>
+      </where>
+
+    </select>
 
 </mapper>

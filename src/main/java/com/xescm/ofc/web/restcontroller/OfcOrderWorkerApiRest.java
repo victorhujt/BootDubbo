@@ -4,20 +4,28 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.domain.OfcEnumeration;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
+import com.xescm.ofc.enums.OrderPotEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO;
+import com.xescm.ofc.service.OfcEnumerationService;
 import com.xescm.ofc.service.OfcExceptOrderService;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcTaskInterfaceLogService;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: worker接口
@@ -33,7 +41,7 @@ public class OfcOrderWorkerApiRest {
     @Resource
     private OfcTaskInterfaceLogService taskInterfaceLogService;
     @Resource
-    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    private OfcEnumerationService ofcEnumerationService;
     @Resource
     private OfcExceptOrderService ofcExceptOrderService;
 
@@ -289,7 +297,20 @@ public class OfcOrderWorkerApiRest {
     public void dealExceptOrder(@RequestBody OfcExceptOrderDTO ofcExceptOrderDTO) {
         logger.info("开始处理异常订单 == > {}", ofcExceptOrderDTO);
         try {
-            ofcExceptOrderService.dealExceptOrder(ofcExceptOrderDTO);
+            if (null == ofcExceptOrderDTO || StringUtils.isEmpty(ofcExceptOrderDTO.getExceptPot())
+                    || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) throw new BusinessException("处理异常订单失败");
+            OfcEnumeration ofcEnumeration = new OfcEnumeration();
+            ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
+            List<OfcEnumeration> enumsOfZp = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+            ofcEnumeration.setEnumType("OfcTimeEnum");
+            Map<String, OfcEnumeration> enumsOfTime = ofcExceptOrderService.loadOfcTimeEnumMap(ofcEnumeration);
+            for (int indexNum = 0; indexNum < 10; indexNum ++) {
+                List<String> orderCodesPartList = ofcExceptOrderService.loadUndealOrders(indexNum);
+                for (String orderCodesPart : orderCodesPartList) {
+                    List<String> dealingCodes = Arrays.asList(orderCodesPart.split(","));
+                    ofcExceptOrderService.dealExceptOrder(ofcExceptOrderDTO, dealingCodes, enumsOfZp, enumsOfTime);
+                }
+            }
         } catch (Exception ex) {
             logger.error("开始处理异常订单异常==>{}", ex);
         }

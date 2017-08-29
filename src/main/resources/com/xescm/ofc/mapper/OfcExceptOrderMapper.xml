@@ -62,44 +62,8 @@
     UPDATE
     ofc_except_order oeo
     <set>
-      <if test="custOrderCode != null and custOrderCode != ''">
-        oeo.cust_order_code = #{custOrderCode},
-      </if>
-      <if test="custCode != null and custCode != ''">
-        oeo.cust_code = #{custCode},
-      </if>
-      <if test="custName != null and custName != ''">
-        oeo.cust_name = #{custName},
-      </if>
-      <if test="orderType != null and orderType != ''">
-        oeo.order_type = #{orderType},
-      </if>
-      <if test="businessType != null and businessType != ''">
-        oeo.business_type = #{businessType},
-      </if>
       <if test="twoDistribution != null and twoDistribution != ''">
         oeo.two_distribution = #{twoDistribution},
-      </if>
-      <if test="transCode != null and transCode != ''">
-        oeo.trans_code = #{transCode},
-      </if>
-      <if test="areaCode != null and areaCode != ''">
-        oeo.area_code = #{areaCode},
-      </if>
-      <if test="areaName != null and areaName != ''">
-        oeo.area_name = #{areaName},
-      </if>
-      <if test="baseCode != null and baseCode != ''">
-        oeo.base_code = #{baseCode},
-      </if>
-      <if test="baseName != null and baseName != ''">
-        oeo.base_name = #{baseName},
-      </if>
-      <if test="orderSource != null and orderSource != ''">
-        oeo.order_source = #{orderSource},
-      </if>
-      <if test="creationTime != null">
-        oeo.creation_time = #{creationTime},
       </if>
       <if test="ofcStatus != null and ofcStatus != ''">
         oeo.ofc_status = #{ofcStatus},
@@ -124,12 +88,6 @@
       </if>
       <if test="dealStatus != null and dealStatus != ''">
         oeo.deal_status = #{dealStatus},
-      </if>
-      <if test="operatorId != null and operatorId != ''">
-        oeo.operator_id = #{operatorId},
-      </if>
-      <if test="operatorName != null and operatorName != ''">
-        oeo.operator_name = #{operatorName},
       </if>
       <if test="yn != null and yn != ''">
         oeo.yn = #{yn}
