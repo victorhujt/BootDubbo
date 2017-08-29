@@ -214,7 +214,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
             OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
             List<CreateOrderGoodsInfo> tempList = new ArrayList<>();
-            good:for (CreateOrderGoodsInfo goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
+            //没有匹配到包装的货品编码
+            List<String> noPackageGoodsCodes = new ArrayList<>();
+            StringBuilder str = new StringBuilder();
+            for (CreateOrderGoodsInfo goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
                 if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
                     CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                     cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
@@ -236,25 +239,23 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
                                 }else {
                                     //没有匹配到包装直接返回错误
-                                    ofcFundamentalInformation.setIsException(ISEXCEPTION);
-                                    ofcFundamentalInformation.setExceptionReason("货品编码"+goodsInfo.getGoodsCode()+"没有匹配到包装信息");
-                                    break good;
+                                    if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
+                                        noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
+                                    }
                                 }
                             }
                         } else {
                             //没有匹配到包装直接返回错误
-                            ofcFundamentalInformation.setIsException(ISEXCEPTION);
-                            ofcFundamentalInformation.setExceptionReason("货品编码"+goodsInfo.getGoodsCode()+"没有匹配到包装信息");
-                            break good;
+                            if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
+                                noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
+                            }
                         }
                     } else {
                         // TODO 推送CSC待创建商品
                         goodsInfo.setCustName(createOrderEntity.getCustName());
                         goodsInfo.setCustCode(custCode);
                         tempList.add(goodsInfo);
-                        ofcFundamentalInformation.setIsException(ISEXCEPTION);
-                        ofcFundamentalInformation.setExceptionReason("订单对应的货品编码"+goodsInfo.getGoodsCode()+"不存在");
-                    }
+                        }
                     }
                 }
             try {
@@ -265,6 +266,34 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            if (noPackageGoodsCodes.size() > 0) {
+                str.append("订单对应货品编码为");
+                for (int i = 0; i < noPackageGoodsCodes.size(); i++) {
+                    if (i == noPackageGoodsCodes.size() -1) {
+                        str.append(noPackageGoodsCodes.get(i));
+                    } else {
+                        str.append(noPackageGoodsCodes.get(i)).append(",");
+                    }
+                }
+                str.append("没有包装.");
+            }
+            if (tempList.size() > 0) {
+                str.append("订单对应货品编码为");
+                for (int i = 0; i < tempList.size(); i++) {
+                    if (i == tempList.size() -1) {
+                        str.append(tempList.get(i).getGoodsCode());
+                    } else {
+                        str.append(tempList.get(i).getGoodsCode()).append(",");
+                    }
+                }
+                str.append("不存在.");
+            }
+            if (!PubUtils.isSEmptyOrNull(str.toString())) {
+                ofcFundamentalInformation.setIsException(ISEXCEPTION);
+                ofcFundamentalInformation.setExceptionReason(str.toString());
+            }
+
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
             //调用创建订单方法
             resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
