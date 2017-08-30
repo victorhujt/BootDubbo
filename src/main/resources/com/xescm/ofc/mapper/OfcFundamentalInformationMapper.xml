@@ -276,7 +276,7 @@
         AND ofi.order_time <![CDATA[ >= ]]>  #{orderTimePre}
       </if>
       <if test="orderTimeSuf!=null and orderTimeSuf!=''">
-        AND ofi.order_time <![CDATA[ <= ]]>  #{orderTimeSuf}
+        AND ofi.order_time <![CDATA[ < ]]>  #{orderTimeSuf}
       </if>
       <if test="orderCode!=null and orderCode!=''">
         AND ofi.order_code = #{orderCode}

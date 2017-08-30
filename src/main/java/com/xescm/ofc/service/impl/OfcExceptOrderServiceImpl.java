@@ -50,7 +50,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
 
     private Set<OfcExceptOrder> normalOrderToRemove = new HashSet<>();
 
-    private Set<String> orderCodesPartKeys = new HashSet<>();
+    private List<String> orderCodesPartKeys = new ArrayList<>();
 
     @Override
     public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO, List<String> orderCodes, List<OfcEnumeration> enumsOfZp, Map<String, OfcEnumeration> enumsOfTime) throws Exception {
@@ -69,7 +69,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                 ofcExceptOrders = this.dealOrderHaventReceive(ofcExceptOrderDTO);
             }
             if (null == ofcExceptOrders || !this.potTypeEqualOrderType(ofcExceptOrderDTO, ofcExceptOrders.get(0))) {
-                logger.debug("订单格式与当前处理格式不符, 不予处理....");
+                logger.debug("ofcExceptOrders为空或订单格式与当前处理格式不符, 不予处理....");
                 continue;
             }
             // 运输订单
@@ -104,7 +104,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         OfcExceptOrder ofcExceptOrder = this.getOrderDetailFromRedis(ofcOrderPotDTO);
         if (null == ofcExceptOrder) {
             logger.error("无法从Redis中获取该订单信息");
-            throw new BusinessException("无法从Redis中获取该订单信息");
+            return null;
         }
         if (!this.potTypeEqualOrderType(ofcExceptOrderDTO, ofcExceptOrder)) {
             logger.debug("订单格式与当前处理格式不符, 不予处理....");
@@ -124,7 +124,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             if (orderCodesPartKey.contains(orderCode)) {
                 List<String> orders;
                 try {
-                    orders = Arrays.asList(orderCodesPartKey);
+                    orders = Arrays.asList(orderCodesPartKey.split(","));
                 } catch (Exception e) {
                     logger.error("orderCodesPartKey转换异常");
                     throw new BusinessException("orderCodesPartKey实体转换异常");
@@ -164,14 +164,12 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         Calendar calendar = DateUtils.toCalendar(now);
         calendar.add(Calendar.DAY_OF_MONTH, -indexNum);
         String suffix = com.xescm.ofc.utils.DateUtils.Date2String(calendar.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
-        List<String> range = listOps.range(potKeyPrefix + suffix, 0, -1);
+        List<String> range = listOps.range(potKeyPrefix + suffix, 0, -1);// 取出来的是当天所有的订单号part的List, 每一个part存放的是订单号集合
         if (CollectionUtils.isEmpty(range)) {
             return new ArrayList<>();
         }
-        String undealCodes = range.get(0);// 取出来的是当天所有的订单号part的List, 每一个part存放的是订单号集合
-        if (StringUtils.isEmpty(undealCodes)) return null;
-        orderCodesPartKeys.add(undealCodes);
-        return Arrays.asList(undealCodes);
+        orderCodesPartKeys.addAll(range);
+        return range;
     }
 
     @Override
@@ -485,11 +483,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         now.set(Calendar.HOUR_OF_DAY, 0);
         now.set(Calendar.MINUTE, 0);
         now.set(Calendar.SECOND, 0);
-        now.set(Calendar.SECOND, -1);
+        now.set(Calendar.MILLISECOND, 0);
         orderScreenCondition.setOrderTimeSuf(now.getTime());
-        now.set(Calendar.HOUR_OF_DAY, 0);
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
+        now.add(Calendar.DATE, -1);
         orderScreenCondition.setOrderTimePre(now.getTime());
         orderScreenCondition.setOrderType(TRANSPORT_ORDER);// 运输订单
         List<OfcExceptOrder> undealedOrders = ofcFundamentalInformationMapper.queryByCondition(orderScreenCondition);
@@ -511,12 +507,15 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             if (aPartKey.split(",").length / 50 > 0 || index == undealedSize) {
                 aPartKey = key.deleteCharAt(key.length() - 1).toString();
                 stringRedisTemplate.delete(aPartKey);
-                stringRedisTemplate.delete(ordersKey);
+//                stringRedisTemplate.delete(ordersKey);
                 listOps.rightPushAll(aPartKey, value);
                 listOps.rightPush(ordersKey, aPartKey);
                 stringRedisTemplate.expire(aPartKey, 10L, TimeUnit.DAYS);
                 stringRedisTemplate.expire(ordersKey, 10L, TimeUnit.DAYS);
-                if (index != undealedSize) key = new StringBuilder();
+                if (index != undealedSize) {
+                    key.delete(0, key.length());
+                    value.clear();
+                }
             }
         }
         return undealedSize;
