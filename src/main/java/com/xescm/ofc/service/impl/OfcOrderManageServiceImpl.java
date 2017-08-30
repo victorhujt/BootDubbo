@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.ac.domain.AcDistributionBasicInfo;
 import com.xescm.ac.domain.AcFinanceInformation;
 import com.xescm.ac.domain.AcFundamentalInformation;
@@ -16,6 +17,7 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
@@ -24,6 +26,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
@@ -240,27 +243,28 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcFundamentalInformation.setOperTime(new Date());
                 List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode, "orderCode");
                 OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
-//                if (!CollectionUtils.isEmpty(goodsDetailsList)) {
-//                    for (OfcGoodsDetailsInfo good:goodsDetailsList) {
-//                        CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-//                        cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
-//                        // cscGoods.setFromSys("WMS");
-//                        cscGoods.setGoodsCode(good.getGoodsCode());
-//                        cscGoods.setPNum(1);
-//                        cscGoods.setPSize(10);
-//                        Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
-//                        if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
-//                                PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
-//                            CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
-//                            List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
-//                            if (CollectionUtils.isEmpty(packages)) {
-//                                throw new BusinessException("商品没有对应的包装信息");
-//                            }
-//                        } else {
-//                            throw new BusinessException("订单包含的商品信息不存在");
-//                        }
-//                    }
-//                }
+                if (!CollectionUtils.isEmpty(goodsDetailsList)) {
+                    for (OfcGoodsDetailsInfo good:goodsDetailsList) {
+                        CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                        cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+                        cscGoods.setFromSys("WMS");
+                        cscGoods.setGoodsCode(good.getGoodsCode());
+                        cscGoods.setCustomerCode(ofcFundamentalInformation.getCustCode());
+                        cscGoods.setPNum(1);
+                        cscGoods.setPSize(10);
+                        Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
+                        if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
+                                PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
+                            CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
+                            List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
+                            if (CollectionUtils.isEmpty(packages)) {
+                                throw new BusinessException("商品没有对应的包装信息");
+                            }
+                        } else {
+                            throw new BusinessException("订单包含的商品信息不存在");
+                        }
+                    }
+                }
 
                 OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
@@ -1314,8 +1318,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         ofcDistributionBasicInfo.setWeight(totalWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
         Iterator iter = goodInfo.entrySet().iterator();
+        int i = 0;
         while (iter.hasNext()) {
-                int i = 0;
                 Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
                 OfcGoodsDetailsInfo ofcGoodsDetails=entry.getValue();
                 if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0) {
@@ -1328,7 +1332,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
-            ofcGoodsDetails.setLineNo(i++);
+            ofcGoodsDetails.setLineNo(++i);
             ofcGoodsDetail.add(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
      }
@@ -1739,8 +1743,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
 
             Iterator iter = goodInfo.entrySet().iterator();
+            int i = 0;
             while (iter.hasNext()) {
-                int i = 0;
                 Map.Entry<String, OfcGoodsDetailsInfo> entry = (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
                 OfcGoodsDetailsInfo ofcGoodsDetails = entry.getValue();
                 if (ofcGoodsDetails.getLineNo() == null) {
