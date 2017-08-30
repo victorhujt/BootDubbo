@@ -1166,6 +1166,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
             ofcFundamentalInformation.setTransportType("10");//10 零担 20整车
+            // 带运输仓储单默认签收回单，费用为0
+            ofcFinanceInformation.setReturnList("1");
+            ofcFinanceInformation.setReturnListFee(new BigDecimal(0));
             if (ofcDistributionBasicInfo == null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
             }
