@@ -304,7 +304,7 @@ public class OfcOrderWorkerApiRest {
             List<OfcEnumeration> enumsOfZp = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
             ofcEnumeration.setEnumType("OfcTimeEnum");
             Map<String, OfcEnumeration> enumsOfTime = ofcExceptOrderService.loadOfcTimeEnumMap(ofcEnumeration);
-            for (int indexNum = 0; indexNum < 10; indexNum ++) {
+            for (int indexNum = 1; indexNum <= 10; indexNum ++) {
                 List<String> orderCodesPartList = ofcExceptOrderService.loadUndealOrders(indexNum);
                 for (String orderCodesPart : orderCodesPartList) {
                     List<String> dealingCodes = Arrays.asList(orderCodesPart.split(","));

@@ -120,13 +120,11 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         OfcExceptOrder ofcExceptOrder = null;
         String orderCode = ofcOrderPotDTO.getOrderCode();
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
-        TypeReference<List<String>> typeReference = new TypeReference<List<String>>() {
-        };
         for (String orderCodesPartKey : orderCodesPartKeys) {
             if (orderCodesPartKey.contains(orderCode)) {
                 List<String> orders;
                 try {
-                    orders = JacksonUtil.parseJson(orderCodesPartKey, typeReference);
+                    orders = Arrays.asList(orderCodesPartKey);
                 } catch (Exception e) {
                     logger.error("orderCodesPartKey转换异常");
                     throw new BusinessException("orderCodesPartKey实体转换异常");
@@ -134,13 +132,13 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                 int indexOfOrder = orders.indexOf(orderCode);
                 List<String> orderMsg = listOps.range(orderCodesPartKey, indexOfOrder, indexOfOrder);
                 if (CollectionUtils.isEmpty(orderMsg)) {
-                    logger.error("查无此单");
-                    throw new BusinessException("查无此单");
+                    logger.error("查无此key");
+                    throw new BusinessException("查无此key");
                 }
                 try {
                     ofcExceptOrder = JacksonUtil.parseJson(orderMsg.get(0), OfcExceptOrder.class);
                 } catch (Exception e) {
-                    logger.error("orderMsg转换异常");
+                    logger.error("orderMsg转换异常{}", e);
                     throw new BusinessException("orderMsg转换异常");
                 }
             }
@@ -163,8 +161,6 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         String potKeyPrefix = "orderPot:";
         Date now = new Date();
-        TypeReference<List<String>> typeReference = new TypeReference<List<String>>() {
-        };
         Calendar calendar = DateUtils.toCalendar(now);
         calendar.add(Calendar.DAY_OF_MONTH, -indexNum);
         String suffix = com.xescm.ofc.utils.DateUtils.Date2String(calendar.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
@@ -175,7 +171,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         String undealCodes = range.get(0);// 取出来的是当天所有的订单号part的List, 每一个part存放的是订单号集合
         if (StringUtils.isEmpty(undealCodes)) return null;
         orderCodesPartKeys.add(undealCodes);
-        return JacksonUtil.parseJson(undealCodes, typeReference);
+        return Arrays.asList(undealCodes);
     }
 
     @Override
@@ -505,17 +501,18 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         int undealedSize = undealedOrders.size();
         String ordersKey = "orderPot:" + com.xescm.ofc.utils.DateUtils.Date2String(now.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
         StringBuilder key = new StringBuilder();
-        List<OfcExceptOrder> value = new ArrayList<>();
+        List<String> value = new ArrayList<>();
         for (int index = 1; index <= undealedSize; index ++) {
             OfcExceptOrder ofcExceptOrder = undealedOrders.get(index - 1);
             String orderCode = ofcExceptOrder.getOrderCode();
             key.append(orderCode).append(",");
             String aPartKey = key.toString();
-            value.add(ofcExceptOrder);
+            value.add(JacksonUtil.toJson(ofcExceptOrder));
             if (aPartKey.split(",").length / 50 > 0 || index == undealedSize) {
+                aPartKey = key.deleteCharAt(key.length() - 1).toString();
                 stringRedisTemplate.delete(aPartKey);
                 stringRedisTemplate.delete(ordersKey);
-                listOps.rightPush(aPartKey, JacksonUtil.toJson(value));
+                listOps.rightPushAll(aPartKey, value);
                 listOps.rightPush(ordersKey, aPartKey);
                 stringRedisTemplate.expire(aPartKey, 10L, TimeUnit.DAYS);
                 stringRedisTemplate.expire(ordersKey, 10L, TimeUnit.DAYS);

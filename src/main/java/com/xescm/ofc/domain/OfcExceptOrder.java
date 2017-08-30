@@ -131,6 +131,8 @@ public class OfcExceptOrder {
      * 结点时间
      */
     @Column(name = "pot_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date potTime;
 
     @Column(name = "record_msg")
@@ -140,6 +142,8 @@ public class OfcExceptOrder {
      * 记录时间
      */
     @Column(name = "record_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date recordTime;
 
 
