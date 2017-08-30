@@ -295,8 +295,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             if (!PubUtils.isSEmptyOrNull(str.toString())) {
                 ofcFundamentalInformation.setIsException(ISEXCEPTION);
                 ofcFundamentalInformation.setExceptionReason(str.toString());
+            } else {
+                //更新订单时  校验通过如果之前是异常订单 将异常订单变为正常订单
+                OfcFundamentalInformation information = ofcFundamentalInformationService.selectByKey(orderCode);
+                if (information != null) {
+                    if (!PubUtils.isSEmptyOrNull(information.getExceptionReason())) {
+                        ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
+                        ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
+                    }
+                }
             }
-
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
             //调用创建订单方法
             resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
@@ -331,14 +339,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 cscGoods.setCustomerCode(custCode);
                 cscGoods.setGoodsCode(goodsCode);
                 Wrapper<List<CscGoodsApiVo>> goodsRest = cscGoodsEdasService.queryCscGoodsList(cscGoods);
-                if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {  // 运输订单 - 如果货品存在则回填大小分类
-                    if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
-                        for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
-                            goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
-                            goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
-                        }
+                if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
+                    for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
+                        goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
+                        goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
                     }
-                } else {    // 仓储订单 - 货品必须存在
+                }
+                if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {
                     resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
                     if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                         logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
@@ -487,7 +494,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             try {
-                if (!StringUtils.equals(ofcFundamentalInformation.getIsException(),ISEXCEPTION)) {
                     //自动审核通过 review:审核；rereview:反审核
                     if (sEmptyOrNull) {
                         //自动审核通过 review:审核；rereview:反审核
@@ -504,7 +510,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                     logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
                     logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
-                }
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
