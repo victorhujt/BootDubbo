@@ -1,8 +1,10 @@
 package com.xescm.ofc.model.dto.ofc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -41,10 +43,17 @@ public class OfcQueryStorageDTO {
     private String tag;
     @ApiModelProperty("业务类型集合")
     private List<String> businessTypes;
+    
     @ApiModelProperty("订单日期范围起始时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startDate;
+    
     @ApiModelProperty("订单日期范围结束时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endDate;
+    
     @ApiModelProperty("是否落地配(0 = 否 1 = 是)")
     private String groundDistribution;
 }
