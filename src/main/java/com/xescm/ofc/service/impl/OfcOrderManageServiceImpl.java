@@ -244,6 +244,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode, "orderCode");
                 OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                 if (!CollectionUtils.isEmpty(goodsDetailsList)) {
+                    //没有匹配到包装的货品编码
+                    List<String> noPackageGoods = new ArrayList<>();
+                    //没有匹配到包装的货品编码
+                    List<String> notExistGoodsCodes = new ArrayList<>();
+                    StringBuilder str = new StringBuilder();
                     for (OfcGoodsDetailsInfo good:goodsDetailsList) {
                         CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                         cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
@@ -258,14 +263,43 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                             CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
                             List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                             if (CollectionUtils.isEmpty(packages)) {
-                                throw new BusinessException("商品没有对应的包装信息");
+                                if (!noPackageGoods.contains(good.getGoodsCode())) {
+                                    noPackageGoods.add(good.getGoodsCode());
+                                }
                             }
                         } else {
-                            throw new BusinessException("订单包含的商品信息不存在");
+                            if (!notExistGoodsCodes.contains(good.getGoodsCode())) {
+                                notExistGoodsCodes.add(good.getGoodsCode());
+                            }
                         }
                     }
-                }
+                    if (noPackageGoods.size() > 0) {
+                        str.append("订单对应货品编码为");
+                        for (int i = 0; i < noPackageGoods.size(); i++) {
+                            if (i == noPackageGoods.size() -1) {
+                                str.append(noPackageGoods.get(i));
+                            } else {
+                                str.append(noPackageGoods.get(i)).append(",");
+                            }
+                        }
+                        str.append("没有包装.");
+                    }
 
+                    if (notExistGoodsCodes.size() > 0) {
+                        str.append("订单对应货品编码为");
+                        for (int i = 0; i < notExistGoodsCodes.size(); i++) {
+                            if (i == notExistGoodsCodes.size() -1) {
+                                str.append(notExistGoodsCodes.get(i));
+                            } else {
+                                str.append(notExistGoodsCodes.get(i)).append(",");
+                            }
+                        }
+                        str.append("不存在.");
+                    }
+                    if (!PubUtils.isSEmptyOrNull(str.toString())) {
+                        throw new BusinessException(str.toString());
+                    }
+                }
                 OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                 OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
                 if (ofcFinanceInformation == null) {
