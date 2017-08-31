@@ -9,18 +9,16 @@ import com.xescm.ofc.enums.OrderPotEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcExceptOrderMapper;
 import com.xescm.ofc.mapper.OfcFundamentalInformationMapper;
+import com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper;
 import com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderPotDTO;
 import com.xescm.ofc.service.OfcEnumerationService;
 import com.xescm.ofc.service.OfcExceptOrderService;
-import com.xescm.ofc.service.OfcGoodsDetailsInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -42,7 +40,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
     @Resource
     private OfcFundamentalInformationMapper ofcFundamentalInformationMapper;
     @Resource
-    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    private OfcGoodsDetailsInfoMapper ofcGoodsDetailsInfoMapper;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
@@ -61,8 +59,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             logger.debug("暂无待处理订单...");
             return;
         }
+        Map<String, List<OfcExceptOrder>> partOrderExceptMap = this.partOrderExceptListToMap(orderCodes);
         for (String orderCode : orderCodes) {
-            List<OfcExceptOrder> ofcExceptOrders = ofcExceptOrderMapper.selectByOrderCode(orderCode);
+            List<OfcExceptOrder> ofcExceptOrders = partOrderExceptMap.get(orderCode);
             ofcExceptOrderDTO.setOrderCode(orderCode);
             if (CollectionUtils.isEmpty(ofcExceptOrders)) {
                 logger.debug("该订单号{}下无状态", orderCode);
@@ -80,6 +79,21 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                 this.dealStoreOrder(ofcExceptOrders, enumsOfZp, enumsOfTime);
             }
         }
+    }
+
+    private Map<String, List<OfcExceptOrder>> partOrderExceptListToMap(List<String> orderCodes) {
+        Map<String, List<OfcExceptOrder>> result = new HashMap<>();
+        List<OfcExceptOrder> partExceptOrdersList = ofcExceptOrderMapper.selectByOrderCodeList(orderCodes);
+        for (OfcExceptOrder ofcExceptOrder : partExceptOrdersList) {
+            String orderCode = ofcExceptOrder.getOrderCode();
+            List<OfcExceptOrder> mapValue = result.get(orderCode);
+            if (CollectionUtils.isEmpty(mapValue)) {
+                mapValue = new ArrayList<>();
+                result.put(orderCode, mapValue);
+            }
+            mapValue.add(ofcExceptOrder);
+        }
+        return result;
     }
 
     private boolean potTypeEqualOrderType(OfcExceptOrderDTO ofcExceptOrderDTO, OfcExceptOrder ofcExceptOrder) {
@@ -194,7 +208,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         String businessType = ofcExceptOrder.getBusinessType();
         boolean isZhongPin = this.isZhongPin(ofcExceptOrder, ofcEnumerations);
         boolean isNormalCust = this.isNormalCust(ofcExceptOrder, ofcEnumerations);
-        boolean goodsTypeHasChilledPork = this.checkGoodsTypeHasChilledPork(ofcExceptOrder);
+        boolean goodsTypeHasChilledPork = StringUtils.equals(ofcExceptOrder.getCoolFreshPork(), STR_YES);
         boolean provideTransport = StringUtils.equals(ofcExceptOrder.getProvideTransport(), STR_YES);
         int calendarHour = Integer.valueOf(ofcTimeEnum.get("CALENDAR_HOUR").getEnumValue());
         // 入库
@@ -284,7 +298,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         OfcExceptOrder ofcExceptOrder = ofcExceptOrders.get(0);
         String businessType = ofcExceptOrder.getBusinessType();
         boolean isZhongPin = this.isZhongPin(ofcExceptOrder, ofcEnumerations);
-        boolean goodsTypeHasChilledPork = this.checkGoodsTypeHasChilledPork(ofcExceptOrder);
+        boolean goodsTypeHasChilledPork = StringUtils.equals(ofcExceptOrder.getCoolFreshPork(), STR_YES);
         boolean isNormalCust = this.isNormalCust(ofcExceptOrder, ofcEnumerations);
         int calendarHour = Integer.valueOf(ofcTimeEnum.get("CALENDAR_HOUR").getEnumValue());
         //     城配
@@ -329,23 +343,6 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         }
     }
 
-    private boolean checkGoodsTypeHasChilledPork(OfcExceptOrder ofcExceptOrder) {
-        String orderCode = ofcExceptOrder.getOrderCode();
-        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-        boolean result = false;
-        for (OfcGoodsDetailsInfo good : ofcGoodsDetailsInfos) {
-            String goodsType = good.getGoodsType();// 大类
-            String goodsCategory = good.getGoodsCategory();// 小类
-            // fixme
-            if ((StringUtils.equals(goodsType, "畜禽类") && StringUtils.equals(goodsCategory, "冷鲜猪肉"))
-                    /*|| (StringUtils.equals(goodsTypeCode, "xxxx") && StringUtils.equals(goodsCategoryCode, "xxxx"))*/) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
-
     private boolean isZhongPin(OfcExceptOrder ofcExceptOrder, List<OfcEnumeration> ofcEnumerations) {
         if (null == ofcExceptOrder) throw new BusinessException("处理异常订单失败!");
         OfcEnumeration ofcEnumeration = new OfcEnumeration();
@@ -368,7 +365,8 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             if (StringUtils.equals(ofcExceptOrder.getPotType(), pot)) {
                 if (StringUtils.equals(ofcExceptOrder.getDealStatus(), IS_EXCEPTION.getCode())) continue;
                 ofcExceptOrder = this.dealExceptPot(ofcExceptOrder, allowHour, delayTimeLevel);
-                if (ofcExceptOrderMapper.updateByOrderCode(ofcExceptOrder) < 1) {
+                if (StringUtils.equals(ofcExceptOrder.getDealStatus(), IS_EXCEPTION.getCode())
+                        && ofcExceptOrderMapper.updateByOrderCode(ofcExceptOrder) < 1) {
                     logger.error("更新失败!");
                     throw new BusinessException("处理异常订单失败!");
                 }
@@ -435,45 +433,6 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         return ofcExceptOrder;
     }
 
-    private void removeFromCodeList() {
-        logger.debug("normalOrderToRemove===>{}", normalOrderToRemove);
-        ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
-        ValueOperations<String, String> stringStringValueOperations = stringRedisTemplate.opsForValue();
-        TypeReference<List<String>> typeReference = new TypeReference<List<String>>() {
-        };
-        for (OfcExceptOrder ofcExceptOrder : normalOrderToRemove) {
-            String orderCode = ofcExceptOrder.getOrderCode();
-            String potType = ofcExceptOrder.getPotType();
-            Date creatTime = ofcExceptOrder.getCreationTime();
-            if (StringUtils.isEmpty(orderCode) || StringUtils.isEmpty(potType) || null == creatTime) {
-                logger.error("removeFromCodeList入参有误");
-                continue;
-            }
-            StringBuilder key = new StringBuilder("orderPot:").append(potType).append(":");
-            key.append(com.xescm.ofc.utils.DateUtils.Date2String(creatTime, com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2));
-            String orderCodeList = stringStringValueOperations.get(key.toString());
-            List<String> orderCodes = new ArrayList<>();
-            try {
-                orderCodes = JacksonUtil.parseJson(orderCodeList, typeReference);
-            } catch (Exception e) {
-                logger.error("orderCodeList转换异常");
-            }
-            boolean orderCodesEmpty = CollectionUtils.isEmpty(orderCodes);
-            if (!orderCodesEmpty && !orderCodes.remove(orderCode)) {
-                logger.error("移除订单{}失败" ,orderCode);
-                throw new BusinessException("处理异常订单失败");
-            }
-            if (orderCodesEmpty) {
-                stringRedisTemplate.delete(key.toString());
-                return;
-            }
-            try {
-                stringStringValueOperations.set(key.toString(), JacksonUtil.toJsonWithFormat(orderCodes));
-            } catch (Exception e) {
-                logger.error("orderCodes转换异常");
-            }
-        }
-    }
 
     @Override
     public int loadYesterdayOrder() throws Exception {
@@ -487,11 +446,26 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         orderScreenCondition.setOrderTimeSuf(now.getTime());
         now.add(Calendar.DATE, -1);
         orderScreenCondition.setOrderTimePre(now.getTime());
-        orderScreenCondition.setOrderType(TRANSPORT_ORDER);// 运输订单
         List<OfcExceptOrder> undealedOrders = ofcFundamentalInformationMapper.queryByCondition(orderScreenCondition);
         if (CollectionUtils.isEmpty(undealedOrders)) {
             logger.error("加载昨日订单失败! 订单号列表为空!");
             throw new BusinessException("处理异常订单失败");
+        }
+        List<OfcGoodsDetailsInfo> ordersGoodsList = ofcGoodsDetailsInfoMapper.queryByCondition(orderScreenCondition);
+        for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ordersGoodsList) {
+            String goodsType = ofcGoodsDetailsInfo.getGoodsType();// 大类
+            String goodsCategory = ofcGoodsDetailsInfo.getGoodsCategory();// 小类
+            String orderCode = ofcGoodsDetailsInfo.getOrderCode();
+            // fixme
+            if ((StringUtils.equals(goodsType, "畜禽类") && StringUtils.equals(goodsCategory, "冷鲜猪肉"))
+                    /*|| (StringUtils.equals(goodsTypeCode, "xxxx") && StringUtils.equals(goodsCategoryCode, "xxxx"))*/) {
+                while (undealedOrders.listIterator().hasNext()) {
+                    OfcExceptOrder exceptOrder = undealedOrders.listIterator().next();
+                    if (StringUtils.equals(exceptOrder.getOrderCode(), orderCode)) {
+                        exceptOrder.setCoolFreshPork(STR_YES);
+                    }
+                }
+            }
         }
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         int undealedSize = undealedOrders.size();
@@ -510,8 +484,8 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
 //                stringRedisTemplate.delete(ordersKey);
                 listOps.rightPushAll(aPartKey, value);
                 listOps.rightPush(ordersKey, aPartKey);
-                stringRedisTemplate.expire(aPartKey, 10L, TimeUnit.DAYS);
-                stringRedisTemplate.expire(ordersKey, 10L, TimeUnit.DAYS);
+                stringRedisTemplate.expire(aPartKey, 11L, TimeUnit.DAYS);
+                stringRedisTemplate.expire(ordersKey, 11L, TimeUnit.DAYS);
                 if (index != undealedSize) {
                     key.delete(0, key.length());
                     value.clear();

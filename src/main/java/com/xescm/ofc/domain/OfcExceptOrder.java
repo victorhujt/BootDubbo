@@ -75,6 +75,12 @@ public class OfcExceptOrder {
     private String provideTransport;
 
     /**
+     * 货品中是否包含冷鲜猪肉 1 是 / 0 否
+     */
+    @Column(name = "cool_fresh_pork")
+    private String coolFreshPork;
+
+    /**
      * 大区编码
      */
     @Column(name = "area_code")
