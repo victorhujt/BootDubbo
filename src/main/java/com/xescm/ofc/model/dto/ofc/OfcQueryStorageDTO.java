@@ -43,17 +43,17 @@ public class OfcQueryStorageDTO {
     private String tag;
     @ApiModelProperty("业务类型集合")
     private List<String> businessTypes;
-
+    
     @ApiModelProperty("订单日期范围起始时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startDate;
-
+    
     @ApiModelProperty("订单日期范围结束时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endDate;
-
+    
     @ApiModelProperty("是否落地配(0 = 否 1 = 是)")
     private String groundDistribution;
 }
