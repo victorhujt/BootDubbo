@@ -41,7 +41,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -324,10 +323,6 @@ public class OfcStorageInfoController extends BaseController {
                         throw new BusinessException("需要提供运输时,配送基本信息发货方不能为空");
                     }
                 }
-                // 带运输仓储单默认签收回单，费用为0
-                OfcFinanceInformationDTO ofcFinanceInformationDTO = new OfcFinanceInformationDTO();
-                ofcFinanceInformationDTO.setReturnList("1");
-                ofcFinanceInformationDTO.setReturnListFee(new BigDecimal(0));
             }
             //发货方信息
             if (consignor == null) {
