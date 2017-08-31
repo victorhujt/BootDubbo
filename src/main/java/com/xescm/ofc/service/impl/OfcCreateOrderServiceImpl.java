@@ -229,9 +229,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     cscGoods.setCustomerCode(createOrderEntity.getCustCode());
                     cscGoods.setPNum(1);
                     cscGoods.setPSize(10);
-                  //  logger.info("匹配包装的参数为:{}",JacksonUtil.toJson(cscGoods));
+                    try{
+                        logger.info("匹配包装的参数为:{}",JacksonUtil.toJson(cscGoods));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                     Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
-                  //  logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
+                    try{
+                         logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                             PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                         CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
