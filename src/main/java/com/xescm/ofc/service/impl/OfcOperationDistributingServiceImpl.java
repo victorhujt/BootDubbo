@@ -7,20 +7,16 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.constant.OrderConstConstant;
-import com.xescm.ofc.domain.OfcFundamentalInformation;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.service.OfcExcelCheckService;
-import com.xescm.ofc.service.OfcFundamentalInformationService;
-import com.xescm.ofc.service.OfcOperationDistributingService;
-import com.xescm.ofc.service.OfcOrderPlaceService;
+import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
+import com.xescm.ofc.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -37,7 +33,9 @@ import java.util.List;
 
 import static com.xescm.ofc.constant.ExcelCheckConstant.XLSX_EXCEL;
 import static com.xescm.ofc.constant.ExcelCheckConstant.XLS_EXCEL;
+import static com.xescm.ofc.constant.OrderConstConstant.PENDING_AUDIT;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_OPER_DISTRI;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 
 /**
  * 城配开单
@@ -54,7 +52,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     private OfcExcelCheckService ofcExcelCheckService;
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInfoService;
-
+    @Resource
+    private OfcOrderManageService ofcOrderManageService;
 
     /**
      * 转换页面DTO为CSCCUSTOMERDTO以便复用原有下单逻辑
@@ -248,8 +247,11 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         String resultMessage = null;
         // 检查客户订单号是否重复
         this.checkCustOrderCode(jsonArray);
+        boolean sendMQ = true;
+        List<OfcOrderInfoDTO> result = new ArrayList<>();
         // 导入
         for (Object aJsonArray : jsonArray) {
+            OfcOrderInfoDTO ofcOrderInfoDTO;
             String json = aJsonArray.toString();
             OfcOrderDTO ofcOrderDTO = null;
             try {
@@ -275,13 +277,53 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             if (ofcOrderDTO != null) {
                 ofcOrderDTO.setOrderBatchNumber(batchNumber);
             }
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTO, ofcGoodsDetailsInfos, ORDER_TAG_OPER_DISTRI, authResDtoByToken, ofcOrderDTO != null ? ofcOrderDTO.getCustCode() : new OfcOrderDTO().toString()
-                    , consignor, consignee, new CscSupplierInfoDto());
+            try {
+                ofcOrderInfoDTO = ofcOrderPlaceService.distributionPlaceOrder(ofcOrderDTO, ofcGoodsDetailsInfos, ORDER_TAG_OPER_DISTRI, authResDtoByToken, ofcOrderDTO != null ? ofcOrderDTO.getCustCode() : new OfcOrderDTO().toString()
+                    , consignor, consignee);
+                result.add(ofcOrderInfoDTO);
+            } catch (Exception ex) {
+                sendMQ = false;
+                logger.error("城配导单导入订单发生异常：异常详情 => {}", ex);
+                break;
+            }
             if (ResultCodeEnum.ERROROPER.getMsg().equals(resultMessage)) {
                 return resultMessage;
             }
         }
+        // 发送订单信息到Tfc、Ac、Whc
+        if (sendMQ && PubUtils.isNotNullAndBiggerSize(result, 0)) {
+            for (OfcOrderInfoDTO ofcOrderInfoDTO : result) {
+                distributionSendMQ(ofcOrderInfoDTO, authResDtoByToken);
+            }
+        }
         return resultMessage;
+    }
+
+    /**
+     * 城配导单发送到下方系统
+     * @param ofcOrderInfoDTO
+     * @param authResDtoByToken
+     */
+    private void distributionSendMQ(OfcOrderInfoDTO ofcOrderInfoDTO, AuthResDto authResDtoByToken) {
+        try {
+            OfcFundamentalInformation ofcFundamentalInformation = ofcOrderInfoDTO.getOfcFundamentalInformation();
+            OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcOrderInfoDTO.getOfcDistributionBasicInfo();
+            OfcFinanceInformation ofcFinanceInformation = ofcOrderInfoDTO.getOfcFinanceInformation();
+            OfcWarehouseInformation ofcWarehouseInformation = ofcOrderInfoDTO.getOfcWarehouseInformation();
+            List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcOrderInfoDTO.getGoodsDetailsInfoList();
+            if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
+                //进行自动审核
+                String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
+                    ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, REVIEW, authResDtoByToken);
+                if (StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)) {
+                    throw new BusinessException("自动审核操作失败!");
+                }
+            }
+            //城配开单订单推结算中心
+            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos, ofcWarehouseInformation);
+        } catch (Exception e) {
+            
+        }
     }
 
     // 检查客户订单号重复
