@@ -226,9 +226,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
                     cscGoods.setFromSys("WMS");
                     cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
+                    cscGoods.setCustomerCode(createOrderEntity.getCustCode());
                     cscGoods.setPNum(1);
                     cscGoods.setPSize(10);
+                  //  logger.info("匹配包装的参数为:{}",JacksonUtil.toJson(cscGoods));
                     Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
+                  //  logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
                     if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                             PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                         CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
@@ -280,6 +283,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                 }
                 str.append("没有包装.");
+                logger.info("订单号为:{}",ofcFundamentalInformation.getOrderCode());
                 logger.info(str.toString());
             }
             if (tempList.size() > 0) {
@@ -292,6 +296,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                 }
                 str.append("不存在.");
+                logger.info("订单号为:{}",ofcFundamentalInformation.getOrderCode());
                 logger.info(str.toString());
             }
             if (!PubUtils.isSEmptyOrNull(str.toString())) {
