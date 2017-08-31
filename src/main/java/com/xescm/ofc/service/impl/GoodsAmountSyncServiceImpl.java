@@ -174,6 +174,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 }
                 // 推送TFC
                 tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+                // 暂时注释dpc
                 try {
                     // 推送调度中心
                     DpcSyncOrderInfoDto syncOrderInfoDto = new DpcSyncOrderInfoDto();
