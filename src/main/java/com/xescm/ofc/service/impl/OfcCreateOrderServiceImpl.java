@@ -280,6 +280,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                 }
                 str.append("没有包装.");
+                logger.info(str.toString());
             }
             if (tempList.size() > 0) {
                 str.append("订单对应货品编码为");
@@ -291,6 +292,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                 }
                 str.append("不存在.");
+                logger.info(str.toString());
             }
             if (!PubUtils.isSEmptyOrNull(str.toString())) {
                 ofcFundamentalInformation.setIsException(ISEXCEPTION);
@@ -342,7 +344,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 if (Wrapper.SUCCESS_CODE == goodsRest.getCode()) {
                     for (CscGoodsApiVo goodsApiVo : goodsRest.getResult()) {
                         goodsInfo.setGoodsType(goodsApiVo.getGoodsTypeParentName());
+                        goodsInfo.setGoodsTypeCode(goodsApiVo.getGoodsTypeId());
                         goodsInfo.setGoodsCategory(goodsApiVo.getGoodsTypeName());
+                        goodsInfo.setGoodsCategoryCode(goodsApiVo.getGoodsType());
                     }
                 }
                 if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {

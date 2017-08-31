@@ -57,10 +57,36 @@ public class CreateOrderGoodsInfo implements Serializable {
      */
     private String goodsType;
 
+    public String getGoodsTypeCode() {
+        return goodsTypeCode;
+    }
+
+    public void setGoodsTypeCode(String goodsTypeCode) {
+        this.goodsTypeCode = goodsTypeCode;
+    }
+
+    public String getGoodsCategoryCode() {
+        return goodsCategoryCode;
+    }
+
+    public void setGoodsCategoryCode(String goodsCategoryCode) {
+        this.goodsCategoryCode = goodsCategoryCode;
+    }
+
+    /**
+     * 货品大类编码
+
+     */
+    private String goodsTypeCode;
+
     /**
      * 货品小类
      */
     private String goodsCategory;
+    /**
+     * 货品小类编码
+     */
+    private String goodsCategoryCode;
 
     /**
      * 单位(必填)
