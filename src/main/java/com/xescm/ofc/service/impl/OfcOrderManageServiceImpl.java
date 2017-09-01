@@ -1426,29 +1426,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     dto.getCscContactDto().setStreetName(resp.getStreet());
                 }
                 dto.getCscContactDto().setAddress(resp.getDetailAddress());
-                if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                    ofcDistributionBasicInfo.setDeparturePlaceCode(sb.toString());
-                    ofcDistributionBasicInfo.setDeparturePlace(resp.getDetailAddress());
-                    ofcDistributionBasicInfo.setDepartureProvince(resp.getProvince());
-                    ofcDistributionBasicInfo.setDepartureCity(resp.getCity());
-                    ofcDistributionBasicInfo.setDepartureDistrict(resp.getArea());
-                    if (!StringUtils.isEmpty(resp.getStreet())) {
-                        ofcDistributionBasicInfo.setDepartureTowns(resp.getStreet());
-                    }
-
-                } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
-                    ofcDistributionBasicInfo.setConsigneeName(resp.getWarehouseName());
-                    ofcDistributionBasicInfo.setConsigneeContactName(resp.getWarehouseName());
-                    ofcDistributionBasicInfo.setDestinationCode(sb.toString());
-                    ofcDistributionBasicInfo.setDestination(resp.getDetailAddress());
-                    ofcDistributionBasicInfo.setDestinationProvince(resp.getProvince());
-                    ofcDistributionBasicInfo.setDestinationCity(resp.getCity());
-                    ofcDistributionBasicInfo.setDestinationDistrict(resp.getArea());
-                    if (!StringUtils.isEmpty(resp.getStreet())) {
-                        ofcDistributionBasicInfo.setDestinationTowns(resp.getStreet());
-                    }
-                }
             }
+            ofcDistributionBasicInfo = ofcDistributionBasicInfoService.fillAddress(ofcWarehouseInformation,ofcDistributionBasicInfo,ofcFundamentalInformation);
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                 cscContantAndCompanyDtoConsignor = dto;//出库发货方是仓库
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {

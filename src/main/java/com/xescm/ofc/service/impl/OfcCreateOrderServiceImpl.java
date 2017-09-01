@@ -222,6 +222,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             StringBuilder str = new StringBuilder();
             for (CreateOrderGoodsInfo goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
                 if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
+                    boolean isHavePackage = false;
                     CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                     cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
                     cscGoods.setFromSys("WMS");
@@ -231,6 +232,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     cscGoods.setPSize(10);
                     try{
                         logger.info("匹配包装的参数为:{}",JacksonUtil.toJson(cscGoods));
+                        logger.info("createOrderEntity:{}",JacksonUtil.toJson(createOrderEntity));
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -247,18 +249,24 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                         List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                         if (!CollectionUtils.isEmpty(packages)) {
                             for (GoodsPackingDto packingDto : packages){
-                                if (StringUtils.equals(packingDto.getLevelName(),goodsInfo.getUnit())) {
+                                logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                logger.info("packingDto.getUnit() is {}",goodsInfo.getUnit());
+                                logger.info("packingDto.getLevel() is {}",packingDto.getLevel());
+                                if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevel())) {
                                     goodsInfo.setConversionRate(packingDto.getLevelSpecification());
                                     goodsInfo.setPackageName(packingDto.getLevelName());
                                     goodsInfo.setPackageType(packingDto.getLevel());
                                     goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
-                                }else {
-                                    //没有匹配到包装直接返回错误
-                                    if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
-                                        noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
-                                    }
+                                    isHavePackage = true;
+                                    break;
                                 }
                             }
+                        //没有匹配到包装直接返回错误
+                        if (!isHavePackage) {
+                            if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
+                                noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
+                            }
+                         }
                         } else {
                             //没有匹配到包装直接返回错误
                             if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
@@ -488,7 +496,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = ofcFundamentalInformation.getCustCode();
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
-
+        //仓储订单 入库 仓库地址为收货方  出库 仓库地址为发货方
+//        if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
+//
+//           ofcDistributionBasicInfo = ofcDistributionBasicInfoService.fillAddress(ofcWarehouseInformation,ofcDistributionBasicInfo,ofcFundamentalInformation);
+//        }
         boolean sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
         this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
@@ -534,7 +546,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             return new ResultModel(ResultModel.ResultEnum.CODE_0000);
         } else {
-
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
             if (sEmptyOrNull) {
                 ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
