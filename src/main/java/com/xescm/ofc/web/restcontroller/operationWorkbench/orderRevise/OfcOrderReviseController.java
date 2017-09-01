@@ -10,6 +10,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.GoodsAmountSyncService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
+import com.xescm.ofc.service.OfcOrderReviseService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
@@ -39,7 +40,7 @@ public class OfcOrderReviseController extends BaseController {
     @Resource
     private OfcOrderPlaceService ofcOrderPlaceService;
     @Resource
-    GoodsAmountSyncService goodsAmountSyncService;
+    private OfcOrderReviseService ofcOrderReviseService;
 
     /**
      * 订单中心下单
@@ -56,7 +57,7 @@ public class OfcOrderReviseController extends BaseController {
         String resultMessage;
         try {
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            if (ofcOrderDTOStr == null) {
+            /*if (ofcOrderDTOStr == null) {
                 throw new BusinessException("订单修改dto不能为空！");
             }
             if (null == ofcOrderDTOStr.getOrderTime()) {
@@ -73,7 +74,7 @@ public class OfcOrderReviseController extends BaseController {
             }
             if (ofcOrderDTOStr.getConsignee() == null) {
                 throw new BusinessException("发货人信息不允许为空！");
-            }
+            }*/
             // 校验业务类型，如果是卡班，必须要有运输单号
             if (StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())) {
                 if (StringUtils.isBlank(ofcOrderDTOStr.getTransCode())) {
@@ -129,7 +130,7 @@ public class OfcOrderReviseController extends BaseController {
         // 赋值
         goodsAmountSyncDto.setGoodsAmountDetailDtoList(goodsAmountDetailDtos);
         // 校验
-        Wrapper<?> result = goodsAmountSyncService.goodsAmountSync(goodsAmountSyncDto);
+        Wrapper<?> result = ofcOrderReviseService.goodsAmountSync(goodsAmountSyncDto);
         if (Wrapper.SUCCESS_CODE == result.getCode()) {
             return true;
         } else {
