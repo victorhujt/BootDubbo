@@ -58,15 +58,14 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
     private DpcTransportDocEdasService dpcTransportDocEdasService;
 
     @Transactional
-    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
+    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto,String getOrderCode) {
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();
         String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
         List<GoodsAmountDetailDto> details = goodsAmountSyncDto.getGoodsAmountDetailDtoList();
         // 查询订单
         OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
-        ofcFundamentalInfo.setCustCode(custCode);
-        ofcFundamentalInfo.setCustOrderCode(custOrderCode);
+        ofcFundamentalInfo.setOrderCode(getOrderCode);
         try {
             List<OfcFundamentalInformation> orderList = ofcFundamentalInformationService.select(ofcFundamentalInfo);
             if (PubUtils.isNotNullAndBiggerSize(orderList, 0)) {
@@ -102,14 +101,14 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                     }
                 }
             } else {
-                logger.error("未查询到客户订单{}信息.", custOrderCode);
-                throw new BusinessException("未查询到客户订单{"+custOrderCode+"}信息.");
+                logger.error("订单修改，未查询到客户订单{}信息.", custOrderCode);
+                throw new BusinessException("订单修改，未查询到客户订单{"+custOrderCode+"}信息.");
             }
         } catch (BusinessException e) {
             logger.error(e.getMessage());
             throw e;
         } catch (Exception e) {
-            logger.error("更新交货数量发生未知异常 {}", e);
+            logger.error("订单修改，更新交货数量发生未知异常 {}", e);
             throw e;
         }
         return result;
@@ -184,7 +183,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 }
             }
         } catch (Exception e) {
-            logger.error("交货量同步更新发生异常. {}", e);
+            logger.error("订单修改，交货量同步更新发生异常. {}", e);
             throw e;
         }
     }
@@ -218,11 +217,11 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 }
                 ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
             } else {
-                logger.error("订单{}查询不到货品{}信息！", orderCode, goodsAmountDetailDto.getGoodsCode());
+                logger.error("订单修改，订单{}查询不到货品{}信息！", orderCode, goodsAmountDetailDto.getGoodsCode());
             }
         } catch (Exception e) {
-            logger.error("订单中心更新货品信息失败",e.getMessage(),e);
-            throw new BusinessException("订单中心更新货品信息失败",e.getMessage(),e);
+            logger.error("订单修改，订单中心更新货品信息失败",e.getMessage(),e);
+            throw new BusinessException("订单修改，订单中心更新货品信息失败",e.getMessage(),e);
         }
     }
 
@@ -275,8 +274,8 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 ofcGoodsRecordModificationService.save(ofcGoodsRecordModification);
             }
         } catch (Exception e) {
-            logger.error("订单中心记录需要更新货品信息失败",e.getMessage(),e);
-            throw new BusinessException("订单中心记录需要更新货品信息失败",e.getMessage(),e);
+            logger.error("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
+            throw new BusinessException("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
         }
     }
 
