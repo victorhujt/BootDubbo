@@ -337,7 +337,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             String custCode = createOrderEntity.getCustCode();
             String orderCode = null;
             String key = null;
-            String orderType = createOrderEntity.getOrderType();
+            String orderType = createOrderEntity.getBusinessType();
             AtomicBoolean lockStatus = new AtomicBoolean(false);
             try {
                 // 对创建订单操作进行加锁，防止订单创建重复
