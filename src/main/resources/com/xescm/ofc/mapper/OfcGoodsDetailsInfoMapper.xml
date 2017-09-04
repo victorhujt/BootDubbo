@@ -159,9 +159,29 @@
     WHERE
      gdi.order_code = #{orderCode}
   </select>
+    <select id="queryByCondition" resultType="com.xescm.ofc.domain.OfcGoodsDetailsInfo">
+      SELECT
+      gdi.order_code,
+      gdi.goods_category,
+      gdi.goods_category_code,
+      gdi.goods_type,
+      gdi.goods_type_code
+    FROM ofc_goods_details_info gdi
+      <where>
+        <if test="orderTimePre!=null and orderTimePre!=''">
+          AND gdi.creation_time <![CDATA[ >= ]]>  #{orderTimePre}
+        </if>
+        <if test="orderTimeSuf!=null and orderTimeSuf!=''">
+          AND gdi.creation_time <![CDATA[ < ]]>  #{orderTimeSuf}
+        </if>
+        <if test="orderCode!=null and orderCode!=''">
+          AND gdi.order_code = #{orderCode}
+        </if>
+      </where>
+    </select>
 
 
-  <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+    <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
     <!--
       根据计划单号进行修改
     -->
