@@ -27,7 +27,7 @@ public enum StorageImportOutEnum {
     SUPPORT_NAME("supportName", "供应商名称"),
     SHIPMENT_TIME("shipmentTime", "预计出库时间"),
     PROVIDE_TRANSPORT("provideTransport", "是否提供运输服务"),
-    GROUND_DISTRIBUTION("groundDistribution", "是否落地配"),
+//    GROUND_DISTRIBUTION("groundDistribution", "是否落地配"),
     TRANS_CODE("transCode", "运输单号"),
     PLATE_NUMBER("plateNumber", "车牌号"),
     DRIVER_NAME("driverName", "司机姓名"),
