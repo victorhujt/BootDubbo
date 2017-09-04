@@ -267,6 +267,11 @@ public class CreateOrderEntity {
     private String consigneeContact;
 
     /**
+     * 收货方联系人编码
+     */
+    private String consigneeContactCode;
+
+    /**
      * 收货方联系电话
      */
     private String consigneePhone;
@@ -1280,5 +1285,13 @@ public class CreateOrderEntity {
 
     public void setPlatformType(String platformType) {
         this.platformType = platformType;
+    }
+
+    public String getConsigneeContactCode() {
+        return consigneeContactCode;
+    }
+
+    public void setConsigneeContactCode(String consigneeContactCode) {
+        this.consigneeContactCode = consigneeContactCode;
     }
 }

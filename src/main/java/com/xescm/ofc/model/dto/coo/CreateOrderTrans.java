@@ -205,6 +205,7 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsigneePhone());
             ofcDistributionBasicInfo.setConsigneeName(createOrderEntity.getConsigneeName());
             ofcDistributionBasicInfo.setConsigneeCode(createOrderEntity.getConsigneeCode());
+            ofcDistributionBasicInfo.setConsigneeContactCode(createOrderEntity.getConsigneeContactCode());
             ofcDistributionBasicInfo.setConsigneeType("2");
             //收货方传真、收货方Email、收货方邮编 暂无字段
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());

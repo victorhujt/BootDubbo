@@ -358,7 +358,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                 logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
                                 if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
-                                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, "订单已经审核，跳过创单操作", true);
+                                    this.orderCreateResult(custCode, orderCode, custOrderCode, createOrderEntity.getBusinessType(), "订单已经审核，跳过创单操作", true);
                                 }
                                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
                             }
@@ -370,7 +370,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                             logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, resultModel.getDesc());
                             if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
-                                this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, "订单创建失败:" + resultModel.getDesc(), false);
+                                this.orderCreateResult(custCode, orderCode, custOrderCode, createOrderEntity.getBusinessType(), "订单创建失败:" + resultModel.getDesc(), false);
                             }
                         } else {
                             logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);

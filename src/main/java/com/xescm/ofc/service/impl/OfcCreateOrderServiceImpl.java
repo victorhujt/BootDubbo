@@ -1001,6 +1001,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 createOrderEntity.setConsigneePhone(cscContantAndCompanyResponseDto.getPhone());
                 createOrderEntity.setConsigneeFax(cscContantAndCompanyResponseDto.getFax());
                 createOrderEntity.setConsigneeEmail(cscContantAndCompanyResponseDto.getEmail());
+                createOrderEntity.setConsigneeContactCode(cscContantAndCompanyResponseDto.getContactCode());
                 createOrderEntity.setConsigneeZip(cscContantAndCompanyResponseDto.getPostCode());
             }else {
                 ResultModel resultModel = queryContactAndSet(createOrderEntity, custCode,"1", consigneeCode);
