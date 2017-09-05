@@ -440,6 +440,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             resultDto.setOrderNo(custOrderCode);
             resultDto.setOrderType(orderType);
             resultDto.setBusinessType(businessType);
+            resultDto.setPaasOrderNo(orderCode);
             resultDto.setState("L");    // 锁定
             jsonMsg = JacksonUtil.toJson(resultDto);
             tag = "DACHEN";
