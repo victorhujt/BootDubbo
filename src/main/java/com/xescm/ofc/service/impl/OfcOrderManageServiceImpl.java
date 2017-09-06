@@ -1716,17 +1716,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatus.setOrderStatus(orderStatus);
 
         List<OfcGoodsDetailsInfo> goodsDetailsInfo = new ArrayList<>();
-//        String specialCust = "";
-//        OfcEnumeration ofcEnumeration = new OfcEnumeration();
-//        ofcEnumeration.setEnumSys("OFC");
-//        ofcEnumeration.setEnumType("SpecialCustEnum");
-//        ofcEnumeration.setEnumName("大成万达（天津）有限公司");
-//        List<OfcEnumeration> enumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
-//        if (!CollectionUtils.isEmpty(enumerations)) {
-//            specialCust = enumerations.get(0).getEnumValue();
-//        }
+        String specialCust = "";
+        OfcEnumeration ofcEnumeration = new OfcEnumeration();
+        ofcEnumeration.setEnumSys("OFC");
+        ofcEnumeration.setEnumType("SpecialCustEnum");
+        ofcEnumeration.setEnumName("大成万达（天津）有限公司");
+        List<OfcEnumeration> enumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+        if (!CollectionUtils.isEmpty(enumerations)) {
+            specialCust = enumerations.get(0).getEnumValue();
+        }
         //纬度   货品编码、供应商批次、生产日期、失效日期不同包装合并主单位数量 仓储订单
-        if(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)){
+        if(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER) && !StringUtils.equals(ofcFundamentalInformation.getCustCode(),specialCust)){
             Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
             for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
                 StringBuilder key=new StringBuilder();
