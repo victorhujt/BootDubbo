@@ -1716,15 +1716,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatus.setOrderStatus(orderStatus);
 
         List<OfcGoodsDetailsInfo> goodsDetailsInfo = new ArrayList<>();
-        String specialCust = "";
-        OfcEnumeration ofcEnumeration = new OfcEnumeration();
-        ofcEnumeration.setEnumSys("OFC");
-        ofcEnumeration.setEnumType("SpecialCustEnum");
-        ofcEnumeration.setEnumName("大成万达（天津）有限公司");
-        List<OfcEnumeration> enumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
-        if (!CollectionUtils.isEmpty(enumerations)) {
-            specialCust = enumerations.get(0).getEnumValue();
-        }
+//        String specialCust = "";
+//        OfcEnumeration ofcEnumeration = new OfcEnumeration();
+//        ofcEnumeration.setEnumSys("OFC");
+//        ofcEnumeration.setEnumType("SpecialCustEnum");
+//        ofcEnumeration.setEnumName("大成万达（天津）有限公司");
+//        List<OfcEnumeration> enumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+//        if (!CollectionUtils.isEmpty(enumerations)) {
+//            specialCust = enumerations.get(0).getEnumValue();
+//        }
         //纬度   货品编码、供应商批次、生产日期、失效日期不同包装合并主单位数量 仓储订单
         if(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)){
             Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
@@ -1743,13 +1743,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (ofcGoodsDetails.getInvalidTime() != null) {
                     key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
                 }
-                if (!PubUtils.isSEmptyOrNull(specialCust)) {
-                    if (StringUtils.equals(ofcFundamentalInformation.getCustCode(),specialCust)) {
-                        if (ofcGoodsDetails.getLineNo() != null) {
-                            key.append(ofcGoodsDetails.getLineNo());
-                        }
-                    }
-                }
+//                if (!PubUtils.isSEmptyOrNull(specialCust)) {
+//                    if (StringUtils.equals(ofcFundamentalInformation.getCustCode(),specialCust)) {
+//                        if (ofcGoodsDetails.getLineNo() != null) {
+//                            key.append(ofcGoodsDetails.getLineNo());
+//                        }
+//                    }
+//                }
                 if (!goodInfo.containsKey(key.toString())) {
                     goodInfo.put(key.toString(),ofcGoodsDetails);
                 }else{

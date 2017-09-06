@@ -250,11 +250,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                         if (!CollectionUtils.isEmpty(packages)) {
                             for (GoodsPackingDto packingDto : packages){
                                 logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
-                                logger.info("packingDto.getUnit() is {}",goodsInfo.getUnit());
-                                logger.info("packingDto.getLevel() is {}",packingDto.getLevel());
-                                if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevel())) {
+                                logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
+                                logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
+                                if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
                                     goodsInfo.setConversionRate(packingDto.getLevelSpecification());
-                                    goodsInfo.setPackageName(packingDto.getLevelName());
+                                    goodsInfo.setPackageName(packingDto.getLevelDescription());
                                     goodsInfo.setPackageType(packingDto.getLevel());
                                     goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
                                     isHavePackage = true;
