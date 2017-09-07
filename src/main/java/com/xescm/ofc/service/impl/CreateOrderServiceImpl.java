@@ -1,5 +1,6 @@
 package com.xescm.ofc.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -331,7 +332,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         logger.info("订单中心创建订单接口开始");
         ResultModel resultModel;
         try {
-            CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
+          //  CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
+            CreateOrderEntity createOrderEntity = JSON.parseObject(data, CreateOrderEntity.class);
             String custOrderCode = createOrderEntity.getCustOrderCode();
             String platformType = createOrderEntity.getPlatformType();
             String custCode = createOrderEntity.getCustCode();

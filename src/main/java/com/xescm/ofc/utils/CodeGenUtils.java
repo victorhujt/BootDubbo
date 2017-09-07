@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,4 +77,25 @@ public class CodeGenUtils {
 		}
 		return validateCode;
 	}
+
+	/**
+	 * 获取平台行号
+	 * @param prefix
+	 * @return
+	 */
+	public Long getPaasLineNo(String prefix){
+		Assert.notNull(prefix, "prefix must not be null");
+		SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
+		String dateStr = df.format(new Date());
+		String key = prefix +dateStr;
+		Long newValue;
+		synchronized (this) {
+			ValueOperations<String,String> ops  = rt.opsForValue();
+			newValue = ops.increment(key, 1L);
+		}
+		return newValue;
+	}
+
+
+
 }

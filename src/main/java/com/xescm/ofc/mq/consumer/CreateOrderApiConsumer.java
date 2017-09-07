@@ -17,7 +17,6 @@ import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
 import com.xescm.ofc.edas.enums.LogSourceSysEnum;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
-import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
 import com.xescm.ofc.service.OfcOrderStatusService;
@@ -70,7 +69,8 @@ public class CreateOrderApiConsumer implements MessageListener {
             if (message.getTag().equals("xeOrderToOfc")) {
                 logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
                 try {
-                    List<CreateOrderEntity> orderEntities = JacksonUtil.parseJsonWithFormat(messageBody, new TypeReference<List<CreateOrderEntity>>() {});
+                    List<CreateOrderEntity> orderEntities = JSON.parseArray(messageBody,CreateOrderEntity.class);
+                   // List<CreateOrderEntity> orderEntities = JacksonUtil.parseJsonWithFormat(messageBody, new TypeReference<List<CreateOrderEntity>>() {});
                     for (CreateOrderEntity orderEntity : orderEntities) {
                         String custOrderCode = orderEntity.getCustOrderCode();
                         OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();

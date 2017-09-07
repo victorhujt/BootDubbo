@@ -241,10 +241,16 @@ public class OfcGoodsDetailsInfo {
     @Column(name = "primary_quantity")
     private BigDecimal primaryQuantity;
     /**
-     * 行号
+     * 平台行号
      */
-    @Column(name = "line_no")
-    private Integer lineNo;
+    @Column(name = "paas_line_no")
+    private Long passLineNo;
+
+    /**
+     * 外部平台行号
+     */
+    @Column(name = "external_paas_line_no")
+    private String externalPaasLineNo;
     /**
      * 厂商批次
      */

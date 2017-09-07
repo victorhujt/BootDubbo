@@ -77,6 +77,7 @@ import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.BATCH_PRE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -1369,7 +1370,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
-            ofcGoodsDetails.setLineNo(++i);
+            ofcGoodsDetails.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
             ofcGoodsDetail.add(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
      }
@@ -1683,6 +1684,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     BeanUtils.copyProperties(newGoodsInfo, info);
                     newGoodsInfo.setId(UUID.randomUUID().toString().replace("-", ""));
                     newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
+                    newGoodsInfo.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
                     ofcGoodsDetailsInfoService.save(newGoodsInfo);
                 }
             }
@@ -1763,8 +1765,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             while (iter.hasNext()) {
                 Map.Entry<String, OfcGoodsDetailsInfo> entry = (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
                 OfcGoodsDetailsInfo ofcGoodsDetails = entry.getValue();
-                if (ofcGoodsDetails.getLineNo() == null) {
-                    ofcGoodsDetails.setLineNo(i++);
+                if (ofcGoodsDetails.getPassLineNo() == null) {
+                    ofcGoodsDetails.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
                 }
                 if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0) {
                     continue;

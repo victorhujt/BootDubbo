@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 
@@ -222,6 +223,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
                 ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
                 ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+                ofcGoodsDetails.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
                 goodsDetailsList.add(ofcGoodsDetails);
             }

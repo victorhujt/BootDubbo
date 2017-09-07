@@ -1294,4 +1294,5 @@ public class CreateOrderEntity {
     public void setConsigneeContactCode(String consigneeContactCode) {
         this.consigneeContactCode = consigneeContactCode;
     }
+
 }

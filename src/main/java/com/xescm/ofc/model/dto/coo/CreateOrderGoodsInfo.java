@@ -1,9 +1,11 @@
 package com.xescm.ofc.model.dto.coo;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 订单中心创建订单（鲜易网）
@@ -156,13 +158,45 @@ public class CreateOrderGoodsInfo implements Serializable {
     /** 主单位数量 */
     private BigDecimal primaryQuantity;
     /**
-     * 行号
+     * 平台行号
      */
-    private Integer lineNo;
+    private Integer passLineNo;
+
+    public Integer getPassLineNo() {
+        return passLineNo;
+    }
+
+    public void setPassLineNo(Integer passLineNo) {
+        this.passLineNo = passLineNo;
+    }
+
+    public String getExternalPaasLineNo() {
+        return externalPaasLineNo;
+    }
+
+    public void setExternalPaasLineNo(String externalPaasLineNo) {
+        this.externalPaasLineNo = externalPaasLineNo;
+    }
+
+    /**
+     * 外部平台号
+
+     */
+    private String externalPaasLineNo;
     /**
      * 厂商批次
      */
     private String manufactureBatchLotatt;
+
+    private List<GoodsPackingDto> skuPackageList;
+
+    public List<GoodsPackingDto> getSkuPackageList() {
+        return skuPackageList;
+    }
+
+    public void setSkuPackageList(List<GoodsPackingDto> skuPackageList) {
+        this.skuPackageList = skuPackageList;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -214,14 +248,6 @@ public class CreateOrderGoodsInfo implements Serializable {
 
     public void setPrimaryQuantity(BigDecimal primaryQuantity) {
         this.primaryQuantity = primaryQuantity;
-    }
-
-    public Integer getLineNo() {
-        return lineNo;
-    }
-
-    public void setLineNo(Integer lineNo) {
-        this.lineNo = lineNo;
     }
 
     public String getManufactureBatchLotatt() {

@@ -39,7 +39,8 @@
     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
     <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
-    <result column="line_no" property="lineNo" jdbcType="INTEGER" />
+    <result column="line_no" property="paas_line_no" jdbcType="INTEGER" />
+    <result column="line_no" property="external_paas_line_no" jdbcType="VARCHAR"  />
     <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
 
   </resultMap>
@@ -85,7 +86,8 @@
     oos.package_type,
     oos.conversion_rate,
     oos.primary_quantity,
-    oos.line_no,
+    oos.paas_line_no,
+    oos.external_paas_line_no,
     oos.manufacture_batch_lotatt
     FROM
     ofc_goods_details_info oos
@@ -150,7 +152,8 @@
       gdi.package_type,
       gdi.conversion_rate,
       gdi.primary_quantity,
-      gdi.line_no,
+      gdi.paas_line_no,
+      gdi.external_paas_line_no,
       gdi.manufacture_batch_lotatt
     FROM ofc_goods_details_info gdi
     LEFT JOIN

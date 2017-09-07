@@ -203,10 +203,16 @@ public class OfcGoodsDetailsInfoDTO {
     private BigDecimal conversionRate;
 
     private BigDecimal primaryQuantity;
+
     /**
-     * 行号
+     * 平台行号
      */
-    private Integer lineNo;
+    private Long passLineNo;
+
+    /**
+     * 外部平台行号
+     */
+    private String externalPaasLineNo;
     /**
      * 厂商批次号
      */

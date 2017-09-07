@@ -35,6 +35,7 @@ import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
+import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.rmc.edas.domain.vo.RmcAddressCodeVo;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
 import com.xescm.rmc.edas.service.RmcAddressEdasService;
@@ -54,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -106,6 +108,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     @Resource
     private OfcEnumerationService ofcEnumerationService;
+
+    @Resource
+    private CodeGenUtils codeGenUtils;
 
     @Override
     public int queryCountByOrderStatus(String orderCode, String orderStatus) {
@@ -236,7 +241,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-
                     Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
                     try{
                          logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
@@ -247,33 +251,77 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                             PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                         CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
                         List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
+                        List<GoodsPackingDto>  dcPackages = goodsInfo.getSkuPackageList();
                         if (!CollectionUtils.isEmpty(packages)) {
-                            for (GoodsPackingDto packingDto : packages){
-                                logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
-                                logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
-                                logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
-                                if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
-                                    goodsInfo.setConversionRate(packingDto.getLevelSpecification());
-                                    goodsInfo.setPackageName(packingDto.getLevelDescription());
-                                    goodsInfo.setPackageType(packingDto.getLevel());
-                                    goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
-                                    isHavePackage = true;
-                                    break;
+                                if (ofcFundamentalInformation.getBusinessType().indexOf("62") != -1) {
+                                    boolean isExistPackage = false;
+                                    if (!CollectionUtils.isEmpty(dcPackages)) {
+                                        logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                        logger.info("入库单货品编码:{}开始比对包装",goodsInfo.getGoodsCode());
+                                        for (GoodsPackingDto packingDto : dcPackages){
+                                            isExistPackage = false;
+                                            //入库比对包装
+                                            for (GoodsPackingDto dcPackingDto : packages) {
+                                                if (StringUtils.equals(packingDto.getLevelDescription(),dcPackingDto.getLevelDescription()) &&
+                                                        packingDto.getLevelSpecification().doubleValue() == dcPackingDto.getLevelSpecification().doubleValue()) {
+                                                    isExistPackage = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                    logger.info("入库单货品编码比对包装结果为:{}",isExistPackage);
+                                    if (!isExistPackage) {
+                                        goodsInfo.setCustName(createOrderEntity.getCustName());
+                                        goodsInfo.setCustCode(custCode);
+                                        tempList.add(goodsInfo);
+                                    }
                                 }
-                            }
-                        //没有匹配到包装直接返回错误
-                        if (!isHavePackage) {
-                            if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
-                                noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
-                            }
-                         }
+                                //出库业务只匹配包装存不存在
+                                else {
+                                    logger.info("出库单货品编码:{}开始匹配包装",goodsInfo.getGoodsCode());
+                                    for (GoodsPackingDto packingDto : packages) {
+                                        if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
+                                            logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                            logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
+                                            logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
+                                            if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
+                                                goodsInfo.setConversionRate(packingDto.getLevelSpecification());
+                                                goodsInfo.setPackageName(packingDto.getLevelDescription());
+                                                goodsInfo.setPackageType(packingDto.getLevel());
+                                                goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
+                                                isHavePackage = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    //没有匹配到包装直接返回错误
+                                    if (!isHavePackage) {
+                                        logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                        logger.info("出库单货品编码:{}没有匹配包装",goodsInfo.getGoodsCode());
+                                        if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
+                                            noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
+                                        }
+                                    }
+                                }
                         } else {
+                            logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                            logger.info("货品编码:{}csc接口没有查询到包装信息",goodsInfo.getGoodsCode());
                             //没有匹配到包装直接返回错误
                             if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
                                 noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
                             }
+                            //csc没有包装 但是大成接口过来的有包装
+                            if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList())) {
+                                goodsInfo.setCustName(createOrderEntity.getCustName());
+                                goodsInfo.setCustCode(custCode);
+                                tempList.add(goodsInfo);
+                            }
                         }
                     } else {
+                        logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                        logger.info("货品编码:{}csc接口查询到包装信息异常",goodsInfo.getGoodsCode());
                         // TODO 推送CSC待创建商品
                         goodsInfo.setCustName(createOrderEntity.getCustName());
                         goodsInfo.setCustCode(custCode);
@@ -521,6 +569,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcGoodsDetailsInfoService.deleteAllByOrderCode(orderCode);
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
                 ofcGoodsDetailsInfo.setOrderCode(orderCode);
+                ofcGoodsDetailsInfo.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             try {
@@ -553,6 +602,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
             ofcFinanceInformationService.save(ofcFinanceInformation);
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
+                ofcGoodsDetailsInfo.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             ofcOrderStatusService.save(ofcOrderStatus);
