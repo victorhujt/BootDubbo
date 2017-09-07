@@ -4,14 +4,12 @@ import com.xescm.ac.domain.AcDistributionBasicInfo;
 import com.xescm.ac.domain.AcFinanceInformation;
 import com.xescm.ac.domain.AcFundamentalInformation;
 import com.xescm.ac.domain.AcGoodsDetailsInfo;
-import com.xescm.ac.model.dto.AcIncomeSettleDTO;
 import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.ac.model.dto.ofc.AcOrderStatusDto;
 import com.xescm.ac.model.dto.ofc.AcPlanDto;
 import com.xescm.ac.model.dto.ofc.CancelAcOrderDto;
 import com.xescm.ac.model.dto.ofc.CancelAcOrderResultDto;
 import com.xescm.ac.provider.AcOrderEdasService;
-import com.xescm.ac.provider.AcSettleStatisticsEdasService;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -26,19 +24,15 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
-import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.edas.model.dto.ofc.OfcOrderAccountDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderCancelDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
-import com.xescm.ofc.model.dto.form.OrderCountForm;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
+import com.xescm.ofc.model.dto.ofc.*;
 import com.xescm.ofc.model.dto.tfc.TfcTransport;
 import com.xescm.ofc.model.dto.tfc.TfcTransportDetail;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
@@ -55,9 +49,7 @@ import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.tfc.edas.model.dto.CancelOrderDTO;
-import com.xescm.tfc.edas.model.dto.DeliverEveryRunDTO;
 import com.xescm.tfc.edas.service.CancelOrderEdasService;
-import com.xescm.tfc.edas.service.TfcQueryEveryDeliveryService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.whc.edas.dto.InventoryDTO;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
@@ -75,8 +67,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.NumberFormat;
 import java.util.*;
 
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
@@ -151,11 +141,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private OfcStorageTemplateService ofcStorageTemplateService;
     @Resource
-    private  OfcDailyAccountsService ofcDailyAccountsService;
-    @Resource
-    private AcSettleStatisticsEdasService acSettleStatisticsEdasService;
-    @Resource
-    private TfcQueryEveryDeliveryService tfcQueryEveryDeliveryService;
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
+
     @Resource
     private DefaultMqProducer mqProducer;
     @Resource
@@ -166,7 +153,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Override
     public Map orderStorageDetails(String orderCode) {
         Map result = new HashMap();
-        OfcDistributionBasicInfo ofcDistributionBasicInfo = null;
+        OfcDistributionBasicInfo ofcDistributionBasicInfo;
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         if (ofcFundamentalInformation == null) {
             throw new BusinessException("该订单不存在订单");
@@ -223,6 +210,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderStatus.setLastedOperTime(null);
                 ofcOrderStatus.setStatusDesc("待审核");
                 ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单反审核完成");
+                ofcOrderStatusService.save(ofcOrderStatus);
             }
         } else if (reviewTag.equals(REVIEW)) {
             if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT)) {
@@ -295,8 +283,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
         ofcWarehouse.setOrderCode(orderCode);
         OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouse);
-        Wrapper response=null;
-        Wrapper whcresponse=null;
+        Wrapper response = null;
+        Wrapper whcresponse = null;
         try {
             if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
                 long start = System.currentTimeMillis();
@@ -331,7 +319,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         response= orderCancelToTfc(orderCode);
                         logger.info("=============> TFC取消耗时：" + (System.currentTimeMillis() - tfcStart)/1000);
                         logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
-                        if (response!=null&&response.getCode()==Wrapper.SUCCESS_CODE) {
+                        if (response.getCode()==Wrapper.SUCCESS_CODE) {
                             whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType(),userName);
                             logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
                         }
@@ -349,11 +337,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                     }
                 }
-
             }
         } catch (Exception e) {
-            logger.info("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
-            throw new BusinessException("取消订单，调用结算中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
+            logger.info("取消订单，取消接口发生异常,返回结果：{}", e.getMessage(), e);
+            throw new BusinessException("取消订单，取消接口发生异常,返回结果：{}", e.getMessage(), e);
         }
 
         if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
@@ -422,15 +409,21 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      */
     private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode,String orderType,String userName) {
         logger.info("调用仓储中心取消接口, 订单号:{}，参数type:{},仓库编码:{}，客户编码:{},业务类型:{}", orderCode,type,warehouseCode,customerCode,orderType);
-        OfcCancelOrderDTO cancelOrderDTO=new OfcCancelOrderDTO();
-        cancelOrderDTO.setOrderNo(orderCode);
-        cancelOrderDTO.setBillType(type);
-        cancelOrderDTO.setWarehouseID(warehouseCode);
-        cancelOrderDTO.setOrderType(orderType);
-        cancelOrderDTO.setCustomerID(customerCode);
-        //cancelOrderDTO.setOperationName(userName);
-        Wrapper response=whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
-        logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
+        Wrapper response = null;
+        try {
+            OfcCancelOrderDTO cancelOrderDTO = new OfcCancelOrderDTO();
+            cancelOrderDTO.setOrderNo(orderCode);
+            cancelOrderDTO.setBillType(type);
+            cancelOrderDTO.setWarehouseID(warehouseCode);
+            cancelOrderDTO.setOrderType(orderType);
+            cancelOrderDTO.setCustomerID(customerCode);
+            //cancelOrderDTO.setOperationName(userName);
+            response = whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
+            logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}", response.getCode(), orderCode);
+        } catch (Exception e) {
+            logger.error("仓储中心取消订单发生异常：异常详情 => {}", e);
+            throw new BusinessException("取消订单失败：仓储中心取消订单发生异常!");
+        }
         return response;
     }
 
@@ -483,6 +476,33 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } else {
             throw new BusinessException("计划单状态不在可删除范围内");
         }
+    }
+
+    @Override
+    /**
+     *  @param orderCode         订单编号
+     */
+    public String orderDelete(String orderCode) {
+        logger.info("删除的订单号为:{}",orderCode);
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        if (ofcFundamentalInformation == null) {
+            throw new BusinessException("订单号不存在");
+        }
+        OfcOrderNewstatus ofcOrderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
+        if (ofcOrderNewstatus != null) {
+            if (!ofcOrderNewstatus.getOrderLatestStatus().equals(PENDING_AUDIT)) {
+                throw new BusinessException("订单状态只有待审核状态才可以删除");
+            }
+            ofcFundamentalInformationService.deleteByKey(orderCode);
+            ofcDistributionBasicInfoService.deleteByOrderCode(orderCode);
+            ofcOrderStatusService.deleteByOrderCode(orderCode);
+            ofcWarehouseInformationService.deleteByOrderCode(orderCode);
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            ofcGoodsDetailsInfo.setOrderCode(orderCode);
+            ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
+            return String.valueOf(Wrapper.SUCCESS_CODE);
+        }
+        return null;
     }
 
     /**
@@ -706,9 +726,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
         String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
-
+        int index = 0;
         for (String orderMapKey : orderMap.keySet()) {
-
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
@@ -730,30 +749,59 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcOrderDTO.setReturnList("1");
                 ofcOrderDTO.setReturnListFee(new BigDecimal(0));
             }
-            List<OfcGoodsDetailsInfo> detailsInfos = new ArrayList<>();
+            List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfoDTOList = new ArrayList<>();
             for (OfcStorageTemplateDto ofcStorageTemplateDto : order) {
-                OfcGoodsDetailsInfo ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
-                CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
+                OfcGoodsDetailsInfoDTO ofcGoodsDetailsInfo = ofcStorageTemplateService.convertCscGoods(ofcStorageTemplateDto);
                 GoodsPackingDto goodsPackingDto = ofcStorageTemplateDto.getGoodsPackingDto();
                 ofcGoodsDetailsInfo.setUnit(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setPackageName(goodsPackingDto.getLevelDescription());
                 ofcGoodsDetailsInfo.setPackageType(goodsPackingDto.getLevel());
                 ofcGoodsDetailsInfo.setWeight(ofcStorageTemplateDto.getWeight());
-                detailsInfos.add(ofcGoodsDetailsInfo);
+                ofcGoodsDetailsInfoDTOList.add(ofcGoodsDetailsInfo);
             }
             CscContantAndCompanyDto cscConsignorDto = ofcStorageTemplateService.convertCscConsignor(forOrderMsg.getConsignor());
             CscContantAndCompanyDto cscConsigneeDto = ofcStorageTemplateService.convertCscConsignee(forOrderMsg.getCscConsigneeDto());
             ofcStorageTemplateService.convertConsignorToDis(forOrderMsg.getConsignor(), ofcOrderDTO);
             ofcStorageTemplateService.convertConsigneeToDis(forOrderMsg.getCscConsigneeDto(), ofcOrderDTO);
             ofcStorageTemplateService.convertSupplierToWare(forOrderMsg.getCscSupplierInfoDto(), ofcOrderDTO);
-            Wrapper save = this.saveStorageOrder(ofcOrderDTO, detailsInfos, ORDER_TAG_STOCK_IMPORT
+
+            OfcSaveStorageDTO ofcSaveStorageDTO = this.convertToOfcSaveStorageDTO(ofcOrderDTO);
+            //ofcOrderDTO, detailsInfos
+            Wrapper save = this.saveStorageOrder(ofcSaveStorageDTO, ofcGoodsDetailsInfoDTOList, ORDER_TAG_STOCK_IMPORT
                     , cscConsignorDto, cscConsigneeDto, forOrderMsg.getCscSupplierInfoDto(), authResDto);
             if (save.getCode() == Wrapper.ERROR_CODE) {
                 logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
                 return save;
             }
+            index++ ;
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
+    }
+
+    /**
+     *
+     * 通过收货地地址匹配基地
+     * @param ofcDistributionBasicInfo
+     * @return
+     */
+    @Override
+    public boolean consigneeAdressIsCoverBase(OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo = new RmcServiceCoverageForOrderVo();
+        rmcServiceCoverageForOrderVo = this.copyDestinationPlace(ofcDistributionBasicInfo.getDestinationCode(), rmcServiceCoverageForOrderVo);
+        RmcServiceCoverageForOrderVo rmcPickup = this.rmcServiceCoverageAPI(rmcServiceCoverageForOrderVo, "Pickup");
+        return rmcPickup !=null ? !PubUtils.isSEmptyOrNull(rmcPickup.getSerialNo())? true:false :false;
+    }
+
+    public OfcSaveStorageDTO convertToOfcSaveStorageDTO(OfcOrderDTO ofcOrderDTO) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
+        OfcSaveStorageDTO ofcSaveStorageDTO = new OfcSaveStorageDTO();
+        OfcFundamentalInformationDTO ofcFundamentalInformationDTO = modelMapper.map(ofcOrderDTO, OfcFundamentalInformationDTO.class);
+        OfcWarehouseInformationDTO ofcWarehouseInformationDTO = modelMapper.map(ofcOrderDTO, OfcWarehouseInformationDTO.class);
+        OfcDistributionBasicInfoDTO ofcDistributionBasicInfoDTO = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfoDTO.class);
+        ofcSaveStorageDTO.setFundamentalInformation(ofcFundamentalInformationDTO);
+        ofcSaveStorageDTO.setWarehouseInformation(ofcWarehouseInformationDTO);
+        ofcSaveStorageDTO.setDistributionBasicInfo(ofcDistributionBasicInfoDTO);
+        return ofcSaveStorageDTO;
     }
 
 
@@ -984,6 +1032,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("订单状态开始推结算中心成功 integerWrapper{}", integerWrapper);
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}", e, e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -1054,272 +1103,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         return whcOrderCancelEdasService.validateStockCount(inventoryGoods);
     }
 
-    /**
-     * 钉钉平台日报
-     */
-    @Override
-    public List<OfcOrderAccountDTO> dailyAccount() {
-
-        OrderCountForm form=new OrderCountForm();
-        NumberFormat percent = NumberFormat.getPercentInstance();
-        percent.setMaximumFractionDigits(2);
-        Calendar calendar=Calendar.getInstance();
-        calendar.setTime(new Date());
-        form.setEndDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
-        calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)-1);
-        form.setStartDate(DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2));
-        String beginTime=DateUtils.Date2String(calendar.getTime(), DateUtils.DateFormatType.TYPE2);
-        //两小时完成的订单统计
-        List<OrderCountResult>  twoHourOrderCount=ofcDailyAccountsService.countTwoHoursOrder(form);
-        //前一天的订单统计
-        List<OrderCountResult>  yesterdayOrderCount=ofcDailyAccountsService.yesterdayOrderCount(form);
-        if(CollectionUtils.isEmpty(twoHourOrderCount)){
-            logger.info("两小时完成的订单为零");
-        }
-        if(CollectionUtils.isEmpty(yesterdayOrderCount)){
-            logger.info("前一天订单总计数为零");
-        }
-
-        //保存到数据库
-        Map<String,OfcDailyAccount> accountDailyResult=new HashMap<>();
-        //发送到钉钉机器人的数据
-        Map<String,OfcOrderAccountDTO> account=new HashMap<>();
-
-        if(!CollectionUtils.isEmpty(yesterdayOrderCount)){
-            for(OrderCountResult yesterdayOrderCountResult:yesterdayOrderCount) {
-                StringBuilder yesterdayOrderCountKey = new StringBuilder();
-                if (!(PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getAreaCode()) && PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getBaseCode()))) {
-                    yesterdayOrderCountKey.append(yesterdayOrderCountResult.getAreaCode()).append(yesterdayOrderCountResult.getBaseCode());
-                }else if(!PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getAreaCode())&&PubUtils.isSEmptyOrNull(yesterdayOrderCountResult.getBaseCode())){
-                    yesterdayOrderCountKey.append(yesterdayOrderCountResult.getAreaCode());
-                }else {
-                    continue;
-                }
-                //保存到数据库的数据
-                OfcDailyAccount ofcDailyAccount=new OfcDailyAccount();
-                ofcDailyAccount.setAreaCode(yesterdayOrderCountResult.getAreaCode());
-                ofcDailyAccount.setAreaName(yesterdayOrderCountResult.getAreaName());
-                ofcDailyAccount.setBaseName(yesterdayOrderCountResult.getBaseName());
-                ofcDailyAccount.setBaseCode(yesterdayOrderCountResult.getBaseCode());
-                ofcDailyAccount.setYesterdayAccount(yesterdayOrderCountResult.getOrderCount()==null?new BigDecimal(0.0):yesterdayOrderCountResult.getOrderCount());
-                ofcDailyAccount.setGmtCreate(new Date());
-                if(!accountDailyResult.containsKey(yesterdayOrderCountKey.toString())){
-                    accountDailyResult.put(yesterdayOrderCountKey.toString(),ofcDailyAccount);
-                }
-
-                // 发送到钉钉机器人的数据
-                OfcOrderAccountDTO  ofcOrderAccountDTO=new OfcOrderAccountDTO();
-                ofcOrderAccountDTO.setAreaCode(yesterdayOrderCountResult.getAreaCode());
-                ofcOrderAccountDTO.setAreaName(yesterdayOrderCountResult.getAreaName());
-                ofcOrderAccountDTO.setBaseName(yesterdayOrderCountResult.getBaseName());
-                ofcOrderAccountDTO.setBaseCode(yesterdayOrderCountResult.getBaseCode());
-                if(!account.containsKey(yesterdayOrderCountKey.toString())){
-                    account.put(yesterdayOrderCountKey.toString(),ofcOrderAccountDTO);
-                }
-            }
-            if(!CollectionUtils.isEmpty(twoHourOrderCount)){
-                for(OrderCountResult twoHourOrderCountResult:twoHourOrderCount){
-                    StringBuilder twoHourOrderCountkey = new StringBuilder();
-                    if (!(PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getAreaCode()) && PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getBaseCode()))) {
-                        twoHourOrderCountkey.append(twoHourOrderCountResult.getAreaCode()).append(twoHourOrderCountResult.getBaseCode());
-                    } else if(!PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getAreaCode())&&PubUtils.isSEmptyOrNull(twoHourOrderCountResult.getBaseCode())){
-                        twoHourOrderCountkey.append(twoHourOrderCountResult.getAreaCode());
-                    }else{
-                        continue;
-                    }
-
-                    if(account.containsKey(twoHourOrderCountkey.toString())){
-                        OfcDailyAccount ofcDailyAccount = accountDailyResult.get(twoHourOrderCountkey.toString());
-                        ofcDailyAccount.setTwoHourAccount(twoHourOrderCountResult.getOrderCount()==null?new BigDecimal(0.0):twoHourOrderCountResult.getOrderCount());
-                        BigDecimal p = BigDecimal.valueOf(0.0);
-                        //事后补录订单：2小时订单/开单合计
-                        if(ofcDailyAccount.getYesterdayAccount() != null && ofcDailyAccount.getYesterdayAccount().doubleValue() != 0.0){
-                             p = twoHourOrderCountResult.getOrderCount().divide(ofcDailyAccount.getYesterdayAccount(),2, RoundingMode.HALF_UP);
-                        }
-                        ofcDailyAccount.setAdditionalOrder(p.setScale(2));
-                        ofcDailyAccount.setAdditionalOrderPercent(percent.format(p.doubleValue()));
-
-                        OfcOrderAccountDTO ofcOrderAccountDTO = account.get(twoHourOrderCountkey.toString());
-                        ofcOrderAccountDTO.setAdditionalOrder(p.setScale(2));
-                        ofcOrderAccountDTO.setAdditionalOrderPercent(percent.format(p.doubleValue()));
-                    }
-                }
-            }
-
-        }
-
-        //收入确认的订单 海洋提供
-        logger.info("调用结算中心的统计接口传的参数为:{}",beginTime);
-        Wrapper<List<AcIncomeSettleDTO>> acResult= acSettleStatisticsEdasService.acIncomeSettle(beginTime);
-        logger.info("调用结算中心的统计接口响应的code为:{}",acResult.getCode());
-        if(acResult.getCode()==Wrapper.SUCCESS_CODE){
-            if(!CollectionUtils.isEmpty(acResult.getResult())){
-                List<AcIncomeSettleDTO> AcIncomeSettleDTOList=acResult.getResult();
-                logger.info("调用结算中心的统计接口查询的结果为:{}",AcIncomeSettleDTOList);
-                for(AcIncomeSettleDTO acIncomeSettleDTO:AcIncomeSettleDTOList){
-                    StringBuilder key=new StringBuilder();
-                    if(!(PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getBaseCode()))){
-                        key.append(acIncomeSettleDTO.getAreaCode()).append(acIncomeSettleDTO.getBaseCode());
-                    }else if(!PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(acIncomeSettleDTO.getBaseCode())){
-                        key.append(acIncomeSettleDTO.getAreaCode());
-                    }else{
-                        continue;
-                    }
-                    if(accountDailyResult.containsKey(key.toString())){
-                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
-                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
-                        ofcDailyAccount.setHaveIncomeOrderAccount(BigDecimal.valueOf(acIncomeSettleDTO.getReceivableOrderNumber()==null?0:acIncomeSettleDTO.getReceivableOrderNumber()));
-                        ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()==null?0:acIncomeSettleDTO.getPayableCarNumber()));
-                        BigDecimal p = BigDecimal.valueOf(0.0);
-                        //应收确认日清：收入确认的订单/开单合计
-                        if(ofcDailyAccount.getYesterdayAccount() != null && ofcDailyAccount.getYesterdayAccount().doubleValue() != 0.0){
-                             p=ofcDailyAccount.getHaveIncomeOrderAccount().divide(ofcDailyAccount.getYesterdayAccount(),2, RoundingMode.HALF_UP);
-                        }
-                        ofcDailyAccount.setReceivable(p.setScale(2));
-                        ofcDailyAccount.setReceivablePercent(percent.format(p.doubleValue()));
-                        ofcOrderAccountDTO.setReceivable(p.setScale(2));
-                        ofcOrderAccountDTO.setReceivablePercent(percent.format(p.doubleValue()));
-                    }else{
-                        OfcDailyAccount ofcDailyAccount=new OfcDailyAccount();
-                        ofcDailyAccount.setAreaCode(acIncomeSettleDTO.getAreaCode());
-                        ofcDailyAccount.setAreaName(acIncomeSettleDTO.getAreaName());
-                        ofcDailyAccount.setBaseName(acIncomeSettleDTO.getBaseName());
-                        ofcDailyAccount.setBaseCode(acIncomeSettleDTO.getBaseCode());
-
-                        OfcOrderAccountDTO ofcOrderAccountDTO=new OfcOrderAccountDTO();
-                        ofcOrderAccountDTO.setAreaCode(acIncomeSettleDTO.getAreaCode());
-                        ofcOrderAccountDTO.setAreaName(acIncomeSettleDTO.getAreaName());
-                        ofcOrderAccountDTO.setBaseName(acIncomeSettleDTO.getBaseName());
-                        ofcOrderAccountDTO.setBaseCode(acIncomeSettleDTO.getBaseCode());
-
-                        ofcDailyAccount.setHaveIncomeOrderAccount(BigDecimal.valueOf(acIncomeSettleDTO.getReceivableOrderNumber()==null?0:acIncomeSettleDTO.getReceivableOrderNumber()));
-                        ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(acIncomeSettleDTO.getPayableCarNumber()==null?0:acIncomeSettleDTO.getPayableCarNumber()));
-                        BigDecimal p = BigDecimal.valueOf(0.0);
-                        //应收确认日清：收入确认的订单/开单合计
-                        ofcDailyAccount.setReceivable(p.setScale(2));
-                        ofcDailyAccount.setReceivablePercent(percent.format(p.doubleValue()));
-                        ofcOrderAccountDTO.setReceivable(p.setScale(2));
-                        ofcOrderAccountDTO.setReceivablePercent(percent.format(p.doubleValue()));
-                        accountDailyResult.put(key.toString(),ofcDailyAccount);
-                        account.put(key.toString(),ofcOrderAccountDTO);
-                    }
-                }
-            }else{
-                logger.info("调用结算中心的统计结果为空");
-            }
-        }
-
-        //外部车辆数发运数量 铭涛提供
-        logger.info("调用运输中心的统计接口传的参数为:{}",beginTime);
-        Wrapper<List<DeliverEveryRunDTO>>  deliverResult=tfcQueryEveryDeliveryService.queryDeliverEveryRun(beginTime);
-        logger.info("调用运输中心的统计接口传的响应为:{}",deliverResult.getCode());
-        if(deliverResult.getCode()==Wrapper.SUCCESS_CODE){
-            List<DeliverEveryRunDTO> tfcDeliverEveryRunDTOList=deliverResult.getResult();
-            if(!CollectionUtils.isEmpty(tfcDeliverEveryRunDTOList)){
-                logger.info("调用运输中心的统计接口查询的结果为:{}",tfcDeliverEveryRunDTOList);
-                for (DeliverEveryRunDTO deliverEveryRunDTO:tfcDeliverEveryRunDTOList){
-                    StringBuilder key=new StringBuilder();
-                    if(!(PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getBaseCode()))){
-                        key.append(deliverEveryRunDTO.getAreaCode()).append(deliverEveryRunDTO.getBaseCode());
-                    }else if(!PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getAreaCode())&&PubUtils.isSEmptyOrNull(deliverEveryRunDTO.getBaseCode())){
-                        key.append(deliverEveryRunDTO.getAreaCode());
-                    }else{
-                        continue;
-                    }
-                    if(accountDailyResult.containsKey(key.toString())){
-                        OfcDailyAccount ofcDailyAccount=accountDailyResult.get(key.toString());
-                        OfcOrderAccountDTO ofcOrderAccountDTO=account.get(key.toString());
-                        ofcDailyAccount.setExternalVehicleAccount(BigDecimal.valueOf(deliverEveryRunDTO.getNum()));
-                        //应付确认日清 应付确认车数量/外部车辆发运数量
-                        BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount()==null?new BigDecimal(0.0):ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
-                        ofcDailyAccount.setPayable(p.setScale(2));
-                        ofcDailyAccount.setPayablePercent(percent.format(p.doubleValue()));
-                        ofcOrderAccountDTO.setPayable(p.setScale(2));
-                        ofcOrderAccountDTO.setPayablePercent(percent.format(p.doubleValue()));
-                    }else{
-                        OfcDailyAccount ofcDailyAccount=new OfcDailyAccount();
-                        OfcOrderAccountDTO ofcOrderAccountDTO=new OfcOrderAccountDTO();
-                        ofcDailyAccount.setExternalVehicleAccount(BigDecimal.valueOf(deliverEveryRunDTO.getNum()));
-                        ofcDailyAccount.setPayableVehicleAccount(BigDecimal.valueOf(0.0));
-                        BigDecimal p=ofcDailyAccount.getPayableVehicleAccount().divide(ofcDailyAccount.getExternalVehicleAccount()==null?new BigDecimal(0.0):ofcDailyAccount.getExternalVehicleAccount(),2, RoundingMode.HALF_UP);
-                        //应付确认日清 应付确认车数量/外部车辆发运数量
-                        ofcDailyAccount.setPayable(p.setScale(2));
-                        ofcDailyAccount.setPayablePercent(percent.format(p.doubleValue()));
-                        ofcOrderAccountDTO.setPayable(p.setScale(2));
-                        ofcOrderAccountDTO.setPayablePercent(percent.format(p.doubleValue()));
-                        accountDailyResult.put(key.toString(),ofcDailyAccount);
-                        account.put(key.toString(),ofcOrderAccountDTO);
-                    }
-                }
-            }else{
-                logger.info("调用运输中心统计外部车辆发运数量为空");
-            }
-        }
-
-        List<OfcOrderAccountDTO> dailyAccountInfo=new ArrayList<>();
-        Iterator iter = accountDailyResult.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<String, OfcDailyAccount> entry = (Map.Entry<String, OfcDailyAccount>) iter.next();
-            OfcDailyAccount ofcDailyAccount=entry.getValue();
-            if(ofcDailyAccount.getAdditionalOrder()==null){
-                ofcDailyAccount.setAdditionalOrder(new BigDecimal(0.0));
-            }
-            if(ofcDailyAccount.getReceivable()==null){
-                ofcDailyAccount.setReceivable(new BigDecimal(0.0));
-            }
-            if(ofcDailyAccount.getPayable()==null){
-                ofcDailyAccount.setPayable(new BigDecimal(0.0));
-            }
-            BigDecimal total=ofcDailyAccount.getReceivable().add(ofcDailyAccount.getPayable()).subtract(ofcDailyAccount.getAdditionalOrder());
-
-            ofcDailyAccount.setTotal(total.setScale(2));
-            ofcDailyAccount.setTotalPercent(percent.format(total.doubleValue()));
-            ofcDailyAccountsService.save(ofcDailyAccount);
-        }
-        Iterator itera = account.entrySet().iterator();
-        while (itera.hasNext()) {
-            Map.Entry<String, OfcOrderAccountDTO> entry = (Map.Entry<String, OfcOrderAccountDTO>) itera.next();
-            OfcOrderAccountDTO ofcOrderAccountDTO=entry.getValue();
-            if(ofcOrderAccountDTO.getAdditionalOrder()==null){
-                ofcOrderAccountDTO.setAdditionalOrder(new BigDecimal(0.0));
-                ofcOrderAccountDTO.setAdditionalOrderPercent("0%");
-            }
-            if(ofcOrderAccountDTO.getReceivable()==null){
-                ofcOrderAccountDTO.setReceivable(new BigDecimal(0.0));
-                ofcOrderAccountDTO.setReceivablePercent("0%");
-            }
-            if(ofcOrderAccountDTO.getPayable()==null){
-                ofcOrderAccountDTO.setPayable(new BigDecimal(0.0));
-                ofcOrderAccountDTO.setPayablePercent("0%");
-            }
-            BigDecimal total=ofcOrderAccountDTO.getReceivable().add(ofcOrderAccountDTO.getPayable()).subtract(ofcOrderAccountDTO.getAdditionalOrder());
-            ofcOrderAccountDTO.setTotal(total.setScale(2));
-            ofcOrderAccountDTO.setTotalPercent(percent.format(total.doubleValue()));
-            if(!PublicUtil.isEmpty(ofcOrderAccountDTO.getBaseCode())){
-                dailyAccountInfo.add(ofcOrderAccountDTO);
-            }
-        }
-
-        //按 应收确认日清 + 应付确认日清 - 事后补录订单 排序
-        Collections.sort(dailyAccountInfo,new Comparator<OfcOrderAccountDTO>(){
-            public int compare(OfcOrderAccountDTO o1, OfcOrderAccountDTO o2) {
-                if(o1.getTotal().doubleValue()<o2.getTotal().doubleValue()){
-                    return 1;
-                }else if(o1.getTotal().doubleValue()>o2.getTotal().doubleValue()){
-                    return -1;
-                }else{
-                    return 0;
-                }
-            }
-        });
-        return dailyAccountInfo;
-    }
 
     /**
      * 生成仓储订单
      *
      * @param ofcOrderDTO                      订单信息
-     * @param goodsDetailsList                 货品信息
+     * @param goodsDetailsListDTO                 货品信息
      * @param reviewTag                        操作标志位
      * @param cscContantAndCompanyDtoConsignor 发货方信息
      * @param cscContantAndCompanyDtoConsignee 收货方信息
@@ -1328,16 +1117,31 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return 操作结果
      */
     @Override
-    public Wrapper<?> saveStorageOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> goodsDetailsList, String reviewTag
+    public Wrapper<?> saveStorageOrder(OfcSaveStorageDTO ofcOrderDTO, List<OfcGoodsDetailsInfoDTO> goodsDetailsListDTO, String reviewTag
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee
             , CscSupplierInfoDto cscSupplierInfoDto, AuthResDto authResDtoByToken) {
         logger.info("开始创建仓储订单 ofcOrderDTO:{}, goodsDetailsList:{}, reviewTag:{}, cscContantAndCompanyDtoConsignor:{}" +
-                ", cscContantAndCompanyDtoConsignee:{}, cscSupplierInfoDto:{}, authResDtoByToken:{}", ofcOrderDTO, goodsDetailsList
+                ", cscContantAndCompanyDtoConsignee:{}, cscSupplierInfoDto:{}, authResDtoByToken:{}", ofcOrderDTO, goodsDetailsListDTO
                 , reviewTag, cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee, cscSupplierInfoDto, authResDtoByToken);
-        OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
-        OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO, OfcWarehouseInformation.class);
-        OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
+        OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO.getFundamentalInformation(), OfcFundamentalInformation.class);
+        OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO.getWarehouseInformation(), OfcWarehouseInformation.class);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO.getDistributionBasicInfo(), OfcDistributionBasicInfo.class);
         OfcFinanceInformation ofcFinanceInformation = modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
+
+        //取供应商的名称
+        if(!PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getSupportCode())){
+            CscSupplierInfoDto dto = new CscSupplierInfoDto();
+            dto.setCustomerCode(ofcFundamentalInformation.getCustCode());
+            dto.setSupplierCode(ofcWarehouseInformation.getSupportCode());
+            List<CscSupplierInfoDto> supplierListInfo = getSupplierInfo(dto);
+            ofcWarehouseInformation.setSupportName(supplierListInfo.get(0).getSupplierName());
+        }
+        List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<>();
+        for(OfcGoodsDetailsInfoDTO  dto: goodsDetailsListDTO){
+            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+            org.springframework.beans.BeanUtils.copyProperties(dto,ofcGoodsDetailsInfo);
+            goodsDetailsList.add(ofcGoodsDetailsInfo);
+        }
         OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
         if (null == ofcFundamentalInformation || null == ofcWarehouseInformation) {
             logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
@@ -1354,6 +1158,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
             ofcFundamentalInformation.setTransportType("10");//10 零担 20整车
+            // 带运输仓储单默认签收回单，费用为0
+            ofcFinanceInformation.setReturnList("1");
+            ofcFinanceInformation.setReturnListFee(new BigDecimal(0));
             if (ofcDistributionBasicInfo == null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
             }
@@ -1382,7 +1189,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         int custOrderCode = 0;
         if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
@@ -1514,7 +1320,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
         dinfo = ofcDistributionBasicInfoService.selectOne(condition);
 
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || ORDER_TAG_STOCK_IMPORT.equals(trimAndNullAsEmpty(reviewTag))) {//
+//        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || ORDER_TAG_STOCK_IMPORT.equals(trimAndNullAsEmpty(reviewTag))) {//
             //编辑时不提供运输改为提供运输时 收货方即是仓库的信息   前台不好处理  后台通过仓库编码获取仓库的信息
             StringBuilder sb = new StringBuilder();
             RmcWarehouseDto rmcWarehouseDto = new RmcWarehouseDto();
@@ -1581,7 +1387,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (Wrapper.ERROR_CODE == wrapper.getCode()) {
                     throw new BusinessException(wrapper.getMessage());
                 }
-            }else{
+            } else {
                 if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
                     wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
                     if (Wrapper.ERROR_CODE == wrapper.getCode()) {
@@ -1589,28 +1395,33 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }
             }
-
-        } else {
-            if (!trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
-                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                        throw new BusinessException(wrapper.getMessage());
-                    }
-                }else{
-                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                        wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-                        if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                            throw new BusinessException(wrapper.getMessage());
-                        }
-                    }
-                }
+      //  }
+//        } else {
+//            if (!trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
+//                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+//                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+//                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+//                        throw new BusinessException(wrapper.getMessage());
+//                    }
+//                }else{
+//                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+//                        wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+//                        if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+//                            throw new BusinessException(wrapper.getMessage());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        //落地配的需求  需求号834 modified by hujt 2017/8/8
+        if (StringUtils.equals(ofcFundamentalInformation.getGroundDistribution(), IS_NEED_GROUND_DISTRIBUTION)) {
+            boolean isCover = this.consigneeAdressIsCoverBase(ofcDistributionBasicInfo);
+            if (!isCover) {
+                throw new BusinessException("落地配订单收货地无基地");
             }
         }
-
         //2017年3月25日 modified by lyh 编辑后将之前无法识别的地址信息匹配表补充完整
         this.fixAddressWhenEdit(reviewTag, ofcDistributionBasicInfo);
-
         //配送基本信息
         ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
         ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
@@ -1852,7 +1663,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
         ofcOrderStatus.setOrderStatus(orderStatus);
 
-        List<OfcGoodsDetailsInfo> goodsDetailsInfo =new ArrayList<>();
+        List<OfcGoodsDetailsInfo> goodsDetailsInfo = new ArrayList<>();
         //纬度   货品编码、供应商批次、生产日期、失效日期不同包装合并主单位数量 仓储订单
         if(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()).equals(WAREHOUSE_DIST_ORDER)){
             Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
@@ -2094,6 +1905,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
     }
 
+
     /**
      * 订单中心实体转运输中心接口DTO
      *
@@ -2191,7 +2003,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setFromSystem(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderSource()));
         tfcTransport.setTransportNo(trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()));
 //        tfcTransport.setStatus();
-        tfcTransport.setBillType(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()));
+        tfcTransport.setBillType(trimAndNullAsEmpty(ofcFundamentalInformation.getOrderType()));
         tfcTransport.setItemType(trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsType()));
         tfcTransport.setCustomerCode(trimAndNullAsEmpty(ofcFundamentalInformation.getCustCode()));
         tfcTransport.setCustomerName(trimAndNullAsEmpty(ofcFundamentalInformation.getCustName()));
@@ -2376,16 +2188,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     /**
      * 众品订单审核
      *
-     * @param orderStatus               订单状态
      * @param reviewTag                 审核标志位
      * @param authResDtoByToken         当前登录用户
      * @return String
      */
     @Override
-    public String orderAutoAuditForTran(String orderCode,String orderStatus, String reviewTag, AuthResDto authResDtoByToken) {
-        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-        ofcOrderStatus.setOrderCode(orderCode);
-        ofcOrderStatus.setOrderStatus(orderStatus);
+    public String orderAutoAuditForTran(String orderCode, String reviewTag, AuthResDto authResDtoByToken) {
+        OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
         logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", orderCode, ofcOrderStatus.toString());
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals(REVIEW)) {
             OfcFundamentalInformation ofcFundamentalInformation= ofcFundamentalInformationService.selectByKey(orderCode);
@@ -2454,4 +2263,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
         return String.valueOf(Wrapper.SUCCESS_CODE);
     }
+
+    /**
+     * 获取供应商相关的信息
+     * @param dto
+     * @return
+     */
+    private List<CscSupplierInfoDto> getSupplierInfo(CscSupplierInfoDto dto){
+        Wrapper<List<CscSupplierInfoDto>> suppliers= cscSupplierEdasService.querySupplierByAttribute(dto);
+        if(suppliers.getCode() == Wrapper.SUCCESS_CODE){
+            if (!CollectionUtils.isEmpty(suppliers.getResult())) {
+              return suppliers.getResult();
+            }
+        }
+        return null;
+    }
+
+
+
 }

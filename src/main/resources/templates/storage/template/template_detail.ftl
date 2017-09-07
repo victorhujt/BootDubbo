@@ -73,25 +73,6 @@
                 templatesTypeList:[
 
                 ],
-                colDefaultValModel:{
-                    orderTime:'',
-                    merchandiser:'',
-                    warehouseName:'',
-                    businessType:'',
-                    provideTransport:''
-                },
-                warehouseNameList:[
-                    //加载所有仓库
-                ],
-                businessTypeList:[
-                    {value:'采购入库',label:'采购入库'},
-                    {value:'调拨入库',label:'调拨入库'},
-                    {value:'退货入库',label:'退货入库'},
-                    {value:'加工入库',label:'加工入库'},
-                    {value:'盘盈入库',label:'盘盈入库'},
-                    {value:'流通入库',label:'流通入库'},
-                    {value:'其他入库',label:'其他入库'}
-                ],
                 tableData:[]
             }
         },

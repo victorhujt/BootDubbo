@@ -58,7 +58,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
-			<artifactId>xescm-epc-api</artifactId>
+			<artifactId>xescm-dpc-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
@@ -69,11 +69,6 @@
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-tfc-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.xescm.api</groupId>
-			<artifactId>xescm-dpc-api</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>

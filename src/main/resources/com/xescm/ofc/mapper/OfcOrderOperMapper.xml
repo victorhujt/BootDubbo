@@ -253,10 +253,12 @@
   </sql>
   <sql id="queryOrderListField">
     ofi.cust_name,
+    ofi.cust_code,
       ofi.order_code,
       ofi.cust_order_code,
       ofi.order_batch_number,
       ofi.order_time,
+      odbi.weight,
       ofi.order_type,
       ofi.business_type,
       ofi.base_name,
@@ -268,11 +270,14 @@
       ofi.notes,
       ofi.store_name,
       ofi.is_exception,
-      ofi.exception_reason
+      ofi.exception_reason,
+      ofi.creation_time,
+      ofi.area_name
   </sql>
 
   <sql id="queryStorageOrderListField">
     ofi.cust_name,
+    ofi.cust_code,
     ofi.order_code,
     ofi.cust_order_code,
     ofi.order_batch_number,
@@ -338,8 +343,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND  ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
@@ -356,6 +365,10 @@
       <if test="form.warehouseCode!=null and form.warehouseCode!=''">
         AND owi.warehouse_code = #{form.warehouseCode}
       </if>
+      <if test="form.groundDistribution!=null and form.groundDistribution!=''">
+        AND ofi.ground_distribution = #{form.groundDistribution}
+      </if>
+
       <if test="form.provideTransport!=null">
         AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
       </if>
@@ -398,6 +411,9 @@
       <if test="form.custName!=null and form.custName!=''">
         AND ofi.cust_name = #{form.custName}
       </if>
+      <if test="form.custCode!=null and form.custCode!=''">
+        AND ofi.cust_code = #{form.custCode}
+      </if>
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
@@ -421,6 +437,9 @@
       </if>
       <if test="form.provideTransport!=null">
         AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
+      </if>
+      <if test="form.groundDistribution!=null and form.groundDistribution!=''" >
+        AND ofi.ground_distribution = #{form.groundDistribution, jdbcType=INTEGER}
       </if>
       <choose>
         <when test="withUser != null and withUser and userId != null and userId != ''">
@@ -553,9 +572,10 @@
     odbi.carrier_name, ofi.notes, finc.service_charge, finc.order_amount, finc.payment_amount, finc.collect_loan_amount, finc.collect_service_charge,
     finc.collect_flag, finc.count_flag, finc.print_invoice, finc.buyer_payment_method, finc.insure, finc.insure_value, finc.pick_up_goods, finc.home_delivery_fee,
     finc.cargo_insurance_fee, finc.insurance, finc.two_distribution, finc.two_distribution_fee, finc.return_list, finc.return_list_fee, finc.expense_payment_party,
-    finc.payment, finc.current_amount, finc.to_pay_amount, finc.return_amount, finc.monthly_amount, finc.luggage, finc.open_invoices
+    finc.payment, finc.current_amount, finc.to_pay_amount, finc.return_amount, finc.monthly_amount, finc.luggage, finc.open_invoices,owi.warehouse_code,
+    owi.warehouse_name
     FROM ofc_fundamental_information ofi LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code LEFT JOIN ofc_finance_information finc
-    ON ofi.order_code = finc.order_code
+    ON ofi.order_code = finc.order_code LEFT JOIN ofc_warehouse_information owi ON owi.order_code = ofi.order_code
     WHERE ofi.order_code IN
     <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
       #{orderCode}
@@ -767,8 +787,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND  ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}
@@ -980,7 +1004,7 @@
     FROM (
     SELECT DISTINCT
     <include refid="queryOrderListField"/>,
-    ofi.cust_code,owi.warehouse_code,owi.provide_transport
+    owi.warehouse_code,owi.provide_transport
     FROM
     ofc_fundamental_information ofi
     LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
@@ -1005,8 +1029,12 @@
       <if test="form.custOrderCode!=null and form.custOrderCode!=''">
         AND ofi.cust_order_code = #{form.custOrderCode}
       </if>
-      <if test="form.orderState!=null and form.orderState!=''">
-        AND ns.order_latest_status = #{form.orderState}
+      <if test="form.orderStateList!=null and form.orderStateList!=''">
+        AND  ns.order_latest_status IN (
+        <foreach collection="form.orderStateList" item="item" separator=",">
+          #{item}
+        </foreach>
+        )
       </if>
       <if test="form.orderType!=null and form.orderType!=''">
         AND ofi.order_type = #{form.orderType}

@@ -39,9 +39,9 @@
     <select id="queryInterfaceReceiveLog" resultType="com.xescm.ofc.model.vo.ofc.OfcInterfaceReceiveLogVo">
         select
         lg.id,
-        busType.enum_name as log_business_type,
-        fromType.enum_name as log_from_sys,
-        toType.enum_name as log_to_sys,
+        (select enum_name from ofc_enumeration where enum_sys= 'OFC' and enum_value = lg.log_business_type) as log_business_type,
+        (select enum_name from ofc_enumeration where enum_sys= 'OFC' and enum_value = lg.log_from_sys) as log_from_sys,
+        (select enum_name from ofc_enumeration where enum_sys= 'OFC' and enum_value = lg.log_to_sys) as log_to_sys,
         ref_no,
         log_type,
         log_data,
@@ -52,12 +52,6 @@
         process_result,
         dr
         from ofc_interface_receive_log lg
-        left join (select * from ofc_enumeration where enum_sys = 'OFC') busType on
-        lg.log_business_type = busType.enum_value
-        left join (select * from ofc_enumeration where enum_sys = 'OFC') fromType on
-        lg.log_from_sys = fromType.enum_value
-        left join (select * from ofc_enumeration where enum_sys = 'OFC') toType on
-        lg.log_to_sys = toType.enum_value
         <where>
             1 = 1 and dr = 0
             <if test="id != null and id != ''">
@@ -73,7 +67,7 @@
                 and log_to_sys = #{logToSys}
             </if>
             <if test="refNo != null and refNo != ''">
-                and ref_no like concat('%', #{refNo}, '%')
+                and ref_no like concat(#{refNo}, '%')
             </if>
             <if test="logType != null and logType != ''">
                 and log_type = #{logType}

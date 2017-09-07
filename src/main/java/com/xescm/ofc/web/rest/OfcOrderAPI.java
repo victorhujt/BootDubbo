@@ -1,5 +1,8 @@
 package com.xescm.ofc.web.rest;
 
+import com.xescm.ofc.model.dto.ofc.OfcExceptOrderDTO;
+import com.xescm.ofc.service.OfcExceptOrderService;
+import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcMobileOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +25,6 @@ public class OfcOrderAPI {
     @Resource
     private OfcMobileOrderService ofcMobileOrderService;
 
-
-
     /**
      * 订单5分钟后依然未处理完, 重新置为待处理, 并重新存到Redis中
      */
@@ -37,6 +38,5 @@ public class OfcOrderAPI {
             logger.error(e.getMessage());
         }
     }
-
 
 }

@@ -24,7 +24,7 @@
 
 package com.xescm.ofc.config;
 
-import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
+import com.xescm.ofc.web.interceptor.VueViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -43,7 +43,7 @@ import javax.annotation.Resource;
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Resource
-    private AuthViewInterceptor authViewInterceptor;
+    private VueViewInterceptor vueViewInterceptor;
 //    @Resource
 //    private LimitRuleInterceptor limitRuleInterceptor;
 	
@@ -61,9 +61,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
     	super.addInterceptors(registry);
-    	authViewInterceptor.setEnv(env);
-//		registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/storage_template/batch_import_upload");
-        registry.addInterceptor(authViewInterceptor).addPathPatterns("/ofc/**").excludePathPatterns("/ofc/searchOverallOrder");
+        vueViewInterceptor.setEnv(env);
+        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**","/page/ofc/**").excludePathPatterns("/ofc/searchOverallOrder");
     }
 
 }

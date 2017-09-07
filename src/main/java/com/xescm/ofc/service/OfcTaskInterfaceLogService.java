@@ -2,6 +2,7 @@ package com.xescm.ofc.service;
 
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
@@ -32,13 +33,20 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
     List<OfcTaskInterfaceLogDto> queryWTaskInterfaceLogForWorker(OfcTaskInterfaceLogDto taskParam);
 
     /**
-     * 更新任务状态
+     * 更新任务最新状态、执行时间、执行次数
      * @param taskParam
      * @return
      */
     @Transactional
     Integer updateTaskInterfaceLogStatus(OfcTaskInterfaceLogDto taskParam);
 
+    /**
+     * 更新任务状态(只更新状态)
+     * @param taskParam
+     * @return
+     */
+    @Transactional
+    Integer updateTaskInterfaceLogStatusOnly(OfcTaskInterfaceLogDto taskParam);
    /**
     * <p>Title:      createOrderByTask. </p>
     * <p>Description 根据待处理任务创建订单</p>
@@ -95,4 +103,37 @@ public interface OfcTaskInterfaceLogService extends IService<OfcTaskInterfaceLog
      * @return
      */
     Integer resendTaskLogById(Long id);
+
+    /**
+     * <p>Title:      queryOrderStatus. </p>
+     * <p>Description 查询订单状态</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/7/20 17:16
+     * @return
+     */
+    OfcOrderNewstatus queryOrderStatus(OfcTaskInterfaceLogDto taskParam) throws Exception;
+
+    /**
+     * <p>Title:      queryFailTaskInterfaceLog. </p>
+     * <p>Description 查询失败两天内任务日志</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/8/7 15:11
+     * @return
+     */
+    List<OfcTaskInterfaceLogDto> queryFailTaskInTwoDays(OfcTaskInterfaceLogDto taskParam);
+
+    /**
+     * <p>Title:      queryFailTaskOverThirtyDays. </p>
+     * <p>Description 查询失败超三十天任务</p>
+     *
+     * @param
+     * @Author	      nothing
+     * @CreateDate    2017/8/8 10:07
+     * @return
+     */
+    List<OfcTaskInterfaceLogDto> queryFailTaskOverThirtyDays(OfcTaskInterfaceLogDto taskParam);
 }
