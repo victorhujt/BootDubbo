@@ -244,7 +244,7 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
     @Override
     @Transactional
     public String distributingOrderPlace(JSONArray jsonArray,AuthResDto authResDtoByToken,String batchNumber) {
-        String resultMessage = null;
+        String resultMessage = "城配开单成功！";
         // 检查客户订单号是否重复
         this.checkCustOrderCode(jsonArray);
         boolean sendMQ = true;
@@ -292,8 +292,16 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         }
         // 发送订单信息到Tfc、Ac、Whc
         if (sendMQ && PubUtils.isNotNullAndBiggerSize(result, 0)) {
-            for (OfcOrderInfoDTO ofcOrderInfoDTO : result) {
-                distributionSendMQ(ofcOrderInfoDTO, authResDtoByToken);
+            try {
+                for (OfcOrderInfoDTO ofcOrderInfoDTO : result) {
+                    distributionSendMQ(ofcOrderInfoDTO, authResDtoByToken);
+                }
+            } catch (BusinessException ex) {
+                resultMessage = "城配开单发生异常，开单失败！";
+                logger.error("{}", ex);
+            } catch (Exception ex) {
+                resultMessage = "城配开单发生异常，开单失败！";
+                logger.error("{}", ex);
             }
         }
         return resultMessage;
@@ -313,16 +321,28 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcOrderInfoDTO.getGoodsDetailsInfoList();
             if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
                 //进行自动审核
-                String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
-                    ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, REVIEW, authResDtoByToken);
-                if (StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)) {
-                    throw new BusinessException("自动审核操作失败!");
+                try {
+                    String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
+                        ofcWarehouseInformation, ofcFinanceInformation, PENDING_AUDIT, REVIEW, authResDtoByToken);
+                    if (StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE), code)) {
+                        throw new BusinessException("自动审核操作失败!");
+                    }
+                } catch (BusinessException ex) {
+                    logger.error("城配导单自动审核发生异常：异常详情 => {}", ex);
+                } catch (Exception ex) {
+                    logger.error("城配导单自动审核发生未知异常：异常详情 => {}", ex);
                 }
             }
             //城配开单订单推结算中心
-            ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos, ofcWarehouseInformation);
-        } catch (Exception e) {
-            
+            try {
+                ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos, ofcWarehouseInformation);
+            } catch (BusinessException ex) {
+                logger.error("城配导单下发结算中心发生异常：异常详情 => {}", ex);
+            } catch (Exception ex) {
+                logger.error("城配导单下发结算中心发生未知异常：异常详情 => {}", ex);
+            }
+        } catch (Exception ex) {
+            logger.error("城配导单自动审核阶段发生未知异常：异常详情 => {}", ex);
         }
     }
 
