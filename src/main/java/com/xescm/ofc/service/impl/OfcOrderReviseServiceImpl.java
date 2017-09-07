@@ -23,21 +23,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
-import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
+import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
+import static com.xescm.ofc.constant.OrderConstConstant.PENDING_AUDIT;
+import static com.xescm.ofc.constant.OrderConstConstant.WITH_THE_CITY;
 
-/**
- *
- * Created by hiyond on 2016/11/25.
- */
 @Service
-public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
+public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
     private Logger logger = LoggerFactory.getLogger(GoodsAmountSyncService.class);
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
@@ -61,22 +58,14 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private DpcTransportDocEdasService dpcTransportDocEdasService;
 
     @Transactional
-    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
+    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto,String getOrderCode) {
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();
         String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
         List<GoodsAmountDetailDto> details = goodsAmountSyncDto.getGoodsAmountDetailDtoList();
-        if (PubUtils.isOEmptyOrNull(custCode)) {
-            throw new BusinessException("客户编码不能为空");
-        }else if (PubUtils.isOEmptyOrNull(custOrderCode)) {
-            throw new BusinessException("客户订单编号不能为空");
-        }else if (PubUtils.isNull(details) || PubUtils.isNotNullAndSmallerSize(details, 1)) {
-            throw new BusinessException("货品信息不能为空");
-        }
         // 查询订单
         OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
-        ofcFundamentalInfo.setCustCode(custCode);
-        ofcFundamentalInfo.setCustOrderCode(custOrderCode);
+        ofcFundamentalInfo.setOrderCode(getOrderCode);
         try {
             List<OfcFundamentalInformation> orderList = ofcFundamentalInformationService.select(ofcFundamentalInfo);
             if (PubUtils.isNotNullAndBiggerSize(orderList, 0)) {
@@ -112,14 +101,14 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                     }
                 }
             } else {
-                logger.error("未查询到客户订单{}信息.", custOrderCode);
-                throw new BusinessException("未查询到客户订单{"+custOrderCode+"}信息.");
+                logger.error("订单修改，未查询到客户订单{}信息.", custOrderCode);
+                throw new BusinessException("订单修改，未查询到客户订单{"+custOrderCode+"}信息.");
             }
         } catch (BusinessException e) {
             logger.error(e.getMessage());
             throw e;
         } catch (Exception e) {
-            logger.error("更新交货数量发生未知异常 {}", e);
+            logger.error("订单修改，更新交货数量发生未知异常 {}", e);
             throw e;
         }
         return result;
@@ -194,7 +183,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 }
             }
         } catch (Exception e) {
-            logger.error("交货量同步更新发生异常. {}", e);
+            logger.error("订单修改，交货量同步更新发生异常. {}", e);
             throw e;
         }
     }
@@ -228,11 +217,11 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 }
                 ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
             } else {
-                logger.error("订单{}查询不到货品{}信息！", orderCode, goodsAmountDetailDto.getGoodsCode());
+                logger.error("订单修改，订单{}查询不到货品{}信息！", orderCode, goodsAmountDetailDto.getGoodsCode());
             }
         } catch (Exception e) {
-            logger.error("订单中心更新货品信息失败",e.getMessage(),e);
-            throw new BusinessException("订单中心更新货品信息失败",e.getMessage(),e);
+            logger.error("订单修改，订单中心更新货品信息失败",e.getMessage(),e);
+            throw new BusinessException("订单修改，订单中心更新货品信息失败",e.getMessage(),e);
         }
     }
 
@@ -244,7 +233,6 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     @Transactional
     void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
         try {
-
             String goodsCode = goodsAmountDetailDto.getGoodsCode();
             String goodsName = goodsAmountDetailDto.getGoodsName();
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
@@ -286,8 +274,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 ofcGoodsRecordModificationService.save(ofcGoodsRecordModification);
             }
         } catch (Exception e) {
-            logger.error("订单中心记录需要更新货品信息失败",e.getMessage(),e);
-            throw new BusinessException("订单中心记录需要更新货品信息失败",e.getMessage(),e);
+            logger.error("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
+            throw new BusinessException("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
         }
     }
 
@@ -300,7 +288,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
      * @param ofcGoodsDetailsInfos      货品明细
      */
     public void modifyOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
-        , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
+            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         AcOrderDto acOrderDto = new AcOrderDto();
         try {
             AcFinanceInformation acFinanceInformation = new AcFinanceInformation();

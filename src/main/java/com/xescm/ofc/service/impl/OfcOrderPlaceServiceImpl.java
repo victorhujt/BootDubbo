@@ -178,7 +178,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             this.distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                     ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
                     ,ofcOrderStatus,ofcMerchandiser);
-        } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANEDIT)) {// 运输开单编辑
+        } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANEDIT)) {// 运输开单编辑 (追加需求994，订单修改，2017-08-31，袁宝龙)
             this.orderTransPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcOrderStatus);
         } else {
