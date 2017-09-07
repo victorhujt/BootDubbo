@@ -218,8 +218,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
                 if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
                         || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
-                    logger.error("订单没有基地信息, 维持待审核状态");
-                    return String.valueOf(Wrapper.SUCCESS_CODE);
+                    OfcWarehouseInformation warehouseInfo = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+                    ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(warehouseInfo.getWarehouseCode(),ofcFundamentalInformation);
+                    if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
+                        || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
+                        logger.error("订单没有基地信息, 维持待审核状态");
+                        return String.valueOf(Wrapper.SUCCESS_CODE);
+                    }
                 }
                 ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
                 ofcOrderStatus.setStatusDesc("已审核");
@@ -288,7 +293,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         try {
             if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
                 long start = System.currentTimeMillis();
-                Wrapper<Integer> cancelStatus = acOrderEdasService.queryOrderCancelStatus(ofcFundamentalInformation.getOrderCode());
+                Wrapper<Integer> cancelStatus = acOrderEdasService.queryOrderCancelStatus(orderCode);
                 logger.info("=============> 查询结算中心是否取消耗时：" + (System.currentTimeMillis() - start)/1000);
                 if (cancelStatus.getCode() == 200) {
                     try {
@@ -302,14 +307,18 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 } else {
                     throw new BusinessException("取消订单失败，结算中心结算单暂时无法取消");
                 }
-                boolean result = cancelAcOrder(ofcFundamentalInformation.getOrderCode());
+                boolean result = cancelAcOrder(orderCode);
                 logger.info("订单中心取消订单，调用结算中心取消订单接口,返回结果：{}", result);
             } else if (StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
+                String businessType = ofcFundamentalInformation.getBusinessType();
+                String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
+                String warehouseCode = ofcWarehouseInformation.getWarehouseCode();
+                String custCode = ofcFundamentalInformation.getCustCode();
                 String type="";
-                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")) {
+                if (PubUtils.trimAndNullAsEmpty(businessType).substring(0,2).equals("61")) {
                     //出库
                     type="CK";
-                }else if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")) {
+                }else if (PubUtils.trimAndNullAsEmpty(businessType).substring(0,2).equals("62")) {
                     //入库
                     type="RK";
                 }
@@ -319,8 +328,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         response= orderCancelToTfc(orderCode);
                         logger.info("=============> TFC取消耗时：" + (System.currentTimeMillis() - tfcStart)/1000);
                         logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
-                        if (response.getCode()==Wrapper.SUCCESS_CODE) {
-                            whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType(),userName);
+                        if (response!=null&&response.getCode()==Wrapper.SUCCESS_CODE) {
+                            whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
                             logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
                         }
                     } catch (Exception e) {
@@ -329,9 +338,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                 }else{
                     try {
-                        whcresponse= orderCancelToWhc(orderCode,type,ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation.getCustCode(),ofcFundamentalInformation.getBusinessType(),userName);
+                        whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
                         logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
-
                     } catch (Exception e) {
                         logger.info("取消订单，调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                         throw new BusinessException("调用WHC取消接口发生异常,返回结果：{}", e.getMessage(), e);
@@ -339,8 +347,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
         } catch (Exception e) {
-            logger.info("取消订单，取消接口发生异常,返回结果：{}", e.getMessage(), e);
-            throw new BusinessException("取消订单，取消接口发生异常,返回结果：{}", e.getMessage(), e);
+            logger.info("取消订单，调用结算中心、运输中心、仓储中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
+            throw new BusinessException("取消订单，调用结算中心、运输中心、仓储中心取消接口发生异常,返回结果：{}", e.getMessage(), e);
         }
 
         if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
@@ -407,7 +415,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param orderCode 订单编号
      * @return void
      */
-    private Wrapper orderCancelToWhc(String orderCode,String type,String warehouseCode,String customerCode,String orderType,String userName) {
+    private Wrapper orderCancelToWhc(String orderCode,String type, String custOrderCode, String warehouseCode,String customerCode,String orderType,String userName) {
         logger.info("调用仓储中心取消接口, 订单号:{}，参数type:{},仓库编码:{}，客户编码:{},业务类型:{}", orderCode,type,warehouseCode,customerCode,orderType);
         Wrapper response = null;
         try {
@@ -417,6 +425,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             cancelOrderDTO.setWarehouseID(warehouseCode);
             cancelOrderDTO.setOrderType(orderType);
             cancelOrderDTO.setCustomerID(customerCode);
+            cancelOrderDTO.setCustomerOrderNo(custOrderCode );
             //cancelOrderDTO.setOperationName(userName);
             response = whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
             logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}", response.getCode(), orderCode);
@@ -1032,7 +1041,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("订单状态开始推结算中心成功 integerWrapper{}", integerWrapper);
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}", e, e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -1189,6 +1197,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+//        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         int custOrderCode = 0;
         if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
@@ -1710,8 +1719,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 // 大区、基地都为空则更新大区基地
                 String baseCode = ofcFundamentalInformation.getBaseCode();
                 String areaCode = ofcFundamentalInformation.getAreaCode();
-                if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode)) {
+                String orderType = ofcFundamentalInformation.getOrderType();
+                if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && TRANSPORT_ORDER.equals(orderType)) {
                     this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+                } else if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && WAREHOUSE_DIST_ORDER.equals(orderType)) {
+                    ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
                 }
                 //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
                 if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())

@@ -5,6 +5,7 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.epc.edas.dto.dachen.LockStockOrderDTO;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
@@ -328,16 +329,14 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         ResultModel resultModel;
         try {
             CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
-            String custOrderCode = null;
-            String platformType = null;
-            String custCode = null;
+            String custOrderCode = createOrderEntity.getCustOrderCode();
+            String platformType = createOrderEntity.getPlatformType();
+            String custCode = createOrderEntity.getCustCode();
             String orderCode = null;
             String key = null;
+            String orderType = createOrderEntity.getOrderType();
             AtomicBoolean lockStatus = new AtomicBoolean(false);
             try {
-                custOrderCode = createOrderEntity.getCustOrderCode();
-                platformType = createOrderEntity.getPlatformType();
-                custCode = createOrderEntity.getCustCode();
                 // 对创建订单操作进行加锁，防止订单创建重复
                 // redis key : OFC:MQ:xeOrderToOfc:<客户编码>:<客户订单号>
                 key = REDIS_LOCK_PREFIX + MQ_TAG_OrderToOfc + ":" + custCode + ":" + custOrderCode;
@@ -355,8 +354,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             //订单已存在,获取订单的最新状态,只有待审核的才能更新
                             if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                 logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
-                                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                                    this.orderCreateResult(orderCode, custOrderCode, "订单已经审核，跳过创单操作", true);
+                                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, "订单已经审核，跳过创单操作", true);
                                 }
                                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
                             }
@@ -367,13 +366,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                             logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, resultModel.getDesc());
-                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                                this.orderCreateResult(orderCode, custOrderCode, "订单创建失败:" + resultModel.getDesc(), false);
+                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                                this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, "订单创建失败:" + resultModel.getDesc(), false);
                             }
                         } else {
                             logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
-                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                                this.orderCreateResult(orderCode, custOrderCode, "订单创建成功！", true);
+                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                                this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, "订单创建成功！", true);
                             }
                         }
                     } else {
@@ -386,14 +385,14 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 }
             } catch (BusinessException ex) {
                 logger.error("订单中心创建订单接口发生异常:{},{}", ex.getMessage(), ex);
-                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                    this.orderCreateResult(orderCode, custOrderCode, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
                 }
                 throw ex;
             } catch (Exception ex) {
                 logger.error("订单中心创建订单接口发生未知异常: {}, {}", ex, ex.getMessage());
-                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                    this.orderCreateResult(orderCode, custOrderCode, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
                 }
                 throw ex;
             } finally {
@@ -420,22 +419,34 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * @param isSuccess
      * @throws Exception
      */
-    private void orderCreateResult(String orderCode, String custOrderCode, String result, boolean isSuccess) throws Exception {
-        CreateOrderResultDto resultDto = new CreateOrderResultDto();
-        String code = isSuccess ? "200" : "500";
-        String typeIdAndReason = "typeId:" + custOrderCode + "||reason:" + result;
+    private void orderCreateResult(String custCode, String orderCode, String custOrderCode, String orderType, String result, boolean isSuccess) throws Exception {
+        String jsonMsg;
+        String tag;
+        // 大成
+        if (CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+            LockStockOrderDTO resultDto = new LockStockOrderDTO();
+            resultDto.setOrderNo(custOrderCode);
+            resultDto.setOrderType(orderType);
+            resultDto.setState("L");    // 锁定
+            jsonMsg = JacksonUtil.toJson(resultDto);
+            tag = "DACHEN";
+        } else { // 鲜易网
+            CreateOrderResultDto resultDto = new CreateOrderResultDto();
+            String code = isSuccess ? "200" : "500";
+            String typeIdAndReason = "typeId:" + custOrderCode + "||reason:" + result;
 
-        List<MessageDto> messageDtos = new ArrayList<>();
-        MessageDto messageDto = new MessageDto();
-        messageDto.setTypeId(custOrderCode);
-        messageDtos.add(messageDto);
+            List<MessageDto> messageDtos = new ArrayList<>();
+            MessageDto messageDto = new MessageDto();
+            messageDto.setTypeId(custOrderCode);
+            messageDtos.add(messageDto);
 
-        resultDto.setCode(code);
-        resultDto.setReason(typeIdAndReason);
-        resultDto.setMessage(messageDtos);
-
-        String jsonMsg = JacksonUtil.toJson(resultDto);
+            resultDto.setCode(code);
+            resultDto.setReason(typeIdAndReason);
+            resultDto.setMessage(messageDtos);
+            jsonMsg = JacksonUtil.toJson(resultDto);
+            tag = "xeStatusBackTag";
+        }
         // 发送创单结果
-        createOrderApiProducer.sendCreateOrderResultMQ(jsonMsg, String.valueOf(jsonMsg.hashCode()));
+        createOrderApiProducer.sendCreateOrderResultMQ(jsonMsg, String.valueOf(jsonMsg.hashCode()), tag);
     }
 }
