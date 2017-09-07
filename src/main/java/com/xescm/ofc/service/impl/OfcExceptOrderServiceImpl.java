@@ -459,8 +459,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             // fixme
             if ((StringUtils.equals(goodsType, "畜禽类") && StringUtils.equals(goodsCategory, "冷鲜猪肉"))
                     /*|| (StringUtils.equals(goodsTypeCode, "xxxx") && StringUtils.equals(goodsCategoryCode, "xxxx"))*/) {
-                while (undealedOrders.listIterator().hasNext()) {
-                    OfcExceptOrder exceptOrder = undealedOrders.listIterator().next();
+                Iterator<OfcExceptOrder> iterator = undealedOrders.listIterator();
+                while (iterator.hasNext()) {
+                    OfcExceptOrder exceptOrder = iterator.next();
                     if (StringUtils.equals(exceptOrder.getOrderCode(), orderCode)) {
                         exceptOrder.setCoolFreshPork(STR_YES);
                     }
