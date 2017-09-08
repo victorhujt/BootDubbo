@@ -1761,7 +1761,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
 
             Iterator iter = goodInfo.entrySet().iterator();
-            int i = 0;
             while (iter.hasNext()) {
                 Map.Entry<String, OfcGoodsDetailsInfo> entry = (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
                 OfcGoodsDetailsInfo ofcGoodsDetails = entry.getValue();
@@ -1775,6 +1774,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         }
 
+        if (StringUtils.equals(ofcFundamentalInformation.getCustCode(),specialCust)) {
+            goodsDetailsInfo = goodsDetailsList;
+        }
 
         logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", ofcFundamentalInformation.getOrderCode(), ofcOrderStatus.toString());
         if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals(REVIEW)) {
