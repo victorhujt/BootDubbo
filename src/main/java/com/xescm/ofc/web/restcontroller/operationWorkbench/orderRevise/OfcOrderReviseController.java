@@ -3,6 +3,7 @@ package com.xescm.ofc.web.restcontroller.operationWorkbench.orderRevise;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
@@ -43,7 +44,7 @@ public class OfcOrderReviseController extends BaseController {
     private OfcOrderReviseService ofcOrderReviseService;
 
     /**
-     * 订单中心下单
+     * 订单修改
      *
      * @param ofcOrderDTOStr 订单基本信息、收发货方信息
      * @param tag            标识下单、编辑、运输开单
@@ -91,9 +92,9 @@ public class OfcOrderReviseController extends BaseController {
             // 修改后通知运输中心、调度中心、结算中心
             boolean flag = checkReviseStatus(ofcOrderDTOStr);
             if (flag) {
-                resultMessage = "您的订单修改成功!";
+                resultMessage = "订单修改成功!";
             } else {
-                resultMessage = "您的订单修改失败!";
+                resultMessage = "订单修改失败!";
             }
         } catch (BusinessException ex) {
             logger.error("订单修改出现异常:{}", ex.getMessage(), ex);
@@ -119,11 +120,21 @@ public class OfcOrderReviseController extends BaseController {
         List<OfcGoodsDetailsInfo> goodsList = ofcOrderDTOStr.getGoodsList();
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsList) {
             GoodsAmountDetailDto goodsAmountDetailDto = new GoodsAmountDetailDto();
-            goodsAmountDetailDto.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode());
-            goodsAmountDetailDto.setGoodsName(ofcGoodsDetailsInfo.getGoodsName());
-            goodsAmountDetailDto.setQty(ofcGoodsDetailsInfo.getQuantity().toString());
-            goodsAmountDetailDto.setUnit(ofcGoodsDetailsInfo.getUnit());
-            goodsAmountDetailDto.setVolume(ofcGoodsDetailsInfo.getCubage().toString());
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCode())){
+                goodsAmountDetailDto.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode());
+            }
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getGoodsName())){
+                goodsAmountDetailDto.setGoodsName(ofcGoodsDetailsInfo.getGoodsName());
+            }
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getQuantity())){
+                goodsAmountDetailDto.setQty(ofcGoodsDetailsInfo.getQuantity().toString());
+            }
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getUnit())){
+                goodsAmountDetailDto.setUnit(ofcGoodsDetailsInfo.getUnit());
+            }
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getCubage())){
+                goodsAmountDetailDto.setVolume(ofcGoodsDetailsInfo.getCubage().toString());
+            }
             goodsAmountDetailDto.setWeight(ofcGoodsDetailsInfo.getWeight().toString());
             goodsAmountDetailDtos.add(goodsAmountDetailDto);
         }

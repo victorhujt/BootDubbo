@@ -129,9 +129,14 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
             for (GoodsAmountDetailDto goodsDetail : details) {
                 if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsName())) {
                     throw new BusinessException("货品名称不能为空");
-                } else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
-                    throw new BusinessException("货品编号不能为空");
                 }
+                // TODO 通过行号修改货品重量
+                /*if (PubUtils.isOEmptyOrNull("")) {
+                    throw new BusinessException("货品行号不能为空");
+                }*/
+                /* else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
+                    throw new BusinessException("货品编号不能为空");
+                }*/
                 // 添加修改记录
                 this.addGoodsModifyRecord(orderCode, goodsDetail);
                 // 修改货品信息
@@ -147,7 +152,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 BigDecimal weight = detailsInfo.getWeight();
                 BigDecimal cubage = detailsInfo.getCubage();
                 quantityCount = quantityCount.add(PubUtils.isNull(quantity) ? new BigDecimal(0) : quantity);
-                weightCount = weightCount.add(PubUtils.isNull(weight) ? new BigDecimal(0) : weight);
+                weightCount = weightCount.add(PubUtils.isNull(weight) ? new BigDecimal(0) : weight);// 重量总计
                 cubageCount = cubageCount.add(PubUtils.isNull(cubage) ? new BigDecimal(0) : cubage);
             }
             orderDistInfo.setQuantity(quantityCount);
@@ -164,7 +169,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 // 推送TFC
                 tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
                 // 暂时注释dpc
-                try {
+                /*try {
                     // 推送调度中心
                     DpcSyncOrderInfoDto syncOrderInfoDto = new DpcSyncOrderInfoDto();
                     syncOrderInfoDto.setOrderNo(orderCode);
@@ -180,7 +185,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 } catch (Exception e) {
                     logger.error("推送调度中心交货量同步发生异常：异常详情 => {}", e);
                     throw new BusinessException("推送调度中心交货量同步发生异常!");
-                }
+                }*/
             }
         } catch (Exception e) {
             logger.error("订单修改，交货量同步更新发生异常. {}", e);
@@ -199,10 +204,11 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
+            // TODO 修改重量 通过货品行号
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
 
             if (PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {
-                ofcGoodsDetailsInfo=ofcGoodsDetailsInfoList.get(0);
+                ofcGoodsDetailsInfo = ofcGoodsDetailsInfoList.get(0);
                 String quantity = goodsAmountDetailDto.getQty();
                 String weight = goodsAmountDetailDto.getWeight();
                 String volume = goodsAmountDetailDto.getVolume();
@@ -217,7 +223,8 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 }
                 ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
             } else {
-                logger.error("订单修改，订单{}查询不到货品{}信息！", orderCode, goodsAmountDetailDto.getGoodsCode());
+                // TODO 货品行号
+                logger.error("订单修改，订单{}查询不到货品{}信息，货品行号{}！", orderCode, goodsAmountDetailDto.getGoodsName(), "");
             }
         } catch (Exception e) {
             logger.error("订单修改，订单中心更新货品信息失败",e.getMessage(),e);
@@ -226,7 +233,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
     }
 
     /**
-     * 新增商品数量、重量、体积修改记录
+     * 商品数量、重量、体积修改记录
      * @param orderCode
      * @param goodsAmountDetailDto
      */
