@@ -85,9 +85,7 @@ public class CodeGenUtils {
 	 */
 	public Long getPaasLineNo(String prefix){
 		Assert.notNull(prefix, "prefix must not be null");
-		SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
-		String dateStr = df.format(new Date());
-		String key = prefix +dateStr;
+		String key = prefix;
 		Long newValue;
 		synchronized (this) {
 			ValueOperations<String,String> ops  = rt.opsForValue();
