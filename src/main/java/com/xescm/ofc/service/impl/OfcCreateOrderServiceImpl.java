@@ -276,33 +276,32 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                         goodsInfo.setCustName(createOrderEntity.getCustName());
                                         goodsInfo.setCustCode(custCode);
                                         tempList.add(goodsInfo);
+                                    //校验完包装成功后  换算成主单位数量
                                     }
                                 }
-                                //出库业务只匹配包装存不存在
-                                else {
-                                    logger.info("出库单货品编码:{}开始匹配包装",goodsInfo.getGoodsCode());
-                                    for (GoodsPackingDto packingDto : packages) {
+                                //出入库业务只匹配包装存不存在
+                                logger.info("出入库单货品编码:{}开始匹配包装换算为主单位数量",goodsInfo.getGoodsCode());
+                                for (GoodsPackingDto packingDto : packages) {
+                                    if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
+                                        logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                        logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
+                                        logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
                                         if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
-                                            logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
-                                            logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
-                                            logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
-                                            if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
-                                                goodsInfo.setConversionRate(packingDto.getLevelSpecification());
-                                                goodsInfo.setPackageName(packingDto.getLevelDescription());
-                                                goodsInfo.setPackageType(packingDto.getLevel());
-                                                goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
-                                                isHavePackage = true;
-                                                break;
-                                            }
+                                            goodsInfo.setConversionRate(packingDto.getLevelSpecification());
+                                            goodsInfo.setPackageName(packingDto.getLevelDescription());
+                                            goodsInfo.setPackageType(packingDto.getLevel());
+                                            goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
+                                            isHavePackage = true;
+                                            break;
                                         }
                                     }
-                                    //没有匹配到包装直接返回错误
-                                    if (!isHavePackage) {
-                                        logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
-                                        logger.info("出库单货品编码:{}没有匹配包装",goodsInfo.getGoodsCode());
-                                        if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
-                                            noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
-                                        }
+                                }
+                                //没有匹配到包装直接返回错误
+                                if (!isHavePackage) {
+                                    logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                    logger.info("出库单货品编码:{}没有匹配包装",goodsInfo.getGoodsCode());
+                                    if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
+                                        noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
                                     }
                                 }
                         } else {
