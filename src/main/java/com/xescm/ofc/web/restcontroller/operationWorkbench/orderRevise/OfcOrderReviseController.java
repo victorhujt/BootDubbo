@@ -120,9 +120,15 @@ public class OfcOrderReviseController extends BaseController {
         List<OfcGoodsDetailsInfo> goodsList = ofcOrderDTOStr.getGoodsList();
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsList) {
             GoodsAmountDetailDto goodsAmountDetailDto = new GoodsAmountDetailDto();
+            // 行号
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getLineNo())){
+                goodsAmountDetailDto.setLineNo(ofcGoodsDetailsInfo.getLineNo());
+            }
+            // 货品编码
             if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCode())){
                 goodsAmountDetailDto.setGoodsCode(ofcGoodsDetailsInfo.getGoodsCode());
             }
+            // 货品名称
             if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getGoodsName())){
                 goodsAmountDetailDto.setGoodsName(ofcGoodsDetailsInfo.getGoodsName());
             }
