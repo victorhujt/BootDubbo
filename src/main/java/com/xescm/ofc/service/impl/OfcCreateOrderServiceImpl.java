@@ -265,11 +265,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             if (!PubUtils.isSEmptyOrNull(str.toString())) {
                 ofcFundamentalInformation.setIsException(ISEXCEPTION);
                 ofcFundamentalInformation.setExceptionReason(str.toString());
-            } else {
-                //更新订单时  校验通过如果之前是异常订单 将异常订单变为正常订单
-                OfcFundamentalInformation information = ofcFundamentalInformationService.selectByKey(orderCode);
-                if (information != null) {
-                    if (!PubUtils.isSEmptyOrNull(information.getExceptionReason())) {
+            }
+            //更新订单时  校验通过如果之前是异常订单 将异常订单变为正常订单
+            OfcFundamentalInformation information = ofcFundamentalInformationService.selectByKey(orderCode);
+            if (information != null) {
+                if (!PubUtils.isSEmptyOrNull(information.getExceptionReason())) {
+                    if (PubUtils.isSEmptyOrNull(str.toString())) {
                         ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
                         ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
                     }
