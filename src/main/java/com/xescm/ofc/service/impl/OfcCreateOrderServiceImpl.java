@@ -365,7 +365,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                         goodsInfo.setConversionRate(packingDto.getLevelSpecification());
                                         goodsInfo.setPackageName(packingDto.getLevelDescription());
                                         goodsInfo.setPackageType(packingDto.getLevel());
-                                        goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())*packingDto.getLevelSpecification().doubleValue()));
+                                        goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())).multiply(packingDto.getLevelSpecification()).setScale(0,BigDecimal.ROUND_HALF_UP));//四舍五入取整数
                                         isHavePackage = true;
                                         break;
                                     }
