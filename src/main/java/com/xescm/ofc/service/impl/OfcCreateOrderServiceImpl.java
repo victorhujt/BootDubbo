@@ -225,6 +225,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             //没有匹配到包装的货品编码
             List<String> noPackageGoodsCodes = new ArrayList<>();
             StringBuilder str = new StringBuilder();
+            StringBuilder str1 = new StringBuilder();
             //大成订单校验包装
             validateGoodsPackage(createOrderEntity,orderCode,tempList,noPackageGoodsCodes);
             try {
@@ -250,27 +251,32 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.info(str.toString());
             }
             if (tempList.size() > 0) {
-                str.append("订单对应货品编码为");
+                str1.append("订单对应货品编码为");
                 for (int i = 0; i < tempList.size(); i++) {
+                    CreateOrderGoodsInfo temp = tempList.get(i);
+                    if (str1.toString().indexOf(temp.getGoodsCode()) != -1) {
+                        continue;
+                    }
                     if (i == tempList.size() -1) {
-                        str.append(tempList.get(i).getGoodsCode());
+                        str1.append(tempList.get(i).getGoodsCode());
                     } else {
-                        str.append(tempList.get(i).getGoodsCode()).append(",");
+                        str1.append(tempList.get(i).getGoodsCode()).append(",");
                     }
                 }
-                str.append("不存在.");
+                str1.append("不存在.");
                 logger.info("订单号为:{}",ofcFundamentalInformation.getOrderCode());
-                logger.info(str.toString());
+                logger.info(str1.toString());
             }
-            if (!PubUtils.isSEmptyOrNull(str.toString())) {
+            String exceptionReason = str.append(str1.toString()).toString();
+            if (!PubUtils.isSEmptyOrNull(exceptionReason)) {
                 ofcFundamentalInformation.setIsException(ISEXCEPTION);
-                ofcFundamentalInformation.setExceptionReason(str.toString());
+                ofcFundamentalInformation.setExceptionReason(exceptionReason);
             }
             //更新订单时  校验通过如果之前是异常订单 将异常订单变为正常订单
             OfcFundamentalInformation information = ofcFundamentalInformationService.selectByKey(orderCode);
             if (information != null) {
                 if (!PubUtils.isSEmptyOrNull(information.getExceptionReason())) {
-                    if (PubUtils.isSEmptyOrNull(str.toString())) {
+                    if (PubUtils.isSEmptyOrNull(exceptionReason)) {
                         ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
                         ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
                     }
