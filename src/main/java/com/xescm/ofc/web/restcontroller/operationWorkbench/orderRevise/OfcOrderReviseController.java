@@ -121,8 +121,8 @@ public class OfcOrderReviseController extends BaseController {
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsList) {
             GoodsAmountDetailDto goodsAmountDetailDto = new GoodsAmountDetailDto();
             // 行号
-            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getLineNo())){
-                goodsAmountDetailDto.setLineNo(ofcGoodsDetailsInfo.getLineNo());
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getPassLineNo())){
+                goodsAmountDetailDto.setPassLineNo(ofcGoodsDetailsInfo.getPassLineNo());
             }
             // 货品编码
             if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCode())){

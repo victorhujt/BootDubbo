@@ -131,7 +131,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                     throw new BusinessException("货品名称不能为空");
                 }
                 // 通过行号修改货品重量
-                if (PubUtils.isOEmptyOrNull(goodsDetail.getLineNo())) {
+                if (PubUtils.isOEmptyOrNull(goodsDetail.getPassLineNo())) {
                     throw new BusinessException("货品行号不能为空");
                 }
                 /* else if (PubUtils.isOEmptyOrNull(goodsDetail.getGoodsCode())) {
@@ -206,7 +206,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             // ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
             // 修改重量 通过货品行号
-            ofcGoodsDetailsInfo.setLineNo(goodsAmountDetailDto.getLineNo());
+            ofcGoodsDetailsInfo.setPassLineNo(goodsAmountDetailDto.getPassLineNo());
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
 
             if (PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {
@@ -225,7 +225,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 }
                 ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
             } else {
-                logger.error("订单修改，订单{}查询不到货品{}信息，货品行号{}！", orderCode, goodsAmountDetailDto.getGoodsName(), goodsAmountDetailDto.getLineNo());
+                logger.error("订单修改，订单{}查询不到货品{}信息，货品行号{}！", orderCode, goodsAmountDetailDto.getGoodsName(), goodsAmountDetailDto.getPassLineNo());
             }
         } catch (Exception e) {
             logger.error("订单修改，订单中心更新货品信息失败",e.getMessage(),e);
@@ -242,13 +242,13 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
     void addGoodsModifyRecord(String orderCode, GoodsAmountDetailDto goodsAmountDetailDto) {
         try {
             // 行号
-            Integer lineNo = goodsAmountDetailDto.getLineNo();
+            Long lineNo = goodsAmountDetailDto.getPassLineNo();
             String goodsCode = goodsAmountDetailDto.getGoodsCode();
             String goodsName = goodsAmountDetailDto.getGoodsName();
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             // 行号
-            ofcGoodsDetailsInfo.setLineNo(lineNo);
+            ofcGoodsDetailsInfo.setPassLineNo(lineNo);
             // ofcGoodsDetailsInfo.setGoodsCode(goodsCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             if (PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {

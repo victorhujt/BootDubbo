@@ -242,8 +242,8 @@ public class OfcGoodsDetailsInfo {
     /**
      * 行号
      */
-    @Column(name = "line_no")
-    private Integer lineNo;
+    @Column(name = "pass_line_no")
+    private Long passLineNo;
     /**
      * 厂商批次
      */
