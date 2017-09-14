@@ -226,4 +226,18 @@
     </set>
     where order_code = #{orderCode,jdbcType=VARCHAR}
   </update>
+
+  <select id="queryIds" resultMap="BaseResultMap">
+  SELECT id FROM ofc_goods_details_info
+  </select>
+
+  <update id="flushPassLineNoById" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+  update ofc_goods_details_info
+  <set>
+  <if test="passLineNo != null">
+    paas_line_no = #{passLineNo}
+  </if>
+  </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
 </mapper>

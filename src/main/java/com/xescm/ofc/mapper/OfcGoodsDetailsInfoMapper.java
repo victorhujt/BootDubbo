@@ -20,5 +20,9 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
 
     int updateByOrderCode(Object key);
 
+    List<OfcGoodsDetailsInfo> queryIds();
+
+    void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
+
     List<OfcGoodsDetailsInfo> queryByCondition(OrderScreenCondition orderScreenCondition);
 }

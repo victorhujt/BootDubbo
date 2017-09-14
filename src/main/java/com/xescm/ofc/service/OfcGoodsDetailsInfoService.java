@@ -24,4 +24,7 @@ public interface OfcGoodsDetailsInfoService extends IService<OfcGoodsDetailsInfo
 
     Wrapper<PageInfo<CscGoodsApiVo>> validateGoodsByCode(CscGoodsApiDto dto);
 
+    // 刷[ofc_goods_details_info][pass_line_no]历史数据
+    List<OfcGoodsDetailsInfo> queryIds();
+    void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
 }

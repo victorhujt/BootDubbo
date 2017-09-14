@@ -69,4 +69,14 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     public  Wrapper<PageInfo<CscGoodsApiVo>> validateGoodsByCode(CscGoodsApiDto dto) {
         return cscGoodsEdasService.queryCscGoodsPageListByFuzzy(dto);
     }
+
+    @Override
+    public List<OfcGoodsDetailsInfo> queryIds() {
+        return ofcGoodsDetailsInfoMapper.queryIds();
+    }
+
+    @Override
+    public void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo) {
+        ofcGoodsDetailsInfoMapper.flushPassLineNoById(ofcGoodsDetailsInfo);
+    }
 }
