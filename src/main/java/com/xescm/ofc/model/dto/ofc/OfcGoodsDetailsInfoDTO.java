@@ -217,4 +217,9 @@ public class OfcGoodsDetailsInfoDTO {
      * 厂商批次号
      */
     private String manufactureBatchLotatt;
+
+    /**
+     * 备注
+     */
+    private String remark;
 }

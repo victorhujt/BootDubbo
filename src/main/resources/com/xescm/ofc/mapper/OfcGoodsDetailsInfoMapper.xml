@@ -39,9 +39,10 @@
     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
     <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
-    <result column="line_no" property="paas_line_no" jdbcType="INTEGER" />
-    <result column="line_no" property="external_paas_line_no" jdbcType="VARCHAR"  />
+    <result column="paasLineNo" property="paas_line_no" jdbcType="INTEGER" />
+    <result column="externalPaasLineNo" property="external_paas_line_no" jdbcType="VARCHAR"  />
     <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
 
   </resultMap>
 
@@ -88,7 +89,8 @@
     oos.primary_quantity,
     oos.paas_line_no,
     oos.external_paas_line_no,
-    oos.manufacture_batch_lotatt
+    oos.manufacture_batch_lotatt,
+    oos.remark
     FROM
     ofc_goods_details_info oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -154,7 +156,8 @@
       gdi.primary_quantity,
       gdi.paas_line_no,
       gdi.external_paas_line_no,
-      gdi.manufacture_batch_lotatt
+      gdi.manufacture_batch_lotatt,
+      gdi.remark
     FROM ofc_goods_details_info gdi
     LEFT JOIN
     ofc_fundamental_information ofi

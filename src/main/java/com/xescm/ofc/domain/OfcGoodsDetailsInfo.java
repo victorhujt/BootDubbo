@@ -257,6 +257,12 @@ public class OfcGoodsDetailsInfo {
     @Column(name = "manufacture_batch_lotatt")
     private String manufactureBatchLotatt;
 
+    /**
+     * 备注
+     */
+    @Column(name = "remark")
+    private String remark;
+
 
 
 

@@ -142,5 +142,10 @@ public class CreateOrderGoodsInfo implements Serializable {
      */
     private String manufactureBatchLotatt;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
     private List<GoodsPackingDto> skuPackageList;
 }
