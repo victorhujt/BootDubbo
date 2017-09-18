@@ -337,11 +337,16 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             String custOrderCode = createOrderEntity.getCustOrderCode();
             String platformType = createOrderEntity.getPlatformType();
             String custCode = createOrderEntity.getCustCode();
+            String orderStatus = createOrderEntity.getOrderStatus();
             String orderCode = null;
             String key = null;
             String orderType = createOrderEntity.getOrderType();
             AtomicBoolean lockStatus = new AtomicBoolean(false);
             try {
+                if (orderStatus != null && HASBEEN_CANCELED.equals(orderStatus)) {
+                    logger.error("订单{}已经取消，跳过创单操作！", custOrderCode);
+                    throw new BusinessException("订单" + custOrderCode + "已经取消，跳过创单操作！");
+                }
                 // 对创建订单操作进行加锁，防止订单创建重复
                 // redis key : OFC:MQ:xeOrderToOfc:<客户编码>:<客户订单号>
                 key = REDIS_LOCK_PREFIX + MQ_TAG_OrderToOfc + ":" + custCode + ":" + custOrderCode;
