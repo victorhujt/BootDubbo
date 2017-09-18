@@ -16,11 +16,11 @@ import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.enums.ExceptionTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
 import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
 import com.xescm.ofc.model.dto.coo.MessageDto;
@@ -77,7 +77,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcEnumerationService ofcEnumerationService;
 
     @Override
-    public boolean CreateOrders(List<CreateOrderEntity> list) {
+    public boolean CreateOrders(List<OfcCreateOrderDTO> list) {
         return false;
     }
 
@@ -92,7 +92,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         //组装接口的返回信息
         List<CreateOrderResult> createOrderResultList = null;
         try {
-            List<CreateOrderEntity> createOrderEntityList = JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<CreateOrderEntity>>() {
+            List<OfcCreateOrderDTO> createOrderEntityList = JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<OfcCreateOrderDTO>>() {
             });
             if (!CollectionUtils.isEmpty(createOrderEntityList)) {
                 createOrderResultList = new ArrayList<>();
@@ -101,7 +101,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String reason = null;
                 String custOrderCode = null;
                 String key = null;
-                for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
+                for (OfcCreateOrderDTO createOrderEntity : createOrderEntityList) {
                     String platformType = createOrderEntity.getPlatformType();
                     AtomicBoolean lockStatus = new AtomicBoolean(false);
                     try {
@@ -333,7 +333,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         ResultModel resultModel;
         try {
           //  CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
-            CreateOrderEntity createOrderEntity = JSON.parseObject(data, CreateOrderEntity.class);
+            OfcCreateOrderDTO createOrderEntity = JSON.parseObject(data, OfcCreateOrderDTO.class);
             String custOrderCode = createOrderEntity.getCustOrderCode();
             String platformType = createOrderEntity.getPlatformType();
             String custCode = createOrderEntity.getCustCode();

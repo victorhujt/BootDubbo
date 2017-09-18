@@ -26,11 +26,11 @@ import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderGoodsInfoDTO;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
-import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import com.xescm.ofc.model.dto.coo.CreateOrderTrans;
 import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
@@ -118,7 +118,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     }
 
     @Transactional
-    public ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException {
+    public ResultModel ofcCreateOrder(OfcCreateOrderDTO createOrderEntity, String orderCode) throws BusinessException {
         ResultModel resultModel;
         try {
             //校验订单日期
@@ -221,7 +221,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
             OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
             OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
-            List<CreateOrderGoodsInfo> tempList = new ArrayList<>();
+            List<OfcCreateOrderGoodsInfoDTO> tempList = new ArrayList<>();
             //没有匹配到包装的货品编码
             List<String> noPackageGoodsCodes = new ArrayList<>();
             StringBuilder str = new StringBuilder();
@@ -253,7 +253,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             if (tempList.size() > 0) {
                 str1.append("订单对应货品编码为");
                 for (int i = 0; i < tempList.size(); i++) {
-                    CreateOrderGoodsInfo temp = tempList.get(i);
+                    OfcCreateOrderGoodsInfoDTO temp = tempList.get(i);
                     if (str1.toString().indexOf(temp.getGoodsCode()) != -1) {
                         continue;
                     }
@@ -299,9 +299,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return resultModel;
     }
 
-    private void validateGoodsPackage(CreateOrderEntity createOrderEntity,String orderCode, List<CreateOrderGoodsInfo> tempList, List<String> noPackageGoodsCodes) {
+    private void validateGoodsPackage(OfcCreateOrderDTO createOrderEntity,String orderCode, List<OfcCreateOrderGoodsInfoDTO> tempList, List<String> noPackageGoodsCodes) {
         String custCode = createOrderEntity.getCustCode();
-        for (CreateOrderGoodsInfo goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
+        for (OfcCreateOrderGoodsInfoDTO goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
             if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
                 boolean isHavePackage = false;
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
@@ -412,11 +412,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param orderType
      * @return
      */
-    private ResultModel checkGoodsDetailInfo(CreateOrderEntity createOrderEntity, String custCode, String orderType) {
+    private ResultModel checkGoodsDetailInfo(OfcCreateOrderDTO createOrderEntity, String custCode, String orderType) {
         ResultModel resultModel;
-        List<CreateOrderGoodsInfo> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+        List<OfcCreateOrderGoodsInfoDTO> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
         if (PubUtils.isNotNullAndBiggerSize(createOrderGoodsInfos, 0)) {
-            for (CreateOrderGoodsInfo goodsInfo : createOrderGoodsInfos) {
+            for (OfcCreateOrderGoodsInfoDTO goodsInfo : createOrderGoodsInfos) {
                 String goodsCode = goodsInfo.getGoodsCode();
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 cscGoods.setCustomerCode(custCode);
@@ -451,13 +451,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param custCode
      * @param distributionBasicInfo
      */
-    private void setOfcDistributionGoodsInfo(CreateOrderEntity createOrderEntity, String custCode,
+    private void setOfcDistributionGoodsInfo(OfcCreateOrderDTO createOrderEntity, String custCode,
                                              OfcDistributionBasicInfo distributionBasicInfo) {
-        List<CreateOrderGoodsInfo> orderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
+        List<OfcCreateOrderGoodsInfoDTO> orderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
         if (PubUtils.isNotNullAndBiggerSize(orderGoodsInfos, 0)) {
             // 货品大类编码、名称
             String goodsTypeCode = null, goodsTypeParentName = null;
-            for (CreateOrderGoodsInfo goodsInfo : orderGoodsInfos) {
+            for (OfcCreateOrderGoodsInfoDTO goodsInfo : orderGoodsInfos) {
                 String goodsCode = goodsInfo.getGoodsCode();
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 cscGoods.setCustomerCode(custCode);
@@ -485,7 +485,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param createOrderEntity 表头
      * @param createOrderGoodsInfo 货品
      */
-    private void fixOrderGoodsMsg(CreateOrderEntity createOrderEntity, CreateOrderGoodsInfo createOrderGoodsInfo) {
+    private void fixOrderGoodsMsg(OfcCreateOrderDTO createOrderEntity, OfcCreateOrderGoodsInfoDTO createOrderGoodsInfo) {
         logger.info("表头体积重量数量计算 == > 表头 createOrderEntity :{}", createOrderEntity);
         logger.info("表头体积重量数量计算 == > 货品 createOrderGoodsInfo :{}", createOrderGoodsInfo);
         //货品信息
@@ -969,7 +969,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * @param createOrderEntity
      * @return
      */
-    public ResultModel checkContactInfo(CreateOrderEntity createOrderEntity) {
+    public ResultModel checkContactInfo(OfcCreateOrderDTO createOrderEntity) {
         ResultModel resultModel;
         ResultModel restConsignor = checkConsignorInfo(createOrderEntity);
         if (ResultModel.ResultEnum.CODE_0000.getCode().equals(restConsignor.getCode())) {
@@ -986,7 +986,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     }
 
     // 发货方校验
-    public ResultModel checkConsignorInfo(CreateOrderEntity createOrderEntity) {
+    public ResultModel checkConsignorInfo(OfcCreateOrderDTO createOrderEntity) {
         // 发货方编码
         String consignorCode = createOrderEntity.getConsignorCode();
         String custCode = createOrderEntity.getCustCode();
@@ -1023,7 +1023,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     }
 
     // 收货方校验
-    public ResultModel checkConsigneeInfo(CreateOrderEntity createOrderEntity) {
+    public ResultModel checkConsigneeInfo(OfcCreateOrderDTO createOrderEntity) {
         // 收货方编码
         String consigneeCode = createOrderEntity.getConsigneeCode();
         String custCode = createOrderEntity.getCustCode();
@@ -1106,7 +1106,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
 
-    private ResultModel queryContactAndSet(CreateOrderEntity createOrderEntity, String companyCode, String purpose, String storeCode) {
+    private ResultModel queryContactAndSet(OfcCreateOrderDTO createOrderEntity, String companyCode, String purpose, String storeCode) {
         String custCode = createOrderEntity.getCustCode();
         CscQueryStoreCodeReqDto param = new CscQueryStoreCodeReqDto();
         param.setStoreCode(storeCode);
