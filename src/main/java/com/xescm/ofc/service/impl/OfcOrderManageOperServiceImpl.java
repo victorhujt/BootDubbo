@@ -497,7 +497,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Override
     public OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto) {
         if (null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
-            throw new BusinessException("根据所选基地反查大区失败");
+            throw new BusinessException("所选地址未配置大区基地信息");
         }
         Wrapper<UamGroupDto> parentInfoByChildSerilNo = uamGroupEdasService.getParentInfoByChildSerilNo(uamGroupDto.getSerialNo());
         checkUamGroupEdasResultNullOrError(parentInfoByChildSerilNo);
