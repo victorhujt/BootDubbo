@@ -38,6 +38,14 @@ public class OfcWarehouseInformation {
     private Date shipmentTime;
 
     /**
+     * 承诺到达时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @Column(name = "expected_arrived_time")
+    private Date expectedArrivedTime;
+
+    /**
      * 入库预计到达时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

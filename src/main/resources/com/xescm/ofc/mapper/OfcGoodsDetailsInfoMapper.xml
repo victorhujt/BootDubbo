@@ -85,7 +85,7 @@
     oos.package_type,
     oos.conversion_rate,
     oos.primary_quantity,
-    oos.line_no,
+    oos.paas_line_no,
     oos.manufacture_batch_lotatt
     FROM
     ofc_goods_details_info oos
