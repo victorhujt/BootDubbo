@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcCustOrderStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcCustOrderStatus" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
+    <result column="trace_status" property="traceStatus" jdbcType="VARCHAR" />
+    <result column="trace" property="trace" jdbcType="VARCHAR" />
+    <result column="lasted_oper_time" property="lastedOperTime" jdbcType="TIMESTAMP" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+    <select id="orderStatusSelect" resultType="com.xescm.ofc.domain.OfcCustOrderStatus"></select>
+</mapper>

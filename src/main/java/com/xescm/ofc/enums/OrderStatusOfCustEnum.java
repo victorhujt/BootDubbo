@@ -4,12 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 订单状态
- * Created by hiyond on 2016/11/21.
+ *
+ * Created by lyh on 2017/9/14.
  */
-public enum OrderStatusEnum {
+public enum  OrderStatusOfCustEnum{
 
     PEND_AUDIT("10", "待审核"),
+    UNCONFIRMED("11", "未确认"),
+    CONFIRMED("12", "已确认"),
     ALREADY_EXAMINE("20", "已审核"),
     IMPLEMENTATION_IN("30", "执行中"),
     BEEN_COMPLETED("40", "已完成"),
@@ -19,7 +21,7 @@ public enum OrderStatusEnum {
 
     private String desc;
 
-    OrderStatusEnum(String code, String desc) {
+    OrderStatusOfCustEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -40,8 +42,8 @@ public enum OrderStatusEnum {
         this.desc = desc;
     }
 
-    public static List<OrderStatusEnum> queryList() {
-        return Arrays.asList(OrderStatusEnum.values());
+    public static List<OrderStatusOfCustEnum> queryList() {
+        return Arrays.asList(OrderStatusOfCustEnum.values());
     }
 
 }

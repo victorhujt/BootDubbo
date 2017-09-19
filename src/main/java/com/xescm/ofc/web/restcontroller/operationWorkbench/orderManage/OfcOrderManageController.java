@@ -122,7 +122,7 @@ public class OfcOrderManageController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/queryOrderDetailByOrderCode/{orderCode}", method = {RequestMethod.POST})
-    @ApiOperation(value = "根据类型查询组织信息", httpMethod = "POST", notes = "返回组织信息")
+    @ApiOperation(value = "查询订单明细", httpMethod = "POST", notes = "返回组织信息")
     public Wrapper<OfcOrderInfoDTO> queryOrderDetailByOrderCode(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
         logger.info("==>queryOrderDetailByOrderCode   orderCode:{}", orderCode);
         Wrapper<OfcOrderInfoDTO> result;

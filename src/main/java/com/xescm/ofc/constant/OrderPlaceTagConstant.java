@@ -24,6 +24,12 @@ public class OrderPlaceTagConstant {
     //仓储开单编辑标志位
     public static final String ORDER_TAG_STOCK_EDIT = "edit";
 
+    //客户工作台仓储开单下单标志位
+    public static final String ORDER_TAG_STOCK_CUST_SAVE = "stockCustSave";
+
+    //客户工作台仓储开单编辑标志位
+    public static final String ORDER_TAG_STOCK_CUST_EDIT = "stockCustEdit";
+
     //客户工作台普通下单
     public static final String ORDER_TAG_NORMAL_PLACE = "place";
 

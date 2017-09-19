@@ -30,6 +30,7 @@ public interface OfcOrderManageService {
     String orderDelete(String orderCode);
 
     String orderCancel(String orderCode,AuthResDto authResDtoByToken);
+
     CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String custId, AuthResDto authResDtoByToken);
     CscSupplierInfoDto getSupportMessage(String suppulierName, String suppulierContactName, String custId, AuthResDto authResDtoByToken);
     Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO);

@@ -189,7 +189,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public int save(OfcOrderStatus ofcOrderStatus) {
+    public int  save(OfcOrderStatus ofcOrderStatus) {
         if (ofcOrderStatus != null && !trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()).equals("")) {
             if (!trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()).equals("")) {
                 OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(ofcOrderStatus.getOrderCode());
@@ -247,7 +247,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 type = OFC_WHC_OUT_TYPE;
             }
             String statusDesc = translateStatusToDesc(traceStatus,type);
-            if (orderStatus.getStatusDesc().indexOf(statusDesc) < 0) {
+            if (orderStatus.getStatusDesc().contains(statusDesc)) {
                 status.setLastedOperTime(new Date());
                 status.setStatusDesc(statusDesc);
                 status.setOrderCode(orderCode);

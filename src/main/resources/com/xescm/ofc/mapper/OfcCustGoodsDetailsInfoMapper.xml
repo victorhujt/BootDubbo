@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcCustGoodsDetailsInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcCustGoodsDetailsInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_spec" property="goodsSpec" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="production_batch" property="productionBatch" jdbcType="VARCHAR" />
+    <result column="production_time" property="productionTime" jdbcType="TIMESTAMP" />
+    <result column="invalid_time" property="invalidTime" jdbcType="TIMESTAMP" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="DECIMAL" />
+    <result column="total_box" property="totalBox" jdbcType="INTEGER" />
+    <result column="goods_category_code" property="goodsCategoryCode" jdbcType="VARCHAR" />
+    <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+    <result column="pack" property="pack" jdbcType="VARCHAR" />
+    <result column="quantity_unit_price" property="quantityUnitPrice" jdbcType="DECIMAL" />
+    <result column="weight_unit_price" property="weightUnitPrice" jdbcType="DECIMAL" />
+    <result column="volume_unit_price" property="volumeUnitPrice" jdbcType="DECIMAL" />
+    <result column="billing_weight" property="billingWeight" jdbcType="DECIMAL" />
+    <result column="goods_type_code" property="goodsTypeCode" jdbcType="VARCHAR" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="charging_ways" property="chargingWays" jdbcType="VARCHAR" />
+    <result column="charging_quantity" property="chargingQuantity" jdbcType="DECIMAL" />
+    <result column="charging_unit_price" property="chargingUnitPrice" jdbcType="DECIMAL" />
+    <result column="real_quantity" property="realQuantity" jdbcType="DECIMAL" />
+    <result column="support_batch" property="supportBatch" jdbcType="VARCHAR" />
+    <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
+    <result column="package_name" property="packageName" jdbcType="VARCHAR" />
+    <result column="package_type" property="packageType" jdbcType="VARCHAR" />
+    <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
+    <result column="support_name" property="supportName" jdbcType="VARCHAR" />
+    <result column="line_no" property="lineNo" jdbcType="BIGINT" />
+    <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="resultField">
+    ogd.goods_code goodsCode,
+    ogd.goods_name goodsName,
+    ogd.goods_spec goodsSpec,
+    ogd.unit unit,
+    ogd.quantity quantity,
+    ogd.unit_price unitPrice,
+    ogd.production_batch productionBatch,
+    ogd.production_time productionTime,
+    ogd.invalid_time invalidTime,
+    ogd.order_code orderCode,
+    ogd.notes notes,
+    ogd.creation_time creationTime,
+    ogd.creator creator,
+    ogd.operator operator,
+    ogd.oper_time operTime,
+    ogd.weight weight,
+    ogd.cubage cubage,
+    ogd.total_box totalBox,
+    ogd.goods_category_code goodsCategoryCode,
+    ogd.goods_category goodsCategory,
+    ogd.pack pack,
+    ogd.quantity_unit_price quantityUnitPrice,
+    ogd.weight_unit_price weightUnitPrice,
+    ogd.volume_unit_price volumeUnitPrice,
+    ogd.billing_weight billingWeight,
+    ogd.goods_type_code goodsTypeCode,
+    ogd.goods_type goodsType,
+    ogd.charging_ways chargingWays,
+    ogd.charging_quantity chargingQuantity,
+    ogd.charging_unit_price chargingUnitPrice,
+    ogd.real_quantity realQuantity,
+    ogd.support_batch supportBatch,
+    ogd.primary_quantity primaryQuantity,
+    ogd.package_name packageName,
+    ogd.package_type packageType,
+    ogd.conversion_rate conversionRate,
+    ogd.support_name supportName,
+    ogd.line_no lineNo,
+    ogd.manufacture_batch_lotatt manufactureBatchLotatt
+  </sql>
+  <select id="queryByInfo" resultType="com.xescm.ofc.domain.OfcCustGoodsDetailsInfo">
+    SELECT <include refid="resultField"/> FROM ofc_goods_details_info ogd
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        ogd.order_code =#{orderCode}
+      </if>
+    </where>
+    UNION
+    SELECT <include refid="resultField"/> FROM ofc_cust_goods_details_info ogd
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        ogd.order_code =#{orderCode}
+      </if>
+    </where>
+  </select>
+</mapper>
