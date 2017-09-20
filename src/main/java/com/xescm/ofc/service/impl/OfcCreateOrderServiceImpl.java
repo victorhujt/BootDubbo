@@ -327,6 +327,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                         PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                     CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
+                    goodsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
+                    goodsInfo.setGoodsTypeCode(cscGoodsApiVo.getGoodsTypeId());
+                    goodsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
+                    goodsInfo.setGoodsCategoryCode(cscGoodsApiVo.getGoodsType());
                     List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                     List<GoodsPackingDto>  dcPackages = goodsInfo.getSkuPackageList();
                     if (!CollectionUtils.isEmpty(packages)) {
