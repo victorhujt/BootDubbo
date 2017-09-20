@@ -111,7 +111,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     @Resource
     private CodeGenUtils codeGenUtils;
-
     @Override
     public int queryCountByOrderStatus(String orderCode, String orderStatus) {
         return createOrdersMapper.queryCountByOrderStatus(orderCode, orderStatus);
@@ -557,11 +556,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = ofcFundamentalInformation.getCustCode();
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
-        //仓储订单 入库 仓库地址为收货方  出库 仓库地址为发货方
-//        if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
-//
-//           ofcDistributionBasicInfo = ofcDistributionBasicInfoService.fillAddress(ofcWarehouseInformation,ofcDistributionBasicInfo,ofcFundamentalInformation);
-//        }
         boolean sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
         this.fixOrEeAddrCode(ofcDistributionBasicInfo);
         if (information != null) {
@@ -585,6 +579,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 ofcGoodsDetailsInfo.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
+            ofcOrderManageService.fillAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation);
             try {
                     //自动审核通过 review:审核；rereview:反审核
                     if (sEmptyOrNull) {
@@ -619,6 +614,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             ofcOrderStatusService.save(ofcOrderStatus);
+            ofcOrderManageService.fillAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation);
             try {
                 if (!StringUtils.equals(ofcFundamentalInformation.getIsException(),ISEXCEPTION)) {
                     //地址编码不为空才走自动审核, 为空的状态还是待审核, 并调用EPC端口补齐

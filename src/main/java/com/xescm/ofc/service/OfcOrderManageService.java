@@ -81,5 +81,7 @@ public interface OfcOrderManageService {
 
     boolean consigneeAdressIsCoverBase(OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
+    boolean  fillAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation);
+
 
 }

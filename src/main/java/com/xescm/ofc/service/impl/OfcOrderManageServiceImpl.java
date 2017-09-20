@@ -1805,21 +1805,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             //创单接口订单和钉钉录单补充大区基地信息
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
                     || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
-                // 大区、基地都为空则更新大区基地
-                String baseCode = ofcFundamentalInformation.getBaseCode();
-                String areaCode = ofcFundamentalInformation.getAreaCode();
-                String orderType = ofcFundamentalInformation.getOrderType();
-                if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && TRANSPORT_ORDER.equals(orderType)) {
-                    this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
-                } else if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && WAREHOUSE_DIST_ORDER.equals(orderType)) {
-                    ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
-                }
-                //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
-                if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
-                        || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
-                    logger.error("订单没有基地信息, 维持待审核状态");
+                if (fillAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation))
                     return String.valueOf(Wrapper.SUCCESS_CODE);
-                }
+
                 this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
             }
             //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
@@ -1879,6 +1867,25 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
 
         return String.valueOf(Wrapper.SUCCESS_CODE);
+    }
+
+    public boolean fillAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation) {
+        // 大区、基地都为空则更新大区基地
+        String baseCode = ofcFundamentalInformation.getBaseCode();
+        String areaCode = ofcFundamentalInformation.getAreaCode();
+        String orderType = ofcFundamentalInformation.getOrderType();
+        if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && TRANSPORT_ORDER.equals(orderType)) {
+            this.updateOrderAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo);
+        } else if (PubUtils.isOEmptyOrNull(baseCode) && PubUtils.isOEmptyOrNull(areaCode) && WAREHOUSE_DIST_ORDER.equals(orderType)) {
+            ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
+        }
+        //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
+        if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
+                || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
+            logger.error("订单没有基地信息, 维持待审核状态");
+            return true;
+        }
+        return false;
     }
 
     /**
