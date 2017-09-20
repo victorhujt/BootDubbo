@@ -282,7 +282,7 @@ public class CreateOrderTrans {
             });
             modelMapper.map(createOrderEntity, ofcWarehouseInformation);
             Integer provideTransport = ofcWarehouseInformation.getProvideTransport();
-            provideTransport = provideTransport == null ? 0 : 1;
+            provideTransport = provideTransport == null || provideTransport == 0 ? 0 : 1;
             ofcWarehouseInformation.setProvideTransport(provideTransport);
             ofcWarehouseInformation.setOrderCode(this.orderCode);
             ofcWarehouseInformation.setArriveTime(DateUtils.String2Date(createOrderEntity.getArriveTime(), DateUtils.DateFormatType.TYPE1));
