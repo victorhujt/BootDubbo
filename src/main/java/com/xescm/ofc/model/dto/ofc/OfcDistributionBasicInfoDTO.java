@@ -43,6 +43,11 @@ public class OfcDistributionBasicInfoDTO implements Serializable{
     private String transCode;
 
     /**
+     * 自身运输单号
+     */
+    private String selfTransCode;
+
+    /**
      * 是否加急
      */
     private Integer urgent;
