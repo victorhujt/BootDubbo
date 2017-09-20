@@ -306,6 +306,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
                 boolean isHavePackage = false;
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                String goodsCode = goodsInfo.getGoodsCode();
                 cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
                 cscGoods.setFromSys("WMS");
                 cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
@@ -338,7 +339,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                 boolean isExistPackage = false;
                                 if (!CollectionUtils.isEmpty(dcPackages)) {
                                     logger.info("orderCode is {}",orderCode);
-                                    logger.info("入库单货品编码:{}开始比对包装",goodsInfo.getGoodsCode());
+                                    logger.info("入库单货品编码:{}开始比对包装",goodsCode);
                                     for (GoodsPackingDto packingDto : dcPackages){
                                         isExistPackage = false;
                                         //入库比对包装
@@ -350,17 +351,21 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                             }
                                         }
                                     }
+                                } else {
+                                    logger.info("大成传入的包装信息为空 orderCode is {}",orderCode);
+                                    goodsInfo.setRemark("大成传入的包装信息为空");
                                 }
                                 logger.info("orderCode is {}",orderCode);
                                 logger.info("入库单货品编码比对包装结果为:{}",isExistPackage);
-                                if (!isExistPackage) {
+                                if (!isExistPackage && !CollectionUtils.isEmpty(dcPackages)) {
+                                    goodsInfo.setRemark("货品编码比对包装结果有误");
                                     goodsInfo.setCustName(createOrderEntity.getCustName());
                                     goodsInfo.setCustCode(custCode);
                                     tempList.add(goodsInfo);
                                 }
                             }
                             //出入库业务只匹配包装存不存在
-                            logger.info("出入库单货品编码:{}开始匹配包装换算为主单位数量",goodsInfo.getGoodsCode());
+                            logger.info("出入库单货品编码:{}开始匹配包装换算为主单位数量",goodsCode);
                             for (GoodsPackingDto packingDto : packages) {
                                 if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
                                     logger.info("orderCode is {}",orderCode);
@@ -379,20 +384,23 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                             //没有匹配到包装直接返回错误
                             if (!isHavePackage) {
                                 logger.info("orderCode is {}",orderCode);
-                                logger.info("出库单货品编码:{}没有匹配包装",goodsInfo.getGoodsCode());
-                                if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
-                                    noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
+                                logger.info("出库单货品编码:{}没有匹配到包装",goodsCode);
+                                if (!noPackageGoodsCodes.contains(goodsCode)) {
+                                    goodsInfo.setRemark("货品编码包装或规格比对有误");
+                                    noPackageGoodsCodes.add(goodsCode);
                                 }
                             }
                     } else {
                         logger.info("orderCode is {}",orderCode);
-                        logger.info("货品编码:{}csc接口没有查询到包装信息",goodsInfo.getGoodsCode());
+                        logger.info("货品编码:{}csc接口没有查询到包装信息",goodsCode);
                         //没有匹配到包装直接返回错误
-                        if (!noPackageGoodsCodes.contains(goodsInfo.getGoodsCode())) {
-                            noPackageGoodsCodes.add(goodsInfo.getGoodsCode());
+                        if (!noPackageGoodsCodes.contains(goodsCode)) {
+                            goodsInfo.setRemark("货品编码没有查询到包装信息");
+                            noPackageGoodsCodes.add(goodsCode);
                         }
                         //csc没有包装 但是大成接口过来的有包装
                         if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList())) {
+                            goodsInfo.setRemark("货品编码没有查询到包装信息");
                             goodsInfo.setCustName(createOrderEntity.getCustName());
                             goodsInfo.setCustCode(custCode);
                             tempList.add(goodsInfo);
@@ -400,7 +408,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                 } else {
                     logger.info("orderCode is {}",orderCode);
-                    logger.info("货品编码:{}csc接口查询到包装信息异常",goodsInfo.getGoodsCode());
+                    logger.info("货品编码:{}csc接口查询到包装信息异常",goodsCode);
+                    goodsInfo.setRemark("货品编码查询包装信息异常");
                     // TODO 推送CSC待创建商品
                     goodsInfo.setCustName(createOrderEntity.getCustName());
                     goodsInfo.setCustCode(custCode);

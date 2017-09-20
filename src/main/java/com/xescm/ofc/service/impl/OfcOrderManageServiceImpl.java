@@ -314,16 +314,19 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     }
                     if (!isHavePackage) {
                         if (!noPackageGoods.contains(goodsCode)) {
+                            good.setRemark("货品编码包装或规格有误");
                             noPackageGoods.add(goodsCode);
                         }
                     }
                 } else {
                     if (!noPackageGoods.contains(goodsCode)) {
+                        good.setRemark("货品编码包装不存在");
                         noPackageGoods.add(goodsCode);
                     }
                 }
             } else {
                 if (!notExistGoodsCodes.contains(goodsCode)) {
+                    good.setRemark("货品编码不存在");
                     notExistGoodsCodes.add(goodsCode);
                 }
             }
@@ -351,13 +354,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
             str.append("不存在.");
         }
-        if (!PubUtils.isSEmptyOrNull(str.toString())) {
-            throw new BusinessException(str.toString());
-        } else {
-            if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getExceptionReason())) {
-                ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
-                ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
-            }
+        if (!PubUtils.isSEmptyOrNull(str.toString())) throw new BusinessException(str.toString());
+        if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getExceptionReason())) {
+            ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
+            ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
         }
     }
 
