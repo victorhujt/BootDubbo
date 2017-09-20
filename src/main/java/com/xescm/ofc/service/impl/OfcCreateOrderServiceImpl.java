@@ -205,12 +205,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             //checkSupport(createOrderEntity, custCode);
 
             //校验：货品档案信息，校验货品明细
-            resultModel = checkGoodsDetailInfo(createOrderEntity, custCode, orderType);
-            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                logger.error("校验订单商品信息失败：{}", resultModel.getDesc());
-                return resultModel;
-            }
 
+            if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {
+                resultModel = checkGoodsDetailInfo(createOrderEntity, custCode, orderType);
+                if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                    logger.error("校验订单商品信息失败：{}", resultModel.getDesc());
+                    return resultModel;
+                }
+            }
             //转换 dto → do
             CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
             OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
@@ -430,13 +432,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                         goodsInfo.setGoodsCategoryCode(goodsApiVo.getGoodsType());
                     }
                 }
-                if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {
-                    resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
-                    if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                        logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
-                        return resultModel;
-                    }
-                }
+//                if (OrderConstant.WAREHOUSE_DIST_ORDER.equals(orderType)) {
+//                    resultModel = CheckUtils.checkGoodsInfo(goodsRest, goodsInfo);
+//                    if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+//                        logger.error("校验数据：{}货品编码：{}失败：{}", "货品档案信息", goodsCode, resultModel.getCode());
+//                        return resultModel;
+//                    }
+//                }
                 //2017年3月29日 lyh 追加逻辑: 表头体积重量数量由表体货品决定
                 this.fixOrderGoodsMsg(createOrderEntity, goodsInfo);
             }
