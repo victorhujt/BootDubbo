@@ -243,8 +243,9 @@ public class OfcGoodsDetailsInfo {
     /**
      * 平台行号
      */
-    @Column(name = "paas_line_no")
+    @Column(name = "pass_line_no")
     private Long passLineNo;
+
 
     /**
      * 外部平台行号
