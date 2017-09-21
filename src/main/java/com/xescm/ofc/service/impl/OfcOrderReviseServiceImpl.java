@@ -168,9 +168,9 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 }
                 // 暂时注释TFC
                 // 推送TFC
-                //tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
+                tfcUpdateOrderEdasService.updateTransportOrder(goodsAmountSyncDto);
                 // 暂时注释dpc
-                /*try {
+                try {
                     // 推送调度中心
                     DpcSyncOrderInfoDto syncOrderInfoDto = new DpcSyncOrderInfoDto();
                     syncOrderInfoDto.setOrderNo(orderCode);
@@ -186,7 +186,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                 } catch (Exception e) {
                     logger.error("推送调度中心交货量同步发生异常：异常详情 => {}", e);
                     throw new BusinessException("推送调度中心交货量同步发生异常!");
-                }*/
+                }
             }
         } catch (Exception e) {
             logger.error("订单修改，交货量同步更新发生异常. {}", e);
