@@ -256,7 +256,6 @@ public class CreateOrderTrans {
             this.ofcFinanceInformation = new OfcFinanceInformation();
             modelMapper.map(createOrderEntity, ofcFinanceInformation);
             ofcFinanceInformation.setOrderCode(this.orderCode);
-            ofcFinanceInformation.setBuyerPaymentMethod(createOrderEntity.getBuyerPaymentMethod());
             ofcFinanceInformation.setCreationTime(nowDate);
             ofcFinanceInformation.setOperator(CREATE_ORDER_BYAPI);
             ofcFinanceInformation.setOperTime(nowDate);
