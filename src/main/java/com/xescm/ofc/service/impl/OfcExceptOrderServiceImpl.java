@@ -24,8 +24,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
@@ -459,7 +457,11 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         orderScreenCondition.setGoodsCategory("冷鲜猪肉");
         List<String> ordersGoodsList = ofcGoodsDetailsInfoMapper.queryByCondition(orderScreenCondition);
         System.out.println("============================异常订单：2 -> 查询昨日订单明细耗时：" + (System.currentTimeMillis() - sOdd));
-        Map<String, Boolean> matchedGoods = ordersGoodsList.stream().distinct().collect(Collectors.toMap(Function.identity(), (goods) -> true));
+        Map<String, Boolean> matchedGoods = new HashMap<>();
+//        Map<String, Boolean> matchedGoods = ordersGoodsList.stream().distinct().collect(Collectors.toMap(Function.identity(), (goods) -> true));
+        for (String orderCode : ordersGoodsList) {
+            matchedGoods.put(orderCode, true);
+        }
         long sMatch = System.currentTimeMillis();
         for (OfcExceptOrder orderInfo : undealedOrders) {
             String orderCode = orderInfo.getOrderCode();
