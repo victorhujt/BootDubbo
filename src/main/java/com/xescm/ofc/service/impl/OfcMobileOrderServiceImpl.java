@@ -223,7 +223,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                 ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
                 ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
                 ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-                ofcGoodsDetails.setPassLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
                 goodsDetailsList.add(ofcGoodsDetails);
             }

@@ -9,13 +9,11 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.service.GoodsAmountSyncService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcOrderReviseService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,8 +119,8 @@ public class OfcOrderReviseController extends BaseController {
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsList) {
             GoodsAmountDetailDto goodsAmountDetailDto = new GoodsAmountDetailDto();
             // 行号
-            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getPassLineNo())){
-                goodsAmountDetailDto.setPassLineNo(ofcGoodsDetailsInfo.getPassLineNo());
+            if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getPaasLineNo())){
+                goodsAmountDetailDto.setPassLineNo(ofcGoodsDetailsInfo.getPaasLineNo());
             }
             // 货品编码
             if (!PubUtils.isOEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCode())){

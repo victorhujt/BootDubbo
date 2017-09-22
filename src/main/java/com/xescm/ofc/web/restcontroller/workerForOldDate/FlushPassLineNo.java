@@ -70,7 +70,7 @@ public class FlushPassLineNo extends BaseController {
                     String nowId = pushList.get(j).getId();
                     Long nowPassLineNo = codeGenUtils.getPaasLineNo(PAAS_LINE_NO);
                     ofcGoodsDetailsInfo.setId(nowId);
-                    ofcGoodsDetailsInfo.setPassLineNo(nowPassLineNo);
+                    ofcGoodsDetailsInfo.setPaasLineNo(nowPassLineNo);
                     ofcGoodsDetailsInfoService.flushPassLineNoById(ofcGoodsDetailsInfo);
                     logger.info("------------>更新数据开始，页数{}，当前页剩余{}", i, PAGESIZE - j);
                 }

@@ -23,15 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
-import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_COMPLETED;
-import static com.xescm.ofc.constant.OrderConstConstant.PENDING_AUDIT;
-import static com.xescm.ofc.constant.OrderConstConstant.WITH_THE_CITY;
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 @Service
 public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
@@ -206,7 +205,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             // ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
             // 修改重量 通过货品行号
-            ofcGoodsDetailsInfo.setPassLineNo(goodsAmountDetailDto.getPassLineNo());
+            ofcGoodsDetailsInfo.setPaasLineNo(goodsAmountDetailDto.getPassLineNo());
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
 
             if (PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {
@@ -248,7 +247,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             // 行号
-            ofcGoodsDetailsInfo.setPassLineNo(lineNo);
+            ofcGoodsDetailsInfo.setPaasLineNo(lineNo);
             // ofcGoodsDetailsInfo.setGoodsCode(goodsCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             if (PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {
