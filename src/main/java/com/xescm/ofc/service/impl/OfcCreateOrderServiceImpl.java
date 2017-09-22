@@ -304,6 +304,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = createOrderEntity.getCustCode();
         for (OfcCreateOrderGoodsInfoDTO goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
             if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
+                if ("000001".equals(createOrderEntity.getWarehouseCode())) return;
                 boolean isHavePackage = false;
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 String goodsCode = goodsInfo.getGoodsCode();

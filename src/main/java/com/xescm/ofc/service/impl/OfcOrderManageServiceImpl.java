@@ -276,6 +276,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     }
 
     private void validateGoodsPackage(OfcFundamentalInformation ofcFundamentalInformation, List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation) {
+        if ("000001".equals(ofcWarehouseInformation.getWarehouseCode())) return;
         //没有匹配到包装的货品编码
         List<String> noPackageGoods = new ArrayList<>();
         //没有匹配到包装的货品编码
