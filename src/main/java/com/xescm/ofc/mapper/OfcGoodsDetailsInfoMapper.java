@@ -20,5 +20,5 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
 
     int updateByOrderCode(Object key);
 
-    List<OfcGoodsDetailsInfo> queryByCondition(OrderScreenCondition orderScreenCondition);
+    List<String> queryByCondition(OrderScreenCondition orderScreenCondition);
 }

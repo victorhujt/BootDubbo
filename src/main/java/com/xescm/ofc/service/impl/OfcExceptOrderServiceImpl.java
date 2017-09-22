@@ -3,7 +3,6 @@ package com.xescm.ofc.service.impl;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.domain.OfcEnumeration;
 import com.xescm.ofc.domain.OfcExceptOrder;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.domain.OrderScreenCondition;
 import com.xescm.ofc.enums.OrderPotEnum;
 import com.xescm.ofc.exception.BusinessException;
@@ -446,27 +445,33 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         orderScreenCondition.setOrderTimeSuf(now.getTime());
         now.add(Calendar.DATE, -1);
         orderScreenCondition.setOrderTimePre(now.getTime());
+        long sOd = System.currentTimeMillis();
         List<OfcExceptOrder> undealedOrders = ofcFundamentalInformationMapper.queryByCondition(orderScreenCondition);
+        System.out.println("============================异常订单：1 -> 查询昨日订单耗时：" + (System.currentTimeMillis() - sOd));
         if (CollectionUtils.isEmpty(undealedOrders)) {
             logger.error("加载昨日订单失败! 订单号列表为空!");
             throw new BusinessException("处理异常订单失败");
         }
-        List<OfcGoodsDetailsInfo> ordersGoodsList = ofcGoodsDetailsInfoMapper.queryByCondition(orderScreenCondition);
-        for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ordersGoodsList) {
-            String goodsType = ofcGoodsDetailsInfo.getGoodsType();// 大类
-            String goodsCategory = ofcGoodsDetailsInfo.getGoodsCategory();// 小类
-            String orderCode = ofcGoodsDetailsInfo.getOrderCode();
-            // fixme
-            if ((StringUtils.equals(goodsType, "畜禽类") && StringUtils.equals(goodsCategory, "冷鲜猪肉"))
-                    /*|| (StringUtils.equals(goodsTypeCode, "xxxx") && StringUtils.equals(goodsCategoryCode, "xxxx"))*/) {
-                while (undealedOrders.listIterator().hasNext()) {
-                    OfcExceptOrder exceptOrder = undealedOrders.listIterator().next();
-                    if (StringUtils.equals(exceptOrder.getOrderCode(), orderCode)) {
-                        exceptOrder.setCoolFreshPork(STR_YES);
-                    }
-                }
+        long sOdd = System.currentTimeMillis();
+        orderScreenCondition.setGoodsType("畜禽类");
+        orderScreenCondition.setGoodsCategory("冷鲜猪肉");
+        List<String> ordersGoodsList = ofcGoodsDetailsInfoMapper.queryByCondition(orderScreenCondition);
+        System.out.println("============================异常订单：2 -> 查询昨日订单明细耗时：" + (System.currentTimeMillis() - sOdd));
+        Map<String, Boolean> matchedGoods = new HashMap<>();
+//        Map<String, Boolean> matchedGoods = ordersGoodsList.stream().distinct().collect(Collectors.toMap(Function.identity(), (goods) -> true));
+        for (String orderCode : ordersGoodsList) {
+            matchedGoods.put(orderCode, true);
+        }
+        long sMatch = System.currentTimeMillis();
+        for (OfcExceptOrder orderInfo : undealedOrders) {
+            String orderCode = orderInfo.getOrderCode();
+            Boolean isMatch = matchedGoods.get(orderCode);
+            if (isMatch != null && isMatch) {
+                orderInfo.setCoolFreshPork(STR_YES);
             }
         }
+        System.out.println("============================异常订单：3 -> 匹配货品分类明细耗时：" + (System.currentTimeMillis() - sMatch));
+        long sRedis = System.currentTimeMillis();
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         int undealedSize = undealedOrders.size();
         String ordersKey = "orderPot:" + com.xescm.ofc.utils.DateUtils.Date2String(now.getTime(), com.xescm.ofc.utils.DateUtils.DateFormatType.TYPE2);
@@ -492,6 +497,7 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                 }
             }
         }
+        System.out.println("============================异常订单：4 -> 保存redis耗时：" + (System.currentTimeMillis() - sRedis));
         return undealedSize;
     }
 
