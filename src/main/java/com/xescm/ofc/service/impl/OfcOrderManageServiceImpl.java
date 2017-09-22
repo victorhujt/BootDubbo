@@ -298,18 +298,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                 if (!CollectionUtils.isEmpty(packages)) {
                     for (GoodsPackingDto packingDto : packages) {
-                        if (StringUtils.equals(good.getUnit(),packingDto.getLevelDescription())) {
+                        if (StringUtils.equals(good.getPackageName(),packingDto.getLevelDescription())) {
                             logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
-                            logger.info("good.getUnit() is {}",good.getUnit());
+                            logger.info("good.getPackageName() is {}",good.getUnit());
                             logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
-                            if (org.apache.commons.lang3.StringUtils.equals(good.getUnit(),packingDto.getLevelDescription())) {
-                                good.setConversionRate(packingDto.getLevelSpecification());
-                                good.setPackageName(packingDto.getLevelDescription());
-                                good.setPackageType(packingDto.getLevel());
-                                good.setPrimaryQuantity(good.getQuantity().multiply(packingDto.getLevelSpecification()).setScale(0, BigDecimal.ROUND_HALF_UP));//四舍五入取整数
-                                isHavePackage = true;
-                                break;
-                            }
+                            good.setConversionRate(packingDto.getLevelSpecification());
+                            good.setPackageName(packingDto.getLevelDescription());
+                            good.setPackageType(packingDto.getLevel());
+                            good.setPrimaryQuantity(good.getQuantity().multiply(packingDto.getLevelSpecification()).setScale(0, BigDecimal.ROUND_HALF_UP));//四舍五入取整数
+                            isHavePackage = true;
+                            break;
                         }
                     }
                     if (!isHavePackage) {
