@@ -302,9 +302,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
     private void validateGoodsPackage(OfcCreateOrderDTO createOrderEntity,String orderCode, List<OfcCreateOrderGoodsInfoDTO> tempList, List<String> noPackageGoodsCodes) {
         String custCode = createOrderEntity.getCustCode();
+        if ("000001".equals(createOrderEntity.getWarehouseCode())) {
+            for (OfcCreateOrderGoodsInfoDTO goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
+                if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
+                    if (goodsInfo.getPrimaryQuantity() == null || goodsInfo.getPrimaryQuantity().doubleValue() == 0.0) {
+                        goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())));
+                    }
+                }
+            }
+            return;
+        }
         for (OfcCreateOrderGoodsInfoDTO goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
             if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
-                if ("000001".equals(createOrderEntity.getWarehouseCode())) return;
                 boolean isHavePackage = false;
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 String goodsCode = goodsInfo.getGoodsCode();
