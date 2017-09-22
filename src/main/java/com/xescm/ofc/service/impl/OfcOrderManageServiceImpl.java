@@ -285,6 +285,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             boolean isHavePackage = false;
             CscGoodsApiDto cscGoods = new CscGoodsApiDto();
             String goodsCode = good.getGoodsCode();
+            String packageName = !PubUtils.isSEmptyOrNull(good.getPackageName())? good.getPackageName():good.getUnit();
             cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             cscGoods.setFromSys("WMS");
             cscGoods.setGoodsCode(goodsCode);
@@ -298,13 +299,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                 if (!CollectionUtils.isEmpty(packages)) {
                     for (GoodsPackingDto packingDto : packages) {
-                        if (StringUtils.equals(good.getPackageName(),packingDto.getLevelDescription())) {
+                        if (StringUtils.equals(packageName,packingDto.getLevelDescription())) {
                             logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
                             logger.info("good.getPackageName() is {}",good.getUnit());
                             logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
                             good.setConversionRate(packingDto.getLevelSpecification());
                             good.setPackageName(packingDto.getLevelDescription());
                             good.setPackageType(packingDto.getLevel());
+                            if (!PubUtils.isSEmptyOrNull(good.getRemark())) good.setRemark("");
                             good.setPrimaryQuantity(good.getQuantity().multiply(packingDto.getLevelSpecification()).setScale(0, BigDecimal.ROUND_HALF_UP));//四舍五入取整数
                             isHavePackage = true;
                             break;
@@ -328,6 +330,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     notExistGoodsCodes.add(goodsCode);
                 }
             }
+            ofcGoodsDetailsInfoService.update(good);
         }
         if (noPackageGoods.size() > 0) {
             str.append("订单对应货品编码为");
@@ -356,6 +359,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getExceptionReason())) {
             ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
             ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
+            ofcFundamentalInformationService.update(ofcFundamentalInformation);
         }
     }
 

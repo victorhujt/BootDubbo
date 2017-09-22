@@ -307,6 +307,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 boolean isHavePackage = false;
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 String goodsCode = goodsInfo.getGoodsCode();
+                String unit = goodsInfo.getUnit();
                 cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
                 cscGoods.setFromSys("WMS");
                 cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
@@ -367,7 +368,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                             //出入库业务只匹配包装存不存在
                             logger.info("出入库单货品编码:{}开始匹配包装换算为主单位数量",goodsCode);
                             for (GoodsPackingDto packingDto : packages) {
-                                if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
+                                if (StringUtils.equals(unit,packingDto.getLevelDescription())) {
                                     logger.info("orderCode is {}",orderCode);
                                     logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
                                     logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
@@ -387,6 +388,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                 logger.info("出库单货品编码:{}没有匹配到包装",goodsCode);
                                 if (!noPackageGoodsCodes.contains(goodsCode)) {
                                     goodsInfo.setRemark("货品编码包装或规格比对有误");
+                                    goodsInfo.setPackageName(unit);
                                     noPackageGoodsCodes.add(goodsCode);
                                 }
                             }
@@ -396,11 +398,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                         //没有匹配到包装直接返回错误
                         if (!noPackageGoodsCodes.contains(goodsCode)) {
                             goodsInfo.setRemark("货品编码没有查询到包装信息");
+                            goodsInfo.setPackageName(unit);
                             noPackageGoodsCodes.add(goodsCode);
                         }
                         //csc没有包装 但是大成接口过来的有包装
                         if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList())) {
                             goodsInfo.setRemark("货品编码没有查询到包装信息");
+                            goodsInfo.setPackageName(unit);
                             goodsInfo.setCustName(createOrderEntity.getCustName());
                             goodsInfo.setCustCode(custCode);
                             tempList.add(goodsInfo);
@@ -410,6 +414,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     logger.info("orderCode is {}",orderCode);
                     logger.info("货品编码:{}csc接口查询到包装信息异常",goodsCode);
                     goodsInfo.setRemark("货品编码查询包装信息异常");
+                    goodsInfo.setPackageName(goodsInfo.getUnit());
                     // TODO 推送CSC待创建商品
                     goodsInfo.setCustName(createOrderEntity.getCustName());
                     goodsInfo.setCustCode(custCode);
