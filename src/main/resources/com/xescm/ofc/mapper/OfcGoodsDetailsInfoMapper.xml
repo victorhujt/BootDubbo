@@ -39,7 +39,7 @@
     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
     <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
-    <result column="line_no" property="lineNo" jdbcType="INTEGER" />
+    <result column="paas_line_no" property="paasLineNo" jdbcType="INTEGER" />
     <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
 
   </resultMap>
@@ -85,7 +85,7 @@
     oos.package_type,
     oos.conversion_rate,
     oos.primary_quantity,
-    oos.line_no,
+    oos.paas_line_no,
     oos.manufacture_batch_lotatt
     FROM
     ofc_goods_details_info oos
@@ -150,7 +150,7 @@
       gdi.package_type,
       gdi.conversion_rate,
       gdi.primary_quantity,
-      gdi.line_no,
+      gdi.paas_line_no,
       gdi.manufacture_batch_lotatt
     FROM ofc_goods_details_info gdi
     LEFT JOIN
@@ -159,13 +159,9 @@
     WHERE
      gdi.order_code = #{orderCode}
   </select>
-    <select id="queryByCondition" resultType="com.xescm.ofc.domain.OfcGoodsDetailsInfo">
+    <select id="queryByCondition" resultType="java.lang.String">
       SELECT
-      gdi.order_code,
-      gdi.goods_category,
-      gdi.goods_category_code,
-      gdi.goods_type,
-      gdi.goods_type_code
+      DISTINCT gdi.order_code
     FROM ofc_goods_details_info gdi
       <where>
         <if test="orderTimePre!=null and orderTimePre!=''">
@@ -176,6 +172,12 @@
         </if>
         <if test="orderCode!=null and orderCode!=''">
           AND gdi.order_code = #{orderCode}
+        </if>
+        <if test="goodsType != null and goodsType != ''">
+          AND gdi.goods_type = #{goodsType}
+        </if>
+        <if test="goodsCategory != null and goodsCategory != ''">
+          AND gdi.goods_category = #{goodsCategory}
         </if>
       </where>
     </select>

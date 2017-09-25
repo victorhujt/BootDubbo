@@ -10,4 +10,10 @@ import java.io.Serializable;
 public class OfcDistributionBasicInfoDTO extends OfcDistributionBasicInfo implements Serializable{
 
     private static final long serialVersionUID = -5002596518696682580L;
+
+    /**
+     * 自身运输单号
+     */
+    private String selfTransCode;
+
 }
