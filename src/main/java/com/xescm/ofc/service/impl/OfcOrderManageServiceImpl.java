@@ -1013,7 +1013,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("订单中心--订单状态推结算中心(执行中和已完成) ofcOrderStatus:{}", ofcOrderStatus);
         if (PubUtils.isNull(ofcOrderStatus)) {
             logger.error("订单状态推结算中心异常");
-            throw new BusinessException("订单状态推结算中心异常");
         }
         AcOrderStatusDto acOrderStatusDto = new AcOrderStatusDto();
         logger.info("订单状态开始推结算中心 acOrderStatusDto{}", acOrderStatusDto);
@@ -1021,7 +1020,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             BeanUtils.copyProperties(acOrderStatusDto, ofcOrderStatus);
         } catch (Exception e) {
             logger.error("订单状态开始推结算中心 实体转换异常");
-            throw new BusinessException("订单状态开始推结算中心 实体转换异常");
         }
         try {
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
