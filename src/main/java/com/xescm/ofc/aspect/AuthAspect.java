@@ -12,9 +12,6 @@ import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.annotation.ValidParam;
 import com.xescm.ofc.model.dto.ofc.OfcUserMsgDTO;
-import com.xescm.ofc.service.OfcOrderManageOperService;
-import com.xescm.uam.provider.UamGroupEdasService;
-import com.xescm.uam.provider.UamUserEdasService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,13 +38,6 @@ public class AuthAspect {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-    @Resource
-    private UamUserEdasService uamUserEdasService;
-    @Resource
-    private UamGroupEdasService uamGroupEdasService;
-    @Resource
-    private OfcOrderManageOperService ofcOrderManageOperService;
     @Resource
     private CscCustomerEdasService cscCustomerEdasService;
 

@@ -1,11 +1,13 @@
 package com.xescm.ofc.service.impl;
 
+import com.xescm.core.utils.PublicUtil;
 import com.xescm.ofc.domain.OfcCustOrderNewstatus;
 import com.xescm.ofc.domain.OfcCustOrderStatus;
 import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcCustOrderNewstatusMapper;
+import com.xescm.ofc.mapper.OfcCustOrderStatusMapper;
 import com.xescm.ofc.service.OfcCustOrderNewstatusService;
 import com.xescm.ofc.service.OfcCustOrderStatusService;
 import com.xescm.ofc.utils.DateUtils;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
@@ -31,6 +34,8 @@ public class OfcCustOrderStatusServiceImpl extends BaseService<OfcCustOrderStatu
     private OfcCustOrderNewstatusService ofcCustOrderNewstatusService;
     @Resource
     private OfcCustOrderNewstatusMapper custOrderNewstatusMapper;
+    @Resource
+    private OfcCustOrderStatusMapper ofcCustOrderStatusMapper;
 
     @Override
     public Integer saveOrderStatus(OfcCustOrderStatus ofcOrderStatus) {
@@ -55,6 +60,16 @@ public class OfcCustOrderStatusServiceImpl extends BaseService<OfcCustOrderStatu
             }
         }
         return 0;
+    }
+
+    @Override
+    public List<OfcCustOrderStatus> queryByOrderCode(String orderCode) {
+        logger.info("queryByOrderCode ==> orderCode{}", orderCode);
+        if (PublicUtil.isEmpty(orderCode)) {
+            logger.error("查询List<OfcCustOrderStatus>失败, 入参为空");
+            throw new BusinessException("查询订单状态列表失败!");
+        }
+        return ofcCustOrderStatusMapper.queryByOrderCode(orderCode);
     }
 
     private void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus, String tag) {

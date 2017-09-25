@@ -158,7 +158,51 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     @Permission
     @Override
     public OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode, @ValidParam OfcUserMsgDTO userMsgDTO) {
-        return null;
+        OfcOrderInfoDTO ofcOrderInfoDTO = new OfcOrderInfoDTO();
+        /**
+         * private OfcFundamentalInformation ofcFundamentalInformation;
+         private OfcDistributionBasicInfo ofcDistributionBasicInfo;
+         private OfcFinanceInformation ofcFinanceInformation;
+         private OfcWarehouseInformation ofcWarehouseInformation;
+         private List<OfcGoodsDetailsInfo> goodsDetailsInfoList;
+         private OfcOrderNewstatus currentStatus;
+         private List<OfcOrderStatus> orderStatusList;
+         */
+        OfcFundamentalInformation custFundamentalInformation = ofcCustFundamentalInformationService.queryByOrderCode(orderCode);
+        if (null == custFundamentalInformation) {
+            logger.error("查无该订单");
+            throw new BusinessException("无法查到该订单");
+        }
+        ofcOrderInfoDTO.setOfcFundamentalInformation(custFundamentalInformation);
+        String orderType = custFundamentalInformation.getOrderType();
+        if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
+            OfcDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
+            if (null == custDistributionBasicInfo) {
+                logger.error("该订单无运输信息");
+                throw new BusinessException("该订单无运输信息");
+            }
+            ofcOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
+        } else if (StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
+            OfcWarehouseInformation custWarehouseInformation = ofcCustWarehouseInformationService.queryByOrderCode(orderCode);
+            if (null == custWarehouseInformation) {
+                logger.error("该订单无仓储信息");
+                throw new BusinessException("该订单无仓储信息");
+            }
+            ofcOrderInfoDTO.setOfcWarehouseInformation(custWarehouseInformation);
+            if (custWarehouseInformation.getProvideTransport().compareTo(1) == 0) {
+                OfcDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
+                if (null == custDistributionBasicInfo) {
+                    logger.error("该订单无运输信息");
+                    throw new BusinessException("该订单无运输信息");
+                }
+                ofcOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
+            }
+        }
+        List<OfcCustGoodsDetailsInfo> ofcCustGoodsDetailsInfos = ofcCustGoodsDetailsInfoService.queryByOrderCode(orderCode);
+        ofcOrderInfoDTO.setGoodsDetailsInfoList(Arrays.asList((OfcGoodsDetailsInfo[]) ofcCustGoodsDetailsInfos.toArray()));
+        List<OfcCustOrderStatus> ofcCustOrderStatus = ofcCustOrderStatusService.queryByOrderCode(orderCode);
+        ofcOrderInfoDTO.setOrderStatusList(Arrays.asList((OfcOrderStatus[])ofcCustOrderStatus.toArray()));
+        return ofcOrderInfoDTO;
     }
 
     /**
