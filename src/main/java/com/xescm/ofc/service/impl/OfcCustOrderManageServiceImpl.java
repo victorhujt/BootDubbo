@@ -11,12 +11,9 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OfcManagementForm;
-import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.ofc.*;
-import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.DateUtils;
-import com.xescm.uam.model.dto.group.UamGroupDto;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,70 +88,14 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
             List<String> strList = Arrays.asList(orderStateStr.split(","));
             form.setOrderStateList(strList);
         }
-        String groupType = userMsgDTO.getGroupType();
-        String userGroupCode = userMsgDTO.getUserGroupCode();
         String userId = userMsgDTO.getUserId();
         form.setCustName(userMsgDTO.getCustName());
         form.setCustCode(userMsgDTO.getCustCode());
-        // 2017年5月12日 追加逻辑 增加创建人查看权限
-        if (StringUtils.equals(groupType, "1")) {
-            //鲜易供应链身份
-            if (StringUtils.equals("GD1625000003", userGroupCode)) {
-                orderSearchOperResults = ofcOrderScreenMapper.queryOrderListForCust(form, null, false);
-                //大区身份
-            } else {
-                orderSearchOperResults = this.queryOrderListOfArea(form, areaSerialNo, baseSerialNo, userGroupCode, userId);
-            }
-            //基地身份
-        } else if (StringUtils.equals(groupType, "3")) {
-            orderSearchOperResults = this.queryOrderListOfBase(form, areaSerialNo, baseSerialNo, userGroupCode, userId);
-            //仓库身份, 其他身份
-        } else {
-            orderSearchOperResults = ofcOrderScreenMapper.queryOrderListForCust(form, userId, true);
-        }
+        orderSearchOperResults = ofcOrderScreenMapper.queryOrderListForCustPrecise(form, userId, false);
         return orderSearchOperResults;
     }
 
-    private List<OrderSearchOperResult> queryOrderListOfArea(OrderOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
-        List<OrderSearchOperResult> results;
-        boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
-        boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
-        boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
-        if (areaEmpty && baseEmpty) {
-            form.setAreaSerialNo(userGroupCode);
-            results = ofcOrderScreenMapper.queryOrderListForCustPrecise(form, userId, false);
-        } else if (!areaEqualUser && !areaEmpty) {
-            results = ofcOrderScreenMapper.queryOrderListForCust(form, userId, true);
-        } else {
-            results = ofcOrderScreenMapper.queryOrderListForCust(form, null, null);
-        }
-        return results;
-    }
 
-    private List<OrderSearchOperResult> queryOrderListOfBase(OrderOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
-        List<OrderSearchOperResult> results;
-        //反查大区
-        UamGroupDto groupDto = new UamGroupDto();
-        groupDto.setSerialNo(userGroupCode);
-        OfcGroupVo ofcGroupVo = ofcOrderManageOperService.queryAreaMsgByBase(groupDto);
-        String userAreaSerialNo = ofcGroupVo.getSerialNo();
-        boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
-        boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
-        boolean areaEqualUser = StringUtils.equals(userAreaSerialNo, areaSerialNo);
-        boolean baseEqualUser = StringUtils.equals(userGroupCode, baseSerialNo);
-        if (areaEmpty && baseEmpty) {
-            form.setAreaSerialNo(userAreaSerialNo);
-            form.setBaseSerialNo(userGroupCode);
-            results = ofcOrderScreenMapper.queryOrderListForCustPrecise(form, userId, false);
-        } else if ((areaEqualUser && baseEqualUser)) {
-            results = ofcOrderScreenMapper.queryOrderListForCust(form, null, null);
-        } else if (areaEqualUser && baseEmpty) {
-            results = ofcOrderScreenMapper.queryOrderListForCustUnion(form, userId, true, userGroupCode);
-        } else {
-            results = ofcOrderScreenMapper.queryOrderListForCust(form, userId, true);
-        }
-        return results;
-    }
 
 
     /**
@@ -162,8 +103,8 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
      */
     @Permission
     @Override
-    public Wrapper orderCancel(@ValidParam(validType = ValidParam.ValidType.ADD_CUSTOMER_MSG) OfcUserMsgDTO userMsgDTO, OfcManagementForm managementForm, AuthResDto authResDtoByToken) {
-        logger.info("客户工作台订单取消===> userMsgDTO==>{}, managementForm==>{}", userMsgDTO, managementForm);
+    public Wrapper orderCancel(OfcManagementForm managementForm, AuthResDto authResDtoByToken) {
+        logger.info("客户工作台订单取消===> userMsgDTO==>{}, managementForm==>{}", managementForm);
         if (null == managementForm || StringUtils.isEmpty(managementForm.getOrderCode())) {
             logger.error("客户工作台订单取消失败, 入参有误!");
             throw new BusinessException("取消失败！");
@@ -225,7 +166,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
      */
     @Permission
     @Override
-    public void confirmOrder(String orderCode, @ValidParam(validType = ValidParam.ValidType.ADD_CUSTOMER_MSG) OfcUserMsgDTO userMsgDTO, AuthResDto authResDtoByToken) {
+    public void confirmOrder(String orderCode, AuthResDto authResDtoByToken) {
         if (StringUtils.isEmpty(orderCode)) {
             logger.error("客户工作台确认订单DTO不能为空");
             throw new BusinessException("客户工作台确认订单DTO不能为空！");
@@ -241,10 +182,10 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         ofcOrderStatus.setStatusDesc(CONFIRMED.getDesc());
         notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
         notes.append(" 订单已确认");
-        notes.append(" 操作人: ").append(userMsgDTO.getUserName());
-        notes.append(" 操作单位: ").append(userMsgDTO.getUserGroupName());
+        notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
+        notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
         ofcOrderStatus.setNotes(notes.toString());
-        ofcOrderStatus.setOperator(userMsgDTO.getUserName());
+        ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
         ofcOrderStatus.setLastedOperTime(new Date());
         this.checkCRUD(ofcCustOrderStatusService.saveOrderStatus(ofcOrderStatus));
         // 将订单推送运营工作台

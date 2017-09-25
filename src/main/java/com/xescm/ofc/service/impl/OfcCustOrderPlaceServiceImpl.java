@@ -7,13 +7,14 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.annotation.Permission;
-import com.xescm.ofc.annotation.ValidParam;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.ofc.*;
+import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
+import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
 import com.xescm.ofc.service.OfcCustOrderPlaceService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
@@ -46,9 +47,8 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
 
     @Permission
     @Override
-    public void saveStorageOrder(OfcSaveStorageDTO ofcSaveStorageDTO, String tag,
-                                 @ValidParam(validType = ValidParam.ValidType.ADD_CUSTOMER_MSG) OfcUserMsgDTO userMsgDTO, AuthResDto authResDtoByToken) throws Exception {
-        logger.info("客户工作台仓储订单下单或编辑 ofcSaveStorageDTO==>{}, tag==>{}, userMsgDTO==>{}", ofcSaveStorageDTO, tag, userMsgDTO);
+    public void saveStorageOrder(OfcSaveStorageDTO ofcSaveStorageDTO, String tag, AuthResDto authResDtoByToken) throws Exception {
+        logger.info("客户工作台仓储订单下单或编辑 ofcSaveStorageDTO==>{}, tag==>{}", ofcSaveStorageDTO, tag);
         if (ofcSaveStorageDTO == null) {
             throw new BusinessException("订单的基本信息不能为空");
         }
@@ -106,8 +106,8 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
 
     @Permission
     @Override
-    public String placeTransOrder(AuthResDto authResDtoByToken, OfcOrderDTO ofcOrderDTOStr, String tag, @ValidParam(validType = ValidParam.ValidType.ADD_CUSTOMER_MSG) OfcUserMsgDTO userMsgDTO) {
-        logger.info("客户工作台运输订单下单或编辑 ofcOrderDTOStr==>{}, tag==>{}, userMsgDTO==>{}", ofcOrderDTOStr, tag, userMsgDTO);
+    public String placeTransOrder(AuthResDto authResDtoByToken, OfcOrderDTO ofcOrderDTOStr, String tag) {
+        logger.info("客户工作台运输订单下单或编辑 ofcOrderDTOStr==>{}, tag==>{}", ofcOrderDTOStr, tag);
         if (ofcOrderDTOStr == null) {
             throw new BusinessException("订单中心下单dto不能为空！");
         }

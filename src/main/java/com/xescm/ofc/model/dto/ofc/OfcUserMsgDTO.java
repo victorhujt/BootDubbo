@@ -3,6 +3,7 @@ package com.xescm.ofc.model.dto.ofc;
 import lombok.Data;
 
 /**
+ *
  * Created by lyh on 2017/9/13.
  */
 @Data

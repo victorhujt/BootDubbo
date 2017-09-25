@@ -15,9 +15,9 @@ import java.util.List;
 public interface OfcCustOrderManageService {
     List<OrderSearchOperResult> queryOrderListByCondition(OfcUserMsgDTO customerMsgDTO, OfcManagementForm param);
 
-    Wrapper orderCancel(OfcUserMsgDTO userMsgDTO, OfcManagementForm managementForm, AuthResDto authResDtoByToken);
+    Wrapper orderCancel(OfcManagementForm managementForm, AuthResDto authResDtoByToken);
 
     OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode, OfcUserMsgDTO userMsgDTO);
 
-    void confirmOrder(String orderCode, OfcUserMsgDTO userMsgDTO, AuthResDto authResDtoByToken);
+    void confirmOrder(String orderCode, AuthResDto authResDtoByToken);
 }

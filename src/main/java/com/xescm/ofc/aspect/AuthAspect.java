@@ -7,10 +7,12 @@ import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
 import com.xescm.core.utils.ThreadLocalMap;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.annotation.ValidParam;
 import com.xescm.ofc.model.dto.ofc.OfcUserMsgDTO;
 import com.xescm.ofc.service.OfcOrderManageOperService;
-import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
 import com.xescm.uam.provider.UamUserEdasService;
 import org.aspectj.lang.JoinPoint;
@@ -27,7 +29,6 @@ import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +48,8 @@ public class AuthAspect {
     private UamGroupEdasService uamGroupEdasService;
     @Resource
     private OfcOrderManageOperService ofcOrderManageOperService;
+    @Resource
+    private CscCustomerEdasService cscCustomerEdasService;
 
 
     @Before(value = "execution(* com.xescm.ofc.service.impl.*.*(..)) && @annotation(com.xescm.ofc.annotation.Permission)")
@@ -71,7 +74,7 @@ public class AuthAspect {
         }
         Object[] args = joinPoint.getArgs();
         AuthResDto authResDto = this.getAuthResDTO();
-        UamGroupDto uamGroupDto = this.checkUserGroupMsg(authResDto);
+        this.checkUserCustomerMsg(authResDto);
         for (Map.Entry<Integer, ValidParam> entry : map.entrySet()) {
             ValidParam validParam = entry.getValue();
             int argsIndex = entry.getKey();
@@ -79,47 +82,37 @@ public class AuthAspect {
                 Object form = args[argsIndex];
                 if (form instanceof OfcUserMsgDTO) {
                     OfcUserMsgDTO customerMsgDTO = (OfcUserMsgDTO) form;
-                    this.addCustomerMsg(customerMsgDTO, uamGroupDto, authResDto);
+                    this.addCustomerMsg(customerMsgDTO, authResDto);
                 }
             }
         }
     }
 
-    private UamGroupDto checkUserGroupMsg(AuthResDto authResDto) {
-        UamGroupDto uamGroupDto = new UamGroupDto();
-        uamGroupDto.setSerialNo(authResDto.getGroupRefCode());
-        Wrapper<List<UamGroupDto>> allGroupByType = uamGroupEdasService.getAllGroupByType(uamGroupDto);
-        ofcOrderManageOperService.checkUamGroupEdasResultNullOrError(allGroupByType);
-        if (CollectionUtils.isEmpty(allGroupByType.getResult()) || allGroupByType.getResult().size() > 1) {
-            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果为空或有误");
+    private void checkUserCustomerMsg(AuthResDto authResDto) {
+        if (PubUtils.isSEmptyOrNull(authResDto.getCustomerRefCode())) {
+            logger.error("当前登录的用户没有所属客户");
+            throw new BusinessException("当前登录的用户没有所属客户!");
         }
-        UamGroupDto uamGroupDtoResult = allGroupByType.getResult().get(0);
-        if (null == uamGroupDtoResult || PubUtils.isSEmptyOrNull(uamGroupDtoResult.getType())) {
-            throw new BusinessException("查询当前登录用户组织信息出错:查询到的结果有误");
+        QueryCustomerCodeDto queryDTO = new QueryCustomerCodeDto();
+        queryDTO.setCustomerCode(authResDto.getCustomerRefCode());
+        Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryDTO);
+        CscCustomerVo result = customerVoWrapper.getResult();
+        if (customerVoWrapper.getCode() == Wrapper.ERROR_CODE || null == result) {
+            logger.error("查询当前登录用户客户信息出错:查询到的结果为空或有误");
+            throw new BusinessException("查询当前登录用户客户信息出错");
         }
-        String userGroupCode = authResDto.getGroupRefCode();
-        if (PubUtils.isSEmptyOrNull(userGroupCode)) {
-            throw new BusinessException("当前登录的用户没有所属组织!");
-        }
-        return uamGroupDto;
     }
 
-    private void addCustomerMsg(OfcUserMsgDTO customerMsgDTO, UamGroupDto uamGroupDto, AuthResDto authResDto) {
-        // 通过UAM接口查询用户绑定的客户信息
-        // fixme
-        // uamUserEdasService.xxxxx();
-        customerMsgDTO.setCustCode("customerCode");
-        customerMsgDTO.setCustName("customerName");
+    private void addCustomerMsg(OfcUserMsgDTO customerMsgDTO, AuthResDto authResDto) {
+        customerMsgDTO.setCustCode(authResDto.getCustomerRefCode());
+        customerMsgDTO.setCustName(authResDto.getCustomerRefName());
         customerMsgDTO.setUserId(authResDto.getUserId());
         customerMsgDTO.setUserName(authResDto.getUserName());
-        customerMsgDTO.setUserGroupCode(uamGroupDto.getGroupCode());
-        customerMsgDTO.setUserGroupName(uamGroupDto.getGroupName());
-        customerMsgDTO.setGroupType(uamGroupDto.getType());
     }
 
     private AuthResDto getAuthResDTO() {
         AuthResDto authResDto = (AuthResDto) ThreadLocalMap.get(UamConstant.TOKEN_AUTH_DTO);
-        if(PublicUtil.isEmpty(authResDto)){
+        if (PublicUtil.isEmpty(authResDto)) {
             throw new BusinessException("验证token失败");
         }
         return authResDto;

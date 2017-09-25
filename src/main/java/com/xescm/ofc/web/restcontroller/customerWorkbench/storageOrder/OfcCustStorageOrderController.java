@@ -4,7 +4,6 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
-import com.xescm.ofc.model.dto.ofc.OfcUserMsgDTO;
 import com.xescm.ofc.service.OfcCustOrderPlaceService;
 import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.Api;
@@ -35,7 +34,7 @@ public class OfcCustStorageOrderController extends BaseController{
     @ResponseBody
     public Wrapper<?> saveStorage(@ApiParam(name = "ofcSaveStorageDTO",value = "仓单Dto") @RequestBody OfcSaveStorageDTO ofcSaveStorageDTO, @PathVariable String tag) {
         try {
-            ofcCustOrderPlaceService.saveStorageOrder(ofcSaveStorageDTO, tag, new OfcUserMsgDTO(), getAuthResDtoByToken());
+            ofcCustOrderPlaceService.saveStorageOrder(ofcSaveStorageDTO, tag, getAuthResDtoByToken());
         } catch (BusinessException ex) {
             logger.error("仓储订单下单或编辑出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());

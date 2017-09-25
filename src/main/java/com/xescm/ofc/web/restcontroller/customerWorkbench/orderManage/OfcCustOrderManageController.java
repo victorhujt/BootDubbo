@@ -2,16 +2,12 @@ package com.xescm.ofc.web.restcontroller.customerWorkbench.orderManage;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OfcManagementForm;
-import com.xescm.ofc.model.dto.form.OrderOperForm;
-import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcUserMsgDTO;
 import com.xescm.ofc.service.OfcCustOrderManageService;
@@ -19,7 +15,6 @@ import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -44,12 +39,11 @@ public class OfcCustOrderManageController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/queryOrdersPage", method = {RequestMethod.POST})
     @ApiOperation(value = "分页查询订单列表", httpMethod = "POST", notes = "返回订单列表")
-//    public Wrapper<PageInfo<OrderSearchOperResult>> queryOrdersPage(@ApiParam(name = "page", value = "订单列表分页") @RequestBody Page<OfcManagementForm> page) {
-    public Wrapper<PageInfo<OrderSearchOperResult>> queryOrdersPage() {
-//        logger.info("==>queryOrdersPage   page:{}", page);
+    public Wrapper<PageInfo<OrderSearchOperResult>> queryOrdersPage(@ApiParam(name = "page", value = "订单列表分页") @RequestBody Page<OfcManagementForm> page) {
+        logger.info("==>queryOrdersPage   page:{}", page);
         try {
-            PageHelper.startPage(1, 1 );
-            List<OrderSearchOperResult> dataList = custOrderManageService.queryOrderListByCondition(new OfcUserMsgDTO(), new OfcManagementForm());
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            List<OrderSearchOperResult> dataList = custOrderManageService.queryOrderListByCondition(new OfcUserMsgDTO(), page.getParam());
             PageInfo<OrderSearchOperResult> pageInfo = new PageInfo<>(dataList);
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
         } catch (BusinessException ex) {
@@ -71,7 +65,7 @@ public class OfcCustOrderManageController extends BaseController{
     @ResponseBody
     public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable OfcManagementForm managementForm) {
         try {
-            return custOrderManageService.orderCancel(new OfcUserMsgDTO(), managementForm, getAuthResDtoByToken());
+            return custOrderManageService.orderCancel(managementForm, getAuthResDtoByToken());
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单取消出现异常,{}", "", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
@@ -93,7 +87,7 @@ public class OfcCustOrderManageController extends BaseController{
                 logger.error("客户工作台确认订单DTO不能为空");
                 throw new BusinessException("客户工作台确认订单DTO不能为空！");
             }
-            custOrderManageService.confirmOrder(orderCode, new OfcUserMsgDTO(), getAuthResDtoByToken());
+            custOrderManageService.confirmOrder(orderCode, getAuthResDtoByToken());
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
         } catch (BusinessException ex) {
             logger.error("客户工作台确认订单出现异常:{}", ex.getMessage(), ex);
