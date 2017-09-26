@@ -1631,6 +1631,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     OfcDistributionBasicInfo newofcDistributionBasicInfo = new OfcDistributionBasicInfo();
                     BeanUtils.copyProperties(newofcDistributionBasicInfo, BasicInfo);
                     newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
+                    newofcDistributionBasicInfo.setTransCode("");//运输单号置为空
                     ofcDistributionBasicInfoService.save(newofcDistributionBasicInfo);
                 }
             }
