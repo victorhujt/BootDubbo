@@ -8,7 +8,6 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
-import com.xescm.ofc.domain.OfcPlanFedBackCondition;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
 import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
@@ -17,6 +16,7 @@ import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
+import com.xescm.ofc.service.MqConsumerService;
 import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
@@ -42,6 +42,8 @@ public class CreateOrderApiConsumer implements MessageListener {
     private Logger logger = LoggerFactory.getLogger(CreateOrderApiConsumer.class);
 
     @Resource
+    private MqConsumerService mqConsumerService;
+    @Resource
     private OfcPlanFedBackService ofcPlanFedBackService;
 
     @Resource
@@ -61,6 +63,7 @@ public class CreateOrderApiConsumer implements MessageListener {
         String tag = message.getTag();
         String userName = "";
         String key = message.getKey();
+        String messageId = message.getMsgID();
         String messageBody;
         messageBody = new String(message.getBody(), StandardCharsets.UTF_8);
         logger.info("OFC消费MQ开始。。。MessageBody:" + messageBody + ",topicName:" + topicName + ",tag:" + tag );
@@ -106,49 +109,34 @@ public class CreateOrderApiConsumer implements MessageListener {
                 }
             }
         } else if (StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())) {
-            logger.info("运输单状态反馈消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
+            logger.info("订单中心消费订单状态MQ: topic => {}, Tag => {}, key: {}, messageId: {}", topicName, message.getTag(), key, messageId);
             try {
-                if (message.getTag().equals("DeliveryTag")) {
-                    logger.info("调度单：{}", message);
-                    List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions;
-                    TypeReference<List<OfcSchedulingSingleFeedbackCondition>> ofcSchedulingTypeRef = new TypeReference<List<OfcSchedulingSingleFeedbackCondition>>() {
-                    };
+//                if (message.getTag().equals("DeliveryTag")) {
+//                    logger.info("订单中心消费订单状态MQ<调度>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, message);
+//                    List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions;
+//                    TypeReference<List<OfcSchedulingSingleFeedbackCondition>> ofcSchedulingTypeRef = new TypeReference<List<OfcSchedulingSingleFeedbackCondition>>() {};
+//                    try {
+//                        ofcSchedulingSingleFeedbackConditions = JacksonUtil.parseJsonWithFormat(messageBody, ofcSchedulingTypeRef);
+//                        for (int i = 0; i < ofcSchedulingSingleFeedbackConditions.size(); i++) {
+//                            try {
+//                                ofcPlanFedBackService.schedulingSingleFeedbackNew(ofcSchedulingSingleFeedbackConditions.get(i), userName);
+//                            } catch (BusinessException ex) {
+//                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
+//                            } catch (Exception ex) {
+//                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        logger.error("运输单状态反馈出错:{}", e.getMessage(), e);
+//                    }
+//                } else if (message.getTag().equals("TransportTag")) {
+                    logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, message);
                     try {
-                        ofcSchedulingSingleFeedbackConditions = JacksonUtil.parseJsonWithFormat(messageBody, ofcSchedulingTypeRef);
-                        for (int i = 0; i < ofcSchedulingSingleFeedbackConditions.size(); i++) {
-                            try {
-                                ofcPlanFedBackService.schedulingSingleFeedbackNew(ofcSchedulingSingleFeedbackConditions.get(i), userName);
-                            } catch (BusinessException ex) {
-                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
-                            } catch (Exception ex) {
-                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
-                            }
-                        }
+                        mqConsumerService.transportStateConsumer(messageBody, MAP);
                     } catch (Exception e) {
-                        logger.error("运输单状态反馈出错:{}", e.getMessage(), e);
+                        logger.error("订单运输状态更新异常: 异常详情 => {}", e);
                     }
-                } else if (message.getTag().equals("TransportTag")) {
-                    logger.info("运输单消费 :{}", message);
-                    // 将获取的json格式字符串转换成相应对象
-                    List<OfcPlanFedBackCondition> ofcPlanFedBackConditions;
-                    TypeReference<List<OfcPlanFedBackCondition>> ofcPlanFedBackTypeRef = new TypeReference<List<OfcPlanFedBackCondition>>() {
-                    };
-                    try {
-                        ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody, ofcPlanFedBackTypeRef);
-                        for (int i = 0; i < ofcPlanFedBackConditions.size(); i++) {
-                            try {
-                            ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i), userName,MAP);
-                            } catch (BusinessException ex) {
-                                logger.error("订单运输状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
-                            } catch (Exception ex) {
-                                logger.error("订单运输状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
-                            }
-                        }
-                    } catch (Exception e) {
-                        logger.error("运输单出错:{}", e.getMessage(), e);
-                    }
-                }
-
+//                }
             } catch (Exception ex) {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}", message.getTag(), topicName, key, ex.getMessage(), ex);
             }
