@@ -23,5 +23,9 @@ public class OrderScreenCondition {
     private String orderStatus;
     private String orderType;
     private String businessType;
+    /** 货品大类 */
+    private String goodsType;
+    /** 货品小类 */
+    private String goodsCategory;
 
 }
