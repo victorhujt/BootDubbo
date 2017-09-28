@@ -319,6 +319,10 @@ public class OfcOrderDTO {
     private String goodsType;
     private String goodsTypeName;
    // private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<OfcGoodsDetailsInfo>();
+
+    /**
+     * 货品列表
+     */
     private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<>();
 
 

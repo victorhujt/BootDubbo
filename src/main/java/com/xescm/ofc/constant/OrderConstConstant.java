@@ -8,7 +8,7 @@ public final class OrderConstConstant {
     public static final String WITH_THE_CITY="600";       //城配
     public static final String WITH_THE_TRUNK="601";      //干线
     public static final String WITH_THE_KABAN="602";      //卡班
-    public static final String WITH_THE_GROUND_DISTRIBUTION="603";      //落地配
+    public static final String WITH_THE_GROUND_DISTRIBUTION="606";      //落地配
 
 
     public static final String SALES_OUT_OF_THE_LIBRARY="610";      //销售出库

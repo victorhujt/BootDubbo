@@ -36,12 +36,6 @@
       <if test="orderCode!=null and orderCode!=''">
         oos.order_code =#{orderCode}
       </if>
-      <if test="custOrderCode!=null and custOrderCode!=''">
-        OR ofi.cust_order_code =#{custOrderCode}
-      </if>
-      <if test="transCode!=null and transCode!=''">
-        OR odbi.trans_code =#{transCode}
-      </if>
     </where>
     UNION
     SELECT
@@ -56,13 +50,7 @@
       <if test="orderCode!=null and orderCode!=''">
         oos.order_code =#{orderCode}
       </if>
-      <if test="custOrderCode!=null and custOrderCode!=''">
-        OR ofi.cust_order_code =#{custOrderCode}
-      </if>
-      <if test="transCode!=null and transCode!=''">
-        OR odbi.trans_code =#{transCode}
-      </if>
     </where>) oos
-    ORDER BY oos.lasted_oper_time,oos.order_status ASC
+    ORDER BY oos.lasted_oper_time, oos.order_status ASC
   </select>
 </mapper>

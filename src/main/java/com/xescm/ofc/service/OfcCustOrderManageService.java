@@ -4,7 +4,7 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.model.dto.form.OfcManagementForm;
-import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
+import com.xescm.ofc.model.dto.ofc.OfcCustOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcUserMsgDTO;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public interface OfcCustOrderManageService {
 
     Wrapper orderCancel(OfcManagementForm managementForm, AuthResDto authResDtoByToken);
 
-    OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode, OfcUserMsgDTO userMsgDTO);
+    OfcCustOrderInfoDTO queryOrderDetailByOrderCode(String orderCode, OfcUserMsgDTO userMsgDTO);
 
     void confirmOrder(String orderCode, AuthResDto authResDtoByToken);
 }

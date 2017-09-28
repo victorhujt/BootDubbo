@@ -84,7 +84,7 @@
     ogd.package_type packageType,
     ogd.conversion_rate conversionRate,
     ogd.support_name supportName,
-    ogd.line_no lineNo,
+    ogd.paas_line_no paasLineNo,
     ogd.manufacture_batch_lotatt manufactureBatchLotatt
   </sql>
   <select id="queryByInfo" resultType="com.xescm.ofc.domain.OfcCustGoodsDetailsInfo">

@@ -274,7 +274,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList!=''">
+            <if test="form.orderStateList!=null and form.orderStateList > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -418,7 +418,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList!=''">
+            <if test="form.orderStateList!=null and form.orderStateList > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -552,7 +552,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList!=''">
+            <if test="form.orderStateList!=null and form.orderStateList > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -581,16 +581,6 @@
             <if test="form.provideTransport!=null">
                 AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
             </if>
-            <choose>
-                <when test="withUser != null and withUser and userId != null and userId != ''">
-                    AND ofi.creator = #{userId, jdbcType=VARCHAR}
-                </when>
-                <otherwise>
-                    <if test="userId != null and userId != ''">
-                        OR ofi.creator = #{userId, jdbcType=VARCHAR}
-                    </if>
-                </otherwise>
-            </choose>
         </where>
         UNION
         SELECT DISTINCT
@@ -619,7 +609,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList!=''">
+            <if test="form.orderStateList!=null and form.orderStateList > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -648,16 +638,6 @@
             <if test="form.provideTransport!=null">
                 AND owi.provide_transport = #{form.provideTransport, jdbcType=INTEGER}
             </if>
-            <choose>
-                <when test="withUser != null and withUser and userId != null and userId != ''">
-                    AND ofi.creator = #{userId, jdbcType=VARCHAR}
-                </when>
-                <otherwise>
-                    <if test="userId != null and userId != ''">
-                        OR ofi.creator = #{userId, jdbcType=VARCHAR}
-                    </if>
-                </otherwise>
-            </choose>
         </where>) temp
         ORDER BY temp.order_code DESC
     </select>
@@ -693,7 +673,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList!=''">
+            <if test="form.orderStateList!=null and form.orderStateList.size() > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -757,7 +737,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList!=''">
+            <if test="form.orderStateList!=null and form.orderStateList.size() > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}

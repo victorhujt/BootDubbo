@@ -8,7 +8,7 @@ import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OfcManagementForm;
-import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
+import com.xescm.ofc.model.dto.ofc.OfcCustOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcUserMsgDTO;
 import com.xescm.ofc.service.OfcCustOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
@@ -105,14 +105,14 @@ public class OfcCustOrderManageController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/queryOrderDetailByOrderCode/{orderCode}", method = {RequestMethod.POST})
     @ApiOperation(value = "客户工作台订单详情", httpMethod = "POST", notes = "")
-    public Wrapper<OfcOrderInfoDTO> queryOrderDetailByOrderCode(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
+    public Wrapper<OfcCustOrderInfoDTO> queryOrderDetailByOrderCode(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
         logger.info("==>queryOrderDetailByOrderCode   orderCode:{}", orderCode);
-        Wrapper<OfcOrderInfoDTO> result;
+        Wrapper<OfcCustOrderInfoDTO> result;
         try {
             if (StringUtils.isEmpty(orderCode)) {
                 return WrapMapper.wrap(Wrapper.ILLEGAL_ARGUMENT_CODE_, Wrapper.ILLEGAL_ARGUMENT_MESSAGE);
             }
-            OfcOrderInfoDTO orderInfoDTO = custOrderManageService.queryOrderDetailByOrderCode(orderCode, new OfcUserMsgDTO());
+            OfcCustOrderInfoDTO orderInfoDTO = custOrderManageService.queryOrderDetailByOrderCode(orderCode, new OfcUserMsgDTO());
             result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderInfoDTO);
         } catch (BusinessException ex) {
             logger.error("查询订单明细信息发生异常：异常详情{}", ex);

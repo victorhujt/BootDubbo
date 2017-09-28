@@ -13,6 +13,7 @@ import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OfcManagementForm;
 import com.xescm.ofc.model.dto.ofc.*;
 import com.xescm.ofc.service.*;
+import com.xescm.ofc.utils.BeanConvertor;
 import com.xescm.ofc.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -72,8 +74,8 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     @Override
     public List<OrderSearchOperResult> queryOrderListByCondition(@ValidParam(validType = ValidParam.ValidType.ADD_CUSTOMER_MSG) OfcUserMsgDTO userMsgDTO
             , OfcManagementForm form) {
+        logger.info("订单管理筛选后端权限校验入参: userMsgDTO==>{},form==>{}", userMsgDTO, form);
         if (null == form) {
-            logger.error("订单管理筛选后端权限校验入参有误: userMsgDTO==>{},form==>{}", userMsgDTO, form);
             throw new BusinessException("订单管理筛选后端权限校验入参有误");
         }
         List<OrderSearchOperResult> orderSearchOperResults;
@@ -91,7 +93,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         String userId = userMsgDTO.getUserId();
         form.setCustName(userMsgDTO.getCustName());
         form.setCustCode(userMsgDTO.getCustCode());
-        orderSearchOperResults = ofcOrderScreenMapper.queryOrderListForCustPrecise(form, userId, false);
+        orderSearchOperResults = ofcOrderScreenMapper.queryOrderListForCust(form, userId, false);
         return orderSearchOperResults;
     }
 
@@ -157,52 +159,43 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
      */
     @Permission
     @Override
-    public OfcOrderInfoDTO queryOrderDetailByOrderCode(String orderCode, @ValidParam OfcUserMsgDTO userMsgDTO) {
-        OfcOrderInfoDTO ofcOrderInfoDTO = new OfcOrderInfoDTO();
-        /**
-         * private OfcFundamentalInformation ofcFundamentalInformation;
-         private OfcDistributionBasicInfo ofcDistributionBasicInfo;
-         private OfcFinanceInformation ofcFinanceInformation;
-         private OfcWarehouseInformation ofcWarehouseInformation;
-         private List<OfcGoodsDetailsInfo> goodsDetailsInfoList;
-         private OfcOrderNewstatus currentStatus;
-         private List<OfcOrderStatus> orderStatusList;
-         */
-        OfcFundamentalInformation custFundamentalInformation = ofcCustFundamentalInformationService.queryByOrderCode(orderCode);
+    public OfcCustOrderInfoDTO queryOrderDetailByOrderCode(String orderCode, @ValidParam OfcUserMsgDTO userMsgDTO) {
+        OfcCustOrderInfoDTO ofcCustOrderInfoDTO = new OfcCustOrderInfoDTO();
+        OfcCustFundamentalInformation custFundamentalInformation = ofcCustFundamentalInformationService.queryByOrderCode(orderCode);
         if (null == custFundamentalInformation) {
             logger.error("查无该订单");
             throw new BusinessException("无法查到该订单");
         }
-        ofcOrderInfoDTO.setOfcFundamentalInformation(custFundamentalInformation);
+        ofcCustOrderInfoDTO.setOfcFundamentalInformation(custFundamentalInformation);
         String orderType = custFundamentalInformation.getOrderType();
         if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {
-            OfcDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
+            OfcCustDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
             if (null == custDistributionBasicInfo) {
                 logger.error("该订单无运输信息");
                 throw new BusinessException("该订单无运输信息");
             }
-            ofcOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
+            ofcCustOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
         } else if (StringUtils.equals(orderType, WAREHOUSE_DIST_ORDER)) {
-            OfcWarehouseInformation custWarehouseInformation = ofcCustWarehouseInformationService.queryByOrderCode(orderCode);
+            OfcCustWarehouseInformation custWarehouseInformation = ofcCustWarehouseInformationService.queryByOrderCode(orderCode);
             if (null == custWarehouseInformation) {
                 logger.error("该订单无仓储信息");
                 throw new BusinessException("该订单无仓储信息");
             }
-            ofcOrderInfoDTO.setOfcWarehouseInformation(custWarehouseInformation);
+            ofcCustOrderInfoDTO.setOfcWarehouseInformation(custWarehouseInformation);
             if (custWarehouseInformation.getProvideTransport().compareTo(1) == 0) {
-                OfcDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
+                OfcCustDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
                 if (null == custDistributionBasicInfo) {
                     logger.error("该订单无运输信息");
                     throw new BusinessException("该订单无运输信息");
                 }
-                ofcOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
+                ofcCustOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
             }
         }
         List<OfcCustGoodsDetailsInfo> ofcCustGoodsDetailsInfos = ofcCustGoodsDetailsInfoService.queryByOrderCode(orderCode);
-        ofcOrderInfoDTO.setGoodsDetailsInfoList(Arrays.asList((OfcGoodsDetailsInfo[]) ofcCustGoodsDetailsInfos.toArray()));
+        ofcCustOrderInfoDTO.setGoodsDetailsInfoList(ofcCustGoodsDetailsInfos);
         List<OfcCustOrderStatus> ofcCustOrderStatus = ofcCustOrderStatusService.queryByOrderCode(orderCode);
-        ofcOrderInfoDTO.setOrderStatusList(Arrays.asList((OfcOrderStatus[])ofcCustOrderStatus.toArray()));
-        return ofcOrderInfoDTO;
+        ofcCustOrderInfoDTO.setOrderStatusList(ofcCustOrderStatus);
+        return ofcCustOrderInfoDTO;
     }
 
     /**
@@ -232,7 +225,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
         ofcOrderStatus.setLastedOperTime(new Date());
         this.checkCRUD(ofcCustOrderStatusService.saveOrderStatus(ofcOrderStatus));
-        // 将订单推送运营工作台
+        // 确认订单, 即将订单推送运营工作台
         OfcCustFundamentalInformation custFundamentalInformation = ofcCustFundamentalInformationService.queryByOrderCode(orderCode);
         String orderType = custFundamentalInformation.getOrderType();
         if (StringUtils.equals(orderType, TRANSPORT_ORDER)) {// 运输订单确认下单
@@ -248,31 +241,37 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
      * 客户工作台仓储订单订单确认
      **/
     private void confirmStorageOrder(String orderCode, AuthResDto authResDtoByToken) {
-        OfcOrderInfoDTO orderDetailUnion = this.getOrderDetailUnion(orderCode);
+        OfcCustOrderInfoDTO orderDetailUnion = this.getOrderDetailUnion(orderCode);
         OfcSaveStorageDTO ofcSaveStorageDTO = new OfcSaveStorageDTO();
-        ofcSaveStorageDTO.setFundamentalInformation((OfcFundamentalInformationDTO) orderDetailUnion.getOfcFundamentalInformation());
-        OfcWarehouseInformationDTO ofcWarehouseInformation = (OfcWarehouseInformationDTO) orderDetailUnion.getOfcWarehouseInformation();
+        OfcFundamentalInformationDTO fundamentalInformationDTO = new OfcFundamentalInformationDTO();
+        BeanUtils.copyProperties(orderDetailUnion.getOfcFundamentalInformation(), fundamentalInformationDTO);
+        ofcSaveStorageDTO.setFundamentalInformation(fundamentalInformationDTO);
+        OfcWarehouseInformationDTO ofcWarehouseInformation = new OfcWarehouseInformationDTO();
+        BeanUtils.copyProperties(orderDetailUnion.getOfcWarehouseInformation(), ofcWarehouseInformation);
         ofcSaveStorageDTO.setWarehouseInformation(ofcWarehouseInformation);
         if ((ofcWarehouseInformation.getProvideTransport().compareTo(1) == 0)) {
-            OfcDistributionBasicInfoDTO ofcDistributionBasicInfoDTO = (OfcDistributionBasicInfoDTO) orderDetailUnion.getOfcDistributionBasicInfo();
-            if (null == ofcDistributionBasicInfoDTO) {
+            OfcDistributionBasicInfoDTO ofcDistributionBasicInfoDTO = new OfcDistributionBasicInfoDTO();
+            if (null == orderDetailUnion.getOfcDistributionBasicInfo()) {
                 logger.error("该仓储订单提供运输但无运输信息");
                 throw new BusinessException("该仓储订单提供运输但无运输信息");
             }
+            BeanUtils.copyProperties(orderDetailUnion.getOfcDistributionBasicInfo(), ofcDistributionBasicInfoDTO);
             ofcSaveStorageDTO.setDistributionBasicInfo(ofcDistributionBasicInfoDTO);
         }
-        List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = Arrays.asList((OfcGoodsDetailsInfoDTO[]) orderDetailUnion.getGoodsDetailsInfoList().toArray());
+        List<OfcCustGoodsDetailsInfo> goodsDetailsInfoList = orderDetailUnion.getGoodsDetailsInfoList();
+        List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = new ArrayList<>();
+        ofcGoodsDetailsInfos = BeanConvertor.listConvertor(goodsDetailsInfoList, ofcGoodsDetailsInfos, OfcGoodsDetailsInfoDTO.class);
         ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO, ofcGoodsDetailsInfos, ORDER_TAG_STOCK_SAVE
                 , null, null, new CscSupplierInfoDto(), authResDtoByToken);
     }
 
-    private OfcOrderInfoDTO getOrderDetailUnion(String orderCode) {
-        OfcOrderInfoDTO ofcOrderInfoDTO = new OfcOrderInfoDTO();
+    private OfcCustOrderInfoDTO getOrderDetailUnion(String orderCode) {
+        OfcCustOrderInfoDTO ofcOrderInfoDTO = new OfcCustOrderInfoDTO();
         ofcOrderInfoDTO.setOfcFundamentalInformation(ofcCustFundamentalInformationService.queryByOrderCode(orderCode));
         ofcOrderInfoDTO.setOfcWarehouseInformation(ofcCustWarehouseInformationService.queryByOrderCode(orderCode));
         ofcOrderInfoDTO.setOfcDistributionBasicInfo(ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode));
         ofcOrderInfoDTO.setOfcFinanceInformation(ofcCustFinanceInformationService.queryByOrderCode(orderCode));
-        ofcOrderInfoDTO.setGoodsDetailsInfoList(Arrays.asList((OfcGoodsDetailsInfo[]) ofcCustGoodsDetailsInfoService.queryByOrderCode(orderCode).toArray()));
+        ofcOrderInfoDTO.setGoodsDetailsInfoList(ofcCustGoodsDetailsInfoService.queryByOrderCode(orderCode));
         return ofcOrderInfoDTO;
     }
 
@@ -282,18 +281,20 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
             logger.error("getOrderDetailForConfirm 入参为空");
             throw new BusinessException("操作失败");
         }
-        OfcOrderInfoDTO orderDetailUnion = this.getOrderDetailUnion(orderCode);
+        OfcCustOrderInfoDTO orderDetailUnion = this.getOrderDetailUnion(orderCode);
         OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
-        OfcCustFundamentalInformation custFundamentalInformation = (OfcCustFundamentalInformation) orderDetailUnion.getOfcFundamentalInformation();
+        OfcCustFundamentalInformation custFundamentalInformation = orderDetailUnion.getOfcFundamentalInformation();
         if (null == custFundamentalInformation) {
             throw new BusinessException("查无此单");
         }
-        OfcCustDistributionBasicInfo custDistributionBasicInfo = (OfcCustDistributionBasicInfo) orderDetailUnion.getOfcDistributionBasicInfo();
-        OfcCustFinanceInformation ofcCustFinanceInformation = (OfcCustFinanceInformation) orderDetailUnion.getOfcFinanceInformation();
+        OfcCustDistributionBasicInfo custDistributionBasicInfo = orderDetailUnion.getOfcDistributionBasicInfo();
+        OfcCustFinanceInformation ofcCustFinanceInformation = orderDetailUnion.getOfcFinanceInformation();
         BeanUtils.copyProperties(custDistributionBasicInfo, ofcOrderDTO);
         if (null != ofcCustFinanceInformation) BeanUtils.copyProperties(ofcCustFinanceInformation, ofcOrderDTO);
-        List<OfcCustGoodsDetailsInfo> ofcCustGoodsDetailsInfos = Arrays.asList((OfcCustGoodsDetailsInfo[]) orderDetailUnion.getGoodsDetailsInfoList().toArray());
-        ofcOrderDTO.setGoodsList(Arrays.asList((OfcGoodsDetailsInfo[]) ofcCustGoodsDetailsInfos.toArray()));
+        List<OfcCustGoodsDetailsInfo> ofcCustGoodsDetailsInfos = orderDetailUnion.getGoodsDetailsInfoList();
+        List<OfcGoodsDetailsInfo> goodsList = new ArrayList<>();
+        goodsList = BeanConvertor.listConvertor(ofcCustGoodsDetailsInfos, goodsList, OfcGoodsDetailsInfo.class);
+        ofcOrderDTO.setGoodsList(goodsList);
         return ofcOrderDTO;
     }
 
