@@ -298,7 +298,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             cscGoods.setCustomerCode(ofcFundamentalInformation.getCustCode());
             cscGoods.setPNum(1);
             cscGoods.setPSize(10);
-            Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
+            Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = null;
+            try {
+                logger.info("csc调用接口响应的参数为:{}",JacksonUtil.toJson(cscGoods));
+                goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
+                logger.info("csc调用接口响应的结果为:{}",JacksonUtil.toJson(goodsRest));
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
             if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                     PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                 CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
