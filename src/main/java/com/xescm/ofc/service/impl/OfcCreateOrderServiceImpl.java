@@ -307,6 +307,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
                     if (goodsInfo.getPrimaryQuantity() == null || goodsInfo.getPrimaryQuantity().doubleValue() == 0.0) {
                         goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())));
+                        goodsInfo.setPackageName(goodsInfo.getUnit());
                     }
                 }
             }

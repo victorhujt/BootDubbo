@@ -278,6 +278,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             for (OfcGoodsDetailsInfo goodsInfo :goodsDetailsList) {
                 if (goodsInfo.getPrimaryQuantity() == null || goodsInfo.getPrimaryQuantity().doubleValue() == 0.0) {
                     goodsInfo.setPrimaryQuantity(goodsInfo.getQuantity());
+                    goodsInfo.setPackageName(goodsInfo.getUnit());
                 }
             }
             return;
