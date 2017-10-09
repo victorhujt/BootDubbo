@@ -854,6 +854,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (!PubUtils.isSEmptyOrNull(forOrderMsg.getProvideTransport())) {
                 ofcOrderDTO.setProvideTransport(Integer.valueOf(forOrderMsg.getProvideTransport()));
             }
+            if (!PubUtils.isSEmptyOrNull(forOrderMsg.getGroundDistribution())) {
+                ofcOrderDTO.setGroundDistribution(forOrderMsg.getGroundDistribution());
+            }
             logger.info("ofcOrderDTO------, {}", ToStringBuilder.reflectionToString(ofcOrderDTO));
             //在这里将订单信息补充完整
             ofcOrderDTO.setOrderBatchNumber(orderBatchNumber);
