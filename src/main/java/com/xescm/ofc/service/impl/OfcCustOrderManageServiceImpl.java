@@ -15,6 +15,9 @@ import com.xescm.ofc.model.dto.ofc.*;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.BeanConvertor;
 import com.xescm.ofc.utils.DateUtils;
+import com.xescm.tfc.edas.model.domain.epc.req.FollowInfoReqDto;
+import com.xescm.tfc.edas.model.domain.epc.resp.TransportRespDto;
+import com.xescm.tfc.edas.service.TfcTransportEpcEdasService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +33,8 @@ import java.util.List;
 import static com.xescm.ofc.constant.OrderConstConstant.HASBEEN_CANCELED;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
+import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_CUST_STOCK;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_OPER_TRANS;
-import static com.xescm.ofc.constant.OrderPlaceTagConstant.ORDER_TAG_STOCK_SAVE;
 import static com.xescm.ofc.enums.OrderStatusOfCustEnum.CONFIRMED;
 import static com.xescm.ofc.enums.OrderStatusOfCustEnum.UNCONFIRMED;
 
@@ -45,10 +48,6 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
-    private OfcOrderManageOperService ofcOrderManageOperService;
-    @Resource
-    private OfcCustOrderStatusService ofcCustOrderStatusService;
-    @Resource
     private OfcCustOrderNewstatusService ofcCustOrderNewstatusService;
     @Resource
     private OfcCustFundamentalInformationService ofcCustFundamentalInformationService;
@@ -61,9 +60,15 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     @Resource
     private OfcCustGoodsDetailsInfoService ofcCustGoodsDetailsInfoService;
     @Resource
+    private OfcCustOrderStatusService ofcCustOrderStatusService;
+    @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
+    @Resource
     private OfcOrderPlaceService ofcOrderPlaceService;
+    @Resource
+    private TfcTransportEpcEdasService tfcTransportEpcEdasService;
     @Resource
     private OfcOrderScreenMapper ofcOrderScreenMapper;
 
@@ -105,24 +110,27 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
      */
     @Permission
     @Override
-    public Wrapper orderCancel(OfcManagementForm managementForm, AuthResDto authResDtoByToken) {
-        logger.info("客户工作台订单取消===> userMsgDTO==>{}, managementForm==>{}", managementForm);
-        if (null == managementForm || StringUtils.isEmpty(managementForm.getOrderCode())) {
+    public Wrapper orderCancel(String orderCode, AuthResDto authResDtoByToken) {
+        logger.info("客户工作台订单取消===> userMsgDTO==>{}, managementForm==>{}", orderCode);
+        if (StringUtils.isEmpty(orderCode)) {
             logger.error("客户工作台订单取消失败, 入参有误!");
             throw new BusinessException("取消失败！");
         }
-        String orderCode = managementForm.getOrderCode();
-        OfcCustOrderNewstatus newstatus = ofcCustOrderNewstatusService.selectByKey(orderCode);
-        if (null == newstatus) {
-            logger.error("该订单号再无最新状态");
-            throw new BusinessException("该订单号再无最新状态");
+        OfcCustOrderNewstatus custOrderNewstatus = ofcCustOrderNewstatusService.selectByKey(orderCode);
+        if (null == custOrderNewstatus) {
+            OfcOrderNewstatus ofcOrderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
+            if (null == ofcOrderNewstatus) {
+                logger.error("该订单号再无最新状态");
+                throw new BusinessException("该订单号再无最新状态");
+            }
+            custOrderNewstatus = (OfcCustOrderNewstatus) ofcOrderNewstatus;
         }
-        String orderLatestStatus = newstatus.getOrderLatestStatus();
+        String orderLatestStatus = custOrderNewstatus.getOrderLatestStatus();
         // 未确认订单(即滞留客户工作台的订单)直接取消掉
         if (StringUtils.equals(orderLatestStatus, UNCONFIRMED.getCode())) {
             this.modifyRelativeWhenCancel(orderCode, authResDtoByToken);
             // 已确认订单(即已推送运营工作台订单)调用原取消方法
-        } else if (StringUtils.equals(orderLatestStatus, CONFIRMED.getCode())) {
+        } else {
             ofcOrderManageService.orderCancel(orderCode, authResDtoByToken);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
@@ -160,6 +168,9 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     @Permission
     @Override
     public OfcCustOrderInfoDTO queryOrderDetailByOrderCode(String orderCode, @ValidParam OfcUserMsgDTO userMsgDTO) {
+        if (StringUtils.isEmpty(orderCode)) {
+            throw new BusinessException("查询订单详情异常");
+        }
         OfcCustOrderInfoDTO ofcCustOrderInfoDTO = new OfcCustOrderInfoDTO();
         OfcCustFundamentalInformation custFundamentalInformation = ofcCustFundamentalInformationService.queryByOrderCode(orderCode);
         if (null == custFundamentalInformation) {
@@ -195,6 +206,14 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         ofcCustOrderInfoDTO.setGoodsDetailsInfoList(ofcCustGoodsDetailsInfos);
         List<OfcCustOrderStatus> ofcCustOrderStatus = ofcCustOrderStatusService.queryByOrderCode(orderCode);
         ofcCustOrderInfoDTO.setOrderStatusList(ofcCustOrderStatus);
+        FollowInfoReqDto followInfoReqDto = new FollowInfoReqDto();
+        followInfoReqDto.setCustomerOrderCode(custFundamentalInformation.getCustOrderCode());
+        Wrapper<List<TransportRespDto>> transportState = tfcTransportEpcEdasService.findTransportState(followInfoReqDto);
+        if (transportState.getCode() == Wrapper.ERROR_CODE) {
+            logger.error("调用TFC接口查询运单跟踪信息失败");
+            throw new BusinessException("查询运单跟踪信息失败");
+        }
+        ofcCustOrderInfoDTO.setTransportRespDtoList(transportState.getResult());
         return ofcCustOrderInfoDTO;
     }
 
@@ -240,6 +259,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     /**
      * 客户工作台仓储订单订单确认
      **/
+    @SuppressWarnings("unchecked")
     private void confirmStorageOrder(String orderCode, AuthResDto authResDtoByToken) {
         OfcCustOrderInfoDTO orderDetailUnion = this.getOrderDetailUnion(orderCode);
         OfcSaveStorageDTO ofcSaveStorageDTO = new OfcSaveStorageDTO();
@@ -261,7 +281,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         List<OfcCustGoodsDetailsInfo> goodsDetailsInfoList = orderDetailUnion.getGoodsDetailsInfoList();
         List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = new ArrayList<>();
         ofcGoodsDetailsInfos = BeanConvertor.listConvertor(goodsDetailsInfoList, ofcGoodsDetailsInfos, OfcGoodsDetailsInfoDTO.class);
-        ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO, ofcGoodsDetailsInfos, ORDER_TAG_STOCK_SAVE
+        ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO, ofcGoodsDetailsInfos, ORDER_TAG_CUST_STOCK
                 , null, null, new CscSupplierInfoDto(), authResDtoByToken);
     }
 
@@ -275,7 +295,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         return ofcOrderInfoDTO;
     }
 
-
+    @SuppressWarnings("unchecked")
     private OfcOrderDTO getOrderDetailForConfirmTransOrder(String orderCode) {
         if (StringUtils.isEmpty(orderCode)) {
             logger.error("getOrderDetailForConfirm 入参为空");
@@ -289,8 +309,11 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         }
         OfcCustDistributionBasicInfo custDistributionBasicInfo = orderDetailUnion.getOfcDistributionBasicInfo();
         OfcCustFinanceInformation ofcCustFinanceInformation = orderDetailUnion.getOfcFinanceInformation();
-        BeanUtils.copyProperties(custDistributionBasicInfo, ofcOrderDTO);
+        OfcCustWarehouseInformation ofcWarehouseInformation = orderDetailUnion.getOfcWarehouseInformation();
+        BeanUtils.copyProperties(custFundamentalInformation, ofcOrderDTO);
+        if (null != custDistributionBasicInfo) BeanUtils.copyProperties(custDistributionBasicInfo, ofcOrderDTO);
         if (null != ofcCustFinanceInformation) BeanUtils.copyProperties(ofcCustFinanceInformation, ofcOrderDTO);
+        if (null != ofcWarehouseInformation) BeanUtils.copyProperties(ofcWarehouseInformation, ofcOrderDTO);
         List<OfcCustGoodsDetailsInfo> ofcCustGoodsDetailsInfos = orderDetailUnion.getGoodsDetailsInfoList();
         List<OfcGoodsDetailsInfo> goodsList = new ArrayList<>();
         goodsList = BeanConvertor.listConvertor(ofcCustGoodsDetailsInfos, goodsList, OfcGoodsDetailsInfo.class);

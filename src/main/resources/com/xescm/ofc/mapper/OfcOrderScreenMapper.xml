@@ -274,7 +274,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList > 0">
+            <if test="form.orderStateList!=null and form.orderStateList.size() > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -418,7 +418,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList > 0">
+            <if test="form.orderStateList!=null and form.orderStateList.size() > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -552,7 +552,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList > 0">
+            <if test="form.orderStateList!=null and form.orderStateList.size() > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}
@@ -586,10 +586,10 @@
         SELECT DISTINCT
         <include refid="queryOrderListField"/>
         FROM
-        ofc_fundamental_information ofi
-        LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
-        LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
-        LEFT JOIN ofc_order_newstatus ns ON ofi.order_code = ns.order_code
+        ofc_cust_fundamental_information ofi
+        LEFT JOIN ofc_cust_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+        LEFT JOIN ofc_cust_warehouse_information owi ON ofi.order_code = owi.order_code
+        LEFT JOIN ofc_cust_order_newstatus ns ON ofi.order_code = ns.order_code
         <where>
             <if test="form.startDate!=null and form.startDate!=''">
                 AND ofi.order_time <![CDATA[ >= ]]>  #{form.startDate}
@@ -609,7 +609,7 @@
             <if test="form.custOrderCode!=null and form.custOrderCode!=''">
                 AND ofi.cust_order_code = #{form.custOrderCode}
             </if>
-            <if test="form.orderStateList!=null and form.orderStateList > 0">
+            <if test="form.orderStateList!=null and form.orderStateList.size() > 0">
                 AND  ns.order_latest_status IN (
                 <foreach collection="form.orderStateList" item="item" separator=",">
                     #{item}

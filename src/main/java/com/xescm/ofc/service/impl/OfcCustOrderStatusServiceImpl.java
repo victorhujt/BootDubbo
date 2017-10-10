@@ -8,12 +8,16 @@ import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcCustOrderNewstatusMapper;
 import com.xescm.ofc.mapper.OfcCustOrderStatusMapper;
+import com.xescm.ofc.mapper.OfcOrderStatusMapper;
 import com.xescm.ofc.service.OfcCustOrderNewstatusService;
 import com.xescm.ofc.service.OfcCustOrderStatusService;
+import com.xescm.ofc.utils.BeanConvertor;
 import com.xescm.ofc.utils.DateUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +39,8 @@ public class OfcCustOrderStatusServiceImpl extends BaseService<OfcCustOrderStatu
     @Resource
     private OfcCustOrderNewstatusMapper custOrderNewstatusMapper;
     @Resource
+    private OfcOrderStatusMapper ofcOrderStatusMapper;
+    @Resource
     private OfcCustOrderStatusMapper ofcCustOrderStatusMapper;
 
     @Override
@@ -46,7 +52,7 @@ public class OfcCustOrderStatusServiceImpl extends BaseService<OfcCustOrderStatu
                 if (orderNewstatus != null) {
                     tag =  "haveStatus";
                 } else {
-                    orderNewstatus=new OfcOrderNewstatus();
+                    orderNewstatus = new OfcOrderNewstatus();
                 }
                 if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
                     if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
@@ -63,11 +69,19 @@ public class OfcCustOrderStatusServiceImpl extends BaseService<OfcCustOrderStatu
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<OfcCustOrderStatus> queryByOrderCode(String orderCode) {
         logger.info("queryByOrderCode ==> orderCode{}", orderCode);
         if (PublicUtil.isEmpty(orderCode)) {
             logger.error("查询List<OfcCustOrderStatus>失败, 入参为空");
             throw new BusinessException("查询订单状态列表失败!");
+        }
+        List<OfcCustOrderStatus> result = new ArrayList<>();
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        ofcOrderStatus.setOrderCode(orderCode);
+        List<OfcOrderStatus> orderStatuses = ofcOrderStatusMapper.queryOrderStatus(orderCode, "orderCode");
+        if (CollectionUtils.isNotEmpty(orderStatuses)) {
+            return BeanConvertor.listConvertor(orderStatuses, result, OfcCustOrderStatus.class);
         }
         return ofcCustOrderStatusMapper.queryByOrderCode(orderCode);
     }

@@ -9,9 +9,9 @@ import java.util.List;
  */
 public enum  OrderStatusOfCustEnum{
 
+    UNCONFIRMED("100", "未确认"),
+    CONFIRMED("101", "已确认"),
     PEND_AUDIT("10", "待审核"),
-    UNCONFIRMED("11", "未确认"),
-    CONFIRMED("12", "已确认"),
     ALREADY_EXAMINE("20", "已审核"),
     IMPLEMENTATION_IN("30", "执行中"),
     BEEN_COMPLETED("40", "已完成"),

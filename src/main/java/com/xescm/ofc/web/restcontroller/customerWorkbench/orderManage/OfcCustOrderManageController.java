@@ -57,15 +57,15 @@ public class OfcCustOrderManageController extends BaseController{
 
     /**
      * 订单取消
-     * @param managementForm     订单编号
+     * @param orderCode     订单编号
      * @return  Wrapper
      */
     @ApiOperation( notes = "取消订单", httpMethod = "POST", value = "取消订单")
     @RequestMapping(value = "/cancelOrder/{orderCode}", method = RequestMethod.POST)
     @ResponseBody
-    public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable OfcManagementForm managementForm) {
+    public Wrapper<?> orderCancelOper(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode) {
         try {
-            return custOrderManageService.orderCancel(managementForm, getAuthResDtoByToken());
+            return custOrderManageService.orderCancel(orderCode, getAuthResDtoByToken());
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单取消出现异常,{}", "", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
@@ -104,7 +104,7 @@ public class OfcCustOrderManageController extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "/queryOrderDetailByOrderCode/{orderCode}", method = {RequestMethod.POST})
-    @ApiOperation(value = "客户工作台订单详情", httpMethod = "POST", notes = "")
+    @ApiOperation(value = "客户工作台订单详情", httpMethod = "POST", notes = "客户工作台订单详情")
     public Wrapper<OfcCustOrderInfoDTO> queryOrderDetailByOrderCode(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
         logger.info("==>queryOrderDetailByOrderCode   orderCode:{}", orderCode);
         Wrapper<OfcCustOrderInfoDTO> result;

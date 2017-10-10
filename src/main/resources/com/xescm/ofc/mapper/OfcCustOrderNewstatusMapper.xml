@@ -10,4 +10,36 @@
     <result column="status_update_time" property="statusUpdateTime" jdbcType="TIMESTAMP" />
     <result column="status_create_time" property="statusCreateTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  <select id="queryByOrderCode" parameterType="java.lang.String" resultType="com.xescm.ofc.domain.OfcCustOrderNewstatus">
+    SELECT
+    oons.order_code,
+    oons.order_latest_status,
+    oons.status_update_time,
+    oons.status_create_time
+    FROM
+    ofc_order_newstatus oons
+    LEFT JOIN ofc_fundamental_information ofi ON oons.order_code = ofi.order_code
+    LEFT JOIN ofc_distribution_basic_info odbi ON oons.order_code = odbi.order_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+    UNION
+    SELECT
+    oons.order_code,
+    oons.order_latest_status,
+    oons.status_update_time,
+    oons.status_create_time
+    FROM
+    ofc_cust_order_newstatus oons
+    LEFT JOIN ofc_cust_fundamental_information ofi ON oons.order_code = ofi.order_code
+    LEFT JOIN ofc_cust_distribution_basic_info odbi ON oons.order_code = odbi.order_code
+    <where>
+      <if test="orderCode!=null and orderCode!=''">
+        OR ofi.order_code =#{orderCode,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
 </mapper>

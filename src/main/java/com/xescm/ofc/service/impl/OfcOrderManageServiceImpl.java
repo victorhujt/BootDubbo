@@ -445,7 +445,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } catch (Exception e) {
             logger.error("仓储中心取消订单发生异常：异常详情 => {}", e);
             throw new BusinessException("取消订单失败：仓储中心取消订单发生异常!");
-        }
+         }
         return response;
     }
 
@@ -752,7 +752,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             orderMap.put(custOrderCode, orderListByCustOrderCode);
         }
         String orderBatchNumber = codeGenUtils.getNewWaterCode(BATCH_PRE,4);
-        int index = 0;
         for (String orderMapKey : orderMap.keySet()) {
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
@@ -799,7 +798,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 logger.error("仓储开单批量导单确认下单失败, 错误信息:{}", save.getMessage());
                 return save;
             }
-            index++ ;
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderBatchNumber);
     }
@@ -1222,7 +1220,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
         int custOrderCode = 0;
-        if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
+        if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode()) && !StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
             custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
             if (custOrderCode > 0) {
                 if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {//编辑时排除是自己的客户订单号
@@ -1251,7 +1249,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
 
         StringBuffer notes = new StringBuffer();
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
         }
 
@@ -1334,10 +1332,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             } else {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
             }
-     }
+        }
 
-
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
             //添加基本信息
             ofcFundamentalInformationService.save(ofcFundamentalInformation);
         } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
@@ -1466,7 +1463,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
         ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
 
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
             logger.info("ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
             ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
         } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
@@ -1492,7 +1489,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcWarehouseInformation.setCreator(ofcFundamentalInformation.getCreator());
         ofcWarehouseInformation.setOperTime(ofcFundamentalInformation.getOperTime());
         ofcWarehouseInformation.setOperator(ofcFundamentalInformation.getOperator());
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
             ofcFinanceInformationService.save(ofcFinanceInformation);
         } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
@@ -1507,7 +1504,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (ofcMerchandiserService.select(ofcMerchandiser).size() == 0 && !trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")) {
             ofcMerchandiserService.save(ofcMerchandiser);
         }
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
             //保存订单日志
             notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
             notes.append(" 订单已创建");

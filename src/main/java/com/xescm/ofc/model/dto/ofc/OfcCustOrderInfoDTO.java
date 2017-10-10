@@ -1,6 +1,7 @@
 package com.xescm.ofc.model.dto.ofc;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.tfc.edas.model.domain.epc.resp.TransportRespDto;
 import lombok.Data;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public class OfcCustOrderInfoDTO {
     private OfcCustOrderNewstatus currentStatus;
 
     private List<OfcCustOrderStatus> orderStatusList;
+
+    private List<TransportRespDto> transportRespDtoList;
 }

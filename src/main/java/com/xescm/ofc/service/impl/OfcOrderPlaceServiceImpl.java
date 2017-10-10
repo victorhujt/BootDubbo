@@ -176,7 +176,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         //校验当前登录用户的身份信息,并存放大区和基地信息
         this.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
-        OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
         if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)) {//客户工作台下单
@@ -185,7 +185,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_EDIT)) { //编辑
             this.orderPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
+        } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_CUST_TRANS)) {// 客户工作台运输订单确认
+            this.orderPlaceTagTransPlace(ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
+                    , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcMerchandiser, ofcOrderStatus);
         } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANS)) {// 运输开单
+            // 校验当前客户的客户订单号是否重复
+            this.operTransOrderCheckCustOrderCode(ofcFundamentalInformation);
             this.orderPlaceTagTransPlace(ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcMerchandiser, ofcOrderStatus);
         } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_DISTRI)) { //城配开单
@@ -204,6 +209,21 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             return "您的订单修改成功!";
         }else {
             return ResultCodeEnum.ERROROPER.getMsg();
+        }
+    }
+
+    private void operTransOrderCheckCustOrderCode(OfcFundamentalInformation ofcFundamentalInformation) {
+        String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
+        String custCode = ofcFundamentalInformation.getCustCode();
+        if (!PubUtils.isSEmptyOrNull(custOrderCode) && !PubUtils.isSEmptyOrNull(custCode)) {
+            boolean isDup = this.checkOrderCode(custOrderCode, custCode);
+            if (isDup) {
+                throw new BusinessException("当前客户存在重复客户订单号！");
+            }
+        } else {
+            if (PubUtils.isSEmptyOrNull(custCode)) {
+                throw new BusinessException("客户不能为空！");
+            }
         }
     }
 
@@ -233,25 +253,14 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         logger.info("运输开单 ==> ofcMerchandiser:{}", ofcMerchandiser);
         logger.info("运输开单 ==> ofcOrderStatus:{}", ofcOrderStatus);
         StringBuilder notes = new StringBuilder();
-        // 校验当前客户的客户订单号是否重复
-        String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
-        String custCode = ofcFundamentalInformation.getCustCode();
-        if (!PubUtils.isSEmptyOrNull(custOrderCode) && !PubUtils.isSEmptyOrNull(custCode)) {
-            boolean isDup = checkOrderCode(custOrderCode, custCode);
-            if (isDup) {
-                throw new BusinessException("当前客户存在重复客户订单号！");
-            }
-        } else {
-            if (PubUtils.isSEmptyOrNull(custCode)) {
-                throw new BusinessException("客户不能为空！");
-            }
-        }
-
         if (!PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()).equals("")) {
             int orderCodeByTransCode = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
             if (orderCodeByTransCode>=1) {
                 throw new BusinessException("该运输单号号已经存在!您不能重复下单!");
             }
+        }
+        if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getCustCode())) {
+            throw new BusinessException("客户不能为空！");
         }
         //2017年4月7日 追加逻辑: 开单员即登录人
         String userName = authResDtoByToken.getUserName();
