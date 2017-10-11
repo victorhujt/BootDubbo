@@ -1948,11 +1948,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcOrderDTO.setDeparturePlace(consignor.getDetailAddress());
         StringBuilder sb = new StringBuilder(consignor.getProvince());
         if (!PubUtils.isSEmptyOrNull(consignor.getCity())) {
-            sb.append(consignor.getCity());
+            sb.append(",").append(consignor.getCity());
             if (!PubUtils.isSEmptyOrNull(consignor.getArea())) {
-                sb.append(consignor.getArea());
+                sb.append(",").append(consignor.getArea());
                 if (!PubUtils.isSEmptyOrNull(consignor.getStreet())) {
-                    sb.append(consignor.getStreet());
+                    sb.append(",").append(consignor.getStreet());
                 }
             }
         }
@@ -1978,11 +1978,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcOrderDTO.setDestination(cscConsigneeDto.getDetailAddress());
         StringBuilder sb = new StringBuilder(cscConsigneeDto.getProvince());
         if (!PubUtils.isSEmptyOrNull(cscConsigneeDto.getCity())) {
-            sb.append(cscConsigneeDto.getCity());
+            sb.append(",").append(cscConsigneeDto.getCity());
             if (!PubUtils.isSEmptyOrNull(cscConsigneeDto.getArea())) {
-                sb.append(cscConsigneeDto.getArea());
+                sb.append(",").append(cscConsigneeDto.getArea());
                 if (!PubUtils.isSEmptyOrNull(cscConsigneeDto.getStreet())) {
-                    sb.append(cscConsigneeDto.getStreet());
+                    sb.append(",").append(cscConsigneeDto.getStreet());
                 }
             }
         }
