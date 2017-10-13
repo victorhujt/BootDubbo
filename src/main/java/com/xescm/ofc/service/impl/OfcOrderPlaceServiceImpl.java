@@ -394,7 +394,6 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 ofcFundamentalInformation.setSecCustCode("");
                 ofcFundamentalInformation.setSecCustName("");
                 ofcDistributionBasicInfoService.deleteByOrderCode(ofcFundamentalInformation.getOrderCode());
-
             }
             // 更新仓配信息
             upOfcWarehouseInformation(ofcWarehouseInformation,ofcFundamentalInformation);
