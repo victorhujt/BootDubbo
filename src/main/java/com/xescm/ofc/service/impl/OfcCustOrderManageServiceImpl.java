@@ -202,12 +202,15 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
                 ofcCustOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
             }
         }
+        OfcCustFinanceInformation ofcCustFinanceInformation = ofcCustFinanceInformationService.queryByOrderCode(orderCode);
+        ofcCustOrderInfoDTO.setOfcFinanceInformation(ofcCustFinanceInformation);
         List<OfcCustGoodsDetailsInfo> ofcCustGoodsDetailsInfos = ofcCustGoodsDetailsInfoService.queryByOrderCode(orderCode);
         ofcCustOrderInfoDTO.setGoodsDetailsInfoList(ofcCustGoodsDetailsInfos);
         List<OfcCustOrderStatus> ofcCustOrderStatus = ofcCustOrderStatusService.queryByOrderCode(orderCode);
         ofcCustOrderInfoDTO.setOrderStatusList(ofcCustOrderStatus);
         FollowInfoReqDto followInfoReqDto = new FollowInfoReqDto();
         followInfoReqDto.setCustomerOrderCode(custFundamentalInformation.getCustOrderCode());
+
         Wrapper<List<TransportRespDto>> transportState = tfcTransportEpcEdasService.findTransportState(followInfoReqDto);
         if (transportState.getCode() == Wrapper.ERROR_CODE) {
             logger.error("调用TFC接口查询运单跟踪信息失败");

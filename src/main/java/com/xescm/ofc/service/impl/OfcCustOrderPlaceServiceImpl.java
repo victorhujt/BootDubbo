@@ -94,7 +94,7 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
             consignee = new CscContantAndCompanyDto();
         }
         Wrapper<?> result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
-                , ofcGoodsDetailsInfos, ORDER_TAG_STOCK_CUST_SAVE, consignor, consignee, supplier,authResDtoByToken);
+                , ofcGoodsDetailsInfos, tag, consignor, consignee, supplier,authResDtoByToken);
         if (result.getCode()!=Wrapper.SUCCESS_CODE) {
             if (!org.apache.commons.lang.StringUtils.isEmpty(result.getMessage())) {
                 throw new BusinessException(result.getMessage());

@@ -179,10 +179,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
-        if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)) {//客户工作台下单
+        if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)) {//客户工作台运输开单
             this.orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcMerchandiser, ofcOrderStatus);
-        } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_EDIT)) { //编辑
+        } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_EDIT)) { //客户工作台运输订单编辑
             this.orderPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcOrderStatus);
         } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_CUST_TRANS)) {// 客户工作台运输订单确认
@@ -338,7 +338,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
     }
 
     /**
-     * 订单编辑
+     * 客户工作台订单编辑
      * @param ofcOrderDTO 订单实体
      * @param ofcGoodsDetailsInfos 货品信息
      * @param authResDtoByToken 登录用户
@@ -353,16 +353,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             , AuthResDto authResDtoByToken, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee
             , OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo
             , OfcWarehouseInformation ofcWarehouseInformation, OfcOrderStatus ofcOrderStatus) {
-        logger.info("订单编辑 ==> ofcOrderDTO:{}", ofcOrderDTO);
-        logger.info("订单编辑 ==> ofcGoodsDetailsInfos:{}", ofcGoodsDetailsInfos);
-        logger.info("订单编辑 ==> authResDtoByToken:{}", authResDtoByToken);
-        logger.info("订单编辑 ==> cscContantAndCompanyDtoConsignor:{}", cscContantAndCompanyDtoConsignor);
-        logger.info("订单编辑 ==> cscContantAndCompanyDtoConsignee:{}", cscContantAndCompanyDtoConsignee);
-        logger.info("订单编辑 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
-        logger.info("订单编辑 ==> ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
-        logger.info("订单编辑 ==> ofcWarehouseInformation:{}", ofcWarehouseInformation);
-        logger.info("订单编辑 ==> ofcOrderStatus:{}", ofcOrderStatus);
-        //删除之前订单的货品信息
+        logger.info("客户工作台订单编辑 ==> ofcOrderDTO:{}", ofcOrderDTO);
+        logger.info("客户工作台订单编辑 ==> ofcGoodsDetailsInfos:{}", ofcGoodsDetailsInfos);
+        logger.info("客户工作台订单编辑 ==> authResDtoByToken:{}", authResDtoByToken);
+        logger.info("客户工作台订单编辑 ==> cscContantAndCompanyDtoConsignor:{}", cscContantAndCompanyDtoConsignor);
+        logger.info("客户工作台订单编辑 ==> cscContantAndCompanyDtoConsignee:{}", cscContantAndCompanyDtoConsignee);
+        logger.info("客户工作台订单编辑 ==> ofcFundamentalInformation:{}", ofcFundamentalInformation);
+        logger.info("客户工作台订单编辑 ==> ofcDistributionBasicInfo:{}", ofcDistributionBasicInfo);
+        logger.info("客户工作台订单编辑 ==> ofcWarehouseInformation:{}", ofcWarehouseInformation);
+        logger.info("客户工作台订单编辑 ==> ofcOrderStatus:{}", ofcOrderStatus);
+//删除之前订单的货品信息
         OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
         ofcGoodsDetailsInfo.setOrderCode(ofcOrderDTO.getOrderCode());
         ofcGoodsDetailsInfoService.delete(ofcGoodsDetailsInfo);
@@ -389,7 +389,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
                 if (select.size() > 0) {//有运输信息
                     ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
                 } else if (select.size() == 0) addDistributionInfo(ofcDistributionBasicInfo, ofcFundamentalInformation);
-            //仓配单不需要运输,需要将属于该订单的运输信息删除
+                //仓配单不需要运输,需要将属于该订单的运输信息删除
             } else if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), WAREHOUSE_NO_TRANS)) {
                 ofcFundamentalInformation.setSecCustCode("");
                 ofcFundamentalInformation.setSecCustName("");

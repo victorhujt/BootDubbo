@@ -28,7 +28,6 @@ public class OfcCustStorageOrderController extends BaseController{
     @Resource
     private OfcCustOrderPlaceService ofcCustOrderPlaceService;
 
-
     @ApiOperation(value = "客户工作台仓储订单下单或编辑", httpMethod = "POST", notes = "返回组织信息")
     @RequestMapping(value ="saveStorage/{tag}", method = {RequestMethod.POST})
     @ResponseBody
@@ -44,9 +43,6 @@ public class OfcCustStorageOrderController extends BaseController{
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
     }
-
-
-
 
 
 }

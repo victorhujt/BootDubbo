@@ -18,6 +18,9 @@ public class OrderPlaceTagConstant {
     //客户工作台运输订单确认标志位
     public static final String ORDER_TAG_CUST_TRANS = "custTransOrderConfirm";
 
+    // 客户工作台运输订单编辑标志位
+    public static final String ORDER_TAG_CUST_TRANS_EDIT = "custTransOrderEdit";
+
     //运输开单编辑订单标志位
     public static final String ORDER_TAG_OPER_TRANEDIT = "tranpEdit";
 

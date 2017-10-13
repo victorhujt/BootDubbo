@@ -102,4 +102,9 @@ public class RestConfig {
     private String paas;
 
     private String paasDev;
+
+    /**
+     * 客户工作台
+     */
+    private String cwbUrl;
 }
