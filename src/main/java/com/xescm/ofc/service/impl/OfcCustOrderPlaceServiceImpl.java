@@ -8,6 +8,7 @@ import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.annotation.Permission;
 import com.xescm.ofc.constant.OrderConstConstant;
+import com.xescm.ofc.domain.OfcCustOrderNewstatus;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.enums.BusinessTypeEnum;
@@ -15,6 +16,7 @@ import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
+import com.xescm.ofc.service.OfcCustOrderNewstatusService;
 import com.xescm.ofc.service.OfcCustOrderPlaceService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
@@ -29,6 +31,7 @@ import java.util.List;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
+import static com.xescm.ofc.enums.OrderStatusOfCustEnum.*;
 
 
 /**
@@ -44,6 +47,9 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
     private OfcOrderPlaceService ofcOrderPlaceService;
     @Resource
     private OfcOrderManageService ofcOrderManageService;
+    @Resource
+    private OfcCustOrderNewstatusService ofcCustOrderNewstatusService;
+
 
     @Permission
     @Override
@@ -93,9 +99,29 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
         if (consignee == null) {
             consignee = new CscContantAndCompanyDto();
         }
-        Wrapper<?> result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
-                , ofcGoodsDetailsInfos, tag, consignor, consignee, supplier,authResDtoByToken);
-        if (result.getCode()!=Wrapper.SUCCESS_CODE) {
+        Wrapper<?> result;
+        if (StringUtils.equals(tag, ORDER_TAG_STOCK_CUST_EDIT)) {
+            OfcCustOrderNewstatus newstatus = ofcCustOrderNewstatusService.queryByOrderCode(ofcFundamentalInformation.getOrderCode());
+            String orderLatestStatus = newstatus.getOrderLatestStatus();
+            // 未确认
+            if (StringUtils.equals(orderLatestStatus, UNCONFIRMED.getCode())) {
+                result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
+                        , ofcGoodsDetailsInfos, tag, consignor, consignee, supplier,authResDtoByToken);
+                // 待审核
+            } else if (StringUtils.equals(orderLatestStatus, PEND_AUDIT.getCode())) {
+                result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
+                        , ofcGoodsDetailsInfos, ORDER_TAG_STOCK_EDIT, consignor, consignee, supplier,authResDtoByToken);
+            } else {
+                throw new BusinessException("订单状态有误");
+            }
+        } else if (StringUtils.equals(tag, ORDER_TAG_STOCK_CUST_SAVE)) {
+            result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
+                    , ofcGoodsDetailsInfos, tag, consignor, consignee, supplier,authResDtoByToken);
+        } else {
+            throw new BusinessException("订单标志位错误");
+        }
+
+        if (result.getCode() != Wrapper.SUCCESS_CODE) {
             if (!org.apache.commons.lang.StringUtils.isEmpty(result.getMessage())) {
                 throw new BusinessException(result.getMessage());
             } else {
@@ -138,7 +164,29 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
         if (null == ofcOrderDTOStr.getUrgent()){
             ofcOrderDTOStr.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
         }
-        return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), tag, authResDtoByToken, ofcOrderDTOStr.getCustCode()
-                ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
+        //客户工作台运输订单编辑
+        if (StringUtils.equals(ORDER_TAG_CUST_TRANS_EDIT, tag)) {
+            // 判断订单状态
+            OfcCustOrderNewstatus newstatus = ofcCustOrderNewstatusService.queryByOrderCode(ofcOrderDTOStr.getOrderCode());
+            String orderLatestStatus = newstatus.getOrderLatestStatus();
+            // 未确认
+            if (StringUtils.equals(orderLatestStatus, UNCONFIRMED.getCode())) {
+                return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), tag, authResDtoByToken, ofcOrderDTOStr.getCustCode()
+                        ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
+                // 待审核
+            } else if (StringUtils.equals(orderLatestStatus, PEND_AUDIT.getCode())) {
+                return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), ORDER_TAG_OPER_TRANEDIT, authResDtoByToken, ofcOrderDTOStr.getCustCode()
+                        ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
+            } else {
+                throw new BusinessException("订单状态有误");
+            }
+            //客户工作台运输订单下单
+        } else if (StringUtils.equals(ORDER_TAG_NORMAL_PLACE, tag)) {
+            return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), tag, authResDtoByToken, ofcOrderDTOStr.getCustCode()
+                    ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
+        } else {
+            throw new BusinessException("标志位错误");
+        }
+
     }
 }

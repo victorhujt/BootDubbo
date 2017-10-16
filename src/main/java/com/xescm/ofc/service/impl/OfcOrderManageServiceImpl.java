@@ -1021,8 +1021,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcInfo.setOrderCode(orderCode);
         int update = ofcFundamentalInformationService.update(ofcInfo);
         if (update == 0) {
-            logger.error("更新订单的大区和基地失败!");
-            throw new BusinessException("更新订单的大区和基地失败!");
+            OfcCustFundamentalInformation custFundamentalInformation = new OfcCustFundamentalInformation();
+            org.springframework.beans.BeanUtils.copyProperties(ofcInfo, custFundamentalInformation);
+            int updateOfCust = ofcCustFundamentalInformationService.update(custFundamentalInformation);
+            if (updateOfCust == 0) throw new BusinessException("更新订单的大区和基地失败!");
         }
     }
 
@@ -1128,7 +1130,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
     /**
      * 生成仓储订单
-     *
      * @param ofcOrderDTO                      订单信息
      * @param goodsDetailsListDTO                 货品信息
      * @param reviewTag                        操作标志位
@@ -1219,8 +1220,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
 //        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource("手动");//订单来源
+
+        // 校验客户订单号
         int custOrderCode = 0;
-        if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode()) && !StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
+        if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode()) && !StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) { // 订单确认不需要再次校验客户订单号
             custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
             if (custOrderCode > 0) {
                 if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {//编辑时排除是自己的客户订单号
@@ -1253,28 +1256,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
         }
 
-        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-            // 运输单号逻辑追加 by lyh
-            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
-                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
-            }
-            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (!(PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())&&PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getSelfTransCode()))) {
-                if (ofcDistributionBasicInfo.getTransCode().equals(ofcDistributionBasicInfo.getSelfTransCode())) {
-                    repeatNum = 0;
-                }
-            }
-            if (repeatNum > 0) {
-                throw new BusinessException("运输单号重复!");
-            }
-        }
-
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         //货品数量
         BigDecimal goodsAmountCount = new BigDecimal(0);
         //保存货品明细
+        String orderCode = ofcFundamentalInformation.getOrderCode();
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
-            ofcGoodsDetailsInfoService.deleteAllByOrderCode(ofcFundamentalInformation.getOrderCode());
+            ofcGoodsDetailsInfoService.deleteAllByOrderCode(orderCode);
+        }
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_EDIT)) {
+            ofcCustGoodsDetailsInfoService.deleteByKey(orderCode);
         }
 
         //相同货品编码数量相加
@@ -1319,7 +1310,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0) {
                     continue;
                 }
-            String orderCode = ofcFundamentalInformation.getOrderCode();
             ofcGoodsDetails.setOrderCode(orderCode);
             ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
@@ -1327,7 +1317,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
             ofcGoodsDetail.add(ofcGoodsDetails);
-            if (StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
+            if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_EDIT)) {
                 ofcCustGoodsDetailsInfoService.save((OfcCustGoodsDetailsInfo) ofcGoodsDetails);
             } else {
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
@@ -1341,7 +1331,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
         } else if (StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
             ofcCustFundamentalInformationService.save((OfcCustFundamentalInformation) ofcFundamentalInformation);
+        } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_EDIT)) { // 客户工作台编辑
+            OfcCustFundamentalInformation custFundamentalInformation = new OfcCustFundamentalInformation();
+            org.springframework.beans.BeanUtils.copyProperties(ofcFundamentalInformation, custFundamentalInformation);
+            ofcCustFundamentalInformationService.update(custFundamentalInformation);
         }
+
         ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
 
         if (null == ofcWarehouseInformation.getProvideTransport()) {
@@ -1476,8 +1471,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
                 ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
             }
+        } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_EDIT)) {
+            OfcCustDistributionBasicInfo custDistributionBasicInfo = new OfcCustDistributionBasicInfo();
+            org.springframework.beans.BeanUtils.copyProperties(ofcDistributionBasicInfo, custDistributionBasicInfo);
+            ofcDistributionBasicInfo.setQuantity(goodsAmountCount);
+            ofcDistributionBasicInfo.setCreationTime(ofcFundamentalInformation.getCreationTime());
+            ofcDistributionBasicInfo.setCreator(ofcFundamentalInformation.getCreator());
+            ofcDistributionBasicInfo.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            ofcDistributionBasicInfo.setOperator(ofcFundamentalInformation.getOperator());
+            ofcDistributionBasicInfo.setOperTime(ofcFundamentalInformation.getOperTime());
+            ofcCustDistributionBasicInfoService.update(custDistributionBasicInfo);
         } else if (StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
-            ofcCustDistributionBasicInfoService.save((OfcCustDistributionBasicInfo) ofcDistributionBasicInfo);
+            OfcCustDistributionBasicInfo custDistributionBasicInfo = new OfcCustDistributionBasicInfo();
+            org.springframework.beans.BeanUtils.copyProperties(ofcDistributionBasicInfo, custDistributionBasicInfo);
+            ofcCustDistributionBasicInfoService.save(custDistributionBasicInfo);
         }
 
         // 服务费用
@@ -1496,15 +1503,27 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
             ofcFinanceInformationService.updateByOrderCode(ofcFinanceInformation);
         } else if (StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
-            ofcCustWarehouseInformationService.save((OfcCustWarehouseInformation) ofcWarehouseInformation);
-            ofcCustFinanceInformationService.save((OfcCustFinanceInformation) ofcFinanceInformation);
+            OfcCustWarehouseInformation custWarehouseInformation = new OfcCustWarehouseInformation();
+            org.springframework.beans.BeanUtils.copyProperties(ofcWarehouseInformation, custWarehouseInformation);
+            ofcCustWarehouseInformationService.save(custWarehouseInformation);
+            OfcCustFinanceInformation custFinanceInformation = new OfcCustFinanceInformation();
+            org.springframework.beans.BeanUtils.copyProperties(ofcFinanceInformation, custFinanceInformation);
+            ofcCustFinanceInformationService.save(custFinanceInformation);
+        } else if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_EDIT)) {
+            OfcCustWarehouseInformation custWarehouseInformation = new OfcCustWarehouseInformation();
+            org.springframework.beans.BeanUtils.copyProperties(ofcWarehouseInformation, custWarehouseInformation);
+            ofcCustWarehouseInformationService.update(custWarehouseInformation);
+            OfcCustFinanceInformation custFinanceInformation = new OfcCustFinanceInformation();
+            org.springframework.beans.BeanUtils.copyProperties(ofcFinanceInformation, custFinanceInformation);
+            ofcCustFinanceInformationService.update(custFinanceInformation);
         }
+
 
         //添加开单员
         if (ofcMerchandiserService.select(ofcMerchandiser).size() == 0 && !trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")) {
             ofcMerchandiserService.save(ofcMerchandiser);
         }
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag) || StringUtils.equals(ORDER_TAG_CUST_STOCK, reviewTag)) {
             //保存订单日志
             notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
             notes.append(" 订单已创建");
@@ -1538,12 +1557,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);
         }
-
-        //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
-        logger.info("自动审核. 订单批次号信息:{}", ofcFundamentalInformation.getOrderBatchNumber());
         if (StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
         }
+        logger.info("自动审核. 订单批次号信息:{}", ofcFundamentalInformation.getOrderBatchNumber());
+        //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
         if (isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
             //调用自动审核
             this.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetail, ofcDistributionBasicInfo, ofcWarehouseInformation
@@ -1560,7 +1578,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     public void fixAddressWhenEdit(String reviewTag, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
         logger.info("编辑后将地址不完整的订单的地址信息补充完整, reviewTag : {}", reviewTag);
         logger.info("编辑后将地址不完整的订单的地址信息补充完整, ofcDistributionBasicInfo : {}", ofcDistributionBasicInfo);
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_EDIT)) {
             String departurePlace = ofcDistributionBasicInfo.getDeparturePlace();
             String destination = ofcDistributionBasicInfo.getDestination();
             if (!PubUtils.isSEmptyOrNull(departurePlace)) {
