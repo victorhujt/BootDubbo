@@ -2269,8 +2269,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setPaymentWay(ofcFinanceInformation.getPayment());
         tfcTransport.setCarrFeePayer(ofcFinanceInformation.getExpensePaymentParty());
         tfcTransport.setIsReceipt(ofcFinanceInformation.getReturnList());
-        tfcTransport.setProvideTransport(ofcWarehouseInformation.getProvideTransport().equals(WEARHOUSE_WITH_TRANS) ? WEARHOUSE_WITH_TRANS:WAREHOUSE_NO_TRANS);
-
+        if (ofcWarehouseInformation != null) {
+            tfcTransport.setProvideTransport(ofcWarehouseInformation.getProvideTransport().equals(WEARHOUSE_WITH_TRANS) ? WEARHOUSE_WITH_TRANS:WAREHOUSE_NO_TRANS);
+        }
     }
 
     /**
