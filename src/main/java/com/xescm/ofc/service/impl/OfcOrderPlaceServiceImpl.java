@@ -165,6 +165,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
+        // 设置订单货品类型(AC使用)
+        setOrderGoodsTypeForAc(ofcGoodsDetailsInfos, ofcDistributionBasicInfo);
         if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)) {//下单
             this.orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcMerchandiser, ofcOrderStatus);
@@ -191,6 +193,24 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }else {
             return ResultCodeEnum.ERROROPER.getMsg();
         }
+    }
+
+    /**
+     * 设置订单货品类型（货品列表第一个不为空的大类小类）
+     * @param ofcGoodsDetailsInfos
+     * @param ofcDistributionBasicInfo
+     */
+    private void setOrderGoodsTypeForAc(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        String goodsType = "", goodsCategory = "";
+        for (OfcGoodsDetailsInfo goodsDetailsInfo : ofcGoodsDetailsInfos) {
+            goodsType = goodsDetailsInfo.getGoodsType();
+            if (!PubUtils.isOEmptyOrNull(goodsType)) {
+                goodsCategory = goodsDetailsInfo.getGoodsCategory();
+                break;
+            }
+        }
+        ofcDistributionBasicInfo.setGoodsType(goodsType);
+        ofcDistributionBasicInfo.setGoodsTypeName(goodsCategory);
     }
 
     /**
@@ -223,6 +243,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOperTime(now);
         //校验当前登录用户的身份信息,并存放大区和基地信息
         this.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
+        // 设置订单货品类型(AC使用)
+        setOrderGoodsTypeForAc(ofcGoodsDetailsInfos, ofcDistributionBasicInfo);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
