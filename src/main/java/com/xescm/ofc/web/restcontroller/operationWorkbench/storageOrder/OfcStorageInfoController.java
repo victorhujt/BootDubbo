@@ -10,6 +10,7 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
@@ -46,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.OrderConstConstant.TRACE_STATUS_5;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
 
 /**
@@ -279,9 +281,25 @@ public class OfcStorageInfoController extends BaseController {
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE,result);
     }
 
-    @RequestMapping(value ="saveStorage/{tag}", method = {RequestMethod.POST})
+    @RequestMapping(value = "saveStorage/{tag}", method = {RequestMethod.POST})
     @ResponseBody
-    public Wrapper<?> saveStorage(@ApiParam(name = "ofcSaveStorageDTO",value = "仓单Dto") @RequestBody OfcSaveStorageDTO ofcSaveStorageDTO,  @PathVariable String tag) {
+    public Wrapper<?> saveStorage(@ApiParam(name = "ofcSaveStorageDTO", value = "仓单Dto") @RequestBody OfcSaveStorageDTO ofcSaveStorageDTO, @PathVariable String tag) {
+        // 金融中心锁定客户不允许出库，追加逻辑
+        String customerCode = ofcSaveStorageDTO.getFundamentalInformation().getCustCode();
+        String orderBusinessType = ofcSaveStorageDTO.getFundamentalInformation().getBusinessType().substring(0, 2);
+        // 当状态为出库 且 保存状态时
+        if (orderBusinessType.equals(TRACE_STATUS_5) && "save".equals(tag)) {
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(customerCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
+            if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
+                throw new BusinessException("校验客户锁定状态时出现异常");
+            }
+            String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
+            if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
+                throw new BusinessException("此客户被金融中心锁定，辛苦联系金融中心同事！");
+            }
+        }
         try {
             if (ofcSaveStorageDTO == null) {
                 throw new BusinessException("订单的基本信息不能为空");
@@ -309,10 +327,10 @@ public class OfcStorageInfoController extends BaseController {
             //收货人信息
             CscContantAndCompanyDto consignee = ofcSaveStorageDTO.getConsignee();
             //供应商信息
-            CscSupplierInfoDto supplier=ofcSaveStorageDTO.getSupplier();
+            CscSupplierInfoDto supplier = ofcSaveStorageDTO.getSupplier();
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
             logger.info("==>仓储开单或编辑实体 OfcSaveStorageDTO={}", JacksonUtil.toJson(ofcSaveStorageDTO));
-           // logger.info("==>仓储开单或编辑标志位 tag={}", tag);
+            // logger.info("==>仓储开单或编辑标志位 tag={}", tag);
             if (ofcWarehouseInformationDTO.getProvideTransport() == 1) {
                 if (trimAndNullAsEmpty(OfcFundamentalInformationDTO.getBusinessType()).substring(0, 2).equals("61")) {
                     if (consignee == null) {
@@ -326,13 +344,13 @@ public class OfcStorageInfoController extends BaseController {
             }
             //发货方信息
             if (consignor == null) {
-                consignor=new CscContantAndCompanyDto();
+                consignor = new CscContantAndCompanyDto();
             }
             if (consignee == null) {
-                consignee=new CscContantAndCompanyDto();
+                consignee = new CscContantAndCompanyDto();
             }
-            Wrapper<?> result=ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO,ofcGoodsDetailsInfos,tag,consignor,consignee,supplier,authResDtoByToken);
-            if (result.getCode()!=Wrapper.SUCCESS_CODE) {
+            Wrapper<?> result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO, ofcGoodsDetailsInfos, tag, consignor, consignee, supplier, authResDtoByToken);
+            if (result.getCode() != Wrapper.SUCCESS_CODE) {
                 if (!org.apache.commons.lang.StringUtils.isEmpty(result.getMessage())) {
                     throw new BusinessException(result.getMessage());
                 } else {
@@ -342,15 +360,15 @@ public class OfcStorageInfoController extends BaseController {
         } catch (BusinessException ex) {
             logger.error("仓储订单下单或编辑出现异常:{}", ex.getMessage(), ex);
             if (!org.apache.commons.lang.StringUtils.isEmpty(ex.getMessage())) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
             } else {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
             }
         } catch (Exception ex) {
             logger.error("仓储订单下单或编辑出现未知异常:{}", ex.getMessage(), ex);
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,Wrapper.ERROR_MESSAGE);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE,"仓储下单成功");
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "仓储下单成功");
     }
 
     /**
