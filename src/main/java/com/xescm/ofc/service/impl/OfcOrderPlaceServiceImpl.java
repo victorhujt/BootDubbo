@@ -206,7 +206,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             String code = goodsDetailsInfo.getGoodsTypeCode();
             String name = goodsDetailsInfo.getGoodsType();
             goodsTypeCode = PubUtils.isOEmptyOrNull(goodsTypeCode) && !PubUtils.isOEmptyOrNull(code) ? code : goodsTypeCode;
-            goodsTypeName = PubUtils.isOEmptyOrNull(goodsTypeName) && !PubUtils.isOEmptyOrNull(name) ? goodsTypeName : goodsTypeName;
+            goodsTypeName = PubUtils.isOEmptyOrNull(goodsTypeName) && !PubUtils.isOEmptyOrNull(name) ? name : goodsTypeName;
         }
         ofcDistributionBasicInfo.setGoodsType(goodsTypeCode);
         ofcDistributionBasicInfo.setGoodsTypeName(goodsTypeName);
