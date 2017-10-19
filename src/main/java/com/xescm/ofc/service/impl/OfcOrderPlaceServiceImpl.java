@@ -201,16 +201,16 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      * @param ofcDistributionBasicInfo
      */
     private void setOrderGoodsTypeForAc(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
-        String goodsType = "", goodsCategory = "";
+        String goodsTypeCode = "", goodsTypeName = "";
         for (OfcGoodsDetailsInfo goodsDetailsInfo : ofcGoodsDetailsInfos) {
-            goodsType = goodsDetailsInfo.getGoodsType();
-            if (!PubUtils.isOEmptyOrNull(goodsType)) {
-                goodsCategory = goodsDetailsInfo.getGoodsCategory();
+            goodsTypeCode = goodsDetailsInfo.getGoodsTypeCode();
+            if (!PubUtils.isOEmptyOrNull(goodsTypeCode)) {
+                goodsTypeName = goodsDetailsInfo.getGoodsType();
                 break;
             }
         }
-        ofcDistributionBasicInfo.setGoodsType(goodsType);
-        ofcDistributionBasicInfo.setGoodsTypeName(goodsCategory);
+        ofcDistributionBasicInfo.setGoodsType(goodsTypeCode);
+        ofcDistributionBasicInfo.setGoodsTypeName(goodsTypeName);
     }
 
     /**
