@@ -42,24 +42,20 @@
     <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
     <result column="consignment_batch_number" property="consignmentBatchNumber" jdbcType="VARCHAR" />
     <result column="signed_sms" property="signedSms" jdbcType="VARCHAR" />
-
-
-
-
-
-   <!-- <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
-    <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
-    <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
-    <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
-    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
-    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
-    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
-    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
-    <result column="destination" property="destination" jdbcType="VARCHAR" />
-    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
-    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
-    <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
-    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="ground_distribution" property="groundDistribution" jdbcType="VARCHAR" />
+    <!-- <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
+     <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
+     <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
+     <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
+     <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+     <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+     <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+     <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+     <result column="destination" property="destination" jdbcType="VARCHAR" />
+     <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+     <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+     <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
+     <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
 
     <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
     <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
@@ -255,5 +251,38 @@
       AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
     </where>
   </select>
+    <select id="queryByCondition" resultType="com.xescm.ofc.domain.OfcExceptOrder">
+      SELECT
+      ofi.order_code orderCode,
+      ofi.cust_order_code custOrderCode,
+      ofi.cust_code custCode,
+      ofi.cust_name custName,
+      ofi.order_type orderType,
+      ofi.business_type businessType,
+      ofi.order_source orderSource,
+      ofi.area_code areaCode,
+      ofi.area_name areaName,
+      ofi.base_code baseCode,
+      ofi.base_name baseName,
+      ofi.creation_time creationTime,
+      odbi.trans_code transCode,
+      owi.provide_transport provideTransport
+      FROM
+      ofc_fundamental_information ofi
+      LEFT JOIN ofc_distribution_basic_info odbi ON ofi.order_code = odbi.order_code
+      LEFT JOIN ofc_warehouse_information owi ON ofi.order_code = owi.order_code
+      <where>
+      <if test="orderTimePre!=null and orderTimePre!=''">
+        AND ofi.creation_time <![CDATA[ >= ]]>  #{orderTimePre}
+      </if>
+      <if test="orderTimeSuf!=null and orderTimeSuf!=''">
+        AND ofi.creation_time <![CDATA[ < ]]>  #{orderTimeSuf}
+      </if>
+      <if test="orderCode!=null and orderCode!=''">
+        AND ofi.order_code = #{orderCode}
+      </if>
+      </where>
+
+    </select>
 
 </mapper>

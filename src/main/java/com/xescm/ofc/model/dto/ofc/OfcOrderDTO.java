@@ -1,6 +1,8 @@
 package com.xescm.ofc.model.dto.ofc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -249,14 +251,14 @@ public class OfcOrderDTO {
     /**
      * 取货时间
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date pickupTime;
     /**
-     *期望送货时间
+     *期望送货时间 [承诺到达时间]
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date expectedArrivedTime;
     /**
      * 发货方编码
@@ -429,5 +431,21 @@ public class OfcOrderDTO {
     private String selfCustCode;
 
     private String consignmentBatchNumber;
+
+
+    private CscContantAndCompanyDto consignor;
+
+    private CscContantAndCompanyDto consignee;
+
+    private CscSupplierInfoDto supplier;
+
+    private String baseName;
+
+    private String baseCode;
+
+    private String areaName;
+
+    private String areaCode;
+
 
 }

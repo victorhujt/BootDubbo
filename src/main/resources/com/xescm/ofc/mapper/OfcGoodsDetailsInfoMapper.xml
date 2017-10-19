@@ -26,15 +26,22 @@
     <result column="cubage" property="cubage" jdbcType="DECIMAL" />
     <result column="total_box" property="totalBox" jdbcType="INTEGER" />
     <result column="goods_category" property="goodsCategory" jdbcType="VARCHAR" />
+    <result column="goods_category_code" property="goodsCategoryCode" jdbcType="VARCHAR" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="goods_type_code" property="goodsTypeCode" jdbcType="VARCHAR" />
     <result column="pack" property="pack" jdbcType="VARCHAR" />
     <result column="quantity_unit_price" property="quantityUnitPrice" jdbcType="DECIMAL" />
     <result column="weight_unit_price" property="weightUnitPrice" jdbcType="DECIMAL" />
     <result column="volume_unit_price" property="volumeUnitPrice" jdbcType="DECIMAL" />
     <result column="support_batch" property="supportBatch" jdbcType="VARCHAR" />
+    <result column="support_name" property="supportName" jdbcType="VARCHAR" />
     <result column="package_name" property="packageName" jdbcType="VARCHAR" />
     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
     <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
+    <result column="paas_line_no" property="paasLineNo" jdbcType="INTEGER" />
+    <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
+
   </resultMap>
 
   <!--订单货品列表查询-->
@@ -61,20 +68,25 @@
     oos.cubage,
     oos.total_box,
     oos.goods_category,
+    oos.goods_category_code,
     oos.pack,
     oos.quantity_unit_price,
     oos.weight_unit_price,
     oos.volume_unit_price,
     oos.billing_weight,
     oos.goods_type,
+    oos.goods_type_code,
     oos.charging_ways,
     oos.charging_quantity,
     oos.charging_unit_price,
     oos.support_batch,
+    oos.support_name,
     oos.package_name,
     oos.package_type,
     oos.conversion_rate,
-    oos.primary_quantity
+    oos.primary_quantity,
+    oos.paas_line_no,
+    oos.manufacture_batch_lotatt
     FROM
     ofc_goods_details_info oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -121,20 +133,25 @@
       gdi.cubage,
       gdi.total_box,
       gdi.goods_category,
+      gdi.goods_category_code,
       gdi.pack,
       gdi.quantity_unit_price,
       gdi.weight_unit_price,
       gdi.volume_unit_price,
       gdi.billing_weight,
       gdi.goods_type,
+      gdi.goods_type_code,
       gdi.charging_ways,
       gdi.charging_quantity,
       gdi.charging_unit_price,
       gdi.support_batch,
+      gdi.support_name,
       gdi.package_name,
       gdi.package_type,
       gdi.conversion_rate,
-      gdi.primary_quantity
+      gdi.primary_quantity,
+      gdi.paas_line_no,
+      gdi.manufacture_batch_lotatt
     FROM ofc_goods_details_info gdi
     LEFT JOIN
     ofc_fundamental_information ofi
@@ -142,9 +159,31 @@
     WHERE
      gdi.order_code = #{orderCode}
   </select>
+    <select id="queryByCondition" resultType="java.lang.String">
+      SELECT
+      DISTINCT gdi.order_code
+    FROM ofc_goods_details_info gdi
+      <where>
+        <if test="orderTimePre!=null and orderTimePre!=''">
+          AND gdi.creation_time <![CDATA[ >= ]]>  #{orderTimePre}
+        </if>
+        <if test="orderTimeSuf!=null and orderTimeSuf!=''">
+          AND gdi.creation_time <![CDATA[ < ]]>  #{orderTimeSuf}
+        </if>
+        <if test="orderCode!=null and orderCode!=''">
+          AND gdi.order_code = #{orderCode}
+        </if>
+        <if test="goodsType != null and goodsType != ''">
+          AND gdi.goods_type = #{goodsType}
+        </if>
+        <if test="goodsCategory != null and goodsCategory != ''">
+          AND gdi.goods_category = #{goodsCategory}
+        </if>
+      </where>
+    </select>
 
 
-  <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+    <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
     <!--
       根据计划单号进行修改
     -->

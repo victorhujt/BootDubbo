@@ -10,6 +10,7 @@ import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.form.OrderStorageOperForm;
 import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
+import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
 import com.xescm.uam.model.dto.group.UamGroupDto;
@@ -18,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -61,8 +63,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OfcOrderNewstatusService ofcOrderNewstatusService;
 
     @Override
-    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OrderStorageOperForm form, String tag) {
-        if (tag.equals("in")) {
+    public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcQueryStorageDTO ofcQueryStorageDTO) {
+        if (ofcQueryStorageDTO.getTag().equals("in")) {
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("620");
                 businessTypes.add("621");
@@ -71,8 +73,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("624");
                 businessTypes.add("625");
                 businessTypes.add("626");
-                form.setBusinessTypes(businessTypes);
-        } else if (tag.equals("out")) {
+            ofcQueryStorageDTO.setBusinessTypes(businessTypes);
+        } else if (ofcQueryStorageDTO.getTag().equals("out")) {
                 List<String> businessTypes=new ArrayList<>();
                 businessTypes.add("610");
                 businessTypes.add("611");
@@ -80,8 +82,11 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
                 businessTypes.add("613");
                 businessTypes.add("614");
                 businessTypes.add("617");
-                form.setBusinessTypes(businessTypes);
+                businessTypes.add("618");
+            ofcQueryStorageDTO.setBusinessTypes(businessTypes);
         }
+        OrderStorageOperForm form = new OrderStorageOperForm();
+        BeanUtils.copyProperties(ofcQueryStorageDTO,form);
         return queryStorageOrderList(authResDto,form);
     }
 
@@ -223,7 +228,17 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (PubUtils.isSEmptyOrNull(areaSerialNo) && !PubUtils.isSEmptyOrNull(baseSerialNo)) {
             throw new BusinessException("基地所属大区未选择!");
         }
-        //2017年5月12日 追加逻辑 增加创建人查看权限
+        // 2017.8.17 订单状态支持多选
+        if (!PubUtils.isSEmptyOrNull(form.getOrderState())){
+            String orderStateStr = form.getOrderState();
+            String[] orderStateArray = orderStateStr.split(",");
+            List<String> strList = new ArrayList<>();
+            for (int i = 0; i < orderStateArray.length; i++){
+                strList.add(orderStateArray[i]);
+            }
+            form.setOrderStateList(strList);
+        }
+        // 2017年5月12日 追加逻辑 增加创建人查看权限
         if (StringUtils.equals(groupType,"1")) {
             boolean accept = StringUtils.equals(userGroupCode, areaSerialNo);
             //鲜易供应链身份
