@@ -5,6 +5,9 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
+import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
@@ -64,6 +67,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private OfcCreateOrderService ofcCreateOrderService;
     @Resource
     private OfcOrderManageService ofcOrderManageService;
+    @Resource
+    private CscCustomerEdasService cscCustomerEdasService;
     @Resource
     private OfcCreateOrderMapper ofcCreateOrderMapper;
     @Resource
