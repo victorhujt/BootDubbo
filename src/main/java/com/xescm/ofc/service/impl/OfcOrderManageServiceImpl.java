@@ -2375,7 +2375,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
 
             this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, null);
-                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectByKey(orderCode);
+            OfcWarehouseInformation cw = new OfcWarehouseInformation();
+            cw.setOrderCode(ofcFundamentalInformation.getOrderCode());
+            OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(cw);
             if (trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, goodsDetailsList);
             } else if (trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
