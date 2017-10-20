@@ -608,6 +608,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             ofcOrderManageService.fillAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation);
             try {
+                if (!StringUtils.equals(ofcFundamentalInformation.getIsException(),ISEXCEPTION)) {
                     //自动审核通过 review:审核；rereview:反审核
                     if (sEmptyOrNull) {
                         //自动审核通过 review:审核；rereview:反审核
@@ -624,6 +625,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     }
                     logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
                     logger.info("订单基本信息:{}",ToStringBuilder.reflectionToString(ofcFundamentalInformation));
+
+                }
+
             } catch (BusinessException ex) {
                 logger.error("自动审核异常，{}", ex);
                 throw new BusinessException("自动审核异常", ex);
@@ -646,7 +650,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 if (!StringUtils.equals(ofcFundamentalInformation.getIsException(),ISEXCEPTION)) {
                     //地址编码不为空才走自动审核, 为空的状态还是待审核, 并调用EPC端口补齐
                     if (sEmptyOrNull) {
-
                         //自动审核通过 review:审核；rereview:反审核
                         this.orderApply(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
                     } else {
