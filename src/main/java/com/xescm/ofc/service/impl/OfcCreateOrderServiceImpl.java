@@ -23,7 +23,6 @@ import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.csc.provider.*;
 import com.xescm.epc.edas.service.EpcBaiDuEdasService;
 import com.xescm.ofc.config.MqConfig;
-import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
@@ -205,13 +204,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
             //校验：货品档案信息，校验货品明细
 
-            if (OrderConstant.TRANSPORT_ORDER.equals(orderType)) {
-                resultModel = checkGoodsDetailInfo(createOrderEntity, custCode, orderType);
+                resultModel = checkGoodsDetailInfo(createOrderEntity, custCode);
                 if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                     logger.error("校验订单商品信息失败：{}", resultModel.getDesc());
                     return resultModel;
                 }
-            }
             //转换 dto → do
             CreateOrderTrans createOrderTrans = new CreateOrderTrans(createOrderEntity, orderCode);
             OfcFundamentalInformation ofcFundamentalInformation = createOrderTrans.getOfcFundamentalInformation();
@@ -439,10 +436,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
      * 校验货品编码
      * @param createOrderEntity
      * @param custCode
-     * @param orderType
      * @return
      */
-    private ResultModel checkGoodsDetailInfo(OfcCreateOrderDTO createOrderEntity, String custCode, String orderType) {
+    private ResultModel checkGoodsDetailInfo(OfcCreateOrderDTO createOrderEntity, String custCode) {
         ResultModel resultModel;
         List<OfcCreateOrderGoodsInfoDTO> createOrderGoodsInfos = createOrderEntity.getCreateOrderGoodsInfos();
         if (PubUtils.isNotNullAndBiggerSize(createOrderGoodsInfos, 0)) {
@@ -733,8 +729,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     if (null == ofcAddressReflect) {
                         ofcAddressReflect = new OfcAddressReflect();
                         ofcAddressReflect.setAddress(departurePlace);
-                        if (ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                        if (ofcAddressReflectMapper.insert(ofcAddressReflect) < 1) {
                             logger.error("存储出发完整地址映射失败!");
+                        }
                     }
                 } else {
                     com.alibaba.fastjson.JSONObject departurePlaceObj = JSON.parseObject((String) departurePlaceResult.getResult());
@@ -801,8 +798,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     if (null == ofcAddressReflect) {
                         ofcAddressReflect = new OfcAddressReflect();
                         ofcAddressReflect.setAddress(destination);
-                        if (ofcAddressReflectMapper.insert(ofcAddressReflect) < 1)
+                        if (ofcAddressReflectMapper.insert(ofcAddressReflect) < 1) {
                             logger.error("存储到达完整地址映射失败!");
+                        }
                     }
                 } else {
                     com.alibaba.fastjson.JSONObject destinationObj = JSON.parseObject((String) destinationResult.getResult());
