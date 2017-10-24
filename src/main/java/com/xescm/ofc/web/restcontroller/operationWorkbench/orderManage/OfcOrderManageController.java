@@ -10,13 +10,13 @@ import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
-import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -172,27 +172,38 @@ public class OfcOrderManageController extends BaseController {
     /**
      * 审核与反审核订单
      *
-     * @param auditOrderDTO 审核参数
+     * @param whcModifWmsCodeReqDto 订单修改实体参数
      * @return      Wrapper
      */
     @ResponseBody
-    @RequestMapping(value = "/auditTransportOrder", method = RequestMethod.POST)
-    @ApiOperation(value = "审核、反审核订单", httpMethod = "POST", notes = "审核、反审核结果")
-    public Wrapper<String> auditTransportOrder(@ApiParam(name = "auditOrderDTO", value = "订单审核实体") @RequestBody AuditOrderDTO auditOrderDTO) {
-        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+    @RequestMapping(value = "/updateOrderDetail", method = RequestMethod.POST)
+    @ApiOperation(value = "修改订单的详情", httpMethod = "POST", notes = "订单修改实体的结果")
+    public Wrapper<String> updateOrderDetail(@ApiParam(name = "whcModifWmsCodeReqDto", value = "订单修改实体") @RequestBody WhcModifWmsCodeReqDto whcModifWmsCodeReqDto) {
         try {
-            if (auditOrderDTO != null && StringUtils.isBlank(auditOrderDTO.getOrderCode())) {
-                throw new BusinessException("订单编号不能为空！");
-            } else if (StringUtils.isBlank(auditOrderDTO.getReviewTag())) {
-                throw new BusinessException("订单标识不能为空！");
+            if (whcModifWmsCodeReqDto == null) {
+                throw new BusinessException("订单修改实体不能为空");
             }
-            String result = ofcOrderManageService.orderAutoAuditForTran(auditOrderDTO.getOrderCode(), auditOrderDTO.getReviewTag(), authResDtoByToken);
-            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单审核成功", result);
+            if (StringUtils.isBlank(whcModifWmsCodeReqDto.getOrderCode())) {
+                throw new BusinessException("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(whcModifWmsCodeReqDto.getBillType())) {
+                throw new BusinessException("订单的业务类型不能为空！");
+            }
+
+            Wrapper<?> result = ofcOrderManageService.updateOrderDetail(whcModifWmsCodeReqDto);
+            if (result == null) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            }
+            if (result.getCode() == Wrapper.SUCCESS_CODE) {
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单修改成功");
+            } else {
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单修改失败");
+            }
         } catch (BusinessException ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单修改出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
-            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            logger.error("订单中心订单管理订单修改出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }

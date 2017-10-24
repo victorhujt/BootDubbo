@@ -56,6 +56,8 @@ import com.xescm.tfc.edas.service.CancelOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.whc.edas.dto.InventoryDTO;
 import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
+import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
+import com.xescm.whc.edas.service.WhcModifWmsCodeEdasService;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -153,6 +155,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private OfcEnumerationService ofcEnumerationService;
 
     private ModelMapper modelMapper = new ModelMapper();
+
+    @Resource
+    private WhcModifWmsCodeEdasService whcModifWmsCodeEdasService;
 
     @Override
     public Map orderStorageDetails(String orderCode) {
@@ -1919,6 +1924,39 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 订单管理修改订单详情
+     * @param whcModifWmsCodeReqDto 修改订单详情信息
+     * @return
+     */
+    @Override
+    public Wrapper<?> updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto) {
+        String orderCode = whcModifWmsCodeReqDto.getOrderCode();
+        String warehouseCode = whcModifWmsCodeReqDto.getNewWareHouseCode();
+        logger.info("订单详情修改的订单为:{},修改后的仓库编码为:{}",orderCode,warehouseCode);
+        OfcFundamentalInformation info = ofcFundamentalInformationService.selectByKey(orderCode);
+        if (info == null) {
+            throw new BusinessException("订单不存在");
+        }
+        OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        ofcFundamentalInformation.setOrderCode(orderCode);
+        ofcWarehouseInformation.setOrderCode(orderCode);
+        ofcWarehouseInformation.setWarehouseCode(warehouseCode);
+        ofcWarehouseInformation.setWarehouseName(whcModifWmsCodeReqDto.getNewWareHouseName());
+
+        /*更新仓库信息的仓库编码和仓库名称*/
+        int reuslt = ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+        if (reuslt < 1) {
+            return null;
+        }
+        /*更新订单信息的大区和基地*/
+        ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
+
+         return whcModifWmsCodeEdasService.modifWmsCodeByOrderCode(whcModifWmsCodeReqDto);
+       // return new Wrapper<>(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
     }
 
     /**
