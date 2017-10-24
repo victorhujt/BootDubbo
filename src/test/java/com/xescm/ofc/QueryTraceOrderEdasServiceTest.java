@@ -65,6 +65,7 @@ public class QueryTraceOrderEdasServiceTest extends HsfBaseTest{
         List<String> codeList = new ArrayList<>();
         codeList.add("SO170919000011");
         codeList.add("SO170919000012");
+        codeList.add("SO170919000055");
         Wrapper<List<OfcOrderDetailTypeDto>> result = ofcOrderInfoEdasService.getOrderGoodsTypeByOrderCode(codeList);
         if (result != null && result.getCode() == 200) {
             int i = 0;
