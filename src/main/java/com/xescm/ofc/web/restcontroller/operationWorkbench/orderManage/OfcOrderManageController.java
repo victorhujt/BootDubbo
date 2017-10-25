@@ -189,7 +189,8 @@ public class OfcOrderManageController extends BaseController {
             if (StringUtils.isBlank(whcModifWmsCodeReqDto.getBillType())) {
                 throw new BusinessException("订单的业务类型不能为空！");
             }
-
+            AuthResDto authResDto = getAuthResDtoByToken();
+            whcModifWmsCodeReqDto.setOperationName(authResDto.getUserName());
             Wrapper<?> result = ofcOrderManageService.updateOrderDetail(whcModifWmsCodeReqDto);
             if (result == null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
