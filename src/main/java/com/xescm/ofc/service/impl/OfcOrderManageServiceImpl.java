@@ -2309,6 +2309,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         tfcTransport.setIsReceipt(ofcFinanceInformation.getReturnList());
         if (ofcWarehouseInformation != null) {
             tfcTransport.setProvideTransport(ofcWarehouseInformation.getProvideTransport().equals(WEARHOUSE_WITH_TRANS) ? WEARHOUSE_WITH_TRANS:WAREHOUSE_NO_TRANS);
+        } else {
+            tfcTransport.setProvideTransport(WAREHOUSE_NO_TRANS);
         }
     }
 
