@@ -222,4 +222,16 @@
     </set>
     where order_code = #{orderCode,jdbcType=VARCHAR}
   </update>
+
+  <!-- 根据订单号批量查询订单信息 -->
+  <select id="getOrderGoodsTypeByOrderCode" resultMap="BaseResultMap">
+    SELECT order_code, goods_type FROM ofc_goods_details_info gdi
+    WHERE 1 = 1 and gdi.order_code IN
+    <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
+      #{orderCode}
+    </foreach>
+    and goods_type is not null and goods_type != ''
+    group by order_code, goods_type
+    order by order_code
+  </select>
 </mapper>

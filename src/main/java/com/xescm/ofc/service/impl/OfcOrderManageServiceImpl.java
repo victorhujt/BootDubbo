@@ -1647,6 +1647,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     OfcDistributionBasicInfo newofcDistributionBasicInfo = new OfcDistributionBasicInfo();
                     BeanUtils.copyProperties(newofcDistributionBasicInfo, BasicInfo);
                     newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
+                    newofcDistributionBasicInfo.setTransCode("");//运输单号置为空
                     ofcDistributionBasicInfoService.save(newofcDistributionBasicInfo);
                 }
             }
@@ -1859,6 +1860,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("订单信息推送仓储中心 ==> dinfo:{}", dinfo);
         String json;
         try {
+            if (CollectionUtils.isEmpty(goodsDetailsList)) {
+                throw new BusinessException("货品信息不能为空");
+            }
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);//严格模式
             OfcOrderDTO ofOrderDto = modelMapper.map(ofcFundamentalInformation, OfcOrderDTO.class);
             logger.info("订单信息推送仓储中心 ==> ofOrderDto:{}", ofOrderDto);
