@@ -2115,6 +2115,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         TfcTransport tfcTransport = new TfcTransport();
         this.convertOrderToTfcOfBaseInfo(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, tfcTransport);
+        //调度中心运力调度订单列表展示货品分类展示的问题  取第一条货品种类填充
+        if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getGoodsTypeName())){
+            ofcDistributionBasicInfo.setGoodsTypeName(ofcGoodsDetailsInfos.get(0).getGoodsType());
+            ofcDistributionBasicInfo.setGoodsType(ofcGoodsDetailsInfos.get(0).getGoodsTypeCode());
+
+        }
         List<TfcTransportDetail> tfcTransportDetails = new ArrayList<>();
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
             if (ofcGoodsDetailsInfo.getQuantity() == null || ofcGoodsDetailsInfo.getQuantity().compareTo(new BigDecimal(0)) == 0) {
