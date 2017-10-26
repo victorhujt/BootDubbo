@@ -2119,8 +2119,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getGoodsTypeName())){
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
                 if (!PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsType())) {
-                    ofcDistributionBasicInfo.setGoodsTypeName(ofcGoodsDetailsInfo.getGoodsType());
-                    ofcDistributionBasicInfo.setGoodsType(ofcGoodsDetailsInfo.getGoodsTypeCode());
+                    tfcTransport.setGoodsTypeName(ofcGoodsDetailsInfo.getGoodsType());
                     break;
                 }
             }
