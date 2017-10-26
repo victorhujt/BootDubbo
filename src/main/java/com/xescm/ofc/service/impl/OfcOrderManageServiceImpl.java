@@ -291,7 +291,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     goodsInfo.setPackageName(goodsInfo.getUnit());
                 }
             }
-            return;
         }
         //没有匹配到包装的货品编码
         List<String> noPackageGoods = new ArrayList<>();
@@ -320,6 +319,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                     PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                 CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
+                if ("000001".equals(ofcWarehouseInformation.getWarehouseCode())) {
+                    if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
+                        if (good.getPrimaryQuantity() == null || good.getPrimaryQuantity().doubleValue() == 0.0) {
+                            good.setPrimaryQuantity(good.getQuantity());
+                            good.setPackageName(good.getUnit());
+                        }
+                    }
+                    continue;
+                }
                 List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                 if (!CollectionUtils.isEmpty(packages)) {
                     for (GoodsPackingDto packingDto : packages) {
