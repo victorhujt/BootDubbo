@@ -224,11 +224,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } else if (reviewTag.equals(REVIEW)) {
             if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT)) {
                 OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+                    OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                 //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
                 if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
                         || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
-                    OfcWarehouseInformation warehouseInfo = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
-                    ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(warehouseInfo.getWarehouseCode(),ofcFundamentalInformation);
+                    ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
                     if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
                         || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
                         logger.error("订单没有基地信息, 维持待审核状态");
@@ -246,7 +246,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
                 List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.goodsDetailsScreenList(orderCode, "orderCode");
-                OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                 if (!CollectionUtils.isEmpty(goodsDetailsList)){
                     validateGoodsPackage(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation);
                 }
@@ -257,6 +256,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     ofcFinanceInformation = new OfcFinanceInformation();
                 }
                 if (ofcWarehouseInformation.getProvideTransport() .equals(WEARHOUSE_WITH_TRANS)) {//提供运输
+                    if (ofcDistributionBasicInfo != null && PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+                        throw new BusinessException("提供运输时，运输单号不能为空");
+                    }
                     //仓储订单推仓储中心
                     pushOrderToWhc(ofcFundamentalInformation, goodsDetailsList, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
                     this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
@@ -1737,7 +1739,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     OfcDistributionBasicInfo newofcDistributionBasicInfo = new OfcDistributionBasicInfo();
                     BeanUtils.copyProperties(newofcDistributionBasicInfo, BasicInfo);
                     newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
-                    newofcDistributionBasicInfo.setTransCode("");
+                    if (owinfo != null) {
+                        if (Objects.equals(owinfo.getProvideTransport(), YES)) {
+                            newofcDistributionBasicInfo.setTransCode(newofcFundamentalInformation.getOrderCode());
+                        }
+                    }
                     ofcDistributionBasicInfoService.save(newofcDistributionBasicInfo);
                 }
             }
