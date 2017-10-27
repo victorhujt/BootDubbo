@@ -24,5 +24,12 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
 
     void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
 
-    List<OfcGoodsDetailsInfo> queryByCondition(OrderScreenCondition orderScreenCondition);
+    List<String> queryByCondition(OrderScreenCondition orderScreenCondition);
+
+    /**
+     * 根据订单批量查询订单货品类型
+     * @param codeList 订单号
+     * @return
+     */
+    List<OfcGoodsDetailsInfo> getOrderGoodsTypeByOrderCode(@Param("list") List<String> codeList);
 }

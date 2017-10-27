@@ -1173,6 +1173,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.info("订单状态开始推结算中心成功 integerWrapper{}", integerWrapper);
         } catch (Exception e) {
             logger.error("订单中心--订单状态推结算中心(执行中和已完成) 异常, {}", e, e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -1425,7 +1426,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         ofcDistributionBasicInfo.setWeight(totalWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
         Iterator iter = goodInfo.entrySet().iterator();
-        int i = 0;
         while (iter.hasNext()) {
                 Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
                 OfcGoodsDetailsInfo ofcGoodsDetails=entry.getValue();
@@ -1979,7 +1979,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      *
      * @param ofcFundamentalInformation 基本信息
      * @param ofcFinanceInformation     财务信息
-     * @P
      * @param ofcDistributionBasicInfo  运输信息
      * @param ofcGoodsDetailsInfos      货品信息
      * @return void
@@ -2187,7 +2186,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     /**
      * 转换TFC实体基本信息
      * @param ofcFundamentalInformation 基本信息
-     *
      * @param ofcFinanceInformation 财务信息
      * @param ofcWarehouseInformation 仓储信息
      * @param ofcDistributionBasicInfo 运输信息

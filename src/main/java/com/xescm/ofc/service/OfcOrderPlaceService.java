@@ -15,15 +15,15 @@ import java.util.List;
  * Created by ydx on 2016/10/12.
  */
 public interface OfcOrderPlaceService{
-    
+
     /**
      * <p>Title:      placeOrder. </p>
      * <p>Description 下单（不包含城配导单）</p>
-     * 
-     * @param 
+     *
+     * @param
      * @author nothing
      * @date 2017/8/31 17:26
-     * @return 
+     * @return
      */
     String placeOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken
                       , String custId, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
@@ -38,11 +38,11 @@ public interface OfcOrderPlaceService{
     /**
      * <p>Title:      distributionPlaceOrder. </p>
      * <p>Description 城配导单</p>
-     * 
-     * @param 
+     *
+     * @param
      * @author nothing
      * @date 2017/8/31 17:26
-     * @return 
+     * @return
      */
     OfcOrderInfoDTO distributionPlaceOrder(OfcOrderDTO ofcOrderDTO, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, String tag, AuthResDto authResDtoByToken, String custId
         , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor

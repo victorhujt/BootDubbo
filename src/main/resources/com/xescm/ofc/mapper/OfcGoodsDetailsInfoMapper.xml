@@ -39,9 +39,10 @@
     <result column="package_type" property="packageType" jdbcType="VARCHAR" />
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
     <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
-    <result column="paasLineNo" property="paas_line_no" jdbcType="INTEGER" />
-    <result column="externalPaasLineNo" property="external_paas_line_no" jdbcType="VARCHAR"  />
-    <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
+    <result column="paas_line_no" property="paasLineNo" jdbcType="INTEGER" />
+      <result column="external_paas_line_no" property="externalPaasLineNo" jdbcType="VARCHAR"  />
+
+      <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
 
   </resultMap>
@@ -165,13 +166,9 @@
     WHERE
      gdi.order_code = #{orderCode}
   </select>
-    <select id="queryByCondition" resultType="com.xescm.ofc.domain.OfcGoodsDetailsInfo">
+    <select id="queryByCondition" resultType="java.lang.String">
       SELECT
-      gdi.order_code,
-      gdi.goods_category,
-      gdi.goods_category_code,
-      gdi.goods_type,
-      gdi.goods_type_code
+      DISTINCT gdi.order_code
     FROM ofc_goods_details_info gdi
       <where>
         <if test="orderTimePre!=null and orderTimePre!=''">
@@ -182,6 +179,12 @@
         </if>
         <if test="orderCode!=null and orderCode!=''">
           AND gdi.order_code = #{orderCode}
+        </if>
+        <if test="goodsType != null and goodsType != ''">
+          AND gdi.goods_type = #{goodsType}
+        </if>
+        <if test="goodsCategory != null and goodsCategory != ''">
+          AND gdi.goods_category = #{goodsCategory}
         </if>
       </where>
     </select>
@@ -240,4 +243,16 @@
   </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <!-- 根据订单号批量查询订单信息 -->
+  <select id="getOrderGoodsTypeByOrderCode" resultMap="BaseResultMap">
+    SELECT order_code, goods_type FROM ofc_goods_details_info gdi
+    WHERE 1 = 1 and gdi.order_code IN
+    <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
+      #{orderCode}
+    </foreach>
+    and goods_type is not null and goods_type != ''
+    group by order_code, goods_type
+    order by order_code
+  </select>
 </mapper>

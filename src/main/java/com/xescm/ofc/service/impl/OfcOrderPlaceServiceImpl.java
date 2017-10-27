@@ -167,6 +167,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(MANUAL);//订单来源
+        // 设置订单货品类型(AC使用)
+        setOrderGoodsTypeForAc(ofcGoodsDetailsInfos, ofcDistributionBasicInfo);
         if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_NORMAL_PLACE)) {//下单
             this.orderPlaceTagPlace(ofcGoodsDetailsInfos, authResDtoByToken, custId, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFinanceInformation, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation, ofcMerchandiser, ofcOrderStatus);
@@ -193,6 +195,23 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }else {
             return ResultCodeEnum.ERROROPER.getMsg();
         }
+    }
+
+    /**
+     * 设置订单货品类型（货品列表第一个不为空的大类小类）
+     * @param ofcGoodsDetailsInfos
+     * @param ofcDistributionBasicInfo
+     */
+    private void setOrderGoodsTypeForAc(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        String goodsTypeCode = "", goodsTypeName = "";
+        for (OfcGoodsDetailsInfo goodsDetailsInfo : ofcGoodsDetailsInfos) {
+            String code = goodsDetailsInfo.getGoodsTypeCode();
+            String name = goodsDetailsInfo.getGoodsType();
+            goodsTypeCode = PubUtils.isOEmptyOrNull(goodsTypeCode) && !PubUtils.isOEmptyOrNull(code) ? code : goodsTypeCode;
+            goodsTypeName = PubUtils.isOEmptyOrNull(goodsTypeName) && !PubUtils.isOEmptyOrNull(name) ? name : goodsTypeName;
+        }
+        ofcDistributionBasicInfo.setGoodsType(goodsTypeCode);
+        ofcDistributionBasicInfo.setGoodsTypeName(goodsTypeName);
     }
 
     /**
@@ -225,6 +244,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcFundamentalInformation.setOperTime(now);
         //校验当前登录用户的身份信息,并存放大区和基地信息
         this.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
+        // 设置订单货品类型(AC使用)
+        setOrderGoodsTypeForAc(ofcGoodsDetailsInfos, ofcDistributionBasicInfo);
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
@@ -238,7 +259,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         }
         return ofcOrderInfoDTO;
     }
-    
+
     /**
      * 运输开单
      * @param ofcGoodsDetailsInfos 货品信息
@@ -999,13 +1020,13 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             if (ofcMerchandiserService.select(ofcMerchandiser).size() == 0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")) {
                 ofcMerchandiserService.save(ofcMerchandiser);
             }
-            
+
             orderInfoDTO.setOfcFundamentalInformation(ofcFundamentalInformation);
             orderInfoDTO.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
             orderInfoDTO.setOfcFinanceInformation(ofcFinanceInformation);
             orderInfoDTO.setGoodsDetailsInfoList(ofcGoodsDetailsInfos);
             orderInfoDTO.setOfcWarehouseInformation(ofcWarehouseInformation);
-            
+
             return orderInfoDTO;
 //            if (!PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
 //                //进行自动审核

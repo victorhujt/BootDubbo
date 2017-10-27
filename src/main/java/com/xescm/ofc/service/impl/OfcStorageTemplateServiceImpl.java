@@ -2026,15 +2026,21 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcGoodsDetailsInfo.setId(null);
         ofcGoodsDetailsInfo.setGoodsSpec(ofcStorageTemplateDto.getGoodsSpec());
         ofcGoodsDetailsInfo.setUnit(ofcStorageTemplateDto.getUnit());
-        ofcGoodsDetailsInfo.setUnitPrice(ofcStorageTemplateDto.getUnitPrice());
         ofcGoodsDetailsInfo.setQuantity(ofcStorageTemplateDto.getQuantity());
         ofcGoodsDetailsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
         ofcGoodsDetailsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
         ofcGoodsDetailsInfo.setChargingWays("01");//计费方式默认按件数
         ofcGoodsDetailsInfo.setChargingQuantity(ofcStorageTemplateDto.getQuantity()); // 计费数量默认为货品数量
-        if (!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())) {
+
+        // dragon 2017.9.19
+        if (!PubUtils.isOEmptyOrNull(ofcStorageTemplateDto.getUnitPrice())) {
+            // 如果模版里的单价不为空，设置为模版中的单价
+            ofcGoodsDetailsInfo.setUnitPrice(ofcStorageTemplateDto.getUnitPrice());
+        }else if (!PubUtils.isSEmptyOrNull(cscGoodsApiVo.getUnitPrice())) {
+            // 如果模版里的单价为空，但csc货品中有单价，设置为csc货品的单价
             ofcGoodsDetailsInfo.setUnitPrice(new BigDecimal(cscGoodsApiVo.getUnitPrice()));
         }
+
         String productionBatch = ofcStorageTemplateDto.getProductionBatch();
         String supportBatch = ofcStorageTemplateDto.getSupportBatch();
         String productionTime = ofcStorageTemplateDto.getProductionTime();

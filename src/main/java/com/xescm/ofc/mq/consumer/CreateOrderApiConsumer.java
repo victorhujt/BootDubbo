@@ -5,12 +5,10 @@ import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
-import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
 import com.xescm.ofc.domain.OfcPlanFedBackCondition;
-import com.xescm.ofc.domain.OfcPlanFedBackResult;
 import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
 import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
@@ -22,6 +20,7 @@ import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
 import com.xescm.ofc.service.OfcOrderStatusService;
 import com.xescm.ofc.service.OfcPlanFedBackService;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -111,14 +110,19 @@ public class CreateOrderApiConsumer implements MessageListener {
             try {
                 if (message.getTag().equals("DeliveryTag")) {
                     logger.info("调度单：{}", message);
-                    List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions = null;
+                    List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions;
                     TypeReference<List<OfcSchedulingSingleFeedbackCondition>> ofcSchedulingTypeRef = new TypeReference<List<OfcSchedulingSingleFeedbackCondition>>() {
                     };
                     try {
                         ofcSchedulingSingleFeedbackConditions = JacksonUtil.parseJsonWithFormat(messageBody, ofcSchedulingTypeRef);
                         for (int i = 0; i < ofcSchedulingSingleFeedbackConditions.size(); i++) {
-                            // 保存到数
-                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.schedulingSingleFeedbackNew(ofcSchedulingSingleFeedbackConditions.get(i),userName);
+                            try {
+                                ofcPlanFedBackService.schedulingSingleFeedbackNew(ofcSchedulingSingleFeedbackConditions.get(i), userName);
+                            } catch (BusinessException ex) {
+                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
+                            } catch (Exception ex) {
+                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
+                            }
                         }
                     } catch (Exception e) {
                         logger.error("运输单状态反馈出错:{}", e.getMessage(), e);
@@ -126,14 +130,19 @@ public class CreateOrderApiConsumer implements MessageListener {
                 } else if (message.getTag().equals("TransportTag")) {
                     logger.info("运输单消费 :{}", message);
                     // 将获取的json格式字符串转换成相应对象
-                    List<OfcPlanFedBackCondition> ofcPlanFedBackConditions = null;
+                    List<OfcPlanFedBackCondition> ofcPlanFedBackConditions;
                     TypeReference<List<OfcPlanFedBackCondition>> ofcPlanFedBackTypeRef = new TypeReference<List<OfcPlanFedBackCondition>>() {
                     };
                     try {
                         ofcPlanFedBackConditions= JacksonUtil.parseJsonWithFormat(messageBody, ofcPlanFedBackTypeRef);
                         for (int i = 0; i < ofcPlanFedBackConditions.size(); i++) {
-                            // 保存到数
-                            Wrapper<List<OfcPlanFedBackResult>> rmcCompanyLists = ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i), userName,MAP);
+                            try {
+                            ofcPlanFedBackService.planFedBackNew(ofcPlanFedBackConditions.get(i), userName,MAP);
+                            } catch (BusinessException ex) {
+                                logger.error("订单运输状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
+                            } catch (Exception ex) {
+                                logger.error("订单运输状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
+                            }
                         }
                     } catch (Exception e) {
                         logger.error("运输单出错:{}", e.getMessage(), e);
