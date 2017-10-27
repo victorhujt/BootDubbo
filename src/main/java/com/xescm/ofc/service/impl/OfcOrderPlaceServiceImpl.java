@@ -38,6 +38,7 @@ import java.util.*;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
+import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -125,6 +126,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+            ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
             goodsAmountCount = goodsAmountCount.add(null == ofcGoodsDetails.getQuantity() ? new BigDecimal(0) : ofcGoodsDetails.getQuantity());
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
@@ -180,7 +182,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             this.distributionOrderPlace(ofcFundamentalInformation,ofcGoodsDetailsInfos,ofcDistributionBasicInfo
                     ,ofcWarehouseInformation,ofcFinanceInformation,custId,cscContantAndCompanyDtoConsignor,cscContantAndCompanyDtoConsignee,authResDtoByToken
                     ,ofcOrderStatus,ofcMerchandiser);
-        } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANEDIT)) {// 运输开单编辑
+        } else if (PubUtils.trimAndNullAsEmpty(tag).equals(ORDER_TAG_OPER_TRANEDIT)) {// 运输开单编辑 (追加需求994，订单修改，2017-08-31，袁宝龙)
             this.orderTransPlaceTagManage(ofcOrderDTO, ofcGoodsDetailsInfos, authResDtoByToken, cscContantAndCompanyDtoConsignor
                     , cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcOrderStatus);
         } else {
@@ -353,6 +355,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+            ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
         try {
@@ -1088,6 +1091,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setCreationTime(creationTime);
             ofcGoodsDetailsInfo.setCreator(creator);
+            ofcGoodsDetailsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
             ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
         }
         // 更新财务信息表

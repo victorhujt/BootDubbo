@@ -1,6 +1,7 @@
 package com.xescm.ofc.model.dto.ofc;
 
 import com.xescm.ofc.domain.*;
+import com.xescm.tfc.edas.model.dto.DeliverDetailsOrdeDto;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,4 +29,6 @@ public class OfcOrderInfoDTO implements Serializable {
     private OfcOrderNewstatus currentStatus;
 
     private List<OfcOrderStatus> orderStatusList;
+
+    private List<DeliverDetailsOrdeDto> deliverDetailsOrdeDtoList;
 }

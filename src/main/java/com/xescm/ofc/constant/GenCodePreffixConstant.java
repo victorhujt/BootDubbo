@@ -18,5 +18,7 @@ public class GenCodePreffixConstant {
     public static final String SILOPROGRAMINFO_PRE  ="WP";
     //仓储模板编码前缀
     public static final String STO_TEMP_PRE = "TC";
+    //平台流水号
+    public static final String PAAS_LINE_NO = "PLN";
 
 }
