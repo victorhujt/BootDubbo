@@ -1,23 +1,26 @@
 package com.xescm.ofc.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.epc.edas.dto.dachen.LockStockOrderDTO;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.domain.OfcCreateOrderErrorLog;
+import com.xescm.ofc.domain.OfcEnumeration;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcOrderStatus;
 import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.enums.ExceptionTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcCreateOrderMapper;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.dto.coo.CreateOrderResult;
 import com.xescm.ofc.model.dto.coo.CreateOrderResultDto;
 import com.xescm.ofc.model.dto.coo.MessageDto;
@@ -70,9 +73,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private DistributedLockEdasService distributedLockEdasService;
     @Resource
     private CreateOrderApiProducer createOrderApiProducer;
+    @Resource
+    private OfcEnumerationService ofcEnumerationService;
 
     @Override
-    public boolean CreateOrders(List<CreateOrderEntity> list) {
+    public boolean CreateOrders(List<OfcCreateOrderDTO> list) {
         return false;
     }
 
@@ -87,7 +92,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         //组装接口的返回信息
         List<CreateOrderResult> createOrderResultList = null;
         try {
-            List<CreateOrderEntity> createOrderEntityList = JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<CreateOrderEntity>>() {
+            List<OfcCreateOrderDTO> createOrderEntityList = JacksonUtil.parseJsonWithFormat(data, new TypeReference<List<OfcCreateOrderDTO>>() {
             });
             if (!CollectionUtils.isEmpty(createOrderEntityList)) {
                 createOrderResultList = new ArrayList<>();
@@ -96,7 +101,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 String reason = null;
                 String custOrderCode = null;
                 String key = null;
-                for (CreateOrderEntity createOrderEntity : createOrderEntityList) {
+                for (OfcCreateOrderDTO createOrderEntity : createOrderEntityList) {
                     String platformType = createOrderEntity.getPlatformType();
                     AtomicBoolean lockStatus = new AtomicBoolean(false);
                     try {
@@ -327,17 +332,21 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         logger.info("订单中心创建订单接口开始");
         ResultModel resultModel;
         try {
-            CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
-            String custOrderCode = null;
-            String platformType = null;
-            String custCode = null;
+          //  CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
+            OfcCreateOrderDTO createOrderEntity = JSON.parseObject(data, OfcCreateOrderDTO.class);
+            String custOrderCode = createOrderEntity.getCustOrderCode();
+            String platformType = createOrderEntity.getPlatformType();
+            String custCode = createOrderEntity.getCustCode();
+            String orderStatus = createOrderEntity.getOrderStatus();
             String orderCode = null;
             String key = null;
+            String orderType = createOrderEntity.getOrderType();
             AtomicBoolean lockStatus = new AtomicBoolean(false);
             try {
-                custOrderCode = createOrderEntity.getCustOrderCode();
-                platformType = createOrderEntity.getPlatformType();
-                custCode = createOrderEntity.getCustCode();
+                if (orderStatus != null && HASBEEN_CANCELED.equals(orderStatus)) {
+                    logger.error("订单{}已经取消，跳过创单操作！", custOrderCode);
+                    throw new BusinessException("订单" + custOrderCode + "已经取消，跳过创单操作！");
+                }
                 // 对创建订单操作进行加锁，防止订单创建重复
                 // redis key : OFC:MQ:xeOrderToOfc:<客户编码>:<客户订单号>
                 key = REDIS_LOCK_PREFIX + MQ_TAG_OrderToOfc + ":" + custCode + ":" + custOrderCode;
@@ -355,8 +364,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             //订单已存在,获取订单的最新状态,只有待审核的才能更新
                             if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                 logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
-                                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                                    this.orderCreateResult(orderCode, custOrderCode, "订单已经审核，跳过创单操作", true);
+                                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), "订单已经审核，跳过创单操作", true);
                                 }
                                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
                             }
@@ -367,13 +376,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         resultModel = ofcCreateOrderService.ofcCreateOrder(createOrderEntity, orderCode);
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                             logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, resultModel.getDesc());
-                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                                this.orderCreateResult(orderCode, custOrderCode, "订单创建失败:" + resultModel.getDesc(), false);
+                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                                this.orderCreateResult(custCode, orderCode, custOrderCode,orderType, createOrderEntity.getBusinessType(), "订单创建失败:" + resultModel.getDesc(), false);
                             }
                         } else {
                             logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
-                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                                this.orderCreateResult(orderCode, custOrderCode, "订单创建成功！", true);
+                            if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                                this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), "订单创建成功！", true);
                             }
                         }
                     } else {
@@ -386,14 +395,14 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                 }
             } catch (BusinessException ex) {
                 logger.error("订单中心创建订单接口发生异常:{},{}", ex.getMessage(), ex);
-                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                    this.orderCreateResult(orderCode, custOrderCode, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), ResultModel.ResultEnum.CODE_9999.getDesc(), false);
                 }
                 throw ex;
             } catch (Exception ex) {
                 logger.error("订单中心创建订单接口发生未知异常: {}, {}", ex, ex.getMessage());
-                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType)) {
-                    this.orderCreateResult(orderCode, custOrderCode, ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
+                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), ResultModel.ResultEnum.CODE_9999.getDesc(), false);
                 }
                 throw ex;
             } finally {
@@ -420,22 +429,45 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * @param isSuccess
      * @throws Exception
      */
-    private void orderCreateResult(String orderCode, String custOrderCode, String result, boolean isSuccess) throws Exception {
-        CreateOrderResultDto resultDto = new CreateOrderResultDto();
-        String code = isSuccess ? "200" : "500";
-        String typeIdAndReason = "typeId:" + custOrderCode + "||reason:" + result;
+    private void orderCreateResult(String custCode, String orderCode, String custOrderCode, String orderType,String businessType, String result, boolean isSuccess) throws Exception {
+        String jsonMsg;
+        String tag;
+        // 大成
+        String specialCust = "";
+        OfcEnumeration ofcEnumeration = new OfcEnumeration();
+        ofcEnumeration.setEnumSys("OFC");
+        ofcEnumeration.setEnumType("SpecialCustEnum");
+        ofcEnumeration.setEnumName("大成万达（天津）有限公司");
+        List<OfcEnumeration> enumerations = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+        if (!CollectionUtils.isEmpty(enumerations)) {
+            specialCust = enumerations.get(0).getEnumValue();
+        }
+        if (specialCust.equals(custCode)) {
+            LockStockOrderDTO resultDto = new LockStockOrderDTO();
+            resultDto.setOrderNo(custOrderCode);
+            resultDto.setOrderType(orderType);
+            resultDto.setBusinessType(businessType);
+            resultDto.setPaasOrderNo(orderCode);
+            resultDto.setState("L");    // 锁定
+            jsonMsg = JacksonUtil.toJson(resultDto);
+            tag = "DACHEN";
+        } else { // 鲜易网
+            CreateOrderResultDto resultDto = new CreateOrderResultDto();
+            String code = isSuccess ? "200" : "500";
+            String typeIdAndReason = "typeId:" + custOrderCode + "||reason:" + result;
 
-        List<MessageDto> messageDtos = new ArrayList<>();
-        MessageDto messageDto = new MessageDto();
-        messageDto.setTypeId(custOrderCode);
-        messageDtos.add(messageDto);
+            List<MessageDto> messageDtos = new ArrayList<>();
+            MessageDto messageDto = new MessageDto();
+            messageDto.setTypeId(custOrderCode);
+            messageDtos.add(messageDto);
 
-        resultDto.setCode(code);
-        resultDto.setReason(typeIdAndReason);
-        resultDto.setMessage(messageDtos);
-
-        String jsonMsg = JacksonUtil.toJson(resultDto);
+            resultDto.setCode(code);
+            resultDto.setReason(typeIdAndReason);
+            resultDto.setMessage(messageDtos);
+            jsonMsg = JacksonUtil.toJson(resultDto);
+            tag = "xeStatusBackTag";
+        }
         // 发送创单结果
-        createOrderApiProducer.sendCreateOrderResultMQ(jsonMsg, String.valueOf(jsonMsg.hashCode()));
+        createOrderApiProducer.sendCreateOrderResultMQ(jsonMsg, String.valueOf(jsonMsg.hashCode()), tag);
     }
 }

@@ -52,6 +52,9 @@
       <if test="warehouseName != null" >
         warehouse_name = #{warehouseName,jdbcType=INTEGER},
       </if>
+      <if test="warehouseCode != null" >
+        warehouse_code = #{warehouseCode,jdbcType=INTEGER},
+      </if>
       <if test="plateNumber != null" >
         plate_number = #{plateNumber,jdbcType=INTEGER},
       </if>
