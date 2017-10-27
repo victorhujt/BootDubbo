@@ -79,9 +79,12 @@ public class MqConfig {
 
     /** 仓储订单Topic */
     private String whc2OfcOrderTopic;
-
+    
     /** 仓储订单状态反馈 */
     private String whc2ofcOrderStatusTopic;
+
+    /** 订单待创建货品Topic */
+    private String ofc2CscGoodsInfoTopic;
 
     /**----------------异常订单topic----------------**/
 
@@ -89,6 +92,8 @@ public class MqConfig {
     private String tfc2OfcOrderPoTopic;
     /** 仓储中心推送订单状态 */
     private String whc2OfcOrderPoTopic;
+    /**订单中心推送货品到客户中心*/
+    private String ofc2CscGoodsTopic;
 
     /**----------------异常订单topic----------------**/
 

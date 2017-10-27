@@ -17,6 +17,7 @@ import com.xescm.ofc.service.OfcOrderManageOperService;
 import com.xescm.ofc.service.OfcOrderManageService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -168,6 +169,47 @@ public class OfcOrderManageController extends BaseController {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "根据所选基地反查大区查询成功", ofcGroupVo);
     }
+
+    /**
+     * 审核与反审核订单
+     *
+     * @param whcModifWmsCodeReqDto 订单修改实体参数
+     * @return      Wrapper
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updateOrderDetail", method = RequestMethod.POST)
+    @ApiOperation(value = "修改订单的详情", httpMethod = "POST", notes = "订单修改实体的结果")
+    public Wrapper<String> updateOrderDetail(@ApiParam(name = "whcModifWmsCodeReqDto", value = "订单修改实体") @RequestBody WhcModifWmsCodeReqDto whcModifWmsCodeReqDto) {
+        try {
+            if (whcModifWmsCodeReqDto == null) {
+                throw new BusinessException("订单修改实体不能为空");
+            }
+            if (StringUtils.isBlank(whcModifWmsCodeReqDto.getOrderCode())) {
+                throw new BusinessException("订单编号不能为空！");
+            }
+            if (StringUtils.isBlank(whcModifWmsCodeReqDto.getBillType())) {
+                throw new BusinessException("订单的业务类型不能为空！");
+            }
+            AuthResDto authResDto = getAuthResDtoByToken();
+            whcModifWmsCodeReqDto.setOperationName(authResDto.getUserName());
+            Wrapper<?> result = ofcOrderManageService.updateOrderDetail(whcModifWmsCodeReqDto);
+            if (result == null) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            }
+            if (result.getCode() == Wrapper.SUCCESS_CODE) {
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单修改成功");
+            } else {
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单修改失败");
+            }
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单修改出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单修改出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
 
     /**
      * 审核与反审核订单
