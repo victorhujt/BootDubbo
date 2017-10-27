@@ -308,7 +308,12 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 CscGoodsApiDto cscGoods = new CscGoodsApiDto();
                 String goodsCode = goodsInfo.getGoodsCode();
                 String unit = goodsInfo.getUnit();
-                cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
+                //天津自动化仓 用天津仓包装校验
+                if ("000001".equals(createOrderEntity.getWarehouseCode())) {
+                    cscGoods.setWarehouseCode("ck0024");
+                } else {
+                    cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
+                }
                 cscGoods.setFromSys("WMS");
                 cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
                 cscGoods.setCustomerCode(createOrderEntity.getCustCode());
@@ -333,15 +338,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     goodsInfo.setGoodsTypeCode(cscGoodsApiVo.getGoodsTypeId());
                     goodsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
                     goodsInfo.setGoodsCategoryCode(cscGoodsApiVo.getGoodsType());
-                    if ("000001".equals(createOrderEntity.getWarehouseCode())) {
-                            if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
-                                if (goodsInfo.getPrimaryQuantity() == null || goodsInfo.getPrimaryQuantity().doubleValue() == 0.0) {
-                                    goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())));
-                                    goodsInfo.setPackageName(goodsInfo.getUnit());
-                                }
-                            }
-                        continue;
-                    }
                     List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                     List<GoodsPackingDto>  dcPackages = goodsInfo.getSkuPackageList();
                     if (!CollectionUtils.isEmpty(packages)) {

@@ -305,6 +305,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             String goodsCode = good.getGoodsCode();
             String packageName = !PubUtils.isSEmptyOrNull(good.getPackageName())? good.getPackageName():good.getUnit();
             cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+            //天津自动化仓 用天津仓包装校验
+            if ("000001".equals(ofcWarehouseInformation.getWarehouseCode())) {
+                cscGoods.setWarehouseCode("ck0024");
+            } else {
+                cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+            }
             cscGoods.setFromSys("WMS");
             cscGoods.setGoodsCode(goodsCode);
             cscGoods.setCustomerCode(ofcFundamentalInformation.getCustCode());
@@ -321,15 +327,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                     PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                 CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
-                if ("000001".equals(ofcWarehouseInformation.getWarehouseCode())) {
-                    if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
-                        if (good.getPrimaryQuantity() == null || good.getPrimaryQuantity().doubleValue() == 0.0) {
-                            good.setPrimaryQuantity(good.getQuantity());
-                            good.setPackageName(good.getUnit());
-                        }
-                    }
-                    continue;
-                }
                 List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                 if (!CollectionUtils.isEmpty(packages)) {
                     for (GoodsPackingDto packingDto : packages) {
