@@ -341,7 +341,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                     List<GoodsPackingDto>  dcPackages = goodsInfo.getSkuPackageList();
                     if (!CollectionUtils.isEmpty(packages)) {
-                            if (createOrderEntity.getBusinessType().indexOf("62") != -1) {
+                            if (createOrderEntity.getBusinessType().indexOf("62") != -1 && !"000001".equals(createOrderEntity.getWarehouseCode())) {
                                 boolean isExistPackage = false;
                                 if (!CollectionUtils.isEmpty(dcPackages)) {
                                     logger.info("orderCode is {}",orderCode);
@@ -407,7 +407,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                             noPackageGoodsCodes.add(goodsCode);
                         }
                         //csc没有包装 但是大成接口过来的有包装
-                        if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList())) {
+                        if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList()) && !"000001".equals(createOrderEntity.getWarehouseCode())) {
                             goodsInfo.setRemark("货品编码没有查询到包装信息");
                             goodsInfo.setPackageName(unit);
                             goodsInfo.setCustName(createOrderEntity.getCustName());
