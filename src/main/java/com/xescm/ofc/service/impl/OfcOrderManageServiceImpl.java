@@ -340,7 +340,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                             if (!PubUtils.isSEmptyOrNull(good.getRemark())) {
                                 good.setRemark("");
                             }
-                            good.setPrimaryQuantity(good.getQuantity().multiply(packingDto.getLevelSpecification()).setScale(0, BigDecimal.ROUND_HALF_UP));//四舍五入取整数
+                            BigDecimal pquantity = good.getQuantity().divide(packingDto.getLevelSpecification(),3,BigDecimal.ROUND_HALF_DOWN);//保留三位小数
+                            good.setPrimaryQuantity(pquantity);
                             isHavePackage = true;
                             break;
                         }
