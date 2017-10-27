@@ -222,67 +222,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
             OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
             OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
-            List<OfcCreateOrderGoodsInfoDTO> tempList = new ArrayList<>();
-            //没有匹配到包装的货品编码
-            List<String> noPackageGoodsCodes = new ArrayList<>();
-            StringBuilder str = new StringBuilder();
-            StringBuilder str1 = new StringBuilder();
-            //大成订单校验包装
-            validateGoodsPackage(createOrderEntity,orderCode,tempList,noPackageGoodsCodes);
-            try {
-                if (tempList.size() > 0) {
-                    String msgStr = JacksonUtil.toJson(tempList);
-                    mqProducer.sendMsg(msgStr,mqConfig.getOfc2CscGoodsTopic(),"","noGoods");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (noPackageGoodsCodes.size() > 0) {
-                str.append("订单对应货品编码为");
-                for (int i = 0; i < noPackageGoodsCodes.size(); i++) {
-                    if (i == noPackageGoodsCodes.size() -1) {
-                        str.append(noPackageGoodsCodes.get(i));
-                    } else {
-                        str.append(noPackageGoodsCodes.get(i)).append(",");
-                    }
-                }
-                str.append("没有包装.");
-                logger.info("订单号为:{}",ofcFundamentalInformation.getOrderCode());
-                logger.info(str.toString());
-            }
-            if (tempList.size() > 0) {
-                str1.append("订单对应货品编码为");
-                for (int i = 0; i < tempList.size(); i++) {
-                    OfcCreateOrderGoodsInfoDTO temp = tempList.get(i);
-                    if (str1.toString().indexOf(temp.getGoodsCode()) != -1) {
-                        continue;
-                    }
-                    if (i == tempList.size() -1) {
-                        str1.append(tempList.get(i).getGoodsCode());
-                    } else {
-                        str1.append(tempList.get(i).getGoodsCode()).append(",");
-                    }
-                }
-                str1.append("不存在.");
-                logger.info("订单号为:{}",ofcFundamentalInformation.getOrderCode());
-                logger.info(str1.toString());
-            }
-            String exceptionReason = str.append(str1.toString()).toString();
-            if (!PubUtils.isSEmptyOrNull(exceptionReason)) {
-                ofcFundamentalInformation.setIsException(ISEXCEPTION);
-                ofcFundamentalInformation.setExceptionReason(exceptionReason);
-            }
-            //更新订单时  校验通过如果之前是异常订单 将异常订单变为正常订单
-            OfcFundamentalInformation information = ofcFundamentalInformationService.selectByKey(orderCode);
-            if (information != null) {
-                if (!PubUtils.isSEmptyOrNull(information.getExceptionReason())) {
-                    if (PubUtils.isSEmptyOrNull(exceptionReason)) {
-                        ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
-                        ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
-                    }
-                }
-            }
+            validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
             //调用创建订单方法
             resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
@@ -300,47 +240,54 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         return resultModel;
     }
 
-    private void validateGoodsPackage(OfcCreateOrderDTO createOrderEntity,String orderCode, List<OfcCreateOrderGoodsInfoDTO> tempList, List<String> noPackageGoodsCodes) {
-        String custCode = createOrderEntity.getCustCode();
-        for (OfcCreateOrderGoodsInfoDTO goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
-            if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
-                boolean isHavePackage = false;
-                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
-                String goodsCode = goodsInfo.getGoodsCode();
-                String unit = goodsInfo.getUnit();
-                //天津自动化仓 用天津仓包装校验
-                if ("000001".equals(createOrderEntity.getWarehouseCode())) {
-                    cscGoods.setWarehouseCode("ck0024");
-                } else {
-                    cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
-                }
-                cscGoods.setFromSys("WMS");
-                cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
-                cscGoods.setCustomerCode(createOrderEntity.getCustCode());
-                cscGoods.setPNum(1);
-                cscGoods.setPSize(10);
-                try{
-                    logger.info("匹配包装的参数为:{}", JacksonUtil.toJson(cscGoods));
-                    logger.info("createOrderEntity:{}",JacksonUtil.toJson(createOrderEntity));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
-                try{
-                     logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
-                        PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
-                    CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
-                    goodsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
-                    goodsInfo.setGoodsTypeCode(cscGoodsApiVo.getGoodsTypeId());
-                    goodsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
-                    goodsInfo.setGoodsCategoryCode(cscGoodsApiVo.getGoodsType());
-                    List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
-                    List<GoodsPackingDto>  dcPackages = goodsInfo.getSkuPackageList();
-                    if (!CollectionUtils.isEmpty(packages)) {
+    private void validateGoodsPackage(OfcCreateOrderDTO createOrderEntity, OfcFundamentalInformation ofcFundamentalInformation) {
+        List<OfcCreateOrderGoodsInfoDTO> tempList = new ArrayList<>();
+        String orderCode = ofcFundamentalInformation.getOrderCode();
+        //没有匹配到包装的货品编码
+        List<String> noPackageGoodsCodes = new ArrayList<>();
+        StringBuilder str = new StringBuilder();
+        StringBuilder str1 = new StringBuilder();
+        {
+            String custCode = createOrderEntity.getCustCode();
+            for (OfcCreateOrderGoodsInfoDTO goodsInfo :createOrderEntity.getCreateOrderGoodsInfos()) {
+                if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
+                    boolean isHavePackage = false;
+                    CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                    String goodsCode = goodsInfo.getGoodsCode();
+                    String unit = goodsInfo.getUnit();
+                    //天津自动化仓 用天津仓包装校验
+                    if ("000001".equals(createOrderEntity.getWarehouseCode())) {
+                        cscGoods.setWarehouseCode("ck0024");
+                    } else {
+                        cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
+                    }
+                    cscGoods.setFromSys("WMS");
+                    cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
+                    cscGoods.setCustomerCode(createOrderEntity.getCustCode());
+                    cscGoods.setPNum(1);
+                    cscGoods.setPSize(10);
+                    try{
+                        logger.info("匹配包装的参数为:{}", JacksonUtil.toJson(cscGoods));
+                        logger.info("createOrderEntity:{}",JacksonUtil.toJson(createOrderEntity));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
+                    try{
+                        logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
+                            PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
+                        CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
+                        goodsInfo.setGoodsType(cscGoodsApiVo.getGoodsTypeParentName());
+                        goodsInfo.setGoodsTypeCode(cscGoodsApiVo.getGoodsTypeId());
+                        goodsInfo.setGoodsCategory(cscGoodsApiVo.getGoodsTypeName());
+                        goodsInfo.setGoodsCategoryCode(cscGoodsApiVo.getGoodsType());
+                        List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
+                        List<GoodsPackingDto>  dcPackages = goodsInfo.getSkuPackageList();
+                        if (!CollectionUtils.isEmpty(packages)) {
                             if (createOrderEntity.getBusinessType().indexOf("62") != -1 && !"000001".equals(createOrderEntity.getWarehouseCode())) {
                                 boolean isExistPackage = false;
                                 if (!CollectionUtils.isEmpty(dcPackages)) {
@@ -397,37 +344,98 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     noPackageGoodsCodes.add(goodsCode);
                                 }
                             }
+                        } else {
+                            logger.info("orderCode is {}",orderCode);
+                            logger.info("货品编码:{}csc接口没有查询到包装信息",goodsCode);
+                            //没有匹配到包装直接返回错误
+                            if (!noPackageGoodsCodes.contains(goodsCode)) {
+                                goodsInfo.setRemark("货品编码没有查询到包装信息");
+                                goodsInfo.setPackageName(unit);
+                                noPackageGoodsCodes.add(goodsCode);
+                            }
+                            //csc没有包装 但是大成接口过来的有包装
+                            if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList()) && !"000001".equals(createOrderEntity.getWarehouseCode())) {
+                                goodsInfo.setRemark("货品编码没有查询到包装信息");
+                                goodsInfo.setPackageName(unit);
+                                goodsInfo.setCustName(createOrderEntity.getCustName());
+                                goodsInfo.setCustCode(custCode);
+                                tempList.add(goodsInfo);
+                            }
+                        }
                     } else {
                         logger.info("orderCode is {}",orderCode);
-                        logger.info("货品编码:{}csc接口没有查询到包装信息",goodsCode);
-                        //没有匹配到包装直接返回错误
-                        if (!noPackageGoodsCodes.contains(goodsCode)) {
-                            goodsInfo.setRemark("货品编码没有查询到包装信息");
-                            goodsInfo.setPackageName(unit);
-                            noPackageGoodsCodes.add(goodsCode);
-                        }
-                        //csc没有包装 但是大成接口过来的有包装
-                        if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList()) && !"000001".equals(createOrderEntity.getWarehouseCode())) {
-                            goodsInfo.setRemark("货品编码没有查询到包装信息");
-                            goodsInfo.setPackageName(unit);
-                            goodsInfo.setCustName(createOrderEntity.getCustName());
-                            goodsInfo.setCustCode(custCode);
-                            tempList.add(goodsInfo);
-                        }
-                    }
-                } else {
-                    logger.info("orderCode is {}",orderCode);
-                    logger.info("货品编码:{}csc接口查询到包装信息异常",goodsCode);
-                    goodsInfo.setRemark("货品编码查询包装信息异常");
-                    goodsInfo.setPackageName(goodsInfo.getUnit());
-                    // TODO 推送CSC待创建商品
-                    goodsInfo.setCustName(createOrderEntity.getCustName());
-                    goodsInfo.setCustCode(custCode);
-                    tempList.add(goodsInfo);
+                        logger.info("货品编码:{}csc接口查询到包装信息异常",goodsCode);
+                        goodsInfo.setRemark("货品编码查询包装信息异常");
+                        goodsInfo.setPackageName(goodsInfo.getUnit());
+                        // TODO 推送CSC待创建商品
+                        goodsInfo.setCustName(createOrderEntity.getCustName());
+                        goodsInfo.setCustCode(custCode);
+                        tempList.add(goodsInfo);
                     }
                 }
             }
+        }
+
+        {
+            try {
+                if (tempList.size() > 0) {
+                    String msgStr = JacksonUtil.toJson(tempList);
+                    mqProducer.sendMsg(msgStr,mqConfig.getOfc2CscGoodsTopic(),"","noGoods");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (noPackageGoodsCodes.size() > 0) {
+                str.append("订单对应货品编码为");
+                for (int i = 0; i < noPackageGoodsCodes.size(); i++) {
+                    if (i == noPackageGoodsCodes.size() -1) {
+                        str.append(noPackageGoodsCodes.get(i));
+                    } else {
+                        str.append(noPackageGoodsCodes.get(i)).append(",");
+                    }
+                }
+                str.append("没有包装.");
+                logger.info("订单号为:{}",ofcFundamentalInformation.getOrderCode());
+                logger.info(str.toString());
+            }
+            if (tempList.size() > 0) {
+                str1.append("订单对应货品编码为");
+                for (int i = 0; i < tempList.size(); i++) {
+                    OfcCreateOrderGoodsInfoDTO temp = tempList.get(i);
+                    if (str1.toString().indexOf(temp.getGoodsCode()) != -1) {
+                        continue;
+                    }
+                    if (i == tempList.size() -1) {
+                        str1.append(tempList.get(i).getGoodsCode());
+                    } else {
+                        str1.append(tempList.get(i).getGoodsCode()).append(",");
+                    }
+                }
+                str1.append("不存在.");
+                logger.info("订单号为:{}",ofcFundamentalInformation.getOrderCode());
+                logger.info(str1.toString());
+            }
+            String exceptionReason = str.append(str1.toString()).toString();
+            if (!PubUtils.isSEmptyOrNull(exceptionReason)) {
+                ofcFundamentalInformation.setIsException(ISEXCEPTION);
+                ofcFundamentalInformation.setExceptionReason(exceptionReason);
+            }
+            //更新订单时  校验通过如果之前是异常订单 将异常订单变为正常订单
+            OfcFundamentalInformation information = ofcFundamentalInformationService.selectByKey(orderCode);
+            if (information != null) {
+                if (!PubUtils.isSEmptyOrNull(information.getExceptionReason())) {
+                    if (PubUtils.isSEmptyOrNull(exceptionReason)) {
+                        ofcFundamentalInformation.setIsException("0");// 0 正常  1 异常
+                        ofcFundamentalInformation.setExceptionReason("");//异常原因置为空
+                    }
+                }
+            }
+        }
     }
+
+
+
 
     /**
      * 校验货品编码
