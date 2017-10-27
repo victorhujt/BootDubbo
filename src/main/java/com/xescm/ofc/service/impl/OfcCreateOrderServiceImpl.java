@@ -107,9 +107,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private CscContactEdasService cscContactEdasService;
 
     @Resource
-    private OfcEnumerationService ofcEnumerationService;
-
-    @Resource
     private CodeGenUtils codeGenUtils;
     @Override
     public int queryCountByOrderStatus(String orderCode, String orderStatus) {
@@ -328,7 +325,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                         goodsInfo.setConversionRate(packingDto.getLevelSpecification());
                                         goodsInfo.setPackageName(packingDto.getLevelDescription());
                                         goodsInfo.setPackageType(packingDto.getLevel());
-                                        goodsInfo.setPrimaryQuantity(BigDecimal.valueOf(Double.parseDouble(goodsInfo.getQuantity())).multiply(packingDto.getLevelSpecification()).setScale(0,BigDecimal.ROUND_HALF_UP));//四舍五入取整数
+                                        BigDecimal quantity = new BigDecimal(goodsInfo.getQuantity());
+                                        BigDecimal pquantity = quantity.divide(packingDto.getLevelSpecification(),3,BigDecimal.ROUND_HALF_DOWN);//保留三位小数
+                                        goodsInfo.setPrimaryQuantity(pquantity);
                                         isHavePackage = true;
                                         break;
                                     }
