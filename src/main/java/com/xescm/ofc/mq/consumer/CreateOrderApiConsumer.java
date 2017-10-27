@@ -5,6 +5,7 @@ import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
+import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;

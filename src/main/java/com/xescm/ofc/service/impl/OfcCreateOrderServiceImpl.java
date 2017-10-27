@@ -178,9 +178,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
             // 校验收发货方，如果收发货方编码不为空，则查询收发货方信息；否则校验传入收发货方字段
             resultModel = checkContactInfo(createOrderEntity);
-
-
-
             if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                 logger.error("校验数据{}失败：{}", "发货方与收货方", resultModel.getCode());
                 return resultModel;

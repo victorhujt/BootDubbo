@@ -10,6 +10,7 @@ import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
+import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.OfcOrderManageOperService;
@@ -205,6 +206,35 @@ public class OfcOrderManageController extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
             logger.error("订单中心订单管理订单修改出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
+
+    /**
+     * 审核与反审核订单
+     *
+     * @param auditOrderDTO 审核参数
+     * @return      Wrapper
+     */
+    @ResponseBody
+    @RequestMapping(value = "/auditTransportOrder", method = RequestMethod.POST)
+    @ApiOperation(value = "审核、反审核订单", httpMethod = "POST", notes = "审核、反审核结果")
+    public Wrapper<String> auditTransportOrder(@ApiParam(name = "auditOrderDTO", value = "订单审核实体") @RequestBody AuditOrderDTO auditOrderDTO) {
+        AuthResDto authResDtoByToken = getAuthResDtoByToken();
+        try {
+            if (auditOrderDTO != null && StringUtils.isBlank(auditOrderDTO.getOrderCode())) {
+                throw new BusinessException("订单编号不能为空！");
+            } else if (StringUtils.isBlank(auditOrderDTO.getReviewTag())) {
+                throw new BusinessException("订单标识不能为空！");
+            }
+            String result = ofcOrderManageService.orderAutoAuditForTran(auditOrderDTO.getOrderCode(), auditOrderDTO.getReviewTag(), authResDtoByToken);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单审核成功", result);
+        } catch (BusinessException ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单审核反审核出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
