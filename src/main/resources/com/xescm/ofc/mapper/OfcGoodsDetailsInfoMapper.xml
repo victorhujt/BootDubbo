@@ -40,7 +40,10 @@
     <result column="conversion_rate" property="conversionRate" jdbcType="DECIMAL" />
     <result column="primary_quantity" property="primaryQuantity" jdbcType="DECIMAL" />
     <result column="paas_line_no" property="paasLineNo" jdbcType="INTEGER" />
-    <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
+      <result column="external_paas_line_no" property="externalPaasLineNo" jdbcType="VARCHAR"  />
+
+      <result column="manufacture_batch_lotatt" property="manufactureBatchLotatt" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
 
   </resultMap>
 
@@ -86,7 +89,9 @@
     oos.conversion_rate,
     oos.primary_quantity,
     oos.paas_line_no,
-    oos.manufacture_batch_lotatt
+    oos.external_paas_line_no,
+    oos.manufacture_batch_lotatt,
+    oos.remark
     FROM
     ofc_goods_details_info oos
     LEFT JOIN ofc_fundamental_information ofi ON oos.order_code = ofi.order_code
@@ -151,7 +156,9 @@
       gdi.conversion_rate,
       gdi.primary_quantity,
       gdi.paas_line_no,
-      gdi.manufacture_batch_lotatt
+      gdi.external_paas_line_no,
+      gdi.manufacture_batch_lotatt,
+      gdi.remark
     FROM ofc_goods_details_info gdi
     LEFT JOIN
     ofc_fundamental_information ofi
@@ -222,4 +229,30 @@
     </set>
     where order_code = #{orderCode,jdbcType=VARCHAR}
   </update>
+
+  <select id="queryIds" resultMap="BaseResultMap">
+  SELECT id FROM ofc_goods_details_info
+  </select>
+
+  <update id="flushPassLineNoById" parameterType="com.xescm.ofc.domain.OfcGoodsDetailsInfo" >
+  update ofc_goods_details_info
+  <set>
+  <if test="passLineNo != null">
+    paas_line_no = #{passLineNo}
+  </if>
+  </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 根据订单号批量查询订单信息 -->
+  <select id="getOrderGoodsTypeByOrderCode" resultMap="BaseResultMap">
+    SELECT order_code, goods_type FROM ofc_goods_details_info gdi
+    WHERE 1 = 1 and gdi.order_code IN
+    <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
+      #{orderCode}
+    </foreach>
+    and goods_type is not null and goods_type != ''
+    group by order_code, goods_type
+    order by order_code
+  </select>
 </mapper>

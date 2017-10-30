@@ -96,9 +96,9 @@ public class ScheduledTask{
                 logger.error("当前订单数据有误");
                 continue;
             }
-            ofcOrderManageService.pushOrderToTfc(fundamentalInformation
-                    ,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
-            num ++;
+//            ofcOrderManageService.pushOrderToTfc(fundamentalInformation
+//                    ,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfoList);
+//            num ++;
         }
 
     }
