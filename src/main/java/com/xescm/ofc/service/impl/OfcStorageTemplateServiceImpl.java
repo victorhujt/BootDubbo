@@ -3,7 +3,6 @@ package com.xescm.ofc.service.impl;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
@@ -30,14 +29,12 @@ import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.qo.RmcWareHouseQO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
-import com.xescm.whc.edas.dto.ResponseMsg;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -91,6 +88,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     private OfcStorageTemplateMapper ofcStorageTemplateMapper;
     @Resource
     private CodeGenUtils codeGenUtils;
+    @Resource
+    private OfcFinanceInformationService ofcFinanceInformationService;
 
 
 
@@ -2093,11 +2092,15 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
             OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
             OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.queryByOrderCode(orderCode);
+            OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+            ofcFinanceInformation = ofcFinanceInformation ==null ? new OfcFinanceInformation():ofcFinanceInformation;
+
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.queryLastTimeOrderByOrderCode(orderCode);
+
             String review;
             try {
                 review = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfoList, ofcDistributionBasicInfo, ofcWarehouseInformation
-                        , new OfcFinanceInformation(), ofcOrderStatus.getOrderStatus(), REVIEW, authResDto);
+                        , ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDto);
             } catch (Exception e) {
                 logger.error("仓储开单批量导单审核, 当前订单审核失败" +
                         ", 直接跳过该订单, 订单号: {}, 错误信息: {}", orderCode, e);
