@@ -604,9 +604,14 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     }
 
     private List<DeliverDetailsOrdeDto> getDeliverDetails(String orderCode){
-        Wrapper<List<DeliverDetailsOrdeDto>> result = acGetDeliveryOrderEdasService.queryTransportDetail(orderCode);
-        if (result.getCode() == Wrapper.SUCCESS_CODE) {
-            return result.getResult();
+        try {
+            Wrapper<List<DeliverDetailsOrdeDto>> result = acGetDeliveryOrderEdasService.queryTransportDetail(orderCode);
+            if (result.getCode() == Wrapper.SUCCESS_CODE) {
+                return result.getResult();
+            }
+        }catch (Exception e) {
+            logger.error("查询订单运输车辆信息发生异常：异常详情{}", e);
+            return null;
         }
         return null;
     }
