@@ -5,26 +5,21 @@ import com.aliyun.openservices.ons.api.Action;
 import com.aliyun.openservices.ons.api.ConsumeContext;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.MessageListener;
-import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.OfcInterfaceReceiveLog;
-import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
 import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
 import com.xescm.ofc.edas.enums.LogSourceSysEnum;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.service.MqConsumerService;
 import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
 import com.xescm.ofc.service.OfcOrderStatusService;
-import com.xescm.ofc.service.OfcPlanFedBackService;
+import com.xescm.tfc.edas.model.constants.TfcMqTagConstants.Tfc2OfcStateTopicTag;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+;
 /**
  * 创单api消费MQ
  */
@@ -44,8 +40,6 @@ public class CreateOrderApiConsumer implements MessageListener {
 
     @Resource
     private MqConsumerService mqConsumerService;
-    @Resource
-    private OfcPlanFedBackService ofcPlanFedBackService;
 
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
@@ -110,9 +104,12 @@ public class CreateOrderApiConsumer implements MessageListener {
                     return Action.ReconsumeLater;
                 }
             }
-        } else if (StringUtils.equals(topicName,mqConfig.getTfcOrderStatusTopic())) {
-            logger.info("订单中心消费订单状态MQ: topic => {}, Tag => {}, key: {}, messageId: {}", topicName, message.getTag(), key, messageId);
+        } else if (StringUtils.equals(topicName,mqConfig.getTfc2OfcOrderPoTopic())) {
+//            logger.info("订单中心消费订单状态MQ: topic => {}, Tag => {}, key: {}, messageId: {}", topicName, message.getTag(), key, messageId);
             try {
+                if (!Tfc2OfcStateTopicTag.PUSH_NOT_SCHEDULE_TAG.equals(tag) && // 未调度
+                    !Tfc2OfcStateTopicTag.PUSH_CANCEL_TAG.equals(tag) &&       // 取消
+                    !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.equals(tag)) {     // 签收单
 //                if (message.getTag().equals("DeliveryTag")) {
 //                    logger.info("订单中心消费订单状态MQ<调度>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, message);
 //                    List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions;
@@ -132,13 +129,14 @@ public class CreateOrderApiConsumer implements MessageListener {
 //                        logger.error("运输单状态反馈出错:{}", e.getMessage(), e);
 //                    }
 //                } else if (message.getTag().equals("TransportTag")) {
-                    logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, message);
+                    logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, messageBody);
                     try {
                         mqConsumerService.transportStateConsumer(messageBody, MAP);
                     } catch (Exception e) {
                         logger.error("订单运输状态更新异常: 异常详情 => {}", e);
                     }
 //                }
+                }
             } catch (Exception ex) {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}", message.getTag(), topicName, key, ex.getMessage(), ex);
             }
