@@ -107,10 +107,18 @@ public class CreateOrderTrans {
                 });
                 for (OfcCreateOrderGoodsInfoDTO goodsInfo : list) {
                     OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+                    String productionTime = goodsInfo.getProductionTime();
+                    String invalidTime = goodsInfo.getInvalidTime();
                     modelMapper.map(goodsInfo, ofcGoodsDetailsInfo);
                     ofcGoodsDetailsInfo.setOrderCode(this.orderCode);
                     ofcGoodsDetailsInfo.setCreationTime(nowDate);
                     ofcGoodsDetailsInfo.setOperator(CREATE_ORDER_BYAPI);
+                    if (!PubUtils.isSEmptyOrNull(productionTime)) {
+                        ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
+                    }
+                    if (!PubUtils.isSEmptyOrNull(invalidTime)) {
+                        ofcGoodsDetailsInfo.setInvalidTime(DateUtils.String2Date(invalidTime, DateUtils.DateFormatType.TYPE2));
+                    }
                     ofcGoodsDetailsInfo.setOperTime(nowDate);
                     ofcGoodsDetailsInfoList.add(ofcGoodsDetailsInfo);
                 }
