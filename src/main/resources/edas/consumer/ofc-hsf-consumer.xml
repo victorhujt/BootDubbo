@@ -52,7 +52,7 @@
     <hsf:consumer id="cancelOrderEdasService" interface="com.xescm.tfc.edas.service.CancelOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="tfcUpdateOrderEdasService" interface="com.xescm.tfc.edas.service.TfcUpdateOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
     <hsf:consumer id="tfcQueryGpsInfoEdasService" interface="com.xescm.tfc.edas.service.TfcQueryGpsInfoEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
-    <!--<hsf:consumer id="acGetDeliveryOrderEdasService" interface="com.xescm.tfc.edas.service.AcGetDeliveryOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>-->
+    <hsf:consumer id="acGetDeliveryOrderEdasService" interface="com.xescm.tfc.edas.service.AcGetDeliveryOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
     <!-- 调度中心 -->
     <hsf:consumer id="dpcTransportDocEdasService" interface="com.xescm.dpc.edas.service.DpcTransportDocEdasService" group="xescm-dpc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
