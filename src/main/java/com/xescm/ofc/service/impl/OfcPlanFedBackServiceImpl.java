@@ -54,6 +54,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private SendSmsManager sendSmsManager;
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Resource
+    private OfcFinanceInformationService ofcFinanceInformationService;
 
     /**
      * 运输单状态反馈
@@ -130,13 +132,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "32-[中转入]");
                 String notes = traceTimeStr + "【"+transportStateDTO.getBaseName()+"】收货入库";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes,"full");
-            } else if (PaasStateEnum.TFC_STATE_9.getCenterState().equals(status)) { /** 中转出 */
+            } /*else if (PaasStateEnum.TFC_STATE_9.getCenterState().equals(status)) { *** 再调度 **
 
-                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "34-[中转出]");
+                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "34-[再调度]");
                 String notes = traceTimeStr + " 【"+transportStateDTO.getBaseName()+"】发货出库, 安排车辆车牌号：【"+transportStateDTO.getCarNumber()+"】，司机姓名：【"
                     + transportStateDTO.getDriver()+"】，联系电话：【"+transportStateDTO.getDriverPhone()+"】";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes,"full");
-            } else if (PaasStateEnum.TFC_STATE_10.getCenterState().equals(status)) {/** 上报异常 */
+            }*/ else if (PaasStateEnum.TFC_STATE_10.getCenterState().equals(status)) {/** 上报异常 */
 
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "36-[异常]");
                 String notes =  traceTimeStr + " 【"+transportStateDTO.getBaseName()+"】上报异常 【"+transportStateDTO.getRemarks()+"】";
@@ -146,6 +148,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "41-[取消签收]");
                 String notes =  traceTimeStr + " 【"+transportStateDTO.getOperatorName()+"】取消签收";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes, "start");
+            } else if (PaasStateEnum.TFC_STATE_12.getCenterState().equals(status)) { /** 中转出 */
+
+                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "38-[中转出]");
+                String notes = traceTimeStr + " 【"+transportStateDTO.getBaseName()+"】发货出库, 安排车辆车牌号：【"+transportStateDTO.getCarNumber()+"】，司机姓名：【"
+                    + transportStateDTO.getDriver()+"】，联系电话：【"+transportStateDTO.getDriverPhone()+"】";
+                orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes,"full");
             } else {
                 throw new BusinessException("订单["+orderCode+"]运输状态更新异常：所给订单状态有误 " + status);
             }
@@ -226,12 +234,22 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         Date now = new Date();
         String traceTimeStr = DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1);
         String orderCode = ofcFundamentalInformation.getOrderCode();
-        flag = checkStatus(false, statusList, "end", "客户已签收");
+        // 业务类型为卡班并且不是二次配送，DMS签收，否则tfc签收
+        String orderType = ofcFundamentalInformation.getBusinessType();
+        OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.queryByOrderCode(orderCode);
+        String twoDistribution = ofcFinanceInformation != null && PubUtils.isOEmptyOrNull(ofcFinanceInformation.getTwoDistribution()) ? ofcFinanceInformation.getTwoDistribution() : "";
+        String signMsg;
+        if (WITH_THE_TRUNK.equals(orderType) && !twoDistribution.equals("1")) {
+            signMsg = "客户自提签收";
+        } else {
+            signMsg = "客户已签收";
+        }
+        flag = checkStatus(false, statusList, "end", signMsg);
         if (!flag) {
             orderStatus.setLastedOperTime(traceTime);
             orderStatus.setTraceStatus("50");
             orderStatus.setTrace("签收");
-            orderStatus.setNotes(traceTimeStr + " " + "客户已签收");
+            orderStatus.setNotes(traceTimeStr + " " + signMsg);
             logger.info("跟踪状态已签收");
             ofcOrderStatusService.save(orderStatus);
             logger.info("序号：4-insertstatus ===== 订单号{}=> 跟踪状态{}", orderCode, orderStatus.getNotes());
