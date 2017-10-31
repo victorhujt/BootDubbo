@@ -317,7 +317,7 @@
 
   <!-- 运营-订单管理查询 -->
   <select id="queryOrderList" resultMap="Order_Search_Oper_Map">
-    SELECT DISTINCT
+    SELECT
     <include refid="queryOrderListField"/>
     FROM
     ofc_fundamental_information ofi
@@ -390,7 +390,7 @@
 
   <!-- 运营-仓储开单查询 -->
   <select id="queryStorageOrderList" resultMap="Order_Search_Oper_Map">
-    SELECT DISTINCT
+    SELECT
     <include refid="queryStorageOrderListField"/>
     FROM
     ofc_fundamental_information ofi
@@ -594,7 +594,7 @@
     SELECT
     *
     FROM (
-    SELECT DISTINCT
+    SELECT
     ofi.cust_name,
     ofi.order_code,
     ofi.cust_order_code,
@@ -672,7 +672,7 @@
       </foreach>
     </where>
     UNION
-    SELECT DISTINCT
+    SELECT
     ofi.cust_name,
     ofi.order_code,
     ofi.cust_order_code,
@@ -745,7 +745,7 @@
     SELECT
     *
     FROM (
-    SELECT DISTINCT
+    SELECT
     ofi.cust_name,
     ofi.order_code,
     ofi.cust_order_code,
@@ -824,7 +824,7 @@
       </choose>
     </where>
     UNION
-    SELECT DISTINCT
+    SELECT
     ofi.cust_name,
     ofi.order_code,
     ofi.cust_order_code,
@@ -896,7 +896,7 @@
     SELECT
     *
     FROM (
-    SELECT DISTINCT
+    SELECT
     <include refid="queryStorageOrderListField"/>,
     owi.warehouse_code,owi.provide_transport
     FROM
@@ -1002,7 +1002,7 @@
     SELECT
     *
     FROM (
-    SELECT DISTINCT
+    SELECT
     <include refid="queryOrderListField"/>,
     owi.warehouse_code,owi.provide_transport
     FROM

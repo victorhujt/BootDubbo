@@ -362,7 +362,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
             }
             //遍历行
             for (int rowNum = 0; rowNum < sheet.getLastRowNum() + 1; rowNum ++) {
-               // boolean groundDistribution = false;
+                boolean groundDistribution = false;
                 Row commonRow = sheet.getRow(rowNum);
                 OfcStorageTemplateDto ofcStorageTemplateDto;
                 try {
@@ -794,42 +794,42 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                                 continue;
                             }
 
-//                            if (StringUtils.equals("是", cellValue)&&StringUtils.equals(STORAGE_OUT,ofcStorageTemplate.getTemplateType())){
-//                                groundDistribution = true;
-//                            }
+                            if (StringUtils.equals("是", cellValue)&&StringUtils.equals(STORAGE_OUT,ofcStorageTemplate.getTemplateType())){
+                                groundDistribution = true;
+                            }
                             setFiledValue(clazz, ofcStorageTemplateDto, cellValue.equals("是") ? "1" : "0", standardColCode);
                             //是否落地配
                         }
-//                        else if (StringUtils.equals(StorageImportOutEnum.GROUND_DISTRIBUTION.getStandardColCode(), standardColCode)&& StringUtils.equals(STORAGE_OUT,ofcStorageTemplate.getTemplateType())) {
-//                            if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
-//                                if (!PubUtils.isSEmptyOrNull(colDefaultVal)) {
-//                                    cellValue =  colDefaultVal.equals("是") ? "1" : "0";
-//                                }else {
-//                                    logger.error("当前行:{},列:{} 没有是否提供落地配, 默认为0", rowNum + 1, cellNum + 1);
-//                                    cellValue = "0";
-//                                }
-//                                setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
-//                                continue;
-//                            }
-//
-//                            //只接受:是/否
-//                            if (!StringUtils.equals("是", cellValue) && !StringUtils.equals("否", cellValue)) {
-//                                logger.error("当前行:{},列:{} 校验失败,是否落地配字段只接受:是/否, 用户表中数据为:{}", rowNum + 1, cellNum + 1, cellValue);
-//                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "是否提供落地配校验失败:"+ cellValue + ",只接受:是/否");
-//                                checkPass = false;
-//                                continue;
-//                            }
-//                            //提供落地配必须提供运输服务
-//                            if (StringUtils.equals("是", cellValue)) {
-//                                if (!groundDistribution) {
-//                                    logger.error("当前行:{},列:{} 校验失败,是否落地配字段为是时必须提供运输服务, 用户表中数据为:{}", rowNum + 1, cellNum + 1, cellValue);
-//                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "是否提供落地配校验失败:"+ cellValue + ",是否落地配字段为是时必须提供运输服务");
-//                                    checkPass = false;
-//                                    continue;
-//                                }
-//                            }
-//                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue.equals("是") ? "1" : "0", standardColCode);
-//                        }
+                        else if (StringUtils.equals(StorageImportOutEnum.GROUND_DISTRIBUTION.getStandardColCode(), standardColCode)&& StringUtils.equals(STORAGE_OUT,ofcStorageTemplate.getTemplateType())) {
+                            if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
+                                if (!PubUtils.isSEmptyOrNull(colDefaultVal)) {
+                                    cellValue =  colDefaultVal.equals("是") ? "1" : "0";
+                                }else {
+                                    logger.error("当前行:{},列:{} 没有是否提供落地配, 默认为0", rowNum + 1, cellNum + 1);
+                                    cellValue = "0";
+                                }
+                                setFiledValue(clazz, ofcStorageTemplateDto, cellValue, standardColCode);
+                                continue;
+                            }
+
+                            //只接受:是/否
+                            if (!StringUtils.equals("是", cellValue) && !StringUtils.equals("否", cellValue)) {
+                                logger.error("当前行:{},列:{} 校验失败,是否落地配字段只接受:是/否, 用户表中数据为:{}", rowNum + 1, cellNum + 1, cellValue);
+                                xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "是否提供落地配校验失败:"+ cellValue + ",只接受:是/否");
+                                checkPass = false;
+                                continue;
+                            }
+                            //提供落地配必须提供运输服务
+                            if (StringUtils.equals("是", cellValue)) {
+                                if (!groundDistribution) {
+                                    logger.error("当前行:{},列:{} 校验失败,是否落地配字段为是时必须提供运输服务, 用户表中数据为:{}", rowNum + 1, cellNum + 1, cellValue);
+                                    xlsErrorMsg.add("行:" + (rowNum + 1) + "列:" + (cellNum + 1) + "是否提供落地配校验失败:"+ cellValue + ",是否落地配字段为是时必须提供运输服务");
+                                    checkPass = false;
+                                    continue;
+                                }
+                            }
+                            setFiledValue(clazz, ofcStorageTemplateDto, cellValue.equals("是") ? "1" : "0", standardColCode);
+                        }
                         else if (StringUtils.equals(StorageImportInEnum.TRANS_CODE.getStandardColCode(), standardColCode)) {
                             if (Cell.CELL_TYPE_BLANK == commonCell.getCellType()) {
                                 logger.error("当前行:{},列:{} 没有运输单号", rowNum + 1, cellNum + 1);
@@ -1948,11 +1948,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcOrderDTO.setDeparturePlace(consignor.getDetailAddress());
         StringBuilder sb = new StringBuilder(consignor.getProvince());
         if (!PubUtils.isSEmptyOrNull(consignor.getCity())) {
-            sb.append(consignor.getCity());
+            sb.append(",").append(consignor.getCity());
             if (!PubUtils.isSEmptyOrNull(consignor.getArea())) {
-                sb.append(consignor.getArea());
+                sb.append(",").append(consignor.getArea());
                 if (!PubUtils.isSEmptyOrNull(consignor.getStreet())) {
-                    sb.append(consignor.getStreet());
+                    sb.append(",").append(consignor.getStreet());
                 }
             }
         }
@@ -1978,11 +1978,11 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         ofcOrderDTO.setDestination(cscConsigneeDto.getDetailAddress());
         StringBuilder sb = new StringBuilder(cscConsigneeDto.getProvince());
         if (!PubUtils.isSEmptyOrNull(cscConsigneeDto.getCity())) {
-            sb.append(cscConsigneeDto.getCity());
+            sb.append(",").append(cscConsigneeDto.getCity());
             if (!PubUtils.isSEmptyOrNull(cscConsigneeDto.getArea())) {
-                sb.append(cscConsigneeDto.getArea());
+                sb.append(",").append(cscConsigneeDto.getArea());
                 if (!PubUtils.isSEmptyOrNull(cscConsigneeDto.getStreet())) {
-                    sb.append(cscConsigneeDto.getStreet());
+                    sb.append(",").append(cscConsigneeDto.getStreet());
                 }
             }
         }
@@ -2168,16 +2168,16 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                 logger.error("若您映射了是否提供运输服务,{}的模板列名不能为空!", StorageImportInEnum.CONSIGNOR_NAME.getStandardColName());
                 throw new BusinessException("若您映射了是否提供运输服务," + StorageImportInEnum.CONSIGNOR_NAME.getStandardColName()  + "的模板列名不能为空!");
             }
-//            else if (StringUtils.equals(standardColCode, StorageImportOutEnum.GROUND_DISTRIBUTION.getStandardColCode())
-//                    && (!PubUtils.isSEmptyOrNull(reflectColName) || StringUtils.equals(colDefaultVal, "是")) && !storageIn){
-//                if (StringUtils.equals(standardColCode, StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColCode())
-//                        && (PubUtils.isSEmptyOrNull(colDefaultVal) || StringUtils.equals(colDefaultVal, "否"))
-//                        ) {
-//                    logger.error("若您映射了提供落地配,{}的模板列名默认值必须为提供运输!", StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColName());
-//                    throw new BusinessException("若您映射了提供落地配," + StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColName()  + "的模板列名必须为提供运输服务!");
-//                }
-//
-//            }
+            else if (StringUtils.equals(standardColCode, StorageImportOutEnum.GROUND_DISTRIBUTION.getStandardColCode())
+                    && (!PubUtils.isSEmptyOrNull(reflectColName) || StringUtils.equals(colDefaultVal, "是")) && !storageIn){
+                if (StringUtils.equals(standardColCode, StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColCode())
+                        && (PubUtils.isSEmptyOrNull(colDefaultVal) || StringUtils.equals(colDefaultVal, "否"))
+                        ) {
+                    logger.error("若您映射了提供落地配,{}的模板列名默认值必须为提供运输!", StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColName());
+                    throw new BusinessException("若您映射了提供落地配," + StorageImportOutEnum.PROVIDE_TRANSPORT.getStandardColName()  + "的模板列名必须为提供运输服务!");
+                }
+
+            }
         }
         logger.info("校验模板必填成功!");
     }

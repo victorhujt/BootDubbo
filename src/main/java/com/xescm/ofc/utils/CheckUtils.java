@@ -8,9 +8,9 @@ import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.model.vo.CscStorevo;
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderGoodsInfoDTO;
 import com.xescm.ofc.enums.ResultCodeEnum;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
-import com.xescm.ofc.model.dto.coo.CreateOrderGoodsInfo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -75,14 +75,14 @@ public class CheckUtils {
         //Set<String> checkSet = new HashSet<String>();
         Set<String> checkSet = new HashSet<>();
         if ("60".equals(orderType)) {
-            String[] checkArray = {"600", "601", "602"};
+            String[] checkArray = {"600", "601", "602","603"};
             if (ArrayUtils.contains(checkArray, businessType)) {
                 return new ResultModel(ResultModel.ResultEnum.CODE_0000);
             }
         }
 
         if ("61".equals(orderType)) {
-            String[] checkArray = {"610", "611", "612", "613", "614", "617", "620", "621", "622", "623", "624", "625", "626"};
+            String[] checkArray = {"610", "611", "612", "613", "614", "617", "618","620", "621", "622", "623", "624", "625", "626"};
             if (ArrayUtils.contains(checkArray, businessType)) {
                 return new ResultModel(ResultModel.ResultEnum.CODE_0000);
             }
@@ -127,7 +127,7 @@ public class CheckUtils {
      *
      * @return
      */
-    public static ResultModel checkWaresDist(CreateOrderEntity createOrderEntity) {
+    public static ResultModel checkWaresDist(OfcCreateOrderDTO createOrderEntity) {
         String orderType = createOrderEntity.getOrderType();
         String consignor_name = createOrderEntity.getConsignorName();
         String consignor_contact = createOrderEntity.getConsignorContact();
@@ -239,7 +239,7 @@ public class CheckUtils {
      * 货品档案信息，在统一对接平台调用时，需要将外部的货品信息编码与平台的货品编码做对应。
      * 若传递的货品代码不存在，则返回错误信息，给予提示”XXXX货品档案不存在！
      */
-    public static ResultModel checkGoodsInfo(Wrapper<List<CscGoodsApiVo>> listWrapper, CreateOrderGoodsInfo createOrderGoodsInfo) {
+    public static ResultModel checkGoodsInfo(Wrapper<List<CscGoodsApiVo>> listWrapper, OfcCreateOrderGoodsInfoDTO createOrderGoodsInfo) {
         if (listWrapper.getCode() == Wrapper.ERROR_CODE) {
             return new ResultModel(ResultModel.ResultEnum.CODE_2001);
         }

@@ -301,7 +301,6 @@ public class OfcFundamentalInformation {
     @Column(name = "ground_distribution")
     private String groundDistribution;
 
-
     public String getGroundDistribution() {
         return groundDistribution;
     }

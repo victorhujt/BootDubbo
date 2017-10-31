@@ -347,6 +347,8 @@ public class OfcOrderDTO {
      * 是否需要提供运输
      */
     private Integer provideTransport;
+
+    private String groundDistribution;
     /**
      *出库发货时间
      */

@@ -62,6 +62,9 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
 
+//    @Resource
+//    private AcGetDeliveryOrderEdasService acGetDeliveryOrderEdasService;
+
     @Override
     public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcQueryStorageDTO ofcQueryStorageDTO) {
         if (ofcQueryStorageDTO.getTag().equals("in")) {
@@ -499,7 +502,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Override
     public OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto) {
         if (null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
-            throw new BusinessException("根据所选基地反查大区失败");
+            throw new BusinessException("所选地址未配置大区基地信息");
         }
         Wrapper<UamGroupDto> parentInfoByChildSerilNo = uamGroupEdasService.getParentInfoByChildSerilNo(uamGroupDto.getSerialNo());
         checkUamGroupEdasResultNullOrError(parentInfoByChildSerilNo);
@@ -566,6 +569,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+//            //运输车辆信息
+//            List<DeliverDetailsOrdeDto> deliverDetailsOrdeDtos = getDeliverDetails(orderCode);
+//            if (!CollectionUtils.isEmpty(deliverDetailsOrdeDtos))
+//                orderInfoDTO.setDeliverDetailsOrdeDtoList(deliverDetailsOrdeDtos);
             orderInfoDTO.setOfcFundamentalInformation(ofcFundamentalInformation);
             orderInfoDTO.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
             orderInfoDTO.setOfcFinanceInformation(ofcFinanceInformation);
@@ -597,5 +604,11 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         return ofcOrderInfoDTO;
     }
 
-
+//    private List<DeliverDetailsOrdeDto> getDeliverDetails(String orderCode){
+//        Wrapper<List<DeliverDetailsOrdeDto>> result = acGetDeliveryOrderEdasService.queryTransportDetail(orderCode);
+//        if (result.getCode() == Wrapper.SUCCESS_CODE) {
+//            return result.getResult();
+//        }
+//        return null;
+//    }
 }

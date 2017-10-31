@@ -3,10 +3,13 @@ package com.xescm.ofc.model.dto.coo;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderGoodsInfoDTO;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.utils.DateUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.modelmapper.convention.MatchingStrategies;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +23,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.CREATE_ORDER_BYAPI;
  */
 public class CreateOrderTrans {
 
-    private CreateOrderEntity createOrderEntity;
+    private OfcCreateOrderDTO createOrderEntity;
 
     private String orderCode;
 
@@ -28,7 +31,7 @@ public class CreateOrderTrans {
 
     ModelMapper modelMapper;
 
-    public CreateOrderTrans(CreateOrderEntity createOrderEntity, String orderCode) {
+    public CreateOrderTrans(OfcCreateOrderDTO createOrderEntity, String orderCode) {
         this.createOrderEntity = createOrderEntity;
         this.orderCode = orderCode;
         this.nowDate = new Date();
@@ -91,22 +94,31 @@ public class CreateOrderTrans {
      */
     public List<OfcGoodsDetailsInfo> getOfcGoodsDetailsInfoList() throws BusinessException {
         if (createOrderEntity != null) {
-            List<CreateOrderGoodsInfo> list = createOrderEntity.getCreateOrderGoodsInfos();
+            List<OfcCreateOrderGoodsInfoDTO> list = createOrderEntity.getCreateOrderGoodsInfos();
             if (null != list && !list.isEmpty()) {
                 this.ofcGoodsDetailsInfoList = new ArrayList<>();
-                modelMapper.addMappings(new PropertyMap<CreateOrderGoodsInfo, OfcGoodsDetailsInfo>() {
+                modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+                modelMapper.addMappings(new PropertyMap<OfcCreateOrderGoodsInfoDTO, OfcGoodsDetailsInfo>() {
                     @Override
                     protected void configure() {
                         skip().setInvalidTime(null);
                         skip().setProductionTime(null);
                     }
                 });
-                for (CreateOrderGoodsInfo goodsInfo : list) {
+                for (OfcCreateOrderGoodsInfoDTO goodsInfo : list) {
                     OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
+                    String productionTime = goodsInfo.getProductionTime();
+                    String invalidTime = goodsInfo.getInvalidTime();
                     modelMapper.map(goodsInfo, ofcGoodsDetailsInfo);
                     ofcGoodsDetailsInfo.setOrderCode(this.orderCode);
                     ofcGoodsDetailsInfo.setCreationTime(nowDate);
                     ofcGoodsDetailsInfo.setOperator(CREATE_ORDER_BYAPI);
+                    if (!PubUtils.isSEmptyOrNull(productionTime)) {
+                        ofcGoodsDetailsInfo.setProductionTime(DateUtils.String2Date(productionTime, DateUtils.DateFormatType.TYPE2));
+                    }
+                    if (!PubUtils.isSEmptyOrNull(invalidTime)) {
+                        ofcGoodsDetailsInfo.setInvalidTime(DateUtils.String2Date(invalidTime, DateUtils.DateFormatType.TYPE2));
+                    }
                     ofcGoodsDetailsInfo.setOperTime(nowDate);
                     ofcGoodsDetailsInfoList.add(ofcGoodsDetailsInfo);
                 }
@@ -124,7 +136,7 @@ public class CreateOrderTrans {
     public OfcFundamentalInformation getOfcFundamentalInformation() throws BusinessException {
         if (createOrderEntity != null) {
             ofcFundamentalInformation = new OfcFundamentalInformation();
-            modelMapper.addMappings(new PropertyMap<CreateOrderEntity, OfcFundamentalInformation>() {
+            modelMapper.addMappings(new PropertyMap<OfcCreateOrderDTO, OfcFundamentalInformation>() {
                 @Override
                 protected void configure() {
                     skip().setOrderTime(null);
@@ -158,7 +170,7 @@ public class CreateOrderTrans {
     public OfcDistributionBasicInfo   getOfcDistributionBasicInfo() throws BusinessException {
         if (createOrderEntity != null) {
             ofcDistributionBasicInfo = new OfcDistributionBasicInfo();
-            modelMapper.addMappings(new PropertyMap<CreateOrderEntity, OfcDistributionBasicInfo>() {
+            modelMapper.addMappings(new PropertyMap<OfcCreateOrderDTO, OfcDistributionBasicInfo>() {
                 @Override
                 protected void configure() {
                     skip().setPickupTime(null);
@@ -203,6 +215,7 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setConsigneeContactPhone(createOrderEntity.getConsigneePhone());
             ofcDistributionBasicInfo.setConsigneeName(createOrderEntity.getConsigneeName());
             ofcDistributionBasicInfo.setConsigneeCode(createOrderEntity.getConsigneeCode());
+            ofcDistributionBasicInfo.setConsigneeContactCode(createOrderEntity.getConsigneeContactCode());
             ofcDistributionBasicInfo.setConsigneeType("2");
             //收货方传真、收货方Email、收货方邮编 暂无字段
             ofcDistributionBasicInfo.setDestinationProvince(createOrderEntity.getConsigneeProvince());
@@ -251,7 +264,6 @@ public class CreateOrderTrans {
             this.ofcFinanceInformation = new OfcFinanceInformation();
             modelMapper.map(createOrderEntity, ofcFinanceInformation);
             ofcFinanceInformation.setOrderCode(this.orderCode);
-            ofcFinanceInformation.setBuyerPaymentMethod(createOrderEntity.getBuyerPaymentMe());
             ofcFinanceInformation.setCreationTime(nowDate);
             ofcFinanceInformation.setOperator(CREATE_ORDER_BYAPI);
             ofcFinanceInformation.setOperTime(nowDate);
@@ -269,7 +281,7 @@ public class CreateOrderTrans {
     public OfcWarehouseInformation getOfcWarehouseInformation() throws BusinessException {
         if (createOrderEntity != null) {
             this.ofcWarehouseInformation = new OfcWarehouseInformation();
-            modelMapper.addMappings(new PropertyMap<CreateOrderEntity, OfcWarehouseInformation>() {
+            modelMapper.addMappings(new PropertyMap<OfcCreateOrderDTO, OfcWarehouseInformation>() {
                 @Override
                 protected void configure() {
                     map().setArriveTime(null);
@@ -277,7 +289,7 @@ public class CreateOrderTrans {
             });
             modelMapper.map(createOrderEntity, ofcWarehouseInformation);
             Integer provideTransport = ofcWarehouseInformation.getProvideTransport();
-            provideTransport = provideTransport == null ? 0 : 1;
+            provideTransport = provideTransport == null || provideTransport == 0 ? 0 : 1;
             ofcWarehouseInformation.setProvideTransport(provideTransport);
             ofcWarehouseInformation.setOrderCode(this.orderCode);
             ofcWarehouseInformation.setArriveTime(DateUtils.String2Date(createOrderEntity.getArriveTime(), DateUtils.DateFormatType.TYPE1));

@@ -46,6 +46,7 @@
 
     <!--仓储中心-->
     <hsf:consumer id="whcOrderCancelEdasService" interface="com.xescm.whc.edas.service.WhcOrderCancelEdasService" group="xescm-whc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
+    <hsf:consumer id="WhcModifWmsCodeEdasService" interface="com.xescm.whc.edas.service.WhcModifWmsCodeEdasService" group="xescm-whc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>
 
     <!--运输中心-->
     <hsf:consumer id="cancelOrderEdasService" interface="com.xescm.tfc.edas.service.CancelOrderEdasService" group="xescm-tfc-${xescm.edas.group}" version="1.0" clientTimeout="600000"/>

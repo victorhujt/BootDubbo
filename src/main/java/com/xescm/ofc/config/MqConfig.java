@@ -92,6 +92,8 @@ public class MqConfig {
     private String tfc2OfcOrderPoTopic;
     /** 仓储中心推送订单状态 */
     private String whc2OfcOrderPoTopic;
+    /**订单中心推送货品到客户中心*/
+    private String ofc2CscGoodsTopic;
 
     /**----------------异常订单topic----------------**/
 
