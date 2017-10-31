@@ -137,31 +137,31 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
         if (ofcOrderDTOStr == null) {
             throw new BusinessException("订单中心下单dto不能为空！");
         }
-        if(null == ofcOrderDTOStr.getOrderTime()){
+        if (null == ofcOrderDTOStr.getOrderTime()) {
             throw new BusinessException("请选择订单日期");
         }
-        if(CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())){
+        if (CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())) {
             throw new BusinessException("请至少添加一条货品！");
         }
-        if(CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())){
+        if (CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())) {
             throw new BusinessException("请至少添加一条货品！");
         }
-        if(ofcOrderDTOStr.getConsignor() == null){
+        if (ofcOrderDTOStr.getConsignor() == null) {
             throw new BusinessException("发货人信息不允许为空！");
         }
-        if(ofcOrderDTOStr.getConsignee() == null){
+        if (ofcOrderDTOStr.getConsignee() == null) {
             throw new BusinessException("发货人信息不允许为空！");
         }
         //校验业务类型，如果是卡班，必须要有运输单号
-        if(StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
+        if (StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())) {
             if(StringUtils.isBlank(ofcOrderDTOStr.getTransCode())){
                 throw new BusinessException("业务类型是卡班，运输单号是必填项");
             }
         }
-        if (null == ofcOrderDTOStr.getProvideTransport()){
+        if (null == ofcOrderDTOStr.getProvideTransport()) {
             ofcOrderDTOStr.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
         }
-        if (null == ofcOrderDTOStr.getUrgent()){
+        if (null == ofcOrderDTOStr.getUrgent()) {
             ofcOrderDTOStr.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
         }
         //客户工作台运输订单编辑

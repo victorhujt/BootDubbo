@@ -30,18 +30,18 @@ public class OfcCustTransportOrderController extends BaseController{
 
     /**
      * 客户工作台运输开单
-     * @param ofcOrderDTOStr        订单基本信息、收发货方信息
+     * @param param        订单基本信息、收发货方信息
      * @param tag           标识下单、编辑、运输开单
      * @return      Wrapper
      */
     @RequestMapping("/orderPlaceCon/{tag}")
     @ResponseBody
-    public Wrapper<?> orderPlace(@RequestBody OfcOrderDTO ofcOrderDTOStr, @PathVariable String tag){
-        logger.info("==>客户工作台运输开单 ofcOrderDTOStr={}", ofcOrderDTOStr);
+    public Wrapper<?> orderPlace(@RequestBody OfcOrderDTO param, @PathVariable String tag){
+        logger.info("==>客户工作台运输开单 ofcOrderDTOStr={}", param);
         logger.info("==>客户工作台运输开单 tag={}", tag);
         String resultMessage;
         try {
-            resultMessage = ofcCustOrderPlaceService.placeTransOrder(getAuthResDtoByToken(), ofcOrderDTOStr, tag);
+            resultMessage = ofcCustOrderPlaceService.placeTransOrder(getAuthResDtoByToken(), param, tag);
         } catch (BusinessException ex){
             logger.error("客户工作台运输开单出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());

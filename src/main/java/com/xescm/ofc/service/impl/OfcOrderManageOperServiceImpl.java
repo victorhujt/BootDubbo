@@ -396,6 +396,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         String userSerialNo = uamGroupDto.getSerialNo();
         //鲜易供应链
         if (StringUtils.equals("xebest",identity)) {
+
             //鲜易供应链下所有大区
             if (PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
                 throw new BusinessException("根据登录用户获取大区列表入参有误!");
@@ -465,6 +466,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
      * 获取当前大区下的所有基地
      * @param uamGroupDto 组织实体对象
      */
+    @Override
     public List<OfcGroupVo> getBaseListByCurArea(UamGroupDto uamGroupDto) {
         if (null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
             throw new BusinessException("获取当前大区下的所有基地失败");
@@ -519,6 +521,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
      * 校验UamGroupEdas返回结果
      * @param allGroupByType 查询当前登录用户组织信息UamGroupEdas返回结果
      */
+    @Override
     public void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType) {
         if (null == allGroupByType) {
             throw new BusinessException("查询当前登录用户组织信息出错,接口返回null");
