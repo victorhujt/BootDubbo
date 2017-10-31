@@ -3,6 +3,8 @@ package com.xescm.ofc.service;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.domain.OfcDistributionBasicInfo;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
+import com.xescm.ofc.domain.OfcWarehouseInformation;
 
 /**
  * Created by lyh on 2016/10/10.
@@ -24,4 +26,9 @@ public interface OfcDistributionBasicInfoService extends IService<OfcDistributio
     Wrapper<?> validateDistrictContactMessage(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee);
 
     int updateAddressByOrderCode(Object key);
+
+
+    OfcDistributionBasicInfo fillAddress(OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation);
+
+
 }

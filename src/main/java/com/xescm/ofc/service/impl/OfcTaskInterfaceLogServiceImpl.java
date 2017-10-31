@@ -10,11 +10,11 @@ import com.xescm.ofc.domain.OfcOrderNewstatus;
 import com.xescm.ofc.domain.OfcTaskInterfaceLog;
 import com.xescm.ofc.edas.enums.LogStatusEnum;
 import com.xescm.ofc.edas.enums.TaskLogSourceEnum;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.edas.model.dto.worker.OfcTaskInterfaceLogDto;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcInterfaceReceiveLogMapper;
 import com.xescm.ofc.mapper.OfcTaskInterfaceLogMapper;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.ofc.model.vo.ofc.OfcTaskInterfaceLogVo;
 import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
@@ -287,7 +287,7 @@ public class OfcTaskInterfaceLogServiceImpl extends BaseService<OfcTaskInterface
         try {
             String taskData = taskParam.getTaskData();
             if (!PubUtils.isSEmptyOrNull(taskData)) {
-                CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(taskData, CreateOrderEntity.class);
+                OfcCreateOrderDTO createOrderEntity = JacksonUtil.parseJsonWithFormat(taskData, OfcCreateOrderDTO.class);
                 String custCode = createOrderEntity.getCustCode();
                 String custOrderCode = createOrderEntity.getCustOrderCode();
                 OfcFundamentalInformation ofcFundamentalInfo = ofcFundamentalInfoService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);

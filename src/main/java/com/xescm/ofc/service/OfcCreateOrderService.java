@@ -1,8 +1,8 @@
 package com.xescm.ofc.service;
 
 import com.xescm.ofc.constant.ResultModel;
+import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.coo.CreateOrderEntity;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
 
 import java.util.Map;
@@ -15,7 +15,7 @@ public interface OfcCreateOrderService {
 
     int queryCountByOrderStatus(String orderCode, String  orderStatus);
 
-    ResultModel ofcCreateOrder(CreateOrderEntity createOrderEntity, String orderCode) throws BusinessException;
+    ResultModel ofcCreateOrder(OfcCreateOrderDTO createOrderEntity, String orderCode) throws BusinessException;
 
     /**
      * 根据省市区名称获取编码

@@ -13,6 +13,8 @@ import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
+import com.xescm.tfc.edas.model.dto.DeliverDetailsOrdeDto;
+import com.xescm.tfc.edas.service.AcGetDeliveryOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
@@ -61,6 +63,9 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     private OrderFollowOperService orderFollowOperService;
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
+
+    @Resource
+    private AcGetDeliveryOrderEdasService acGetDeliveryOrderEdasService;
 
     @Override
     public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcQueryStorageDTO ofcQueryStorageDTO) {
@@ -497,7 +502,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Override
     public OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto) {
         if (null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
-            throw new BusinessException("根据所选基地反查大区失败");
+            throw new BusinessException("所选地址未配置大区基地信息");
         }
         Wrapper<UamGroupDto> parentInfoByChildSerilNo = uamGroupEdasService.getParentInfoByChildSerilNo(uamGroupDto.getSerialNo());
         checkUamGroupEdasResultNullOrError(parentInfoByChildSerilNo);
@@ -563,6 +568,10 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+//            //运输车辆信息
+            List<DeliverDetailsOrdeDto> deliverDetailsOrdeDtos = getDeliverDetails(orderCode);
+            if (!CollectionUtils.isEmpty(deliverDetailsOrdeDtos))
+                orderInfoDTO.setDeliverDetailsOrdeDtoList(deliverDetailsOrdeDtos);
             orderInfoDTO.setOfcFundamentalInformation(ofcFundamentalInformation);
             orderInfoDTO.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
             orderInfoDTO.setOfcFinanceInformation(ofcFinanceInformation);
@@ -594,5 +603,16 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         return ofcOrderInfoDTO;
     }
 
-
+    private List<DeliverDetailsOrdeDto> getDeliverDetails(String orderCode){
+        try {
+            Wrapper<List<DeliverDetailsOrdeDto>> result = acGetDeliveryOrderEdasService.queryTransportDetail(orderCode);
+            if (result.getCode() == Wrapper.SUCCESS_CODE) {
+                return result.getResult();
+            }
+        }catch (Exception e) {
+            logger.error("查询订单运输车辆信息发生异常：异常详情{}", e);
+            return null;
+        }
+        return null;
+    }
 }
