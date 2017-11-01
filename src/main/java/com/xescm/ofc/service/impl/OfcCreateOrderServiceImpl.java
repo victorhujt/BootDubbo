@@ -135,13 +135,21 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 return resultModel;
             }
 
+            String orderBusinessType = createOrderEntity.getBusinessType().substring(0, 2);
             QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
             queryCustomerCodeDto.setCustomerCode(custCode);
             Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
             if (customerVoWrapper.getResult() == null) {
                 logger.error("获取货主信息失败：custId:{}，{}", custCode, customerVoWrapper.getMessage());
                 return new ResultModel(ResultModel.ResultEnum.CODE_0009);
-            } else {
+            } else if (orderBusinessType.equals(TRACE_STATUS_5)) {
+                // 金融中心锁定客户不允许出库，追加逻辑
+                String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
+                if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
+                    return new ResultModel(ResultModel.ResultEnum.CODE_4001);
+                }
+                createOrderEntity.setCustName(customerVoWrapper.getResult().getCustomerName());
+            } else  {
                 createOrderEntity.setCustName(customerVoWrapper.getResult().getCustomerName());
             }
 
