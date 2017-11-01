@@ -225,6 +225,18 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT)) {
                 OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
+                // 金融中心锁定客户不允许出库，追加逻辑
+                String customerCode = ofcFundamentalInformation.getCustCode();
+                QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                queryCustomerCodeDto.setCustomerCode(customerCode);
+                Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
+                if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
+                    throw new BusinessException("校验客户锁定状态时出现异常");
+                }
+                String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
+                if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
+                    throw new BusinessException("订单编号[" + orderCode + "]不能执行审核，此订单客户被金融中心锁定，辛苦联系金融中心同事！");
+                }
                 //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
                 if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
                         || PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseName())) {
@@ -1677,16 +1689,29 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (ofcFundamentalInformation == null) {
             throw new BusinessException("订单号不存在订单");
         }
-
         OfcOrderStatus ordertatus = ofcOrdertatusService.orderStatusSelect(orderCode, "orderCode");
         if (ordertatus == null) {
             throw new BusinessException("订单号不存在任何状态");
         }
-
         String status = ordertatus.getOrderStatus();
+        String orderBusinessType = ofcFundamentalInformation.getBusinessType().substring(0, 2);
         StringBuilder notes = new StringBuilder();
         OfcOrderStatus s = new OfcOrderStatus();
         OfcFundamentalInformation newofcFundamentalInformation = new OfcFundamentalInformation();
+        // 金融中心锁定客户不允许出库，追加逻辑
+        if (orderBusinessType.equals(TRACE_STATUS_5)){
+            String customerCode = ofcFundamentalInformation.getCustCode();
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(customerCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
+            if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
+                throw new BusinessException("校验客户锁定状态时出现异常");
+            }
+            String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
+            if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
+                throw new BusinessException("订单编号[" + orderCode + "]不能执行复制，此订单客户被金融中心锁定，辛苦联系金融中心同事！");
+            }
+        }
         try {
             BeanUtils.copyProperties(newofcFundamentalInformation, ofcFundamentalInformation);
             if (!status.equals(HASBEEN_CANCELED)) {
