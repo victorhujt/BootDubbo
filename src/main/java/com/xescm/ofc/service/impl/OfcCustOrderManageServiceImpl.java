@@ -123,7 +123,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
                 logger.error("该订单号再无最新状态");
                 throw new BusinessException("该订单号再无最新状态");
             }
-            custOrderNewstatus = (OfcCustOrderNewstatus) ofcOrderNewstatus;
+            BeanUtils.copyProperties(ofcOrderNewstatus, custOrderNewstatus);
         }
         String orderLatestStatus = custOrderNewstatus.getOrderLatestStatus();
         // 未确认订单(即滞留客户工作台的订单)直接取消掉
