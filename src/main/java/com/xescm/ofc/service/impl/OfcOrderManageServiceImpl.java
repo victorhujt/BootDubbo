@@ -346,7 +346,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                             logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
                             logger.info("good.getPackageName() is {}",good.getUnit());
                             logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
-                            good.setConversionRate(packingDto.getLevelSpecification());
+                            BigDecimal ls = packingDto.getLevelSpecification();
+                            if (ls == null || ls.compareTo(new BigDecimal(0)) == 0) {
+                                break;
+                            }
+                            good.setConversionRate(ls);
                             good.setPackageName(packingDto.getLevelDescription());
                             good.setPackageType(packingDto.getLevel());
                             if (!PubUtils.isSEmptyOrNull(good.getRemark())) {

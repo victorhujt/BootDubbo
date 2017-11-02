@@ -327,7 +327,11 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
                                     logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
                                     if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
-                                        goodsInfo.setConversionRate(packingDto.getLevelSpecification());
+                                        BigDecimal ls = packingDto.getLevelSpecification();
+                                        if (ls == null || ls.compareTo(new BigDecimal(0)) == 0) {
+                                            break;
+                                        }
+                                        goodsInfo.setConversionRate(ls);
                                         goodsInfo.setPackageName(packingDto.getLevelDescription());
                                         goodsInfo.setPackageType(packingDto.getLevel());
                                         BigDecimal quantity = new BigDecimal(goodsInfo.getQuantity());
