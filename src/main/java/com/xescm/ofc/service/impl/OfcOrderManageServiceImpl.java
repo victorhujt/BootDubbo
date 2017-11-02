@@ -679,8 +679,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (orderStatus == null) {
             throw new BusinessException("订单没有任何状态");
         }
-        if ((!trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(PENDING_AUDIT))
-                && (!trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(HASBEEN_COMPLETED))
+        if ((!trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(HASBEEN_COMPLETED))
                 && (!trimAndNullAsEmpty(orderStatus.getOrderStatus()).equals(HASBEEN_CANCELED))) {
             //调用各中心请求直接取消订单
             try {
