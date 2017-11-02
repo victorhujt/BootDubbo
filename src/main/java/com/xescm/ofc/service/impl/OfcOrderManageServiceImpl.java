@@ -854,11 +854,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     }
 
     @Override
-    public Wrapper storageOrderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto) {
-        logger.info("仓储批量下单 ==> ofcStorageTemplateDtoList:{}", ofcStorageTemplateDtoList);
+    public Wrapper storageOrderConfirm(OfcStorageImportDTO ofcStorageImportDTO, AuthResDto authResDto) {
+        logger.info("仓储批量下单 ==> OfcStorageImportDTO:{}", ofcStorageImportDTO);
         logger.info("仓储批量下单 ==> authResDto:{}", authResDto);
         Map<String, List<OfcStorageTemplateDto>> orderMap = new HashMap<>();
-        for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
+        for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageImportDTO.getOrderList()) {
             if (null == ofcStorageTemplateDto) {
                 logger.info("仓储开单批量导单确认下单, 订单信息为空! ");
                 continue;
@@ -868,7 +868,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (!orderMap.containsKey(custOrderCode) && orderListByCustOrderCode == null) {
                 logger.info("初始化");
                 orderListByCustOrderCode = new ArrayList<>();
-//                orderMap.put(custOrderCode, orderListByCustOrderCode);
             }
             orderListByCustOrderCode.add(ofcStorageTemplateDto);
             orderMap.put(custOrderCode, orderListByCustOrderCode);
@@ -879,6 +878,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             List<OfcStorageTemplateDto> order = orderMap.get(orderMapKey);
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
             OfcStorageTemplateDto forOrderMsg = order.get(0);
+            forOrderMsg.getOfcOrderDTO().setServiceProductCode(ofcStorageImportDTO.getServiceProductCode());
+            forOrderMsg.getOfcOrderDTO().setServiceProductName(ofcStorageImportDTO.getServiceProductName());
             logger.info("forOrderMsg------, {}", ToStringBuilder.reflectionToString(forOrderMsg));
             org.springframework.beans.BeanUtils.copyProperties(forOrderMsg.getOfcOrderDTO(), ofcOrderDTO);
             org.springframework.beans.BeanUtils.copyProperties(forOrderMsg, ofcOrderDTO, "orderTime");

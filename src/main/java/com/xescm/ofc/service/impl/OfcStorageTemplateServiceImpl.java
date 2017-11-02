@@ -25,6 +25,7 @@ import com.xescm.ofc.mapper.OfcStorageTemplateMapper;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcStorageImportDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CodeGenUtils;
@@ -1082,8 +1083,6 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     //补齐
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustCode(ofcStorageTemplate.getCustCode());
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustName(ofcStorageTemplate.getCustName());
-                    ofcStorageTemplateDto.getOfcOrderDTO().setServiceProductCode(ofcStorageTemplate.getServiceProductCode());
-                    ofcStorageTemplateDto.getOfcOrderDTO().setServiceProductName(ofcStorageTemplate.getServiceProductName());
                     //若文件中不存在此列，则所有订单默认为当前日期.
                     Date now = new Date();
                     if (PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getOrderTime())) {
@@ -1876,41 +1875,41 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
 
     /**
      * 仓储开单批量导单确认下单
-     * @param ofcStorageTemplateDtoList 订单List
+     * @param ofcStorageImportDTO 订单集合
      * @param authResDto 登录用户
      * @return 下单结果
      */
     @Override
-    public Wrapper orderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto) throws Exception{
-        logger.info("仓储开单批量导单确认下单orderList ==> {}", ofcStorageTemplateDtoList);
+    public Wrapper orderConfirm(OfcStorageImportDTO ofcStorageImportDTO, AuthResDto authResDto) throws Exception{
+        logger.info("仓储开单批量导单确认下单ofcStorageImportDTO ==> {}", ofcStorageImportDTO);
         logger.info("仓储开单批量导单确认下单authResDto ==> {}", authResDto);
-        // 金融中心锁定客户不允许出库，追加逻辑
-        String customerCode = ofcStorageTemplateDtoList.get(0).getOfcOrderDTO().getCustCode();
-        String orderBusinessType = ofcStorageTemplateDtoList.get(0).getBusinessType().substring(0, 2);
-        if (orderBusinessType.equals(TRACE_STATUS_5)) {
-            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
-            queryCustomerCodeDto.setCustomerCode(customerCode);
-            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
-            if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
-                throw new BusinessException("校验客户锁定状态时出现异常");
-            }
-            String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
-            if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
-                throw new BusinessException("此客户被金融中心锁定，辛苦联系金融中心同事！");
-            }
+        List<OfcStorageTemplateDto> orderList = ofcStorageImportDTO.getOrderList();
+        if (CollectionUtils.isEmpty(orderList)) {
+            throw new BusinessException("仓储开单批量导单确认下单失败! 订单列表为空!");
         }
-//        List<String> orderBatchNumberList = new ArrayList<>();
-        if (CollectionUtils.isEmpty(ofcStorageTemplateDtoList) || null == authResDto) {
+        if (CollectionUtils.isEmpty(orderList) || null == authResDto) {
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
             throw new BusinessException("仓储开单批量导单确认下单失败!");
         }
-//        TypeReference<List<OfcStorageTemplateDto>> typeReference = new TypeReference<List<OfcStorageTemplateDto>>() {
-//        };
-//        List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = JacksonUtil.parseJsonWithFormat(orderList, typeReference);
-        if (CollectionUtils.isEmpty(ofcStorageTemplateDtoList)) {
-            throw new BusinessException("仓储开单批量导单确认下单失败! 订单列表为空!");
+        // 金融中心锁定客户不允许出库，追加逻辑
+        OfcStorageTemplateDto ofcStorageTemplateDto = orderList.get(0);
+        if (ofcStorageTemplateDto != null && ofcStorageTemplateDto.getOfcOrderDTO() != null) {
+            String customerCode = ofcStorageTemplateDto.getOfcOrderDTO().getCustCode();
+            String orderBusinessType = ofcStorageTemplateDto.getBusinessType().substring(0, 2);
+            if (orderBusinessType.equals(TRACE_STATUS_5)) {
+                QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                queryCustomerCodeDto.setCustomerCode(customerCode);
+                Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
+                if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
+                    throw new BusinessException("校验客户锁定状态时出现异常");
+                }
+                String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
+                if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)) {
+                    throw new BusinessException("此客户被金融中心锁定，辛苦联系金融中心同事！");
+                }
+            }
         }
-        return ofcOrderManageService.storageOrderConfirm(ofcStorageTemplateDtoList, authResDto);
+        return ofcOrderManageService.storageOrderConfirm(ofcStorageImportDTO, authResDto);
     }
 
     public Date convertStringToDate(String orderTime) {

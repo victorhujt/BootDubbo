@@ -9,6 +9,7 @@ import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
 import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.model.dto.ofc.OfcStorageImportDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import org.apache.poi.ss.usermodel.Cell;
@@ -42,7 +43,15 @@ public interface OfcStorageTemplateService {
 
     List<RmcWarehouseRespDto> allWarehouseByRmc();
 
-    Wrapper orderConfirm(List<OfcStorageTemplateDto> orderList, AuthResDto authResDto) throws Exception;
+    /**
+     * <p>Description 批量导入仓储订单</p>
+     *
+     * @param ofcStorageImportDTO 订单信息
+     * @author nothing
+     * @date 02/11/2017 16:53
+     * @return
+     */
+    Wrapper orderConfirm(OfcStorageImportDTO ofcStorageImportDTO, AuthResDto authResDto) throws Exception;
 
     Wrapper storageTemplateAudit(Object result, AuthResDto authResDto);
 

@@ -8,7 +8,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
-import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
+import com.xescm.ofc.model.dto.ofc.OfcStorageImportDTO;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
@@ -77,7 +77,7 @@ public interface OfcOrderManageService {
      */
      void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
-    Wrapper storageOrderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto);
+    Wrapper storageOrderConfirm(OfcStorageImportDTO ofcStorageImportDTO, AuthResDto authResDto);
 
 
     boolean consigneeAdressIsCoverBase(OfcDistributionBasicInfo ofcDistributionBasicInfo);
