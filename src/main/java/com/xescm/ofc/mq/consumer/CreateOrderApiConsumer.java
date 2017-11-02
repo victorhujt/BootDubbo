@@ -105,37 +105,16 @@ public class CreateOrderApiConsumer implements MessageListener {
                 }
             }
         } else if (StringUtils.equals(topicName,mqConfig.getTfc2OfcOrderPoTopic())) {
-//            logger.info("订单中心消费订单状态MQ: topic => {}, Tag => {}, key: {}, messageId: {}", topicName, message.getTag(), key, messageId);
             try {
                 if (!Tfc2OfcStateTopicTag.PUSH_NOT_SCHEDULE_TAG.equals(tag) && // 未调度
                     !Tfc2OfcStateTopicTag.PUSH_CANCEL_TAG.equals(tag) &&       // 取消
                     !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.equals(tag)) {     // 签收单
-//                if (message.getTag().equals("DeliveryTag")) {
-//                    logger.info("订单中心消费订单状态MQ<调度>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, message);
-//                    List<OfcSchedulingSingleFeedbackCondition> ofcSchedulingSingleFeedbackConditions;
-//                    TypeReference<List<OfcSchedulingSingleFeedbackCondition>> ofcSchedulingTypeRef = new TypeReference<List<OfcSchedulingSingleFeedbackCondition>>() {};
-//                    try {
-//                        ofcSchedulingSingleFeedbackConditions = JacksonUtil.parseJsonWithFormat(messageBody, ofcSchedulingTypeRef);
-//                        for (int i = 0; i < ofcSchedulingSingleFeedbackConditions.size(); i++) {
-//                            try {
-//                                ofcPlanFedBackService.schedulingSingleFeedbackNew(ofcSchedulingSingleFeedbackConditions.get(i), userName);
-//                            } catch (BusinessException ex) {
-//                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
-//                            } catch (Exception ex) {
-//                                logger.error("订单调度状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                        logger.error("运输单状态反馈出错:{}", e.getMessage(), e);
-//                    }
-//                } else if (message.getTag().equals("TransportTag")) {
                     logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, messageBody);
                     try {
                         mqConsumerService.transportStateConsumer(messageBody, MAP);
                     } catch (Exception e) {
                         logger.error("订单运输状态更新异常: 异常详情 => {}", e);
                     }
-//                }
                 }
             } catch (Exception ex) {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}", message.getTag(), topicName, key, ex.getMessage(), ex);
