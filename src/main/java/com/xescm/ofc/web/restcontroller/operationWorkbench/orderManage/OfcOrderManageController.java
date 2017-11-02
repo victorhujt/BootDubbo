@@ -171,7 +171,7 @@ public class OfcOrderManageController extends BaseController {
     }
 
     /**
-     * 审核与反审核订单
+     * 修改订单仓库
      *
      * @param whcModifWmsCodeReqDto 订单修改实体参数
      * @return      Wrapper
@@ -190,6 +190,12 @@ public class OfcOrderManageController extends BaseController {
             if (StringUtils.isBlank(whcModifWmsCodeReqDto.getBillType())) {
                 throw new BusinessException("订单的业务类型不能为空！");
             }
+            if (PubUtils.isOEmptyOrNull(whcModifWmsCodeReqDto.getNewWareHouseCode())) {
+                throw new BusinessException("仓库编码不能为空！");
+            }
+            if (PubUtils.isOEmptyOrNull(whcModifWmsCodeReqDto.getNewWareHouseName())) {
+                throw new BusinessException("仓库名称不能为空！");
+            }
             AuthResDto authResDto = getAuthResDtoByToken();
             whcModifWmsCodeReqDto.setOperationName(authResDto.getUserName());
             Wrapper<?> result = ofcOrderManageService.updateOrderDetail(whcModifWmsCodeReqDto);
@@ -197,9 +203,9 @@ public class OfcOrderManageController extends BaseController {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
             }
             if (result.getCode() == Wrapper.SUCCESS_CODE) {
-                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单修改成功");
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单仓库修改成功");
             } else {
-                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单修改失败");
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单仓库修改失败");
             }
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单修改出现异常:{}", ex.getMessage(), ex);
