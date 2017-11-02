@@ -616,6 +616,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
                 ofcGoodsDetailsInfo.setOrderCode(orderCode);
                 ofcGoodsDetailsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetailsInfo);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             ofcOrderManageService.fillAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation);
@@ -654,6 +655,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcFinanceInformationService.save(ofcFinanceInformation);
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
                 ofcGoodsDetailsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetailsInfo);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
             ofcOrderStatusService.save(ofcOrderStatus);

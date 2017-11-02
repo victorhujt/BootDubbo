@@ -1455,6 +1455,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
             ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
             ofcGoodsDetail.add(ofcGoodsDetails);
+            ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
      }
 
@@ -1786,6 +1787,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     newGoodsInfo.setId(UUID.randomUUID().toString().replace("-", ""));
                     newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                     newGoodsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                    ofcGoodsDetailsInfoService.fillGoodType(newGoodsInfo);
                     ofcGoodsDetailsInfoService.save(newGoodsInfo);
                 }
             }
