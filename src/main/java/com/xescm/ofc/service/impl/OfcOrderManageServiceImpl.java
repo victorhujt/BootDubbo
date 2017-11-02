@@ -1994,7 +1994,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
 
          return whcModifWmsCodeEdasService.modifWmsCodeByOrderCode(whcModifWmsCodeReqDto);
-       // return new Wrapper<>(Wrapper.SUCCESS_CODE,Wrapper.SUCCESS_MESSAGE);
     }
 
     /**
