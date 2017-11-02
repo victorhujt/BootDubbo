@@ -1082,6 +1082,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
                     //补齐
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustCode(ofcStorageTemplate.getCustCode());
                     ofcStorageTemplateDto.getOfcOrderDTO().setCustName(ofcStorageTemplate.getCustName());
+                    ofcStorageTemplateDto.getOfcOrderDTO().setServiceProductCode(ofcStorageTemplate.getServiceProductCode());
+                    ofcStorageTemplateDto.getOfcOrderDTO().setServiceProductName(ofcStorageTemplate.getServiceProductName());
                     //若文件中不存在此列，则所有订单默认为当前日期.
                     Date now = new Date();
                     if (PubUtils.isSEmptyOrNull(ofcStorageTemplateDto.getOrderTime())) {

@@ -70,5 +70,4 @@ public class OfcStorageTemplateDto {
     private BigDecimal weight;
     //是否落地配
     private String groundDistribution;
-
 }

@@ -159,4 +159,12 @@ public class OfcFundamentalInformationDTO {
     
     /** 发货波次号 */    
     private String consignmentBatchNumber;
+    /**
+     * 服务产品编码
+     */
+    private String serviceProductCode;
+    /**
+     * 服务产品名称
+     */
+    private String serviceProductName;
 }

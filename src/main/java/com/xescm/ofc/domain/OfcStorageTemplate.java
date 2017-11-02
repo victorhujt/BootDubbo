@@ -109,4 +109,13 @@ public class OfcStorageTemplate implements Serializable{
     @Column(name = "operator_name")
     private String operatorName;
 
+    /**
+     * 服务产品编码
+     */
+    private String serviceProductCode;
+
+    /**
+     * 服务产品名称
+     */
+    private String serviceProductName;
 }
