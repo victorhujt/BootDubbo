@@ -8,6 +8,8 @@ import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.ofc.annotation.Permission;
 import com.xescm.ofc.annotation.ValidParam;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
+import com.xescm.ofc.edas.service.OfcOrderStatusEdasService;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderScreenMapper;
 import com.xescm.ofc.model.dto.form.OfcManagementForm;
@@ -16,7 +18,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.BeanConvertor;
 import com.xescm.ofc.utils.DateUtils;
 import com.xescm.tfc.edas.model.domain.epc.req.FollowInfoReqDto;
-import com.xescm.tfc.edas.model.domain.epc.resp.TransportRespDto;
 import com.xescm.tfc.edas.service.TfcTransportEpcEdasService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -71,6 +72,8 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     private TfcTransportEpcEdasService tfcTransportEpcEdasService;
     @Resource
     private OfcOrderScreenMapper ofcOrderScreenMapper;
+    @Resource
+    private OfcOrderStatusEdasService ofcOrderStatusEdasService;
 
     /**
      * 订单筛选
@@ -212,12 +215,12 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         FollowInfoReqDto followInfoReqDto = new FollowInfoReqDto();
         followInfoReqDto.setCustomerOrderCode(custFundamentalInformation.getCustOrderCode());
 
-        Wrapper<List<TransportRespDto>> transportState = tfcTransportEpcEdasService.findTransportState(followInfoReqDto);
-        if (transportState.getCode() == Wrapper.ERROR_CODE) {
+        Wrapper<OfcTraceOrderDTO> ofcTraceOrderDTOWrapper = ofcOrderStatusEdasService.traceByOrderCode(orderCode);
+        if (ofcTraceOrderDTOWrapper.getCode() == Wrapper.ERROR_CODE) {
             logger.error("调用TFC接口查询运单跟踪信息失败");
             throw new BusinessException("查询运单跟踪信息失败");
         }
-        ofcCustOrderInfoDTO.setTransportRespDtoList(transportState.getResult());
+        ofcCustOrderInfoDTO.setOfcTraceOrderDTO(ofcTraceOrderDTOWrapper.getResult());
         return ofcCustOrderInfoDTO;
     }
 
