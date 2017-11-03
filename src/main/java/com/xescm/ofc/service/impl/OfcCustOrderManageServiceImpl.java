@@ -123,6 +123,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
                 logger.error("该订单号再无最新状态");
                 throw new BusinessException("该订单号再无最新状态");
             }
+            custOrderNewstatus = new OfcCustOrderNewstatus();
             BeanUtils.copyProperties(ofcOrderNewstatus, custOrderNewstatus);
         }
         String orderLatestStatus = custOrderNewstatus.getOrderLatestStatus();

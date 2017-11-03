@@ -10,6 +10,12 @@ import java.util.List;
  * Created by lyh on 2017/9/28.
  */
 public class BeanConvertor {
+
+    public static Object objConvertor(Object source, Object target) {
+        BeanUtils.copyProperties(source, target);
+        return target;
+    }
+
     public static List listConvertor(List source, List target, Class<?> targetClazz) {
         try {
             for (Object o : source) {
