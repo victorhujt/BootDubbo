@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.ExceSubmittedMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.ExceSubmitted" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="exce_code" property="exceCode" jdbcType="VARCHAR" />
+    <result column="customer_code" property="customerCode" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="exce_type" property="exceType" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="occurrence_time" property="occurrenceTime" jdbcType="TIMESTAMP" />
+    <result column="damage_product" property="damageProduct" jdbcType="VARCHAR" />
+    <result column="damage_product_num" property="damageProductNum" jdbcType="VARCHAR" />
+    <result column="losses" property="losses" jdbcType="DECIMAL" />
+    <result column="responsible_person" property="responsiblePerson" jdbcType="VARCHAR" />
+    <result column="exce_describe" property="exceDescribe" jdbcType="VARCHAR" />
+    <result column="img_serial_no" property="imgSerialNo" jdbcType="VARCHAR" />
+    <result column="exce_state" property="exceState" jdbcType="VARCHAR" />
+    <result column="report_person_code" property="reportPersonCode" jdbcType="VARCHAR" />
+    <result column="report_person_name" property="reportPersonName" jdbcType="VARCHAR" />
+    <result column="report_time" property="reportTime" jdbcType="TIMESTAMP" />
+    <result column="report_base_code" property="reportBaseCode" jdbcType="VARCHAR" />
+    <result column="report_base_name" property="reportBaseName" jdbcType="VARCHAR" />
+    <result column="dealing_person_code" property="dealingPersonCode" jdbcType="VARCHAR" />
+    <result column="dealing_person_name" property="dealingPersonName" jdbcType="VARCHAR" />
+    <result column="dealing_time" property="dealingTime" jdbcType="TIMESTAMP" />
+    <result column="dealing_base_code" property="dealingBaseCode" jdbcType="VARCHAR" />
+    <result column="dealing_base_name" property="dealingBaseName" jdbcType="VARCHAR" />
+    <result column="dealing_opinion" property="dealingOpinion" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="last_operator" property="lastOperator" jdbcType="VARCHAR" />
+    <result column="last_operator_id" property="lastOperatorId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>
