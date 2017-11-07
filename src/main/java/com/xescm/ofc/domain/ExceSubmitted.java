@@ -118,6 +118,18 @@ public class ExceSubmitted {
     private Date reportTime;
 
     /**
+     * 上报大区编码
+     */
+    @Column(name = "report_region_code")
+    private String reportRegionCode;
+
+    /**
+     * 上报大区名称
+     */
+    @Column(name = "report_region_name")
+    private String reportRegionName;
+
+    /**
      * 上报基地编码
      */
     @Column(name = "report_base_code")
@@ -146,18 +158,6 @@ public class ExceSubmitted {
      */
     @Column(name = "dealing_time")
     private Date dealingTime;
-
-    /**
-     * 处理基地编码
-     */
-    @Column(name = "dealing_base_code")
-    private String dealingBaseCode;
-
-    /**
-     * 处理基地名称
-     */
-    @Column(name = "dealing_base_name")
-    private String dealingBaseName;
 
     /**
      * 处理意见

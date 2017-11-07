@@ -12,7 +12,12 @@ public enum OssFileUrlEnum {
     /**
      * 异常图片路径
      */
-    IMG_CUSTOMER("dms/img/customer", "公司图片地址");
+    IMG_CUSTOMER("dms/img/customer", "公司图片地址"),
+
+    /**
+     * 异常报送图片路径
+     */
+    EXCE_SUBMITTED_IMG("ofc/exce_submitted/img", "异常报送图片地址");
 
 
     String url;
