@@ -1,10 +1,10 @@
 package com.xescm.ofc.model.dto.coo;
 
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderGoodsInfoDTO;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.utils.DateUtils;
 import org.modelmapper.ModelMapper;
@@ -71,14 +71,14 @@ public class CreateOrderTrans {
     public OfcOrderStatus getOfcOrderStatus() throws BusinessException {
         if (createOrderEntity != null) {
             ofcOrderStatus = new OfcOrderStatus();
-            ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDING_AUDIT);
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setOrderCode(orderCode);
             StringBuilder notes = new StringBuilder();
             notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
             notes.append(" 订单已创建");
             notes.append(" 操作人: ").append(CREATE_ORDER_BYAPI);
             notes.append(" 操作单位: ").append(CREATE_ORDER_BYAPI);
-            ofcOrderStatus.setTraceStatus(OrderConstConstant.PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setTrace("接收订单");
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOperator(CREATE_ORDER_BYAPI);
