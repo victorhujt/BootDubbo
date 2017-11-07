@@ -73,7 +73,7 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
     @Resource
     private OfcOrderScreenMapper ofcOrderScreenMapper;
     @Resource
-    private OfcOrderStatusEdasService ofcOrderStatusEdasService;
+    private OfcOrderStatusEdasService OfcOrderStatusEdasService;
 
     /**
      * 订单筛选
@@ -215,12 +215,10 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         FollowInfoReqDto followInfoReqDto = new FollowInfoReqDto();
         followInfoReqDto.setCustomerOrderCode(custFundamentalInformation.getCustOrderCode());
 
-        Wrapper<OfcTraceOrderDTO> ofcTraceOrderDTOWrapper = ofcOrderStatusEdasService.traceByOrderCode(orderCode);
-        if (ofcTraceOrderDTOWrapper.getCode() == Wrapper.ERROR_CODE) {
-            logger.error("调用TFC接口查询运单跟踪信息失败");
-            throw new BusinessException("查询运单跟踪信息失败");
+        Wrapper<OfcTraceOrderDTO> ofcTraceOrderDTOWrapper = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
+        if (ofcTraceOrderDTOWrapper.getCode() != Wrapper.ERROR_CODE) {
+            ofcCustOrderInfoDTO.setOfcTraceOrderDTO(ofcTraceOrderDTOWrapper.getResult());
         }
-        ofcCustOrderInfoDTO.setOfcTraceOrderDTO(ofcTraceOrderDTOWrapper.getResult());
         return ofcCustOrderInfoDTO;
     }
 

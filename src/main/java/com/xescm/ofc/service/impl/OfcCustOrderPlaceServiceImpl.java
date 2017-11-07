@@ -61,7 +61,7 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
         if (PubUtils.isSEmptyOrNull(tag)) {
             throw new BusinessException("下单标志不能为空");
         }
-        if (!(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag))) {
+        if (!(ORDER_TAG_STOCK_CUST_SAVE.equals(tag) || ORDER_TAG_STOCK_CUST_EDIT.equals(tag))) {
             throw new BusinessException("下单标志类型错误");
         }
         //货品信息
