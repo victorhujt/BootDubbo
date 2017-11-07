@@ -100,6 +100,15 @@ public final class OrderConstConstant {
     //是或者不是
     public static final Integer YES=1;      //是
     public static final Integer NO=0;      //否
+    //零担
+    public static final String BREAKCHEAP = "10";
+    //整车
+    public static final String CARLOAD = "20";
+    //返回签单
+    public static final String IS_RETURNLIST = "1";
+
+
+
 
     //钉钉 订单来源
     public static  final String DING_DING = "钉钉";

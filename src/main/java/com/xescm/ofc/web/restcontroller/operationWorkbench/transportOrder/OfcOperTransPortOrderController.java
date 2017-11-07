@@ -61,7 +61,7 @@ public class OfcOperTransPortOrderController extends BaseController {
                 throw new BusinessException("发货人信息不允许为空！");
             }
             if(ofcOrderDTOStr.getConsignee() == null){
-                throw new BusinessException("发货人信息不允许为空！");
+                throw new BusinessException("收货人信息不允许为空！");
             }
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){

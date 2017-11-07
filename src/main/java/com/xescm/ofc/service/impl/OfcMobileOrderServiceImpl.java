@@ -9,6 +9,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcMobileOrderMapper;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
@@ -149,7 +150,6 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         StringBuilder notes = new StringBuilder();
-        //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
         ofcFundamentalInformation.setOrderSource(DING_DING);//订单来源
 
@@ -168,7 +168,6 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
        }
         orderCode=ofcFundamentalInformation.getOrderCode();
-        // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         ofcFundamentalInformation.setOrderType(orderType);
         if(ofcFundamentalInformation.getOrderType().equals(orderType)){
@@ -180,15 +179,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             //运输订单
             if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) || ofcDistributionBasicInfo.getDeparturePlaceCode().length() <= 12) {
                 throw new BusinessException("四级地址编码为空!");
-            } /*else {
-                //String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
-                //String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
-                    *//*if(depatrueCode.equals(destinationCode)){
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_CITY);
-                    }else {
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_TRUNK);
-                    }*//*
-            }*/
+            }
             try {
                 //添加基本信息
                 ofcFundamentalInformationService.save(ofcFundamentalInformation);
@@ -239,10 +230,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
             ofcOrderStatus.setTrace("接收订单");
-            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);

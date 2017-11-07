@@ -1266,6 +1266,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO.getWarehouseInformation(), OfcWarehouseInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO.getDistributionBasicInfo(), OfcDistributionBasicInfo.class);
         OfcFinanceInformation ofcFinanceInformation = modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
+        OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
 
         //取供应商的名称
         if(!PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getSupportCode())){
@@ -1281,40 +1282,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             BeanUtils.copyProperties(dto,ofcGoodsDetailsInfo);
             goodsDetailsList.add(ofcGoodsDetailsInfo);
         }
-        OfcMerchandiser ofcMerchandiser = modelMapper.map(ofcOrderDTO, OfcMerchandiser.class);
-        if (null == ofcFundamentalInformation || null == ofcWarehouseInformation) {
-            logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
-                            ", ofcFundamentalInformation:{}, ofcWarehouseInformation:{},ofcDistributionBasicInfo:{}"
-                    , ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
-            throw new BusinessException("创建仓储订单失败!");
+        Wrapper<?> x = getWrapper(ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo, ofcFinanceInformation);
+        if (x != null) {
+            return x;
         }
-        if(PublicUtil.isEmpty(ofcWarehouseInformation.getWarehouseCode())){
-            throw new BusinessException("仓库编码不能为空!");
-        }
-        if (null == ofcWarehouseInformation.getProvideTransport()) {
-            logger.error("ofcWarehouseInformation.getProvideTransport为空");
-            throw new BusinessException("创建仓储订单失败!");
-        }
-        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-            ofcFundamentalInformation.setTransportType("10");//10 零担 20整车
-            // 带运输仓储单默认签收回单，费用为0
-            ofcFinanceInformation.setReturnList("1");
-            ofcFinanceInformation.setReturnListFee(new BigDecimal(0));
-            if (ofcDistributionBasicInfo == null) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
-            }
-            // 运输单号逻辑追加 by lyh
-            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
-                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
-            }
-            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (repeatNum > 0) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
-            }
-        } else {
-            //如果不提供运输, 则运输单号为空
-            ofcDistributionBasicInfo.setTransCode("");
-        }
+        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
+        //校验客户订单号
+        validateCustomerCustCode(reviewTag, ofcFundamentalInformation);
+
+        StringBuffer notes = new StringBuffer();
+        List<OfcGoodsDetailsInfo> ofcGoodsDetail = new ArrayList<>();
 
         //订单的基本信息
         ofcFundamentalInformation.setCreationTime(new Date());
@@ -1323,125 +1300,16 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
         ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
         ofcFundamentalInformation.setOrderType(WAREHOUSE_DIST_ORDER);
-
-        //校验当前登录用户的身份信息,并存放大区和基地信息
-        //ofcOrderPlaceService.orderAuthByConsignorAddr(authResDtoByToken, ofcDistributionBasicInfo, ofcFundamentalInformation);
         ofcFundamentalInformation.setOperTime(new Date());
-        OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-//        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
-        ofcFundamentalInformation.setOrderSource("手动");//订单来源
-        int custOrderCode = 0;
-        if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
-            custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
-            if (custOrderCode > 0) {
-                if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {//编辑时排除是自己的客户订单号
-                    OfcFundamentalInformation info = ofcFundamentalInformationService.queryDataByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
-                    if (info.getOrderCode().equals(ofcFundamentalInformation.getOrderCode())) {
-                        custOrderCode = 0;
-                    }
-                }
-            }
-        }
-        //仓储下单//根据客户订单编号查询唯一性
-        if (custOrderCode < 1) {
-            if (!isSEmptyOrNull(ofcFundamentalInformation.getCustName())) {
-                QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
-                queryCustomerCodeDto.setCustomerCode(ofcFundamentalInformation.getCustCode());
-                Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
-                if (Wrapper.ERROR_CODE == cscCustomerVo.getCode()) {
-                    throw new BusinessException(cscCustomerVo.getMessage());
-                } else if (null == cscCustomerVo.getResult()) {
-                    throw new BusinessException("客户中心没有查到该客户!");
-                }
-                ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
-            }
-        } else {
-            throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
-        }
-
-        StringBuffer notes = new StringBuffer();
+        ofcFundamentalInformation.setOrderSource(MANUAL);
+        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
         }
-
-        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-            // 运输单号逻辑追加 by lyh
-            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
-                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
-            }
-            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (!(PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())&&PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getSelfTransCode()))) {
-                if (ofcDistributionBasicInfo.getTransCode().equals(ofcDistributionBasicInfo.getSelfTransCode())) {
-                    repeatNum = 0;
-                }
-            }
-            if (repeatNum > 0) {
-                throw new BusinessException("运输单号重复!");
-            }
-        }
-
-        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
-        //货品数量
-        BigDecimal goodsAmountCount = new BigDecimal(0);
-        //保存货品明细
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
-            ofcGoodsDetailsInfoService.deleteAllByOrderCode(ofcFundamentalInformation.getOrderCode());
-        }
-
-        //相同货品编码数量相加
-        Map<String,OfcGoodsDetailsInfo> goodInfo=new HashMap<>();
-        List<OfcGoodsDetailsInfo> ofcGoodsDetail=new ArrayList<>();
-        //订单货品总重量
-        BigDecimal totalWeight = new BigDecimal(0);
-        for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
-            StringBuilder key=new StringBuilder();
-            key.append(ofcGoodsDetails.getGoodsCode());
-            key.append(ofcGoodsDetails.getPackageType());
-            if (!StringUtils.isEmpty(ofcGoodsDetails.getSupportBatch())) {
-                key.append(ofcGoodsDetails.getSupportBatch());
-            }
-            if (!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())) {
-                key.append(ofcGoodsDetails.getProductionBatch());
-            }
-            if(ofcGoodsDetails.getProductionTime()!=null){
-                key.append(DateUtils.Date2String(ofcGoodsDetails.getProductionTime(), DateUtils.DateFormatType.TYPE1));
-            }
-            if (ofcGoodsDetails.getInvalidTime() != null) {
-                key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
-            }
-            if (!goodInfo.containsKey(key.toString())) {
-                goodInfo.put(key.toString(),ofcGoodsDetails);
-            }else{
-                OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
-                info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
-                info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
-                BigDecimal undealWeight = null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight();
-                BigDecimal preWeight = info.getWeight();
-                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(undealWeight);
-                info.setWeight(infoWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
-            }
-            totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
-        }
-        ofcDistributionBasicInfo.setWeight(totalWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
-        Iterator iter = goodInfo.entrySet().iterator();
-        while (iter.hasNext()) {
-                Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
-                OfcGoodsDetailsInfo ofcGoodsDetails=entry.getValue();
-                if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0) {
-                    continue;
-                }
-            String orderCode = ofcFundamentalInformation.getOrderCode();
-            ofcGoodsDetails.setOrderCode(orderCode);
-            ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
-            ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
-            ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
-            ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
-            ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
-            ofcGoodsDetail.add(ofcGoodsDetails);
-            ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
-     }
-
+        //校验运输单号
+        validateTransCode(ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
+        //货品信息的处理
+        BigDecimal goodsAmountCount =  saveGoodsDetails(reviewTag, ofcFundamentalInformation, ofcDistributionBasicInfo, goodsDetailsList,ofcGoodsDetail);
 
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
             //添加基本信息
@@ -1455,84 +1323,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcWarehouseInformation.setProvideTransport(WAREHOUSE_NO_TRANS);
         }
 
-        Wrapper<?> wrapper;
         OfcDistributionBasicInfo dinfo;
         OfcDistributionBasicInfo condition = new OfcDistributionBasicInfo();
         condition.setOrderCode(ofcFundamentalInformation.getOrderCode());
         dinfo = ofcDistributionBasicInfoService.selectOne(condition);
+        ofcDistributionBasicInfo = getOfcDistributionBasicInfo(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee, ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
 
-//        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT) || ORDER_TAG_STOCK_IMPORT.equals(trimAndNullAsEmpty(reviewTag))) {//
-            //编辑时不提供运输改为提供运输时 收货方即是仓库的信息   前台不好处理  后台通过仓库编码获取仓库的信息
-            StringBuilder sb = new StringBuilder();
-            RmcWarehouseDto rmcWarehouseDto = new RmcWarehouseDto();
-            rmcWarehouseDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
-            Wrapper<RmcWarehouseRespDto> wareHouse = rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouseDto);
-            CscContantAndCompanyDto dto = new CscContantAndCompanyDto();
-            CscContactCompanyDto c = new CscContactCompanyDto();
-            CscContactDto cc = new CscContactDto();
-            dto.setCscContactDto(cc);
-            dto.setCscContactCompanyDto(c);
-            if (wareHouse.getCode() == Wrapper.SUCCESS_CODE) {
-                RmcWarehouseRespDto resp = wareHouse.getResult();
-                dto.getCscContactCompanyDto().setContactCompanyName(resp.getWarehouseName());
-                dto.getCscContactDto().setContactName(resp.getContactName());
-                dto.getCscContactDto().setPhone(resp.getPhone());
-                dto.getCscContactDto().setProvince(resp.getProvinceCode());
-                sb.append(resp.getProvinceCode());
-                dto.getCscContactDto().setCity(resp.getCityCode());
-                sb.append(",").append(resp.getCityCode());
-                dto.getCscContactDto().setArea(resp.getAreaCode());
-                sb.append(",").append(resp.getAreaCode());
-                if (!StringUtils.isEmpty(resp.getStreetCode())) {
-                    dto.getCscContactDto().setStreet(resp.getStreetCode());
-                    sb.append(",").append(resp.getStreetCode());
-                }
-                dto.getCscContactDto().setProvinceName(resp.getProvince());
-                dto.getCscContactDto().setCityName(resp.getCity());
-                dto.getCscContactDto().setAreaName(resp.getArea());
-                if (!StringUtils.isEmpty(resp.getStreetCode())) {
-                    dto.getCscContactDto().setStreetName(resp.getStreet());
-                }
-                dto.getCscContactDto().setAddress(resp.getDetailAddress());
-            }
-            ofcDistributionBasicInfo = ofcDistributionBasicInfoService.fillAddress(ofcWarehouseInformation,ofcDistributionBasicInfo,ofcFundamentalInformation);
-            if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                cscContantAndCompanyDtoConsignor = dto;//出库发货方是仓库
-            } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
-                cscContantAndCompanyDtoConsignee = dto;//入库时收货方是仓库
-            }
-            if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-                //收货方、发货方校验
-                wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-                if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                    throw new BusinessException(wrapper.getMessage());
-                }
-            } else {
-                if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-                        throw new BusinessException(wrapper.getMessage());
-                    }
-                }
-            }
-      //  }
-//        } else {
-//            if (!trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
-//                if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-//                    wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-//                    if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-//                        throw new BusinessException(wrapper.getMessage());
-//                    }
-//                }else{
-//                    if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-//                        wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
-//                        if (Wrapper.ERROR_CODE == wrapper.getCode()) {
-//                            throw new BusinessException(wrapper.getMessage());
-//                        }
-//                    }
-//                }
-//            }
-//        }
         //落地配的需求  需求号834 modified by hujt 2017/8/8
         if (StringUtils.equals(ofcFundamentalInformation.getGroundDistribution(), IS_NEED_GROUND_DISTRIBUTION)) {
             boolean isCover = this.consigneeAdressIsCoverBase(ofcDistributionBasicInfo);
@@ -1586,6 +1382,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (ofcMerchandiserService.select(ofcMerchandiser).size() == 0 && !trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")) {
             ofcMerchandiserService.save(ofcMerchandiser);
         }
+        //保存订单的状态
+        saveOrderStatus(reviewTag, authResDtoByToken, ofcFundamentalInformation, ofcOrderStatus, notes);
+
+        //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
+        logger.info("自动审核. 订单批次号信息:{}", ofcFundamentalInformation.getOrderBatchNumber());
+        if (isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
+            //调用自动审核
+            this.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetail, ofcDistributionBasicInfo, ofcWarehouseInformation
+                    , ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+    }
+
+    private void saveOrderStatus(String reviewTag, AuthResDto authResDtoByToken, OfcFundamentalInformation ofcFundamentalInformation, OfcOrderStatus ofcOrderStatus, StringBuffer notes) {
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT)) {
             //保存订单日志
             notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
@@ -1594,10 +1404,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
             ofcOrderStatus.setTrace("接收订单");
-            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);
@@ -1608,23 +1418,222 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
             ofcOrderStatus.setTrace("接收订单");
-            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);
         }
+    }
 
-        //普通手录订单直接调用自动审核, 批量导入订单另起自动审核.
-        logger.info("自动审核. 订单批次号信息:{}", ofcFundamentalInformation.getOrderBatchNumber());
-        if (isSEmptyOrNull(ofcFundamentalInformation.getOrderBatchNumber())) {
-            //调用自动审核
-            this.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetail, ofcDistributionBasicInfo, ofcWarehouseInformation
-                    , ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
+    private OfcDistributionBasicInfo getOfcDistributionBasicInfo(CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, OfcFundamentalInformation ofcFundamentalInformation, OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        Wrapper<?> wrapper;
+        StringBuilder sb = new StringBuilder();
+        RmcWarehouseDto rmcWarehouseDto = new RmcWarehouseDto();
+        rmcWarehouseDto.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+        Wrapper<RmcWarehouseRespDto> wareHouse = rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouseDto);
+        CscContantAndCompanyDto dto = new CscContantAndCompanyDto();
+        CscContactCompanyDto c = new CscContactCompanyDto();
+        CscContactDto cc = new CscContactDto();
+        dto.setCscContactDto(cc);
+        dto.setCscContactCompanyDto(c);
+        if (wareHouse.getCode() == Wrapper.SUCCESS_CODE) {
+            RmcWarehouseRespDto resp = wareHouse.getResult();
+            dto.getCscContactCompanyDto().setContactCompanyName(resp.getWarehouseName());
+            dto.getCscContactDto().setContactName(resp.getContactName());
+            dto.getCscContactDto().setPhone(resp.getPhone());
+            dto.getCscContactDto().setProvince(resp.getProvinceCode());
+            sb.append(resp.getProvinceCode());
+            dto.getCscContactDto().setCity(resp.getCityCode());
+            sb.append(",").append(resp.getCityCode());
+            dto.getCscContactDto().setArea(resp.getAreaCode());
+            sb.append(",").append(resp.getAreaCode());
+            if (!StringUtils.isEmpty(resp.getStreetCode())) {
+                dto.getCscContactDto().setStreet(resp.getStreetCode());
+                sb.append(",").append(resp.getStreetCode());
+            }
+            dto.getCscContactDto().setProvinceName(resp.getProvince());
+            dto.getCscContactDto().setCityName(resp.getCity());
+            dto.getCscContactDto().setAreaName(resp.getArea());
+            if (!StringUtils.isEmpty(resp.getStreetCode())) {
+                dto.getCscContactDto().setStreetName(resp.getStreet());
+            }
+            dto.getCscContactDto().setAddress(resp.getDetailAddress());
         }
-        return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
+        ofcDistributionBasicInfo = ofcDistributionBasicInfoService.fillAddress(ofcWarehouseInformation,ofcDistributionBasicInfo,ofcFundamentalInformation);
+        if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+            cscContantAndCompanyDtoConsignor = dto;//出库发货方是仓库
+        } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
+            cscContantAndCompanyDtoConsignee = dto;//入库时收货方是仓库
+        }
+        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+            //收货方、发货方校验
+            wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+            if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                throw new BusinessException(wrapper.getMessage());
+            }
+        } else {
+            if (PubUtils.trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+                wrapper = validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
+                if (Wrapper.ERROR_CODE == wrapper.getCode()) {
+                    throw new BusinessException(wrapper.getMessage());
+                }
+            }
+        }
+        return ofcDistributionBasicInfo;
+    }
+
+    private BigDecimal saveGoodsDetails(String reviewTag, OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> goodsDetailsList,List<OfcGoodsDetailsInfo> ofcGoodsDetail) {
+        //货品数量
+        BigDecimal goodsAmountCount = new BigDecimal(0);
+        //相同货品编码数量相加
+        Map<String,OfcGoodsDetailsInfo> goodInfo = new HashMap<>();
+        //保存货品明细
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
+            ofcGoodsDetailsInfoService.deleteAllByOrderCode(ofcFundamentalInformation.getOrderCode());
+        }
+
+        //订单货品总重量
+        BigDecimal totalWeight = new BigDecimal(0);
+        for (OfcGoodsDetailsInfo ofcGoodsDetails : goodsDetailsList) {
+            StringBuilder key=new StringBuilder();
+            key.append(ofcGoodsDetails.getGoodsCode());
+            key.append(ofcGoodsDetails.getPackageType());
+            if (!StringUtils.isEmpty(ofcGoodsDetails.getSupportBatch())) {
+                key.append(ofcGoodsDetails.getSupportBatch());
+            }
+            if (!StringUtils.isEmpty(ofcGoodsDetails.getProductionBatch())) {
+                key.append(ofcGoodsDetails.getProductionBatch());
+            }
+            if(ofcGoodsDetails.getProductionTime()!=null){
+                key.append(DateUtils.Date2String(ofcGoodsDetails.getProductionTime(), DateUtils.DateFormatType.TYPE1));
+            }
+            if (ofcGoodsDetails.getInvalidTime() != null) {
+                key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
+            }
+            if (!goodInfo.containsKey(key.toString())) {
+                goodInfo.put(key.toString(),ofcGoodsDetails);
+            }else{
+                OfcGoodsDetailsInfo info=goodInfo.get(key.toString());
+                info.setPrimaryQuantity(info.getPrimaryQuantity().add(ofcGoodsDetails.getPrimaryQuantity()));
+                info.setQuantity(info.getQuantity().add(ofcGoodsDetails.getQuantity()));
+                BigDecimal undealWeight = null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight();
+                BigDecimal preWeight = info.getWeight();
+                BigDecimal infoWeight = null == preWeight ? undealWeight : preWeight.add(undealWeight);
+                info.setWeight(infoWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
+            }
+            totalWeight = totalWeight.add(null == ofcGoodsDetails.getWeight() ? new BigDecimal(0) : ofcGoodsDetails.getWeight());
+        }
+        ofcDistributionBasicInfo.setWeight(totalWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
+        Iterator iter = goodInfo.entrySet().iterator();
+        while (iter.hasNext()) {
+                Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
+                OfcGoodsDetailsInfo ofcGoodsDetails=entry.getValue();
+                if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0) {
+                    continue;
+                }
+            String orderCode = ofcFundamentalInformation.getOrderCode();
+            ofcGoodsDetails.setOrderCode(orderCode);
+            ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
+            ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
+            ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
+            ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
+            goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
+            ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+            ofcGoodsDetail.add(ofcGoodsDetails);
+            ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
+     }
+        return goodsAmountCount;
+    }
+
+    private void validateTransCode(OfcFundamentalInformation ofcFundamentalInformation, OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo) {
+        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+            // 运输单号逻辑追加 by lyh
+            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+            }
+            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+            if (!(PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())&&PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getSelfTransCode()))) {
+                if (ofcDistributionBasicInfo.getTransCode().equals(ofcDistributionBasicInfo.getSelfTransCode())) {
+                    repeatNum = 0;
+                }
+            }
+            if (repeatNum > 0) {
+                throw new BusinessException("运输单号重复!");
+            }
+        }
+    }
+
+    private void validateCustomerCustCode(String reviewTag, OfcFundamentalInformation ofcFundamentalInformation) {
+        int custOrderCode = 0;
+        if (!isSEmptyOrNull(ofcFundamentalInformation.getCustOrderCode())) {
+            custOrderCode = ofcFundamentalInformationService.checkCustOrderCode(ofcFundamentalInformation);
+            if (custOrderCode > 0) {
+                //编辑时排除是自己的客户订单号
+                if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_EDIT)) {
+                    OfcFundamentalInformation info = ofcFundamentalInformationService.queryDataByCustOrderCode(ofcFundamentalInformation.getCustOrderCode());
+                    if (info.getOrderCode().equals(ofcFundamentalInformation.getOrderCode())) {
+                        custOrderCode = 0;
+                    }
+                }
+            }
+        }
+        //仓储下单//根据客户订单编号查询唯一性
+        if (custOrderCode < 1) {
+            if (!isSEmptyOrNull(ofcFundamentalInformation.getCustName())) {
+                QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                queryCustomerCodeDto.setCustomerCode(ofcFundamentalInformation.getCustCode());
+                Wrapper<CscCustomerVo> cscCustomerVo = cscCustomerEdasService.queryCustomerByCustomerCodeOrId(queryCustomerCodeDto);
+                if (Wrapper.ERROR_CODE == cscCustomerVo.getCode()) {
+                    throw new BusinessException(cscCustomerVo.getMessage());
+                } else if (null == cscCustomerVo.getResult()) {
+                    throw new BusinessException("客户中心没有查到该客户!");
+                }
+                ofcFundamentalInformation.setCustName(cscCustomerVo.getResult().getCustomerName());
+            }
+        } else {
+            throw new BusinessException("该客户订单编号已经存在!您不能重复下单!");
+        }
+    }
+
+    private Wrapper<?> getWrapper(OfcFundamentalInformation ofcFundamentalInformation, OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation) {
+        if (null == ofcFundamentalInformation || null == ofcWarehouseInformation) {
+            logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
+                            ", ofcFundamentalInformation:{}, ofcWarehouseInformation:{},ofcDistributionBasicInfo:{}"
+                    , ofcFundamentalInformation, ofcWarehouseInformation, ofcDistributionBasicInfo);
+            throw new BusinessException("创建仓储订单失败!");
+        }
+        if(PublicUtil.isEmpty(ofcWarehouseInformation.getWarehouseCode())){
+            throw new BusinessException("仓库编码不能为空!");
+        }
+        if (null == ofcWarehouseInformation.getProvideTransport()) {
+            logger.error("ofcWarehouseInformation.getProvideTransport为空");
+            throw new BusinessException("创建仓储订单失败!");
+        }
+        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+            //10 零担 20整车
+            ofcFundamentalInformation.setTransportType(BREAKCHEAP);
+            // 带运输仓储单默认签收回单，费用为0
+            ofcFinanceInformation.setReturnList(IS_RETURNLIST);
+            ofcFinanceInformation.setReturnListFee(new BigDecimal(0));
+            if (ofcDistributionBasicInfo == null) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
+            }
+            // 运输单号逻辑追加 by lyh
+            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+            }
+            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+            if (repeatNum > 0) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
+            }
+        } else {
+            //如果不提供运输, 则运输单号为空
+            ofcDistributionBasicInfo.setTransCode("");
+        }
+        return null;
     }
 
     /**
