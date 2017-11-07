@@ -6,13 +6,16 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
+import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
+import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.domain.*;
@@ -52,6 +55,7 @@ import java.util.*;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.STO_TEMP_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.STR_YES;
+import static com.xescm.ofc.constant.OrderConstConstant.TRACE_STATUS_5;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 import static com.xescm.ofc.constant.StorageTemplateConstant.*;
 
@@ -91,6 +95,8 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
 
+    @Resource
+    private CscCustomerEdasService cscCustomerEdasService;
 
 
 
@@ -1876,6 +1882,21 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
     public Wrapper orderConfirm(List<OfcStorageTemplateDto> ofcStorageTemplateDtoList, AuthResDto authResDto) throws Exception{
         logger.info("仓储开单批量导单确认下单orderList ==> {}", ofcStorageTemplateDtoList);
         logger.info("仓储开单批量导单确认下单authResDto ==> {}", authResDto);
+        // 金融中心锁定客户不允许出库，追加逻辑
+        String customerCode = ofcStorageTemplateDtoList.get(0).getOfcOrderDTO().getCustCode();
+        String orderBusinessType = ofcStorageTemplateDtoList.get(0).getBusinessType().substring(0, 2);
+        if (orderBusinessType.equals(TRACE_STATUS_5)) {
+            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+            queryCustomerCodeDto.setCustomerCode(customerCode);
+            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
+            if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
+                throw new BusinessException("校验客户锁定状态时出现异常");
+            }
+            String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
+            if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
+                throw new BusinessException("此客户被金融中心锁定，辛苦联系金融中心同事！");
+            }
+        }
 //        List<String> orderBatchNumberList = new ArrayList<>();
         if (CollectionUtils.isEmpty(ofcStorageTemplateDtoList) || null == authResDto) {
             logger.error("仓储开单批量导单确认下单失败, orderConfirm入参有误");
