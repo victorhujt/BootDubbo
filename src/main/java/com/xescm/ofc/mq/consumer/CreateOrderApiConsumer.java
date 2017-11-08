@@ -27,10 +27,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
-;
+import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_GoodsAmountSync;
+import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_OrderToOfc;
+
 /**
+ * @author hujintao
  * 创单api消费MQ
  */
 @Service
@@ -49,14 +51,11 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Resource
     private OfcInterfaceReceiveLogService receiveLogService;
 
-    private  static ConcurrentHashMap MAP = new ConcurrentHashMap();
-
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
         logger.info("OFC消费MQ开始。。。");
         String topicName = message.getTopic();
         String tag = message.getTag();
-        String userName = "";
         String key = message.getKey();
         String messageId = message.getMsgID();
         String messageBody;
@@ -64,11 +63,10 @@ public class CreateOrderApiConsumer implements MessageListener {
         logger.info("OFC消费MQ开始。。。MessageBody:" + messageBody + ",topicName:" + topicName + ",tag:" + tag );
         //EPCTopic
         if (StringUtils.equals(topicName, mqConfig.getEpcOrderTopic())) {
-            if (message.getTag().equals("xeOrderToOfc")) {
+            if (MQ_TAG_OrderToOfc.equals(message.getTag())) {
                 logger.info("创单api消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
                 try {
                     List<OfcCreateOrderDTO> orderEntities = JSON.parseArray(messageBody,OfcCreateOrderDTO.class);
-                   // List<CreateOrderEntity> orderEntities = JacksonUtil.parseJsonWithFormat(messageBody, new TypeReference<List<CreateOrderEntity>>() {});
                     for (OfcCreateOrderDTO orderEntity : orderEntities) {
                         String custOrderCode = orderEntity.getCustOrderCode();
                         OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();
@@ -85,7 +83,8 @@ public class CreateOrderApiConsumer implements MessageListener {
                 } finally {
                     logger.info("创单api消费MQ获取message处理结束");
                 }
-            } else if (message.getTag().equals("goodsAmountSync")) {//众品订单交货量同步接口
+                //众品订单交货量同步接口
+            } else if (MQ_TAG_GoodsAmountSync.equals(message.getTag())) {
                 //接收分拣中心回传的状态
                 logger.info("对接中心订单交货量调整消息体:{}", messageBody);
                 logger.info("订单中心消费对接中心同步交货量开始消费topic:{},tag:{},key{}", topicName, tag, key);
@@ -106,12 +105,15 @@ public class CreateOrderApiConsumer implements MessageListener {
             }
         } else if (StringUtils.equals(topicName,mqConfig.getTfc2OfcOrderPoTopic())) {
             try {
-                if (!Tfc2OfcStateTopicTag.PUSH_NOT_SCHEDULE_TAG.equals(tag) && // 未调度
-                    !Tfc2OfcStateTopicTag.PUSH_CANCEL_TAG.equals(tag) &&       // 取消
-                    !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.equals(tag)) {     // 签收单
+                // 未调度
+                if (!Tfc2OfcStateTopicTag.PUSH_NOT_SCHEDULE_TAG.equals(tag) &&
+                        // 取消
+                    !Tfc2OfcStateTopicTag.PUSH_CANCEL_TAG.equals(tag) &&
+                        // 签收单
+                    !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.equals(tag)) {
                     logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, messageBody);
                     try {
-                        mqConsumerService.transportStateConsumer(messageBody, MAP);
+                        mqConsumerService.transportStateConsumer(messageBody);
                     } catch (Exception e) {
                         logger.error("订单运输状态更新异常: 异常详情 => {}", e);
                     }
@@ -135,7 +137,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
             try {
                 FeedBackOrderDto feedBackOrderDto = JacksonUtil.parseJson(messageBody, FeedBackOrderDto.class);
-                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto,MAP);
+                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
             } catch (Exception e) {
                 logger.error("仓储单出入库单反馈出现异常{}", e.getMessage(), e);
             }

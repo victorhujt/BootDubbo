@@ -10,21 +10,11 @@ public class MqTopicConstants {
      *订单中心消费topic
      */
     public static final String OFC = "OfcOrderTopic";
-
-    /**
-     * 运输中心消费topic
-     */
-    public static final String TFC = "TfcOrderTopic";
-
-    public static final String WHC = "WhcOrderTopic";
     /**
      * 仓储中心生产topic
      */
     public static final String WHp = "WhpOrderTopic";
     
-    public static final String OFC_SILOPRO_STATUS_TOPIC ="XeDevWhcOrderStatusTopic";
-
-
 
 
 }

@@ -8,13 +8,13 @@ import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.ofc.domain.*;
-import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderGoodsInfoDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderStatusDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcRealTimeTraceDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
@@ -26,29 +26,31 @@ import com.xescm.tfc.edas.model.dto.ofc.req.OfcRealTimeTraceReqDTO;
 import com.xescm.tfc.edas.service.TfcQueryGpsInfoEdasService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.CreateOrderApiConstant.DACHEN_CUST_CODE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
+import static com.xescm.ofc.constant.OrderConstant.STOCK_IN_ORDER;
+import static com.xescm.ofc.constant.OrderConstant.STOCK_OUT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 
 /**
  * 订单状态
- * Created by lyh on 2016/10/10.
+ * @author lyh
+ * @date 2016-10-10.
  */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
     @Resource
     private OfcOrderStatusMapper ofcOrderStatusMapper;
-    @Resource
-    private OfcOrderNewstatusMapper ofcOrderNewstatusMapper;
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
     @Resource
@@ -63,6 +65,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     private TfcQueryGpsInfoEdasService tfcQueryGpsInfoEdasService;
     @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+    @Resource
+    private OfcOrderNewstatusMapper ofcOrderNewstatusMapper;
+
+    @Resource
+    private StringRedisTemplate rt;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -86,7 +93,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     transCode = code;
                     break;
             }
-            // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String, String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
@@ -99,7 +105,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public OfcOrderStatus orderStatusSelect(String code, String followTag) {
-        if (!trimAndNullAsEmpty(code).equals("")) {
+        if (!"".equals(trimAndNullAsEmpty(code))) {
             String orderCode = null;
             String custOrderCode = null;
             String transCode = null;
@@ -114,15 +120,14 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     transCode = code;
                     break;
             }
-            // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String, String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
             OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusMapper.orderStatusSelectNew(mapperMap);
             OfcOrderStatus ofcOrderStatus = ofcOrderStatusMapper.orderStatusSelect(mapperMap);
-            if (orderNewstatus == null || trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                    || trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")) {
+            if (orderNewstatus == null || "".equals(trimAndNullAsEmpty(orderNewstatus.getOrderCode()))
+                    || "".equals(trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()))) {
                 OfcOrderNewstatus orderNewstatu = new OfcOrderNewstatus();
                 orderNewstatu.setOrderCode(ofcOrderStatus.getOrderCode());
                 orderNewstatu.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
@@ -159,8 +164,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public OfcOrderStatus queryLastUpdateOrderByOrderCode(String orderCode) {
         OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-        if (orderNewstatus != null && !trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                && !trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")) {
+        if (orderNewstatus != null && !"".equals(trimAndNullAsEmpty(orderNewstatus.getOrderCode()))
+                && !"".equals(trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()))) {
             ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
             ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
         } else {
@@ -178,11 +183,17 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         return ofcOrderStatus;
     }
 
+    /**
+     *
+     * @param orderCode 订单号
+     * @return 订单状态
+     */
+    @Override
     public OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode) {
         OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
-        if (orderNewstatus != null && !trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")
-                && !trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals("")) {
+        if (orderNewstatus != null && !"".equals(trimAndNullAsEmpty(orderNewstatus.getOrderCode()))
+                && !"".equals(trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()))) {
             ofcOrderStatus.setOrderCode(orderNewstatus.getOrderCode());
             ofcOrderStatus.setOrderStatus(orderNewstatus.getOrderLatestStatus());
         } else {
@@ -198,8 +209,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public int save(OfcOrderStatus ofcOrderStatus) {
-        if (ofcOrderStatus != null && !trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()).equals("")) {
-            if (!trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()).equals("")) {
+        if (ofcOrderStatus != null && !"".equals(trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()))) {
+            if (!"".equals(trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()))) {
                 OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(ofcOrderStatus.getOrderCode());
                 String tag = "noStatus";
                 if (orderNewstatus != null) {
@@ -207,10 +218,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 } else {
                     orderNewstatus=new OfcOrderNewstatus();
                 }
-                if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
-                    if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
+                if (!OrderStatusEnum.BEEN_CANCELED.getCode().equals(trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()))){
+                    if (!OrderStatusEnum.BEEN_COMPLETED.getCode().equals(trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()))) {
                         updateOrderNewStatus(ofcOrderStatus, tag);
                     }
+                }
+
                 ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                 ofcOrderStatus.setCreationTime(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
                 return super.save(ofcOrderStatus);
@@ -248,23 +261,22 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     throw new BusinessException("订单已经取消");
                 }
             }
-            if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")) {
+            if (STOCK_IN_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2))) {
                 type = OFC_WHC_IN_TYPE;
             }
-            else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")) {
+            else if (STOCK_OUT_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2))) {
                 type = OFC_WHC_OUT_TYPE;
             }
             String statusDesc = translateStatusToDesc(traceStatus,type);
-            if (orderStatus.getStatusDesc().indexOf(statusDesc) < 0) {
+            if (!orderStatus.getStatusDesc().contains(statusDesc)) {
                 status.setLastedOperTime(new Date());
                 status.setStatusDesc(statusDesc);
                 status.setOrderCode(orderCode);
-                status.setOperator("");
                 status.setOrderStatus(orderStatus.getOrderStatus());
                 status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                         + " " + statusDesc);
                 status.setOrderCode(orderCode);
-                super.save(status);
+                save(status);
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
@@ -272,14 +284,14 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto, ConcurrentHashMap cmap) {
+    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto) {
         try {
             String orderCode = feedBackOrderDto.getOrderCode();
-            List<FeedBackOrderDetailDto> detailDtos = feedBackOrderDto.getFeedBackOrderDetail();
+            List<FeedBackOrderDetailDto> details = feedBackOrderDto.getFeedBackOrderDetail();
             if (StringUtils.isEmpty(orderCode)) {
                 throw new BusinessException("订单号不可以为空");
             }
-            if (detailDtos == null || (detailDtos != null && detailDtos.size() == 0)) {
+            if (CollectionUtils.isEmpty(details)) {
                 throw new BusinessException("货品详情不能为空");
             }
             OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
@@ -292,46 +304,59 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             OfcOrderStatus orderStatus = orderStatusSelect(orderCode,"orderCode");
             OfcOrderStatus status = new OfcOrderStatus();
             if (orderStatus != null) {
-                if (HASBEEN_COMPLETED.equals(orderStatus.getOrderStatus())) {
+                if (OrderStatusEnum.BEEN_COMPLETED.getCode().equals(orderStatus.getOrderStatus())) {
                     throw new BusinessException("订单已经完成");
                 }
-                if (HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())) {
+                if (OrderStatusEnum.BEEN_CANCELED.getCode().equals(orderStatus.getOrderStatus())) {
                     throw new BusinessException("订单已经取消");
                 }
             }
             String str = "";
-            if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
-                status.setOrderStatus(HASBEEN_COMPLETED);
+            if (STOCK_IN_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2))) {
+                status.setOrderStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
+                status.setStatusDesc(OrderStatusEnum.INPUT_COMPLETED.getDesc());
+                status.setTraceStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
+                status.setTrace(OrderStatusEnum.INPUT_COMPLETED.getDesc());
                 str = "入库单";
-            } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+            } else if (STOCK_OUT_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2))) {
                 str = "出库单";
-                status.setTraceStatus("20");
-                status.setTrace("出库");
+                status.setOrderStatus(OrderStatusEnum.OUTPUT_COMPLETED.getCode());
+                status.setStatusDesc(OrderStatusEnum.OUTPUT_COMPLETED.getDesc());
+                status.setTraceStatus(OrderStatusEnum.OUTPUT_COMPLETED.getCode());
+                status.setTrace(OrderStatusEnum.OUTPUT_COMPLETED.getDesc());
             }
+            status.setLastedOperTime(new Date());
+            status.setOrderCode(orderCode);
+            save(status);
 
             if (ofcWarehouseInformation != null) {
-                if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
-                    if (cmap.containsKey(ofcFundamentalInformation.getOrderCode())) {
+                if (WEARHOUSE_WITH_TRANS.equals(ofcWarehouseInformation.getProvideTransport())) {
+                    if (rt.hasKey(ofcFundamentalInformation.getOrderCode())) {
                         logger.info("仓储订单运输先完成,订单号为{}", ofcFundamentalInformation.getOrderCode());
-                        status.setOrderStatus(HASBEEN_COMPLETED);
+                        status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
+                        status.setStatusDesc(OrderStatusEnum.BEEN_COMPLETED.getDesc());
+                        status.setTraceStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
+                        status.setTrace(OrderStatusEnum.BEEN_COMPLETED.getDesc());
                         //更新订单完成时间
                         ofcFundamentalInformation.setFinishedTime(new Date());
+                        rt.delete(ofcFundamentalInformation.getOrderCode());
                     } else {
-                        status.setOrderStatus(IMPLEMENTATION_IN);
                         logger.info("===>仓储订单仓储先完成,订单号为{}", ofcFundamentalInformation.getOrderCode());
-                        cmap.put(ofcFundamentalInformation.getOrderCode(), "");
+                        rt.opsForValue().set(ofcFundamentalInformation.getOrderCode(),"");
                     }
                 } else {
-                    status.setOrderStatus(HASBEEN_COMPLETED);
+                    status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
+                    status.setStatusDesc(OrderStatusEnum.BEEN_COMPLETED.getDesc());
+                    status.setTraceStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
+                    status.setTrace(OrderStatusEnum.BEEN_COMPLETED.getDesc());
                     //更新订单完成时间
                     ofcFundamentalInformation.setFinishedTime(new Date());
                 }
             }
-
             //转换为原包装的数量
-            conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
+            conversionUnitQuantity(details, ofcWarehouseInformation, ofcFundamentalInformation);
             //更新实际的数量
-            for (FeedBackOrderDetailDto detail :detailDtos) {
+            for (FeedBackOrderDetailDto detail :details) {
                 OfcGoodsDetailsInfo good = new OfcGoodsDetailsInfo();
                 good.setGoodsCode(detail.getGoodsCode());
                 good.setOrderCode(orderCode);
@@ -340,9 +365,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
 
             status.setLastedOperTime(new Date());
-            status.setStatusDesc("订单号为" + orderCode + str + "已完成");
             status.setOrderCode(orderCode);
-            status.setOperator("");
             status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)
                     + " " + "订单号为" + orderCode + str + "已完成");
             status.setOrderCode(orderCode);
@@ -400,7 +423,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                                     logger.info("订单号为:{}的货品编码为:{}转化为原包装的数量",ofcFundamentalInformation.getOrderCode(),goodsCode);
                                     logger.info("主单位的数量为:{}转化率为:{}",realQuantity.doubleValue(),ls.doubleValue());
                                     //大成客户特殊处理
-                                    if ("100259".equals(custCode)) {
+                                    if (DACHEN_CUST_CODE.equals(custCode)) {
                                         pquantity = realQuantity.multiply(ls).setScale(2,BigDecimal.ROUND_HALF_DOWN);
                                     } else {
                                         //保留三位小数
@@ -427,8 +450,10 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     @Override
     public OfcTraceOrderDTO queryOrderByCode(String orderCode) throws Exception {
         logger.info("查单的订单号为:{}",orderCode);
-        String departureTime = "";//发运时间
-        String signTime = "";//签收时间
+        /*发运时间*/
+        String departureTime = "";
+        /*签收时间*/
+        String signTime = "";
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         CheckUtils.checkArgument(ofcFundamentalInformation == null, ResultCodeEnum.RESULTISNULL);
         if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
@@ -436,7 +461,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
           ofcWarehouseInformation.setOrderCode(orderCode);
           List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
           if (!CollectionUtils.isEmpty(ofcWarehouseInformations) && ofcWarehouseInformations.size() == 1) {
-              CheckUtils.checkArgument(ofcWarehouseInformations.get(0).getProvideTransport() != WEARHOUSE_WITH_TRANS, ResultCodeEnum.ISNOTSUPPORT);
+              CheckUtils.checkArgument(!ofcWarehouseInformations.get(0).getProvideTransport().equals(WEARHOUSE_WITH_TRANS), ResultCodeEnum.ISNOTSUPPORT);
           }
         }
         OfcTraceOrderDTO ofcTraceOrderDTO = new OfcTraceOrderDTO();
@@ -490,14 +515,14 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         return ofcTraceOrderDTO;
     }
 
-    public void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus, String tag) {
+    private void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus, String tag) {
         OfcOrderNewstatus orderNewstatus = new OfcOrderNewstatus();
         orderNewstatus.setOrderCode(ofcOrderStatus.getOrderCode());
         orderNewstatus.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
-        if (tag.equals("haveStatus")) {
+        if ("haveStatus".equals(tag)) {
             orderNewstatus.setStatusUpdateTime(new Date());
             ofcOrderNewstatusService.update(orderNewstatus);
-        } else if (tag.equals("noStatus")) {
+        } else if ("noStatus".equals(tag)) {
             orderNewstatus.setStatusUpdateTime(new Date());
             orderNewstatus.setStatusCreateTime(new Date());
             ofcOrderNewstatusService.save(orderNewstatus);
@@ -509,16 +534,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         if (statusCode.equals(TRACE_STATUS_1)) {
             if (OFC_WHC_IN_TYPE.equals(businessType)) {
                 statusDesc="入库单已创建";
-
             } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
                 statusDesc="出库单已创建";
             }
         } else if (statusCode.equals(TRACE_STATUS_2)) {
             if (OFC_WHC_IN_TYPE.equals(businessType)) {
                 statusDesc="部分收货";
-
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-
             }
         } else if (statusCode.equals(TRACE_STATUS_3)) {
             if (OFC_WHC_IN_TYPE.equals(businessType)) {

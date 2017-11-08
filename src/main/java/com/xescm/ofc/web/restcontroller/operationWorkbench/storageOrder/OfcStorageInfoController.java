@@ -229,7 +229,7 @@ public class OfcStorageInfoController extends BaseController {
             QueryWarehouseDto dto=new QueryWarehouseDto();
             dto.setCustomerCode(customerCode);
             Wrapper<List<CscWarehouseDto>>  warehouse=cscWarehouseEdasService.getCscWarehouseByCustomerId(dto);
-            if (warehouse.getCode()==warehouse.SUCCESS_CODE) {
+            if (warehouse.getCode() == Wrapper.SUCCESS_CODE) {
                 //通过查询出的仓库编码查询出仓库的信息
                 if (!PublicUtil.isEmpty(warehouse.getResult())) {
                     RmcWarehouseDto rmcWarehouseDto=new RmcWarehouseDto();
