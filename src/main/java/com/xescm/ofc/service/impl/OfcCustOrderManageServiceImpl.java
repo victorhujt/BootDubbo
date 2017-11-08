@@ -214,7 +214,8 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
         ofcCustOrderInfoDTO.setOrderStatusList(ofcCustOrderStatus);
         FollowInfoReqDto followInfoReqDto = new FollowInfoReqDto();
         followInfoReqDto.setCustomerOrderCode(custFundamentalInformation.getCustOrderCode());
-
+        OfcCustOrderNewstatus newstatus = ofcCustOrderNewstatusService.queryByOrderCode(orderCode);
+        ofcCustOrderInfoDTO.setCurrentStatus(newstatus);
         Wrapper<OfcTraceOrderDTO> ofcTraceOrderDTOWrapper = OfcOrderStatusEdasService.traceByOrderCode(orderCode);
         if (ofcTraceOrderDTOWrapper.getCode() != Wrapper.ERROR_CODE) {
             ofcCustOrderInfoDTO.setOfcTraceOrderDTO(ofcTraceOrderDTOWrapper.getResult());
