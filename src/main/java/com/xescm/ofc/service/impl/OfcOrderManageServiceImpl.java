@@ -1997,7 +1997,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             return null;
         }
         /*更新订单信息的大区和基地*/
-        ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
+       // ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
 
          return whcModifWmsCodeEdasService.modifWmsCodeByOrderCode(whcModifWmsCodeReqDto);
     }
