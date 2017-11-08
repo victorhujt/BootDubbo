@@ -2,6 +2,10 @@ package com.xescm.ofc.service;
 
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.ofc.domain.ExceSubmitted;
+import com.xescm.ofc.model.dto.exce.ExceSubmittedQueryDto;
+import com.xescm.ofc.model.vo.exce.ExceSubmittedVo;
+
+import java.util.List;
 
 /**
  * <p>Title: CscContractService. </p>
@@ -16,4 +20,6 @@ public interface ExceSubmittedService {
     void exceSubmittedEdit(ExceSubmitted exceSubmitted, AuthResDto authResDto);
     // 通过id查询异常报送录入信息
     ExceSubmitted queryExceSubmittedById(String id);
+    // 分页查询异常报送信息列表
+    List<ExceSubmittedVo> queryExceSubmittedList(ExceSubmittedQueryDto exceSubmittedQueryDto);
 }

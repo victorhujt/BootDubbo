@@ -1,10 +1,15 @@
 package com.xescm.ofc.web.restcontroller.operationWorkbench.exceSubmitted;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.exception.BusinessException;
 import com.xescm.ofc.domain.ExceSubmitted;
+import com.xescm.ofc.domain.Page;
+import com.xescm.ofc.model.dto.exce.ExceSubmittedQueryDto;
+import com.xescm.ofc.model.vo.exce.ExceSubmittedVo;
 import com.xescm.ofc.service.ExceSubmittedService;
 import com.xescm.ofc.web.controller.BaseController;
 import io.swagger.annotations.Api;
@@ -18,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Title: ExceSubmittedMainController. </p>
@@ -66,6 +72,27 @@ public class ExceSubmittedMainController extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
             logger.error("通过id查询异常报送录入信息出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * 前后端分离，合同列表查询
+     */
+    @ResponseBody
+    @RequestMapping(value = "/queryExceSubmittedList", method = {RequestMethod.POST})
+    @ApiOperation(value = "分页查询异常报送信息列表", httpMethod = "POST", notes = "返回异常报送信息列表")
+    public Wrapper<?> queryExceSubmittedList(@ApiParam(name = "page", value = "异常报送信息列表分页") @RequestBody Page<ExceSubmittedQueryDto> page) {
+        try {
+            PageHelper.startPage(page.getPageNum(), page.getPageSize());
+            List<ExceSubmittedVo> dataList = exceSubmittedService.queryExceSubmittedList(page.getParam());
+            PageInfo<ExceSubmittedVo> pageInfo = new PageInfo<>(dataList);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, pageInfo);
+        } catch (BusinessException ex) {
+            logger.error("分页查询异常报送信息列表出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("分页查询异常报送信息列表出错：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
