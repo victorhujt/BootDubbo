@@ -1343,26 +1343,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("ofcWarehouseInformation.getProvideTransport为空");
             throw new BusinessException("创建仓储订单失败!");
         }
-        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-            ofcFundamentalInformation.setTransportType("10");//10 零担 20整车
-            // 带运输仓储单默认签收回单，费用为0
-            ofcFinanceInformation.setReturnList("1");
-            ofcFinanceInformation.setReturnListFee(new BigDecimal(0));
-            if (ofcDistributionBasicInfo == null) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
-            }
-            // 运输单号逻辑追加 by lyh
-            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
-                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
-            }
-            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (repeatNum > 0) {
-                return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
-            }
-        } else {
-            //如果不提供运输, 则运输单号为空
-            ofcDistributionBasicInfo.setTransCode("");
-        }
+
 
         //订单的基本信息
         ofcFundamentalInformation.setCreationTime(new Date());
@@ -1413,6 +1394,28 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
             ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
         }
+
+        if (ofcWarehouseInformation.getProvideTransport().equals(YES)) {
+            ofcFundamentalInformation.setTransportType("10");//10 零担 20整车
+            // 带运输仓储单默认签收回单，费用为0
+            ofcFinanceInformation.setReturnList("1");
+            ofcFinanceInformation.setReturnListFee(new BigDecimal(0));
+            if (ofcDistributionBasicInfo == null) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "需要运输时送基本信息不能为空 ");
+            }
+            // 运输单号逻辑追加 by lyh
+            if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getTransCode())) {
+                ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
+            }
+            int repeatNum = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
+            if (repeatNum > 0) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
+            }
+        } else {
+            //如果不提供运输, 则运输单号为空
+            ofcDistributionBasicInfo.setTransCode("");
+        }
+
         //未作废
         ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);
         //货品数量
