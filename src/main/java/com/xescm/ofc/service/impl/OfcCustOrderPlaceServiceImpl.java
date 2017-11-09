@@ -13,9 +13,7 @@ import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
-import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
+import com.xescm.ofc.model.dto.ofc.*;
 import com.xescm.ofc.service.OfcCustOrderNewstatusService;
 import com.xescm.ofc.service.OfcCustOrderPlaceService;
 import com.xescm.ofc.service.OfcOrderManageService;
@@ -24,6 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -70,9 +69,13 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
             throw new BusinessException("仓储下单时货品信息不能为空");
         }
         //订单基本信息
-        OfcFundamentalInformation ofcFundamentalInformation = ofcSaveStorageDTO.getFundamentalInformation();
+        OfcFundamentalInformationDTO fundamentalInformation = ofcSaveStorageDTO.getFundamentalInformation();
+        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+        BeanUtils.copyProperties(fundamentalInformation, ofcFundamentalInformation);
         //仓储信息
-        OfcWarehouseInformation ofcWarehouseInformation = ofcSaveStorageDTO.getWarehouseInformation();
+        OfcWarehouseInformationDTO warehouseInformation = ofcSaveStorageDTO.getWarehouseInformation();
+        OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+        BeanUtils.copyProperties(warehouseInformation, ofcWarehouseInformation);
         //发货人信息
         CscContantAndCompanyDto consignor = ofcSaveStorageDTO.getConsignor();
         //收货人信息

@@ -1305,16 +1305,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("开始创建仓储订单 ofcOrderDTO:{}, goodsDetailsList:{}, reviewTag:{}, cscContantAndCompanyDtoConsignor:{}" +
                         ", cscContantAndCompanyDtoConsignee:{}, cscSupplierInfoDto:{}, authResDtoByToken:{}", ofcOrderDTO, goodsDetailsListDTO
                 , reviewTag, cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee, cscSupplierInfoDto, authResDtoByToken);
-        OfcFundamentalInformation ofcFundamentalInformation = ofcOrderDTO.getFundamentalInformation();
-        OfcWarehouseInformation ofcWarehouseInformation = ofcOrderDTO.getWarehouseInformation();
+
+        OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO.getFundamentalInformation(), OfcFundamentalInformation.class);
+        OfcWarehouseInformation ofcWarehouseInformation = modelMapper.map(ofcOrderDTO.getWarehouseInformation(), OfcWarehouseInformation.class);
         if (null == ofcFundamentalInformation || null == ofcWarehouseInformation) {
             logger.error("创建仓储订单失败,saveStorageOrder转换的某个实体为空" +
                             ", ofcFundamentalInformation:{}, ofcWarehouseInformation:{}:{}"
                     , ofcFundamentalInformation, ofcWarehouseInformation);
             throw new BusinessException("创建仓储订单失败!");
         }
-        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcOrderDTO.getDistributionBasicInfo();
-        OfcFinanceInformation ofcFinanceInformation = new OfcFinanceInformation();
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO.getDistributionBasicInfo(), OfcDistributionBasicInfo.class);
+        OfcFinanceInformation ofcFinanceInformation = modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
 
         //取供应商的名称
         if(!PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getSupportCode())){

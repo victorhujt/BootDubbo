@@ -190,6 +190,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
                 ofcDistributionBasicInfo.setConsignorCode(resp.getWarehouseCode());
                 ofcDistributionBasicInfo.setConsignorContactName(resp.getWarehouseName());
                 ofcDistributionBasicInfo.setConsignorContactCode(resp.getWarehouseCode());
+                ofcDistributionBasicInfo.setConsignorContactPhone(resp.getPhone());
                 ofcDistributionBasicInfo.setDeparturePlaceCode(sb.toString());
                 ofcDistributionBasicInfo.setDeparturePlace(resp.getDetailAddress());
                 ofcDistributionBasicInfo.setDepartureProvince(resp.getProvince());
@@ -203,6 +204,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
                 ofcDistributionBasicInfo.setConsigneeCode(resp.getWarehouseCode());
                 ofcDistributionBasicInfo.setConsigneeContactName(resp.getWarehouseName());
                 ofcDistributionBasicInfo.setConsigneeContactCode(resp.getWarehouseCode());
+                ofcDistributionBasicInfo.setConsigneeContactPhone(resp.getPhone());
                 ofcDistributionBasicInfo.setDestinationCode(sb.toString());
                 ofcDistributionBasicInfo.setDestination(resp.getDetailAddress());
                 ofcDistributionBasicInfo.setDestinationProvince(resp.getProvince());
