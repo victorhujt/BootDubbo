@@ -275,19 +275,15 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
-                            if(hasGoods){
-                                if(cellNum == 1){
-                                    cscGoodsImportDto.setGoodsName(cellValue);
-                                }else if(cellNum == 2){
-                                    cscGoodsImportDto.setSpecification(cellValue);
-                                }else if(cellNum == 3){
-                                    cscGoodsImportDto.setUnit(cellValue);
-                                }else if(cellNum == 4){
-                                    cscGoodsImportDto.setUnitPrice(cellValue);
-                                }
+                            if(cellNum == 1){
+                                cscGoodsImportDto.setGoodsName(cellValue);
+                            }else if(cellNum == 2){
+                                cscGoodsImportDto.setSpecification(cellValue);
+                            }else if(cellNum == 3){
+                                cscGoodsImportDto.setUnit(cellValue);
+                            }else if(cellNum == 4){
+                                cscGoodsImportDto.setUnitPrice(cellValue);
                             }
-
-
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){
