@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
  * Created by lyh on 2017/2/28.
  */
 public enum BusinessTypeStorageOutEnum {

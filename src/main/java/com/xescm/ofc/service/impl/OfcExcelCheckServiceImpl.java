@@ -275,7 +275,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }
                             //货品名称, 规格, 单位, 单价的数据暂时不需校验
                         }else if(cellNum > 0 && cellNum <= (staticCell -1)){
-                            if(!hasGoods){
+                            if(hasGoods){
                                 if(cellNum == 1){
                                     cscGoodsImportDto.setGoodsName(cellValue);
                                 }else if(cellNum == 2){
@@ -332,7 +332,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     }
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
-                                    cscGoodsApiVo.setUnitPrice(cscGoodsImportDto.getUnitPrice());
+                                    String unitPrice = cscGoodsImportDto.getUnitPrice();
+                                    if (StringUtils.isNotEmpty(unitPrice)) cscGoodsApiVo.setUnitPrice(unitPrice);
                                     jsonArray.add(cscGoodsApiVo);
                                     jsonArray.add(jsonObject);
                                     jsonArray.add(cscContantAndCompanyVo);
