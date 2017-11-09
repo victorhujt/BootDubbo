@@ -40,7 +40,9 @@
     SELECT
       e.id,
       e.exce_code,
+      e.report_base_code,
       e.report_base_name,
+      e.report_region_code,
       e.report_region_name,
       e.customer_name,
       e.exce_type,

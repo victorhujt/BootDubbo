@@ -9,10 +9,14 @@ import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.domain.ExceSubmitted;
 import com.xescm.core.exception.BusinessException;
+import com.xescm.ofc.domain.OfcFinanceInformation;
+import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.mapper.ExceSubmittedMapper;
 import com.xescm.ofc.model.dto.exce.ExceSubmittedQueryDto;
 import com.xescm.ofc.model.vo.exce.ExceSubmittedVo;
 import com.xescm.ofc.service.ExceSubmittedService;
+import com.xescm.ofc.service.OfcFinanceInformationService;
+import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.utils.CodeGenUtils;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
@@ -37,7 +41,25 @@ public class ExceSubmittedServiceImpl extends BaseService<ExceSubmitted> impleme
     @Resource
     private CscCustomerEdasService cscCustomerEdasService;
     @Resource
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+    @Resource
     private ExceSubmittedMapper exceSubmittedMapper;
+
+    /**
+     * <p>Title: checkOrderCodeExists. </p>
+     * <p>校验新增异常报送中，订单号是否存在 </p>
+     *
+     * @param
+     * @Author 袁宝龙
+     * @CreateDate 2017/11/9 15:13
+     * @return
+     */
+    @Override
+    public int checkOrderCodeExists(String orderCode) {
+        OfcFundamentalInformation record = new OfcFundamentalInformation();
+        record.setOrderCode(orderCode);
+        return ofcFundamentalInformationService.selectCount(record);
+    }
 
     /**
      * <p>Title: exceSubmittedEdit. </p>
@@ -81,7 +103,7 @@ public class ExceSubmittedServiceImpl extends BaseService<ExceSubmitted> impleme
             }
         } else if ("1".equals(userType) && !"GD1625000003".equals(groupRefCode)) {
             // [1]为大区，如果此用户为大区用户，并且不为超级管理员，不记录基地
-            userRegionCode = uamBaseGroupDto.getGroupCode();
+            userRegionCode = uamBaseGroupDto.getSerialNo();
             userRegionName = uamBaseGroupDto.getGroupName();
         } else if ("GD1625000003".equals(groupRefCode)) {
             throw new BusinessException("超级管理员不允许异常录入!");
@@ -143,6 +165,30 @@ public class ExceSubmittedServiceImpl extends BaseService<ExceSubmitted> impleme
         return exceSubmitted;
     }
 
+    @Override
+    public void exceSubmittedCancel(String id) {
+        AuthResDto authdto = getAuthResDtoByToken();
+        ExceSubmitted exceSubmitted = new ExceSubmitted();
+        exceSubmitted.setId(id);
+        exceSubmitted.setExceState("0");
+        exceSubmitted.setLastOperatorId(authdto.getUserId());
+        exceSubmitted.setLastOperator(authdto.getUserName());
+        exceSubmitted.setUpdateTime(new Date());
+        super.update(exceSubmitted);
+    }
+
+    @Override
+    public void exceHandle(ExceSubmitted exceSubmitted) {
+        AuthResDto authdto = getAuthResDtoByToken();
+        exceSubmitted.setDealingPersonCode(authdto.getUserId());
+        exceSubmitted.setDealingPersonName(authdto.getUserName());
+        exceSubmitted.setDealingTime(new Date());
+        exceSubmitted.setExceState("2");
+        exceSubmitted.setLastOperatorId(authdto.getUserId());
+        exceSubmitted.setLastOperator(authdto.getUserName());
+        exceSubmitted.setUpdateTime(new Date());
+        super.update(exceSubmitted);
+    }
 
     /**
      * <p>Title: queryExceSubmittedList. </p>
@@ -164,11 +210,17 @@ public class ExceSubmittedServiceImpl extends BaseService<ExceSubmitted> impleme
         if (PubUtils.isOEmptyOrNull(uamBaseGroupDto)) {
             throw new BusinessException("查询当前登录用户基地信息出错:查询到的结果为空或有误");
         }
-        String userType = uamBaseGroupDto.getType();
+        String userType = uamBaseGroupDto.getType(); // 1为大区，3为基地
+        String userGroupCode = uamBaseGroupDto.getSerialNo(); // 用户所在大区或基地编码
+        String userAreaCode = null; // 用户所在基地，反查出所在大区编码
+        if ("3".equals(userType)) {
+            Wrapper<UamGroupDto> dto = uamGroupEdasService.getParentInfoByChildSerilNo(userGroupCode);
+            userAreaCode = dto.getResult().getSerialNo();
+        }
         List<ExceSubmittedVo> list = new ArrayList<>();
         if ("3".equals(userType)) {
             // 3为基地，基地用户只能查询此基地的报送列表信息
-            String userBaseCode = uamBaseGroupDto.getSerialNo();
+            String userBaseCode = userGroupCode;
             String getBaseCode = exceSubmittedQueryDto.getBaseSerialNo();
             String getRegionCode = exceSubmittedQueryDto.getAreaSerialNo();
             if (PubUtils.isSEmptyOrNull(getBaseCode) && PubUtils.isSEmptyOrNull(getRegionCode)) {
@@ -179,30 +231,56 @@ public class ExceSubmittedServiceImpl extends BaseService<ExceSubmitted> impleme
                 // 如果前端选择了大区和基地，并且与用户基地相吻合，进行查询
                 exceSubmittedQueryDto.setAreaSerialNo(null);
                 exceSubmittedQueryDto.setBaseSerialNo(userBaseCode);
-            } else if (PubUtils.isSEmptyOrNull(getBaseCode) && !PubUtils.isSEmptyOrNull(getRegionCode)) {
-                // 如果前端选择了大区，没有选择基地，不查询
-                return list;
+            } else if (!PubUtils.isSEmptyOrNull(getRegionCode) && PubUtils.isSEmptyOrNull(getBaseCode)) {
+                // 如果前端选择了大区，没有选择基地，并且与当前用户相符合，进行查询
+                if (userAreaCode.equals(getRegionCode)) {
+                    exceSubmittedQueryDto.setAreaSerialNo(null);
+                    exceSubmittedQueryDto.setBaseSerialNo(userBaseCode);
+                } else {
+                    // 如果前端选择了大区，没有选择基地，但选择的大区与当前用户不符合，不查询
+                    return list;
+                }
             } else {
                 return list;
             }
         } else if ("1".equals(userType) && !"GD1625000003".equals(groupRefCode)) {
             // 1为大区，大区用户只能查询此大区及附属基地下的报送列表信息
-            String userRegionCode = uamBaseGroupDto.getSerialNo();
+            String userRegionCode = userGroupCode;
             String getBaseCode = exceSubmittedQueryDto.getBaseSerialNo();
-            String getRegionCode = exceSubmittedQueryDto.getAreaOption();
+            String getRegionCode = exceSubmittedQueryDto.getAreaSerialNo();
             if (PubUtils.isSEmptyOrNull(getBaseCode) && PubUtils.isSEmptyOrNull(getRegionCode)) {
                 // 如果前端什么都不选，默认查询当前用户所属基地，进行查询
                 exceSubmittedQueryDto.setAreaSerialNo(userRegionCode);
-            }
-            if (!PubUtils.isSEmptyOrNull(getRegionCode) && userRegionCode.equals(getRegionCode)) {
+            } else if (!PubUtils.isSEmptyOrNull(getRegionCode) && userRegionCode.equals(getRegionCode)) {
                 // 如果前端选择了大区，并且与用户大区相吻合，进行查询
                 exceSubmittedQueryDto.setAreaSerialNo(userRegionCode);
+                if (!PubUtils.isSEmptyOrNull(getBaseCode)) {
+                    exceSubmittedQueryDto.setBaseSerialNo(getBaseCode);
+                }
             } else {
                 return list;
             }
+        } else if ("GD1625000003".equals(groupRefCode)) {
+            // GD1625000003为管理员，查询所有，并且可进行处理操作
         }
         list = exceSubmittedMapper.queryExceSubmittedList(exceSubmittedQueryDto);
         for (ExceSubmittedVo exceSubmittedVo: list) {
+            String reportBaseCode = exceSubmittedVo.getReportBaseCode(); // 上报基地
+            String reportRegionCode = exceSubmittedVo.getReportRegionCode();// 上报大区
+            String exceState = exceSubmittedVo.getExceState();
+            if ("GD1625000003".equals(groupRefCode) && "1".equals(exceState)) {
+                // 设置管理员可进行处理操作，并加上标识符cl
+                exceSubmittedVo.setOperateTag("cl");
+            } else if ("1".equals(exceSubmittedVo.getExceState())){
+                // 在异常状态为已上报的状态，可以进行取消操作，并加上标识符qx
+                // 如果不是管理员
+                // 上报基地或上报大区
+                if (!PubUtils.isSEmptyOrNull(reportBaseCode) && userGroupCode.equals(reportBaseCode)) {
+                    exceSubmittedVo.setOperateTag("qx");
+                } else if (!PubUtils.isSEmptyOrNull(reportRegionCode) && userGroupCode.equals(reportRegionCode)) {
+                    exceSubmittedVo.setOperateTag("qx");
+                }
+            }
             // 上报基地名称
             String reportBaseName = exceSubmittedVo.getReportBaseName();
             String reportRegionName = exceSubmittedVo.getReportRegionName();

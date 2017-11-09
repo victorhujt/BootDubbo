@@ -113,9 +113,19 @@ public class ExceSubmittedVo {
     private String reportRegionName;
 
     /**
+     * 上报大区编码
+     */
+    private String reportRegionCode;
+
+    /**
      * 上报基地名称
      */
     private String reportBaseName;
+
+    /**
+     * 上报基地编码
+     */
+    private String reportBaseCode;
 
     /**
      * 开单基地名称 回显

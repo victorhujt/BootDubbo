@@ -22,4 +22,10 @@ public interface ExceSubmittedService {
     ExceSubmitted queryExceSubmittedById(String id);
     // 分页查询异常报送信息列表
     List<ExceSubmittedVo> queryExceSubmittedList(ExceSubmittedQueryDto exceSubmittedQueryDto);
+    // 通过id异常报送取消
+    void exceSubmittedCancel(String id);
+    // 异常报送进行处理
+    void exceHandle(ExceSubmitted exceSubmitted);
+    // 校验订单号是否存在
+    int checkOrderCodeExists(String orderCode);
 }

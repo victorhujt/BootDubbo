@@ -61,6 +61,26 @@ public class ExceSubmittedMainController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/checkOrderCodeExists/{orderCode}", method = {RequestMethod.POST})
+    @ApiOperation(value = "校验订单号是否存在", httpMethod = "POST", notes = "通过id查询异常报送录入信息")
+    public Wrapper<?> checkOrderCodeExists(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
+        try {
+            Boolean flag = false;
+            int num = exceSubmittedService.checkOrderCodeExists(orderCode);
+            if (num > 0) {
+                flag = true;
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, flag);
+        } catch (BusinessException ex) {
+            logger.error("校验订单号是否存在出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("校验订单号是否存在出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/queryExceSubmittedById/{id}", method = {RequestMethod.POST})
     @ApiOperation(value = "通过id查询异常报送录入信息", httpMethod = "POST", notes = "通过id查询异常报送录入信息")
     public Wrapper<?> queryExceSubmittedById(@ApiParam(name = "id", value = "异常报送id") @PathVariable String id) {
@@ -72,6 +92,38 @@ public class ExceSubmittedMainController extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
         } catch (Exception ex) {
             logger.error("通过id查询异常报送录入信息出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
+    @RequestMapping("/exceSubmittedCancel")
+    @ResponseBody
+    public Wrapper<?> exceSubmittedCancel(@RequestBody String id) {
+        logger.info("==>异常报送取消,id={}", id);
+        try {
+            exceSubmittedService.exceSubmittedCancel(id);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+        } catch (BusinessException ex) {
+            logger.error("异常报送取消出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("异常报送取消出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+    }
+
+    @RequestMapping("/exceHandle")
+    @ResponseBody
+    public Wrapper<?> exceHandle(@RequestBody ExceSubmitted exceSubmitted) {
+        logger.info("==>异常报送进行处理,exceSubmitted={}", exceSubmitted);
+        try {
+            exceSubmittedService.exceHandle(exceSubmitted);
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+        } catch (BusinessException ex) {
+            logger.error("异常报送进行处理出错：{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("异常报送进行处理出错：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
