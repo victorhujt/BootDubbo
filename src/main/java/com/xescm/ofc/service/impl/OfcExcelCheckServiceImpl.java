@@ -331,7 +331,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                     String consigneeMsg = consigneeCode + "@" + consigneeContactCode;
                                     jsonObject.put(consigneeMsg,goodsAndConsigneeNum);
                                     String unitPrice = cscGoodsImportDto.getUnitPrice();
-                                    if (StringUtils.isNotEmpty(unitPrice)) cscGoodsApiVo.setUnitPrice(cscGoodsImportDto.getUnitPrice());
+                                    if (StringUtils.isNotEmpty(unitPrice)) cscGoodsApiVo.setUnitPrice(unitPrice);
                                     jsonArray.add(cscGoodsApiVo);
                                     jsonArray.add(jsonObject);
                                     jsonArray.add(cscContantAndCompanyVo);
