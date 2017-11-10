@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@Table(name = "exce_submitted")
+@Table(name = "ofc_exception_submitted")
 public class ExceSubmitted {
     /**
      * 主键
