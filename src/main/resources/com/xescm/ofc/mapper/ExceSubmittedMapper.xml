@@ -60,7 +60,7 @@
       e.last_operator,
       e.update_time
     FROM
-	  exce_submitted e
+      ofc_exception_submitted e
     LEFT JOIN ofc_fundamental_information ofi ON ofi.order_code = e.order_code
     WHERE
       1=1
