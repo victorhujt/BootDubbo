@@ -57,8 +57,10 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
     private DpcTransportDocEdasService dpcTransportDocEdasService;
 
     @Transactional
-    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto,String orderCode) {
+    @Override
+    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
         Wrapper result = null;
+        String orderCode = goodsAmountSyncDto.getOderCode();
         List<GoodsAmountDetailDto> details = goodsAmountSyncDto.getGoodsAmountDetailDtoList();
         // 校验订单是否存在
         OfcFundamentalInformation ofcFundamentalInfo  = ofcFundamentalInformationService.selectByKey(orderCode);

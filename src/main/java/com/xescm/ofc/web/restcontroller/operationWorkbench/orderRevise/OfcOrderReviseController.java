@@ -109,8 +109,9 @@ public class OfcOrderReviseController extends BaseController {
         }
         // 赋值
         goodsAmountSyncDto.setGoodsAmountDetailDtoList(goodsAmountDetailDtos);
+        goodsAmountSyncDto.setOderCode(ofcOrderDTOStr.getOrderCode());
         // 校验
-        Wrapper<?> result = ofcOrderReviseService.goodsAmountSync(goodsAmountSyncDto,ofcOrderDTOStr.getOrderCode());
+        Wrapper<?> result = ofcOrderReviseService.goodsAmountSync(goodsAmountSyncDto);
         if (Wrapper.SUCCESS_CODE == result.getCode()) {
             return true;
         } else {
