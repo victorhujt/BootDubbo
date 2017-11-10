@@ -76,6 +76,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             }
             for (OfcFundamentalInformation ofcOrder : orderList) {
                 String orderCode = ofcOrder.getOrderCode();
+                goodsAmountSyncDto.setOderCode(orderCode);
                 OfcOrderNewstatus orderStatusObj = ofcOrderNewstatusService.selectByKey(orderCode);
                 if (!PubUtils.isOEmptyOrNull(orderStatusObj) && !PubUtils.isOEmptyOrNull(orderStatusObj.getOrderLatestStatus())) {
                     String orderStatus = orderStatusObj.getOrderLatestStatus();
