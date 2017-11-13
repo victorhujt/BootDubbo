@@ -1,10 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ac.domain.AcDistributionBasicInfo;
-import com.xescm.ac.domain.AcFinanceInformation;
-import com.xescm.ac.domain.AcFundamentalInformation;
-import com.xescm.ac.domain.AcGoodsDetailsInfo;
-import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.ac.provider.AcModifyOrderEdasService;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -18,7 +13,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 @Service
@@ -291,51 +283,6 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
         } catch (Exception e) {
             logger.error("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
             throw new BusinessException("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
-        }
-    }
-
-    /**
-     * 订单信息推送结算中心
-     *
-     * @param ofcFundamentalInformation 订单基本信息
-     * @param ofcFinanceInformation     费用基本信息
-     * @param ofcDistributionBasicInfo  运输基本信息
-     * @param ofcGoodsDetailsInfos      货品明细
-     */
-    public void modifyOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
-            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
-        AcOrderDto acOrderDto = new AcOrderDto();
-        try {
-            AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
-            BeanUtils.copyProperties(acFinanceInformation, ofcFinanceInformation);
-
-            AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
-            BeanUtils.copyProperties(acFundamentalInformation, ofcFundamentalInformation);
-
-            AcDistributionBasicInfo acDistributionBasicInfo = new AcDistributionBasicInfo();
-            BeanUtils.copyProperties(acDistributionBasicInfo, ofcDistributionBasicInfo);
-
-            List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
-            for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
-                AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
-                BeanUtils.copyProperties(acGoodsDetailsInfo, ofcGoodsDetailsInfo);
-                acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
-            }
-            if (acGoodsDetailsInfoList.size() < 1) {
-                throw new BusinessException("订单货品明细不能为空!");
-            }
-            acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
-            acOrderDto.setAcFinanceInformation(acFinanceInformation);
-            acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
-            acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
-
-        } catch (Exception e) {
-            logger.error("订单信息推送结算中心 转换异常, {}", e);
-        }
-        Wrapper<?> wrapper = acModifyOrderEdasService.modifyOfcOrder(acOrderDto);
-        if (ERROR_CODE == wrapper.getCode()) {
-            logger.error(wrapper.getMessage());
-            throw new BusinessException(wrapper.getMessage());
         }
     }
 }

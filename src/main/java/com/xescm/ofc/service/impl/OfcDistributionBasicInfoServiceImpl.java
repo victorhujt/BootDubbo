@@ -58,10 +58,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public String getOrderCodeByTransCode(String transCode) {
-//        String custCode = "001";
-       // Map<String,String> mapperMap = new HashMap<String,String>();
-        Map<String,String> mapperMap = new HashMap<>();
-//        mapperMap.put("custCode",custCode);
+        Map<String,String> mapperMap = new HashMap<>(1024);
         mapperMap.put("transCode",transCode);
         List<String> orderCode = ofcDistributionBasicInfoMapper.getOrderCodeByTransCode(mapperMap);
         return orderCode.get(0);
@@ -69,7 +66,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public String getKabanOrderCodeByTransCode(String transCode) {
-        Map<String,String> mapperMap = new HashMap<>();
+        Map<String,String> mapperMap = new HashMap<>(1024);
         mapperMap.put("transCode",transCode);
         List<String> orderCode = ofcDistributionBasicInfoMapper.getKabanOrderCodeByTransCode(mapperMap);
         if(orderCode.size() > 0){
@@ -81,7 +78,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
 
     @Override
     public String getLastedKabanOrderCodeByTransCode(String transCode) {
-        Map<String,String> mapperMap = new HashMap<>();
+        Map<String,String> mapperMap = new HashMap<>(1024);
         mapperMap.put("transCode",transCode);
         List<String> orderCodeList = ofcDistributionBasicInfoMapper.getKabanOrderCodeByTransCode(mapperMap);
         if(orderCodeList.size() > 0){
@@ -124,10 +121,6 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContactDto().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
         }
-        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignor.getCscContact().getAreaName())){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"发货方联系人地址不完整");
-        }*/
-
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactCompanyDto().getContactCompanyName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"请输入收货方信息");
         }
@@ -143,9 +136,6 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
         if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContactDto().getCityName())){
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
         }
-        /*if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignee.getCscContact().getAreaName())){
-            return WrapMapper.wrap(Wrapper.ERROR_CODE,"收货方联系人地址不完整");
-        }*/
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
@@ -170,7 +160,7 @@ public class OfcDistributionBasicInfoServiceImpl extends BaseService<OfcDistribu
      * @param ofcWarehouseInformation 仓库信息
      * @param ofcDistributionBasicInfo  地址
      * @param ofcFundamentalInformation 订单基本信息
-     * @return
+     * @return   OfcDistributionBasicInfo 地址
      */
     @Override
     public OfcDistributionBasicInfo fillAddress(OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFundamentalInformation ofcFundamentalInformation) {

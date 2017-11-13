@@ -61,6 +61,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private DpcTransportDocEdasService dpcTransportDocEdasService;
 
     @Transactional
+    @Override
     public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();

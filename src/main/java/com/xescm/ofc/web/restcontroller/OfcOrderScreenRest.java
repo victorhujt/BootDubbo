@@ -42,12 +42,10 @@ public class OfcOrderScreenRest extends BaseController {
     @ResponseBody
     public Wrapper<?> queryOrderPageByCondition(Page<OrderScreenCondition> page,  OrderScreenCondition orderScreenCondition) {
         logger.info("==>订单中心订单查询条件 queryOrderPageByCondition={}", orderScreenCondition);
-//        logger.debug("==>订单中心订单查询标志位 tag={}", tag);
         PageInfo<OrderScreenResult> pageInfo;
         try {
             PageHelper.startPage(page.getPageNum(), page.getPageSize());
             List<OrderScreenResult> orderScreenResults = ofcOrderScreenService.orderScreen(orderScreenCondition);
-           // pageInfo = new PageInfo<OrderScreenResult>(orderScreenResults);
             pageInfo = new PageInfo<>(orderScreenResults);
             logger.info("pageInfo={}", pageInfo);
         }catch (BusinessException ex){

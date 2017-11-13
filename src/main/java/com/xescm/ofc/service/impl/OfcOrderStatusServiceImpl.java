@@ -78,7 +78,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public List<OfcOrderStatus> orderStatusScreen(String code, String followTag) {
-        if (!trimAndNullAsEmpty(code).equals("")) {
+        if (!"".equals(trimAndNullAsEmpty(code))) {
             String orderCode = null;
             String custOrderCode = null;
             String transCode = null;
@@ -93,7 +93,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     transCode = code;
                     break;
             }
-            Map<String, String> mapperMap = new HashMap<>();
+            Map<String, String> mapperMap = new HashMap<>(1024);
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
@@ -120,7 +120,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     transCode = code;
                     break;
             }
-            Map<String, String> mapperMap = new HashMap<>();
+            Map<String, String> mapperMap = new HashMap<>(1024);
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
@@ -154,7 +154,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public void cancelOrderStateByOrderCode(String orderCode) {
         OfcOrderNewstatus orderNewstatus = new OfcOrderNewstatus();
         orderNewstatus.setOrderCode(orderCode);
-        orderNewstatus.setOrderLatestStatus(HASBEEN_CANCELED);
+        orderNewstatus.setOrderLatestStatus(OrderStatusEnum.BEEN_CANCELED.getCode());
         orderNewstatus.setStatusUpdateTime(new Date());
         ofcOrderNewstatusService.update(orderNewstatus);
         ofcOrderStatusMapper.cancelOrderStateByOrderCode(orderCode);
@@ -218,12 +218,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 } else {
                     orderNewstatus=new OfcOrderNewstatus();
                 }
-                if (!OrderStatusEnum.BEEN_CANCELED.getCode().equals(trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()))){
-                    if (!OrderStatusEnum.BEEN_COMPLETED.getCode().equals(trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()))) {
-                        updateOrderNewStatus(ofcOrderStatus, tag);
-                    }
+                String orderLatestStatus = trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus());
+                if (!(OrderStatusEnum.BEEN_CANCELED.getCode().equals(orderLatestStatus) ||
+                        OrderStatusEnum.BEEN_COMPLETED.getCode().equals(orderLatestStatus))) {
+                    updateOrderNewStatus(ofcOrderStatus, tag);
                 }
-
                 ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                 ofcOrderStatus.setCreationTime(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
                 return super.save(ofcOrderStatus);
@@ -261,10 +260,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     throw new BusinessException("订单已经取消");
                 }
             }
-            if (STOCK_IN_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2))) {
+            String businessTypePrifx = trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2);
+            if (STOCK_IN_ORDER.equals(businessTypePrifx)) {
                 type = OFC_WHC_IN_TYPE;
             }
-            else if (STOCK_OUT_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2))) {
+            else if (STOCK_OUT_ORDER.equals(businessTypePrifx)) {
                 type = OFC_WHC_OUT_TYPE;
             }
             String statusDesc = translateStatusToDesc(traceStatus,type);
@@ -312,13 +312,15 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
             String str = "";
-            if (STOCK_IN_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2))) {
+            String businessTypePrifx = trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2);
+
+            if (STOCK_IN_ORDER.equals(businessTypePrifx)) {
                 status.setOrderStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
                 status.setStatusDesc(OrderStatusEnum.INPUT_COMPLETED.getDesc());
                 status.setTraceStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
                 status.setTrace(OrderStatusEnum.INPUT_COMPLETED.getDesc());
                 str = "入库单";
-            } else if (STOCK_OUT_ORDER.equals(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2))) {
+            } else if (STOCK_OUT_ORDER.equals(businessTypePrifx)) {
                 str = "出库单";
                 status.setOrderStatus(OrderStatusEnum.OUTPUT_COMPLETED.getCode());
                 status.setStatusDesc(OrderStatusEnum.OUTPUT_COMPLETED.getDesc());
@@ -433,7 +435,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                                     logger.info("主单位的数量转化为原包装的数量为:{}",realQuantity.doubleValue());
                                     break;
                                 }
-
                             }
                         }
                     }

@@ -11,7 +11,7 @@ import java.util.List;
 public enum OrderStatusEnum {
 
     PEND_AUDIT("10", "待审核"),
-    ALREADY_ACCEPTED("20", "已受理"),
+    ALREADY_ACCEPTED("30", "已受理"),
     OUTPUT_COMPLETED("32", "出库完成"),
     ALREADY_SHIPPED("34", "已发运"),
     ALREADY_SIGNED("36", "已签收"),

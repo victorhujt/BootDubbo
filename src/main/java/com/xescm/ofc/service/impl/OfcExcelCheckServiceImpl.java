@@ -24,12 +24,12 @@ import com.xescm.ofc.model.dto.csc.OfcGoodsImportDto;
 import com.xescm.ofc.model.dto.ofc.OfcExcelBoradwise;
 import com.xescm.ofc.model.vo.ofc.OfcCheckExcelErrorVo;
 import com.xescm.ofc.service.OfcExcelCheckService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -78,10 +78,10 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
         List<OfcGoodsApiVo> goodsApiVoList;
         List<String> goodsCodeListForCheck = null;
         List<String> xlsErrorMsg = null;
-        List<OfcGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
-        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         InputStream inputStream;
         Workbook workbook;
+        List<OfcGoodsImportDto> cscGoodsImportDtoList = new ArrayList<>();
+        List<CscContantAndCompanyInportDto> cscContantAndCompanyInportDtoList = new ArrayList<>();
         try {
             inputStream = uploadFile.getInputStream();
             workbook = WorkbookFactory.create(inputStream);
@@ -264,7 +264,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                                 mapKey =cscGoodsApiVo.getGoodsCode() + "@" + rowNum;
                                 OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                                 try {
-                                    BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                                    BeanUtils.copyProperties(cscGoodsApiVo,ofcGoodsApiVo);
                                     ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                                 } catch (Exception e) {
                                     logger.error("Excel导入异常,{}",e);
@@ -614,7 +614,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                     OfcContantAndCompanyResponseDto ofcContantAndCompanyResponseDto = new OfcContantAndCompanyResponseDto();
                     cscContantAndCompanyResponseDto = result.get(0);
                     try {
-                        BeanUtils.copyProperties(ofcContantAndCompanyResponseDto,cscContantAndCompanyResponseDto);
+                        BeanUtils.copyProperties(cscContantAndCompanyResponseDto,ofcContantAndCompanyResponseDto);
                     } catch (Exception e) {
                         logger.error("校验明细类型Excel异常,{}",e);
                         throw new BusinessException("校验明细类型Excel异常");

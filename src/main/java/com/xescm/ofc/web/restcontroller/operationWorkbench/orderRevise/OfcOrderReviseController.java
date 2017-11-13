@@ -1,6 +1,5 @@
 package com.xescm.ofc.web.restcontroller.operationWorkbench.orderRevise;
 
-import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
@@ -9,7 +8,6 @@ import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.service.OfcOrderReviseService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
@@ -37,8 +35,6 @@ public class OfcOrderReviseController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
-    private OfcOrderPlaceService ofcOrderPlaceService;
-    @Resource
     private OfcOrderReviseService ofcOrderReviseService;
 
     /**
@@ -55,25 +51,6 @@ public class OfcOrderReviseController extends BaseController {
         logger.info("==>订单修改标志位 tag={}", tag);
         String resultMessage;
         try {
-            AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            /*if (ofcOrderDTOStr == null) {
-                throw new BusinessException("订单修改dto不能为空！");
-            }
-            if (null == ofcOrderDTOStr.getOrderTime()) {
-                throw new BusinessException("请选择订单日期");
-            }
-            if (CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())) {
-                throw new BusinessException("请至少添加一条货品！");
-            }
-            if (CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())) {
-                throw new BusinessException("请至少添加一条货品！");
-            }
-            if (ofcOrderDTOStr.getConsignor() == null) {
-                throw new BusinessException("发货人信息不允许为空！");
-            }
-            if (ofcOrderDTOStr.getConsignee() == null) {
-                throw new BusinessException("发货人信息不允许为空！");
-            }*/
             // 校验业务类型，如果是卡班，必须要有运输单号
             if (StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())) {
                 if (StringUtils.isBlank(ofcOrderDTOStr.getTransCode())) {

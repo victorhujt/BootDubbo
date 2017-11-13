@@ -120,6 +120,15 @@ public final class OrderConstConstant {
     public static final String INTERFACE_STATUS = "quey_order_switch";
     /**落地配*/
     public static final String IS_NEED_GROUND_DISTRIBUTION = "1";
+    /**入库类型**/
+    public static final String[] INBUSINESSTYPES = {"620","621","622","623","624","625","626"};
+    /**入库类型**/
+    public static final String[] OUTBUSINESSTYPES = {"610","611","612","613","614","617","618"};
+    /**入库**/
+    public static final String IN = "in";
+    /**出库**/
+    public static final String OUT = "out";
+
 
 
     public OrderConstConstant() {

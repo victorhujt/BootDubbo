@@ -137,7 +137,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto) {
         String orderCode;
-        List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<>();
+        List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<>();
         OfcFinanceInformation  ofcFinanceInformation =modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
@@ -150,8 +150,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         StringBuilder notes = new StringBuilder();
-        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
-        ofcFundamentalInformation.setOrderSource(DING_DING);//订单来源
+        /***店铺还没维护表***/
+        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());
+        /***订单来源***/
+        ofcFundamentalInformation.setOrderSource(DING_DING);
 
         //校验运输单号是否重复
         if(!"".equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()))){
@@ -168,7 +170,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
        }
         orderCode=ofcFundamentalInformation.getOrderCode();
-        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
+        //未作废
+        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);
         ofcFundamentalInformation.setOrderType(orderType);
         if(ofcFundamentalInformation.getOrderType().equals(orderType)){
             Wrapper<?> wrapper =ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
@@ -281,6 +284,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 将待受理订单号放入缓存
      * @param orderCode 订单号
      */
+    @Override
     public void pushOrderToCache(String key,String orderCode) {
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         listOps.rightPush(key, orderCode);
@@ -338,13 +342,13 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                    ofcOssManagerService.deleteFile(url);
                }
            }
-           String serialNo=mobileOrder.getSerialNo();
+           String serialNo = mobileOrder.getSerialNo();
           if(!PubUtils.isSEmptyOrNull(serialNo)){
               //删除手机订单号对应的附件
-              String[] serialNos=serialNo.split(",");
-              for(int i=0;i<serialNos.length;i++){
-                  OfcAttachment ofcAttachment=new OfcAttachment();
-                  ofcAttachment.setSerialNo(serialNos[i]);
+              String[] serialNos = serialNo.split(",");
+              for (String serialno:serialNos) {
+                  OfcAttachment ofcAttachment = new OfcAttachment();
+                  ofcAttachment.setSerialNo(serialno);
                   ofcAttachmentService.delete(ofcAttachment);
               }
           }
@@ -359,7 +363,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 从缓存中获取待受理订单
      * @return 订单号
      */
-    public String getOrderFromCache(String key) {
+    private String getOrderFromCache(String key) {
         String orderCode = null;
         boolean existList = stringRedisTemplate.hasKey(key);
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
@@ -373,7 +377,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     /**
      * 自动获取待受理订单
-     * @return
+     * @return 手机订单
      */
     @Transactional
     public OfcMobileOrderVo autoAcceptPendingOrder(String user) {
@@ -413,7 +417,6 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                         }
                     }
                 }
-
             } catch (UnsupportedEncodingException e) {
                 this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,mobileOrderCode);
                 throw new BusinessException("获取照片发生错误！");

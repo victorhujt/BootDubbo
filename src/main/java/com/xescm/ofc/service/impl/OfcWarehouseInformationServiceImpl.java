@@ -78,7 +78,6 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
                 RmcWarehouseRespDto rmcWarehouseResult;
                 Wrapper<RmcWarehouseRespDto> rmcWarehouseByid =  rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
-                    //throw new BusinessException(rmcWarehouseByid.getMessage());
                     continue;
                 }
                 rmcWarehouseResult = rmcWarehouseByid.getResult();

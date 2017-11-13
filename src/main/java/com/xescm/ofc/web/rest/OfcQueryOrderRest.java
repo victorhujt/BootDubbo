@@ -135,7 +135,7 @@ public class OfcQueryOrderRest {
 
     /**
      * 获取随机的图片验证码
-     * @return
+     * @return 验证码
      */
     @RequestMapping(value = "getCaptcha", method = {RequestMethod.POST})
     @ResponseBody
@@ -163,19 +163,19 @@ public class OfcQueryOrderRest {
         String validateCode = codeGenUtils.getSmsCode(4);
         logger.info("接收验证码的手机号为:{},验证码为:{}",phone,validateCode);
 
-        SmsCodeApiDto SmsCodeApiDto = new SmsCodeApiDto();
-        SmsCodeApiDto.setMobile(phone);
-        SmsCodeApiDto.setSmsTempletCode("SMS_70510558");
+        SmsCodeApiDto smsCodeApiDto = new SmsCodeApiDto();
+        smsCodeApiDto.setMobile(phone);
+        smsCodeApiDto.setSmsTempletCode("SMS_70510558");
         Map<String, String> param = Maps.newHashMap();
         param.put("code", validateCode);
         param.put("product", "鲜易供应链");
         JSONObject json = JSONObject.fromObject(param);
-        SmsCodeApiDto.setParam(json.toString());
-        SmsCodeApiDto.setCode(validateCode);
+        smsCodeApiDto.setParam(json.toString());
+        smsCodeApiDto.setCode(validateCode);
 
-        logger.info("调用短信接口的参数为:{}", JacksonUtil.toJson(SmsCodeApiDto));
+        logger.info("调用短信接口的参数为:{}", JacksonUtil.toJson(smsCodeApiDto));
         Long begin = System.currentTimeMillis();
-        Wrapper result = epcSendMessageEdasService.sendSms(SmsCodeApiDto);
+        Wrapper result = epcSendMessageEdasService.sendSms(smsCodeApiDto);
         Long end = System.currentTimeMillis();
         logger.info("短信接口耗时为:{}ms",(end-begin));
         logger.info("调用短信接口的响应结果为:{}", JacksonUtil.toJson(result));

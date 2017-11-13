@@ -4,7 +4,6 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.ofc.constant.ResultModel;
 import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.edas.model.dto.epc.QueryOrderStatusDto;
-import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
 
 import java.util.List;
@@ -15,12 +14,6 @@ import java.util.List;
  */
 public interface CreateOrderService {
 
-    /**
-     * 创建订单
-     *
-     * @return boolean
-     */
-    boolean CreateOrders(List<OfcCreateOrderDTO> list);
 
     Wrapper<CannelOrderVo> cancelOrderStateByOrderCode(CancelOrderDto cancelOrderDto);
 

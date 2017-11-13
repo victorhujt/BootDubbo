@@ -12,17 +12,17 @@ import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.vo.CscGoodsApiVo;
-import com.xescm.csc.provider.*;
+import com.xescm.csc.provider.CscContactEdasService;
+import com.xescm.csc.provider.CscGoodsEdasService;
+import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcFundamentalInformation;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.service.OfcDistributionBasicInfoService;
 import com.xescm.ofc.service.OfcFundamentalInformationService;
 import com.xescm.ofc.service.OfcOrderPlaceService;
 import com.xescm.ofc.web.controller.BaseController;
-import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -52,19 +52,11 @@ public class OfcOrderPlaceOrderRest extends BaseController{
     @Resource
     private OfcFundamentalInformationService ofcFundamentalInformationService;
     @Resource
-    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
-    @Resource
     private CscGoodsEdasService cscGoodsEdasService;
-    @Resource
-    private CscGoodsTypeEdasService cscGoodsTypeEdasService;
     @Resource
     private CscSupplierEdasService cscSupplierEdasService;
     @Resource
     private CscContactEdasService cscContactEdasService;
-    @Resource
-    private  CscWarehouseEdasService cscWarehouseEdasService;
-    @Resource
-    private RmcWarehouseEdasService rmcWarehouseEdasService;
 
 
 
@@ -93,10 +85,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         try {
             orderGoodsListStr = orderGoodsListStr.replace("~`","");
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
-           /* if(PubUtils.isSEmptyOrNull(ofcOrderDTOJson)){
-                logger.debug(ofcOrderDTOJson);
-                ofcOrderDTOJson = JacksonUtil.toJsonWithFormat(new OfcOrderDTO());
-            }*/
             if(PubUtils.isSEmptyOrNull(cscContantAndCompanyDtoConsignorStr)){
                 cscContantAndCompanyDtoConsignorStr = JacksonUtil.toJsonWithFormat(new CscContantAndCompanyDto());
             }
@@ -106,10 +94,8 @@ public class OfcOrderPlaceOrderRest extends BaseController{
             if(PubUtils.isSEmptyOrNull(cscSupplierInfoDtoStr)){
                 cscSupplierInfoDtoStr = JacksonUtil.toJsonWithFormat(new CscSupplierInfoDto());
             }
-           // List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<OfcGoodsDetailsInfo>();
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = new ArrayList<>();
             if(!PubUtils.isSEmptyOrNull(orderGoodsListStr)){ // 如果货品不空才去添加
-                //orderGoodsListStr = JacksonUtil.toJsonWithFormat(new OfcGoodsDetailsInfo());
                 ofcGoodsDetailsInfos = JSONObject.parseArray(orderGoodsListStr, OfcGoodsDetailsInfo.class);
             }
             OfcOrderDTO ofcOrderDTO = JacksonUtil.parseJsonWithFormat(ofcOrderDTOStr, OfcOrderDTO.class);
@@ -148,7 +134,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
      */
     @ApiOperation(value="下单货品筛选", notes="根据查询条件筛选货品")
     @ApiImplicitParams({
-            //@ApiImplicitParam(name = "cscGoods", value = "货品筛选条件", required = true, dataType = "CscGoods"),
     })
     @RequestMapping(value = "/goodsSelect",method = RequestMethod.POST)
     public void goodsSelectByCscApi(CscGoodsApiDto cscGoods, HttpServletResponse response){
@@ -260,8 +245,6 @@ public class OfcOrderPlaceOrderRest extends BaseController{
         //调用外部接口,最低传CustomerCode
         try {
             if (cscSupplierInfoDto == null) {
-                AuthResDto authResDtoByToken = getAuthResDtoByToken();
-//                cscSupplierInfoDto.setCustomerCode(authResDtoByToken.getGroupRefCode());
                 cscSupplierInfoDto.setCustomerCode(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getCustomerCode()));
                 cscSupplierInfoDto.setSupplierName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getSupplierName()));
                 cscSupplierInfoDto.setContactName(PubUtils.trimAndNullAsEmpty(cscSupplierInfoDto.getContactName()));
