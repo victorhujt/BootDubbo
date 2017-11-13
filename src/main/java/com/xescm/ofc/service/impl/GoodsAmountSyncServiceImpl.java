@@ -53,6 +53,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     private DefaultMqProducer mqProducer;
 
     @Transactional
+    @Override
     public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
         Wrapper result = null;
         String custCode = goodsAmountSyncDto.getCustCode();
