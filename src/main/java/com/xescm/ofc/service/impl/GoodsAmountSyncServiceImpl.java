@@ -13,6 +13,7 @@ import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,15 +61,20 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
         String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
         if (PubUtils.isOEmptyOrNull(custCode)) {
             throw new BusinessException("客户编码不能为空");
-        }else if (PubUtils.isOEmptyOrNull(custOrderCode)) {
-            throw new BusinessException("客户订单编号不能为空");
         }else if (PubUtils.isNotNullAndSmallerSize(goodsAmountSyncDto.getGoodsAmountDetailDtoList(), 1)) {
             throw new BusinessException("货品信息不能为空");
         }
         // 查询订单
         OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
         ofcFundamentalInfo.setCustCode(custCode);
-        ofcFundamentalInfo.setCustOrderCode(custOrderCode);
+        if (!PubUtils.isSEmptyOrNull(custOrderCode)) {
+            ofcFundamentalInfo.setCustOrderCode(custOrderCode);
+        } else {
+            if (!PubUtils.isSEmptyOrNull(goodsAmountSyncDto.getOderCode())) {
+                ofcFundamentalInfo.setOrderCode(goodsAmountSyncDto.getOderCode());
+            }
+        }
+
         try {
             List<OfcFundamentalInformation> orderList = ofcFundamentalInformationService.select(ofcFundamentalInfo);
             if (!PubUtils.isNotNullAndBiggerSize(orderList, 0)) {
@@ -186,7 +192,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 ofcGoodsDetailsInfo.setOrderCode(orderCode);
                 ofcGoodsDetailsInfo.setGoodsCode(goodsAmountDetailDto.getGoodsCode());
                 List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
-                if (!PubUtils.isNotNullAndBiggerSize(ofcGoodsDetailsInfoList, 0)) {
+                if (CollectionUtils.isNotEmpty(ofcGoodsDetailsInfoList) && ofcGoodsDetailsInfoList.size() == 1) {
                     ofcGoodsDetailsInfo = ofcGoodsDetailsInfoList.get(0);
                     String weight = goodsAmountDetailDto.getWeight();
                     String quantity = goodsAmountDetailDto.getQty();
