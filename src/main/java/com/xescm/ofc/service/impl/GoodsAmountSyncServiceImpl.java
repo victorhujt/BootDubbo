@@ -118,9 +118,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     void modifyGoodsDetails(GoodsAmountSyncDto goodsAmountSyncDto, String orderCode, String orderStatus) {
         try {
             // 1.修改订单中心重量、数量、体积
-            this.modifyOfcGoodsDetailInfo(orderCode, goodsAmountSyncDto.getGoodsAmountDetailDtoList());
-            // 2.修改运输、结算、调度中心
-            this.modifyOtherCenterGoodsDetailInfo(orderCode, orderStatus, goodsAmountSyncDto);
+            this.modifyOfcGoodsDetailInfo(orderCode,orderStatus, goodsAmountSyncDto);
         } catch (BusinessException ex) {
             logger.error("{}", ex);
             throw ex;
@@ -176,13 +174,13 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
     /**
      * 修改商品数量、重量、体积
      * @param orderCode
-     * @param modifyGoodsList
+     * @param goodsAmountSyncDto
      */
     @Transactional
-    void modifyOfcGoodsDetailInfo(String orderCode, List<GoodsAmountDetailDto> modifyGoodsList) {
+    void modifyOfcGoodsDetailInfo(String orderCode,String orderStatus, GoodsAmountSyncDto goodsAmountSyncDto) {
         try {
             // 修改订单商品重量、数量、体积
-            for (GoodsAmountDetailDto goodsAmountDetailDto: modifyGoodsList) {
+            for (GoodsAmountDetailDto goodsAmountDetailDto: goodsAmountSyncDto.getGoodsAmountDetailDtoList()) {
                 if (PubUtils.isOEmptyOrNull(goodsAmountDetailDto.getGoodsName())) {
                     throw new BusinessException("货品名称不能为空！");
                 } else if (PubUtils.isOEmptyOrNull(goodsAmountDetailDto.getGoodsCode())) {
@@ -215,6 +213,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             }
             // 修改订单总重量、数量、体积
             this.modifyOfcOrderTotalAmount(orderCode);
+            // 2.修改运输、结算、调度中心
+            this.modifyOtherCenterGoodsDetailInfo(orderCode, orderStatus, goodsAmountSyncDto);
         } catch (NumberFormatException ex) {
             logger.error("众品交货量同步转换数字类型失败：异常详情 => {}", ex);
             throw new BusinessException("众品交货量同步转换数字类型失败，请检查类型！");
