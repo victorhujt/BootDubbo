@@ -201,10 +201,10 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                         ofcGoodsDetailsInfo.setQuantity(new BigDecimal(quantity));
                     }
                     if (!PubUtils.isOEmptyOrNull(weight)) {
-                        ofcGoodsDetailsInfo.setWeight(new BigDecimal(weight));
+                        ofcGoodsDetailsInfo.setWeight(new BigDecimal(weight).setScale(2,BigDecimal.ROUND_FLOOR));
                     }
                     if (!PubUtils.isOEmptyOrNull(volume)) {
-                        ofcGoodsDetailsInfo.setCubage(new BigDecimal(volume));
+                        ofcGoodsDetailsInfo.setCubage(new BigDecimal(volume).setScale(2,BigDecimal.ROUND_FLOOR));
                     }
                     ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
                 } else {
