@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -163,6 +164,7 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                 syncOrderInfoDto.setWeight(orderDistInfo.getWeight());
                 syncOrderInfoDto.setGoodsNum(orderDistInfo.getQuantity());
                 syncOrderInfoDto.setVolume(orderDistInfo.getCubage());
+                syncOrderInfoDto.setUpdateTime(new Date());
                 String msgStr = JacksonUtil.toJson(syncOrderInfoDto);
                 boolean result = mqProducer.sendMsg(msgStr, mqConfig.getOrderAmountModifyTopic(), orderCode, null);
                 if (!result) {
