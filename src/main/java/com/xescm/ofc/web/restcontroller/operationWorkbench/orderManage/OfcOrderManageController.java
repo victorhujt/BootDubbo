@@ -199,13 +199,14 @@ public class OfcOrderManageController extends BaseController {
             AuthResDto authResDto = getAuthResDtoByToken();
             whcModifWmsCodeReqDto.setOperationName(authResDto.getUserName());
             Wrapper<?> result = ofcOrderManageService.updateOrderDetail(whcModifWmsCodeReqDto);
+            logger.info("修改仓库的反馈结果是{}",result);
             if (result == null) {
                 return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
             }
             if (result.getCode() == Wrapper.SUCCESS_CODE) {
                 return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单仓库修改成功");
             } else {
-                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "订单仓库修改失败");
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单仓库修改失败");
             }
         } catch (BusinessException ex) {
             logger.error("订单中心订单管理订单修改出现异常:{}", ex.getMessage(), ex);
