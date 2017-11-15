@@ -203,10 +203,10 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
                         ofcGoodsDetailsInfo.setQuantity(new BigDecimal(quantity));
                     }
                     if (!PubUtils.isOEmptyOrNull(weight)) {
-                        ofcGoodsDetailsInfo.setWeight(new BigDecimal(weight).setScale(2,BigDecimal.ROUND_FLOOR));
+                        ofcGoodsDetailsInfo.setWeight(new BigDecimal(weight));
                     }
                     if (!PubUtils.isOEmptyOrNull(volume)) {
-                        ofcGoodsDetailsInfo.setCubage(new BigDecimal(volume).setScale(2,BigDecimal.ROUND_FLOOR));
+                        ofcGoodsDetailsInfo.setCubage(new BigDecimal(volume));
                     }
                     ofcGoodsDetailsInfoService.update(ofcGoodsDetailsInfo);
                 } else {
@@ -247,8 +247,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             quantityCount = quantityCount.add(PubUtils.isNull(quantity) ? new BigDecimal(0) : quantity);
             cubageCount = cubageCount.add(PubUtils.isNull(cubage) ? new BigDecimal(0) : cubage);
         }
-        orderDistInfo.setQuantity(quantityCount);
-        orderDistInfo.setWeight(weightCount);
+        orderDistInfo.setQuantity(quantityCount.setScale(2,BigDecimal.ROUND_FLOOR));
+        orderDistInfo.setWeight(weightCount.setScale(2,BigDecimal.ROUND_FLOOR));
         orderDistInfo.setCubage(cubageCount.toString());
         ofcDistributionBasicInfoService.update(orderDistInfo);
     }
