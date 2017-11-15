@@ -247,8 +247,8 @@ public class GoodsAmountSyncServiceImpl implements GoodsAmountSyncService {
             quantityCount = quantityCount.add(PubUtils.isNull(quantity) ? new BigDecimal(0) : quantity);
             cubageCount = cubageCount.add(PubUtils.isNull(cubage) ? new BigDecimal(0) : cubage);
         }
-        orderDistInfo.setQuantity(quantityCount.setScale(2,BigDecimal.ROUND_FLOOR));
-        orderDistInfo.setWeight(weightCount.setScale(2,BigDecimal.ROUND_FLOOR));
+        orderDistInfo.setQuantity(quantityCount.setScale(2,BigDecimal.ROUND_HALF_UP));
+        orderDistInfo.setWeight(weightCount.setScale(2,BigDecimal.ROUND_HALF_UP));
         orderDistInfo.setCubage(cubageCount.toString());
         ofcDistributionBasicInfoService.update(orderDistInfo);
     }
