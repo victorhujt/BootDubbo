@@ -1,7 +1,11 @@
 package com.xescm.ofc.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
+import com.xescm.csc.provider.CscGoodsEdasService;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper;
@@ -23,11 +27,13 @@ import java.util.Map;
 public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsInfo> implements OfcGoodsDetailsInfoService {
     @Resource
     private OfcGoodsDetailsInfoMapper ofcGoodsDetailsInfoMapper;
+    @Resource
+    private CscGoodsEdasService cscGoodsEdasService;
     @Override
     public List<OfcGoodsDetailsInfo> goodsDetailsScreenList(String code, String followTag) {
-        if(!PubUtils.trimAndNullAsEmpty(code).equals("")){
+        if(!"".equals(PubUtils.trimAndNullAsEmpty(code))){
             String orderCode = null;
-            if(followTag.equals("orderCode")){
+            if("orderCode".equals(followTag)){
                 orderCode = code;
             }
             Map<String,String> mapperMap = new HashMap<>();
@@ -57,5 +63,20 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     @Override
     public int updateByOrderCode(Object key) {
         return ofcGoodsDetailsInfoMapper.updateByOrderCode(key);
+    }
+
+    @Override
+    public  Wrapper<PageInfo<CscGoodsApiVo>> validateGoodsByCode(CscGoodsApiDto dto) {
+        return cscGoodsEdasService.queryCscGoodsPageListByFuzzy(dto);
+    }
+
+    @Override
+    public List<OfcGoodsDetailsInfo> queryIds() {
+        return ofcGoodsDetailsInfoMapper.queryIds();
+    }
+
+    @Override
+    public void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo) {
+        ofcGoodsDetailsInfoMapper.flushPassLineNoById(ofcGoodsDetailsInfo);
     }
 }

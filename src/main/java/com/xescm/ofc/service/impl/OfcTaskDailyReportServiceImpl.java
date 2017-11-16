@@ -26,7 +26,7 @@ public class OfcTaskDailyReportServiceImpl implements OfcTaskDailyReportService 
 
     @Override
     public List<OfcTaskDailyReport> queryDailyReportTask(OfcTaskDailyReport task) {
-        List<OfcTaskDailyReport> result = null;
+        List<OfcTaskDailyReport> result;
         try {
             result = ofcTaskDailyReportMapper.queryDailyReportTask(task);
         } catch (Exception e) {

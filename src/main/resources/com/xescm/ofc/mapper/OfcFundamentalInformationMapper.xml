@@ -193,6 +193,7 @@
       ofi.area_code,
       ofi.area_name,
       ofi.consignment_batch_number,
+      ofi.ground_distribution,
       odb.consignee_name,owi.warehouse_name,
       oos.order_latest_status as order_status
       FROM ofc_fundamental_information ofi

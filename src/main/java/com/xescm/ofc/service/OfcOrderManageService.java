@@ -12,6 +12,7 @@ import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
+import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
 
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public interface OfcOrderManageService {
     RmcServiceCoverageForOrderVo copyDestinationPlace(String departurePlaceCode, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo);
 
     void pushOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
-            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
+            ,OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
 
     void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
@@ -81,5 +82,8 @@ public interface OfcOrderManageService {
 
     boolean consigneeAdressIsCoverBase(OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
+    boolean  fillAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation);
+
+    Wrapper<?> updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto);
 
 }

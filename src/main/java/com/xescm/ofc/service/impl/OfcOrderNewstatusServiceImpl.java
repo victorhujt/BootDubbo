@@ -55,12 +55,12 @@ public class OfcOrderNewstatusServiceImpl extends BaseService<OfcOrderNewstatus>
 
     @Override
     public int update(OfcOrderNewstatus orderNewstatus) {
-        if(null!=orderNewstatus && !PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()).equals("")){
+        if(null != orderNewstatus && !"".equals(PubUtils.trimAndNullAsEmpty(orderNewstatus.getOrderCode()))){
             OfcOrderNewstatus orderNewstatu = selectByKey(orderNewstatus.getOrderCode());
-            if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
-                if (!trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
-                    return super.update(orderNewstatus);
-                }
+            String status = trimAndNullAsEmpty(orderNewstatu.getOrderLatestStatus());
+             if (!(HASBEEN_CANCELED.equals(status) || HASBEEN_COMPLETED.equals(status))) {
+                 return super.update(orderNewstatus);
+             }
         }
         return 0;
 

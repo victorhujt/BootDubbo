@@ -13,6 +13,8 @@ import com.xescm.ofc.model.dto.ofc.OfcOrderInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcQueryStorageDTO;
 import com.xescm.ofc.model.vo.ofc.OfcGroupVo;
 import com.xescm.ofc.service.*;
+import com.xescm.tfc.edas.model.dto.DeliverDetailsOrdeDto;
+import com.xescm.tfc.edas.service.AcGetDeliveryOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
@@ -23,10 +25,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 /**
  * 运营中心订单管理
@@ -52,8 +53,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
     @Resource
-    private OfcOrderStatusService ofcOrderStatusService;
-    @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
@@ -62,28 +61,15 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
 
+    @Resource
+    private AcGetDeliveryOrderEdasService acGetDeliveryOrderEdasService;
+
     @Override
     public List<OrderSearchOperResult> queryOrderStorageDataOper(AuthResDto authResDto, OfcQueryStorageDTO ofcQueryStorageDTO) {
-        if (ofcQueryStorageDTO.getTag().equals("in")) {
-                List<String> businessTypes=new ArrayList<>();
-                businessTypes.add("620");
-                businessTypes.add("621");
-                businessTypes.add("622");
-                businessTypes.add("623");
-                businessTypes.add("624");
-                businessTypes.add("625");
-                businessTypes.add("626");
-            ofcQueryStorageDTO.setBusinessTypes(businessTypes);
-        } else if (ofcQueryStorageDTO.getTag().equals("out")) {
-                List<String> businessTypes=new ArrayList<>();
-                businessTypes.add("610");
-                businessTypes.add("611");
-                businessTypes.add("612");
-                businessTypes.add("613");
-                businessTypes.add("614");
-                businessTypes.add("617");
-                businessTypes.add("618");
-            ofcQueryStorageDTO.setBusinessTypes(businessTypes);
+        if (IN.equals(ofcQueryStorageDTO.getTag())) {
+            ofcQueryStorageDTO.setBusinessTypes(Arrays.asList(INBUSINESSTYPES));
+        } else if (OUT.equals(ofcQueryStorageDTO.getTag())) {
+            ofcQueryStorageDTO.setBusinessTypes(Arrays.asList(OUTBUSINESSTYPES));
         }
         OrderStorageOperForm form = new OrderStorageOperForm();
         BeanUtils.copyProperties(ofcQueryStorageDTO,form);
@@ -91,12 +77,12 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     }
 
 
-    public List<OrderSearchOperResult> queryStorageOrderList(AuthResDto authResDto,OrderStorageOperForm form) {
+    private List<OrderSearchOperResult> queryStorageOrderList(AuthResDto authResDto,OrderStorageOperForm form) {
         //订单管理筛选后端权限校验
         if (null == authResDto || null == form) {
             throw new BusinessException("订单管理筛选后端权限校验入参有误");
         }
-        List<OrderSearchOperResult> orderSearchOperResults = new ArrayList<>();
+        List<OrderSearchOperResult> orderSearchOperResults;
         UamGroupDto uamGroupDto = new UamGroupDto();
         uamGroupDto.setSerialNo(authResDto.getGroupRefCode());
         String userId = authResDto.getUserId();
@@ -120,7 +106,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             throw new BusinessException("基地所属大区未选择!");
         }
         if (StringUtils.equals(groupType,"1")) {
-            boolean accept = StringUtils.equals(areaSerialNo, userGroupCode);
             //鲜易供应链身份
             if (StringUtils.equals("GD1625000003",uamGroupDtoResult.getSerialNo())) {
                 orderSearchOperResults = ofcOrderOperMapper.queryStorageOrderList(form, null, false);
@@ -140,7 +125,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     private List<OrderSearchOperResult> queryStorageOrderListOfArea(OrderStorageOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
         List<OrderSearchOperResult> results;
-        boolean choosen = this.dealChoosen(form); //选了是true
         boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
@@ -162,7 +146,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         groupDto.setSerialNo(userGroupCode);
         OfcGroupVo ofcGroupVo = this.queryAreaMsgByBase(groupDto);
         String userAreaSerialNo = ofcGroupVo.getSerialNo();
-        boolean choosen = this.dealChoosen(form); //选了是true
         boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userAreaSerialNo, areaSerialNo);
@@ -180,15 +163,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         }
         return results;
     }
-
-    private boolean dealChoosen(OrderStorageOperForm form) {
-        if (!PubUtils.isSEmptyOrNull(form.getOrderCode()) || !PubUtils.isSEmptyOrNull(form.getCustOrderCode())) {
-            return true;
-        }
-        return false;
-    }
-
-
     @Override
     public List<OrderScreenResult> queryOrderOper(OrderOperForm form) {
         return ofcOrderScreenMapper.queryOrderOper(form);
@@ -233,14 +207,13 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             String orderStateStr = form.getOrderState();
             String[] orderStateArray = orderStateStr.split(",");
             List<String> strList = new ArrayList<>();
-            for (int i = 0; i < orderStateArray.length; i++){
-                strList.add(orderStateArray[i]);
+            for (String status:orderStateArray) {
+                strList.add(status);
             }
             form.setOrderStateList(strList);
         }
         // 2017年5月12日 追加逻辑 增加创建人查看权限
         if (StringUtils.equals(groupType,"1")) {
-            boolean accept = StringUtils.equals(userGroupCode, areaSerialNo);
             //鲜易供应链身份
             if (StringUtils.equals("GD1625000003",userGroupCode)) {
                 orderSearchOperResults = ofcOrderOperMapper.queryOrderList(form, null, false);
@@ -261,7 +234,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
 
     private List<OrderSearchOperResult> queryOrderListOfArea(OrderOperForm form, String areaSerialNo, String baseSerialNo, String userGroupCode, String userId) {
         List<OrderSearchOperResult> results;
-        boolean choosen = this.dealChoosenOper(form); //选了是true
         boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userGroupCode, areaSerialNo);
@@ -283,7 +255,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         groupDto.setSerialNo(userGroupCode);
         OfcGroupVo ofcGroupVo = this.queryAreaMsgByBase(groupDto);
         String userAreaSerialNo = ofcGroupVo.getSerialNo();
-        boolean choosen = this.dealChoosenOper(form); //选了是true
         boolean areaEmpty = PubUtils.isSEmptyOrNull(areaSerialNo);
         boolean baseEmpty = PubUtils.isSEmptyOrNull(baseSerialNo);
         boolean areaEqualUser = StringUtils.equals(userAreaSerialNo, areaSerialNo);
@@ -300,14 +271,6 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             results = ofcOrderOperMapper.queryOrderList(form, userId, true);
         }
         return results;
-    }
-
-
-    private boolean dealChoosenOper(OrderOperForm form) {
-        if (!PubUtils.isSEmptyOrNull(form.getOrderCode()) || !PubUtils.isSEmptyOrNull(form.getCustOrderCode())) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -390,7 +353,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         if (null == uamGroupDto || PubUtils.isSEmptyOrNull(identity)) {
             throw new BusinessException("根据登录用户获取组织信息入参有误!");
         }
-        Map<String, List<OfcGroupVo>> resultMap = new HashMap<>();
+        Map<String, List<OfcGroupVo>> resultMap = new HashMap<>(1024);
         List<OfcGroupVo> areaList = new ArrayList<>();
         List<OfcGroupVo> baseList = new ArrayList<>();
         String userSerialNo = uamGroupDto.getSerialNo();
@@ -465,6 +428,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
      * 获取当前大区下的所有基地
      * @param uamGroupDto 组织实体对象
      */
+    @Override
     public List<OfcGroupVo> getBaseListByCurArea(UamGroupDto uamGroupDto) {
         if (null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
             throw new BusinessException("获取当前大区下的所有基地失败");
@@ -492,12 +456,12 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     /**
      * 根据所选基地反查大区
      * @param uamGroupDto 组织实体对象
-     * @return
+     * @return 组织实体对象
      */
     @Override
     public OfcGroupVo queryAreaMsgByBase(UamGroupDto uamGroupDto) {
         if (null == uamGroupDto || PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
-            throw new BusinessException("根据所选基地反查大区失败");
+            throw new BusinessException("所选地址未配置大区基地信息");
         }
         Wrapper<UamGroupDto> parentInfoByChildSerilNo = uamGroupEdasService.getParentInfoByChildSerilNo(uamGroupDto.getSerialNo());
         checkUamGroupEdasResultNullOrError(parentInfoByChildSerilNo);
@@ -519,6 +483,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
      * 校验UamGroupEdas返回结果
      * @param allGroupByType 查询当前登录用户组织信息UamGroupEdas返回结果
      */
+    @Override
     public void checkUamGroupEdasResultNullOrError(Wrapper<?> allGroupByType) {
         if (null == allGroupByType) {
             throw new BusinessException("查询当前登录用户组织信息出错,接口返回null");
@@ -532,7 +497,8 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
     public Map<String, List<OfcGroupVo>> loadGroupList() {
         logger.info("查询所有组织信息");
         UamGroupDto uamGroupDto = new UamGroupDto();
-        uamGroupDto.setSerialNo("GD1625000003");//鲜易供应链身份
+        /**鲜易供应链身份**/
+        uamGroupDto.setSerialNo("GD1625000003");
         Map<String, List<OfcGroupVo>> xebest = this.getGroupMsg(uamGroupDto, "xebest");
         return xebest;
     }
@@ -563,6 +529,11 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
+//            //运输车辆信息
+            List<DeliverDetailsOrdeDto> deliverDetailsOrdeDtos = getDeliverDetails(orderCode);
+            if (!CollectionUtils.isEmpty(deliverDetailsOrdeDtos)) {
+                orderInfoDTO.setDeliverDetailsOrdeDtoList(deliverDetailsOrdeDtos);
+            }
             orderInfoDTO.setOfcFundamentalInformation(ofcFundamentalInformation);
             orderInfoDTO.setOfcDistributionBasicInfo(ofcDistributionBasicInfo);
             orderInfoDTO.setOfcFinanceInformation(ofcFinanceInformation);
@@ -594,5 +565,16 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         return ofcOrderInfoDTO;
     }
 
-
+    private List<DeliverDetailsOrdeDto> getDeliverDetails(String orderCode){
+        try {
+            Wrapper<List<DeliverDetailsOrdeDto>> result = acGetDeliveryOrderEdasService.queryTransportDetail(orderCode);
+            if (result.getCode() == Wrapper.SUCCESS_CODE) {
+                return result.getResult();
+            }
+        }catch (Exception e) {
+            logger.error("查询订单运输车辆信息发生异常：异常详情{}", e);
+            return null;
+        }
+        return null;
+    }
 }

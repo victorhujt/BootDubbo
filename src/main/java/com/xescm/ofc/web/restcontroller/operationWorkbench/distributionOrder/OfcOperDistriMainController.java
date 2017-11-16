@@ -150,7 +150,6 @@ public class OfcOperDistriMainController extends BaseController{
                     resultDTO.add(dto);
                 }
                 String resultJSON = JacksonUtil.toJsonWithFormat(resultDTO);
-//                String resultJSON = JacksonUtil.toJsonWithFormat(resultMap);
                 result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, checkResult.getMessage(), resultJSON);
             }
         } catch (BusinessException ex) {

@@ -59,7 +59,7 @@ public class OfcOrderWorkerApiRest {
         logger.info("查询worker待处理任务：taskParam={}", taskParam);
         Wrapper<List<OfcTaskInterfaceLogDto>> result;
         try {
-            List<OfcTaskInterfaceLogDto> list = taskInterfaceLogService.queryWTaskInterfaceLogForWorker(taskParam);
+           List<OfcTaskInterfaceLogDto> list = taskInterfaceLogService.queryWTaskInterfaceLogForWorker(taskParam);
             result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
         } catch (BusinessException e) {
             logger.error("{}", e);
@@ -298,7 +298,9 @@ public class OfcOrderWorkerApiRest {
         logger.info("开始处理异常订单 == > {}", ofcExceptOrderDTO);
         try {
             if (null == ofcExceptOrderDTO || StringUtils.isEmpty(ofcExceptOrderDTO.getExceptPot())
-                    || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) throw new BusinessException("处理异常订单失败");
+                    || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) {
+                throw new BusinessException("处理异常订单失败");
+            }
             OfcEnumeration ofcEnumeration = new OfcEnumeration();
             ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
             List<OfcEnumeration> enumsOfZp = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);

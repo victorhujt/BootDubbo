@@ -15,10 +15,4 @@ public class BaseConstant {
 
     /** 交货量同步TAG */
     public static String MQ_TAG_GoodsAmountSync = "goodsAmountSync";
-
-    /** 调度信息TAG */
-    public static String MQ_TAG_DeliveryTag = "DeliveryTag";
-
-    /** 运输信息TAG */
-    public static String MQ_TAG_TransportTag = "TransportTag";
 }
