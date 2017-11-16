@@ -1997,7 +1997,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if ( Wrapper.SUCCESS_CODE == result.getCode()) {
                 /*更新仓库信息的仓库编码和仓库名称*/
                 int reuslt = ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
-                if (reuslt > 1) {
+                if (reuslt == 1) {
                     succees = true;
                 }
             }
