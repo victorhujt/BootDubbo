@@ -84,7 +84,7 @@ public interface OfcOrderManageService {
 
     boolean  fillAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation);
 
-    Wrapper<?> updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto);
+    boolean  updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto);
 
 
 
