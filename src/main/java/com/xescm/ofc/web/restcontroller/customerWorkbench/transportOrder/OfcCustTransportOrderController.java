@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * Created by lyh on 2017/9/8.
  */
 @Controller
-@RequestMapping(value = "/page/ofc/cust/transport")
+@RequestMapping(value = "/page/ofc/cust/transport", produces = {"application/json;charset=UTF-8"})
 @Api(value = "OfcCustTransportOrderController", tags = "OfcCustTransportOrderController", description = "客户工作台运输订单", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class OfcCustTransportOrderController extends BaseController{
 

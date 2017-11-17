@@ -1551,7 +1551,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals(STOCK_IN_ORDER)) {
             cscContantAndCompanyDtoConsignee = dto;//入库时收货方是仓库
         }
-        if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+        if (YES.equals(ofcWarehouseInformation.getProvideTransport())) {
             //收货方、发货方校验
             wrapper = validateDistrictContactMessage(ofcDistributionBasicInfo);
             if (Wrapper.ERROR_CODE == wrapper.getCode()) {

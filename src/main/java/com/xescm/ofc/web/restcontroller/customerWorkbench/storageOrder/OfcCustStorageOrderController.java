@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  */
 
 @Controller
-@RequestMapping(value = "/page/ofc/cust/storage")
+@RequestMapping(value = "/page/ofc/cust/storage", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "OfcCustStorageOrderController", tags = "OfcCustStorageOrderController", description = "客户工作台仓储订单", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class OfcCustStorageOrderController extends BaseController{
 
