@@ -61,7 +61,7 @@ public class OfcHomeDisplayController {
             value = "首页数据展示"
     )
     public Wrapper<?> homeDisplay(@ApiParam(name = "HomeDisplaySeleDto",value = "首页展示查询DTO") @RequestBody HomeDisplaySeleDto homeDisplaySeleDto) {
-        this.logger.info("==>首页数据展示。");
+        this.logger.info("==>首页数据展示。",homeDisplaySeleDto);
         HomeDisplayDto homeDisplayDto = new HomeDisplayDto();
         try {
             homeDisplayDto = ofcHomeDisplayService.homeDisplaySele(homeDisplaySeleDto);

@@ -28,14 +28,6 @@
       <if test="custCode!=null and custCode!=''">
         ofi.cust_code = #{custCode}
       </if>
-      AND date_format(
-      ofi.creation_time,
-      '%Y-%m-%d'
-      ) &gt;= date_sub(NOW(), INTERVAL 1 DAY)
-      AND date_format(
-      ofi.creation_time,
-      '%Y-%m-%d'
-      ) &lt;= NOW()
       AND ofi.order_type = '60'
       AND oon.order_latest_status &lt;&gt; '40'
       AND oon.order_latest_status &lt;&gt; '50'
@@ -51,14 +43,6 @@
       <if test="custCode!=null and custCode!=''">
         ofi.cust_code = #{custCode}
       </if>
-      AND date_format(
-      ofi.creation_time,
-      '%Y-%m-%d'
-      ) &gt;= date_sub(NOW(), INTERVAL 1 DAY)
-      AND date_format(
-      ofi.creation_time,
-      '%Y-%m-%d'
-      ) &lt;= NOW()
       AND ofi.order_type = '61'
       AND oon.order_latest_status &lt;&gt; '40'
       AND oon.order_latest_status &lt;&gt; '50'

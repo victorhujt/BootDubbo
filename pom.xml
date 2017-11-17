@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-uam-api</artifactId>
-			<version>2.2</version>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
