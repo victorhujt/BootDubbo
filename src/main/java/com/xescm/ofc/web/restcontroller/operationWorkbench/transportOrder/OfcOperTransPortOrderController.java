@@ -75,7 +75,7 @@ public class OfcOperTransPortOrderController extends BaseController {
             if (null == ofcOrderDTOStr.getUrgent()){
                 ofcOrderDTOStr.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
             }
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(),tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(),tag,authResDtoByToken,ofcOrderDTOStr.getCustCode()
                     ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
         } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
