@@ -59,7 +59,6 @@ import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
 import com.xescm.whc.edas.service.WhcModifWmsCodeEdasService;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
-import org.springframework.beans.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -67,12 +66,14 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
@@ -81,7 +82,7 @@ import static com.xescm.ofc.constant.GenCodePreffixConstant.*;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
-import static com.xescm.ofc.enums.OrderStatusEnum.*;
+import static com.xescm.ofc.enums.OrderStatusEnum.ALREADY_ACCEPTED;
 
 /**
  * <p>Title:    .订单编辑 </p>
@@ -162,6 +163,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Override
     public Map orderStorageDetails(String orderCode) {
         Map<String,Object> result = new HashMap<>(1024);
+        ConcurrentHashMap amap = new ConcurrentHashMap();
         OfcDistributionBasicInfo ofcDistributionBasicInfo;
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         if (ofcFundamentalInformation == null) {
