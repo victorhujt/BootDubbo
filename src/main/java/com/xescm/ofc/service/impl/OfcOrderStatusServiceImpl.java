@@ -47,7 +47,7 @@ import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
  * @date 2016-10-10.
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> implements OfcOrderStatusService {
     @Resource
     private OfcOrderStatusMapper ofcOrderStatusMapper;
@@ -120,7 +120,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     transCode = code;
                     break;
             }
-            Map<String, String> mapperMap = new HashMap<>(1024);
+            Map<String, String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
             mapperMap.put("transCode", transCode);
@@ -355,10 +355,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     ofcFundamentalInformation.setFinishedTime(new Date());
                 }
             }
+
             //转换为原包装的数量
-            conversionUnitQuantity(details, ofcWarehouseInformation, ofcFundamentalInformation);
+            conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
             //更新实际的数量
-            for (FeedBackOrderDetailDto detail :details) {
+            for (FeedBackOrderDetailDto detail :detailDtos) {
                 OfcGoodsDetailsInfo good = new OfcGoodsDetailsInfo();
                 good.setGoodsCode(detail.getGoodsCode());
                 good.setOrderCode(orderCode);

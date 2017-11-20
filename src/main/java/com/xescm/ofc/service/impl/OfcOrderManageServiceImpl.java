@@ -326,7 +326,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                             logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
                             logger.info("good.getPackageName() is {}",good.getUnit());
                             logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
-                            good.setConversionRate(packingDto.getLevelSpecification());
+                            BigDecimal ls = packingDto.getLevelSpecification();
+                            if (ls == null || ls.compareTo(new BigDecimal(0)) == 0) {
+                                break;
+                            }
+                            good.setConversionRate(ls);
                             good.setPackageName(packingDto.getLevelDescription());
                             good.setPackageType(packingDto.getLevel());
                             if (!PubUtils.isSEmptyOrNull(good.getRemark())) {
@@ -1022,11 +1026,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Override
     public void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
             , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos, OfcWarehouseInformation ofcWarehouseInformation) {
-        logger.info("订单信息推送结算中心 == > ofcFundamentalInformation{}", ofcFundamentalInformation);
-        logger.info("订单信息推送结算中心 == > ofcFinanceInformation{}", ofcFinanceInformation);
-        logger.info("订单信息推送结算中心 == > ofcDistributionBasicInfo{}", ofcDistributionBasicInfo);
-        logger.info("订单信息推送结算中心 == > ofcGoodsDetailsInfos{}", ofcGoodsDetailsInfos);
-        logger.info("订单信息推送结算中心 == > ofcWarehouseInformation{}", ofcWarehouseInformation);
+        logger.info("订单信息推送结算中心......");
         AcOrderDto acOrderDto = new AcOrderDto();
         try {
             // 转换Ac实体
@@ -1738,6 +1738,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     newGoodsInfo.setId(UUID.randomUUID().toString().replace("-", ""));
                     newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                     newGoodsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                    ofcGoodsDetailsInfoService.fillGoodType(newGoodsInfo);
                     ofcGoodsDetailsInfoService.save(newGoodsInfo);
                 }
             }
@@ -1914,29 +1915,37 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @return
      */
     @Override
-    public Wrapper<?> updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto) {
-        String orderCode = whcModifWmsCodeReqDto.getOrderCode();
-        String warehouseCode = whcModifWmsCodeReqDto.getNewWareHouseCode();
-        logger.info("订单详情修改的订单为:{},修改后的仓库编码为:{}",orderCode,warehouseCode);
-        OfcFundamentalInformation info = ofcFundamentalInformationService.selectByKey(orderCode);
-        if (info == null) {
-            throw new BusinessException("订单不存在");
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto) {
+        boolean succees = false;
+        try {
+            String orderCode = whcModifWmsCodeReqDto.getOrderCode();
+            String warehouseCode = whcModifWmsCodeReqDto.getNewWareHouseCode();
+            logger.info("订单详情修改的订单为:{},修改后的仓库编码为:{}",orderCode,warehouseCode);
+            OfcFundamentalInformation info = ofcFundamentalInformationService.selectByKey(orderCode);
+            if (info == null) {
+                throw new BusinessException("订单不存在");
+            }
+            OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+            OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
+            ofcFundamentalInformation.setOrderCode(orderCode);
+            ofcWarehouseInformation.setOrderCode(orderCode);
+            ofcWarehouseInformation.setWarehouseCode(warehouseCode);
+            ofcWarehouseInformation.setWarehouseName(whcModifWmsCodeReqDto.getNewWareHouseName());
+            logger.info("request parameter is {}",whcModifWmsCodeReqDto);
+            Wrapper result =  whcModifWmsCodeEdasService.modifWmsCodeByOrderCode(whcModifWmsCodeReqDto);
+            logger.info("response result is {}",result);
+            if ( Wrapper.SUCCESS_CODE == result.getCode()) {
+                /**更新仓库信息的仓库编码和仓库名称**/
+                int reuslt = ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
+                if (reuslt == 1) {
+                    succees = true;
+                }
+            }
+        }catch (Exception e) {
+            throw  e;
         }
-        OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
-        OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
-        ofcFundamentalInformation.setOrderCode(orderCode);
-        ofcWarehouseInformation.setOrderCode(orderCode);
-        ofcWarehouseInformation.setWarehouseCode(warehouseCode);
-        ofcWarehouseInformation.setWarehouseName(whcModifWmsCodeReqDto.getNewWareHouseName());
-
-        /**更新仓库信息的仓库编码和仓库名称**/
-        int reuslt = ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
-        if (reuslt < 1) {
-            return null;
-        }
-        /**更新订单信息的大区和基地**/
-        ofcOrderPlaceService.updateBaseAndAreaBywarehouseCode(ofcWarehouseInformation.getWarehouseCode(),ofcFundamentalInformation);
-         return whcModifWmsCodeEdasService.modifWmsCodeByOrderCode(whcModifWmsCodeReqDto);
+        return succees;
     }
 
     /**

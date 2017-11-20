@@ -128,6 +128,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
             goodsAmountCount = goodsAmountCount.add(null == ofcGoodsDetails.getQuantity() ? new BigDecimal(0) : ofcGoodsDetails.getQuantity());
+            ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
         return goodsAmountCount;
@@ -357,6 +358,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+            ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
         try {
@@ -1084,6 +1086,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetailsInfo.setCreationTime(creationTime);
             ofcGoodsDetailsInfo.setCreator(creator);
             ofcGoodsDetailsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+            ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetailsInfo);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
         }
         // 更新财务信息表
