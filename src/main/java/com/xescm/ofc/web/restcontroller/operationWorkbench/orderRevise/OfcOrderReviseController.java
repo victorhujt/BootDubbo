@@ -6,7 +6,7 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.service.OfcOrderReviseService;
+import com.xescm.ofc.service.GoodsAmountSyncService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
@@ -30,9 +30,8 @@ import java.util.List;
 public class OfcOrderReviseController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Resource
-    private OfcOrderReviseService ofcOrderReviseService;
+    private GoodsAmountSyncService goodsAmountSyncService;
 
     /**
      * 订单修改
@@ -109,8 +108,9 @@ public class OfcOrderReviseController extends BaseController {
         }
         // 赋值
         goodsAmountSyncDto.setGoodsAmountDetailDtoList(goodsAmountDetailDtos);
+        goodsAmountSyncDto.setOderCode(ofcOrderDTOStr.getOrderCode());
         // 校验
-        Wrapper<?> result = ofcOrderReviseService.goodsAmountSync(goodsAmountSyncDto,ofcOrderDTOStr.getOrderCode());
+        Wrapper<?> result = goodsAmountSyncService.goodsAmountSync(goodsAmountSyncDto);
         if (Wrapper.SUCCESS_CODE == result.getCode()) {
             return true;
         } else {

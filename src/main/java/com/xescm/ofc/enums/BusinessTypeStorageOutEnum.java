@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
  * Created by lyh on 2017/2/28.
  */
 public enum BusinessTypeStorageOutEnum {
@@ -16,6 +15,7 @@ public enum BusinessTypeStorageOutEnum {
     LOSS_OF_REPORTING("612", "报损出库"),
     OTHER_OUT_OF_THE_LIBRARY("613", "其他出库"),
     ALLOT_OUT_OF_THE_LIBRARY("614", "分拨出库"),
+    PROCESSING_OUT_STORAGE("618", "加工出库"),
     BACK_TO_SHOP("617", "退车间");
 
     BusinessTypeStorageOutEnum(String code, String desc) {
