@@ -3,20 +3,18 @@ package com.xescm.ofc.web.restcontroller.operationWorkbench.orderRevise;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
-import com.xescm.ofc.enums.BusinessTypeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
+import com.xescm.ofc.service.GoodsAmountSyncService;
 import com.xescm.ofc.service.OfcOrderReviseService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,7 +31,10 @@ import java.util.List;
 public class OfcOrderReviseController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    @Resource
+    private GoodsAmountSyncService goodsAmountSyncService;
+    @Resource
+    private OfcOrderPlaceService ofcOrderPlaceService;
     @Resource
     private OfcOrderReviseService ofcOrderReviseService;
 
@@ -41,30 +42,21 @@ public class OfcOrderReviseController extends BaseController {
      * 订单修改
      *
      * @param ofcOrderDTOStr 订单基本信息、收发货方信息
-     * @param tag            标识下单、编辑、运输开单
      * @return Wrapper
      */
-    @RequestMapping("/orderReviseCon/{tag}")
+    @RequestMapping("/orderReviseCon")
     @ResponseBody
-    public Wrapper<?> orderPlace(@RequestBody OfcOrderDTO ofcOrderDTOStr, @PathVariable String tag) {
+    public Wrapper<?> orderPlace(@RequestBody OfcOrderDTO ofcOrderDTOStr) {
         logger.info("==>订单修改实体 ofcOrderDTOStr={}", ofcOrderDTOStr);
-        logger.info("==>订单修改标志位 tag={}", tag);
         String resultMessage;
+        String orderCode = ofcOrderDTOStr.getOrderCode();
         try {
-            // 校验业务类型，如果是卡班，必须要有运输单号
-            if (StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())) {
-                if (StringUtils.isBlank(ofcOrderDTOStr.getTransCode())) {
-                    throw new BusinessException("业务类型是卡班，运输单号是必填项");
-                }
+            if (PubUtils.isSEmptyOrNull(orderCode)) {
+                throw new BusinessException("订单号不能为空");
             }
-            if (null == ofcOrderDTOStr.getProvideTransport()) {
-                ofcOrderDTOStr.setProvideTransport(OrderConstConstant.WAREHOUSE_NO_TRANS);
+            if (CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())) {
+                throw new BusinessException("订单{"+orderCode+"}货品不能为空");
             }
-            if (null == ofcOrderDTOStr.getUrgent()) {
-                ofcOrderDTOStr.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
-            }
-            // 修改时询问结算中心是否可以修改（未结算）
-            // 修改后通知运输中心、调度中心、结算中心
             boolean flag = checkReviseStatus(ofcOrderDTOStr);
             if (flag) {
                 resultMessage = "订单修改成功!";
@@ -121,8 +113,9 @@ public class OfcOrderReviseController extends BaseController {
         }
         // 赋值
         goodsAmountSyncDto.setGoodsAmountDetailDtoList(goodsAmountDetailDtos);
+        goodsAmountSyncDto.setOderCode(ofcOrderDTOStr.getOrderCode());
         // 校验
-        Wrapper<?> result = ofcOrderReviseService.goodsAmountSync(goodsAmountSyncDto,ofcOrderDTOStr.getOrderCode());
+        Wrapper<?> result = goodsAmountSyncService.goodsAmountSync(goodsAmountSyncDto);
         if (Wrapper.SUCCESS_CODE == result.getCode()) {
             return true;
         } else {

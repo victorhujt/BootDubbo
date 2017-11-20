@@ -1,8 +1,12 @@
 package com.xescm.ofc.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.csc.model.dto.CscGoodsApiDto;
+import com.xescm.csc.model.dto.packing.GoodsPackingDto;
+import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderStatusDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcRealTimeTraceDTO;
@@ -25,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -55,6 +60,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
     @Resource
     private TfcQueryGpsInfoEdasService tfcQueryGpsInfoEdasService;
+    @Resource
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -91,7 +98,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
     @Override
     public OfcOrderStatus orderStatusSelect(String code, String followTag) {
-        if (!trimAndNullAsEmpty(code).equals("")) {
+        if (!"".equals(trimAndNullAsEmpty(code))) {
             String orderCode = null;
             String custOrderCode = null;
             String transCode = null;
@@ -106,7 +113,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     transCode = code;
                     break;
             }
-            // Map<String,String> mapperMap = new HashMap<String,String>();
             Map<String, String> mapperMap = new HashMap<>();
             mapperMap.put("orderCode", orderCode);
             mapperMap.put("custOrderCode", custOrderCode);
@@ -169,7 +175,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         }
         return ofcOrderStatus;
     }
-
+    @Override
     public OfcOrderStatus queryLastTimeOrderByOrderCode(String orderCode) {
         OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
         OfcOrderStatus ofcOrderStatus = new OfcOrderStatus();
@@ -189,8 +195,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     }
 
     @Override
-    public int  save(OfcOrderStatus ofcOrderStatus) {
-        if (ofcOrderStatus != null && !trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()).equals("")) {
+    public int save(OfcOrderStatus ofcOrderStatus) {
+        if (ofcOrderStatus != null && !"".equals(trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()))) {
             if (!trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()).equals("")) {
                 OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(ofcOrderStatus.getOrderCode());
                 String tag = "noStatus";
@@ -199,10 +205,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 } else {
                     orderNewstatus=new OfcOrderNewstatus();
                 }
-                if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED))
+                if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED)){
                     if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
                         updateOrderNewStatus(ofcOrderStatus, tag);
                     }
+                }
                 ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                 ofcOrderStatus.setCreationTime(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
                 return super.save(ofcOrderStatus);
@@ -319,6 +326,18 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     ofcFundamentalInformation.setFinishedTime(new Date());
                 }
             }
+
+            //转换为原包装的数量
+            conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
+            //更新实际的数量
+            for (FeedBackOrderDetailDto detail :detailDtos) {
+                OfcGoodsDetailsInfo good = new OfcGoodsDetailsInfo();
+                good.setGoodsCode(detail.getGoodsCode());
+                good.setOrderCode(orderCode);
+                good.setRealQuantity(detail.getRealQuantity());
+                ofcGoodsDetailsInfoService.updateByOrderCode(good);
+            }
+
             status.setLastedOperTime(new Date());
             status.setStatusDesc("订单号为" + orderCode + str + "已完成");
             status.setOrderCode(orderCode);
@@ -330,6 +349,72 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void conversionUnitQuantity(List<FeedBackOrderDetailDto> detailDtos, OfcWarehouseInformation ofcWarehouseInformation, OfcFundamentalInformation ofcFundamentalInformation) {
+        for (FeedBackOrderDetailDto goodsInfo :detailDtos) {
+            if (WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
+                CscGoodsApiDto cscGoods = new CscGoodsApiDto();
+                String goodsCode = goodsInfo.getGoodsCode();
+                String unit = goodsInfo.getUnit();
+                String warehouseCode = ofcWarehouseInformation.getWarehouseCode();
+                String custCode = ofcFundamentalInformation.getCustCode();
+                //天津自动化仓 用天津仓包装校验
+                if ("000001".equals(warehouseCode)) {
+                    cscGoods.setWarehouseCode("ck0024");
+                } else {
+                    cscGoods.setWarehouseCode(warehouseCode);
+                }
+                cscGoods.setFromSys("WMS");
+                cscGoods.setGoodsCode(goodsCode);
+                cscGoods.setCustomerCode(custCode);
+                cscGoods.setPNum(1);
+                cscGoods.setPSize(10);
+                try{
+                    logger.info("匹配包装的参数为:{}", JacksonUtil.toJson(cscGoods));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
+                try{
+                    logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
+                        PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
+                    CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
+                    List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
+                    if (!CollectionUtils.isEmpty(packages)) {
+                        for (GoodsPackingDto packingDto : packages) {
+                            if (StringUtils.equals(unit,packingDto.getLevelDescription())) {
+                                logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                logger.info("unit is {}",unit);
+                                logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
+                                BigDecimal pquantity;
+                                BigDecimal realQuantity = goodsInfo.getRealQuantity();
+                                BigDecimal ls = packingDto.getLevelSpecification();
+                                if (!(ls == null || ls.compareTo(new BigDecimal(0)) == 0)) {
+                                    logger.info("订单号为:{}的货品编码为:{}转化为原包装的数量",ofcFundamentalInformation.getOrderCode(),goodsCode);
+                                    logger.info("主单位的数量为:{}转化率为:{}",realQuantity.doubleValue(),ls.doubleValue());
+                                    //大成客户特殊处理
+                                    if ("100259".equals(custCode)) {
+                                        pquantity = realQuantity.multiply(ls).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+                                    } else {
+                                        //保留三位小数
+                                        pquantity = realQuantity.divide(ls,3,BigDecimal.ROUND_HALF_DOWN);
+                                    }
+                                    goodsInfo.setRealQuantity(pquantity);
+                                    logger.info("主单位的数量转化为原包装的数量为:{}",realQuantity.doubleValue());
+                                    break;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -346,12 +431,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         CheckUtils.checkArgument(ofcFundamentalInformation == null, ResultCodeEnum.RESULTISNULL);
         if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
-          OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
-          ofcWarehouseInformation.setOrderCode(orderCode);
-          List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
-          if (!CollectionUtils.isEmpty(ofcWarehouseInformations) && ofcWarehouseInformations.size() == 1) {
-              CheckUtils.checkArgument(ofcWarehouseInformations.get(0).getProvideTransport() != WEARHOUSE_WITH_TRANS, ResultCodeEnum.ISNOTSUPPORT);
-          }
+            OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+            ofcWarehouseInformation.setOrderCode(orderCode);
+            List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
+            if (!CollectionUtils.isEmpty(ofcWarehouseInformations) && ofcWarehouseInformations.size() == 1) {
+                CheckUtils.checkArgument(ofcWarehouseInformations.get(0).getProvideTransport() != WEARHOUSE_WITH_TRANS, ResultCodeEnum.ISNOTSUPPORT);
+            }
         }
         OfcTraceOrderDTO ofcTraceOrderDTO = new OfcTraceOrderDTO();
         List<OfcOrderStatusDTO> orderStatusDTOs = new ArrayList<>();
