@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_GoodsAmountSync;
 import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_OrderToOfc;
@@ -50,6 +51,8 @@ public class CreateOrderApiConsumer implements MessageListener {
     private MqConfig mqConfig;
     @Resource
     private OfcInterfaceReceiveLogService receiveLogService;
+
+    private  static ConcurrentHashMap MAP = new ConcurrentHashMap();
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
@@ -137,7 +140,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
             try {
                 FeedBackOrderDto feedBackOrderDto = JacksonUtil.parseJson(messageBody, FeedBackOrderDto.class);
-                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
+                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto, MAP);
             } catch (Exception e) {
                 logger.error("仓储单出入库单反馈出现异常{}", e.getMessage(), e);
             }

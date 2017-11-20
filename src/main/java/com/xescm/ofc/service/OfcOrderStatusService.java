@@ -6,6 +6,7 @@ import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by lyh on 2016/10/10.
@@ -35,7 +36,7 @@ public interface OfcOrderStatusService extends IService<OfcOrderStatus> {
     int save(OfcOrderStatus record);
 
     void feedBackStatusFromWhc(FeedBackOrderStatusDto feedBackOrderStatusDto);
-    void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto);
+    void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto, ConcurrentHashMap cmap);
 
     OfcTraceOrderDTO queryOrderByCode(String code) throws Exception;
 }

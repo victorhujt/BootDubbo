@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by victor on 2017/11/3.
@@ -18,6 +19,8 @@ import java.util.List;
 public class FeedBackTest {
     @Resource
     private OfcOrderStatusService ofcOrderStatusService;
+
+    private ConcurrentHashMap MAP = new ConcurrentHashMap();
     @Test
     public void testrFeedBack() {
         FeedBackOrderDto feedBackOrderDto = new FeedBackOrderDto();
@@ -30,7 +33,7 @@ public class FeedBackTest {
         feedBackOrderDetail.add(feedBackOrderDetailDto);
         feedBackOrderDto.setOrderCode("SO171103000012");
         feedBackOrderDto.setFeedBackOrderDetail(feedBackOrderDetail);
-        ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
+        ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto, MAP);
 
     }
 }
