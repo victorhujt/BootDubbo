@@ -42,7 +42,7 @@ public class ExceSubmittedCommServiceImpl extends BaseService<ExceSubmitted> imp
                 if(StringUtils.hasText(fileName)){
                     ofcAttachment = uploadFile(ImageCompressUtil.compress(imgFile.getInputStream(), 480, 320, false), fileName, OssFileUrlEnum.EXCE_SUBMITTED_IMG.getUrl());
                     if(ofcAttachment != null){
-                        ofcAttachment.setFormat("合同附件");
+                        ofcAttachment.setFormat("异常报送附件");
                         // 添加创建人id,姓名，创建时间
                         ofcAttachment.setCreator(authResDto.getUserName());
                         ofcAttachment.setCreatorId(authResDto.getUserId());
