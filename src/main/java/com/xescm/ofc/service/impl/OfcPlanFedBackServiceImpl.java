@@ -18,7 +18,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,9 +56,6 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
-
-    @Resource
-    private StringRedisTemplate rt;
 
     /**
      * 运输单状态反馈
@@ -104,54 +100,56 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             List<OfcOrderStatus> statusList = ofcOrderStatusService.orderStatusScreen(orderCode, "orderCode");
             String statusNotes = orderStatus.getNotes();
             String traceTimeStr = DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1);
-            /*已调度*/
-            if (PaasStateEnum.TFC_STATE_3.getCenterState().equals(status)) {
+            if (PaasStateEnum.TFC_STATE_3.getCenterState().equals(status)) {        /** 已调度 */
+
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "10-[已调度]");
                 // 更新调度车辆、司机信息
                 updateOrderScheduleInfo(orderCode, transportStateDTO);
                 String notes = traceTimeStr + " 订单调度完成，安排车辆车牌号：【" + transportStateDTO.getCarNumber() + "】" + "，司机姓名：【" + transportStateDTO.getDriver() + "】" +
                     "，联系电话：【" + transportStateDTO.getDriverPhone() +"】";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes, "full");
-                /*已发运*/
-            } else if (PaasStateEnum.TFC_STATE_4.getCenterState().equals(status)) {
+            } else if (PaasStateEnum.TFC_STATE_4.getCenterState().equals(status)) { /** 已发运 */
 
-                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "34-[已发运]");
+                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "20-[已发运]");
                 String notes = traceTimeStr + " " + " 车辆已发运，发往目的地：" + destination;
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, "30", "发车", notes, "start");
-//                orderStatus.setOrderStatus(OrderStatusEnum.ALREADY_SHIPPED.getCode());
-//                orderStatus.setStatusDesc(OrderStatusEnum.ALREADY_SHIPPED.getDesc());
-                /*已到达*/
-            } else if (PaasStateEnum.TFC_STATE_5.getCenterState().equals(status)) {
+            } else if (PaasStateEnum.TFC_STATE_5.getCenterState().equals(status)) { /** 已到达 */
+
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "30-[已到达]");
                 String notes = traceTimeStr + " " + "车辆已到达目的地：" + destination;
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes, "start");
-                /*已签收*/
-            } else if (PaasStateEnum.TFC_STATE_6.getCenterState().equals(status)) {
-                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "36-[已签收]");
-                orderStatus = setOrderStatusSign(orderStatus, statusList, ofcFundamentalInformation, traceTime,cmap);
-                /*已回单*/
-            } else if (PaasStateEnum.TFC_STATE_7.getCenterState().equals(status)) {
+            } else if (PaasStateEnum.TFC_STATE_6.getCenterState().equals(status)) { /** 已签收 */
+
+                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "40-[已签收]");
+                orderStatus = setOrderStatusSign(orderStatus, statusList, ofcFundamentalInformation, traceTime, cmap);
+            } else if (PaasStateEnum.TFC_STATE_7.getCenterState().equals(status)) { /** 已回单 */
+
                 logger.info("=====> 订单号{}=> 跟踪状态{}订单号{}=> 跟踪状态{}", orderCode, "50-[已回单]");
                 String notes = traceTimeStr + " " + "客户已回单";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, "60", "回单", notes,"start");
-                /*中转入*/
-            } else if (PaasStateEnum.TFC_STATE_8.getCenterState().equals(status)) {
+            } else if (PaasStateEnum.TFC_STATE_8.getCenterState().equals(status)) { /** 中转入 */
+
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "32-[中转入]");
                 String notes = traceTimeStr + "【"+transportStateDTO.getBaseName()+"】收货入库";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes,"full");
-            }
-            /*上报异常*/
-            else if (PaasStateEnum.TFC_STATE_10.getCenterState().equals(status)) {
+            } /*else if (PaasStateEnum.TFC_STATE_9.getCenterState().equals(status)) { *** 再调度 **
+
+                logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "34-[再调度]");
+                String notes = traceTimeStr + " 【"+transportStateDTO.getBaseName()+"】发货出库, 安排车辆车牌号：【"+transportStateDTO.getCarNumber()+"】，司机姓名：【"
+                    + transportStateDTO.getDriver()+"】，联系电话：【"+transportStateDTO.getDriverPhone()+"】";
+                orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes,"full");
+            }*/ else if (PaasStateEnum.TFC_STATE_10.getCenterState().equals(status)) {/** 上报异常 */
+
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "36-[异常]");
                 String notes =  traceTimeStr + " 【"+transportStateDTO.getBaseName()+"】上报异常 【"+transportStateDTO.getRemarks()+"】";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes, "full");
-                /*取消签收*/
-            } else if (PaasStateEnum.TFC_STATE_11.getCenterState().equals(status)) {
+            } else if (PaasStateEnum.TFC_STATE_11.getCenterState().equals(status)) {/** 取消签收 */
+
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "41-[取消签收]");
                 String notes =  traceTimeStr + " 【"+transportStateDTO.getOperatorName()+"】取消签收";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes, "start");
-                /*中转出*/
-            } else if (PaasStateEnum.TFC_STATE_12.getCenterState().equals(status)) {
+            } else if (PaasStateEnum.TFC_STATE_12.getCenterState().equals(status)) { /** 中转出 */
+
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "38-[中转出]");
                 String notes = traceTimeStr + " 【"+transportStateDTO.getBaseName()+"】发货出库, 安排车辆车牌号：【"+transportStateDTO.getCarNumber()+"】，司机姓名：【"
                     + transportStateDTO.getDriver()+"】，联系电话：【"+transportStateDTO.getDriverPhone()+"】";
