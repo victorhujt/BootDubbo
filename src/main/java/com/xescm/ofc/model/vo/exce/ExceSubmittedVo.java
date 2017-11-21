@@ -148,6 +148,16 @@ public class ExceSubmittedVo {
     private String lastOperator;
 
     /**
+     * 上报人，在异常上报中展示
+     */
+    private String creator;
+
+    /**
+     * 处理人名称，在异常处理中展示
+     */
+    private String dealingPersonName;
+
+    /**
      * 更新时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

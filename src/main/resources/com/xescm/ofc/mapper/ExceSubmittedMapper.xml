@@ -57,6 +57,8 @@
       e.order_code,
       ofi.base_name,
       ofi.area_name,
+      e.creator,
+      e.dealing_person_name,
       e.last_operator,
       e.update_time
     FROM
