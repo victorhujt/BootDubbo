@@ -116,7 +116,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.equals(tag)) {
                     logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, messageBody);
                     try {
-                        mqConsumerService.transportStateConsumer(messageBody);
+                        mqConsumerService.transportStateConsumer(messageBody,MAP);
                     } catch (Exception e) {
                         logger.error("订单运输状态更新异常: 异常详情 => {}", e);
                     }
