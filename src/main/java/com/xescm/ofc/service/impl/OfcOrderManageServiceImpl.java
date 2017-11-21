@@ -82,6 +82,7 @@ import static com.xescm.ofc.constant.GenCodePreffixConstant.*;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
+import static com.xescm.ofc.enums.OrderStatusEnum.PEND_AUDIT;
 
 /**
  * <p>Title:    .订单编辑 </p>
@@ -1800,6 +1801,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             notes.append(" 操作人: ").append(authResDtoByToken.getUserName());
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             s.setNotes(notes.toString());
+            s.setTrace(PEND_AUDIT.getDesc());
             s.setOrderCode(newofcFundamentalInformation.getOrderCode());
             s.setOrderStatus(PENDING_AUDIT);
             s.setStatusDesc("待审核");
