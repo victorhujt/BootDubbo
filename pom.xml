@@ -34,12 +34,12 @@
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-ofc-api</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-epc-api</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
@@ -64,7 +64,7 @@
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-whc-api</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
@@ -74,7 +74,7 @@
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-dingtalk-api</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.common</groupId>
