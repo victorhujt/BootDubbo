@@ -1,6 +1,7 @@
 package com.xescm.ofc.web.restcontroller.operationWorkbench.exceSubmitted;
 
 import com.aliyun.oss.OSSClient;
+import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.exception.BusinessException;
@@ -14,6 +15,8 @@ import com.xescm.ofc.service.ExceSubmittedCommService;
 import com.xescm.ofc.service.OfcAttachmentService;
 import com.xescm.ofc.utils.CheckArgumentUtil;
 import com.xescm.ofc.web.controller.BaseController;
+import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.uam.provider.UamGroupEdasService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -49,6 +52,8 @@ public class ExceSubmittedCommController extends BaseController {
     private ExceSubmittedCommService exceSubmittedCommService;
     @Autowired
     private OfcAttachmentService ofcAttachmentService;
+    @Resource
+    private UamGroupEdasService uamGroupEdasService;
     @Resource
     private OSSConfigureConfig ossConfigure;
 
@@ -139,6 +144,33 @@ public class ExceSubmittedCommController extends BaseController {
         } catch (Exception e) {
             logger.error("==>查询异常报送图片附件路径, 出现异常={}", e.getMessage(), e);
             return  WrapMapper.wrap(Wrapper.ERROR_CODE,"查询异常报送图片附件路径失败");
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/checkUserGroup")
+    @ApiOperation(notes = "检查异常录入用户权限", httpMethod = "POST", value = "检查异常录入用户权限")
+    public Wrapper<?> checkUserGroup() {
+        logger.info("检查异常录入用户权限");
+        try {
+            String msg = "只有基地人员才能录入异常";
+            AuthResDto authResDto = getAuthResDtoByToken();
+            String groupRefCode = authResDto.getGroupRefCode();
+            // GD1625000003为管理员
+            if ("GD1625000003".equals(groupRefCode)) {
+                return  WrapMapper.wrap(Wrapper.ERROR_CODE,msg);
+            }
+            // userType为1 表示此用户为大区用户
+            Wrapper<UamGroupDto> uamBaseGroupDtoWrapper = uamGroupEdasService.queryByGroupSerialNo(groupRefCode);
+            UamGroupDto uamBaseGroupDto = uamBaseGroupDtoWrapper.getResult();
+            String userType = uamBaseGroupDto.getType();
+            if ("1".equals(userType)) {
+                return  WrapMapper.wrap(Wrapper.ERROR_CODE,msg);
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+        } catch (Exception e) {
+            logger.error("==>检查异常录入用户权限, 出现异常={}", e.getMessage(), e);
+            return  WrapMapper.wrap(Wrapper.ERROR_CODE,"检查异常录入用户权限失败");
         }
     }
 }
