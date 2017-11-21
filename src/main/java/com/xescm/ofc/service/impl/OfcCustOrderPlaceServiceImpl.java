@@ -107,16 +107,11 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
             OfcCustOrderNewstatus newstatus = ofcCustOrderNewstatusService.queryByOrderCode(ofcFundamentalInformation.getOrderCode());
             String orderLatestStatus = newstatus.getOrderLatestStatus();
             // 未确认
-            if (StringUtils.equals(orderLatestStatus, UNCONFIRMED.getCode())) {
-                result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
-                        , ofcGoodsDetailsInfos, tag, consignor, consignee, supplier,authResDtoByToken);
-                // 待审核
-            } else if (StringUtils.equals(orderLatestStatus, PEND_AUDIT.getCode())) {
-                result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
-                        , ofcGoodsDetailsInfos, ORDER_TAG_STOCK_EDIT, consignor, consignee, supplier,authResDtoByToken);
-            } else {
+            if (!StringUtils.equals(orderLatestStatus, UNCONFIRMED.getCode())) {
                 throw new BusinessException("订单状态有误");
             }
+            result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
+                    , ofcGoodsDetailsInfos, tag, consignor, consignee, supplier,authResDtoByToken);
         } else if (StringUtils.equals(tag, ORDER_TAG_STOCK_CUST_SAVE)) {
             result = ofcOrderManageService.saveStorageOrder(ofcSaveStorageDTO
                     , ofcGoodsDetailsInfos, tag, consignor, consignee, supplier,authResDtoByToken);
@@ -173,16 +168,11 @@ public class OfcCustOrderPlaceServiceImpl implements OfcCustOrderPlaceService{
             OfcCustOrderNewstatus newstatus = ofcCustOrderNewstatusService.queryByOrderCode(ofcOrderDTOStr.getOrderCode());
             String orderLatestStatus = newstatus.getOrderLatestStatus();
             // 未确认
-            if (StringUtils.equals(orderLatestStatus, UNCONFIRMED.getCode())) {
-                return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), tag, authResDtoByToken, ofcOrderDTOStr.getCustCode()
-                        ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
-                // 待审核
-            } else if (StringUtils.equals(orderLatestStatus, PEND_AUDIT.getCode())) {
-                return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), ORDER_TAG_OPER_TRANEDIT, authResDtoByToken, ofcOrderDTOStr.getCustCode()
-                        ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
-            } else {
+            if (!StringUtils.equals(orderLatestStatus, UNCONFIRMED.getCode())) {
                 throw new BusinessException("订单状态有误");
             }
+            return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), tag, authResDtoByToken, ofcOrderDTOStr.getCustCode()
+                    ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
             //客户工作台运输订单下单
         } else if (StringUtils.equals(ORDER_TAG_NORMAL_PLACE, tag)) {
             return ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(), tag, authResDtoByToken, ofcOrderDTOStr.getCustCode()

@@ -197,14 +197,11 @@ public class OfcCustOrderManageServiceImpl implements OfcCustOrderManageService 
                 throw new BusinessException("该订单无仓储信息");
             }
             ofcCustOrderInfoDTO.setOfcWarehouseInformation(custWarehouseInformation);
-            if (custWarehouseInformation.getProvideTransport().compareTo(1) == 0) {
-                OfcCustDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
-                if (null == custDistributionBasicInfo) {
-                    logger.error("该订单无运输信息");
-                    throw new BusinessException("该订单无运输信息");
-                }
-                ofcCustOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
+            OfcCustDistributionBasicInfo custDistributionBasicInfo = ofcCustDistributionBasicInfoService.queryByOrderCode(orderCode);
+            if (null == custDistributionBasicInfo) {
+                logger.error("该订单无运输信息");
             }
+            ofcCustOrderInfoDTO.setOfcDistributionBasicInfo(custDistributionBasicInfo);
         }
         OfcCustFinanceInformation ofcCustFinanceInformation = ofcCustFinanceInformationService.queryByOrderCode(orderCode);
         ofcCustOrderInfoDTO.setOfcFinanceInformation(ofcCustFinanceInformation);
