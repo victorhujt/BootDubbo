@@ -274,10 +274,8 @@ public class ExceSubmittedServiceImpl extends BaseService<ExceSubmitted> impleme
             } else if ("1".equals(exceSubmittedVo.getExceState())){
                 // 在异常状态为已上报的状态，可以进行取消操作，并加上标识符qx
                 // 如果不是管理员
-                // 上报基地或上报大区
+                // 仅上报基地
                 if (!PubUtils.isSEmptyOrNull(reportBaseCode) && userGroupCode.equals(reportBaseCode)) {
-                    exceSubmittedVo.setOperateTag("qx");
-                } else if (!PubUtils.isSEmptyOrNull(reportRegionCode) && userGroupCode.equals(reportRegionCode)) {
                     exceSubmittedVo.setOperateTag("qx");
                 }
             }
