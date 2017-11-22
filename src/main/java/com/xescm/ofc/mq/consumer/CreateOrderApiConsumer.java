@@ -105,12 +105,9 @@ public class CreateOrderApiConsumer implements MessageListener {
             }
         } else if (StringUtils.equals(topicName,mqConfig.getTfc2OfcOrderPoTopic())) {
             try {
-                // 未调度
-                if (!Tfc2OfcStateTopicTag.PUSH_NOT_SCHEDULE_TAG.equals(tag) &&
-                        // 取消
-                    !Tfc2OfcStateTopicTag.PUSH_CANCEL_TAG.equals(tag) &&
-                        // 签收单
-                    !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.equals(tag)) {
+                if (!Tfc2OfcStateTopicTag.PUSH_NOT_SCHEDULE_TAG.getTag().equals(tag) && // 未调度
+                    !Tfc2OfcStateTopicTag.PUSH_CANCEL_TAG.getTag().equals(tag) &&       // 取消
+                    !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.getTag().equals(tag)) {     // 签收单
                     logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, messageBody);
                     try {
                         mqConsumerService.transportStateConsumer(messageBody);
