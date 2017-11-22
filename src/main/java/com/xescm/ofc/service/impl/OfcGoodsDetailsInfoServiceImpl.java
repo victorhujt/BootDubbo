@@ -79,4 +79,21 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     public void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo) {
         ofcGoodsDetailsInfoMapper.flushPassLineNoById(ofcGoodsDetailsInfo);
     }
+
+    @Override
+    public void fillGoodType(OfcGoodsDetailsInfo ofcGoodsDetailsInfo) {
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsType())) {
+            ofcGoodsDetailsInfo.setGoodsType("其他");
+        }
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsTypeCode())) {
+            ofcGoodsDetailsInfo.setGoodsTypeCode("GT006");
+        }
+
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCategory())) {
+            ofcGoodsDetailsInfo.setGoodsCategory("其他");
+        }
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCategoryCode())) {
+            ofcGoodsDetailsInfo.setGoodsCategoryCode("GT098");
+        }
+    }
 }
