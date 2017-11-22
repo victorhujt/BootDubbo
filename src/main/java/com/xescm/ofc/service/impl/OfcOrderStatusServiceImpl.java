@@ -329,7 +329,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
 
             //转换为原包装的数量
-            conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
+         //   conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
             //更新实际的数量
             for (FeedBackOrderDetailDto detail :detailDtos) {
                 OfcGoodsDetailsInfo good = new OfcGoodsDetailsInfo();
