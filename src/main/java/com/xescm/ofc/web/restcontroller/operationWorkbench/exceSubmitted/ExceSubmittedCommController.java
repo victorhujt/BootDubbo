@@ -173,4 +173,31 @@ public class ExceSubmittedCommController extends BaseController {
             return  WrapMapper.wrap(Wrapper.ERROR_CODE,"检查异常录入用户权限失败");
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/getUserPower")
+    @ApiOperation(notes = "获取用户权限", httpMethod = "POST", value = "获取用户权限")
+    public Wrapper<?> getUserPower() {
+        logger.info("获取用户权限");
+        try {
+            String userPower = "";
+            AuthResDto authResDto = getAuthResDtoByToken();
+            String groupRefCode = authResDto.getGroupRefCode();
+            if ("GD1625000003".equals(groupRefCode)) {
+                userPower = "2";
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, userPower);
+            }
+            Wrapper<UamGroupDto> uamBaseGroupDtoWrapper = uamGroupEdasService.queryByGroupSerialNo(groupRefCode);
+            UamGroupDto uamBaseGroupDto = uamBaseGroupDtoWrapper.getResult();
+            String userType = uamBaseGroupDto.getType();
+            if ("1".equals(userType) || "3".equals(userType)) {
+                userPower = "1";
+                return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, userPower);
+            }
+            return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, userPower);
+        } catch (Exception e) {
+            logger.error("==>获取用户权限, 出现异常={}", e.getMessage(), e);
+            return  WrapMapper.wrap(Wrapper.ERROR_CODE,"获取用户权限失败");
+        }
+    }
 }
