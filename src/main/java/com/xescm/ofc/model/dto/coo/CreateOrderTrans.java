@@ -223,20 +223,20 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setDestinationDistrict(createOrderEntity.getConsigneeCounty());
             ofcDistributionBasicInfo.setDestinationTowns(createOrderEntity.getConsigneeTown());
             ofcDistributionBasicInfo.setDestination(createOrderEntity.getConsigneeAddress());
-//            if(PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeProvinceCode())){
-//                throw new BusinessException("收货地省编码为空!");
-//            }
-//            StringBuilder destinationCode = new StringBuilder(createOrderEntity.getConsigneeProvinceCode());
-//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCityCode())){
-//                destinationCode.append(",").append(createOrderEntity.getConsigneeCityCode());
-//            }
-//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCountyCode())){
-//                destinationCode.append(",").append(createOrderEntity.getConsigneeCountyCode());
-//            }
-//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeTownCode())){
-//                destinationCode.append(",").append(createOrderEntity.getConsigneeTownCode());
-//            }
-//            ofcDistributionBasicInfo.setDestinationCode(destinationCode.toString());
+            StringBuilder destinationCode = new StringBuilder(createOrderEntity.getConsigneeProvinceCode());
+            if (!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeProvinceCode())) {
+                destinationCode.append(createOrderEntity.getConsigneeProvinceCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCityCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeCityCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCountyCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeCountyCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeTownCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeTownCode());
+            }
+            ofcDistributionBasicInfo.setDestinationCode(destinationCode.toString());
             //承运商
             ofcDistributionBasicInfo.setCarrierName(createOrderEntity.getSupportName());
 
