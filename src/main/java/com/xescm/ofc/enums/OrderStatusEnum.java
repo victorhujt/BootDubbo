@@ -47,4 +47,5 @@ public enum OrderStatusEnum {
     public static List<OrderStatusEnum> queryList() {
         return Arrays.asList(OrderStatusEnum.values());
     }
+
 }

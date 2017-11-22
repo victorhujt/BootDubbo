@@ -284,6 +284,8 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             }else if(cellNum == 4){
                                 cscGoodsImportDto.setUnitPrice(cellValue);
                             }
+
+
                             //收货人的货品需求数量
                         }else if(cellNum > (staticCell -1)){
                             if(Wrapper.ERROR_CODE == queryCscGoodsList.getCode()){

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcCustFundamentalInformationMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcCustFundamentalInformation" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="order_batch_number" property="orderBatchNumber" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="sec_cust_code" property="secCustCode" jdbcType="VARCHAR" />
+    <result column="sec_cust_name" property="secCustName" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="cust_order_code" property="custOrderCode" jdbcType="VARCHAR" />
+    <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="store_code" property="storeCode" jdbcType="VARCHAR" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="platform_type" property="platformType" jdbcType="VARCHAR" />
+    <result column="order_source" property="orderSource" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="finished_time" property="finishedTime" jdbcType="TIMESTAMP" />
+    <result column="abolish_mark" property="abolishMark" jdbcType="INTEGER" />
+    <result column="abolish_time" property="abolishTime" jdbcType="TIMESTAMP" />
+    <result column="abolisher" property="abolisher" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="sale_organization" property="saleOrganization" jdbcType="VARCHAR" />
+    <result column="product_group" property="productGroup" jdbcType="VARCHAR" />
+    <result column="sale_department" property="saleDepartment" jdbcType="VARCHAR" />
+    <result column="sale_group" property="saleGroup" jdbcType="VARCHAR" />
+    <result column="sale_department_desc" property="saleDepartmentDesc" jdbcType="VARCHAR" />
+    <result column="sale_group_desc" property="saleGroupDesc" jdbcType="VARCHAR" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="abolisher_name" property="abolisherName" jdbcType="VARCHAR" />
+    <result column="merchandiser" property="merchandiser" jdbcType="VARCHAR" />
+    <result column="transport_type" property="transportType" jdbcType="VARCHAR" />
+    <result column="base_code" property="baseCode" jdbcType="VARCHAR" />
+    <result column="base_name" property="baseName" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="is_exception" property="isException" jdbcType="VARCHAR" />
+    <result column="exception_reason" property="exceptionReason" jdbcType="VARCHAR" />
+    <result column="consignment_batch_number" property="consignmentBatchNumber" jdbcType="VARCHAR" />
+    <result column="signed_sms" property="signedSms" jdbcType="VARCHAR" />
+    <result column="ground_distribution" property="groundDistribution" jdbcType="CHAR" />
+  </resultMap>
+    <sql id="resultField">
+      ofi.order_code orderCode,
+      ofi.order_batch_number orderBatchNumber,
+      ofi.order_time orderTime,
+      ofi.cust_code custCode,
+      ofi.cust_name custName,
+      ofi.sec_cust_code secCustCode,
+      ofi.sec_cust_name secCustName,
+      ofi.order_type orderType,
+      ofi.business_type businessType,
+      ofi.cust_order_code custOrderCode,
+      ofi.notes notes,
+      ofi.store_code storeCode,
+      ofi.store_name storeName,
+      ofi.platform_type platformType,
+      ofi.order_source orderSource,
+      ofi.product_type productType,
+      ofi.product_name productName,
+      ofi.finished_time finishedTime,
+      ofi.abolish_mark abolishMark,
+      ofi.abolish_time abolishTime,
+      ofi.abolisher abolisher,
+      ofi.creation_time creationTime,
+      ofi.creator creator,
+      ofi.operator operator,
+      ofi.oper_time operTime,
+      ofi.sale_organization saleOrganization,
+      ofi.product_group productGroup,
+      ofi.sale_department saleDepartment,
+      ofi.sale_group saleGroup,
+      ofi.sale_department_desc saleDepartmentDesc,
+      ofi.sale_group_desc saleGroupDesc,
+      ofi.creator_name creatorName,
+      ofi.operator_name operatorName,
+      ofi.abolisher_name abolisherName,
+      ofi.merchandiser merchandiser,
+      ofi.transport_type transportType,
+      ofi.base_code baseCode,
+      ofi.base_name baseName,
+      ofi.area_code areaCode,
+      ofi.area_name areaName,
+      ofi.is_exception isException,
+      ofi.exception_reason exceptionReason,
+      ofi.consignment_batch_number consignmentBatchNumber,
+      ofi.signed_sms signedSms,
+      ofi.ground_distribution groundDistribution
+    </sql>
+    <select id="queryOrderByInfo" resultType="com.xescm.ofc.domain.OfcCustFundamentalInformation">
+      SELECT
+      <include refid="resultField"/>
+      FROM
+      ofc_fundamental_information ofi
+      <where>
+        <if test="orderCode!=null and orderCode!=''">
+          AND ofi.order_code = #{orderCode}
+        </if>
+        <if test="orderType != null and orderType != ''">
+          AND ofi.order_type = #{orderType}
+        </if>
+      </where>
+      UNION
+      SELECT
+      <include refid="resultField"/>
+      FROM
+      ofc_cust_fundamental_information ofi
+      <where>
+        <if test="orderCode!=null and orderCode!=''">
+          AND ofi.order_code = #{orderCode}
+        </if>
+        <if test="orderType != null and orderType != ''">
+          AND ofi.order_type = #{orderType}
+        </if>
+      </where>
+
+    </select>
+</mapper>

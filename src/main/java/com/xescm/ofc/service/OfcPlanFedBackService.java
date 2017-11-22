@@ -19,6 +19,6 @@ public interface OfcPlanFedBackService {
      * @param userName
      * @return
      */
-    Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO tfcTransportStateDTO, String userName);
+    Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO tfcTransportStateDTO, String userName,ConcurrentHashMap cmap);
     Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedbackNew(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName);
 }

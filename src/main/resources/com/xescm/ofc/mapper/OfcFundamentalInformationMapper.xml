@@ -93,6 +93,22 @@
       cust_order_code = #{custOrderCode}
       AND (abolish_mark is null OR abolish_mark  = 0)
     </where>
+    UNION
+    SELECT
+    count(order_code) AS countOrderCode
+    FROM
+    ofc_cust_fundamental_information ofi
+    <where>
+      <if test="selfCustOrderCode != null and selfCustOrderCode != ''" >
+        cust_order_code != #{selfCustOrderCode}
+      </if>
+      <if test="custCode != null and custCode != ''">
+        and cust_code = #{custCode}
+      </if>
+      AND
+      cust_order_code = #{custOrderCode}
+      AND (abolish_mark is null OR abolish_mark  = 0)
+    </where>
   </select>
 
   <select id="getOrderCodeByCustOrderCodeAndCustCode" resultMap="convCustOrderCode">

@@ -6,7 +6,7 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
-import com.xescm.ofc.service.OfcOrderReviseService;
+import com.xescm.ofc.service.GoodsAmountSyncService;
 import com.xescm.ofc.web.controller.BaseController;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;

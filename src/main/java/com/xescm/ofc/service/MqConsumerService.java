@@ -14,5 +14,5 @@ public interface MqConsumerService {
      * @param messageBody
      * @param cmap
      */
-    void transportStateConsumer(String messageBody) throws Exception;
+    void transportStateConsumer(String messageBody,ConcurrentHashMap cmap) throws Exception;
 }
