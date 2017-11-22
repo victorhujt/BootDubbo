@@ -73,7 +73,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             cscContantAndCompanyDto.getCscContactDto().setPurpose(purpose);
             cscContantAndCompanyDto.getCscContactDto().setContactName(ofcOrderDTO.getConsignorContactName());
             cscContantAndCompanyDto.getCscContactDto().setPhone(ofcOrderDTO.getConsignorContactPhone());
-//            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsignorCode());
             cscContantAndCompanyDto.getCscContactDto().setSerialNo(ofcOrderDTO.getConsignorContactCode());
             cscContantAndCompanyDto.getCscContactDto().setProvinceName(ofcOrderDTO.getDepartureProvince());
             cscContantAndCompanyDto.getCscContactDto().setCityName(ofcOrderDTO.getDepartureCity());
@@ -103,7 +102,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             cscContantAndCompanyDto.getCscContactDto().setPurpose(purpose);
             cscContantAndCompanyDto.getCscContactDto().setContactName(ofcOrderDTO.getConsigneeContactName());
             cscContantAndCompanyDto.getCscContactDto().setPhone(ofcOrderDTO.getConsigneeContactPhone());
-//            cscContantAndCompanyDto.getCscContact().setContactCompanyId(ofcOrderDTO.getConsigneeCode());
             cscContantAndCompanyDto.getCscContactDto().setSerialNo(ofcOrderDTO.getConsigneeContactCode());
             cscContantAndCompanyDto.getCscContactDto().setProvinceName(ofcOrderDTO.getDestinationProvince());
             cscContantAndCompanyDto.getCscContactDto().setCityName(ofcOrderDTO.getDestinationCity());
@@ -260,7 +258,10 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 logger.error("城配开单批量下单循环入口, JSON转换异常, {}", e);
             }
             //2017年4月7日 追加逻辑: 开单员即登录人
-            ofcOrderDTO.setMerchandiser(authResDtoByToken.getUserName());
+            if (ofcOrderDTO != null) {
+                ofcOrderDTO.setMerchandiser(authResDtoByToken.getUserName());
+                ofcOrderDTO.setOrderBatchNumber(batchNumber);
+            }
             this.validateOperationDistributingMsg(ofcOrderDTO);
             String orderGoodsListStr = null;
             try {
@@ -274,9 +275,6 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
             }
             CscContantAndCompanyDto consignor = switchOrderDtoToCscCAndCDto(ofcOrderDTO, "2");//2为发货方
             CscContantAndCompanyDto consignee = switchOrderDtoToCscCAndCDto(ofcOrderDTO, "1");//1为收货方
-            if (ofcOrderDTO != null) {
-                ofcOrderDTO.setOrderBatchNumber(batchNumber);
-            }
             try {
                 ofcOrderInfoDTO = ofcOrderPlaceService.distributionPlaceOrder(ofcOrderDTO, ofcGoodsDetailsInfos, ORDER_TAG_OPER_DISTRI, authResDtoByToken, ofcOrderDTO != null ? ofcOrderDTO.getCustCode() : new OfcOrderDTO().toString()
                     , consignor, consignee);
@@ -309,8 +307,8 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
 
     /**
      * 城配导单发送到下方系统
-     * @param ofcOrderInfoDTO
-     * @param authResDtoByToken
+     * @param ofcOrderInfoDTO 城配订单信息
+     * @param authResDtoByToken 用户信息
      */
     private void distributionSendMQ(OfcOrderInfoDTO ofcOrderInfoDTO, AuthResDto authResDtoByToken) {
         try {
@@ -346,7 +344,9 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
         }
     }
 
-    // 检查客户订单号重复
+    /**
+     * 检查客户订单号重复
+     * **/
     private void checkCustOrderCode(JSONArray jsonArray) {
         for (Object aJsonArray : jsonArray) {
             String json = aJsonArray.toString();
@@ -357,8 +357,12 @@ public class OfcOperationDistributingServiceImpl implements OfcOperationDistribu
                 logger.error("城配开单批量下单循环入口, JSON转换异常, {}", e);
             }
             // 检查客户订单号是否重复
-            String custCode = ofcOrderDTO.getCustCode();
-            String custOrderCode = ofcOrderDTO.getCustOrderCode();
+            String custCode = "";
+            String custOrderCode = "";
+            if (ofcOrderDTO != null) {
+                custCode = ofcOrderDTO.getCustCode();
+                custOrderCode = ofcOrderDTO.getCustOrderCode();
+            }
             if (!PubUtils.isNull(custCode) && !PubUtils.isNull(custOrderCode)) {
                 OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
                 ofcFundamentalInformation.setCustCode(custCode);

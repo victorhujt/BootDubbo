@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcWarehouseInformationMapper">
+    <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.CwbWarehouseInformation">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="support_name" property="supportName" jdbcType="VARCHAR"/>
+        <result column="support_code" property="supportCode" jdbcType="VARCHAR"/>
+        <result column="provide_transport" property="provideTransport" jdbcType="INTEGER"/>
+        <result column="shipment_time" property="shipmentTime" jdbcType="TIMESTAMP"/>
+        <result column="arrive_time" property="arriveTime" jdbcType="TIMESTAMP"/>
+        <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
+        <result column="plate_number" property="plateNumber" jdbcType="VARCHAR"/>
+        <result column="driver_name" property="driverName" jdbcType="VARCHAR"/>
+        <result column="contact_number" property="contactNumber" jdbcType="VARCHAR"/>
+        <result column="order_code" property="orderCode" jdbcType="VARCHAR"/>
+        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="creator" property="creator" jdbcType="VARCHAR"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+        <result column="oper_time" property="operTime" jdbcType="TIMESTAMP"/>
+        <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <delete id="deleteByOrderCode" parameterType="java.lang.String">
+        <!--
+          根据订单编号进行删除
+        -->
+        delete from cwb_warehouse_information
+        where order_code = #{orderCode,jdbcType=VARCHAR}
+    </delete>
+    <update id="updateByOrderCode" parameterType="com.xescm.ofc.domain.CwbWarehouseInformation">
+        <!--
+          根据订单号进行修改
+        -->
+        update cwb_warehouse_information
+        <set>
+            <if test="supportName != null">
+                support_name = #{supportName,jdbcType=VARCHAR},
+            </if>
+            <if test="supportCode != null">
+                support_code = #{supportCode,jdbcType=INTEGER},
+            </if>
+            <if test="provideTransport != null">
+                provide_transport = #{provideTransport,jdbcType=INTEGER},
+            </if>
+            <if test="shipmentTime != null">
+                shipment_time = #{shipmentTime,jdbcType=INTEGER},
+            </if>
+            <if test="arriveTime != null">
+                arrive_time = #{arriveTime,jdbcType=INTEGER},
+            </if>
+            <if test="warehouseName != null">
+                warehouse_name = #{warehouseName,jdbcType=INTEGER},
+            </if>
+            <if test="plateNumber != null">
+                plate_number = #{plateNumber,jdbcType=INTEGER},
+            </if>
+            <if test="driverName != null">
+                driver_name = #{driverName,jdbcType=INTEGER},
+            </if>
+            <if test="contactNumber != null">
+                contact_number = #{contactNumber,jdbcType=INTEGER},
+            </if>
+            <if test="orderCode != null">
+                order_code = #{orderCode,jdbcType=INTEGER},
+            </if>
+            <if test="creationTime != null">
+                creation_time = #{creationTime,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=INTEGER},
+            </if>
+            <if test="operator != null">
+                operator = #{operator,jdbcType=INTEGER},
+            </if>
+            <if test="operTime != null">
+                oper_time = #{operTime,jdbcType=INTEGER}
+            </if>
+        </set>
+        where order_code = #{orderCode,jdbcType=VARCHAR}
+    </update>
+
+    <!--
+        根据订单号进行查询对应数据
+      -->
+    <select id="ofcWarehouseInformationSelect" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM cwb_warehouse_information ofw
+      WHERE ofw.order_code =#{orderCode}
+    ORDER BY ofw.oper_time DESC limit 1
+  </select>
+</mapper>

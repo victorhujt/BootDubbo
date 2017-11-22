@@ -57,8 +57,6 @@ public interface OfcStorageTemplateService {
 
     void checkTemplateListRequired(List<OfcStorageTemplate> ofcStorageTemplates);
 
-    Wrapper checkStock(String orderList) throws Exception;
-
     Date convertStringToDate(String orderTime);
 
     OfcGoodsDetailsInfoDTO convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto);

@@ -31,9 +31,9 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     private CscGoodsEdasService cscGoodsEdasService;
     @Override
     public List<OfcGoodsDetailsInfo> goodsDetailsScreenList(String code, String followTag) {
-        if(!PubUtils.trimAndNullAsEmpty(code).equals("")){
+        if(!"".equals(PubUtils.trimAndNullAsEmpty(code))){
             String orderCode = null;
-            if(followTag.equals("orderCode")){
+            if("orderCode".equals(followTag)){
                 orderCode = code;
             }
             Map<String,String> mapperMap = new HashMap<>();

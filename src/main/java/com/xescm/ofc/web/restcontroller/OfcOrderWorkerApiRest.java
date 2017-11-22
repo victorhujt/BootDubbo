@@ -298,7 +298,9 @@ public class OfcOrderWorkerApiRest {
         logger.info("开始处理异常订单 == > {}", ofcExceptOrderDTO);
         try {
             if (null == ofcExceptOrderDTO || StringUtils.isEmpty(ofcExceptOrderDTO.getExceptPot())
-                    || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) throw new BusinessException("处理异常订单失败");
+                    || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) {
+                throw new BusinessException("处理异常订单失败");
+            }
             OfcEnumeration ofcEnumeration = new OfcEnumeration();
             ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
             List<OfcEnumeration> enumsOfZp = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);

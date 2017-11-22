@@ -118,7 +118,7 @@ public class OfcGoodsDetailsInfoDTO {
     private Integer totalBox;
 
     /**
-     * 货品种类
+     * 货品种类(大类名称)
      */
     private String goodsType;
 
@@ -128,12 +128,12 @@ public class OfcGoodsDetailsInfoDTO {
     private String goodsTypeCode;
 
     /**
-     * 货品类别(小类)
+     * 货品类别(小类名称)
      */
     private String goodsCategory;
 
     /**
-     * 货品类别编码(小类)
+     * 货品类别编码(小类编码)
      */
     private String goodsCategoryCode;
 

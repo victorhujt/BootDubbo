@@ -83,7 +83,7 @@ public class OfcBatchImportController extends BaseController{
         List<OfcStorageTemplate> ofcStorageTemplateList;
         PageInfo<OfcStorageTemplate> pageInfo;
         try {
-            new PageHelper().startPage(templateCondition.getPageNum(),templateCondition.getPageSize());
+            PageHelper.startPage(templateCondition.getPageNum(),templateCondition.getPageSize());
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
             pageInfo = new PageInfo<>(ofcStorageTemplateList);
         } catch (BusinessException e) {
@@ -264,6 +264,7 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @SuppressWarnings("unchecked")
     public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, OfcStorageTemplate ofcStorageTemplate) {
         logger.info("仓储开单批量导单: {}", ofcStorageTemplate);
         Wrapper<?> result = null;

@@ -44,9 +44,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Resource
     private VueViewInterceptor vueViewInterceptor;
-//    @Resource
-//    private LimitRuleInterceptor limitRuleInterceptor;
-	
+
 	@Value("${env}")
 	private String env;
 	

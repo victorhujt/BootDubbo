@@ -254,7 +254,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 type = OFC_WHC_OUT_TYPE;
             }
             String statusDesc = translateStatusToDesc(traceStatus,type);
-            if (orderStatus.getStatusDesc().indexOf(statusDesc) < 0) {
+            if (orderStatus.getStatusDesc().contains(statusDesc)) {
                 status.setLastedOperTime(new Date());
                 status.setStatusDesc(statusDesc);
                 status.setOrderCode(orderCode);
@@ -270,6 +270,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         }
     }
 
+
     @Override
     public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto, ConcurrentHashMap cmap) {
         try {
@@ -278,7 +279,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             if (StringUtils.isEmpty(orderCode)) {
                 throw new BusinessException("订单号不可以为空");
             }
-            if (detailDtos == null || (detailDtos != null && detailDtos.size() == 0)) {
+            if (CollectionUtils.isEmpty(detailDtos)) {
                 throw new BusinessException("货品详情不能为空");
             }
             OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
@@ -351,6 +352,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             e.printStackTrace();
         }
     }
+
+
 
     private void conversionUnitQuantity(List<FeedBackOrderDetailDto> detailDtos, OfcWarehouseInformation ofcWarehouseInformation, OfcFundamentalInformation ofcFundamentalInformation) {
         for (FeedBackOrderDetailDto goodsInfo :detailDtos) {

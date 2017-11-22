@@ -9,6 +9,7 @@ package com.xescm.ofc.exception;
  * @CreateDate 2016年10月4日 上午10:23:46 <br/>
  * @since JDK 1.7
  */
+
 public class BusinessException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 

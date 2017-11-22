@@ -156,8 +156,8 @@ public class OfcFundamentalInformationDTO {
      * 是否落地配  1 是  0 否
      */
     private String groundDistribution;
-    
-    /** 发货波次号 */    
+
+    /** 发货波次号 */
     private String consignmentBatchNumber;
     /**
      * 服务产品编码

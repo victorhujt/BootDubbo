@@ -142,7 +142,9 @@ public class OfcMobileOrderController extends BaseController {
         }
         try {
             int count = ofcDistributionBasicInfoService.checkTransCode(ofcDistributionBasicInfo);
-            if (count > 0) return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
+            if (count > 0) {
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, "运输单号重复");
+            }
         } catch (Exception e) {
             logger.error("校验运输单号出错:{}　", e.getMessage(), e);
         }
@@ -221,14 +223,11 @@ public class OfcMobileOrderController extends BaseController {
             if (CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())) {
                 throw new BusinessException("请至少添加一条货品！");
             }
-            if (CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())) {
-                throw new BusinessException("请至少添加一条货品！");
-            }
             if (ofcOrderDTOStr.getConsignor() == null) {
                 throw new BusinessException("发货人信息不允许为空！");
             }
             if (ofcOrderDTOStr.getConsignee() == null) {
-                throw new BusinessException("发货人信息不允许为空！");
+                throw new BusinessException("收货人信息不允许为空！");
             }
             //校验业务类型，如果是卡班，必须要有运输单号
             if (StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())) {
@@ -249,16 +248,16 @@ public class OfcMobileOrderController extends BaseController {
                 throw new BusinessException("手机订单号不存在！");
             }
             String accepter = mobileOrder.getAccepter();
-            String MobileOrderStatus = mobileOrder.getMobileOrderStatus();
-            if (TREATED.equals(MobileOrderStatus)) {
+            String mobileOrderStatus = mobileOrder.getMobileOrderStatus();
+            if (TREATED.equals(mobileOrderStatus)) {
                 throw new BusinessException("手机订单已经受理！");
             }
 
-            if (UN_TREATED.equals(MobileOrderStatus)) {
+            if (UN_TREATED.equals(mobileOrderStatus)) {
                 throw new BusinessException("手机订单已经超过5分钟未受理，请刷新页面重新加载新的订单！");
             }
 
-            if (TREATING.equals(MobileOrderStatus)) {
+            if (TREATING.equals(mobileOrderStatus)) {
                 if (!PubUtils.isSEmptyOrNull(accepter)) {
                     if (!accepter.equals(authResDtoByToken.getUserName())) {
                         throw new BusinessException("手机订单有其它人在受理,请受理其它手机订单！");
@@ -273,7 +272,8 @@ public class OfcMobileOrderController extends BaseController {
                 order.setMobileOrderCode(mobileOrderCode);
                 order.setAccepter(authResDtoByToken.getUserName());
                 order.setAppcetDate(new Date());
-                order.setMobileOrderStatus(TREATED);//已处理
+                //已处理
+                order.setMobileOrderStatus(TREATED);
                 order.setOrderCode(orderCode);
                 ofcMobileOrderService.updateByMobileCode(order);
             }

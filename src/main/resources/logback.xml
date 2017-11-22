@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="GBK"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property resource="logback.properties"/>
     <jmxConfigurator/>
@@ -6,6 +6,7 @@
         <Target>System.out</Target>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%class:%line] - %m%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
@@ -16,6 +17,7 @@
         <Append>true</Append>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%class:%line] - %m%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
@@ -29,6 +31,7 @@
         <File>${log.path}/${log.name.error}</File>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%class:%line] - %m%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
@@ -39,7 +42,7 @@
         </rollingPolicy>
     </appender>
 
-    <!-- ###################### DAO日志监控  ###################### -->
+    <!-- ###################### DAO鏃ュ織鐩戞帶  ###################### -->
     <appender name="DaoStatistics" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log.path}/${log.name.sql}.%d{yyyy-MM-dd }.log</fileNamePattern>
@@ -47,6 +50,7 @@
         </rollingPolicy>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}-%msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
     </appender>
 
@@ -54,7 +58,7 @@
         <appender-ref ref="DaoStatistics" />
     </logger>
 
-    <!-- ###################### SQL日志监控  ###################### -->
+    <!-- ###################### SQL鏃ュ織鐩戞帶  ###################### -->
 
 
     <logger name="org.springframework" level="INFO"/>

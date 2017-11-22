@@ -36,7 +36,9 @@ public class OfcExceptOrderMainController extends BaseController{
     public Wrapper<PageInfo<OfcExceptOrder>> selectExceptOrders(@RequestBody OfcExceptOrderDTO ofcExceptOrderDTO) {
         logger.info("运营平台查询异常订单{}", ofcExceptOrderDTO);
         try {
-            if (null == ofcExceptOrderDTO) throw new BusinessException("运营平台查询异常订单出错");
+            if (null == ofcExceptOrderDTO){
+                throw new BusinessException("运营平台查询异常订单出错");
+            }
             PageHelper.startPage(ofcExceptOrderDTO.getPageNum(), ofcExceptOrderDTO.getPageSize());
             getAuthResDtoByToken();
             List<OfcExceptOrder> ofcExceptOrders = ofcExceptOrderService.selectByDTO(ofcExceptOrderDTO);
@@ -57,7 +59,9 @@ public class OfcExceptOrderMainController extends BaseController{
         logger.info("加载前一天0点至24点所有订单到各节点Redis库下");
         try {
             int num = ofcExceptOrderService.loadYesterdayOrder();
-            if (num == 0) throw new BusinessException("加载前一天0点至24点所有订单到各节点Redis库下失败, 查无订单");
+            if (num == 0) {
+                throw new BusinessException("加载前一天0点至24点所有订单到各节点Redis库下失败, 查无订单");
+            }
             return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
         } catch (BusinessException ex) {
             logger.error("运营平台查询异常订单出错：{}", ex.getMessage(), ex);
@@ -74,7 +78,9 @@ public class OfcExceptOrderMainController extends BaseController{
         List<OfcKVDTO> list;
         try {
             list = OrderPotEnum.getList();
-            if (CollectionUtils.isEmpty(list)) throw new BusinessException("查询异常订单结点出错");
+            if (CollectionUtils.isEmpty(list)){
+                throw new BusinessException("查询异常订单结点出错");
+            }
         } catch (BusinessException ex) {
             logger.error("查询异常订单结点出错：{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());

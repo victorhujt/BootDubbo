@@ -21,9 +21,4 @@ public class ExcelCheckConstant {
      */
     public static final String BATCH_GOODS = "ofc:batchgoods:";
     public static final String BATCH_CONSIGNEE = "ofc:batchconsingee:";
-
-    /**
-     * 批量导入历史url
-     */
-    public static final String HISTORY_URL = "operation_distributing";
 }

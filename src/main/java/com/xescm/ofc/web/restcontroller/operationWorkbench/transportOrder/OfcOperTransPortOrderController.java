@@ -57,14 +57,11 @@ public class OfcOperTransPortOrderController extends BaseController {
             if(CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())){
                 throw new BusinessException("请至少添加一条货品！");
             }
-            if(CollectionUtils.isEmpty(ofcOrderDTOStr.getGoodsList())){
-                throw new BusinessException("请至少添加一条货品！");
-            }
             if(ofcOrderDTOStr.getConsignor() == null){
                 throw new BusinessException("发货人信息不允许为空！");
             }
             if(ofcOrderDTOStr.getConsignee() == null){
-                throw new BusinessException("发货人信息不允许为空！");
+                throw new BusinessException("收货人信息不允许为空！");
             }
             //校验业务类型，如果是卡班，必须要有运输单号
             if(StringUtils.equals(ofcOrderDTOStr.getBusinessType(), BusinessTypeEnum.CABANNES.getCode())){
@@ -78,7 +75,7 @@ public class OfcOperTransPortOrderController extends BaseController {
             if (null == ofcOrderDTOStr.getUrgent()){
                 ofcOrderDTOStr.setUrgent(OrderConstConstant.DISTRIBUTION_ORDER_NOT_URGENT);
             }
-            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(),tag,authResDtoByToken,authResDtoByToken.getGroupRefCode()
+            resultMessage = ofcOrderPlaceService.placeOrder(ofcOrderDTOStr,ofcOrderDTOStr.getGoodsList(),tag,authResDtoByToken,ofcOrderDTOStr.getCustCode()
                     ,ofcOrderDTOStr.getConsignor(),ofcOrderDTOStr.getConsignee(),ofcOrderDTOStr.getSupplier());
         } catch (BusinessException ex){
             logger.error("订单中心下单或编辑出现异常:{}", ex.getMessage(), ex);
