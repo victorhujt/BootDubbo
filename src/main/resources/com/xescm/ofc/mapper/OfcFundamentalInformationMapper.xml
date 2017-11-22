@@ -81,6 +81,10 @@
 
   <select id="checkCustOrderCode" parameterType="com.xescm.ofc.domain.OfcFundamentalInformation" resultType="java.lang.Integer">
     SELECT
+    SUM(temp.countOrderCode)
+    FROM
+    (
+    SELECT
     count(order_code) AS countOrderCode
     FROM
     ofc_fundamental_information ofi
@@ -93,7 +97,7 @@
       </if>
       AND
       cust_order_code = #{custOrderCode}
-      AND (abolish_mark is null OR abolish_mark  = 0)
+      AND (abolish_mark is null OR abolish_mark = 0)
     </where>
     UNION
     SELECT
@@ -101,7 +105,7 @@
     FROM
     ofc_cust_fundamental_information ofi
     <where>
-      <if test="selfCustOrderCode != null and selfCustOrderCode != ''" >
+      <if test="selfCustOrderCode != null and selfCustOrderCode != ''">
         cust_order_code != #{selfCustOrderCode}
       </if>
       <if test="custCode != null and custCode != ''">
@@ -109,8 +113,9 @@
       </if>
       AND
       cust_order_code = #{custOrderCode}
-      AND (abolish_mark is null OR abolish_mark  = 0)
+      AND (abolish_mark is null OR abolish_mark = 0)
     </where>
+    ) temp
   </select>
 
   <select id="getOrderCodeByCustOrderCodeAndCustCode" resultMap="convCustOrderCode">
