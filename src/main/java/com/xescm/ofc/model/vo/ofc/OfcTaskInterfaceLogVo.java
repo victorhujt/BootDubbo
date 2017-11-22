@@ -1,10 +1,11 @@
 package com.xescm.ofc.model.vo.ofc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
+@Data
 public class OfcTaskInterfaceLogVo {
 
     private Long id;
@@ -90,123 +91,4 @@ public class OfcTaskInterfaceLogVo {
      */
     private Integer dr;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(String taskType) {
-        this.taskType = taskType;
-    }
-
-    public String getRefNo() {
-        return refNo;
-    }
-
-    public void setRefNo(String refNo) {
-        this.refNo = refNo;
-    }
-
-    public String getTaskSource() {
-        return taskSource;
-    }
-
-    public void setTaskSource(String taskSource) {
-        this.taskSource = taskSource;
-    }
-
-    public String getSourceLogId() {
-        return sourceLogId;
-    }
-
-    public void setSourceLogId(String sourceLogId) {
-        this.sourceLogId = sourceLogId;
-    }
-
-    public String getTaskData() {
-        return taskData;
-    }
-
-    public void setTaskData(String taskData) {
-        this.taskData = taskData;
-    }
-
-    public Integer getTaskExeCount() {
-        return taskExeCount;
-    }
-
-    public void setTaskExeCount(Integer taskExeCount) {
-        this.taskExeCount = taskExeCount;
-    }
-
-    public String getExeInstanceIp() {
-        return exeInstanceIp;
-    }
-
-    public void setExeInstanceIp(String exeInstanceIp) {
-        this.exeInstanceIp = exeInstanceIp;
-    }
-
-    public String getTaskStatus() {
-        return taskStatus;
-    }
-
-    public void setTaskStatus(String taskStatus) {
-        this.taskStatus = taskStatus;
-    }
-
-    public Date getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(Date creationTime) {
-        this.creationTime = creationTime;
-    }
-
-    public Date getBeginDate() {
-        return beginDate;
-    }
-
-    public void setBeginDate(Date beginDate) {
-        this.beginDate = beginDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Date getExeTime() {
-        return exeTime;
-    }
-
-    public void setExeTime(Date exeTime) {
-        this.exeTime = exeTime;
-    }
-
-    public Integer getDr() {
-        return dr;
-    }
-
-    public void setDr(Integer dr) {
-        this.dr = dr;
-    }
 }

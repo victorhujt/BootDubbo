@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcCustDistributionBasicInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.domain.OfcCustDistributionBasicInfo" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+    <result column="urgent" property="urgent" jdbcType="INTEGER" />
+    <result column="departure_place" property="departurePlace" jdbcType="VARCHAR" />
+    <result column="departure_province" property="departureProvince" jdbcType="VARCHAR" />
+    <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+    <result column="departure_district" property="departureDistrict" jdbcType="VARCHAR" />
+    <result column="departure_towns" property="departureTowns" jdbcType="VARCHAR" />
+    <result column="departure_place_code" property="departurePlaceCode" jdbcType="VARCHAR" />
+    <result column="destination" property="destination" jdbcType="VARCHAR" />
+    <result column="destination_province" property="destinationProvince" jdbcType="VARCHAR" />
+    <result column="destination_city" property="destinationCity" jdbcType="VARCHAR" />
+    <result column="destination_district" property="destinationDistrict" jdbcType="VARCHAR" />
+    <result column="destination_towns" property="destinationTowns" jdbcType="VARCHAR" />
+    <result column="destination_code" property="destinationCode" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="DECIMAL" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="cubage" property="cubage" jdbcType="VARCHAR" />
+    <result column="total_standard_box" property="totalStandardBox" jdbcType="INTEGER" />
+    <result column="trans_require" property="transRequire" jdbcType="VARCHAR" />
+    <result column="pickup_time" property="pickupTime" jdbcType="TIMESTAMP" />
+    <result column="expected_arrived_time" property="expectedArrivedTime" jdbcType="TIMESTAMP" />
+    <result column="consignor_code" property="consignorCode" jdbcType="VARCHAR" />
+    <result column="consignor_name" property="consignorName" jdbcType="VARCHAR" />
+    <result column="consignee_code" property="consigneeCode" jdbcType="VARCHAR" />
+    <result column="consignee_name" property="consigneeName" jdbcType="VARCHAR" />
+    <result column="carrier_code" property="carrierCode" jdbcType="VARCHAR" />
+    <result column="carrier_name" property="carrierName" jdbcType="VARCHAR" />
+    <result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="contact_number" property="contactNumber" jdbcType="VARCHAR" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="oper_time" property="operTime" jdbcType="TIMESTAMP" />
+    <result column="consignor_contact_name" property="consignorContactName" jdbcType="VARCHAR" />
+    <result column="consignor_contact_code" property="consignorContactCode" jdbcType="VARCHAR" />
+    <result column="consignee_contact_name" property="consigneeContactName" jdbcType="VARCHAR" />
+    <result column="consignee_contact_code" property="consigneeContactCode" jdbcType="VARCHAR" />
+    <result column="consignor_type" property="consignorType" jdbcType="VARCHAR" />
+    <result column="consignee_type" property="consigneeType" jdbcType="VARCHAR" />
+    <result column="base_id" property="baseId" jdbcType="VARCHAR" />
+    <result column="consignor_contact_phone" property="consignorContactPhone" jdbcType="VARCHAR" />
+    <result column="consignee_contact_phone" property="consigneeContactPhone" jdbcType="VARCHAR" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="goods_type_name" property="goodsTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="resultField">
+    odb.order_code orderCode,
+    odb.trans_code transCode,
+    odb.urgent urgent,
+    odb.departure_place departurePlace,
+    odb.departure_province departureProvince,
+    odb.departure_city departureCity,
+    odb.departure_district departureDistrict,
+    odb.departure_towns departureTowns,
+    odb.departure_place_code departurePlaceCode,
+    odb.destination destination,
+    odb.destination_province destinationProvince,
+    odb.destination_city destinationCity,
+    odb.destination_district destinationDistrict,
+    odb.destination_towns destinationTowns,
+    odb.destination_code destinationCode,
+    odb.quantity quantity,
+    odb.weight weight,
+    odb.cubage cubage,
+    odb.total_standard_box totalStandardBox,
+    odb.trans_require transRequire,
+    odb.pickup_time pickupTime,
+    odb.expected_arrived_time expectedArrivedTime,
+    odb.consignor_code consignorCode,
+    odb.consignor_name consignorName,
+    odb.consignee_code consigneeCode,
+    odb.consignee_name consigneeName,
+    odb.carrier_code carrierCode,
+    odb.carrier_name carrierName,
+    odb.plate_number plateNumber,
+    odb.driver_name driverName,
+    odb.contact_number contactNumber,
+    odb.creation_time creationTime,
+    odb.creator creator,
+    odb.operator operator,
+    odb.oper_time operTime,
+    odb.consignor_contact_name consignorContactName,
+    odb.consignor_contact_code consignorContactCode,
+    odb.consignee_contact_name consigneeContactName,
+    odb.consignee_contact_code consigneeContactCode,
+    odb.consignor_type consignorType,
+    odb.consignee_type consigneeType,
+    odb.base_id baseId,
+    odb.consignor_contact_phone consignorContactPhone,
+    odb.consignee_contact_phone consigneeContactPhone,
+    odb.goods_type goodsType,
+    odb.goods_type_name goodsTypeName
+  </sql>
+    <select id="queryByInfo" resultType="com.xescm.ofc.domain.OfcCustDistributionBasicInfo">
+      SELECT * FROM
+      (
+      SELECT <include refid="resultField"/> FROM ofc_distribution_basic_info odb
+      <where>
+        <if test="orderCode!=null and orderCode!=''">
+          odb.order_code =#{orderCode}
+        </if>
+      </where>
+      UNION
+      SELECT <include refid="resultField"/> FROM ofc_cust_distribution_basic_info odb
+      <where>
+        <if test="orderCode!=null and orderCode!=''">
+          odb.order_code =#{orderCode}
+        </if>
+      </where>
+      ) temp
+      ORDER BY temp.operTime DESC limit 1
+    </select>
+</mapper>

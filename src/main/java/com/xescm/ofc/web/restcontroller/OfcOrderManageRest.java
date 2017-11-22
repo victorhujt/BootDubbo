@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.OrderConstant.STOCK_IN_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 
@@ -128,10 +129,6 @@ public class OfcOrderManageRest extends BaseController{
         logger.info("==>订单中心订单管理订单编辑标志位 dtotag={}", dtotag);
         setDefaultModel(model);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
-//        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-//        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-//        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-//        String custId = (String) wrapper.getResult();
         String customerCode = authResDtoByToken.getGroupRefCode();
         OfcOrderDTO ofcOrderDTO=new OfcOrderDTO();
         orderCode=orderCode.replace(",","");
@@ -161,7 +158,7 @@ public class OfcOrderManageRest extends BaseController{
                     consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(), OrderConstConstant.CONTACT_PURPOSE_CONSIGNEE,customerCode,authResDtoByToken);
                 }
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息
-                if("62".equals(businessTypeHead)){
+                if(STOCK_IN_ORDER.equals(businessTypeHead)){
                     supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),customerCode,authResDtoByToken);
                 }
             }
@@ -180,8 +177,6 @@ public class OfcOrderManageRest extends BaseController{
             map.put("supportMessage",supportMessage);
             map.put("rmcWarehouseByCustCode",rmcWarehouseByCustCode);
             map.put("cscStoreByCustId",cscStoreListResult);
-            /*map.put("warehouseCodeByOrderCode",warehouseCodeByOrderCode);
-            map.put("storeCodeByOrderCode",storeCodeByOrderCode);*/
             return "/order_edit";
         }
         return "order_manage";
@@ -232,18 +227,7 @@ public class OfcOrderManageRest extends BaseController{
             }else {
                 rmcCompanyLineQO.setArriveCityName(null);
             }
-            /*QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-            queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-            Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-            String custId = (String) wrapper.getResult();
-            cscGoods.setCustomerId(custId);*/
-            //rmcCompanyLineQO.setLineType("1");
             Wrapper<List<RmcCompanyLineVo>> rmcCompanyLists = ofcOrderManageService.companySelByApi(rmcCompanyLineQO);
-            /*List<RmcCompanyLineVo> lineVos1=rmcCompanyLists.getResult();
-            List<RmcCompanyLineVo> lineVos2=rmcCompanyLists.getResult();
-            lineVos1.addAll(lineVos2);
-            lineVos1.get(0).setCompanyName("孙悟空");
-            rmcCompanyLists.setResult(lineVos1);*/
             response.setCharacterEncoding("UTF-8");
             response.getWriter().print(JacksonUtil.toJsonWithFormat(rmcCompanyLists.getResult()));
         }catch (Exception ex){
@@ -284,7 +268,7 @@ public class OfcOrderManageRest extends BaseController{
             if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
                 String message=wrapper.getMessage();
                 logger.info("货品库存校验信息为:{}",message);
-                List<ResponseMsg> msgs = null;
+                List<ResponseMsg> msgs;
                 TypeReference<List<ResponseMsg>> responseMsgsRef = new TypeReference<List<ResponseMsg>>() {};
                 msgs= JacksonUtil.parseJsonWithFormat(message,responseMsgsRef);
                 return WrapMapper.wrap(Wrapper.ERROR_CODE,"货品库存不足",msgs);

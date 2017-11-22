@@ -26,6 +26,7 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
 
     List<String> queryByCondition(OrderScreenCondition orderScreenCondition);
 
+
     /**
      * 根据订单批量查询订单货品类型
      * @param codeList 订单号

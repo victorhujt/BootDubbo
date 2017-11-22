@@ -1371,7 +1371,9 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         String packageId = PACKAGE_ID_NAME + "@" + PACKAGE_ID_CODE;
         //主单位数量列
         String mainUnitNum = MAIN_UNIT_NUM_NAME + "@" + MAIN_UNIT_NUM_CODE;
-        if (hasUnit) usefulCol.add(unitColNum, packageId);
+        if (hasUnit) {
+            usefulCol.add(unitColNum, packageId);
+        }
         usefulCol.add(mainUnitNum);
     }
 
@@ -1615,6 +1617,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * 通过RMC接口返回所有的仓库信息
      * @return 所有仓库信息
      */
+    @Override
     public List<RmcWarehouseRespDto> allWarehouseByRmc() {
         Wrapper<List<RmcWarehouseRespDto>> listWrapper = rmcWarehouseEdasService.queryWarehouseList(new RmcWareHouseQO());
         if (listWrapper.getCode() == Wrapper.ERROR_CODE || CollectionUtils.isEmpty(listWrapper.getResult())) {
@@ -1910,7 +1913,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         return ofcOrderManageService.storageOrderConfirm(ofcStorageTemplateDtoList, authResDto);
     }
-
+    @Override
     public Date convertStringToDate(String orderTime) {
         String[] split = orderTime.split(" ");
         if (split.length == 1 || orderTime.matches(REGEX_YYYYMMDD)) {
@@ -1918,7 +1921,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         return DateUtils.String2Date(orderTime, DateUtils.DateFormatType.TYPE1);
     }
-
+    @Override
     public void convertSupplierToWare(CscSupplierInfoDto cscSupplierInfoDto, OfcOrderDTO ofcOrderDTO) {
         if (null == cscSupplierInfoDto || PubUtils.isSEmptyOrNull(cscSupplierInfoDto.getSupplierCode())) {
             return;
@@ -1978,7 +1981,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         ofcOrderDTO.setDeparturePlaceCode(sb.toString());
     }
-
+    @Override
     public void convertConsigneeToDis(CscContantAndCompanyResponseDto cscConsigneeDto, OfcOrderDTO ofcOrderDTO) {
         logger.info("===>cscConsigneeDto:{}", cscConsigneeDto);
         logger.info("===>ofcOrderDTO:{}", ofcOrderDTO);
@@ -2015,6 +2018,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @return 转换后的收货方
      * @throws Exception 异常
      */
+    @Override
     public CscContantAndCompanyDto convertCscConsignee(CscContantAndCompanyResponseDto cscConsigneeDto) {
         logger.info("转换客户中心DTO收货方 cscConsigneeDto:{}", cscConsigneeDto);
         if (null == cscConsigneeDto) {
@@ -2037,6 +2041,7 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
      * @param ofcStorageTemplateDto 订单DTO
      * @return 转换后的货品
      */
+    @Override
     public OfcGoodsDetailsInfoDTO convertCscGoods(OfcStorageTemplateDto ofcStorageTemplateDto) {
         logger.info("转换客户中心货品: ofcStorageTemplateDto.getCscGoodsApiVo():{}", ofcStorageTemplateDto.getCscGoodsApiVo());
         CscGoodsApiVo cscGoodsApiVo = ofcStorageTemplateDto.getCscGoodsApiVo();
@@ -2205,55 +2210,4 @@ public class OfcStorageTemplateServiceImpl extends BaseService<OfcStorageTemplat
         }
         logger.info("校验模板必填成功!");
     }
-
-    /**
-     * 出库批量导单确认下单之前, 校验当前库存
-     * @param orderList 订单列表
-     * @return 校验结果
-     */
-    @Override
-    public Wrapper checkStock(String orderList) throws Exception {
-//        logger.info("出库批量导单确认下单之前, 校验当前库存 orderList ==> {}", orderList);
-//        if (PubUtils.isSEmptyOrNull(orderList)) {
-//            logger.error("仓储开单出库批量导单校验当前库存失败, checkStock入参有误");
-//            throw new BusinessException("仓储出库开单批量导单校验当前库存失败!");
-//        }
-//        TypeReference<List<OfcStorageTemplateDto>> typeReference = new TypeReference<List<OfcStorageTemplateDto>>() {
-//        };
-//        List<OfcStorageTemplateDto> ofcStorageTemplateDtoList = JacksonUtil.parseJsonWithFormat(orderList, typeReference);
-//        if (CollectionUtils.isEmpty(ofcStorageTemplateDtoList)) {
-//            logger.error("仓储开单出库批量导单校验当前库存失败! 订单列表为空!");
-//            throw new BusinessException("仓储开单出库批量导单校验当前库存失败! 订单列表为空!");
-//        }
-//        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = new ArrayList<>();
-//        Set<String> warehouseCodeSet = new HashSet<>();
-//        for (OfcStorageTemplateDto ofcStorageTemplateDto : ofcStorageTemplateDtoList) {
-//            OfcGoodsDetailsInfo ofcGoodsDetailsInfo = this.convertCscGoods(ofcStorageTemplateDto);
-//            String warehouseCode = ofcStorageTemplateDto.getWarehouseCode();
-//            ofcGoodsDetailsInfoList.add(ofcGoodsDetailsInfo);
-//            if (PubUtils.isSEmptyOrNull(warehouseCode)) {
-//                String custOrderCode = ofcStorageTemplateDto.getCustOrderCode();
-//                logger.error("仓储开单出库批量导单校验当前库存失败! 客户订单号【{}】的仓库为空!", custOrderCode);
-//                throw new BusinessException("仓储开单出库批量导单校验当前库存失败! 客户订单号【" + custOrderCode + "】的仓库为空!");
-//            }
-//            warehouseCodeSet.add(warehouseCode);
-//        }
-//        if (warehouseCodeSet.size() > 1) {
-//            logger.error("仓储开单出库批量导单校验当前库存失败! 本批次订单存在多个仓库! 单个仓库才能校验库存!");
-//            throw new BusinessException("仓储开单出库批量导单校验当前库存失败! 本批次订单存在多个仓库! 单个仓库才能校验库存!");
-//        }
-//        String custCode = ofcStorageTemplateDtoList.get(0).getOfcOrderDTO().getCustCode();
-//        String warehouseCode = warehouseCodeSet.iterator().next();
-//        Wrapper wrapper = ofcOrderManageService.validateStockCount(ofcGoodsDetailsInfoList, custCode, warehouseCode);
-//        if (wrapper.getCode() != Wrapper.SUCCESS_CODE) {
-//            TypeReference<List<ResponseMsg>> typeReferenceRespMsg = new TypeReference<List<ResponseMsg>>() {
-//            };
-//            List<ResponseMsg> responseMsgs = JacksonUtil.parseJson(wrapper.getMessage(), typeReferenceRespMsg);
-//            logger.error("仓储开单出库批量导单校验当前库存失败! 库存数量不足! 失败信息: {}", wrapper.getMessage());
-//            return WrapMapper.wrap(Wrapper.ERROR_CODE, wrapper.getMessage(), responseMsgs);
-//        }
-//        return WrapMapper.ok();
-        return null;
-    }
-
 }

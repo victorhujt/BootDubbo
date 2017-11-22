@@ -29,8 +29,6 @@ public class OfcIpLimitRuleServiceImpl extends BaseService<OfcIplimitRule> imple
 
     @Resource
     private IpLimitRuleConfig ipLimitRuleConfig;
-    @Resource
-    private RedisOperationUtils redisOperationUtils;
 
     @Override
     public void updateByIp(OfcIplimitRule rule) {

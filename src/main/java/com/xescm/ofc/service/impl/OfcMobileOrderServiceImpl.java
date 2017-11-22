@@ -9,6 +9,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.OrderConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcMobileOrderMapper;
 import com.xescm.ofc.model.dto.form.MobileOrderOperForm;
@@ -136,7 +137,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignor
             , CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto) {
         String orderCode;
-        List<OfcGoodsDetailsInfo> goodsDetailsList=new ArrayList<>();
+        List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<>();
         OfcFinanceInformation  ofcFinanceInformation =modelMapper.map(ofcOrderDTO, OfcFinanceInformation.class);
         OfcFundamentalInformation ofcFundamentalInformation = modelMapper.map(ofcOrderDTO, OfcFundamentalInformation.class);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = modelMapper.map(ofcOrderDTO, OfcDistributionBasicInfo.class);
@@ -149,9 +150,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
         ofcFundamentalInformation.setOperTime(new Date());
         OfcOrderStatus ofcOrderStatus=new OfcOrderStatus();
         StringBuilder notes = new StringBuilder();
-        //ofcFundamentalInformation.setStoreCode(ofcOrderDTO.getStoreName());//店铺还没维护表
-        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());//店铺还没维护表
-        ofcFundamentalInformation.setOrderSource(DING_DING);//订单来源
+        /***店铺还没维护表***/
+        ofcFundamentalInformation.setStoreName(ofcOrderDTO.getStoreName());
+        /***订单来源***/
+        ofcFundamentalInformation.setOrderSource(DING_DING);
 
         //校验运输单号是否重复
         if(!"".equals(PubUtils.trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()))){
@@ -168,8 +170,8 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
            ofcDistributionBasicInfo.setTransCode(ofcFundamentalInformation.getOrderCode());
        }
         orderCode=ofcFundamentalInformation.getOrderCode();
-        // ofcFundamentalInformation.setCustName(authResDtoByToken.getGroupRefName());
-        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);//未作废
+        //未作废
+        ofcFundamentalInformation.setAbolishMark(ORDER_WASNOT_ABOLISHED);
         ofcFundamentalInformation.setOrderType(orderType);
         if(ofcFundamentalInformation.getOrderType().equals(orderType)){
             Wrapper<?> wrapper =ofcDistributionBasicInfoService.validateDistrictContactMessage(cscContantAndCompanyDtoConsignor, cscContantAndCompanyDtoConsignee);
@@ -180,15 +182,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             //运输订单
             if (PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getDeparturePlaceCode()) || ofcDistributionBasicInfo.getDeparturePlaceCode().length() <= 12) {
                 throw new BusinessException("四级地址编码为空!");
-            } /*else {
-                //String depatrueCode = ofcDistributionBasicInfo.getDeparturePlaceCode().substring(0,13);
-                //String destinationCode = ofcDistributionBasicInfo.getDestinationCode().substring(0,13);
-                    *//*if(depatrueCode.equals(destinationCode)){
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_CITY);
-                    }else {
-                        ofcFundamentalInformation.setBusinessType(OrderConstEnum.WITH_THE_TRUNK);
-                    }*//*
-            }*/
+            }
             try {
                 //添加基本信息
                 ofcFundamentalInformationService.save(ofcFundamentalInformation);
@@ -240,10 +234,10 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
             ofcOrderStatus.setTrace("接收订单");
-            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);
@@ -291,6 +285,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 将待受理订单号放入缓存
      * @param orderCode 订单号
      */
+    @Override
     public void pushOrderToCache(String key,String orderCode) {
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         listOps.rightPush(key, orderCode);
@@ -348,13 +343,13 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                    ofcOssManagerService.deleteFile(url);
                }
            }
-           String serialNo=mobileOrder.getSerialNo();
+           String serialNo = mobileOrder.getSerialNo();
           if(!PubUtils.isSEmptyOrNull(serialNo)){
               //删除手机订单号对应的附件
-              String[] serialNos=serialNo.split(",");
-              for(int i=0;i<serialNos.length;i++){
-                  OfcAttachment ofcAttachment=new OfcAttachment();
-                  ofcAttachment.setSerialNo(serialNos[i]);
+              String[] serialNos = serialNo.split(",");
+              for (String serialno:serialNos) {
+                  OfcAttachment ofcAttachment = new OfcAttachment();
+                  ofcAttachment.setSerialNo(serialno);
                   ofcAttachmentService.delete(ofcAttachment);
               }
           }
@@ -369,7 +364,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
      * 从缓存中获取待受理订单
      * @return 订单号
      */
-    public String getOrderFromCache(String key) {
+    private String getOrderFromCache(String key) {
         String orderCode = null;
         boolean existList = stringRedisTemplate.hasKey(key);
         ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
@@ -383,7 +378,7 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
 
     /**
      * 自动获取待受理订单
-     * @return
+     * @return 手机订单
      */
     @Transactional
     public OfcMobileOrderVo autoAcceptPendingOrder(String user) {
@@ -423,7 +418,6 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
                         }
                     }
                 }
-
             } catch (UnsupportedEncodingException e) {
                 this.pushOrderToCache(MOBILE_PENDING_ORDER_LIST,mobileOrderCode);
                 throw new BusinessException("获取照片发生错误！");

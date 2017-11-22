@@ -291,22 +291,7 @@ public class OfcStorageInfoController extends BaseController {
     @RequestMapping(value = "saveStorage/{tag}", method = {RequestMethod.POST})
     @ResponseBody
     public Wrapper<?> saveStorage(@ApiParam(name = "ofcSaveStorageDTO", value = "仓单Dto") @RequestBody OfcSaveStorageDTO ofcSaveStorageDTO, @PathVariable String tag) {
-        // 金融中心锁定客户不允许出库，追加逻辑
-        String customerCode = ofcSaveStorageDTO.getFundamentalInformation().getCustCode();
-        String orderBusinessType = ofcSaveStorageDTO.getFundamentalInformation().getBusinessType().substring(0, 2);
-        // 当状态为出库 且 保存状态时
-        if (orderBusinessType.equals(TRACE_STATUS_5) && "save".equals(tag)) {
-            QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
-            queryCustomerCodeDto.setCustomerCode(customerCode);
-            Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
-            if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
-                throw new BusinessException("校验客户锁定状态时出现异常");
-            }
-            String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
-            if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
-                throw new BusinessException("此客户被金融中心锁定，辛苦联系金融中心同事！");
-            }
-        }
+
         try {
             if (ofcSaveStorageDTO == null) {
                 throw new BusinessException("订单的基本信息不能为空");
@@ -319,6 +304,24 @@ public class OfcStorageInfoController extends BaseController {
             if (!(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag))) {
                 throw new BusinessException("下单标志类型错误");
             }
+
+            // 金融中心锁定客户不允许出库，追加逻辑
+            String customerCode = ofcSaveStorageDTO.getFundamentalInformation().getCustCode();
+            String orderBusinessType = ofcSaveStorageDTO.getFundamentalInformation().getBusinessType().substring(0, 2);
+            // 当状态为出库 且 保存状态时
+            if (orderBusinessType.equals(TRACE_STATUS_5) && "save".equals(tag)) {
+                QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
+                queryCustomerCodeDto.setCustomerCode(customerCode);
+                Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
+                if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
+                    throw new BusinessException("校验客户锁定状态时出现异常");
+                }
+                String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
+                if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
+                    throw new BusinessException("此客户被金融中心锁定，辛苦联系金融中心同事！");
+                }
+            }
+
 
             //货品信息
             List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = ofcSaveStorageDTO.getGoodsDetailsInfo();

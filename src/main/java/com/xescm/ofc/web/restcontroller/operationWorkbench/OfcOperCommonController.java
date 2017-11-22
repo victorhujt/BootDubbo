@@ -76,7 +76,9 @@ public class OfcOperCommonController extends BaseController{
             BeanUtils.copyProperties(reqParam, select2ReqDto);
             select2ReqDto.setName(reqParam.getParam());
             wrapper = cscCustomerEdasService.queryCustomerListPageWithSelect2(select2ReqDto);
-            if (null == wrapper) throw new BusinessException("Select2查询客户为空");
+            if (null == wrapper) {
+                throw new BusinessException("Select2查询客户为空");
+            }
             result = wrapper.getResult();
         } catch (BusinessException e) {
             logger.error("Select2查询客户出错:{}", e);
@@ -149,9 +151,6 @@ public class OfcOperCommonController extends BaseController{
     /**
      * 货品类别(调用客户中心API)
      */
-
-
-
     @ApiOperation(
             notes = "筛选货品",
             httpMethod = "POST",
@@ -162,7 +161,7 @@ public class OfcOperCommonController extends BaseController{
     public Wrapper<?> getCscGoodsTypeList(@ApiParam(name = "cscGoodsType",value = "类id" ) @RequestBody GoodsCategoryDTO cscGoodsType) {
         logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
         //调用外部接口,最低传CustomerCode
-        try{
+        try {
             CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
             if (!PubUtils.trimAndNullAsEmpty(cscGoodsType.getCscGoodsType()).equals("")) {
                 cscGoodType.setPid(cscGoodsType.getCscGoodsType());
@@ -193,7 +192,9 @@ public class OfcOperCommonController extends BaseController{
             cscContantAndCompanyDto.getCscContactDto().setContactName(PubUtils.trimAndNullAsEmpty(cscContantAndCompanyDto.getCscContactDto().getContactName()));
             cscContantAndCompanyDto.getCscContactDto().setPhone(PubUtils.trimAndNullAsEmpty(cscContantAndCompanyDto.getCscContactDto().getPhone()));
             Wrapper<PageInfo<CscContantAndCompanyResponseDto>> pageInfoWrapper = cscContactEdasService.queryCscReceivingInfoListWithPage(cscContantAndCompanyDto);
-            if (null == pageInfoWrapper || pageInfoWrapper.getCode() != Wrapper.SUCCESS_CODE) throw new BusinessException("下单收发货方筛选接口出错");
+            if (null == pageInfoWrapper || pageInfoWrapper.getCode() != Wrapper.SUCCESS_CODE) {
+                throw new BusinessException("下单收发货方筛选接口出错");
+            }
             result = pageInfoWrapper.getResult();
         } catch (BusinessException e) {
             logger.error("分页查询收发货方:{}", e);
@@ -255,7 +256,7 @@ public class OfcOperCommonController extends BaseController{
             cscGoodsApiDto.setFromSys("WMS");//只要WMS渠道的货品
             cscGoodsApiDto.setPNum(page.getPageNum());
             cscGoodsApiDto.setPSize(page.getPageSize());
-            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoodsApiDto);
+             cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoodsApiDto);
             logger.info("===>查询货品的结果为:{}",JacksonUtil.toJson(cscGoodsLists));
         } catch (Exception ex) {
             logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);

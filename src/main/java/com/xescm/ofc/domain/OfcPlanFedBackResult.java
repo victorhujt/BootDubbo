@@ -7,9 +7,11 @@ import lombok.Data;
  */
 @Data
 public class OfcPlanFedBackResult {
-
-    private String transportNo;//运输单号
-    private String result;//结果
-    private String reason;//原因
+    /**运输单号**/
+    private String transportNo;
+    /**结果**/
+    private String result;
+    /**原因**/
+    private String reason;
 
 }

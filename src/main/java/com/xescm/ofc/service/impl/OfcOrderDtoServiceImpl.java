@@ -5,7 +5,7 @@ import com.xescm.ofc.domain.*;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.OfcOrderDTO;
 import com.xescm.ofc.service.*;
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,17 +64,18 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                     OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
                     OfcOrderStatus ofcOrderStatus = ofcOrderStatusService.orderStatusSelect(orderCode, dtoTag);
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcOrderStatus);
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                    BeanUtils.copyProperties(ofcOrderStatus,ofcOrderDTO);
+                    BeanUtils.copyProperties(ofcFundamentalInformation,ofcOrderDTO);
+
                     ofcOrderDTO.setOrderStatus(ofcOrderStatus.getOrderStatus());
                    if(!PubUtils.isSEmptyOrNull(ofcDistributionBasicInfo.getOrderCode())){
-                        BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
-                    }
+                       BeanUtils.copyProperties(ofcDistributionBasicInfo,ofcOrderDTO);
+
+                   }
                     if(!PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getOrderCode())){
-                        BeanUtils.copyProperties(ofcOrderDTO,ofcWarehouseInformation);
+                        BeanUtils.copyProperties(ofcWarehouseInformation,ofcOrderDTO);
+
                     }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new BusinessException("实体转换失败", e);
                 } catch (BusinessException ex){
                     throw new BusinessException("查询订单失败", ex);
                 }catch (Exception ex){
@@ -90,7 +91,8 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
 
     @Override
     public OfcOrderDTO transOrderDotSelect(String orderCode) throws InvocationTargetException {
-        if(PubUtils.isSEmptyOrNull(orderCode)){//如果找不到对应的code,就提示直接提示错误.
+        /**如果找不到对应的code,就提示直接提示错误**/
+        if(PubUtils.isSEmptyOrNull(orderCode)){
             throw new BusinessException("找不到该订单编号");
         }else{
             OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
@@ -100,17 +102,17 @@ public class OfcOrderDtoServiceImpl implements OfcOrderDtoService {
                 OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
                 OfcOrderNewstatus ofcOrderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
                 if(null!=ofcFinanceInformation){
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcFinanceInformation);
+                    BeanUtils.copyProperties(ofcFinanceInformation,ofcOrderDTO);
                 }
                 if(null!=ofcFundamentalInformation){
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcFundamentalInformation);
+                    BeanUtils.copyProperties(ofcFundamentalInformation,ofcOrderDTO);
+
                 }
                 if(null!=ofcDistributionBasicInfo){
-                    BeanUtils.copyProperties(ofcOrderDTO,ofcDistributionBasicInfo);
+                    BeanUtils.copyProperties(ofcDistributionBasicInfo,ofcOrderDTO);
+
                 }
                 ofcOrderDTO.setOrderStatus(ofcOrderNewstatus.getOrderLatestStatus());
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new BusinessException("实体转换失败", e);
             } catch (BusinessException ex){
                 throw new BusinessException("查询订单失败", ex);
             }catch (Exception ex){

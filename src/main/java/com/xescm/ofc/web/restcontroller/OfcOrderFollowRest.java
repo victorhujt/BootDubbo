@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.xescm.ofc.constant.OrderConstant.STOCK_IN_ORDER;
+
 /**
  *
  * Created by lyh on 2016/10/12.
@@ -44,23 +46,11 @@ public class OfcOrderFollowRest extends BaseController{
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Resource
     private OfcOrderManageService ofcOrderManageService;
-
-    /*@RequestMapping(value = "/orderFollowCon/{code}/{followTag}",method = RequestMethod.GET)
-    public String orderFollowCon(Model model, @PathVariable String code, @PathVariable String followTag, Map<String,Object> map) throws InvocationTargetException {
-        logger.debug("==>订单中心订单追踪条件筛选code code={}", code);
-        logger.debug("==>订单中心订单追踪条件标志位 followTag={}", followTag);
-        OfcOrderDTO ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(code, followTag);
-        List<OfcOrderStatus> ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen(code, followTag);
-        map.put("ofcOrderDTO",ofcOrderDTO);
-        map.put("orderStatusList",ofcOrderStatuses);
-        return "order_follow";
-    }*/
     @RequestMapping(value = "/orderFollowCon",method = RequestMethod.POST)
     @ResponseBody
     public Wrapper<?> orderFollowCon( String code, String followTag) throws InvocationTargetException {
         logger.info("==>订单中心订单追踪条件筛选code code={}", code);
         logger.info("==>订单中心订单追踪条件标志位 followTag={}", followTag);
-        //Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> map = new HashMap<>();
         try{
             code = PubUtils.trimAndNullAsEmpty(code);
@@ -86,47 +76,20 @@ public class OfcOrderFollowRest extends BaseController{
         logger.info("==>订单中心订单详情code code={}", code);
         logger.info("==>订单中心订单详情标志位 followTag={}", followTag);
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
-//        QueryCustomerIdDto queryCustomerIdDto = new QueryCustomerIdDto();
-//        queryCustomerIdDto.setGroupId(authResDtoByToken.getGroupId());
-//        Wrapper<?> wrapper = feignCscCustomerAPIClient.queryCustomerIdByGroupId(queryCustomerIdDto);
-//        String custId = (String) wrapper.getResult();
         OfcOrderDTO ofcOrderDTO = new OfcOrderDTO();
-        //List<OfcOrderStatus> ofcOrderStatuses = new ArrayList<OfcOrderStatus>();
         List<OfcOrderStatus> ofcOrderStatuses = new ArrayList<>();
         
-        //List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<OfcGoodsDetailsInfo>();
         List<OfcGoodsDetailsInfo> goodsDetailsList = new ArrayList<>();
-        //CscContantAndCompanyVo consignorMessage = null;
-        //CscContantAndCompanyVo consigneeMessage = null;
         CscSupplierInfoDto supportMessage = null;
         try{
             ofcOrderDTO = ofcOrderDtoService.orderDtoSelect(code, followTag);
             ofcOrderStatuses = ofcOrderStatusService.orderStatusScreen(code, followTag);
             goodsDetailsList=ofcGoodsDetailsInfoService.goodsDetailsScreenList(code,followTag);
-            //如果是运输订单,就去找收发货方联系人的信息
-            /*if(OrderConstEnum.TRANSPORTORDER.equals(ofcOrderDTO.getOrderType())){
-                if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                    consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNOR,custId,authResDtoByToken);
-                }
-                if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                    consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNEE,custId,authResDtoByToken);
-                }
-            }*/
             //仓配订单
             if(OrderConstant.WAREHOUSE_DIST_ORDER.equals(ofcOrderDTO.getOrderType())){
-                /*rmcWarehouseByCustCode = ofcWarehouseInformationService.getWarehouseListByCustCode(custId);*/
                 String businessTypeHead = ofcOrderDTO.getBusinessType().substring(0,2);
-                //如果是仓配订单而且是需要提供运输的,就去找收发货方联系人的信息
-                /*if(OrderConstEnum.WAREHOUSEORDERPROVIDETRANS == ofcOrderDTO.getProvideTransport()){
-                    if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                        consignorMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsignorName(),ofcOrderDTO.getConsignorContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNOR,custId,authResDtoByToken);
-                    }
-                    if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getConsignorContactName()) ){
-                        consigneeMessage = ofcOrderManageService.getContactMessage(ofcOrderDTO.getConsigneeName(),ofcOrderDTO.getConsigneeContactName(),OrderConstEnum.CONTACT_PURPOSE_CONSIGNEE,custId,authResDtoByToken);
-                    }
-                }*/
                 //如果是仓配订单而且业务类型是入库单,就去找供应商信息
-                if("62".equals(businessTypeHead)){
+                if(STOCK_IN_ORDER.equals(businessTypeHead)){
                     if(!PubUtils.isSEmptyOrNull(ofcOrderDTO.getSupportName()) || !PubUtils.isSEmptyOrNull(ofcOrderDTO.getSupportContactName()) ){
                         supportMessage = ofcOrderManageService.getSupportMessage(ofcOrderDTO.getSupportName(),ofcOrderDTO.getSupportContactName(),authResDtoByToken.getGroupRefCode(),authResDtoByToken);
                     }
@@ -135,7 +98,6 @@ public class OfcOrderFollowRest extends BaseController{
 
         }catch (Exception ex){
             logger.error("订单中心订单追踪出现异常:{}", ex.getMessage(), ex);
-//            return WrapMapper.wrap(Wrapper.ERROR_CODE,ex.getMessage());
         }
         map.put("ofcOrderDTO",ofcOrderDTO);
         map.put("orderStatusList",ofcOrderStatuses);

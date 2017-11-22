@@ -5,13 +5,17 @@ import java.util.List;
 
 /**
  * 订单状态
- * Created by hiyond on 2016/11/21.
+ * Created by hujintao on 2017/11/06.
  */
+
 public enum OrderStatusEnum {
 
     PEND_AUDIT("10", "待审核"),
-    ALREADY_EXAMINE("20", "已审核"),
-    IMPLEMENTATION_IN("30", "执行中"),
+    ALREADY_ACCEPTED("30", "已受理"),
+    OUTPUT_COMPLETED("32", "出库完成"),
+    ALREADY_SHIPPED("34", "已发运"),
+    ALREADY_SIGNED("36", "已签收"),
+    INPUT_COMPLETED("38", "入库完成"),
     BEEN_COMPLETED("40", "已完成"),
     BEEN_CANCELED("50", "已取消");
 
@@ -43,4 +47,5 @@ public enum OrderStatusEnum {
     public static List<OrderStatusEnum> queryList() {
         return Arrays.asList(OrderStatusEnum.values());
     }
+
 }
