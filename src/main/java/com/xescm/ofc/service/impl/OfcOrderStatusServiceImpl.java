@@ -402,7 +402,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                                     logger.info("订单号为:{}的货品编码为:{}转化为原包装的数量",ofcFundamentalInformation.getOrderCode(),goodsCode);
                                     logger.info("主单位的数量为:{}转化率为:{}",realQuantity.doubleValue(),ls.doubleValue());
                                     //大成客户特殊处理
-                                    if (DACHEN_CUST_CODE.equals(custCode)) {
                                     if ("100259".equals(custCode)) {
                                         pquantity = realQuantity.multiply(ls).setScale(2,BigDecimal.ROUND_HALF_DOWN);
                                     } else {
