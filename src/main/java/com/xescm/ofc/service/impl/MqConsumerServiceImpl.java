@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @description: mq消费
@@ -26,13 +27,13 @@ public class MqConsumerServiceImpl implements MqConsumerService {
     private OfcPlanFedBackService ofcPlanFedBackService;
 
     @Override
-    public void transportStateConsumer(String messageBody) throws Exception {
+    public void transportStateConsumer(String messageBody,ConcurrentHashMap cmap) throws Exception {
         try {
             try {
                 // 将获取的json格式字符串转换成相应对象
                 TfcTransportStateDTO transportStates;
                 transportStates = JacksonUtil.parseJsonWithFormat(messageBody, TfcTransportStateDTO.class);
-                ofcPlanFedBackService.planFedBackNew(transportStates, "");
+                ofcPlanFedBackService.planFedBackNew(transportStates, "",cmap);
             } catch (BusinessException ex) {
                 logger.error("订单运输状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
             } catch (Exception ex) {

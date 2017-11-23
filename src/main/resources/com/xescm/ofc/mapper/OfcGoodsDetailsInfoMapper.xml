@@ -196,6 +196,12 @@
     -->
     update ofc_goods_details_info
     <set >
+      <if test="goodsCode != null" >
+        goods_code = #{goodsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsName != null" >
+        goods_name = #{goodsName,jdbcType=INTEGER},
+      </if>
       <if test="quantity != null" >
         quantity = #{quantity,jdbcType=INTEGER},
       </if>
@@ -222,7 +228,7 @@
       </if>
     </set>
     where order_code = #{orderCode,jdbcType=VARCHAR}
-    AND   goods_code = #{goodsCode,jdbcType=VARCHAR}
+      AND   goods_code = #{goodsCode,jdbcType=VARCHAR}
   </update>
 
   <select id="queryIds" resultMap="BaseResultMap">

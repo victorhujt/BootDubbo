@@ -151,9 +151,6 @@ public class OfcOperCommonController extends BaseController{
     /**
      * 货品类别(调用客户中心API)
      */
-
-
-
     @ApiOperation(
             notes = "筛选货品",
             httpMethod = "POST",
@@ -164,7 +161,7 @@ public class OfcOperCommonController extends BaseController{
     public Wrapper<?> getCscGoodsTypeList(@ApiParam(name = "cscGoodsType",value = "类id" ) @RequestBody GoodsCategoryDTO cscGoodsType) {
         logger.info("下单货品筛选==> cscGoodsType={}", cscGoodsType);
         //调用外部接口,最低传CustomerCode
-        try{
+        try {
             CscGoodsTypeDto cscGoodType=new CscGoodsTypeDto();
             if (!PubUtils.trimAndNullAsEmpty(cscGoodsType.getCscGoodsType()).equals("")) {
                 cscGoodType.setPid(cscGoodsType.getCscGoodsType());
@@ -259,7 +256,7 @@ public class OfcOperCommonController extends BaseController{
             cscGoodsApiDto.setFromSys("WMS");//只要WMS渠道的货品
             cscGoodsApiDto.setPNum(page.getPageNum());
             cscGoodsApiDto.setPSize(page.getPageSize());
-            cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoodsApiDto);
+             cscGoodsLists = cscGoodsEdasService.queryCscGoodsPageListByFuzzy(cscGoodsApiDto);
             logger.info("===>查询货品的结果为:{}",JacksonUtil.toJson(cscGoodsLists));
         } catch (Exception ex) {
             logger.error("订单中心仓储下单筛选货品出现异常:{}", ex.getMessage(), ex);

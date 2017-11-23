@@ -1,10 +1,13 @@
 package com.xescm.ofc.service;
 
+import com.xescm.ofc.domain.OfcAttachment;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 /** 通用接口 */
@@ -60,6 +63,14 @@ public interface IService<T> {
 	/** 根据example条件和RowBounds进行分页查询 */
 	List<T> selectByExampleAndRowBounds(Object example, RowBounds rowBounds);
 
+	/**
+	 * 根据访问路径返回URL
+	 */
+	URL getFileURL(String filePath);
 
+	/**
+	 * 上传文件
+	 */
+	OfcAttachment uploadFile(InputStream inputStream, String fileName, String ossFilePath);
 
 }

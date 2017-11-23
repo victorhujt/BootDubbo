@@ -27,4 +27,6 @@ public interface OfcGoodsDetailsInfoService extends IService<OfcGoodsDetailsInfo
     // 刷[ofc_goods_details_info][pass_line_no]历史数据
     List<OfcGoodsDetailsInfo> queryIds();
     void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
+
+    void fillGoodType(OfcGoodsDetailsInfo ofcGoodsDetailsInfo);
 }

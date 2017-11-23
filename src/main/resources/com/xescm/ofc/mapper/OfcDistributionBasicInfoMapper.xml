@@ -359,16 +359,30 @@
 
 
   <select id="checkTransCode" parameterType="com.xescm.ofc.domain.OfcDistributionBasicInfo" resultType="java.lang.Integer">
-    SELECT COUNT(odbi.order_code)  FROM ofc_distribution_basic_info odbi
-    LEFT JOIN ofc_order_newstatus oos ON odbi.order_code = oos.order_code
-    <where>
+      SELECT
+      COUNT(1)
+      FROM
+      (SELECT odbi.order_code FROM ofc_distribution_basic_info odbi
+      LEFT JOIN ofc_order_newstatus oos ON odbi.order_code = oos.order_code
+      <where>
+      <if test="selfTransCode != null and selfTransCode != ''">trans_code != #{selfTransCode}
+      </if>
+          AND
+          trans_code = #{transCode}
+          AND
+          oos.order_latest_status!='50'
+      </where>
+    UNION
+  SELECT odbi.order_code  FROM ofc_cust_distribution_basic_info odbi
+  LEFT JOIN ofc_cust_order_newstatus oos ON odbi.order_code = oos.order_code
+  <where>
       <if test="selfTransCode != null and selfTransCode != ''" >
-        trans_code != #{selfTransCode}
+          trans_code != #{selfTransCode}
       </if>
       AND
       trans_code = #{transCode}
       AND oos.order_latest_status!='50'
-    </where>
+  </where>) temp
   </select>
 
 
