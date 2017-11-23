@@ -265,23 +265,4 @@ public class OfcGoodsDetailsInfo {
     private String remark;
 
 
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * 获取货品代码
-     *
-     * @return goods_code - 货品代码
-     */
-    public String getGoodsCode() {
-        return goodsCode;
-    }
-
 }

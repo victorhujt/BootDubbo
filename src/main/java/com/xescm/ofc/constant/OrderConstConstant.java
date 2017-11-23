@@ -108,6 +108,8 @@ public final class OrderConstConstant {
 
     public static final String STR_YES = "1";
 
+    public static final String STR_NO = "0";
+
     public static final String MOBILE_PENDING_ORDER_LIST = "DdMobilePendingOrderList";
 
     public static final String QUERY_REQUEST_COUNT = "requestCount";

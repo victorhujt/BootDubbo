@@ -359,6 +359,7 @@ public class OfcOrderManageOperServiceImpl implements OfcOrderManageOperService 
         String userSerialNo = uamGroupDto.getSerialNo();
         //鲜易供应链
         if (StringUtils.equals("xebest",identity)) {
+
             //鲜易供应链下所有大区
             if (PubUtils.isSEmptyOrNull(uamGroupDto.getSerialNo())) {
                 throw new BusinessException("根据登录用户获取大区列表入参有误!");
