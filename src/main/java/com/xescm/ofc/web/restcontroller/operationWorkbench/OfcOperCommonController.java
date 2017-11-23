@@ -73,7 +73,7 @@ public class OfcOperCommonController extends BaseController{
         PageInfo<Select2RespDto> result;
         try {
             Select2ReqDto select2ReqDto = new Select2ReqDto();
-            BeanUtils.copyProperties(reqParam, select2ReqDto);
+            BeanUtils.copyProperties(select2ReqDto,reqParam);
             select2ReqDto.setName(reqParam.getParam());
             wrapper = cscCustomerEdasService.queryCustomerListPageWithSelect2(select2ReqDto);
             if (null == wrapper) {
