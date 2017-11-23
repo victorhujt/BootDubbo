@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -267,7 +268,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                         + " " + statusDesc);
                 status.setOrderCode(orderCode);
-                super.save(status);
+                if (TRACE_STATUS_9.equals(traceStatus)) {
+                    status.setOrderStatus(OFC_WHC_IN_TYPE.equals(type)? OrderStatusEnum.INPUT_COMPLETED.getCode():OrderStatusEnum.OUTPUT_COMPLETED.getCode());
+                    save(status);
+                } else {
+                    super.save(status);
+                }
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
@@ -286,6 +292,14 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             if (CollectionUtils.isEmpty(detailDtos)) {
                 throw new BusinessException("货品详情不能为空");
             }
+
+            for (FeedBackOrderDetailDto dto:detailDtos) {
+                Long paasLineNo = dto.getPaasLineNo();
+                if (paasLineNo == 0L || paasLineNo < 0L) {
+                    throw new BusinessException("货品的行号不能小于或等于0");
+                }
+            }
+
             OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
             ofcWarehouseInformation.setOrderCode(orderCode);
             ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
@@ -333,12 +347,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
 
             //转换为原包装的数量
-         //   conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
+             conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
             //更新实际的数量
             for (FeedBackOrderDetailDto detail :detailDtos) {
                 OfcGoodsDetailsInfo good = new OfcGoodsDetailsInfo();
-                good.setGoodsCode(detail.getGoodsCode());
                 good.setOrderCode(orderCode);
+                good.setPaasLineNo(detail.getPaasLineNo());
                 good.setRealQuantity(detail.getRealQuantity());
                 ofcGoodsDetailsInfoService.updateByOrderCode(good);
             }
@@ -367,6 +381,20 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 String unit = goodsInfo.getUnit();
                 String warehouseCode = ofcWarehouseInformation.getWarehouseCode();
                 String custCode = ofcFundamentalInformation.getCustCode();
+                String orderCode = ofcFundamentalInformation.getOrderCode();
+                String key =  custCode+":"+warehouseCode+":" + goodsCode;
+                String packageKey = key +":"+unit;
+                /**缓存中有包装先从缓存中取**/
+                if (rt.hasKey(packageKey)) {
+                    String  v = rt.opsForValue().get(packageKey);
+                    BigDecimal ls = new BigDecimal(v);
+                    BigDecimal pquantity;
+                    BigDecimal realQuantity = goodsInfo.getRealQuantity();
+                    pquantity = accountRealQuantity(custCode, realQuantity, ls);
+                    goodsInfo.setRealQuantity(pquantity);
+                    continue;
+                }
+                List<GoodsPackingDto>  packages;
                 //天津自动化仓 用天津仓包装校验
                 if ("000001".equals(warehouseCode)) {
                     cscGoods.setWarehouseCode("ck0024");
@@ -378,41 +406,32 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 cscGoods.setCustomerCode(custCode);
                 cscGoods.setPNum(1);
                 cscGoods.setPSize(10);
-                try{
-                    logger.info("匹配包装的参数为:{}", JacksonUtil.toJson(cscGoods));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                logger.info("匹配包装的参数为:{}",cscGoods);
                 Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
-                try{
-                    logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                logger.info("匹配包装的响应结果为:{}",goodsRest);
                 if (goodsRest != null && Wrapper.SUCCESS_CODE == goodsRest.getCode() && goodsRest.getResult() != null &&
                         PubUtils.isNotNullAndBiggerSize(goodsRest.getResult().getList(), 0)) {
                     CscGoodsApiVo cscGoodsApiVo = goodsRest.getResult().getList().get(0);
-                    List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
+                    packages = cscGoodsApiVo.getGoodsPackingDtoList();
                     if (!CollectionUtils.isEmpty(packages)) {
                         for (GoodsPackingDto packingDto : packages) {
-                            if (StringUtils.equals(unit,packingDto.getLevelDescription())) {
-                                logger.info("orderCode is {}",ofcFundamentalInformation.getOrderCode());
+                                String levelDescription = packingDto.getLevelDescription();
+                            if (StringUtils.equals(unit,levelDescription)) {
+                                logger.info("orderCode is {}",orderCode);
                                 logger.info("unit is {}",unit);
-                                logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
+                                logger.info("packingDto.getLevelDescription() is {}",levelDescription);
                                 BigDecimal pquantity;
                                 BigDecimal realQuantity = goodsInfo.getRealQuantity();
                                 BigDecimal ls = packingDto.getLevelSpecification();
                                 if (!(ls == null || ls.compareTo(new BigDecimal(0)) == 0)) {
-                                    logger.info("订单号为:{}的货品编码为:{}转化为原包装的数量",ofcFundamentalInformation.getOrderCode(),goodsCode);
+                                    logger.info("订单号为:{}的货品编码为:{}转化为原包装的数量",orderCode,goodsCode);
                                     logger.info("主单位的数量为:{}转化率为:{}",realQuantity.doubleValue(),ls.doubleValue());
-                                    //大成客户特殊处理
-                                    if ("100259".equals(custCode)) {
-                                        pquantity = realQuantity.multiply(ls).setScale(2,BigDecimal.ROUND_HALF_DOWN);
-                                    } else {
-                                        //保留三位小数
-                                        pquantity = realQuantity.divide(ls,3,BigDecimal.ROUND_HALF_DOWN);
-                                    }
+                                    pquantity = accountRealQuantity(custCode, realQuantity, ls);
                                     goodsInfo.setRealQuantity(pquantity);
+                                    key = key +":" +levelDescription;
+                                    rt.opsForValue().set(key,ls.toString());
+                                    /**缓存1小时**/
+                                    rt.expire(key,1, TimeUnit.HOURS);
                                     logger.info("主单位的数量转化为原包装的数量为:{}",realQuantity.doubleValue());
                                     break;
                                 }
@@ -423,6 +442,18 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
         }
+    }
+
+    private BigDecimal accountRealQuantity(String custCode, BigDecimal realQuantity, BigDecimal ls) {
+        BigDecimal pquantity;
+        //大成客户特殊处理
+        if ("100259".equals(custCode)) {
+            pquantity = realQuantity.multiply(ls).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+        } else {
+            //保留三位小数
+            pquantity = realQuantity.divide(ls,3,BigDecimal.ROUND_HALF_DOWN);
+        }
+        return pquantity;
     }
 
     /**

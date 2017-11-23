@@ -226,19 +226,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (ofcOrderStatus == null) {
             throw new BusinessException("订单号不存在任何状态");
         }
-        //反审核
-        if (reviewTag.equals(RE_REVIEW)) {
-            if (!ofcOrderStatus.getOrderStatus().equals(ALREADY_EXAMINE)) {
-                throw new BusinessException("订单编号[" + orderCode + "]不能执行反审核，仅能对订单状态为【已审核】的订单执行反审核操作！");
-            } else {
-                ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-                ofcOrderStatus.setOperator("");
-                ofcOrderStatus.setLastedOperTime(null);
-                ofcOrderStatus.setStatusDesc("待审核");
-                ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单反审核完成");
-                ofcOrderStatusService.save(ofcOrderStatus);
-            }
-        } else if (reviewTag.equals(REVIEW)) {
+        if (reviewTag.equals(REVIEW)) {
             if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT)) {
                 OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
                     OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.warehouseInformationSelect(orderCode);
@@ -264,13 +252,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                         return String.valueOf(Wrapper.SUCCESS_CODE);
                     }
                 }
-                ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
-                ofcOrderStatus.setStatusDesc("已审核");
-                ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单审核完成");
-                ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
-                ofcOrderStatus.setLastedOperTime(new Date());
-                ofcOrderStatusService.save(ofcOrderStatus);
-
                 ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
                 ofcFundamentalInformation.setOperatorName(authResDtoByToken.getUserName());
                 ofcFundamentalInformation.setOperTime(new Date());
@@ -304,10 +285,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
 
             OfcOrderStatus s=new OfcOrderStatus();
-            s.setOrderStatus(IMPLEMENTATION_IN);
+            s.setOrderStatus(OrderStatusEnum.ALREADY_ACCEPTED.getCode());
             s.setOrderCode(orderCode);
-            s.setStatusDesc("执行中");
-            s.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单开始执行");
+            s.setStatusDesc(OrderStatusEnum.ALREADY_ACCEPTED.getDesc());
+            s.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单已受理");
             s.setOperator(authResDtoByToken.getUserName());
             s.setLastedOperTime(new Date());
             ofcOrderStatusService.save(s);
@@ -2515,24 +2496,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 return String.valueOf(Wrapper.SUCCESS_CODE);
             }
             String userName = authResDtoByToken.getUserName();
-            ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
-            ofcOrderStatus.setStatusDesc("已审核");
-            ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单审核完成");
-            ofcOrderStatus.setOperator(userName);
-            ofcOrderStatus.setLastedOperTime(new Date());
-            int save = ofcOrderStatusService.save(ofcOrderStatus);
-            if (save == 0) {
-                logger.error("自动审核出错, 更新订单状态为已审核失败");
-                throw new BusinessException("自动审核出错!");
-            }
             OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
             OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
             OfcGoodsDetailsInfo ofcGoodsDetailsInfo = new OfcGoodsDetailsInfo();
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             String orderType = ofcFundamentalInformation.getOrderType();
-
-
             this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, null);
             OfcWarehouseInformation cw = new OfcWarehouseInformation();
             cw.setOrderCode(ofcFundamentalInformation.getOrderCode());
@@ -2553,11 +2522,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 throw new BusinessException("订单类型有误");
             }
             //订单状态变为执行中
-            ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
-            ofcOrderStatus.setStatusDesc("执行中");
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.ALREADY_ACCEPTED.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.ALREADY_ACCEPTED.getDesc());
             ofcOrderStatus.setNotes(new StringBuilder()
                     .append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1))
-                    .append(" ").append("订单开始执行").toString());
+                    .append(" ").append("订单已受理").toString());
             ofcOrderStatus.setOperator(userName);
             ofcOrderStatus.setLastedOperTime(new Date());
             int saveOrderStatus = ofcOrderStatusService.save(ofcOrderStatus);
