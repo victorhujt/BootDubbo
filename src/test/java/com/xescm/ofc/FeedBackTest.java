@@ -33,7 +33,7 @@ public class FeedBackTest {
         feedBackOrderDetail.add(feedBackOrderDetailDto);
         feedBackOrderDto.setOrderCode("SO171103000012");
         feedBackOrderDto.setFeedBackOrderDetail(feedBackOrderDetail);
-        ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto, MAP);
+        ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
 
     }
 }
