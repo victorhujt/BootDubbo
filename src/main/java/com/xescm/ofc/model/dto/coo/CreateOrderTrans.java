@@ -223,7 +223,7 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setDestinationDistrict(createOrderEntity.getConsigneeCounty());
             ofcDistributionBasicInfo.setDestinationTowns(createOrderEntity.getConsigneeTown());
             ofcDistributionBasicInfo.setDestination(createOrderEntity.getConsigneeAddress());
-            StringBuilder destinationCode = new StringBuilder(createOrderEntity.getConsigneeProvinceCode());
+            StringBuilder destinationCode = new StringBuilder();
             if (!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeProvinceCode())) {
                 destinationCode.append(createOrderEntity.getConsigneeProvinceCode());
             }
