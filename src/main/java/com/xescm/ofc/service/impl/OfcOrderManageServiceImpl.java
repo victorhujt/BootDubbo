@@ -32,6 +32,7 @@ import com.xescm.csc.provider.CscSupplierEdasService;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderCancelDto;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcAddressReflectMapper;
 import com.xescm.ofc.model.dto.ofc.*;
@@ -1678,10 +1679,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
             ofcOrderStatus.setTrace("接收订单");
-            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             if (StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
@@ -1696,10 +1697,10 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             notes.append(" 操作单位: ").append(authResDtoByToken.getGroupRefName());
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-            ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-            ofcOrderStatus.setStatusDesc("待审核");
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
             ofcOrderStatus.setTrace("接收订单");
-            ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setLastedOperTime(new Date());
             ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
             ofcOrderStatusService.save(ofcOrderStatus);
@@ -1957,7 +1958,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
 
         logger.info("订单进行自动审核,当前订单号:{}, 当前订单状态:{}", ofcFundamentalInformation.getOrderCode(), ofcOrderStatus.toString());
-        if (ofcOrderStatus.getOrderStatus().equals(PENDING_AUDIT) && reviewTag.equals(REVIEW)) {
+        if (ofcOrderStatus.getOrderStatus().equals(OrderStatusEnum.PEND_AUDIT.getCode()) && reviewTag.equals(REVIEW)) {
             //创单接口订单和钉钉录单补充大区基地信息
             if (StringUtils.equals(ofcFundamentalInformation.getOrderSource(), DING_DING)
                     || StringUtils.equals(ofcFundamentalInformation.getCreator(), CREATE_ORDER_BYAPI)) {
@@ -1974,16 +1975,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 return String.valueOf(Wrapper.SUCCESS_CODE);
             }
             String userName = authResDtoByToken.getUserName();
-            ofcOrderStatus.setOrderStatus(ALREADY_EXAMINE);
-            ofcOrderStatus.setStatusDesc("已审核");
-            ofcOrderStatus.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1) + " " + "订单审核完成");
-            ofcOrderStatus.setOperator(userName);
-            ofcOrderStatus.setLastedOperTime(new Date());
-            int save = ofcOrderStatusService.save(ofcOrderStatus);
-            if (save == 0) {
-                logger.error("自动审核出错, 更新订单状态为已审核失败");
-                throw new BusinessException("自动审核出错!");
-            }
             ofcFundamentalInformation.setOperator(authResDtoByToken.getUserId());
             ofcFundamentalInformation.setOperatorName(userName);
             ofcFundamentalInformation.setOperTime(new Date());
@@ -2003,17 +1994,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 logger.error("订单类型有误");
                 throw new BusinessException("订单类型有误");
             }
-            //订单状态变为执行中
-            ofcOrderStatus.setOrderStatus(IMPLEMENTATION_IN);
-            ofcOrderStatus.setStatusDesc("执行中");
+            //订单状态变为已受理
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.ALREADY_ACCEPTED.getCode());
+            ofcOrderStatus.setStatusDesc(OrderStatusEnum.ALREADY_ACCEPTED.getDesc());
             ofcOrderStatus.setNotes(new StringBuilder()
                     .append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1))
-                    .append(" ").append("订单开始执行").toString());
+                    .append(" ").append("订单已经受理").toString());
             ofcOrderStatus.setOperator(userName);
             ofcOrderStatus.setLastedOperTime(new Date());
             int saveOrderStatus = ofcOrderStatusService.save(ofcOrderStatus);
             if (saveOrderStatus == 0) {
-                logger.error("自动审核出错, 更新订单状态为执行中失败");
+                logger.error("受理出错, 更新订单状态为执行中失败");
                 throw new BusinessException("自动审核出错!");
             }
             logger.info("=====>订单中心--订单状态推结算中心");

@@ -6,7 +6,6 @@ import com.xescm.ofc.domain.OfcSchedulingSingleFeedbackCondition;
 import com.xescm.tfc.mq.dto.TfcTransportStateDTO;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by ydx on 2016/10/12.
@@ -19,6 +18,6 @@ public interface OfcPlanFedBackService {
      * @param userName
      * @return
      */
-    Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO tfcTransportStateDTO, String userName,ConcurrentHashMap cmap);
+    Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO tfcTransportStateDTO, String userName);
     Wrapper<List<OfcPlanFedBackResult>> schedulingSingleFeedbackNew(OfcSchedulingSingleFeedbackCondition ofcSchedulingSingleFeedbackCondition, String userName);
 }

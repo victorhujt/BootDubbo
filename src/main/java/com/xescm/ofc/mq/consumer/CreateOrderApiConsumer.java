@@ -113,7 +113,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.getTag().equals(tag)) {     // 签收单
                     logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, messageBody);
                     try {
-                        mqConsumerService.transportStateConsumer(messageBody, MAP);
+                        mqConsumerService.transportStateConsumer(messageBody);
                     } catch (Exception e) {
                         logger.error("订单运输状态更新异常: 异常详情 => {}", e);
                     }
@@ -137,7 +137,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
             try {
                 FeedBackOrderDto feedBackOrderDto = JacksonUtil.parseJson(messageBody, FeedBackOrderDto.class);
-                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto, MAP);
+                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
             } catch (Exception e) {
                 logger.error("仓储单出入库单反馈出现异常{}", e.getMessage(), e);
             }

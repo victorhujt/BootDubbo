@@ -14,6 +14,7 @@ import com.xescm.ofc.edas.model.dto.ofc.OfcTraceOrderDTO;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDetailDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcOrderNewstatusMapper;
@@ -25,13 +26,13 @@ import com.xescm.tfc.edas.model.dto.ofc.req.OfcRealTimeTraceReqDTO;
 import com.xescm.tfc.edas.service.TfcQueryGpsInfoEdasService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -62,6 +63,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     private TfcQueryGpsInfoEdasService tfcQueryGpsInfoEdasService;
     @Resource
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+
+    @Resource
+    private StringRedisTemplate rt;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -272,7 +276,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
 
 
     @Override
-    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto, ConcurrentHashMap cmap) {
+    public void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto) {
         try {
             String orderCode = feedBackOrderDto.getOrderCode();
             List<FeedBackOrderDetailDto> detailDtos = feedBackOrderDto.getFeedBackOrderDetail();
@@ -292,37 +296,37 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             OfcOrderStatus orderStatus = orderStatusSelect(orderCode,"orderCode");
             OfcOrderStatus status = new OfcOrderStatus();
             if (orderStatus != null) {
-                if (HASBEEN_COMPLETED.equals(orderStatus.getOrderStatus())) {
+                if (OrderStatusEnum.BEEN_COMPLETED.getCode().equals(orderStatus.getOrderStatus())) {
                     throw new BusinessException("订单已经完成");
                 }
-                if (HASBEEN_CANCELED.equals(orderStatus.getOrderStatus())) {
+                if (OrderStatusEnum.BEEN_CANCELED.getCode().equals(orderStatus.getOrderStatus())) {
                     throw new BusinessException("订单已经取消");
                 }
             }
-            String str = "";
             if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
-                status.setOrderStatus(HASBEEN_COMPLETED);
-                str = "入库单";
+                status.setOrderStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
+                status.setStatusDesc(OrderStatusEnum.INPUT_COMPLETED.getDesc());
             } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                str = "出库单";
+                status.setOrderStatus(OrderStatusEnum.OUTPUT_COMPLETED.getCode());
+                status.setStatusDesc(OrderStatusEnum.OUTPUT_COMPLETED.getDesc());
                 status.setTraceStatus("20");
                 status.setTrace("出库");
             }
 
             if (ofcWarehouseInformation != null) {
-                if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
-                    if (cmap.containsKey(ofcFundamentalInformation.getOrderCode())) {
-                        logger.info("仓储订单运输先完成,订单号为{}", ofcFundamentalInformation.getOrderCode());
-                        status.setOrderStatus(HASBEEN_COMPLETED);
+                if (WEARHOUSE_WITH_TRANS.equals(ofcWarehouseInformation.getProvideTransport())) {
+                    if (rt.hasKey(orderCode)) {
+                        logger.info("仓储订单运输先完成,订单号为{}", orderCode);
+                        status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
                         //更新订单完成时间
                         ofcFundamentalInformation.setFinishedTime(new Date());
+                        rt.delete(orderCode);
                     } else {
-                        status.setOrderStatus(IMPLEMENTATION_IN);
-                        logger.info("===>仓储订单仓储先完成,订单号为{}", ofcFundamentalInformation.getOrderCode());
-                        cmap.put(ofcFundamentalInformation.getOrderCode(), "");
+                        logger.info("===>仓储订单仓储先完成,订单号为{}", orderCode);
+                        rt.opsForValue().set(orderCode,orderCode);
                     }
                 } else {
-                    status.setOrderStatus(HASBEEN_COMPLETED);
+                    status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
                     //更新订单完成时间
                     ofcFundamentalInformation.setFinishedTime(new Date());
                 }
@@ -340,11 +344,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
 
             status.setLastedOperTime(new Date());
-            status.setStatusDesc("订单号为" + orderCode + str + "已完成");
+            status.setStatusDesc("订单号为" + orderCode + "已完成");
             status.setOrderCode(orderCode);
             status.setOperator("");
             status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)
-                    + " " + "订单号为" + orderCode + str + "已完成");
+                    + " " + "订单号为" + orderCode + "已完成");
             status.setOrderCode(orderCode);
             save(status);
             ofcFundamentalInformationService.update(ofcFundamentalInformation);

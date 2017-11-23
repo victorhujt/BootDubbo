@@ -18,14 +18,13 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
@@ -38,7 +37,6 @@ import static com.xescm.tfc.edas.model.constants.PaasStateConstants.PaasStateEnu
  *  date: 2016/10/10.
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
     private static final Logger logger = LoggerFactory.getLogger(OfcPlanFedBackServiceImpl.class);
@@ -57,6 +55,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
 
+    @Resource
+    private StringRedisTemplate rt;
+
     /**
      * 运输单状态反馈
      * @param transportStateDTO      反馈实体
@@ -64,7 +65,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @return      list
      */
     @Override
-    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO transportStateDTO, String userName,ConcurrentHashMap cmap) {
+    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO transportStateDTO, String userName) {
         String orderCode = trimAndNullAsEmpty(transportStateDTO.getOrderNo());
         try{
             String status = trimAndNullAsEmpty(transportStateDTO.getState());
@@ -112,7 +113,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "20-[已发运]");
                 String notes = traceTimeStr + " " + " 车辆已发运，发往目的地：" + destination;
-                orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, "30", "发车", notes, "start");
+                orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, "34", "发车", notes, "start");
+                orderStatus.setOrderStatus(OrderStatusEnum.ALREADY_SHIPPED.getCode());
+                orderStatus.setStatusDesc(OrderStatusEnum.ALREADY_SHIPPED.getDesc());
             } else if (PaasStateEnum.TFC_STATE_5.getCenterState().equals(status)) { /** 已到达 */
 
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "30-[已到达]");
@@ -121,7 +124,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             } else if (PaasStateEnum.TFC_STATE_6.getCenterState().equals(status)) { /** 已签收 */
 
                 logger.info("=====> 订单号{}=> 跟踪状态{}", orderCode, "40-[已签收]");
-                orderStatus = setOrderStatusSign(orderStatus, statusList, ofcFundamentalInformation, traceTime, cmap);
+                orderStatus = setOrderStatusSign(orderStatus, statusList, ofcFundamentalInformation, traceTime);
             } else if (PaasStateEnum.TFC_STATE_7.getCenterState().equals(status)) { /** 已回单 */
 
                 logger.info("=====> 订单号{}=> 跟踪状态{}订单号{}=> 跟踪状态{}", orderCode, "50-[已回单]");
@@ -231,7 +234,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @param traceTime 操作时间
      * @return 订单状态
      */
-    private OfcOrderStatus setOrderStatusSign(OfcOrderStatus orderStatus, List<OfcOrderStatus> statusList, OfcFundamentalInformation ofcFundamentalInformation, Date traceTime, ConcurrentHashMap cmap) {
+    private OfcOrderStatus setOrderStatusSign(OfcOrderStatus orderStatus, List<OfcOrderStatus> statusList, OfcFundamentalInformation ofcFundamentalInformation, Date traceTime) {
         boolean flag;
         Date now = new Date();
         String traceTimeStr = DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1);
@@ -253,6 +256,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             orderStatus.setTrace("签收");
             orderStatus.setNotes(traceTimeStr + " " + signMsg);
             logger.info("跟踪状态已签收");
+            orderStatus.setOrderStatus(OrderStatusEnum.ALREADY_SIGNED.getCode());
+            orderStatus.setStatusDesc(OrderStatusEnum.ALREADY_SIGNED.getDesc());
             ofcOrderStatusService.save(orderStatus);
             logger.info("序号：4-insertstatus ===== 订单号{}=> 跟踪状态{}", orderCode, orderStatus.getNotes());
 
@@ -263,30 +268,31 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
                 ofcWarehouseInformation.setOrderCode(orderCode);
                 ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
-                if (ofcWarehouseInformation.getProvideTransport() == WEARHOUSE_WITH_TRANS) {
-                    if (cmap.containsKey(orderCode)) {
+                if (WEARHOUSE_WITH_TRANS.equals(ofcWarehouseInformation.getProvideTransport())) {
+                    if (rt.hasKey(orderCode)) {
                         logger.info("仓储订单仓储先完成,订单号为{}", orderCode);
-                        orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                        orderStatus.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
                         if (null == ofcFundamentalInformation.getFinishedTime()) {
                             ofcFundamentalInformation.setFinishedTime(now);
                         }
                     } else {
-                        orderStatus.setOrderStatus(IMPLEMENTATION_IN);
-                        cmap.put(ofcFundamentalInformation.getOrderCode(), "");
+                        rt.opsForValue().set(orderCode,orderCode);
                         logger.info("===>仓储订单运输先完成,订单号为{}", orderCode);
                     }
                 }
             } else {
-                orderStatus.setOrderStatus(HASBEEN_COMPLETED);
+                orderStatus.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
                 if (null == ofcFundamentalInformation.getFinishedTime()) {
                     ofcFundamentalInformation.setFinishedTime(now);
                 }
             }
-            orderStatus.setLastedOperTime(now);
-            orderStatus.setStatusDesc("运输单已完成");
-            orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) + " " + "运输单订单已完成");
-            orderStatus.setOperator("");
-            ofcFundamentalInformationService.update(ofcFundamentalInformation);
+            if (!OrderStatusEnum.ALREADY_SIGNED.getCode().equals(orderStatus.getOrderStatus())) {
+                orderStatus.setLastedOperTime(now);
+                orderStatus.setStatusDesc("运输单已完成");
+                orderStatus.setNotes(DateUtils.Date2String(now, DateUtils.DateFormatType.TYPE1) + " " + "运输单订单已完成");
+                orderStatus.setOperator("");
+                ofcFundamentalInformationService.update(ofcFundamentalInformation);
+            }
         }
         return orderStatus;
     }
