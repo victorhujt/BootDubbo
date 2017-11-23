@@ -430,8 +430,8 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                                     goodsInfo.setRealQuantity(pquantity);
                                     key = key +":" +levelDescription;
                                     rt.opsForValue().set(key,ls.toString());
-                                    /**缓存1小时**/
-                                    rt.expire(key,1, TimeUnit.HOURS);
+                                    /**缓存2小时**/
+                                    rt.expire(key,2, TimeUnit.HOURS);
                                     logger.info("主单位的数量转化为原包装的数量为:{}",realQuantity.doubleValue());
                                     break;
                                 }
