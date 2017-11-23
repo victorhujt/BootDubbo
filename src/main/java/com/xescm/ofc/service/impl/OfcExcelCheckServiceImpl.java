@@ -648,7 +648,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
                             cscGoodsApiVo.setGoodsCode(cscGoodsApiDto.getGoodsCode() + "@" + ofcExcelBoradwise.getGoodsUnitPirce());
                             OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                             try {
-                                BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                                BeanUtils.copyProperties(cscGoodsApiVo, ofcGoodsApiVo);
                                 ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                             } catch (Exception e) {
                                 logger.error("校验明细类型Excel异常,{}",e);
@@ -728,7 +728,7 @@ public class OfcExcelCheckServiceImpl implements OfcExcelCheckService{
 
                         OfcGoodsApiVo ofcGoodsApiVo = new OfcGoodsApiVo();
                         try {
-                            BeanUtils.copyProperties(ofcGoodsApiVo,cscGoodsApiVo);
+                            BeanUtils.copyProperties(cscGoodsApiVo, ofcGoodsApiVo);
                             ofcGoodsApiVo.setGoodsAmount(Double.valueOf("0"));
                         } catch (Exception e) {
                             logger.error("校验明细类型Excel异常,{}",e);
