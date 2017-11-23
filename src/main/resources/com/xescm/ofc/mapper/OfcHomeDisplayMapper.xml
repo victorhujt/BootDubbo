@@ -69,7 +69,6 @@
       ofi.creation_time,
       '%Y-%m-%d'
       ) &lt;= NOW()
-      AND oon.order_latest_status &lt;&gt; '40'
       AND oon.order_latest_status &lt;&gt; '50'
     </where>
   </select>
