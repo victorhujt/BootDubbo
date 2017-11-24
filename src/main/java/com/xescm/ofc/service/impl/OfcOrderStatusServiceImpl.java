@@ -66,6 +66,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
 
     @Resource
+    private OfcRuntimePropertyService ofcRuntimePropertyService;
+
+    @Resource
     private StringRedisTemplate rt;
 
     @Override
@@ -385,15 +388,20 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 String key =  custCode+":"+warehouseCode+":" + goodsCode;
                 String packageKey = key +":"+unit;
                 /**缓存中有包装先从缓存中取**/
-                if (rt.hasKey(packageKey)) {
-                    String  v = rt.opsForValue().get(packageKey);
-                    BigDecimal ls = new BigDecimal(v);
-                    BigDecimal pquantity;
-                    BigDecimal realQuantity = goodsInfo.getRealQuantity();
-                    pquantity = accountRealQuantity(custCode, realQuantity, ls);
-                    goodsInfo.setRealQuantity(pquantity);
-                    continue;
+                if (isSwitchCache()) {
+                    if (rt.hasKey(packageKey)) {
+                        String  v = rt.opsForValue().get(packageKey);
+                        BigDecimal ls = new BigDecimal(v);
+                        BigDecimal pquantity;
+                        BigDecimal realQuantity = goodsInfo.getRealQuantity();
+                        pquantity = accountRealQuantity(custCode, realQuantity, ls);
+                        goodsInfo.setRealQuantity(pquantity);
+                        continue;
+                    }
+                } else {
+                    rt.delete(packageKey);
                 }
+
                 List<GoodsPackingDto>  packages;
                 //天津自动化仓 用天津仓包装校验
                 if ("000001".equals(warehouseCode)) {
@@ -428,10 +436,13 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                                     logger.info("主单位的数量为:{}转化率为:{}",realQuantity.doubleValue(),ls.doubleValue());
                                     pquantity = accountRealQuantity(custCode, realQuantity, ls);
                                     goodsInfo.setRealQuantity(pquantity);
-                                    key = key +":" +levelDescription;
-                                    rt.opsForValue().set(key,ls.toString());
-                                    /**缓存2小时**/
-                                    rt.expire(key,2, TimeUnit.HOURS);
+                                    if (isSwitchCache()) {
+                                        key = key +":" +levelDescription;
+                                        rt.opsForValue().set(key,ls.toString());
+                                        /**缓存1天**/
+                                        rt.expire(key,1, TimeUnit.DAYS);
+                                    }
+
                                     logger.info("主单位的数量转化为原包装的数量为:{}",realQuantity.doubleValue());
                                     break;
                                 }
@@ -602,4 +613,17 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         }
         return statusDesc;
     }
+
+    private boolean  isSwitchCache() {
+        boolean isCache = false;
+        //是否开启包装缓存的开关 on 开启
+        OfcRuntimeProperty  ofcRuntimeProperty=  ofcRuntimePropertyService.findByName("good_package_cache_switch");
+        if (ofcRuntimeProperty != null) {
+            if ("on".equals(ofcRuntimeProperty.getValue())) {
+                isCache = true;
+            }
+        }
+        return isCache;
+    }
+
 }
