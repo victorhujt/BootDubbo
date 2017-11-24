@@ -73,7 +73,7 @@ public class OfcOperCommonController extends BaseController{
         PageInfo<Select2RespDto> result;
         try {
             Select2ReqDto select2ReqDto = new Select2ReqDto();
-            BeanUtils.copyProperties(select2ReqDto,reqParam);
+            BeanUtils.copyProperties(reqParam,select2ReqDto);
             select2ReqDto.setName(reqParam.getParam());
             wrapper = cscCustomerEdasService.queryCustomerListPageWithSelect2(select2ReqDto);
             if (null == wrapper) {
@@ -123,7 +123,7 @@ public class OfcOperCommonController extends BaseController{
                 throw new BusinessException("没有查询到供应商");
             }
             PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
-            org.apache.commons.beanutils.BeanUtils.copyProperties(pageInfo, resultForRevert);
+            BeanUtils.copyProperties(resultForRevert,pageInfo);
             pageInfo.setList(null);
             List<Select2RespDto> select2RespDtoList = new ArrayList<>();
             for (CscSupplierInfoDto cscSupplierInfoDto : resultForRevert.getList()) {
