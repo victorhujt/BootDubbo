@@ -480,12 +480,13 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         CheckUtils.checkArgument(ofcFundamentalInformation == null, ResultCodeEnum.RESULTISNULL);
         if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
-            OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
-            ofcWarehouseInformation.setOrderCode(orderCode);
-            List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
-            if (!CollectionUtils.isEmpty(ofcWarehouseInformations) && ofcWarehouseInformations.size() == 1) {
-                CheckUtils.checkArgument(ofcWarehouseInformations.get(0).getProvideTransport() != WEARHOUSE_WITH_TRANS, ResultCodeEnum.ISNOTSUPPORT);
-            }
+
+          OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+          ofcWarehouseInformation.setOrderCode(orderCode);
+          List<OfcWarehouseInformation> ofcWarehouseInformations = ofcWarehouseInformationService.select(ofcWarehouseInformation);
+          if (!CollectionUtils.isEmpty(ofcWarehouseInformations) && ofcWarehouseInformations.size() == 1) {
+              CheckUtils.checkArgument(ofcWarehouseInformations.get(0).getProvideTransport()!=WEARHOUSE_WITH_TRANS, ResultCodeEnum.ISNOTSUPPORT);
+          }
         }
         OfcTraceOrderDTO ofcTraceOrderDTO = new OfcTraceOrderDTO();
         List<OfcOrderStatusDTO> orderStatusDTOs = new ArrayList<>();

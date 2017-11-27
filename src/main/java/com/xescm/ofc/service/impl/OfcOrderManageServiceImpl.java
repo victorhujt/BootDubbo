@@ -1076,14 +1076,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         try {
             // 转换Ac实体
             AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
-            BeanUtils.copyProperties(ofcFundamentalInformation, acFundamentalInformation);
-
+            BeanUtils.copyProperties( ofcFundamentalInformation, acFundamentalInformation);
             AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
-            BeanUtils.copyProperties(ofcFinanceInformation, acFinanceInformation);
-
+            BeanUtils.copyProperties( ofcFinanceInformation, acFinanceInformation);
             AcDistributionBasicInfo acDistributionBasicInfo = new AcDistributionBasicInfo();
-            BeanUtils.copyProperties(ofcDistributionBasicInfo, acDistributionBasicInfo);
-
+            BeanUtils.copyProperties( ofcDistributionBasicInfo, acDistributionBasicInfo);
             List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
                 AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
@@ -1190,6 +1187,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("订单状态开始推结算中心 实体转换异常");
             throw new BusinessException("订单状态开始推结算中心 实体转换异常");
         }
+        BeanUtils.copyProperties(ofcOrderStatus, acOrderStatusDto);
+
         try {
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
             if (null == integerWrapper || integerWrapper.getCode() != Wrapper.SUCCESS_CODE) {
@@ -1811,7 +1810,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             OfcWarehouseInformation owinfo = ofcWarehouseInformationService.selectOne(cw);
             if (owinfo != null) {
                 OfcWarehouseInformation ofcnewWarehouseInformation = new OfcWarehouseInformation();
-                BeanUtils.copyProperties(owinfo, ofcnewWarehouseInformation);
+                BeanUtils.copyProperties( owinfo, ofcnewWarehouseInformation);
                 ofcnewWarehouseInformation.setOrderCode(newofcFundamentalInformation.getOrderCode());
                 ofcWarehouseInformationService.save(ofcnewWarehouseInformation);
 
@@ -1821,7 +1820,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 OfcDistributionBasicInfo BasicInfo = ofcDistributionBasicInfoService.selectOne(f);
                 if (BasicInfo != null) {
                     OfcDistributionBasicInfo newofcDistributionBasicInfo = new OfcDistributionBasicInfo();
-                    BeanUtils.copyProperties(BasicInfo, newofcDistributionBasicInfo);
+                    BeanUtils.copyProperties( BasicInfo, newofcDistributionBasicInfo);
                     newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                     if (owinfo != null) {
                         if (Objects.equals(owinfo.getProvideTransport(), YES)) {
@@ -1839,7 +1838,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (goodsInfo != null && goodsInfo.size() > 0) {
                 for (OfcGoodsDetailsInfo info : goodsInfo) {
                     OfcGoodsDetailsInfo newGoodsInfo = new OfcGoodsDetailsInfo();
-                    BeanUtils.copyProperties(info,newGoodsInfo);
+                    BeanUtils.copyProperties( info,newGoodsInfo);
                     newGoodsInfo.setId(UUID.randomUUID().toString().replace("-", ""));
                     newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                     newGoodsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
@@ -2043,7 +2042,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             Wrapper result =  whcModifWmsCodeEdasService.modifWmsCodeByOrderCode(whcModifWmsCodeReqDto);
             logger.info("response result is {}",result);
             if ( Wrapper.SUCCESS_CODE == result.getCode()) {
-                /*更新仓库信息的仓库编码和仓库名称*/
+                /**更新仓库信息的仓库编码和仓库名称**/
                 int reuslt = ofcWarehouseInformationService.updateByOrderCode(ofcWarehouseInformation);
                 if (reuslt == 1) {
                     succees = true;
