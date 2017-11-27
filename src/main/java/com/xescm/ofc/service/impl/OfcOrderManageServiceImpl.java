@@ -146,7 +146,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private OfcStorageTemplateService ofcStorageTemplateService;
     @Resource
     private OfcOrderNewstatusService ofcOrderNewstatusService;
-
+    @Resource
+    private OfcPotNormalRuleService ofcPotNormalRuleService;
     @Resource
     private DefaultMqProducer mqProducer;
     @Resource
@@ -1094,21 +1095,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 String orderInfo = JacksonUtil.toJson(acOrderDto);
                 // 推送结算
                 boolean isSend = mqProducer.sendMsg(orderInfo, mqConfig.getOfc2AcOrderTopic(), orderCode, "xeOrderToAc");
-                if (isSend) {
-                    logger.info("订单中心推送结算中心成功，订单号：{}", orderCode);
-                } else {
-                    logger.info("订单中心推送结算中心失败，订单号：{}", orderCode);
-                }
+                logger.info("订单中心推送结算中心结果: {}，订单号：{}", isSend, orderCode);
             } catch (Exception e) {
                 logger.error("订单中心推送结算订单转换发生错误, 异常： {}", e);
                 throw new BusinessException("订单中心推送结算订单转换发生错误!");
             }
+            ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo , ofcGoodsDetailsInfos, ofcWarehouseInformation);
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {
             logger.error("订单信息推送结算中心 转换异常, {}", e);
         }
     }
+
+
 
     /**
      * <p>Title:    .更新 </p>
