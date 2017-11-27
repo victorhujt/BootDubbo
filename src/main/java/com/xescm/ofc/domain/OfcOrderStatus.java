@@ -74,13 +74,4 @@ public class OfcOrderStatus {
      */
     @Column(name = "trace")
     private String trace;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
 }

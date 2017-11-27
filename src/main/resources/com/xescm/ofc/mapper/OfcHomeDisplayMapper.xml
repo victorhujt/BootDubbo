@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xescm.ofc.mapper.OfcHomeDisplayMapper" >
+  <resultMap id="BaseResultMap" type="com.xescm.ofc.model.dto.ofc.HomeDisplayDto" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="transportOrderIncompleteNumber" property="transportOrderIncompleteNumber" jdbcType="VARCHAR" />
+    <result column="storageOrderIncompleteNumber" property="storageOrderIncompleteNumber" jdbcType="VARCHAR" />
+    <result column="monthCreateOrderNumber" property="monthCreateOrderNumber" jdbcType="VARCHAR" />
+    <result column="monthCompletedOrderNumber" property="monthCompletedOrderNumber" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="DailyResultMap" type="com.xescm.ofc.model.dto.ofc.DailyOrderDto" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="day" property="day" jdbcType="VARCHAR" />
+    <result column="orderNumber" property="orderNumber" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="queryTransportOrderIncompleteNumber" parameterType="com.xescm.ofc.model.dto.ofc.HomeDisplaySeleDto" resultMap="BaseResultMap">
+    SELECT
+      IFNULL(count(ofi.order_code),0) AS transportOrderIncompleteNumber
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_order_newstatus oon ON ofi.order_code = oon.order_code
+    <where>
+      <if test="custCode!=null and custCode!=''">
+        ofi.cust_code = #{custCode}
+      </if>
+      AND ofi.order_type = '60'
+      AND oon.order_latest_status &lt;&gt; '40'
+      AND oon.order_latest_status &lt;&gt; '50'
+    </where>
+  </select>
+  <select id="queryStorageOrderIncompleteNumber" parameterType="com.xescm.ofc.model.dto.ofc.HomeDisplaySeleDto" resultMap="BaseResultMap">
+    SELECT
+    IFNULL(count(ofi.order_code),0) AS storageOrderIncompleteNumber
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_order_newstatus oon ON ofi.order_code = oon.order_code
+    <where>
+      <if test="custCode!=null and custCode!=''">
+        ofi.cust_code = #{custCode}
+      </if>
+      AND ofi.order_type = '61'
+      AND oon.order_latest_status &lt;&gt; '40'
+      AND oon.order_latest_status &lt;&gt; '50'
+    </where>
+  </select>
+  <select id="queryMonthCreateOrderNumber" parameterType="com.xescm.ofc.model.dto.ofc.HomeDisplaySeleDto" resultMap="BaseResultMap">
+    SELECT
+    IFNULL(count(ofi.order_code),0) AS monthCreateOrderNumber
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_order_newstatus oon ON ofi.order_code = oon.order_code
+    <where>
+      <if test="custCode!=null and custCode!=''">
+        ofi.cust_code = #{custCode}
+      </if>
+      AND date_format(
+      ofi.creation_time,
+      '%Y-%m-%d'
+      ) &gt;= date_add(
+      curdate(),
+      INTERVAL - DAY (curdate()) + 1 DAY
+      )
+      AND date_format(
+      ofi.creation_time,
+      '%Y-%m-%d'
+      ) &lt;= NOW()
+      AND oon.order_latest_status &lt;&gt; '40'
+      AND oon.order_latest_status &lt;&gt; '50'
+    </where>
+  </select>
+  <select id="queryMonthCompletedOrderNumber" parameterType="com.xescm.ofc.model.dto.ofc.HomeDisplaySeleDto" resultMap="BaseResultMap">
+    SELECT
+    IFNULL(count(ofi.order_code),0) AS monthCompletedOrderNumber
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_order_newstatus oon ON ofi.order_code = oon.order_code
+    <where>
+      <if test="custCode!=null and custCode!=''">
+        ofi.cust_code = #{custCode}
+      </if>
+      AND date_format(
+      ofi.finished_time,
+      '%Y-%m-%d'
+      ) &gt;= date_add(
+      curdate(),
+      INTERVAL - DAY (curdate()) + 1 DAY
+      )
+      AND date_format(
+      ofi.finished_time,
+      '%Y-%m-%d'
+      ) &lt;= NOW()
+      AND oon.order_latest_status = '40'
+    </where>
+  </select>
+  <select id="queryDailyOrderNumber" parameterType="com.xescm.ofc.model.dto.ofc.HomeDisplaySeleDto" resultMap="DailyResultMap">
+    SELECT
+    date_format(
+    ofi.creation_time,
+    '%Y-%m-%d'
+    ) AS day,
+    IFNULL(count(ofi.order_code), 0) AS orderNumber
+    FROM
+    ofc_fundamental_information ofi
+    LEFT JOIN ofc_order_newstatus oon ON ofi.order_code = oon.order_code
+    <where>
+      <if test="custCode!=null and custCode!=''">
+        ofi.cust_code = #{custCode}
+      </if>
+      AND date_format(
+      ofi.creation_time,
+      '%Y-%m-%d'
+      ) &gt;= date_sub(NOW(), INTERVAL 30 DAY)
+      AND date_format(
+      ofi.creation_time,
+      '%Y-%m-%d'
+      ) &lt;= NOW()
+      AND oon.order_latest_status &lt;&gt; '50'
+      GROUP BY
+      date_format(
+      ofi.creation_time,
+      '%Y-%m-%d'
+      )
+      ORDER BY
+      date_format(
+      ofi.creation_time,
+      '%Y-%m-%d'
+      ) ASC
+    </where>
+  </select>
+
+</mapper>

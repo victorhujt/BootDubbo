@@ -5,8 +5,8 @@ import com.google.common.collect.Maps;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.enums.SmsTemplatesEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.ofc.SendSmsDTO;
@@ -34,11 +34,11 @@ import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 import static com.xescm.tfc.edas.model.constants.PaasStateConstants.PaasStateEnum;
 
 /**
- *
- * Created by lyh on 2016/10/10.
+ *@author  lyh
+ *  date: 2016/10/10.
  */
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
     private static final Logger logger = LoggerFactory.getLogger(OfcPlanFedBackServiceImpl.class);
@@ -64,7 +64,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @return      list
      */
     @Override
-    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO transportStateDTO, String userName, ConcurrentHashMap cmap) {
+    public Wrapper<List<OfcPlanFedBackResult>> planFedBackNew(TfcTransportStateDTO transportStateDTO, String userName,ConcurrentHashMap cmap) {
         String orderCode = trimAndNullAsEmpty(transportStateDTO.getOrderNo());
         try{
             String status = trimAndNullAsEmpty(transportStateDTO.getState());
@@ -157,13 +157,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             } else {
                 throw new BusinessException("订单["+orderCode+"]运输状态更新异常：所给订单状态有误 " + status);
             }
-
             if (!statusNotes.equals(orderStatus.getNotes())) {
-                if ("40".equals(status) || "50".equals(status)) {
-                    orderStatus.setOrderStatus("40");
+                if (PaasStateEnum.TFC_STATE_6.getCenterState().equals(status) || PaasStateEnum.TFC_STATE_7.getCenterState().equals(status)) {
+                    orderStatus.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
                 }
                 ofcOrderStatusService.save(orderStatus);
-                if (StringUtils.equals(orderStatus.getOrderStatus(), OrderConstConstant.HASBEEN_COMPLETED)) {
+                if (StringUtils.equals(orderStatus.getOrderStatus(), OrderStatusEnum.BEEN_COMPLETED.getCode())) {
                     //订单发送签收短信
                     this.sendSmsWhileSigned(ofcFundamentalInformation, distributionBasicInfo);
                     //订单中心--订单状态推结算中心(执行中和已完成)
@@ -178,18 +177,18 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 
     /**
      * 更新调度信息，司机、车牌、电话号码
-     * @param orderCode
-     * @param transportStateDTO
+     * @param orderCode 订单号
+     * @param transportStateDTO  运输状态DTO
      */
     private void updateOrderScheduleInfo(String orderCode, TfcTransportStateDTO transportStateDTO) {
         OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.distributionBasicInfoSelect(orderCode);
-        if (trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()).equals("")) {
+        if ("".equals(trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()))) {
             ofcDistributionBasicInfo.setPlateNumber(transportStateDTO.getCarNumber());
         }
-        if (trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()).equals("")) {
+        if ("".equals(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()))) {
             ofcDistributionBasicInfo.setDriverName(transportStateDTO.getDriver());
         }
-        if (trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")) {
+        if ("".equals(trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()))) {
             ofcDistributionBasicInfo.setContactNumber(transportStateDTO.getDriverPhone());
         }
         ofcDistributionBasicInfoService.updateByOrderCode(ofcDistributionBasicInfo);
@@ -203,9 +202,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @param traceTime 操作时间
      * @param traceCode 操作类型
      * @param traceStatus 操作类型描述
-     * @param notes
+     * @param notes 备注
      * @param checkPoint 检查点
-     * @return
+     * @return 订单状态
      */
     private OfcOrderStatus setOrderStatusInfo(OfcOrderStatus orderStatus, List<OfcOrderStatus> currentOrderStatus, Date traceTime, String traceCode, String traceStatus, String notes, String checkPoint) {
         boolean flag;
@@ -213,8 +212,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         if (!flag) {
             orderStatus.setLastedOperTime(traceTime);
             orderStatus.setNotes(notes);
-            if (PubUtils.isSEmptyOrNull(traceCode)) orderStatus.setTraceStatus(traceCode);
-            if (PubUtils.isSEmptyOrNull(traceStatus)) orderStatus.setTrace(traceStatus);
+            if (PubUtils.isSEmptyOrNull(traceCode)) {
+                orderStatus.setTraceStatus(traceCode);
+            }
+            if (PubUtils.isSEmptyOrNull(traceStatus)) {
+                orderStatus.setTrace(traceStatus);
+            }
         }
         return orderStatus;
     }
@@ -226,8 +229,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
      * @param statusList 订单现有状态
      * @param ofcFundamentalInformation 订单
      * @param traceTime 操作时间
-     * @param cmap
-     * @return
+     * @return 订单状态
      */
     private OfcOrderStatus setOrderStatusSign(OfcOrderStatus orderStatus, List<OfcOrderStatus> statusList, OfcFundamentalInformation ofcFundamentalInformation, Date traceTime, ConcurrentHashMap cmap) {
         boolean flag;
@@ -341,10 +343,10 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             //注意，运输单号即是订单号
             String orderCode = trimAndNullAsEmpty(ofcSchedulingStatus.getOrderCode().get(i));
             try {
-                if (orderCode.equals("") || !trimAndNullAsEmpty(orderCode).startsWith(ORDER_PRE)) {
+                if ("".equals(orderCode) || !trimAndNullAsEmpty(orderCode).startsWith(ORDER_PRE)) {
                     throw new BusinessException("订单调度状态更新异常：订单号为空或者格式不正确: ["+orderCode+"]");
                 }
-                if (ofcSchedulingStatus.getDeliveryNo().equals("")) {
+                if ("".equals(ofcSchedulingStatus.getDeliveryNo())) {
                     throw new BusinessException("订单["+orderCode+"]调度状态更新异常：调度单号不可以为空");
                 }
                 if (ofcSchedulingStatus.getCreateTime() == null) {
@@ -355,15 +357,15 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 StringBuilder info = new StringBuilder("订单");
                 String tag = "";
                 info.append("调度完成");
-                if (trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()).equals("")) {
+                if ("".equals(trimAndNullAsEmpty(ofcDistributionBasicInfo.getPlateNumber()))) {
                     ofcDistributionBasicInfo.setPlateNumber(ofcSchedulingStatus.getVehical());
                 }
                 info.append("，安排车辆车牌号：【").append(ofcSchedulingStatus.getVehical()).append("】");
-                if (trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()).equals("")) {
+                if ("".equals(trimAndNullAsEmpty(ofcDistributionBasicInfo.getDriverName()))) {
                     ofcDistributionBasicInfo.setDriverName(ofcSchedulingStatus.getDriver());
                 }
                 info.append("，司机姓名：【").append(ofcSchedulingStatus.getDriver()).append("】");
-                if (trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()).equals("")) {
+                if ("".equals(trimAndNullAsEmpty(ofcDistributionBasicInfo.getContactNumber()))) {
                     ofcDistributionBasicInfo.setContactNumber(ofcSchedulingStatus.getTel());
                 }
                 info.append("，联系电话：【").append(ofcSchedulingStatus.getTel()).append("】");
@@ -390,24 +392,24 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         return null;
     }
 
-    //校验数据库中是否已存在相应状态
+    /**校验数据库中是否已存在相应状态**/
     private boolean checkStatus(boolean flag,List<OfcOrderStatus> statusList,String position,String msg) {
         if (PubUtils.isNotNullAndBiggerSize(statusList, 0)) {
             for (OfcOrderStatus status : statusList) {
                 if (status != null) {
                     String statusNote = status.getNotes();
                     if (!PubUtils.isSEmptyOrNull(statusNote)) {
-                        if (trimAndNullAsEmpty(position).equals("start")) {
+                        if ("start".equals(trimAndNullAsEmpty(position))) {
                             if (statusNote.startsWith(msg)) {
                                 flag = true;
                                 break;
                             }
-                        } else if (trimAndNullAsEmpty(position).equals("end")) {
+                        } else if ("end".equals(trimAndNullAsEmpty(position))) {
                             if (statusNote.endsWith(msg)) {
                                 flag = true;
                                 break;
                             }
-                        } else if (trimAndNullAsEmpty(position).equals("full")) {
+                        } else if ("full".equals(trimAndNullAsEmpty(position))) {
                             if (statusNote.equals(msg)) {
                                 flag = true;
                                 break;

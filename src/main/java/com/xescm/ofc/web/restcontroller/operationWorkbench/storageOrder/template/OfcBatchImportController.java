@@ -9,7 +9,7 @@ import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcStorageTemplate;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.TemplateCondition;
-import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateDto;
+import com.xescm.ofc.model.dto.ofc.OfcStorageImportDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageTemplateEditDTO;
 import com.xescm.ofc.service.OfcStorageTemplateService;
 import com.xescm.ofc.web.controller.BaseController;
@@ -83,7 +83,7 @@ public class OfcBatchImportController extends BaseController{
         List<OfcStorageTemplate> ofcStorageTemplateList;
         PageInfo<OfcStorageTemplate> pageInfo;
         try {
-            new PageHelper().startPage(templateCondition.getPageNum(),templateCondition.getPageSize());
+            PageHelper.startPage(templateCondition.getPageNum(),templateCondition.getPageSize());
             ofcStorageTemplateList = ofcStorageTemplateService.selectTemplateByCondition(templateCondition);
             pageInfo = new PageInfo<>(ofcStorageTemplateList);
         } catch (BusinessException e) {
@@ -264,6 +264,7 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
+    @SuppressWarnings("unchecked")
     public Wrapper batchInUpload(@RequestParam(value = "file") MultipartFile file, OfcStorageTemplate ofcStorageTemplate) {
         logger.info("仓储开单批量导单: {}", ofcStorageTemplate);
         Wrapper<?> result = null;
@@ -311,12 +312,12 @@ public class OfcBatchImportController extends BaseController{
      */
     @RequestMapping(value = "/confirm")
     @ResponseBody
-    public Wrapper confirm(@RequestBody List<OfcStorageTemplateDto> orderList) {
-        logger.info("仓储开单批量导单确认下单 ==> orderList:{}", orderList);
+    public Wrapper confirm(@RequestBody OfcStorageImportDTO ofcStorageImportDTO) {
+        logger.info("仓储开单批量导单确认下单 ==> ofcStorageImportDTO:{}", ofcStorageImportDTO);
         try {
             AuthResDto authResDto = getAuthResDtoByToken();
             //下单
-            Wrapper placeOrderResult = ofcStorageTemplateService.orderConfirm(orderList, authResDto);
+            Wrapper placeOrderResult = ofcStorageTemplateService.orderConfirm(ofcStorageImportDTO, authResDto);
             if (Wrapper.ERROR_CODE == placeOrderResult.getCode()) {
                 return placeOrderResult;
             }

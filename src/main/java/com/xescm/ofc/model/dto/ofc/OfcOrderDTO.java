@@ -73,13 +73,21 @@ public class OfcOrderDTO {
      */
     private String orderSource;
     /**
-     * 服务产品类型
+     * 产品类型
      */
     private String productType;
     /**
-     * 服务产品名称
+     * 产品名称
      */
     private String productName;
+    /**
+     * 服务产品编码
+     */
+    private String serviceProductCode;
+    /**
+     * 服务产品名称
+     */
+    private String serviceProductName;
     /**
      * 完成日期
      */
@@ -319,6 +327,10 @@ public class OfcOrderDTO {
     private String goodsType;
     private String goodsTypeName;
    // private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<OfcGoodsDetailsInfo>();
+
+    /**
+     * 货品列表
+     */
     private List<OfcGoodsDetailsInfo> goodsList = new ArrayList<>();
 
 

@@ -29,17 +29,17 @@
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-uam-api</artifactId>
-			<version>2.2</version>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-ofc-api</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-epc-api</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
@@ -64,22 +64,27 @@
 		<dependency>
 			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-whc-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.xescm.api</groupId>
-			<artifactId>xescm-tfc-api</artifactId>
 			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.api</groupId>
+			<artifactId>xescm-tfc-api</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.api</groupId>
 			<artifactId>xescm-dingtalk-api</artifactId>
-			<version>1.0</version>
+			<version>1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xescm.common</groupId>
 			<artifactId>xescm-core</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.xescm.common</groupId>
+			<artifactId>xescm-base</artifactId>
+			<version>1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>

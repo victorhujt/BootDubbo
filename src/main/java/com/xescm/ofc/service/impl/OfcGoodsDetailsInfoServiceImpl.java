@@ -31,9 +31,9 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     private CscGoodsEdasService cscGoodsEdasService;
     @Override
     public List<OfcGoodsDetailsInfo> goodsDetailsScreenList(String code, String followTag) {
-        if(!PubUtils.trimAndNullAsEmpty(code).equals("")){
+        if(!"".equals(PubUtils.trimAndNullAsEmpty(code))){
             String orderCode = null;
-            if(followTag.equals("orderCode")){
+            if("orderCode".equals(followTag)){
                 orderCode = code;
             }
             Map<String,String> mapperMap = new HashMap<>();
@@ -78,5 +78,22 @@ public class OfcGoodsDetailsInfoServiceImpl extends BaseService<OfcGoodsDetailsI
     @Override
     public void flushPassLineNoById(OfcGoodsDetailsInfo ofcGoodsDetailsInfo) {
         ofcGoodsDetailsInfoMapper.flushPassLineNoById(ofcGoodsDetailsInfo);
+    }
+
+    @Override
+    public void fillGoodType(OfcGoodsDetailsInfo ofcGoodsDetailsInfo) {
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsType())) {
+            ofcGoodsDetailsInfo.setGoodsType("其他");
+        }
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsTypeCode())) {
+            ofcGoodsDetailsInfo.setGoodsTypeCode("GT006");
+        }
+
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCategory())) {
+            ofcGoodsDetailsInfo.setGoodsCategory("其他");
+        }
+        if (PubUtils.isSEmptyOrNull(ofcGoodsDetailsInfo.getGoodsCategoryCode())) {
+            ofcGoodsDetailsInfo.setGoodsCategoryCode("GT098");
+        }
     }
 }

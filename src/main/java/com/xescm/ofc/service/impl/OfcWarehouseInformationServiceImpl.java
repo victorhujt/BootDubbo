@@ -2,16 +2,20 @@ package com.xescm.ofc.service.impl;
 
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
 import com.xescm.csc.model.dto.warehouse.CscWarehouseDto;
 import com.xescm.csc.provider.CscWarehouseEdasService;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcWarehouseInformationMapper;
+import com.xescm.ofc.model.dto.ofc.ModifyWarehouseDTO;
 import com.xescm.ofc.service.OfcWarehouseInformationService;
 import com.xescm.rmc.edas.domain.dto.RmcWarehouseDto;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
+import com.xescm.uam.model.dto.group.UamGroupDto;
+import com.xescm.uam.provider.UamGroupEdasService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,10 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     private CscWarehouseEdasService cscWarehouseEdasService;
     @Resource
     private RmcWarehouseEdasService rmcWarehouseEdasService;
+
+    @Resource
+
+    private UamGroupEdasService uamGroupEdasService;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -78,7 +86,6 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
                 RmcWarehouseRespDto rmcWarehouseResult;
                 Wrapper<RmcWarehouseRespDto> rmcWarehouseByid =  rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouse);
                 if(Wrapper.ERROR_CODE == rmcWarehouseByid.getCode()){
-                    //throw new BusinessException(rmcWarehouseByid.getMessage());
                     continue;
                 }
                 rmcWarehouseResult = rmcWarehouseByid.getResult();
@@ -122,5 +129,78 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
         return select.get(0);
     }
 
+    /**
+     * 客户查询已经开通的仓库
+     * @param custCode
+     * @return
+     */
+    @Override
+    public List<RmcWarehouseRespDto> queryWarehouseByCustomerCode(String custCode) {
+        List<RmcWarehouseRespDto> warehouses = new ArrayList<>();
+        QueryWarehouseDto dto = new QueryWarehouseDto();
+        dto.setCustomerCode(custCode);
+        Wrapper<List<CscWarehouseDto>>  warehouse = cscWarehouseEdasService.getCscWarehouseByCustomerId(dto);
+        if (warehouse.getCode() == Wrapper.SUCCESS_CODE) {
+            //通过查询出的仓库编码查询出仓库的信息
+            if (!PublicUtil.isEmpty(warehouse.getResult())) {
+                RmcWarehouseDto rmcWarehouseDto = new RmcWarehouseDto();
+                for (CscWarehouseDto cscWarehouseDto : warehouse.getResult()) {
+                    rmcWarehouseDto.setWarehouseCode(cscWarehouseDto.getWarehouseCode());
+                    Wrapper<RmcWarehouseRespDto> resp = rmcWarehouseEdasService.queryRmcWarehouseByCode(rmcWarehouseDto);
+                    if (resp != null) {
+                        if (resp.getCode() == Wrapper.SUCCESS_CODE && resp.getResult() != null) {
+                            warehouses.add(resp.getResult());
+                        }
+                    }
+                }
+            } else {
+                logger.info("客户没有开通仓库{}",warehouse.getMessage());
+            }
+        }
+        return warehouses;
+    }
 
+    @Override
+    public List<RmcWarehouseRespDto> queryWarehouseByBaseCode(ModifyWarehouseDTO modifyWarehouseDTO) {
+            List<String> codes = new ArrayList<>();
+            List<RmcWarehouseRespDto> rws = new ArrayList();
+            String custCode = modifyWarehouseDTO.getCustCode();
+            String serialNo = modifyWarehouseDTO.getSerialNo();
+            List<RmcWarehouseRespDto> warehouseRespDtos = queryWarehouseByCustomerCode(custCode);
+            if (CollectionUtils.isEmpty(warehouseRespDtos)) {
+                throw new BusinessException("客户下没有查询到仓库！");
+            }
+            Wrapper<UamGroupDto> uamGroup =  uamGroupEdasService.queryByGroupSerialNo(serialNo);
+            if (uamGroup != null) {
+                logger.info("uamGroupEdasService.queryByGroupSerialNo response code is {}",uamGroup.getCode());
+                if (uamGroup.getCode() == Wrapper.SUCCESS_CODE) {
+                    if (uamGroup.getResult() != null) {
+                        String code = uamGroup.getResult().getGroupCode();
+                        if (PubUtils.isSEmptyOrNull(code)) {
+                            new BusinessException("基地编码为空");
+                        }
+                        codes.add(code);
+                        Wrapper<List<RmcWarehouseRespDto>>  warehouses =  rmcWarehouseEdasService.queryWareHouseInfoByBaseCode(codes);
+                        logger.info("rmcWarehouseEdasService.queryWareHouseInfoByBaseCode response code is {}",warehouses.getCode());
+                        if (warehouses.getCode() == Wrapper.SUCCESS_CODE) {
+                            if (CollectionUtils.isNotEmpty(warehouses.getResult())) {
+                                if (CollectionUtils.isNotEmpty(warehouseRespDtos)) {
+                                    for (RmcWarehouseRespDto dto:warehouses.getResult()) {
+                                        for (RmcWarehouseRespDto dto1:warehouseRespDtos) {
+                                            if (dto.getWarehouseCode().equals(dto1.getWarehouseCode())) {
+                                                rws.add(dto1);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        logger.info("没有查询到基地编码，基地编码为:{}",serialNo);
+                        throw new BusinessException("没有查询到基地编码！");
+                    }
+                }
+            }
+            return rws;
+    }
 }

@@ -1,10 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.ac.domain.AcDistributionBasicInfo;
-import com.xescm.ac.domain.AcFinanceInformation;
-import com.xescm.ac.domain.AcFundamentalInformation;
-import com.xescm.ac.domain.AcGoodsDetailsInfo;
-import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.ac.provider.AcModifyOrderEdasService;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
@@ -18,7 +13,6 @@ import com.xescm.ofc.service.*;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountDetailDto;
 import com.xescm.tfc.edas.model.dto.ofc.req.GoodsAmountSyncDto;
 import com.xescm.tfc.edas.service.TfcUpdateOrderEdasService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 
 @Service
@@ -57,58 +49,43 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
     private DpcTransportDocEdasService dpcTransportDocEdasService;
 
     @Transactional
-    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto,String getOrderCode) {
+    @Override
+    public Wrapper<?> goodsAmountSync(GoodsAmountSyncDto goodsAmountSyncDto) {
         Wrapper result = null;
-        String custCode = goodsAmountSyncDto.getCustCode();
-        String custOrderCode = goodsAmountSyncDto.getCustOrderCode();
+        String orderCode = goodsAmountSyncDto.getOderCode();
         List<GoodsAmountDetailDto> details = goodsAmountSyncDto.getGoodsAmountDetailDtoList();
-        // 查询订单
-        OfcFundamentalInformation ofcFundamentalInfo = new OfcFundamentalInformation();
-        ofcFundamentalInfo.setOrderCode(getOrderCode);
-        try {
-            List<OfcFundamentalInformation> orderList = ofcFundamentalInformationService.select(ofcFundamentalInfo);
-            if (PubUtils.isNotNullAndBiggerSize(orderList, 0)) {
-                for (OfcFundamentalInformation ofcOrder : orderList) {
-                    String orderCode = ofcOrder.getOrderCode();
-                    OfcOrderNewstatus orderStatusObj = ofcOrderNewstatusService.selectByKey(orderCode);
-                    if (!PubUtils.isOEmptyOrNull(orderStatusObj) && !PubUtils.isOEmptyOrNull(orderStatusObj.getOrderLatestStatus())) {
-                        String orderStatus = orderStatusObj.getOrderLatestStatus();
-                        // 订单取消或者已完成，不调整；待审核只修改订单中心
-                        if (HASBEEN_COMPLETED.equals(orderStatus) || HASBEEN_CANCELED.equals(orderStatus)) {
-                            logger.info("订单{}当前状态为{},不允许调整数量!", orderCode, orderStatus);
-                            throw new BusinessException("订单{"+orderCode+"}当前状态为{"+orderStatus+"},不允许调整数量!");
-                        } else if (PENDING_AUDIT.equals(orderStatus)) { // 待审核只调整OFC
-                            modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
-                            result = WrapMapper.ok();
-                        } else {
-                            Wrapper<Boolean> acStatus = acModifyOrderEdasService.queryOrderIncomeStatus(orderCode);
-                            if (!PubUtils.isNull(acStatus) && Wrapper.SUCCESS_CODE == acStatus.getCode()) {
-                                if (!acStatus.getResult()) {
-                                    modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, orderStatus);
-                                    result = WrapMapper.ok();
-                                } else {
-                                    logger.error("订单{}已经结算，无法调整数量: {}", orderCode, acStatus.getMessage());
-                                    throw new BusinessException("订单{"+orderCode+"}已经结算，无法调整数量: {"+acStatus.getMessage()+"}");
-                                }
-                            } else {
-                                logger.error("结算中心验证订单是否可以取消接口发生异常！");
-                                throw new BusinessException("结算中心验证订单是否可以取消接口发生异常！");
-                            }
-                        }
-                    } else {
-                        logger.error("订单{}查询不到当前状态.", orderCode);
-                    }
-                }
+        // 校验订单是否存在
+        OfcFundamentalInformation ofcFundamentalInfo  = ofcFundamentalInformationService.selectByKey(orderCode);
+        if (ofcFundamentalInfo == null) {
+            throw new BusinessException("订单{"+orderCode+"}不存在");
+        }
+        OfcOrderNewstatus orderStatus = ofcOrderNewstatusService.selectByKey(orderCode);
+        if (!PubUtils.isOEmptyOrNull(orderStatus) && !PubUtils.isOEmptyOrNull(orderStatus.getOrderLatestStatus())) {
+            String status = orderStatus.getOrderLatestStatus();
+            // 订单取消或者已完成，不调整；待审核只修改订单中心
+            if (HASBEEN_COMPLETED.equals(status) || HASBEEN_CANCELED.equals(status)) {
+                logger.info("订单{}当前状态为{},不允许调整数量!", orderCode, status);
+                throw new BusinessException("订单{"+orderCode+"}当前状态为{"+status+"},不允许调整数量!");
+            } else if (PENDING_AUDIT.equals(status)) { // 待审核只调整OFC
+                modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, status);
+                result = WrapMapper.ok();
             } else {
-                logger.error("订单修改，未查询到客户订单{}信息.", custOrderCode);
-                throw new BusinessException("订单修改，未查询到客户订单{"+custOrderCode+"}信息.");
+                Wrapper<Boolean> acStatus = acModifyOrderEdasService.queryOrderIncomeStatus(orderCode);
+                if (!PubUtils.isNull(acStatus) && Wrapper.SUCCESS_CODE == acStatus.getCode()) {
+                    if (!acStatus.getResult()) {
+                        modifyGoodsDetails(goodsAmountSyncDto, details, orderCode, status);
+                        result = WrapMapper.ok();
+                    } else {
+                        logger.error("订单{}已经结算，无法调整数量: {}", orderCode, acStatus.getMessage());
+                        throw new BusinessException("订单{"+orderCode+"}已经结算，无法调整数量: {"+acStatus.getMessage()+"}");
+                    }
+                } else {
+                    logger.error("结算中心验证订单是否可以取消接口发生异常！");
+                    throw new BusinessException("结算中心验证订单是否可以取消接口发生异常！");
+                }
             }
-        } catch (BusinessException e) {
-            logger.error(e.getMessage());
-            throw e;
-        } catch (Exception e) {
-            logger.error("订单修改，更新交货数量发生未知异常 {}", e);
-            throw e;
+        } else {
+            logger.error("订单{}查询不到当前状态.", orderCode);
         }
         return result;
     }
@@ -137,7 +114,7 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                     throw new BusinessException("货品编号不能为空");
                 }*/
                 // 添加修改记录
-                this.addGoodsModifyRecord(orderCode, goodsDetail);
+              //  this.addGoodsModifyRecord(orderCode, goodsDetail);
                 // 修改货品信息
                 editGoodsDetailInfo(orderCode, goodsDetail);
             }
@@ -291,51 +268,6 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
         } catch (Exception e) {
             logger.error("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
             throw new BusinessException("订单修改，订单中心记录需要更新货品信息失败",e.getMessage(),e);
-        }
-    }
-
-    /**
-     * 订单信息推送结算中心
-     *
-     * @param ofcFundamentalInformation 订单基本信息
-     * @param ofcFinanceInformation     费用基本信息
-     * @param ofcDistributionBasicInfo  运输基本信息
-     * @param ofcGoodsDetailsInfos      货品明细
-     */
-    public void modifyOrderToAc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
-            , OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
-        AcOrderDto acOrderDto = new AcOrderDto();
-        try {
-            AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
-            BeanUtils.copyProperties(acFinanceInformation, ofcFinanceInformation);
-
-            AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
-            BeanUtils.copyProperties(acFundamentalInformation, ofcFundamentalInformation);
-
-            AcDistributionBasicInfo acDistributionBasicInfo = new AcDistributionBasicInfo();
-            BeanUtils.copyProperties(acDistributionBasicInfo, ofcDistributionBasicInfo);
-
-            List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
-            for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
-                AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
-                BeanUtils.copyProperties(acGoodsDetailsInfo, ofcGoodsDetailsInfo);
-                acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
-            }
-            if (acGoodsDetailsInfoList.size() < 1) {
-                throw new BusinessException("订单货品明细不能为空!");
-            }
-            acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
-            acOrderDto.setAcFinanceInformation(acFinanceInformation);
-            acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
-            acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
-
-        } catch (Exception e) {
-            logger.error("订单信息推送结算中心 转换异常, {}", e);
-        }
-        Wrapper<?> wrapper = acModifyOrderEdasService.modifyOfcOrder(acOrderDto);
-        if (ERROR_CODE == wrapper.getCode()) {
-            logger.error(wrapper.getMessage());
-            throw new BusinessException(wrapper.getMessage());
         }
     }
 }

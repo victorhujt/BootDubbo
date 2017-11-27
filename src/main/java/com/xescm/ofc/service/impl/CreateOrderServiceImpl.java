@@ -6,7 +6,6 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.epc.edas.dto.dachen.LockStockOrderDTO;
 import com.xescm.ofc.constant.CreateOrderApiConstant;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
@@ -69,8 +68,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     @Resource
     private OfcOrderManageService ofcOrderManageService;
     @Resource
-    private CscCustomerEdasService cscCustomerEdasService;
-    @Resource
     private OfcCreateOrderMapper ofcCreateOrderMapper;
     @Resource
     private DistributedLockEdasService distributedLockEdasService;
@@ -79,17 +76,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     @Resource
     private OfcEnumerationService ofcEnumerationService;
 
-    @Override
-    public boolean CreateOrders(List<OfcCreateOrderDTO> list) {
-        return false;
-    }
-
     /**
      * 创单api  custOrderCode与typeId是相同的
      *
      * @param data 传入的json格式的字符串
      * @throws Exception    异常
      */
+    @Override
     public String createOrder(String data) throws Exception {
         logger.info("订单中心创建订单接口开始");
         //组装接口的返回信息
@@ -229,7 +222,9 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                                           String custOrderCode, String orderCode,
                                           ResultModel resultModel,
                                           List<CreateOrderResult> createOrderResultList) {
-        if (PubUtils.trimAndNullAsEmpty(reason).equals("")) reason = resultModel.getDesc();
+        if ("".equals(PubUtils.trimAndNullAsEmpty(reason))) {
+                reason = resultModel.getDesc();
+            }
         CreateOrderResult createOrderResult = new CreateOrderResult(result, reason, custOrderCode, orderCode);
         createOrderResultList.add(createOrderResult);
     }
@@ -335,7 +330,6 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         logger.info("订单中心创建订单接口开始");
         ResultModel resultModel;
         try {
-          //  CreateOrderEntity createOrderEntity = JacksonUtil.parseJsonWithFormat(data, CreateOrderEntity.class);
             OfcCreateOrderDTO createOrderEntity = JSON.parseObject(data, OfcCreateOrderDTO.class);
             String custOrderCode = createOrderEntity.getCustOrderCode();
             String platformType = createOrderEntity.getPlatformType();
@@ -426,8 +420,8 @@ public class CreateOrderServiceImpl implements CreateOrderService {
 
     /**
      * 创单结果发送mq
-     * @param orderCode
-     * @param custOrderCode
+     * @param orderCode 订单号
+     * @param custOrderCode 客户订单号
      * @param result
      * @param isSuccess
      * @throws Exception
@@ -451,10 +445,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             resultDto.setOrderType(orderType);
             resultDto.setBusinessType(businessType);
             resultDto.setPaasOrderNo(orderCode);
-            resultDto.setState("L");    // 锁定
+            /**锁定**/
+            resultDto.setState("L");
             jsonMsg = JacksonUtil.toJson(resultDto);
             tag = "DACHEN";
-        } else { // 鲜易网
+            /**鲜易网**/
+        } else {
             CreateOrderResultDto resultDto = new CreateOrderResultDto();
             String code = isSuccess ? "200" : "500";
             String typeIdAndReason = "typeId:" + custOrderCode + "||reason:" + result;

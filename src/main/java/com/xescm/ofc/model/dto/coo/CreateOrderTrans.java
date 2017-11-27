@@ -1,10 +1,10 @@
 package com.xescm.ofc.model.dto.coo;
 
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderGoodsInfoDTO;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.utils.DateUtils;
 import org.modelmapper.ModelMapper;
@@ -71,14 +71,14 @@ public class CreateOrderTrans {
     public OfcOrderStatus getOfcOrderStatus() throws BusinessException {
         if (createOrderEntity != null) {
             ofcOrderStatus = new OfcOrderStatus();
-            ofcOrderStatus.setOrderStatus(OrderConstConstant.PENDING_AUDIT);
+            ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setOrderCode(orderCode);
             StringBuilder notes = new StringBuilder();
             notes.append(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
             notes.append(" 订单已创建");
             notes.append(" 操作人: ").append(CREATE_ORDER_BYAPI);
             notes.append(" 操作单位: ").append(CREATE_ORDER_BYAPI);
-            ofcOrderStatus.setTraceStatus(OrderConstConstant.PENDING_AUDIT);
+            ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
             ofcOrderStatus.setTrace("接收订单");
             ofcOrderStatus.setNotes(notes.toString());
             ofcOrderStatus.setOperator(CREATE_ORDER_BYAPI);
@@ -223,20 +223,20 @@ public class CreateOrderTrans {
             ofcDistributionBasicInfo.setDestinationDistrict(createOrderEntity.getConsigneeCounty());
             ofcDistributionBasicInfo.setDestinationTowns(createOrderEntity.getConsigneeTown());
             ofcDistributionBasicInfo.setDestination(createOrderEntity.getConsigneeAddress());
-//            if(PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeProvinceCode())){
-//                throw new BusinessException("收货地省编码为空!");
-//            }
-//            StringBuilder destinationCode = new StringBuilder(createOrderEntity.getConsigneeProvinceCode());
-//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCityCode())){
-//                destinationCode.append(",").append(createOrderEntity.getConsigneeCityCode());
-//            }
-//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCountyCode())){
-//                destinationCode.append(",").append(createOrderEntity.getConsigneeCountyCode());
-//            }
-//            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeTownCode())){
-//                destinationCode.append(",").append(createOrderEntity.getConsigneeTownCode());
-//            }
-//            ofcDistributionBasicInfo.setDestinationCode(destinationCode.toString());
+            StringBuilder destinationCode = new StringBuilder();
+            if (!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeProvinceCode())) {
+                destinationCode.append(createOrderEntity.getConsigneeProvinceCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCityCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeCityCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeCountyCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeCountyCode());
+            }
+            if(!PubUtils.isSEmptyOrNull(createOrderEntity.getConsigneeTownCode())){
+                destinationCode.append(",").append(createOrderEntity.getConsigneeTownCode());
+            }
+            ofcDistributionBasicInfo.setDestinationCode(destinationCode.toString());
             //承运商
             ofcDistributionBasicInfo.setCarrierName(createOrderEntity.getSupportName());
 

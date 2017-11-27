@@ -34,8 +34,8 @@ public class OfcAttachmentServiceImpl extends BaseService<OfcAttachment>  implem
 
     @Override
     public void deleteAttachmentByserialNo(OfcAttachment attachment) {
-        OfcAttachment result=selectOne(attachment);
-        if (result!=null) {
+        OfcAttachment result = selectOne(attachment);
+        if (result != null) {
             if (StringUtils.isEmpty(result.getPath())||StringUtils.isEmpty(result.getName())) {
                 throw new BusinessException("附件文件路径或附件文件名为空");
             } else {

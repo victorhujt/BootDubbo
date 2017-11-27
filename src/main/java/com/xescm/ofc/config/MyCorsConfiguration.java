@@ -26,9 +26,9 @@ public class MyCorsConfiguration {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/ofc/**").allowedOrigins(restConfig.getUamUrl(),restConfig.getPaas(), restConfig.getPaasDev());// 用户中心
-                registry.addMapping("/page/ofc/**").allowedOrigins(restConfig.getUamUrl(),restConfig.getPaas(), restConfig.getPaasDev());// 用户中心
-                registry.addMapping("/www/ofc/**").allowedOrigins(restConfig.getOfficalApiUrl(), restConfig.getOfficalApiShortUrl(), restConfig.getOfficalApiDevUrl());
+                registry.addMapping("/ofc/**").allowedOrigins(restConfig.getUamUrl(),restConfig.getPaas(), restConfig.getPaasDev(),restConfig.getCwbTestUrl(),restConfig.getCwbBetaUrl(),restConfig.getCwbProUrl(), restConfig.getCwbUrl(),"http://localhost:3000","http://192.168.32.249:3000", "http://192.168.32.125:3000");// 用户中心
+                registry.addMapping("/page/ofc/**").allowedOrigins(restConfig.getUamUrl(),restConfig.getPaas(), restConfig.getPaasDev(), restConfig.getOfficalApiDevUrl(),restConfig.getCwbTestUrl(),restConfig.getCwbBetaUrl(),restConfig.getCwbProUrl(), restConfig.getCwbUrl(),"http://localhost:3000","http://192.168.32.249:3000", "http://192.168.32.125:3000","*");// 用户中心
+                registry.addMapping("/www/ofc/**").allowedOrigins(restConfig.getOfficalApiUrl(), restConfig.getOfficalApiShortUrl(), restConfig.getCwbTestUrl(),restConfig.getCwbBetaUrl(),restConfig.getCwbProUrl(), restConfig.getCwbUrl(),"http://localhost:3000", restConfig.getOfficalApiDevUrl(),"http://localhost:63342","http://192.168.32.249:3000", "http://192.168.32.125:3000");
             }
         };
     }

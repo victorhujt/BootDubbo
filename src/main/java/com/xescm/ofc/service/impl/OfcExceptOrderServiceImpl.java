@@ -53,7 +53,10 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
     public void dealExceptOrder(OfcExceptOrderDTO ofcExceptOrderDTO, List<String> orderCodes, List<OfcEnumeration> enumsOfZp, Map<String, OfcEnumeration> enumsOfTime) throws Exception {
         logger.debug("处理异常订单==> {}", ofcExceptOrderDTO);
         if (null == ofcExceptOrderDTO || StringUtils.isEmpty(ofcExceptOrderDTO.getExceptPot())
-                || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) throw new BusinessException("处理异常订单失败");
+                || !OrderPotEnum.getCodeList().contains(ofcExceptOrderDTO.getExceptPot())) {
+                    throw new BusinessException("处理异常订单失败");
+        }
+
         if (CollectionUtils.isEmpty(orderCodes)) {
             logger.debug("暂无待处理订单...");
             return;
@@ -124,7 +127,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             return null;
         }
         ofcExceptOrder.setPotType(ofcExceptOrderDTO.getExceptPot());
-        if (ofcExceptOrderMapper.insert(ofcExceptOrder) < 1) logger.error("ofcExceptOrder插入失败...");
+        if (ofcExceptOrderMapper.insert(ofcExceptOrder) < 1) {
+            logger.error("ofcExceptOrder插入失败...");
+        }
         result.add(ofcExceptOrder);
         return result;
     }
@@ -187,12 +192,16 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
 
     @Override
     public List<OfcExceptOrder> selectByDTO(OfcExceptOrderDTO ofcExceptOrderDTO) {
-        if (null == ofcExceptOrderDTO) throw new BusinessException("运营平台查询异常订单出错");
+        if (null == ofcExceptOrderDTO) {
+            throw new BusinessException("运营平台查询异常订单出错");
+        }
         ofcExceptOrderDTO.setDealStatus(IS_EXCEPTION.getCode());
         ofcExceptOrderDTO.setExceptReason("");
         List<OfcExceptOrder> result = ofcExceptOrderMapper.selectExceptOrderByDTO(ofcExceptOrderDTO);
         logger.debug("运营平台查询异常订单{}", result);
-        if (CollectionUtils.isEmpty(result)) throw new BusinessException("暂无异常订单");
+        if (CollectionUtils.isEmpty(result)){
+            throw new BusinessException("暂无异常订单");
+        }
         return result;
     }
 
@@ -344,13 +353,17 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
 
     @Override
     public boolean isZhongPin(OfcExceptOrder ofcExceptOrder, List<OfcEnumeration> ofcEnumerations) {
-        if (null == ofcExceptOrder) throw new BusinessException("处理异常订单失败!");
+        if (null == ofcExceptOrder) {
+            throw new BusinessException("处理异常订单失败!");
+        }
         OfcEnumeration ofcEnumeration = new OfcEnumeration();
         ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
         for (OfcEnumeration enumeration : ofcEnumerations) {
             boolean isZhongPin = StringUtils.equals(enumeration.getEnumName(), ofcExceptOrder.getCustName())
                     && StringUtils.equals(enumeration.getEnumValue(), ofcExceptOrder.getCustCode());
-            if (isZhongPin) return true;
+            if (isZhongPin){
+                return true;
+            }
         }
         return false;
     }
@@ -363,7 +376,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
     private void checkDelay(List<OfcExceptOrder> ofcExceptOrders, String pot, Integer allowHour, Integer delayTimeLevel) {
         for (OfcExceptOrder ofcExceptOrder : ofcExceptOrders) {
             if (StringUtils.equals(ofcExceptOrder.getPotType(), pot)) {
-                if (StringUtils.equals(ofcExceptOrder.getDealStatus(), IS_EXCEPTION.getCode())) continue;
+                if (StringUtils.equals(ofcExceptOrder.getDealStatus(), IS_EXCEPTION.getCode())) {
+                    continue;
+                }
                 ofcExceptOrder = this.dealExceptPot(ofcExceptOrder, allowHour, delayTimeLevel);
                 if (StringUtils.equals(ofcExceptOrder.getDealStatus(), IS_EXCEPTION.getCode())
                         && ofcExceptOrderMapper.updateByOrderCode(ofcExceptOrder) < 1) {
@@ -459,7 +474,6 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         List<String> ordersGoodsList = ofcGoodsDetailsInfoMapper.queryByCondition(orderScreenCondition);
         System.out.println("============================异常订单：2 -> 查询昨日订单明细耗时：" + (System.currentTimeMillis() - sOdd));
         Map<String, Boolean> matchedGoods = new HashMap<>();
-//        Map<String, Boolean> matchedGoods = ordersGoodsList.stream().distinct().collect(Collectors.toMap(Function.identity(), (goods) -> true));
         for (String orderCode : ordersGoodsList) {
             matchedGoods.put(orderCode, true);
         }
@@ -487,7 +501,6 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             if (aPartKey.split(",").length / 50 > 0 || index == undealedSize) {
                 aPartKey = key.deleteCharAt(key.length() - 1).toString();
                 stringRedisTemplate.delete(aPartKey);
-//                stringRedisTemplate.delete(ordersKey);
                 listOps.rightPushAll(aPartKey, value);
                 listOps.rightPush(ordersKey, aPartKey);
                 stringRedisTemplate.expire(aPartKey, 11L, TimeUnit.DAYS);
@@ -509,7 +522,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
             logger.debug("aleadyExistThisPot");
             return 0;
         }
-        if (this.dealSpecialStatus(ofcOrderPotDTO)) return 0;
+        if (this.dealSpecialStatus(ofcOrderPotDTO)){
+            return 0;
+        }
         OfcExceptOrder ofcExceptOrder = this.getOrderDetail(ofcOrderPotDTO);
         return ofcExceptOrderMapper.insert(ofcExceptOrder);
     }
@@ -519,7 +534,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         if (StringUtils.equals(ofcOrderPotDTO.getPotCode(), CANCEL_DELIVERY.getPotCode())) {
             List<OfcExceptOrder> ofcExceptOrders = ofcExceptOrderMapper.selectByOrderCode(orderCode);
             if (CollectionUtils.isEmpty(ofcExceptOrders)
-                    || !StringUtils.equals(ofcExceptOrders.get(0).getOrderType(), TRANSPORT_ORDER)) return false;
+                    || !StringUtils.equals(ofcExceptOrders.get(0).getOrderType(), TRANSPORT_ORDER)) {
+                return false;
+            }
             for (OfcExceptOrder ofcExceptOrder : ofcExceptOrders) {
                 if (StringUtils.equals(ofcExceptOrder.getPotType(), DELIVERY.getPotCode())
                         && StringUtils.isNotEmpty(ofcExceptOrder.getExceptReason())
@@ -527,7 +544,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
                     ofcExceptOrder.setExceptReason("");
                     ofcExceptOrder.setDealStatus("");
                     int update = ofcExceptOrderMapper.updateByOrderCode(ofcExceptOrder);
-                    if (update == 0) logger.error("取消调度更新失败");
+                    if (update == 0){
+                        logger.error("取消调度更新失败");
+                    }
                     return true;
                 }
             }

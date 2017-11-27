@@ -1,17 +1,11 @@
 package com.xescm.ofc.model.dto.coo;
 
+import lombok.Data;
+
 /**
  * Created by hiyond on 2016/11/19.
  */
+@Data
 public class MessageDto {
-
     private String typeId;
-
-    public String getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
 }
