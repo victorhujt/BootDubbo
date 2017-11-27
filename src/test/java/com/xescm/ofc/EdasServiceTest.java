@@ -59,8 +59,9 @@ public class EdasServiceTest extends HsfBaseTest {
     public void getOrderInfoByOrderCode() throws Exception {
         OfcOrderInfoEdasService ofcOrderInfoEdasService = super.getConsumer(OfcOrderInfoEdasService.class, "com.xescm.ofc.edas.service.OfcOrderInfoEdasService", "1.0", "xescm-ofc-dev", null);
         List<String> orderList = new ArrayList<>();
-        orderList.add("SO170525000439");
-        orderList.add("SO170703000005");
+        orderList.add("SO171103000001");
+        orderList.add("SO171102000013");
+        orderList.add("SO171102000012");
         Wrapper<List<OfcOrderInfoDto>> res = ofcOrderInfoEdasService.getOrderInfoByOrderCode(orderList);
         System.out.println(JacksonUtil.toJson(res));
     }
