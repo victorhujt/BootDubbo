@@ -123,7 +123,7 @@ public class OfcOperCommonController extends BaseController{
                 throw new BusinessException("没有查询到供应商");
             }
             PageInfo<Select2RespDto> pageInfo = new PageInfo<>();
-            org.apache.commons.beanutils.BeanUtils.copyProperties(pageInfo, resultForRevert);
+            BeanUtils.copyProperties(resultForRevert, pageInfo);
             pageInfo.setList(null);
             List<Select2RespDto> select2RespDtoList = new ArrayList<>();
             for (CscSupplierInfoDto cscSupplierInfoDto : resultForRevert.getList()) {

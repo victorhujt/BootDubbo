@@ -7,7 +7,6 @@ import com.xescm.ac.domain.AcFundamentalInformation;
 import com.xescm.ac.domain.AcGoodsDetailsInfo;
 import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.ac.model.dto.ofc.AcOrderStatusDto;
-impo
 import com.xescm.ac.model.dto.ofc.CancelAcOrderDto;
 import com.xescm.ac.model.dto.ofc.CancelAcOrderResultDto;
 import com.xescm.ac.provider.AcOrderEdasService;
@@ -60,7 +59,6 @@ import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
 import com.xescm.whc.edas.service.WhcModifWmsCodeEdasService;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -84,7 +82,6 @@ import static com.xescm.ofc.constant.GenCodePreffixConstant.*;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
-import static com.xescm.ofc.enums.OrderStatusEnum.ALREADY_ACCEPTED;
 import static com.xescm.ofc.enums.OrderStatusEnum.PEND_AUDIT;
 
 /**
@@ -1097,18 +1094,15 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         try {
             // 转换Ac实体
             AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
-            BeanUtils.copyProperties(acFundamentalInformation, ofcFundamentalInformation);
-
+            BeanUtils.copyProperties(ofcFundamentalInformation, acFundamentalInformation);
             AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
-            BeanUtils.copyProperties(acFinanceInformation, ofcFinanceInformation);
-
+            BeanUtils.copyProperties(ofcFinanceInformation, acFinanceInformation);
             AcDistributionBasicInfo acDistributionBasicInfo = new AcDistributionBasicInfo();
-            BeanUtils.copyProperties(acDistributionBasicInfo, ofcDistributionBasicInfo);
-
+            BeanUtils.copyProperties(ofcDistributionBasicInfo, acDistributionBasicInfo);
             List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
                 AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
-                BeanUtils.copyProperties(acGoodsDetailsInfo, ofcGoodsDetailsInfo);
+                BeanUtils.copyProperties(ofcGoodsDetailsInfo, acGoodsDetailsInfo);
                 acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
             }
             if (acGoodsDetailsInfoList.size() < 1) {
@@ -1205,12 +1199,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
         AcOrderStatusDto acOrderStatusDto = new AcOrderStatusDto();
         logger.info("订单状态开始推结算中心 acOrderStatusDto{}", acOrderStatusDto);
-        try {
-            BeanUtils.copyProperties(acOrderStatusDto, ofcOrderStatus);
-        } catch (Exception e) {
-            logger.error("订单状态开始推结算中心 实体转换异常");
-            throw new BusinessException("订单状态开始推结算中心 实体转换异常");
-        }
+        BeanUtils.copyProperties(ofcOrderStatus, acOrderStatusDto);
+
         try {
             Wrapper<Integer> integerWrapper = acOrderEdasService.pullOfcOrderStatus(acOrderStatusDto);
             if (null == integerWrapper || integerWrapper.getCode() != Wrapper.SUCCESS_CODE) {
@@ -1794,7 +1784,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
         }
         try {
-            BeanUtils.copyProperties(newofcFundamentalInformation, ofcFundamentalInformation);
+            BeanUtils.copyProperties(ofcFundamentalInformation,newofcFundamentalInformation);
             if (!status.equals(HASBEEN_CANCELED)) {
                 newofcFundamentalInformation.setCustOrderCode("");
             }
@@ -1832,7 +1822,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             OfcWarehouseInformation owinfo = ofcWarehouseInformationService.selectOne(cw);
             if (owinfo != null) {
                 OfcWarehouseInformation ofcnewWarehouseInformation = new OfcWarehouseInformation();
-                BeanUtils.copyProperties(ofcnewWarehouseInformation, owinfo);
+                BeanUtils.copyProperties(owinfo,ofcnewWarehouseInformation);
                 ofcnewWarehouseInformation.setOrderCode(newofcFundamentalInformation.getOrderCode());
                 ofcWarehouseInformationService.save(ofcnewWarehouseInformation);
 
@@ -1842,7 +1832,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 OfcDistributionBasicInfo BasicInfo = ofcDistributionBasicInfoService.selectOne(f);
                 if (BasicInfo != null) {
                     OfcDistributionBasicInfo newofcDistributionBasicInfo = new OfcDistributionBasicInfo();
-                    BeanUtils.copyProperties(newofcDistributionBasicInfo, BasicInfo);
+                    BeanUtils.copyProperties(BasicInfo,newofcDistributionBasicInfo);
                     newofcDistributionBasicInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                     if (owinfo != null) {
                         if (Objects.equals(owinfo.getProvideTransport(), YES)) {
@@ -1860,7 +1850,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             if (goodsInfo != null && goodsInfo.size() > 0) {
                 for (OfcGoodsDetailsInfo info : goodsInfo) {
                     OfcGoodsDetailsInfo newGoodsInfo = new OfcGoodsDetailsInfo();
-                    BeanUtils.copyProperties(newGoodsInfo, info);
+                    BeanUtils.copyProperties(info, newGoodsInfo);
                     newGoodsInfo.setId(UUID.randomUUID().toString().replace("-", ""));
                     newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
                     newGoodsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
