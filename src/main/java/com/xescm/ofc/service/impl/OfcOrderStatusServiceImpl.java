@@ -205,8 +205,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     @Override
     public int save(OfcOrderStatus ofcOrderStatus) {
         if (ofcOrderStatus != null && !"".equals(trimAndNullAsEmpty(ofcOrderStatus.getOrderCode()))) {
+            String orderCode = ofcOrderStatus.getOrderCode();
             if (!trimAndNullAsEmpty(ofcOrderStatus.getOrderStatus()).equals("")) {
-                OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(ofcOrderStatus.getOrderCode());
+                OfcOrderNewstatus orderNewstatus = ofcOrderNewstatusService.selectByKey(orderCode);
                 String tag = "noStatus";
                 if (orderNewstatus != null) {
                     tag =  "haveStatus";
@@ -215,11 +216,13 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
                 if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_CANCELED)){
                     if (!trimAndNullAsEmpty(orderNewstatus.getOrderLatestStatus()).equals(HASBEEN_COMPLETED)) {
+                        logger.info("订单更新的订单号为:{},的状态为{}:",orderCode,ofcOrderStatus.getOrderStatus());
                         updateOrderNewStatus(ofcOrderStatus, tag);
                     }
                 }
                 ofcOrderStatus.setId(UUID.randomUUID().toString().replace("-", ""));
                 ofcOrderStatus.setCreationTime(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1));
+                logger.info("订单保存日志订单号为:{},状态{}:",orderCode,ofcOrderStatus.getOrderStatus());
                 return super.save(ofcOrderStatus);
             } else {
                 throw new BusinessException("订单状态为空，保存订单状态失败");
@@ -543,6 +546,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         OfcOrderNewstatus orderNewstatus = new OfcOrderNewstatus();
         orderNewstatus.setOrderCode(ofcOrderStatus.getOrderCode());
         orderNewstatus.setOrderLatestStatus(ofcOrderStatus.getOrderStatus());
+        logger.info("订单更新状态订单号为{},tag为{}:",ofcOrderStatus.getOrderCode(),tag);
         if (tag.equals("haveStatus")) {
             orderNewstatus.setStatusUpdateTime(new Date());
             ofcOrderNewstatusService.update(orderNewstatus);
@@ -626,5 +630,4 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         }
         return isCache;
     }
-
 }
