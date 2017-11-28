@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_GoodsAmountSync;
 import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_OrderToOfc;
@@ -52,7 +51,6 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Resource
     private OfcInterfaceReceiveLogService receiveLogService;
 
-    private  static ConcurrentHashMap MAP = new ConcurrentHashMap();
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
