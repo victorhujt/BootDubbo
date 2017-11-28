@@ -161,9 +161,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 throw new BusinessException("订单["+orderCode+"]运输状态更新异常：所给订单状态有误 " + status);
             }
             if (!statusNotes.equals(orderStatus.getNotes())) {
-                if (PaasStateEnum.TFC_STATE_6.getCenterState().equals(status) || PaasStateEnum.TFC_STATE_7.getCenterState().equals(status)) {
-                    orderStatus.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
-                }
+//                if (PaasStateEnum.TFC_STATE_6.getCenterState().equals(status) || PaasStateEnum.TFC_STATE_7.getCenterState().equals(status)) {
+//                    orderStatus.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
+//                }
                 ofcOrderStatusService.save(orderStatus);
                 if (StringUtils.equals(orderStatus.getOrderStatus(), OrderStatusEnum.BEEN_COMPLETED.getCode())) {
                     //订单发送签收短信
