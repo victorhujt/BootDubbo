@@ -57,7 +57,7 @@ public class MqConfig {
     private String ofcOrderStatusTopic;
 
     /** 仓储订单状态 */
-    private String WhcOrderStateTopic;
+    private String whcOrderStateTopic;
 
     /** 运输订单状态 */
     private String tfcOrderStatusTopic;
