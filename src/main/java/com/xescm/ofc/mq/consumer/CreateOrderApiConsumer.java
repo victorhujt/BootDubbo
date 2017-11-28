@@ -124,7 +124,7 @@ public class CreateOrderApiConsumer implements MessageListener {
         } else if (StringUtils.equals(topicName, mqConfig.getWhcOrderStateTopic())) {
             logger.info("仓储单状态反馈的消息体为{}:", messageBody);
             logger.info("仓储单状态开始消费");
-            if ("InOrderFinishedTag ".equals(tag) ||"OutOrderFinishedTag ".equals(tag)) {
+            if ("InOrderFinishedTag".equals(tag) ||"OutOrderFinishedTag".equals(tag)) {
                 try {
                     logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
                     FeedBackOrderStatusDto feedBackOrderStatusDto = JacksonUtil.parseJson(messageBody, FeedBackOrderStatusDto.class);

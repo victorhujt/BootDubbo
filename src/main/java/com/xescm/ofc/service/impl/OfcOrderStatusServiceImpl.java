@@ -235,8 +235,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
     public void feedBackStatusFromWhc(FeedBackOrderStatusDto feedBackOrderStatusDto) {
         try {
             String orderCode = feedBackOrderStatusDto.getOrderCode();
-            String type = "";
-            String traceStatus = feedBackOrderStatusDto.getStatus();
             Date traceTime = feedBackOrderStatusDto.getTraceTime();
             if (StringUtils.isEmpty(orderCode)) {
                 throw new BusinessException("订单号不可以为空");
@@ -244,6 +242,9 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             if (StringUtils.isEmpty(feedBackOrderStatusDto.getStatus())) {
                 throw new BusinessException("跟踪状态不能为空");
             }
+            OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+            ofcWarehouseInformation.setOrderCode(orderCode);
+            ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
             OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
             if (ofcFundamentalInformation == null) {
                 throw new BusinessException("订单不存在");
@@ -258,29 +259,28 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     throw new BusinessException("订单已经取消");
                 }
             }
-            if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("62")) {
-                type = OFC_WHC_IN_TYPE;
-            }
-            else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0,2).equals("61")) {
-                type = OFC_WHC_OUT_TYPE;
-            }
-            String statusDesc = translateStatusToDesc(traceStatus,type);
-            if (orderStatus.getStatusDesc().contains(statusDesc)) {
-                status.setLastedOperTime(new Date());
-                status.setStatusDesc(statusDesc);
-                status.setOrderCode(orderCode);
-                status.setOperator("");
-                status.setOrderStatus(orderStatus.getOrderStatus());
-                status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
-                        + " " + statusDesc);
-                status.setOrderCode(orderCode);
-                if (TRACE_STATUS_9.equals(traceStatus)) {
-                    status.setOrderStatus(OFC_WHC_IN_TYPE.equals(type)? OrderStatusEnum.INPUT_COMPLETED.getCode():OrderStatusEnum.OUTPUT_COMPLETED.getCode());
-                    save(status);
-                } else {
-                    super.save(status);
+            String businessType = trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType());
+            if (status.equals(OrderStatusEnum.BEEN_COMPLETED.getCode())) {
+                if ("62".equals(businessType.substring(0,2))) {
+                    status.setStatusDesc(OrderStatusEnum.INPUT_COMPLETED.getDesc());
+                    status.setOrderStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
+                }
+                else if ("61".equals(businessType.substring(0,2))) {
+                    status.setOrderStatus(OrderStatusEnum.OUTPUT_COMPLETED.getCode());
+                    status.setStatusDesc(OrderStatusEnum.OUTPUT_COMPLETED.getDesc());
+                    status.setTraceStatus("20");
+                    status.setTrace("出库");
                 }
             }
+            status =  getOfcOrderStatus(ofcFundamentalInformation, status, ofcWarehouseInformation);
+            status.setLastedOperTime(new Date());
+            status.setOrderCode(orderCode);
+            status.setOperator("");
+            traceTime = traceTime == null ? new Date():traceTime;
+            status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
+                    + " " + status.getStatusDesc());
+            status.setOrderCode(orderCode);
+            save(status);
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -305,10 +305,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                     throw new BusinessException("货品的行号不能小于或等于0");
                 }
             }
-
-            OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
-            ofcWarehouseInformation.setOrderCode(orderCode);
-            ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
             OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
             if (ofcFundamentalInformation == null) {
                 throw new BusinessException("订单不存在");
@@ -316,42 +312,26 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             OfcOrderStatus orderStatus = orderStatusSelect(orderCode,"orderCode");
             OfcOrderStatus status = new OfcOrderStatus();
             if (orderStatus != null) {
-                if (OrderStatusEnum.BEEN_COMPLETED.getCode().equals(orderStatus.getOrderStatus())) {
-                    throw new BusinessException("订单已经完成");
-                }
+//                if (OrderStatusEnum.BEEN_COMPLETED.getCode().equals(orderStatus.getOrderStatus())) {
+//                    throw new BusinessException("订单已经完成");
+//                }
                 if (OrderStatusEnum.BEEN_CANCELED.getCode().equals(orderStatus.getOrderStatus())) {
                     throw new BusinessException("订单已经取消");
                 }
             }
-            if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
-                status.setOrderStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
-                status.setStatusDesc(OrderStatusEnum.INPUT_COMPLETED.getDesc());
-            } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
-                status.setOrderStatus(OrderStatusEnum.OUTPUT_COMPLETED.getCode());
-                status.setStatusDesc(OrderStatusEnum.OUTPUT_COMPLETED.getDesc());
-                status.setTraceStatus("20");
-                status.setTrace("出库");
-            }
-
-            if (ofcWarehouseInformation != null) {
-                if (WEARHOUSE_WITH_TRANS.equals(ofcWarehouseInformation.getProvideTransport())) {
-                    if (rt.hasKey(orderCode)) {
-                        logger.info("仓储订单运输先完成,订单号为{}", orderCode);
-                        status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
-                        //更新订单完成时间
-                        ofcFundamentalInformation.setFinishedTime(new Date());
-                        rt.delete(orderCode);
-                    } else {
-                        logger.info("===>仓储订单仓储先完成,订单号为{}", orderCode);
-                        rt.opsForValue().set(orderCode,orderCode);
-                    }
-                } else {
-                    status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
-                    //更新订单完成时间
-                    ofcFundamentalInformation.setFinishedTime(new Date());
-                }
-            }
-
+//            if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("62")) {
+//                status.setOrderStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
+//                status.setStatusDesc(OrderStatusEnum.INPUT_COMPLETED.getDesc());
+//            } else if (trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()).substring(0, 2).equals("61")) {
+//                status.setOrderStatus(OrderStatusEnum.OUTPUT_COMPLETED.getCode());
+//                status.setStatusDesc(OrderStatusEnum.OUTPUT_COMPLETED.getDesc());
+//                status.setTraceStatus("20");
+//                status.setTrace("出库");
+//            }
+            OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
+            ofcWarehouseInformation.setOrderCode(orderCode);
+            ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(ofcWarehouseInformation);
+           // status =  getOfcOrderStatus(ofcFundamentalInformation, status, ofcWarehouseInformation);
             //转换为原包装的数量
              conversionUnitQuantity(detailDtos, ofcWarehouseInformation, ofcFundamentalInformation);
             //更新实际的数量
@@ -363,20 +343,44 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 ofcGoodsDetailsInfoService.updateByOrderCode(good);
             }
 
-            status.setLastedOperTime(new Date());
-            status.setStatusDesc("订单号为" + orderCode + "已完成");
-            status.setOrderCode(orderCode);
-            status.setOperator("");
-            status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)
-                    + " " + "订单号为" + orderCode + "已完成");
-            status.setOrderCode(orderCode);
-            save(status);
+//            status.setLastedOperTime(new Date());
+//            status.setStatusDesc("订单号为" + orderCode + "已完成");
+//            status.setOrderCode(orderCode);
+//            status.setOperator("");
+//            status.setNotes(DateUtils.Date2String(new Date(), DateUtils.DateFormatType.TYPE1)
+//                    + " " + "订单号为" + orderCode + "已完成");
+//            status.setOrderCode(orderCode);
+         //   save(status);
+            ofcFundamentalInformation.setFinishedTime(new Date());
             ofcFundamentalInformationService.update(ofcFundamentalInformation);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private OfcOrderStatus getOfcOrderStatus(OfcFundamentalInformation ofcFundamentalInformation, OfcOrderStatus status, OfcWarehouseInformation ofcWarehouseInformation) {
+        String orderCode = ofcFundamentalInformation.getOrderCode();
+        if (ofcWarehouseInformation != null) {
+            if (WEARHOUSE_WITH_TRANS.equals(ofcWarehouseInformation.getProvideTransport())) {
+                if (rt.hasKey(orderCode)) {
+                    logger.info("仓储订单运输先完成,订单号为{}", orderCode);
+                    status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
+                    //更新订单完成时间
+                    ofcFundamentalInformation.setFinishedTime(new Date());
+                    rt.delete(orderCode);
+                } else {
+                    logger.info("===>仓储订单仓储先完成,订单号为{}", orderCode);
+                    rt.opsForValue().set(orderCode,orderCode);
+                }
+            } else {
+                status.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
+                status.setStatusDesc(OrderStatusEnum.BEEN_COMPLETED.getDesc());
+                //更新订单完成时间
+//                ofcFundamentalInformation.setFinishedTime(new Date());
+            }
+        }
+        return status;
+    }
 
 
     private void conversionUnitQuantity(List<FeedBackOrderDetailDto> detailDtos, OfcWarehouseInformation ofcWarehouseInformation, OfcFundamentalInformation ofcFundamentalInformation) {
@@ -557,67 +561,6 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         }
     }
 
-    private String translateStatusToDesc(String statusCode,String businessType) {
-        String statusDesc = "";
-        if (statusCode.equals(TRACE_STATUS_1)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-                statusDesc="入库单已创建";
-
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc="出库单已创建";
-            }
-        } else if (statusCode.equals(TRACE_STATUS_2)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-                statusDesc="部分收货";
-
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-
-            }
-        } else if (statusCode.equals(TRACE_STATUS_3)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-                statusDesc="完全收货";
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc="出库分配完成";
-            }
-        } else if (statusCode.equals(TRACE_STATUS_4)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc="拣货完成";
-            }
-        } else if (statusCode.equals(TRACE_STATUS_5)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc="二次拣货完成";
-            }
-        } else if (statusCode.equals(TRACE_STATUS_6)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc="装车完成";
-            }
-        } else if (statusCode.equals(TRACE_STATUS_7)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc = "出库单已发运";
-            }
-        } else if (statusCode.equals(TRACE_STATUS_8)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-                statusDesc = "入库单取消";
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc = "出库单取消";
-            }
-        } else if (statusCode.equals(TRACE_STATUS_9)) {
-            if (OFC_WHC_IN_TYPE.equals(businessType)) {
-                statusDesc = "入库完毕";
-            } else if (OFC_WHC_OUT_TYPE.equals(businessType)) {
-                statusDesc = "出库完毕";
-            }
-        }
-        return statusDesc;
-    }
 
     private boolean  isSwitchCache() {
         boolean isCache = false;
