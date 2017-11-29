@@ -1713,7 +1713,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             this.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetail, ofcDistributionBasicInfo, ofcWarehouseInformation
                     , ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
         }
-        if (!StringUtils.equals(reviewTag, ORDER_TAG_STOCK_EDIT) && !StringUtils.equals(reviewTag, ORDER_TAG_STOCK_CUST_EDIT)) {
+        if (!StringUtils.equals(reviewTag, ORDER_TAG_STOCK_EDIT) && !StringUtils.equals(reviewTag, ORDER_TAG_STOCK_CUST_EDIT) && STR_YES.equals(ofcWarehouseInformation.getProvideTransport().toString())) {
             ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcGoodsDetail, ofcWarehouseInformation);
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
