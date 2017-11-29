@@ -3,7 +3,6 @@ package com.xescm.ofc.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.OrderStatusEnum;
@@ -70,7 +69,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         try{
             String status = trimAndNullAsEmpty(transportStateDTO.getState());
             Date traceTime = transportStateDTO.getOperatorTime();
-            logger.info("订单运输状态更新：transportStateDTO => {}", JacksonUtil.toJson(transportStateDTO));
+            logger.info("订单运输状态更新：transportStateDTO => {}",transportStateDTO);
 
             if (PubUtils.isSEmptyOrNull(orderCode)) {
                 throw new BusinessException("订单运输状态更新异常：订单号为空或者格式不正确");

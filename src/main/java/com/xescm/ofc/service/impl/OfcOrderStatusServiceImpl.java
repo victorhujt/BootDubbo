@@ -236,10 +236,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
         try {
             String orderCode = feedBackOrderStatusDto.getOrderCode();
             Date traceTime = feedBackOrderStatusDto.getTraceTime();
+            String orderTraceStatus = feedBackOrderStatusDto.getStatus();
             if (StringUtils.isEmpty(orderCode)) {
                 throw new BusinessException("订单号不可以为空");
             }
-            if (StringUtils.isEmpty(feedBackOrderStatusDto.getStatus())) {
+            if (StringUtils.isEmpty(orderTraceStatus)) {
                 throw new BusinessException("跟踪状态不能为空");
             }
             OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
@@ -260,7 +261,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
                 }
             }
             String businessType = trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType());
-            if (status.equals(OrderStatusEnum.BEEN_COMPLETED.getCode())) {
+            if (orderTraceStatus.equals(OrderStatusEnum.BEEN_COMPLETED.getCode())) {
                 if ("62".equals(businessType.substring(0,2))) {
                     status.setStatusDesc(OrderStatusEnum.INPUT_COMPLETED.getDesc());
                     status.setOrderStatus(OrderStatusEnum.INPUT_COMPLETED.getCode());
