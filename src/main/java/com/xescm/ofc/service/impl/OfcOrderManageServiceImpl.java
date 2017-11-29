@@ -1129,7 +1129,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 logger.error("订单中心推送结算订单转换发生错误, 异常： {}", e);
                 throw new BusinessException("订单中心推送结算订单转换发生错误!");
             }
-            ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo , ofcGoodsDetailsInfos, ofcWarehouseInformation);
+
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {
@@ -1713,9 +1713,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             this.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetail, ofcDistributionBasicInfo, ofcWarehouseInformation
                     , ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
         }
-        if (!StringUtils.equals(reviewTag, ORDER_TAG_STOCK_EDIT) && !StringUtils.equals(reviewTag, ORDER_TAG_STOCK_CUST_EDIT) && STR_YES.equals(ofcWarehouseInformation.getProvideTransport().toString())) {
-            ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcGoodsDetail, ofcWarehouseInformation);
-        }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE);
     }
 
@@ -1998,6 +1995,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 pushOrderToWhc(ofcFundamentalInformation, goodsDetailsInfo, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
                 //仓储带运输订单推仓储中心和运输中心
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
+                    if (!StringUtils.equals(reviewTag, ORDER_TAG_STOCK_EDIT) && !StringUtils.equals(reviewTag, ORDER_TAG_STOCK_CUST_EDIT)) {
+                        ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
+                    }
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, goodsDetailsInfo);
                     pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsInfo, ofcWarehouseInformation);
                 }
@@ -2101,6 +2101,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         //订单中心实体转运输中心接口DTO
         if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
             ofcFundamentalInformation.setBusinessType(WITH_THE_CITY);
+        } else {
+            ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo , ofcGoodsDetailsInfos, ofcWarehouseInformation);
         }
         TfcTransport tfcTransport = convertOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
         String json;
