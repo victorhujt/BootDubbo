@@ -281,7 +281,12 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                     + " " + status.getStatusDesc());
             status.setOrderCode(orderCode);
-            save(status);
+            OfcOrderStatus s = orderStatusSelect(orderCode,"orderCode");
+            if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(status.getOrderStatus()) > 0) {
+                saveOrderStatusLog(orderStatus);
+            } else {
+                save(status);
+            }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -545,6 +550,11 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             }
         }
         return ofcTraceOrderDTO;
+    }
+
+    @Override
+    public int saveOrderStatusLog(OfcOrderStatus record) {
+        return super.save(record);
     }
 
     public void updateOrderNewStatus(OfcOrderStatus ofcOrderStatus, String tag) {

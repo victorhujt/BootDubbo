@@ -163,7 +163,13 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 //                if (PaasStateEnum.TFC_STATE_6.getCenterState().equals(status) || PaasStateEnum.TFC_STATE_7.getCenterState().equals(status)) {
 //                    orderStatus.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
 //                }
-                ofcOrderStatusService.save(orderStatus);
+
+                OfcOrderStatus s = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
+                if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
+                    ofcOrderStatusService.saveOrderStatusLog(orderStatus);
+                } else {
+                    ofcOrderStatusService.save(orderStatus);
+                }
                 if (StringUtils.equals(orderStatus.getOrderStatus(), OrderStatusEnum.BEEN_COMPLETED.getCode())) {
                     //订单发送签收短信
                     this.sendSmsWhileSigned(ofcFundamentalInformation, distributionBasicInfo);
@@ -257,7 +263,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             logger.info("跟踪状态已签收");
             orderStatus.setOrderStatus(OrderStatusEnum.ALREADY_SIGNED.getCode());
             orderStatus.setStatusDesc(OrderStatusEnum.ALREADY_SIGNED.getDesc());
-            ofcOrderStatusService.save(orderStatus);
+            OfcOrderStatus s = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
+            if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
+                ofcOrderStatusService.saveOrderStatusLog(orderStatus);
+            } else {
+                ofcOrderStatusService.save(orderStatus);
+            }
             logger.info("序号：4-insertstatus ===== 订单号{}=> 跟踪状态{}", orderCode, orderStatus.getNotes());
 
             //签收后标记为已完成

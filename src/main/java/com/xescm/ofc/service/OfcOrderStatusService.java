@@ -38,4 +38,6 @@ public interface OfcOrderStatusService extends IService<OfcOrderStatus> {
     void ofcWarehouseFeedBackFromWhc(FeedBackOrderDto feedBackOrderDto);
 
     OfcTraceOrderDTO queryOrderByCode(String code) throws Exception;
+
+    int saveOrderStatusLog(OfcOrderStatus record);
 }
