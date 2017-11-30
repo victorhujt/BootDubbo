@@ -3,6 +3,7 @@ package com.xescm.ofc.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.enums.OrderStatusEnum;
@@ -168,8 +169,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 //                }
 
                 OfcOrderNewstatus s = ofcOrderNewstatusService.selectByKey(orderCode);
+                logger.info("orderStatus:{},s:{}", JacksonUtil.toJson(orderStatus),JacksonUtil.toJson(s));
                 if (orderStatus.getOrderStatus() != null && s!= null) {
-                    if (Integer.getInteger(s.getOrderLatestStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
+                    if (Integer.parseInt(s.getOrderLatestStatus()) - Integer.parseInt(orderStatus.getOrderStatus()) > 0) {
                         ofcOrderStatusService.saveOrderStatusLog(orderStatus);
                     } else {
                         ofcOrderStatusService.save(orderStatus);

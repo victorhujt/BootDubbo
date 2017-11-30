@@ -283,7 +283,7 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             status.setOrderCode(orderCode);
             OfcOrderNewstatus s = ofcOrderNewstatusService.selectByKey(orderCode);
             if (s!= null) {
-                if (Integer.getInteger(s.getOrderLatestStatus()) - Integer.getInteger(status.getOrderStatus()) > 0) {
+                if (Integer.parseInt(s.getOrderLatestStatus()) - Integer.parseInt(status.getOrderStatus()) > 0) {
                     saveOrderStatusLog(orderStatus);
                 } else {
                     save(status);
