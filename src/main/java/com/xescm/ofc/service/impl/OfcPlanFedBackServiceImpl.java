@@ -160,6 +160,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
                 String notes = traceTimeStr + " 【"+transportStateDTO.getBaseName()+"】发货出库, 安排车辆车牌号：【"+transportStateDTO.getCarNumber()+"】，司机姓名：【"
                     + transportStateDTO.getDriver()+"】，联系电话：【"+transportStateDTO.getDriverPhone()+"】";
                 orderStatus = setOrderStatusInfo(orderStatus, statusList, traceTime, null, null, notes,"full");
+                orderStatus.setOrderStatus(OrderStatusEnum.ALREADY_SHIPPED.getCode());
+                orderStatus.setStatusDesc(OrderStatusEnum.ALREADY_SHIPPED.getDesc());
             } else {
                 throw new BusinessException("订单["+orderCode+"]运输状态更新异常：所给订单状态有误 " + status);
             }
