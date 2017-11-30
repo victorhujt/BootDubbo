@@ -272,8 +272,8 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
             logger.info("跟踪状态已签收");
             orderStatus.setOrderStatus(OrderStatusEnum.ALREADY_SIGNED.getCode());
             orderStatus.setStatusDesc(OrderStatusEnum.ALREADY_SIGNED.getDesc());
-            OfcOrderStatus s = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-            if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
+            OfcOrderNewstatus s = ofcOrderNewstatusService.selectByKey(orderCode);
+            if (Integer.parseInt(s.getOrderLatestStatus()) - Integer.parseInt(orderStatus.getOrderStatus()) > 0) {
                 ofcOrderStatusService.saveOrderStatusLog(orderStatus);
             } else {
                 ofcOrderStatusService.save(orderStatus);
