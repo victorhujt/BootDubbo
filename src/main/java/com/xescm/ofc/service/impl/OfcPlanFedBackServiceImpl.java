@@ -165,10 +165,12 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 //                }
 
                 OfcOrderStatus s = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-                if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
-                    ofcOrderStatusService.saveOrderStatusLog(orderStatus);
-                } else {
-                    ofcOrderStatusService.save(orderStatus);
+                if (orderStatus.getOrderStatus() != null) {
+                    if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
+                        ofcOrderStatusService.saveOrderStatusLog(orderStatus);
+                    } else {
+                        ofcOrderStatusService.save(orderStatus);
+                    }
                 }
                 if (StringUtils.equals(orderStatus.getOrderStatus(), OrderStatusEnum.BEEN_COMPLETED.getCode())) {
                     //订单发送签收短信
