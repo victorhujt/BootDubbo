@@ -53,6 +53,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
     private OfcWarehouseInformationService ofcWarehouseInformationService;
     @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
+    @Resource
+    private OfcOrderNewstatusService ofcOrderNewstatusService;
+
 
     @Resource
     private StringRedisTemplate rt;
@@ -164,9 +167,9 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
 //                    orderStatus.setOrderStatus(OrderStatusEnum.BEEN_COMPLETED.getCode());
 //                }
 
-                OfcOrderStatus s = ofcOrderStatusService.orderStatusSelect(orderCode,"orderCode");
-                if (orderStatus.getOrderStatus() != null) {
-                    if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
+                OfcOrderNewstatus s = ofcOrderNewstatusService.selectByKey(orderCode);
+                if (orderStatus.getOrderStatus() != null && s!= null) {
+                    if (Integer.getInteger(s.getOrderLatestStatus()) - Integer.getInteger(orderStatus.getOrderStatus()) > 0) {
                         ofcOrderStatusService.saveOrderStatusLog(orderStatus);
                     } else {
                         ofcOrderStatusService.save(orderStatus);

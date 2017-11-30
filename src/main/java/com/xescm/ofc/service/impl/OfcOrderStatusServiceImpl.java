@@ -281,11 +281,13 @@ public class OfcOrderStatusServiceImpl extends BaseService<OfcOrderStatus> imple
             status.setNotes(DateUtils.Date2String(traceTime, DateUtils.DateFormatType.TYPE1)
                     + " " + status.getStatusDesc());
             status.setOrderCode(orderCode);
-            OfcOrderStatus s = orderStatusSelect(orderCode,"orderCode");
-            if (Integer.getInteger(s.getOrderStatus()) - Integer.getInteger(status.getOrderStatus()) > 0) {
-                saveOrderStatusLog(orderStatus);
-            } else {
-                save(status);
+            OfcOrderNewstatus s = ofcOrderNewstatusService.selectByKey(orderCode);
+            if (s!= null) {
+                if (Integer.getInteger(s.getOrderLatestStatus()) - Integer.getInteger(status.getOrderStatus()) > 0) {
+                    saveOrderStatusLog(orderStatus);
+                } else {
+                    save(status);
+                }
             }
         } catch (Exception e) {
             throw new BusinessException(e.getMessage(), e);
