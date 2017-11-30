@@ -10,10 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
@@ -42,6 +39,9 @@ public class OfcPotNormalRuleServiceImpl extends BaseService<OfcPotNormalRule> i
         logger.info("insertOrderNormalRule == > ofcDistributionBasicInfo == > {}", ofcDistributionBasicInfo);
         logger.info("insertOrderNormalRule == > ofcGoodsDetailsInfos == > {}", ofcGoodsDetailsInfos);
         logger.info("insertOrderNormalRule == > ofcWarehouseInformation == > {}", ofcWarehouseInformation);
+        if (!this.checkParam(ofcFundamentalInformation, ofcWarehouseInformation)) {
+            return;
+        }
         OfcExceptOrder ofcExceptOrder = new OfcExceptOrder();
         BeanUtils.copyProperties(ofcFundamentalInformation, ofcExceptOrder);
         ofcExceptOrder.setProvideTransport(ofcWarehouseInformation == null ? "0" : ofcWarehouseInformation.getProvideTransport() == null ? "0" : String.valueOf(ofcWarehouseInformation.getProvideTransport()));
@@ -55,6 +55,21 @@ public class OfcPotNormalRuleServiceImpl extends BaseService<OfcPotNormalRule> i
         }
         // 异常原因暂时只有超时
         this.dealDelay(ofcExceptOrder);
+    }
+
+    private boolean checkParam(OfcFundamentalInformation ofcFundamentalInformation, OfcWarehouseInformation ofcWarehouseInformation) {
+        boolean checkPass = true;
+        if (WITH_THE_GROUND_DISTRIBUTION.equals(ofcFundamentalInformation.getBusinessType())) {
+            logger.error("暂不支持落地配业务类型");
+            checkPass = false;
+        }
+        if (StringUtils.equals(ofcFundamentalInformation.getOrderType(), WAREHOUSE_DIST_ORDER)
+                && !STR_YES.equals(ofcWarehouseInformation.getProvideTransport().toString())) {
+            logger.error("仓储订单暂时只支持带运输的");
+            checkPass = false;
+        }
+
+        return checkPass;
     }
 
     private void dealDelay(OfcExceptOrder ofcExceptOrder) {
