@@ -30,6 +30,7 @@ import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
+import static com.xescm.ofc.enums.BusinessTypeEnum.CABANNES;
 import static com.xescm.tfc.edas.model.constants.PaasStateConstants.PaasStateEnum;
 
 /**
@@ -326,7 +327,7 @@ public class  OfcPlanFedBackServiceImpl implements OfcPlanFedBackService {
         String transCode = ofcDistributionBasicInfo.getTransCode();
         String phoneNumber = ofcDistributionBasicInfo.getConsignorContactPhone();
         String signedSms = ofcFundamentalInformation.getSignedSms();
-        if (!StringUtils.equals(signedSms, STR_YES)) {
+        if (!StringUtils.equals(signedSms, STR_YES) || !StringUtils.equals(ofcFundamentalInformation.getBusinessType(), CABANNES.getCode())) {
             logger.error("不需发短信!");
             return;
         }
