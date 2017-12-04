@@ -18,6 +18,8 @@ public interface OfcExceptOrderService extends IService<OfcExceptOrder> {
 
     List<OfcExceptOrder> selectByDTO(OfcExceptOrderDTO ofcExceptOrderDTO);
 
+    boolean isZhongPin(OfcExceptOrder ofcExceptOrder, List<OfcEnumeration> ofcEnumerations);
+
     int loadYesterdayOrder() throws Exception;
 
     int insertUndealOrder(OfcOrderPotDTO ofcOrderPotDTO);
