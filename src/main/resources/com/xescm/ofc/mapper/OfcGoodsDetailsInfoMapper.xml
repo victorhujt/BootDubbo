@@ -228,7 +228,7 @@
       </if>
     </set>
     where order_code = #{orderCode,jdbcType=VARCHAR}
-      AND   goods_code = #{goodsCode,jdbcType=VARCHAR}
+      AND   paas_line_no = #{paasLineNo,jdbcType=INTEGER}
   </update>
 
   <select id="queryIds" resultMap="BaseResultMap">

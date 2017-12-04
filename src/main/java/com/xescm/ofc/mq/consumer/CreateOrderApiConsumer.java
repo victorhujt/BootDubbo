@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_GoodsAmountSync;
 import static com.xescm.ofc.constant.BaseConstant.MQ_TAG_OrderToOfc;
@@ -52,7 +51,6 @@ public class CreateOrderApiConsumer implements MessageListener {
     @Resource
     private OfcInterfaceReceiveLogService receiveLogService;
 
-    private  static ConcurrentHashMap MAP = new ConcurrentHashMap();
 
     @Override
     public Action consume(Message message, ConsumeContext consumeContext) {
@@ -113,7 +111,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     !Tfc2OfcStateTopicTag.PUSH_SIGN_DOC_TAG.getTag().equals(tag)) {     // 签收单
                     logger.info("订单中心消费订单状态MQ<运输>: topic => {}, Tag => {}, key: {}, messageId: {}, message: {}", topicName, message.getTag(), key, messageId, messageBody);
                     try {
-                        mqConsumerService.transportStateConsumer(messageBody, MAP);
+                        mqConsumerService.transportStateConsumer(messageBody);
                     } catch (Exception e) {
                         logger.error("订单运输状态更新异常: 异常详情 => {}", e);
                     }
@@ -121,23 +119,25 @@ public class CreateOrderApiConsumer implements MessageListener {
             } catch (Exception ex) {
                 logger.error("运输单状态反馈消费MQ异常:tag:{},topic:{},key{},异常信息:{}", message.getTag(), topicName, key, ex.getMessage(), ex);
             }
-        } else if (StringUtils.equals(topicName, mqConfig.getWhcOrderStatusTopic())) {
+        } else if (StringUtils.equals(topicName, mqConfig.getWhcOrderStateTopic())) {
             logger.info("仓储单状态反馈的消息体为{}:", messageBody);
             logger.info("仓储单状态开始消费");
-            try {
-                logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
-                FeedBackOrderStatusDto feedBackOrderStatusDto = JacksonUtil.parseJson(messageBody, FeedBackOrderStatusDto.class);
-                ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
-            } catch (Exception e) {
-                logger.error("仓储单状态反馈出现异常{}", e.getMessage(), e);
+            if ("InOrderFinishedTag".equals(tag) ||"OutOrderFinishedTag".equals(tag)) {
+                try {
+                    logger.info("仓储单状态反馈消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
+                    FeedBackOrderStatusDto feedBackOrderStatusDto = JacksonUtil.parseJson(messageBody, FeedBackOrderStatusDto.class);
+                    ofcOrderStatusService.feedBackStatusFromWhc(feedBackOrderStatusDto);
+                } catch (Exception e) {
+                    logger.error("仓储单状态反馈出现异常{}", e.getMessage(), e);
+                }
             }
-        } else if (StringUtils.equals(topicName,mqConfig.getWhc2OfcOrderTopic())) {
+        } else if (StringUtils.equals(topicName,mqConfig.getWhcOrderResultTopic())) {
             logger.info("仓储单出入库单实收实出反馈的消息体为{}:", messageBody);
             logger.info("仓储单出入库单实收实出反馈开始消费");
             logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
             try {
                 FeedBackOrderDto feedBackOrderDto = JacksonUtil.parseJson(messageBody, FeedBackOrderDto.class);
-                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto, MAP);
+                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
             } catch (Exception e) {
                 logger.error("仓储单出入库单反馈出现异常{}", e.getMessage(), e);
             }
