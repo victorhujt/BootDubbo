@@ -163,6 +163,8 @@ public class OfcOrderReviseServiceImpl implements OfcOrderReviseService {
                     logger.error("推送调度中心交货量同步发生异常：异常详情 => {}", e);
                     throw new BusinessException("推送调度中心交货量同步发生异常!");
                 }
+
+
             }
         } catch (Exception e) {
             logger.error("订单修改，交货量同步更新发生异常. {}", e);

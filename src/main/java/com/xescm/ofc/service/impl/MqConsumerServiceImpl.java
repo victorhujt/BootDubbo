@@ -27,13 +27,13 @@ public class MqConsumerServiceImpl implements MqConsumerService {
     private OfcPlanFedBackService ofcPlanFedBackService;
 
     @Override
-    public void transportStateConsumer(String messageBody,ConcurrentHashMap cmap) throws Exception {
+    public void transportStateConsumer(String messageBody) throws Exception {
         try {
             try {
                 // 将获取的json格式字符串转换成相应对象
                 TfcTransportStateDTO transportStates;
                 transportStates = JacksonUtil.parseJsonWithFormat(messageBody, TfcTransportStateDTO.class);
-                ofcPlanFedBackService.planFedBackNew(transportStates, "",cmap);
+                ofcPlanFedBackService.planFedBackNew(transportStates, "");
             } catch (BusinessException ex) {
                 logger.error("订单运输状态更新异常: " + ExceptionUtils.getFullStackTrace(ex));
             } catch (Exception ex) {

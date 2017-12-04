@@ -1,7 +1,5 @@
 package com.xescm.ofc.service;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @description: mq消费
  * @author: nothing
@@ -12,7 +10,6 @@ public interface MqConsumerService {
     /**
      * 订单运输状态消费
      * @param messageBody
-     * @param cmap
      */
-    void transportStateConsumer(String messageBody,ConcurrentHashMap cmap) throws Exception;
+    void transportStateConsumer(String messageBody) throws Exception;
 }

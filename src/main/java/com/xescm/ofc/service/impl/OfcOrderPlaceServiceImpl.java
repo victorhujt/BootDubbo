@@ -11,6 +11,7 @@ import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.constant.GenCodePreffixConstant;
 import com.xescm.ofc.constant.OrderConstConstant;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.enums.ResultCodeEnum;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcCustDistributionBasicInfoMapper;
@@ -493,10 +494,10 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
 
     private void upOrderStatusOfCust(OfcOrderStatus ofcOrderStatus, OfcFundamentalInformation ofcFundamentalInformation, AuthResDto authResDtoByToken) {
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-        ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-        ofcOrderStatus.setStatusDesc("待审核");
+        ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+        ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
         ofcOrderStatus.setLastedOperTime(new Date());
-        ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+        ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
         ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
         OfcCustOrderStatus custOrderStatus = new OfcCustOrderStatus();
         BeanUtils.copyProperties(ofcOrderStatus, custOrderStatus);
@@ -837,11 +838,11 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     private void upOrderStatus(OfcOrderStatus ofcOrderStatus,OfcFundamentalInformation ofcFundamentalInformation,AuthResDto authResDtoByToken) {
         ofcOrderStatus.setOrderCode(ofcFundamentalInformation.getOrderCode());
-        ofcOrderStatus.setOrderStatus(PENDING_AUDIT);
-        ofcOrderStatus.setStatusDesc("待审核");
+        ofcOrderStatus.setOrderStatus(OrderStatusEnum.PEND_AUDIT.getCode());
+        ofcOrderStatus.setStatusDesc(OrderStatusEnum.PEND_AUDIT.getDesc());
         ofcOrderStatus.setLastedOperTime(new Date());
         ofcOrderStatus.setTrace("接收订单");
-        ofcOrderStatus.setTraceStatus(PENDING_AUDIT);
+        ofcOrderStatus.setTraceStatus(OrderStatusEnum.PEND_AUDIT.getCode());
         ofcOrderStatus.setOperator(authResDtoByToken.getUserName());
         ofcOrderStatusService.save(ofcOrderStatus);
     }
