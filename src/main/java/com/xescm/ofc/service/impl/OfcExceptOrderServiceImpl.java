@@ -351,8 +351,9 @@ public class OfcExceptOrderServiceImpl extends BaseService<OfcExceptOrder> imple
         }
     }
 
-    private boolean isZhongPin(OfcExceptOrder ofcExceptOrder, List<OfcEnumeration> ofcEnumerations) {
-        if (null == ofcExceptOrder){
+    @Override
+    public boolean isZhongPin(OfcExceptOrder ofcExceptOrder, List<OfcEnumeration> ofcEnumerations) {
+        if (null == ofcExceptOrder) {
             throw new BusinessException("处理异常订单失败!");
         }
         OfcEnumeration ofcEnumeration = new OfcEnumeration();
