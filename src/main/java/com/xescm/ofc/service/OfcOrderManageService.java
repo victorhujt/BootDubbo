@@ -5,7 +5,9 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.dpc.edas.dto.DpcOrderGroupInfoDto;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.ModifyAbwKbOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageImportDTO;
@@ -86,6 +88,10 @@ public interface OfcOrderManageService {
     boolean  fillAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation);
 
     boolean  updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto);
+
+    Wrapper<DpcOrderGroupInfoDto> queryOrderGroupInfoByOrderCode(String orderCode);
+
+     boolean pushOrderToTfcAndDpc(ModifyAbwKbOrderDTO dto);
 
 
 

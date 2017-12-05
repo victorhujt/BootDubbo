@@ -29,8 +29,11 @@ import com.xescm.csc.model.vo.CscGoodsApiVo;
 import com.xescm.csc.provider.CscContactEdasService;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.csc.provider.CscSupplierEdasService;
+import com.xescm.dpc.edas.dto.DpcOrderGroupInfoDto;
+import com.xescm.dpc.edas.service.DpcTransportDocEdasService;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.model.dto.ofc.ModifyAbwKbOrderDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderCancelDto;
 import com.xescm.ofc.enums.OrderStatusEnum;
 import com.xescm.ofc.exception.BusinessException;
@@ -60,7 +63,6 @@ import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
 import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
 import com.xescm.whc.edas.service.WhcModifWmsCodeEdasService;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
-import org.springframework.beans.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -68,6 +70,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,7 +86,7 @@ import static com.xescm.ofc.constant.GenCodePreffixConstant.*;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
-import static com.xescm.ofc.enums.OrderStatusEnum.*;
+import static com.xescm.ofc.enums.OrderStatusEnum.PEND_AUDIT;
 
 /**
  * <p>Title:    .订单编辑 </p>
@@ -174,6 +177,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 
     @Resource
     private WhcModifWmsCodeEdasService whcModifWmsCodeEdasService;
+
+    @Resource
+    private DpcTransportDocEdasService dpcTransportDocEdasService;
 
     @Override
     public Map orderStorageDetails(String orderCode) {
@@ -2032,10 +2038,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             String orderCode = whcModifWmsCodeReqDto.getOrderCode();
             String warehouseCode = whcModifWmsCodeReqDto.getNewWareHouseCode();
             logger.info("订单详情修改的订单为:{},修改后的仓库编码为:{}",orderCode,warehouseCode);
-            OfcFundamentalInformation info = ofcFundamentalInformationService.selectByKey(orderCode);
-            if (info == null) {
-                throw new BusinessException("订单不存在");
-            }
+            validateOrderCodeIsExist(orderCode);
             OfcWarehouseInformation ofcWarehouseInformation = new OfcWarehouseInformation();
             OfcFundamentalInformation ofcFundamentalInformation = new OfcFundamentalInformation();
             ofcFundamentalInformation.setOrderCode(orderCode);
@@ -2056,6 +2059,65 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw  e;
         }
         return succees;
+    }
+
+    private void validateOrderCodeIsExist(String orderCode) {
+        OfcFundamentalInformation info = ofcFundamentalInformationService.selectByKey(orderCode);
+        if (info == null) {
+            throw new BusinessException("订单不存在");
+        }
+    }
+
+    @Override
+    public Wrapper<DpcOrderGroupInfoDto> queryOrderGroupInfoByOrderCode(String orderCode) {
+        Wrapper<DpcOrderGroupInfoDto> result;
+        try {
+            logger.info("订单号查询卡班二次配送的基地和仓库,orderCode is {}",orderCode);
+            /**校验卡班订单是否为二次配送**/
+            validateKbOrder(orderCode);
+             result = dpcTransportDocEdasService.queryOrderGroupInfoByOrderCode(orderCode);
+            logger.info(" dpcTransportDocEdasService.queryOrderGroupInfoByOrderCode response result is {}",result);
+        }catch(Exception e) {
+            logger.error("订单号查询卡班二次配送的基地和仓库发生异常：异常详情{}", e);
+            throw e;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean pushOrderToTfcAndDpc(ModifyAbwKbOrderDTO dto) {
+        logger.info("修改卡班二次配送订单负责的基地以及仓库的dto为:{}",dto);
+        boolean isSend;
+        String orderCode = dto.getOrderCode();
+        try {
+            String orderInfo = JacksonUtil.toJson(dto);
+             isSend = mqProducer.sendMsg(orderInfo, mqConfig.getKbTwoDisBaseModifyTopic(), orderCode, "");
+            logger.info("订单中心推送dpc or tfc 结果: {}，订单号：{}", isSend, orderCode);
+        } catch (Exception e) {
+            logger.error("订单中心推送dpc or tfc 订单转换发生错误, 异常： {}", e);
+            throw new BusinessException("订单中心推送dpc or tfc 订单转换发生错误!");
+        }
+        return isSend;
+    }
+
+    private void validateKbOrder(String orderCode) {
+        OfcFundamentalInformation info = ofcFundamentalInformationService.selectByKey(orderCode);
+        if (info == null) {
+            throw new BusinessException("订单不存在");
+        }
+        if (!TRANSPORT_ORDER.equals(info.getOrderType())) {
+            throw new BusinessException("订单类型必须是运输订单");
+        }
+        if (!WITH_THE_KABAN.equals(info.getBusinessType())) {
+            throw new BusinessException("订单业务类型必须是卡班类型");
+        }
+        OfcFinanceInformation financeInfo = ofcFinanceInformationService.selectByKey(orderCode);
+        if (financeInfo == null) {
+            throw new BusinessException("订单费用信息为空");
+        }
+        if (!TWO_DISTRIBUTION.equals(financeInfo.getTwoDistribution())) {
+            throw new BusinessException("订单必须为二次配送");
+        }
     }
 
     /**
