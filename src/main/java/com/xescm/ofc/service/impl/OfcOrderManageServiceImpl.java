@@ -1946,7 +1946,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     return String.valueOf(Wrapper.SUCCESS_CODE);
                 }
 
-                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
+//                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
             }
             //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
             if (PubUtils.isSEmptyOrNull(ofcFundamentalInformation.getBaseCode())
@@ -1962,6 +1962,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             String orderType = ofcFundamentalInformation.getOrderType();
             if (trimAndNullAsEmpty(orderType).equals(TRANSPORT_ORDER)) {  // 运输订单
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, goodsDetailsList);
+                pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsInfo, ofcWarehouseInformation);
             } else if (trimAndNullAsEmpty(orderType).equals(WAREHOUSE_DIST_ORDER)) {//仓储订单
                 //仓储订单推仓储中心
                 pushOrderToWhc(ofcFundamentalInformation, goodsDetailsInfo, ofcWarehouseInformation, ofcFinanceInformation, ofcDistributionBasicInfo);
@@ -2224,6 +2225,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
             TfcTransportDetail tfcTransportDetail = new TfcTransportDetail();
+            tfcTransportDetail.setPaasLineNo(ofcGoodsDetailsInfo.getPaasLineNo());
             tfcTransportDetail.setOrderCode(ofcFundamentalInformation.getOrderCode());
             tfcTransportDetail.setStandard(trimAndNullAsEmpty(ofcGoodsDetailsInfo.getGoodsSpec()));
 //            tfcTransportDetail.setPono();
@@ -2506,13 +2508,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             List<OfcGoodsDetailsInfo> goodsDetailsList = ofcGoodsDetailsInfoService.select(ofcGoodsDetailsInfo);
             String orderType = ofcFundamentalInformation.getOrderType();
-            this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, null);
             OfcWarehouseInformation cw = new OfcWarehouseInformation();
             cw.setOrderCode(ofcFundamentalInformation.getOrderCode());
             OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.selectOne(cw);
             // 运输订单
             if (TRANSPORT_ORDER.equals(trimAndNullAsEmpty(orderType))) {
                 pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, goodsDetailsList);
+                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, null);
                 //仓储订单
             } else if (WAREHOUSE_DIST_ORDER.equals(trimAndNullAsEmpty(orderType))) {
                 //仓储订单推仓储中心
@@ -2520,6 +2522,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 //仓储带运输订单推仓储中心和运输中心
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
                     pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, goodsDetailsList);
+                    this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, null);
                 }
             } else {
                 logger.error("订单类型有误");
