@@ -14,6 +14,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -33,23 +34,19 @@ public class Whc2OfcGoodsRealAmountProcessor implements ScxSimpleJobProcessor {
     @Override
     public ProcessResult process(ScxSimpleJobContext scxSimpleJobContext) {
         logger.info("执行Processor -----> Whc2OfcGoodsRealAmountProcessor");
-        OfcTaskInterfaceLogDto ofcTaskInterfaceLogDto = new OfcTaskInterfaceLogDto();
-        try {
-            // 查询任务日志
-            OfcTaskInterfaceLogDto param = new OfcTaskInterfaceLogDto();
-            param.setTaskType(LogBusinessTypeEnum.EDI_WHC_GOODS_REAL_AMOUNT.getCode());
-            param.setFetchNum(fetchNum);
-            List<OfcTaskInterfaceLogDto> result = schedulerOfcServiceImpl.queryWTaskInterfaceLogForWorker(param);
-            if (!CollectionUtils.isEmpty(result)) {
-                for (OfcTaskInterfaceLogDto taskInterfaceLogDto : result) {
-                    ofcTaskInterfaceLogDto = taskInterfaceLogDto;
-                    workOnce(ofcTaskInterfaceLogDto);
+        // 查询任务日志
+        OfcTaskInterfaceLogDto param = new OfcTaskInterfaceLogDto();
+        param.setTaskType(LogBusinessTypeEnum.EDI_WHC_GOODS_REAL_AMOUNT.getCode());
+        param.setFetchNum(fetchNum);
+        List<OfcTaskInterfaceLogDto> result = schedulerOfcServiceImpl.queryWTaskInterfaceLogForWorker(param);
+        if (!CollectionUtils.isEmpty(result)) {
+            for (OfcTaskInterfaceLogDto taskInterfaceLogDto : result) {
+                try {
+                    workOnce(taskInterfaceLogDto);
+                } catch (Exception e) {
+                    workException(e, taskInterfaceLogDto);
                 }
             }
-        } catch (BusinessException e) {
-            workException(e, ofcTaskInterfaceLogDto);
-        } catch (Exception e) {
-            workException(e, ofcTaskInterfaceLogDto);
         }
         return new ProcessResult(true);
     }
@@ -59,9 +56,9 @@ public class Whc2OfcGoodsRealAmountProcessor implements ScxSimpleJobProcessor {
      * <p>仓储单出入库单实收实出反馈，业务处理 </p>
      *
      * @param
+     * @return
      * @Author 袁宝龙
      * @CreateDate 2017/12/6 16:23
-     * @return
      */
     public void workOnce(OfcTaskInterfaceLogDto ofcTaskInterfaceLogDto) {
         try {
@@ -85,9 +82,9 @@ public class Whc2OfcGoodsRealAmountProcessor implements ScxSimpleJobProcessor {
      * <p>仓储单出入库单实收实出反馈，处理异常 </p>
      *
      * @param
+     * @return
      * @Author 袁宝龙
      * @CreateDate 2017/12/6 16:23
-     * @return
      */
     public void workException(Exception e, OfcTaskInterfaceLogDto ofcTaskInterfaceLogDto) {
         logger.error("仓储单出入库单实收实出反馈，发生异常：{}", e);
