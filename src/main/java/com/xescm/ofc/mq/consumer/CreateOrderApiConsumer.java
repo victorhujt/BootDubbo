@@ -12,7 +12,6 @@ import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
 import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
 import com.xescm.ofc.edas.enums.LogSourceSysEnum;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
-import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 import com.xescm.ofc.service.MqConsumerService;
 import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
@@ -136,8 +135,8 @@ public class CreateOrderApiConsumer implements MessageListener {
             logger.info("仓储单出入库单实收实出反馈开始消费");
             logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
             try {
-                FeedBackOrderDto feedBackOrderDto = JacksonUtil.parseJson(messageBody, FeedBackOrderDto.class);
-                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
+//                FeedBackOrderDto feedBackOrderDto = JacksonUtil.parseJson(messageBody, FeedBackOrderDto.class);
+//                ofcOrderStatusService.ofcWarehouseFeedBackFromWhc(feedBackOrderDto);
             } catch (Exception e) {
                 logger.error("仓储单出入库单反馈出现异常{}", e.getMessage(), e);
             }
