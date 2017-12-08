@@ -144,4 +144,10 @@ public class TfcTransportDetail implements Serializable {
     private Date invalidTime;//失效日期
 
     private Integer totalBox;//合计标准箱
+
+    /**
+     * 平台行号
+     */
+    @Column(name = "paas_line_no")
+    private Long paasLineNo;
 }
