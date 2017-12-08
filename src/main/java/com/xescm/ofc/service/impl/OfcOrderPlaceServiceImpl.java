@@ -403,8 +403,8 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         if (ofcMerchandiserService.select(ofcMerchandiser).size()==0 && !PubUtils.trimAndNullAsEmpty(ofcMerchandiser.getMerchandiser()).equals("")) {
             ofcMerchandiserService.save(ofcMerchandiser);
         }
-        //推结算
-        ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos, null);
+//        //推结算
+//        ofcOrderManageService.pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,ofcGoodsDetailsInfos, null);
         String code = ofcOrderManageService.orderAutoAudit(ofcFundamentalInformation, ofcGoodsDetailsInfos, ofcDistributionBasicInfo,
                 null, ofcFinanceInformation, ofcOrderStatus.getOrderStatus(), REVIEW, authResDtoByToken);
         if (StringUtils.equals(String.valueOf(Wrapper.ERROR_CODE),code)) {
