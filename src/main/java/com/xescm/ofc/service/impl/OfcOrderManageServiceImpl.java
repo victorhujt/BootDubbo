@@ -1904,13 +1904,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (ofcGoodsDetails.getInvalidTime() != null) {
                     key.append(DateUtils.Date2String(ofcGoodsDetails.getInvalidTime(), DateUtils.DateFormatType.TYPE1));
                 }
-//                if (!PubUtils.isSEmptyOrNull(specialCust)) {
-//                    if (StringUtils.equals(ofcFundamentalInformation.getCustCode(),specialCust)) {
-//                        if (ofcGoodsDetails.getLineNo() != null) {
-//                            key.append(ofcGoodsDetails.getLineNo());
-//                        }
-//                    }
-//                }
                 if (!goodInfo.containsKey(key.toString())) {
                     goodInfo.put(key.toString(),ofcGoodsDetails);
                 }else{
@@ -1945,7 +1938,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (fillAreaAndBase(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcWarehouseInformation)) {
                     return String.valueOf(Wrapper.SUCCESS_CODE);
                 }
-
 //                this.pushOrderToAc(ofcFundamentalInformation, ofcFinanceInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
             }
             //2017年6月13日 追加逻辑: 判断订单上是否有基地信息, 若无, 则不允许审核, 即维持待审核
@@ -2416,7 +2408,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
 //        tfcTransport.setTransportPoolName();//
         tfcTransport.setPaymentWay(ofcFinanceInformation.getPayment());
         tfcTransport.setCarrFeePayer(ofcFinanceInformation.getExpensePaymentParty());
-        tfcTransport.setIsReceipt(ofcFinanceInformation.getReturnList() == null ?"1":ofcFinanceInformation.getReturnList());
+        tfcTransport.setIsReceipt(ofcFinanceInformation.getReturnList());
         if (ofcWarehouseInformation != null && !PubUtils.isOEmptyOrNull(ofcWarehouseInformation.getProvideTransport())) {
             tfcTransport.setProvideTransport(ofcWarehouseInformation.getProvideTransport().equals(WEARHOUSE_WITH_TRANS) ? WEARHOUSE_WITH_TRANS:WAREHOUSE_NO_TRANS);
         } else {
