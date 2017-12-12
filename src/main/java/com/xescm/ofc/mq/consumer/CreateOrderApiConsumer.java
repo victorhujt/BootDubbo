@@ -12,6 +12,7 @@ import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
 import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
 import com.xescm.ofc.edas.enums.LogSourceSysEnum;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
+import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 import com.xescm.ofc.service.MqConsumerService;
 import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
