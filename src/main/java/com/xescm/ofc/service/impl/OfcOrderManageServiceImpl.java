@@ -1963,8 +1963,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     if (!StringUtils.equals(reviewTag, ORDER_TAG_STOCK_EDIT) && !StringUtils.equals(reviewTag, ORDER_TAG_STOCK_CUST_EDIT)) {
                         ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo, goodsDetailsList, ofcWarehouseInformation);
                     }
-                    pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, goodsDetailsInfo);
                     pushOrderToAc(ofcFundamentalInformation,ofcFinanceInformation,ofcDistributionBasicInfo,goodsDetailsInfo, ofcWarehouseInformation);
+                    pushOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, goodsDetailsInfo);
                 }
             } else {
                 logger.error("订单类型有误");
@@ -2064,9 +2064,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ,OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         logger.info("订单信息推送运输中心,订单号:{}", ofcFundamentalInformation.getOrderCode());
         //订单中心实体转运输中心接口DTO
-        if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
-            ofcFundamentalInformation.setBusinessType(WITH_THE_CITY);
-        } else {
+        if (!ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
             ofcPotNormalRuleService.insertOrderNormalRule(ofcFundamentalInformation, ofcDistributionBasicInfo , ofcGoodsDetailsInfos, ofcWarehouseInformation);
         }
         TfcTransport tfcTransport = convertOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
@@ -2390,7 +2388,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             tfcTransport.setVoidTime(ofcFundamentalInformation.getAbolishTime());
         }
         tfcTransport.setMerchandiser(trimAndNullAsEmpty(ofcFundamentalInformation.getMerchandiser()));
-        tfcTransport.setBusinessType(trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType()));
+        // 仓储带运输业务类型写死600
+        String businessType = trimAndNullAsEmpty(ofcFundamentalInformation.getBusinessType());
+        if (ofcFundamentalInformation.getOrderType().equals(WAREHOUSE_DIST_ORDER)) {
+            businessType = WITH_THE_CITY;
+        }
+        tfcTransport.setBusinessType(businessType);
         tfcTransport.setGoodsTypeName(trimAndNullAsEmpty(ofcDistributionBasicInfo.getGoodsTypeName()));
         tfcTransport.setTwoDistribution(ofcFinanceInformation.getTwoDistribution() == null ? null : ofcFinanceInformation.getTwoDistribution());
         tfcTransport.setFaceOrder(trimAndNullAsEmpty(ofcDistributionBasicInfo.getTransCode()));//面单号
