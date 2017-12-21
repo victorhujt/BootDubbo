@@ -1803,6 +1803,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             newofcFundamentalInformation.setAbolishTime(null);
             newofcFundamentalInformation.setOperator("");
             newofcFundamentalInformation.setAbolisherName("");
+            newofcFundamentalInformation.setOrderTime(new Date());
             newofcFundamentalInformation.setOrderSource("手动录入");
             newofcFundamentalInformation.setCreator(authResDtoByToken.getUserName());
             newofcFundamentalInformation.setAreaCode(ofcFundamentalInformation.getAreaCode());
