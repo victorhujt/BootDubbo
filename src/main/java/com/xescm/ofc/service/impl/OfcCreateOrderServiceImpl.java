@@ -36,6 +36,7 @@ import com.xescm.ofc.mq.producer.DefaultMqProducer;
 import com.xescm.ofc.service.*;
 import com.xescm.ofc.utils.CheckUtils;
 import com.xescm.ofc.utils.CodeGenUtils;
+import com.xescm.ofc.utils.DateUtils;
 import com.xescm.rmc.edas.domain.vo.RmcAddressCodeVo;
 import com.xescm.rmc.edas.domain.vo.RmcAddressNameVo;
 import com.xescm.rmc.edas.service.RmcAddressEdasService;
@@ -50,10 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
@@ -105,6 +103,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
     private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
     @Resource
     private CscContactEdasService cscContactEdasService;
+    @Resource
+    private OfcEnumerationService ofcEnumerationService;
 
     @Resource
     private CodeGenUtils codeGenUtils;
@@ -227,6 +227,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
             validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
+            // 数据特殊处理方法
+            this.specialOrderData(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             //调用创建订单方法
             resultModel = this.createOrders(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             if (StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
@@ -241,6 +243,49 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             throw e;
         }
         return resultModel;
+    }
+
+    /**
+     * <p>Title: 数据特殊处理方法. </p>
+     *
+     * @param
+     * @return
+     * @Author 袁宝龙
+     * @CreateDate 2017/12/11 10:45
+     */
+    private void specialOrderData(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcFinanceInformation ofcFinanceInformation, OfcWarehouseInformation ofcWarehouseInformation, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList, OfcOrderStatus ofcOrderStatus) {
+        String custCode = ofcFundamentalInformation.getCustCode();
+        Date orderTime = ofcFundamentalInformation.getOrderTime();
+        OfcEnumeration ofcEnumeration = new OfcEnumeration();
+        ofcEnumeration.setEnumType("SpecialCustZhongpinEnum");
+        List<OfcEnumeration> enumsOfZp = ofcEnumerationService.queryOfcEnumerationList(ofcEnumeration);
+        /**
+         * [1293] 众品订单 - 确定承诺发货时间和承诺到达时间
+         */
+        List<String> zpCustCodes = new ArrayList<>();
+        for (OfcEnumeration enumeration: enumsOfZp) {
+            zpCustCodes.add(enumeration.getEnumValue());
+        }
+        // 判断是否是众品客户
+        if (zpCustCodes.contains(custCode)) {
+            String zpGoodsCategoryCode = "GT099";
+            int zpGoodsNum = 0;
+            for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
+                String goodsCategoryCode = ofcGoodsDetailsInfo.getGoodsCategoryCode();
+                if (zpGoodsCategoryCode.equals(goodsCategoryCode)) {
+                    zpGoodsNum++;
+                }
+            }
+            if (zpGoodsNum > 0) {
+                // 如果货品为鲜品。则 承诺发货时间 = 下单时间 + 24小时，承诺到达时间 = 下单时间 + 48小时
+                ofcDistributionBasicInfo.setPickupTime(DateUtils.addHourToDate(orderTime, 24));
+                ofcDistributionBasicInfo.setExpectedArrivedTime(DateUtils.addHourToDate(orderTime, 48));
+            } else {
+                // 如果货品为其他品类。则 承诺发货时间 = 下单时间 + 72小时，承诺到达时间 = 下单时间 + 144小时
+                ofcDistributionBasicInfo.setPickupTime(DateUtils.addHourToDate(orderTime, 72));
+                ofcDistributionBasicInfo.setExpectedArrivedTime(DateUtils.addHourToDate(orderTime, 144));
+            }
+        }
     }
 
     private void validateGoodsPackage(OfcCreateOrderDTO createOrderEntity, OfcFundamentalInformation ofcFundamentalInformation) {

@@ -163,13 +163,8 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     @Override
     public List<RmcWarehouseRespDto> queryWarehouseByBaseCode(ModifyWarehouseDTO modifyWarehouseDTO) {
             List<String> codes = new ArrayList<>();
-            List<RmcWarehouseRespDto> rws = new ArrayList();
-            String custCode = modifyWarehouseDTO.getCustCode();
+            List<RmcWarehouseRespDto> rws = new ArrayList<>();
             String serialNo = modifyWarehouseDTO.getSerialNo();
-            List<RmcWarehouseRespDto> warehouseRespDtos = queryWarehouseByCustomerCode(custCode);
-            if (CollectionUtils.isEmpty(warehouseRespDtos)) {
-                throw new BusinessException("客户下没有查询到仓库！");
-            }
             Wrapper<UamGroupDto> uamGroup =  uamGroupEdasService.queryByGroupSerialNo(serialNo);
             if (uamGroup != null) {
                 logger.info("uamGroupEdasService.queryByGroupSerialNo response code is {}",uamGroup.getCode());
@@ -177,22 +172,14 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
                     if (uamGroup.getResult() != null) {
                         String code = uamGroup.getResult().getGroupCode();
                         if (PubUtils.isSEmptyOrNull(code)) {
-                            new BusinessException("基地编码为空");
+                            throw new BusinessException("基地编码为空");
                         }
                         codes.add(code);
                         Wrapper<List<RmcWarehouseRespDto>>  warehouses =  rmcWarehouseEdasService.queryWareHouseInfoByBaseCode(codes);
                         logger.info("rmcWarehouseEdasService.queryWareHouseInfoByBaseCode response code is {}",warehouses.getCode());
                         if (warehouses.getCode() == Wrapper.SUCCESS_CODE) {
                             if (CollectionUtils.isNotEmpty(warehouses.getResult())) {
-                                if (CollectionUtils.isNotEmpty(warehouseRespDtos)) {
-                                    for (RmcWarehouseRespDto dto:warehouses.getResult()) {
-                                        for (RmcWarehouseRespDto dto1:warehouseRespDtos) {
-                                            if (dto.getWarehouseCode().equals(dto1.getWarehouseCode())) {
-                                                rws.add(dto1);
-                                            }
-                                        }
-                                    }
-                                }
+                                rws.addAll(warehouses.getResult());
                             }
                         }
                     } else {

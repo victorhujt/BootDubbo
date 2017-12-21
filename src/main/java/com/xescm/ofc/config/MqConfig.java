@@ -95,5 +95,7 @@ public class MqConfig {
 
     /** 订单货品数量、重量、体积修改Topic */
     private String orderAmountModifyTopic;
+    /**修改卡班二次配送订单负责基地及仓库*/
+    private String kbTwoDisBaseModifyTopic;
 
 }
