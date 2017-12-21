@@ -1,6 +1,7 @@
 package com.xescm.ofc.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -101,6 +102,18 @@ public class DateUtils {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    /**
+     * <p>Title: 时间加小时. </p>
+     * @author 袁宝龙
+     */
+    public static Date addHourToDate(Date date, int number) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.HOUR, number);
+        date = cal.getTime();
+        return date;
     }
 
     /*public static void main(String[] args) throws Exception {

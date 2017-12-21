@@ -4,6 +4,7 @@ import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.edas.model.dto.dpc.resp.OfcOrderGoodsTempDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailInfoDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailTypeDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderInfoDto;
@@ -121,5 +122,10 @@ public class OfcOrderInfoEdasServiceImpl implements OfcOrderInfoEdasService {
         }
         LOGGER.info("======>【getOrderDetailTypeByOrderCode】查询耗时: {} 毫秒", (System.currentTimeMillis() - start));
         return result;
+    }
+
+    @Override
+    public Wrapper<List<OfcOrderGoodsTempDto>> getOrderGoodsTempByOrderCode(List<String> list) {
+        return null;
     }
 }
