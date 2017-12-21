@@ -578,7 +578,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         Wrapper response = null;
         try {
             OfcCancelOrderDTO cancelOrderDTO = new OfcCancelOrderDTO();
-            cancelOrderDTO.setOrderNo(orderCode);
+            cancelOrderDTO.setOrderCode(orderCode);
             cancelOrderDTO.setBillType(type);
             cancelOrderDTO.setWarehouseID(warehouseCode);
             cancelOrderDTO.setOrderType(orderType);
