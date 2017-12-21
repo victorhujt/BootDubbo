@@ -6,8 +6,10 @@ import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.PubUtils;
+import com.xescm.dpc.edas.dto.DpcOrderGroupInfoDto;
 import com.xescm.ofc.domain.OrderSearchOperResult;
 import com.xescm.ofc.domain.Page;
+import com.xescm.ofc.edas.model.dto.ofc.ModifyAbwKbOrderDTO;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.model.dto.form.OrderOperForm;
 import com.xescm.ofc.model.dto.ofc.AuditOrderDTO;
@@ -241,4 +243,60 @@ public class OfcOrderManageController extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
         }
     }
+    /**
+     * 查询卡班二次配送负责基地以及仓库
+     */
+    @RequestMapping(value = "queryWareHouseAndBase/{orderCode}", method = {RequestMethod.POST})
+    @ResponseBody
+    @ApiOperation(value = "根据订单号查询卡班二次配送负责的基地以及仓库", httpMethod = "POST", notes = "返回配送负责基地以及仓库的信息")
+    public Wrapper<DpcOrderGroupInfoDto> queryWareHouseAndBase(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
+        Wrapper<DpcOrderGroupInfoDto> result;
+        try {
+            if (PubUtils.isSEmptyOrNull(orderCode)) {
+                throw new BusinessException("订单编号不能为空！");
+            }
+            result = ofcOrderManageService.queryOrderGroupInfoByOrderCode(orderCode);
+        }catch (BusinessException ex) {
+            logger.error("订单号查询卡班二次配送负责的基地以及仓库出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }catch (Exception e){
+            logger.error("订单号查询卡班二次配送负责的基地以及仓库出现异常:{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return result;
+    }
+
+
+    /**
+     * 卡班二次配送负责基地以及仓库修改后的推送
+     */
+    @RequestMapping(value = "pushAreaAndBase", method = {RequestMethod.POST})
+    @ResponseBody
+    @ApiOperation(value = "根据订单号查询卡班二次配送负责的基地以及仓库", httpMethod = "POST", notes = "返回配送负责基地以及仓库的信息")
+    public  Wrapper<?>  pushAreaAndBase(@ApiParam(name = "auditOrderDTO", value = "订单审核实体") @RequestBody ModifyAbwKbOrderDTO modifyAbwKbOrderDTO) {
+        boolean result;
+        try {
+            if (modifyAbwKbOrderDTO == null) {
+                throw new BusinessException("订单修改实体不能为空");
+            }
+            if (PubUtils.isSEmptyOrNull(modifyAbwKbOrderDTO.getOrderCode())) {
+                throw new BusinessException("订单编号不能为空！");
+            }
+            result = ofcOrderManageService.pushOrderToTfcAndDpc(modifyAbwKbOrderDTO);
+            if (!result){
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+            }
+        }catch (BusinessException ex) {
+            logger.error("推送修改卡班二次配送负责的基地以及仓库出现异常:{}", ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }catch (Exception e){
+            logger.error("推送修改卡班二次配送负责的基地以及仓库出现异常:{}", e.getMessage(), e);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, Wrapper.ERROR_MESSAGE);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE);
+    }
+
+
+
+
 }

@@ -258,6 +258,7 @@ public class OfcStorageInfoController extends BaseController {
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
 
         }catch (Exception ex){
+            logger.error("查询基地下的仓库出现异常:{}", ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE,"内部异常");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, "操作成功", rws);
