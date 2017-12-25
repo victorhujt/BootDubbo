@@ -5,6 +5,7 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.contract.ofc.CscContractProEdasDto;
 import com.xescm.dpc.edas.dto.DpcOrderGroupInfoDto;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.ofc.ModifyAbwKbOrderDTO;
@@ -92,6 +93,10 @@ public interface OfcOrderManageService {
     Wrapper<DpcOrderGroupInfoDto> queryOrderGroupInfoByOrderCode(String orderCode);
 
      boolean pushOrderToTfcAndDpc(ModifyAbwKbOrderDTO dto);
+
+     boolean validateCustomerIsHaveContract(CscContractProEdasDto dto);
+
+     void validateCustomerIsLocked(OfcFundamentalInformation ofcFundamentalInformation);
 
 
 
