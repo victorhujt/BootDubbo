@@ -2066,11 +2066,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("产品分类不能为空");
         }
         try {
-            Wrapper<List<CscEdasContractVo>>  contractResp = cscContractEdasService.queryCscContractByCustomerCode(dto);
+            Wrapper<List<CscEdasContractVo>>  contractResp = cscContractEdasService.ofcPlaceOrderByContract(dto);
             if (contractResp != null && contractResp.getCode() == Wrapper.SUCCESS_CODE) {
-                if (CollectionUtils.isNotEmpty(contractResp.getResult())) {
                     isHaveContract = true;
-                }
             }
         }catch (Exception e) {
             logger.error("调用csc校验客户是否存在仓储合同出现异常:{}",e);
