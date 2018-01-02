@@ -10,7 +10,6 @@ import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
-import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
@@ -44,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
-import static com.xescm.ofc.constant.OrderConstConstant.TRACE_STATUS_5;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.*;
 
 /**
@@ -157,15 +155,18 @@ public class OfcStorageInfoController extends BaseController {
     public Wrapper<?> copyOrder(@ApiParam(name = "orderCode",value = "订单号" ) @PathVariable String orderCode) {
         AuthResDto authResDtoByToken = getAuthResDtoByToken();
         String result;
-        try{
+        try {
             if (StringUtils.isBlank(orderCode)) {
-                throw new Exception("订单编号不能为空！");
+                throw new BusinessException("订单编号不能为空！");
             }
-            logger.info("被复制的订单号为:{}",orderCode);
-            result = ofcOrderManageService.copyOrder(orderCode,authResDtoByToken);
-        } catch (Exception ex) {
+            logger.info("被复制的订单号为:{}", orderCode);
+            result = ofcOrderManageService.copyOrder(orderCode, authResDtoByToken);
+        }catch (BusinessException ex) {
             logger.error("订单中心订单管理订单复制出现异常orderCode：{},{}", "", orderCode,ex.getMessage(), ex);
             return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("订单中心订单管理订单复制出现异常orderCode：{},{}", "", orderCode,ex.getMessage(), ex);
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, "订单中心订单管理订单复制出现异常");
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE,result);
     }
@@ -305,24 +306,6 @@ public class OfcStorageInfoController extends BaseController {
             if (!(ORDER_TAG_STOCK_SAVE.equals(tag) || ORDER_TAG_STOCK_EDIT.equals(tag) || ORDER_TAG_STOCK_IMPORT.equals(tag))) {
                 throw new BusinessException("下单标志类型错误");
             }
-
-            // 金融中心锁定客户不允许出库，追加逻辑
-            String customerCode = ofcSaveStorageDTO.getFundamentalInformation().getCustCode();
-            String orderBusinessType = ofcSaveStorageDTO.getFundamentalInformation().getBusinessType().substring(0, 2);
-            // 当状态为出库 且 保存状态时
-            if (orderBusinessType.equals(TRACE_STATUS_5) && "save".equals(tag)) {
-                QueryCustomerCodeDto queryCustomerCodeDto = new QueryCustomerCodeDto();
-                queryCustomerCodeDto.setCustomerCode(customerCode);
-                Wrapper<CscCustomerVo> customerVoWrapper = cscCustomerEdasService.queryCustomerByCustomerCodeDto(queryCustomerCodeDto);
-                if (Wrapper.ERROR_CODE == customerVoWrapper.getCode()) {
-                    throw new BusinessException("校验客户锁定状态时出现异常");
-                }
-                String customerStatus = customerVoWrapper.getResult().getCustomerStatus();
-                if (!PubUtils.isSEmptyOrNull(customerStatus) && "1".equals(customerStatus)){
-                    throw new BusinessException("此客户被金融中心锁定，辛苦联系金融中心同事！");
-                }
-            }
-
 
             //货品信息
             List<OfcGoodsDetailsInfoDTO> ofcGoodsDetailsInfos = ofcSaveStorageDTO.getGoodsDetailsInfo();
