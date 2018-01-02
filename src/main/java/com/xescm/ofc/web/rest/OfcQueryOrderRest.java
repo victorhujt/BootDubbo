@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.exception.BusinessException;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.epc.edas.dto.SmsCodeApiDto;
 import com.xescm.epc.edas.service.EpcSendMessageEdasService;
@@ -173,12 +172,12 @@ public class OfcQueryOrderRest {
         smsCodeApiDto.setParam(json.toString());
         smsCodeApiDto.setCode(validateCode);
 
-        logger.info("调用短信接口的参数为:{}", JacksonUtil.toJson(smsCodeApiDto));
+        logger.info("调用短信接口的参数为:{}",smsCodeApiDto);
         Long begin = System.currentTimeMillis();
         Wrapper result = epcSendMessageEdasService.sendSms(smsCodeApiDto);
         Long end = System.currentTimeMillis();
         logger.info("短信接口耗时为:{}ms",(end-begin));
-        logger.info("调用短信接口的响应结果为:{}", JacksonUtil.toJson(result));
+        logger.info("调用短信接口的响应结果为:{}",result);
         if(result.getCode() == Wrapper.SUCCESS_CODE){
             logger.info("发送到手机号的验证码成功发送，手机号为:{},验证码为:{}",phone,validateCode);
             //缓存三分钟
