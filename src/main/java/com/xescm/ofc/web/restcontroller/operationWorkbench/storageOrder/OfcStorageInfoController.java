@@ -12,6 +12,7 @@ import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
 import com.xescm.csc.model.dto.QueryCustomerNameAvgueDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
+import com.xescm.csc.model.dto.contract.ofc.CscContractProEdasDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
 import com.xescm.csc.provider.CscCustomerEdasService;
 import com.xescm.ofc.domain.OrderSearchOperResult;
@@ -72,15 +73,14 @@ public class OfcStorageInfoController extends BaseController {
     private CscCustomerEdasService cscCustomerEdasService;
 
     @Resource
-    private OfcOrderManageService ofcOrderManageService;
-
-    @Resource
     private WhcOrderCancelEdasService whcOrderCancelEdasService;
 
     @Resource
     private UamGroupEdasService uamGroupEdasService;
     @Resource
     private OfcWarehouseInformationService ofcWarehouseInformationService;
+    @Resource
+    private OfcOrderManageService ofcOrderManageService;
 
 
     /**
@@ -531,5 +531,28 @@ public class OfcStorageInfoController extends BaseController {
             result = WrapMapper.wrap(Wrapper.ERROR_CODE, "城配开单根据客户名称查询客户发生异常！");
         }
         return result;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/validateCustomerIsHaveContract", method= RequestMethod.POST)
+    @ApiOperation(notes = "校验客户是否存在合同", httpMethod = "POST", value = "校验客户是否存在合同")
+    public  Wrapper<Boolean> validateCustomerIsHaveContract(@ApiParam(name = "dto", value = "合同校验dto") @RequestBody CscContractProEdasDto dto) {
+        boolean isHaveContract;
+        String message = "";
+        try {
+             isHaveContract = ofcOrderManageService.validateCustomerIsHaveContract(dto);
+             if (!isHaveContract) {
+                 message ="该客户没有对应的合同，辛苦联系营销中心同事!" ;
+             } else {
+                 message = Wrapper.SUCCESS_MESSAGE;
+             }
+        } catch (BusinessException ex) {
+            logger.error("==> 校验客户是否存在合同,出现异常={}", ex.getMessage(), ex);
+                return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("==> 校验客户是否存在合同,出现异常={}", ex.getMessage(), ex);
+            return WrapMapper.error();
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, message, isHaveContract);
+
     }
 }
