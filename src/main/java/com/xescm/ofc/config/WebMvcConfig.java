@@ -60,7 +60,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // excludePathPatterns 用户排除拦截
     	super.addInterceptors(registry);
         vueViewInterceptor.setEnv(env);
-        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**","/page/ofc/**").excludePathPatterns("/ofc/searchOverallOrder");
+        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**","/page/ofc/**").excludePathPatterns("/ofc/searchOverallOrder").excludePathPatterns("/ordermanage/queryUamGroupByType/area");
     }
 
 }

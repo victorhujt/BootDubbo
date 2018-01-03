@@ -23,6 +23,7 @@ import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
+import com.xescm.csc.model.dto.contract.ContractDto;
 import com.xescm.csc.model.dto.contract.ofc.CscContractProEdasDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
 import com.xescm.csc.model.vo.CscCustomerVo;
@@ -1809,7 +1810,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private void validateCustomerContract(OfcFundamentalInformation ofcFundamentalInformation){
         CscContractProEdasDto dto = new CscContractProEdasDto();
         dto.setCustomerCode(ofcFundamentalInformation.getCustCode());
-        dto.setProductCatlogCode("warehouse");
+        dto.setProductCatlogCode("warehouse,delivery");
         boolean isHaveContract =  validateCustomerIsHaveContract(dto);
         if (!isHaveContract) {
             throw new BusinessException("该客户没有对应的合同，辛苦联系营销中心同事");
@@ -2059,16 +2060,35 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         if (dto == null) {
             throw new BusinessException("校验客户仓储合同dto不能为空");
         }
-        if (PubUtils.isSEmptyOrNull(dto.getCustomerCode())) {
+        String custCode = dto.getCustomerCode();
+        if (PubUtils.isSEmptyOrNull(custCode)) {
             throw new BusinessException("客户编码不能为空");
         }
         if (PubUtils.isSEmptyOrNull(dto.getProductCatlogCode())) {
             throw new BusinessException("产品分类不能为空");
         }
         try {
+            /**
+             * 客户是否没有合同也可以下单
+             */
             Wrapper<List<CscEdasContractVo>>  contractResp = cscContractEdasService.ofcPlaceOrderByContract(dto);
+            logger.info("校验客户是否需要仓储合同才可以下单的响应为:{}",contractResp);
             if (contractResp != null && contractResp.getCode() == Wrapper.SUCCESS_CODE) {
                     isHaveContract = true;
+                /**
+                 * 客户必须存在合同才可以下单，校验改客户是否存在合同
+                 */
+            } else {
+                logger.info("客户必须存在合同才可下单，客户编码为:{}",custCode);
+                ContractDto contractDto = new ContractDto();
+                contractDto.setCustomerCode(custCode);
+                contractDto.setProductCatlogCode(dto.getProductCatlogCode());
+                logger.info("查询客户是否存在合同参数为:{}",contractDto);
+                Wrapper<List<CscEdasContractVo>> cscConstractResp = cscContractEdasService.queryCscContractByCustomerCode(contractDto);
+                logger.info("查询客户是否存在合同响应为:{}",cscConstractResp);
+                if (cscConstractResp.getCode() == Wrapper.SUCCESS_CODE && CollectionUtils.isNotEmpty(cscConstractResp.getResult())) {
+                    isHaveContract = true;
+                }
             }
         }catch (Exception e) {
             logger.error("调用csc校验客户是否存在仓储合同出现异常:{}",e);
