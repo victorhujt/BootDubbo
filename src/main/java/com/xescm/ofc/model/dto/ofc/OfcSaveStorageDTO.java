@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 @ApiModel("保存仓储订单的Dto")
 @Data
-public class OfcSaveStorageDTO {
+public class OfcSaveStorageDTO  implements Serializable {
     @ApiModelProperty("发货方信息")
     private CscContantAndCompanyDto consignor;
     @ApiModelProperty("收货方信息")

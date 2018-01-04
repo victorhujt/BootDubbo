@@ -84,6 +84,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.xescm.base.model.wrap.Wrapper.ERROR_CODE;
 import static com.xescm.core.utils.PubUtils.isSEmptyOrNull;
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
+import static com.xescm.ofc.constant.CreateOrderApiConstant.DACHEN_CUST_CODE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.*;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.*;
@@ -312,6 +313,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 }
             }
         }
+        String custCode = ofcFundamentalInformation.getCustCode();
         //没有匹配到包装的货品编码
         List<String> noPackageGoods = new ArrayList<>();
         //没有匹配到包装的货品编码
@@ -324,14 +326,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             String packageName = !PubUtils.isSEmptyOrNull(good.getPackageName())? good.getPackageName():good.getUnit();
             cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             //天津自动化仓 用天津仓包装校验
-            if ("000001".equals(ofcWarehouseInformation.getWarehouseCode())) {
+            if ("000001".equals(ofcWarehouseInformation.getWarehouseCode()) && DACHEN_CUST_CODE.equals(custCode)) {
                 cscGoods.setWarehouseCode("ck0024");
             } else {
                 cscGoods.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
             }
             cscGoods.setFromSys("WMS");
             cscGoods.setGoodsCode(goodsCode);
-            cscGoods.setCustomerCode(ofcFundamentalInformation.getCustCode());
+            cscGoods.setCustomerCode(custCode);
             cscGoods.setPNum(1);
             cscGoods.setPSize(10);
             Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = null;

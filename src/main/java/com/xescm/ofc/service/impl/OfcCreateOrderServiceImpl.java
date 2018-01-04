@@ -53,6 +53,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.xescm.ofc.constant.CreateOrderApiConstant.DACHEN_CUST_CODE;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
@@ -304,14 +305,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     String goodsCode = goodsInfo.getGoodsCode();
                     String unit = goodsInfo.getUnit();
                     //天津自动化仓 用天津仓包装校验
-                    if ("000001".equals(createOrderEntity.getWarehouseCode())) {
+                    if ("000001".equals(createOrderEntity.getWarehouseCode()) && DACHEN_CUST_CODE.equals(custCode)) {
                         cscGoods.setWarehouseCode("ck0024");
                     } else {
                         cscGoods.setWarehouseCode(createOrderEntity.getWarehouseCode());
                     }
                     cscGoods.setFromSys("WMS");
-                    cscGoods.setGoodsCode(goodsInfo.getGoodsCode());
-                    cscGoods.setCustomerCode(createOrderEntity.getCustCode());
+                    cscGoods.setGoodsCode(goodsCode);
+                    cscGoods.setCustomerCode(custCode);
                     cscGoods.setPNum(1);
                     cscGoods.setPSize(10);
                     try{
