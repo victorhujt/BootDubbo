@@ -338,9 +338,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             cscGoods.setPSize(10);
             Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = null;
             try {
-                logger.info("csc调用接口响应的参数为:{}",JacksonUtil.toJson(cscGoods));
+                logger.info("csc调用接口响应的参数为:{}",cscGoods);
                 goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
-                logger.info("csc调用接口响应的结果为:{}",JacksonUtil.toJson(goodsRest));
+                logger.info("csc调用接口响应的结果为:{}",goodsRest);
             }catch (Exception e) {
                 e.printStackTrace();
             }
