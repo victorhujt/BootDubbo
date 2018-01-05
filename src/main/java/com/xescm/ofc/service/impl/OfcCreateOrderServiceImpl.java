@@ -10,9 +10,6 @@ import com.xescm.csc.model.dto.CscGoodsApiDto;
 import com.xescm.csc.model.dto.QueryCustomerCodeDto;
 import com.xescm.csc.model.dto.QueryStoreDto;
 import com.xescm.csc.model.dto.QueryWarehouseDto;
-import com.xescm.csc.model.dto.contantAndCompany.CscContactCompanyDto;
-import com.xescm.csc.model.dto.contantAndCompany.CscContactDto;
-import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyDto;
 import com.xescm.csc.model.dto.contantAndCompany.CscContantAndCompanyResponseDto;
 import com.xescm.csc.model.dto.edas.company.CscQueryStoreCodeReqDto;
 import com.xescm.csc.model.dto.packing.GoodsPackingDto;
@@ -1099,42 +1096,42 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         String custCode = createOrderEntity.getCustCode();
         if (!PubUtils.isOEmptyOrNull(consigneeCode)) {
             //大成客户只传客收货方编码和名称 补全收货方信息
-            if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
-                CscContantAndCompanyDto  cscContantAndCompanyDto = new CscContantAndCompanyDto();
-                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
-                cscContactCompanyDto.setContactCompanyCode(consigneeCode);
-                cscContactCompanyDto.setContactCompanyName(createOrderEntity.getConsigneeName());
-                CscContactDto cscContactDto = new CscContactDto();
-                cscContactDto.setPurpose("1");
-                cscContantAndCompanyDto.setCscContactDto(cscContactDto);
-                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
-                cscContantAndCompanyDto.setPageNum(1);
-                cscContantAndCompanyDto.setPageSize(10);
-                cscContantAndCompanyDto.setCustomerCode(createOrderEntity.getCustCode());
-                Wrapper<PageInfo<CscContantAndCompanyResponseDto>> pageInfoWrapper = cscContactEdasService.queryCscReceivingInfoListWithPage(cscContantAndCompanyDto);
-                if (null == pageInfoWrapper || pageInfoWrapper.getCode() != Wrapper.SUCCESS_CODE) {
-                    return new ResultModel(ResultModel.ResultEnum.CODE_NO_CONSIGNEE);
-                }
-                PageInfo<CscContantAndCompanyResponseDto> result = pageInfoWrapper.getResult();
-                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto= result.getList().get(0);
-                createOrderEntity.setConsigneeProvinceCode(cscContantAndCompanyResponseDto.getProvince());
-                createOrderEntity.setConsigneeProvince(cscContantAndCompanyResponseDto.getProvinceName());
-                createOrderEntity.setConsigneeCityCode(cscContantAndCompanyResponseDto.getCity());
-                createOrderEntity.setConsigneeCity(cscContantAndCompanyResponseDto.getCityName());
-                createOrderEntity.setConsigneeCountyCode(cscContantAndCompanyResponseDto.getArea());
-                createOrderEntity.setConsigneeCounty(cscContantAndCompanyResponseDto.getAreaName());
-                createOrderEntity.setConsigneeTownCode(cscContantAndCompanyResponseDto.getStreet());
-                createOrderEntity.setConsigneeTown(cscContantAndCompanyResponseDto.getStreetName());
-                createOrderEntity.setConsigneeAddress(cscContantAndCompanyResponseDto.getAddress());
-                createOrderEntity.setConsigneeCode(cscContantAndCompanyResponseDto.getContactCompanyCode());
-                createOrderEntity.setConsigneeName(cscContantAndCompanyResponseDto.getContactCompanyName());
-                createOrderEntity.setConsigneeContact(cscContantAndCompanyResponseDto.getContactName());
-                createOrderEntity.setConsigneePhone(cscContantAndCompanyResponseDto.getPhone());
-                createOrderEntity.setConsigneeFax(cscContantAndCompanyResponseDto.getFax());
-                createOrderEntity.setConsigneeEmail(cscContantAndCompanyResponseDto.getEmail());
-                createOrderEntity.setConsigneeContactCode(cscContantAndCompanyResponseDto.getContactCode());
-                createOrderEntity.setConsigneeZip(cscContantAndCompanyResponseDto.getPostCode());
-            }else {
+//            if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
+//                CscContantAndCompanyDto  cscContantAndCompanyDto = new CscContantAndCompanyDto();
+//                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
+//                cscContactCompanyDto.setContactCompanyCode(consigneeCode);
+//                cscContactCompanyDto.setContactCompanyName(createOrderEntity.getConsigneeName());
+//                CscContactDto cscContactDto = new CscContactDto();
+//                cscContactDto.setPurpose("1");
+//                cscContantAndCompanyDto.setCscContactDto(cscContactDto);
+//                cscContantAndCompanyDto.setCscContactCompanyDto(cscContactCompanyDto);
+//                cscContantAndCompanyDto.setPageNum(1);
+//                cscContantAndCompanyDto.setPageSize(10);
+//                cscContantAndCompanyDto.setCustomerCode(createOrderEntity.getCustCode());
+//                Wrapper<PageInfo<CscContantAndCompanyResponseDto>> pageInfoWrapper = cscContactEdasService.queryCscReceivingInfoListWithPage(cscContantAndCompanyDto);
+//                if (null == pageInfoWrapper || pageInfoWrapper.getCode() != Wrapper.SUCCESS_CODE) {
+//                    return new ResultModel(ResultModel.ResultEnum.CODE_NO_CONSIGNEE);
+//                }
+//                PageInfo<CscContantAndCompanyResponseDto> result = pageInfoWrapper.getResult();
+//                CscContantAndCompanyResponseDto cscContantAndCompanyResponseDto= result.getList().get(0);
+//                createOrderEntity.setConsigneeProvinceCode(cscContantAndCompanyResponseDto.getProvince());
+//                createOrderEntity.setConsigneeProvince(cscContantAndCompanyResponseDto.getProvinceName());
+//                createOrderEntity.setConsigneeCityCode(cscContantAndCompanyResponseDto.getCity());
+//                createOrderEntity.setConsigneeCity(cscContantAndCompanyResponseDto.getCityName());
+//                createOrderEntity.setConsigneeCountyCode(cscContantAndCompanyResponseDto.getArea());
+//                createOrderEntity.setConsigneeCounty(cscContantAndCompanyResponseDto.getAreaName());
+//                createOrderEntity.setConsigneeTownCode(cscContantAndCompanyResponseDto.getStreet());
+//                createOrderEntity.setConsigneeTown(cscContantAndCompanyResponseDto.getStreetName());
+//                createOrderEntity.setConsigneeAddress(cscContantAndCompanyResponseDto.getAddress());
+//                createOrderEntity.setConsigneeCode(cscContantAndCompanyResponseDto.getContactCompanyCode());
+//                createOrderEntity.setConsigneeName(cscContantAndCompanyResponseDto.getContactCompanyName());
+//                createOrderEntity.setConsigneeContact(cscContantAndCompanyResponseDto.getContactName());
+//                createOrderEntity.setConsigneePhone(cscContantAndCompanyResponseDto.getPhone());
+//                createOrderEntity.setConsigneeFax(cscContantAndCompanyResponseDto.getFax());
+//                createOrderEntity.setConsigneeEmail(cscContantAndCompanyResponseDto.getEmail());
+//                createOrderEntity.setConsigneeContactCode(cscContantAndCompanyResponseDto.getContactCode());
+//                createOrderEntity.setConsigneeZip(cscContantAndCompanyResponseDto.getPostCode());
+//            }else {
                 ResultModel resultModel = queryContactAndSet(createOrderEntity, custCode,"1", consigneeCode);
                 if (ResultModel.ResultEnum.CODE_3001.getCode().equals(resultModel.getCode())) {
                     createOrderEntity.setConsigneeCode(null);
@@ -1142,7 +1139,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 } else {
                     return resultModel;
                 }
-            }
+            //}
 
         } else {
             boolean isNeedValidateConSignee = false;
