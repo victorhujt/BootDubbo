@@ -228,8 +228,24 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
             OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
             OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
-            validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
+            /**
+             * 出库业务没有仓库时匹配仓储中心推荐的仓库 需求号  1322
+             */
+            if (ofcFundamentalInformation.getBusinessType().contains("62") && WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())) {
+                logger.info("接口的仓储订单没有仓库开始匹配仓储中心推荐的仓库，订单号为:{}",ofcFundamentalInformation.getOrderCode());
+                ofcOrderManageService.matchWarehouse(ofcFundamentalInformation,ofcDistributionBasicInfo,ofcWarehouseInformation,ofcGoodsDetailsInfoList);
+            }
+            QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
+            cscWarehouse.setCustomerCode(custCode);
+            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+             resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, ofcWarehouseInformation.getWarehouseCode(), ofcFundamentalInformation.getOrderType());
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
+                return resultModel;
+            }
+
+            validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             // 数据特殊处理方法
             this.specialOrderData(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             //调用创建订单方法
@@ -318,14 +334,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     cscGoods.setPNum(1);
                     cscGoods.setPSize(10);
                     try{
-                        logger.info("匹配包装的参数为:{}", JacksonUtil.toJson(cscGoods));
-                        logger.info("createOrderEntity:{}",JacksonUtil.toJson(createOrderEntity));
+                        logger.info("匹配包装的参数为:{}",cscGoods);
+                        logger.info("createOrderEntity:{}",createOrderEntity);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
                     try{
-                        logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
+                        logger.info("匹配包装的响应结果为:{}",goodsRest);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
