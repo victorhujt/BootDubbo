@@ -1852,7 +1852,12 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             goodDetail.add(dd);
         }
         dto.setDetailsList(goodDetail);
-        WareHouseDTO warehouse = ofcWarehouseInformationService.matchWareHouse(dto);
+        WareHouseDTO warehouse = null;
+        try {
+             warehouse = ofcWarehouseInformationService.matchWareHouse(dto);
+        }catch (Exception e) {
+            throw e;
+        }
         if (warehouse != null) {
             ofcWarehouseInformation.setWarehouseName(warehouse.getWareHouseName());
             ofcWarehouseInformation.setWarehouseCode(warehouse.getWareHouseCode());

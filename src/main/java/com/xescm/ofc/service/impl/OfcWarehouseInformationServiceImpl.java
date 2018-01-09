@@ -203,10 +203,14 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
         String orderCode = deliveryDTO.getOrderCode();
         logger.info("订单号{}开始匹配仓库:{}",orderCode);
         logger.info("匹配仓库的参数为:{}",deliveryDTO);
-        Wrapper<WareHouseDTO> wareHouseResp = whcOutOrderWareHouseMatchService.matchWareHouse(deliveryDTO);
-        logger.info("匹配仓库的响应为:{}",wareHouseResp);
-        if (wareHouseResp.getCode() == Wrapper.SUCCESS_CODE && wareHouseResp.getResult() != null ) {
-            return wareHouseResp.getResult();
+        try {
+            Wrapper<WareHouseDTO> wareHouseResp = whcOutOrderWareHouseMatchService.matchWareHouse(deliveryDTO);
+            logger.info("匹配仓库的响应为:{}",wareHouseResp);
+            if (wareHouseResp.getCode() == Wrapper.SUCCESS_CODE && wareHouseResp.getResult() != null ) {
+                return wareHouseResp.getResult();
+            }
+        }catch (Exception e) {
+            throw e;
         }
         return null;
     }
