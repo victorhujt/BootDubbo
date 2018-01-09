@@ -1848,7 +1848,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             WhcDeliveryDetailsDTO dd = new WhcDeliveryDetailsDTO();
             dd.setItemCode(good.getGoodsCode());
             dd.setItemName(good.getGoodsName());
-            dd.setPrimaryQuantity(good.getPrimaryQuantity());
+            dd.setQty(good.getQuantity());
             goodDetail.add(dd);
         }
         dto.setDetailsList(goodDetail);
