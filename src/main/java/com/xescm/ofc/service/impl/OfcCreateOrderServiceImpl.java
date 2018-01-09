@@ -232,7 +232,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             /**
              * 出库业务没有仓库时匹配仓储中心推荐的仓库 需求号  1322
              */
-            if (ofcFundamentalInformation.getBusinessType().contains("61") && WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType())&&PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getWarehouseCode())) {
+            if (ofcFundamentalInformation.getBusinessType().contains("61") && WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType()) && PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getWarehouseCode())) {
                 logger.info("接口的仓储订单没有仓库开始匹配仓储中心推荐的仓库，订单号为:{}",ofcFundamentalInformation.getOrderCode());
                 ofcOrderManageService.matchWarehouse(ofcFundamentalInformation,ofcDistributionBasicInfo,ofcWarehouseInformation,ofcGoodsDetailsInfoList);
             }
