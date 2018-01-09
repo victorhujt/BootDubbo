@@ -1836,12 +1836,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     public void matchWarehouse(OfcFundamentalInformation ofcFundamentalInformation,OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcWarehouseInformation ofcWarehouseInformation,List<OfcGoodsDetailsInfo> goodsDetailsInfos){
         logger.info("没有仓库时开始匹配仓储中心推荐的仓库，订单号为:{}",ofcFundamentalInformation.getOrderCode());
         WhcDeliveryDTO dto = new WhcDeliveryDTO();
+        String[] destinationCodeArr = ofcDistributionBasicInfo.getDestinationCode().split(",");
         dto.setCustomerCode(ofcFundamentalInformation.getCustCode());
         dto.setCustomerName(ofcFundamentalInformation.getCustName());
-        dto.setCProvince(ofcDistributionBasicInfo.getDestinationProvince());
-        dto.setCCity(ofcDistributionBasicInfo.getDestinationCity());
-        dto.setCDistrict(ofcDistributionBasicInfo.getDestinationDistrict());
-        dto.setCStreet(ofcDistributionBasicInfo.getDestinationTowns());
+        dto.setCProvince(destinationCodeArr[0]);
+        dto.setCCity(destinationCodeArr[1]);
+        if (destinationCodeArr.length >= 3 ) {
+            dto.setCDistrict(destinationCodeArr[2]);
+        }
+        if (destinationCodeArr.length >= 4) {
+            dto.setCStreet(destinationCodeArr[3]);
+        }
         dto.setOrderCode(ofcFundamentalInformation.getOrderCode());
         List<WhcDeliveryDetailsDTO> goodDetail = new ArrayList<>();
         for (OfcGoodsDetailsInfo good :goodsDetailsInfos) {

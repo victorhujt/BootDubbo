@@ -65,8 +65,9 @@ public class ResultModel {
         CODE_3001("3001", "收发货方编码不存在！"),
         CODE_4001("4001", "客户已被锁定，无法创建！"),
         CODE_SMS_0001("SMS_0001", "入参不可为空！"),
-        CODE_NO_PACKAGE("4001", "货品没有匹配到包装信息！"),
+        CODE_NO_PACKAGE("7001", "货品没有匹配到包装信息！"),
         CODE_NO_CONSIGNEE("5001","收货方信息不能为空"),
+        CODE_NO_MATCH_WAREHOUSE("6001", "没有匹配到推荐仓库！"),
         CODE_9999("9999", "系统异常！");
 
         private String code;

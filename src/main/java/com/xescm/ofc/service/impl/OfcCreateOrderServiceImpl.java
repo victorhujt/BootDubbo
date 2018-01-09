@@ -59,6 +59,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
+import static com.xescm.ofc.constant.ResultModel.ResultEnum.CODE_NO_MATCH_WAREHOUSE;
 
 @Service
 public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
@@ -239,7 +240,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 try{
                     ofcOrderManageService.matchWarehouse(ofcFundamentalInformation,ofcDistributionBasicInfo,ofcWarehouseInformation,ofcGoodsDetailsInfoList);
                 }catch (Exception e) {
-                    throw new BusinessException("仓储订单匹配仓库失败");
+                    logger.error("仓储订单匹配推荐仓库失败：{}", CODE_NO_MATCH_WAREHOUSE.getDesc());
+                    new ResultModel(CODE_NO_MATCH_WAREHOUSE.getCode(), CODE_NO_MATCH_WAREHOUSE.getDesc());
                 }
             }
             QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
