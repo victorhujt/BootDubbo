@@ -116,6 +116,16 @@ public class DateUtils {
         return date;
     }
 
+    public static Date addMinuteToDate(Date date, int number) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MINUTE, number);
+        date = cal.getTime();
+        return date;
+    }
+
+
+
     /*public static void main(String[] args) throws Exception {
         System.out.println(DateFormatType.TYPE1.getType());
         System.out.println(Date2String(new Date(), DateFormatType.TYPE1));

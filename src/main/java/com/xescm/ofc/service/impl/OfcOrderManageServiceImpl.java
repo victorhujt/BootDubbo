@@ -56,7 +56,6 @@ import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
 import com.xescm.rmc.edas.service.RmcCompanyInfoEdasService;
 import com.xescm.rmc.edas.service.RmcServiceCoverageEdasService;
-import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.tfc.edas.model.dto.CancelOrderDTO;
 import com.xescm.tfc.edas.service.CancelOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
@@ -136,8 +135,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     @Resource
     private RmcServiceCoverageEdasService rmcServiceCoverageEdasService;
     @Resource
-    private RmcWarehouseEdasService rmcWarehouseEdasService;
-    @Resource
     private CodeGenUtils codeGenUtils;
     @Resource
     private WhcOrderCancelEdasService whcOrderCancelEdasService;
@@ -175,6 +172,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private MqConfig mqConfig;
     @Resource
     private OfcEnumerationService ofcEnumerationService;
+    @Resource
+    private OfcCancelRepeatService ofcCancelRepeatService;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -440,6 +439,17 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("订单取消失败,查不到该订单!");
             throw new BusinessException("订单取消失败,查不到该订单!");
         }
+        /**
+         * 接口过来的订单十分钟内不可取消  1398
+         */
+        if ("EDI".equals(ofcFundamentalInformation.getOrderSource())) {
+            Date creationTime = ofcFundamentalInformation.getCreationTime();
+           if (DateUtils.addMinuteToDate(creationTime,10).before(new Date()))  {
+               logger.error("接口订单十分钟之内不可以取消,订单号为:{}",orderCode);
+               throw new BusinessException("接口订单十分钟之内不可以取消!");
+           }
+        }
+
         String orderType = ofcFundamentalInformation.getOrderType();
         OfcWarehouseInformation ofcWarehouse = new OfcWarehouseInformation();
         ofcWarehouse.setOrderCode(orderCode);
@@ -567,6 +577,25 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 throw new BusinessException("取消订单推送调度中心失败");
             }
         }
+    }
+
+    private void saveCancelOrderRepeat(String orderCode) {
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
+        OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+        TfcTransport tfcTransport = convertOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
+        try {
+            String orderData = JacksonUtil.toJson(tfcTransport);
+            OfcCancelRepeat repeat = new OfcCancelRepeat();
+            repeat.setOrderCode(orderCode);
+            repeat.setOrderData(orderData);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
