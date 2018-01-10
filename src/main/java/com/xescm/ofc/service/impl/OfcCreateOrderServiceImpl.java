@@ -239,6 +239,8 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.info("接口的仓储订单没有仓库开始匹配仓储中心推荐的仓库，订单号为:{}",ofcFundamentalInformation.getOrderCode());
                 try{
                     ofcOrderManageService.matchWarehouse(ofcFundamentalInformation,ofcDistributionBasicInfo,ofcWarehouseInformation,ofcGoodsDetailsInfoList);
+                    createOrderEntity.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+                    createOrderEntity.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
                 }catch (Exception e) {
                     logger.error("仓储订单匹配推荐仓库失败：{}", CODE_NO_MATCH_WAREHOUSE.getDesc());
                     new ResultModel(CODE_NO_MATCH_WAREHOUSE.getCode(), CODE_NO_MATCH_WAREHOUSE.getDesc());

@@ -12,6 +12,7 @@ import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
 import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
 import com.xescm.ofc.edas.enums.LogSourceSysEnum;
 import com.xescm.ofc.edas.model.dto.ofc.OfcCreateOrderDTO;
+import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderDto;
 import com.xescm.ofc.edas.model.dto.whc.FeedBackOrderStatusDto;
 import com.xescm.ofc.service.MqConsumerService;
 import com.xescm.ofc.service.OfcInterfaceReceiveLogService;
@@ -130,7 +131,7 @@ public class CreateOrderApiConsumer implements MessageListener {
                     logger.error("仓储单状态反馈出现异常{}", e.getMessage(), e);
                 }
             }
-        }/* else if (StringUtils.equals(topicName,mqConfig.getWhcOrderResultTopic())) {
+        } else if (StringUtils.equals(topicName,mqConfig.getWhcOrderResultTopic())) {
             logger.info("仓储单出入库单实收实出反馈的消息体为{}:", messageBody);
             logger.info("仓储单出入库单实收实出反馈开始消费");
             logger.info("仓储单出入库单实收实出反馈开始消费MQ:Tag:{},topic:{},key{}", message.getTag(), topicName, key);
@@ -148,7 +149,7 @@ public class CreateOrderApiConsumer implements MessageListener {
             } catch (Exception e) {
                 logger.error("仓储单出入库单反馈出现异常{}", e.getMessage(), e);
             }
-        }*/
+        }
         return Action.CommitMessage;
     }
 

@@ -1854,6 +1854,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             dd.setItemCode(good.getGoodsCode());
             dd.setItemName(good.getGoodsName());
             dd.setQty(good.getQuantity());
+            dd.setPackageType(good.getUnit());
             goodDetail.add(dd);
         }
         dto.setDetailsList(goodDetail);
