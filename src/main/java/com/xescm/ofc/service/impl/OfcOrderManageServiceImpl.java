@@ -1359,6 +1359,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         BigDecimal totalWeight = accountTotalWeight(goodsDetailsList, goodInfo);
         ofcDistributionBasicInfo.setWeight(totalWeight.setScale(3, BigDecimal.ROUND_HALF_UP));
         Iterator iter = goodInfo.entrySet().iterator();
+        int i = 1;
         while (iter.hasNext()) {
             Map.Entry<String,OfcGoodsDetailsInfo> entry= (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
             OfcGoodsDetailsInfo ofcGoodsDetails=entry.getValue();
@@ -1371,7 +1372,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
             goodsAmountCount = goodsAmountCount.add(ofcGoodsDetails.getQuantity());
-            ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+            ofcGoodsDetails.setPaasLineNo(new Long((long)i++));
             ofcGoodsDetail.add(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetails);
             if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_CUST_EDIT)) {
@@ -1771,12 +1772,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             infoCondition.setOrderCode(ofcFundamentalInformation.getOrderCode());
             List<OfcGoodsDetailsInfo> goodsInfo = ofcGoodsDetailsInfoService.queryByOrderCode(ofcFundamentalInformation.getOrderCode());
             if (goodsInfo != null && goodsInfo.size() > 0) {
+                int i = 1;
                 for (OfcGoodsDetailsInfo info : goodsInfo) {
                     OfcGoodsDetailsInfo newGoodsInfo = new OfcGoodsDetailsInfo();
                     BeanUtils.copyProperties( info,newGoodsInfo);
                     newGoodsInfo.setId(UUID.randomUUID().toString().replace("-", ""));
                     newGoodsInfo.setOrderCode(newofcFundamentalInformation.getOrderCode());
-                    newGoodsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                    newGoodsInfo.setPaasLineNo(new Long((long)i++));
                     ofcGoodsDetailsInfoService.fillGoodType(newGoodsInfo);
                     ofcGoodsDetailsInfoService.save(newGoodsInfo);
                 }

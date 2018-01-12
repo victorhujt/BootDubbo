@@ -54,7 +54,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static com.xescm.ofc.constant.CreateOrderApiConstant.DACHEN_CUST_CODE;
-import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -653,9 +652,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             ofcWarehouseInformationService.update(ofcWarehouseInformation);
             ofcFinanceInformationService.update(ofcFinanceInformation);
             ofcGoodsDetailsInfoService.deleteAllByOrderCode(orderCode);
+            int i = 1;
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
                 ofcGoodsDetailsInfo.setOrderCode(orderCode);
-                ofcGoodsDetailsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                ofcGoodsDetailsInfo.setPaasLineNo(new Long((long)i++));
                 ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetailsInfo);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }
@@ -693,8 +693,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
             ofcWarehouseInformationService.save(ofcWarehouseInformation);
             ofcFinanceInformationService.save(ofcFinanceInformation);
+            int i = 1;
             for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfoList) {
-                ofcGoodsDetailsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                ofcGoodsDetailsInfo.setPaasLineNo(new Long((long)i++));
                 ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetailsInfo);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
             }

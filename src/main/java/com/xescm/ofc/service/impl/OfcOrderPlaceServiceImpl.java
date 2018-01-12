@@ -38,11 +38,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import static com.xescm.core.utils.PubUtils.trimAndNullAsEmpty;
 import static com.xescm.ofc.constant.GenCodePreffixConstant.ORDER_PRE;
-import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
@@ -131,6 +133,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
      */
     private BigDecimal saveDetails(List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,OfcFundamentalInformation ofcFundamentalInformation) {
         BigDecimal goodsAmountCount = new BigDecimal(0);
+        int i = 1;
         for (OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos) {
             if (ofcGoodsDetails.getQuantity() == null || ofcGoodsDetails.getQuantity().compareTo(new BigDecimal(0)) == 0 ) {
                 if ((ofcGoodsDetails.getWeight() == null || ofcGoodsDetails.getWeight().compareTo(new BigDecimal(0)) == 0) && (ofcGoodsDetails.getCubage() == null || ofcGoodsDetails.getCubage().compareTo(new BigDecimal(0)) == 0)) {
@@ -145,7 +148,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-            ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+            ofcGoodsDetails.setPaasLineNo(new Long((long)i++));
             goodsAmountCount = goodsAmountCount.add(null == ofcGoodsDetails.getQuantity() ? new BigDecimal(0) : ofcGoodsDetails.getQuantity());
             ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
@@ -377,6 +380,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderStatus.setNotes(notes.toString());
         upOrderStatus(ofcOrderStatus,ofcFundamentalInformation,authResDtoByToken);
         //添加该订单的货品信息
+        int i = 1;
         for (OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos) {
             String orderCode = ofcFundamentalInformation.getOrderCode();
             ofcGoodsDetails.setOrderCode(orderCode);
@@ -384,7 +388,7 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
             ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
             ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
             ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-            ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+            ofcGoodsDetails.setPaasLineNo(new Long((long)i++));
             ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetails);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
         }
@@ -1120,11 +1124,12 @@ public class OfcOrderPlaceServiceImpl implements OfcOrderPlaceService {
         ofcOrderManageService.fixAddressWhenEdit(ORDER_TAG_STOCK_EDIT, ofcDistributionBasicInfo);
         // 更新货品表
         ofcGoodsDetailsInfoService.deleteAllByOrderCode(orderCode);
+        int i = 1;
         for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : ofcGoodsDetailsInfos) {
             ofcGoodsDetailsInfo.setOrderCode(orderCode);
             ofcGoodsDetailsInfo.setCreationTime(creationTime);
             ofcGoodsDetailsInfo.setCreator(creator);
-            ofcGoodsDetailsInfo.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+            ofcGoodsDetailsInfo.setPaasLineNo(new Long((long)i++));
             ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetailsInfo);
             ofcGoodsDetailsInfoService.save(ofcGoodsDetailsInfo);
         }

@@ -35,7 +35,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.xescm.ofc.constant.GenCodePreffixConstant.PAAS_LINE_NO;
 import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
 
@@ -211,13 +210,14 @@ public class OfcMobileOrderServiceImpl extends BaseService<OfcMobileOrder>  impl
             ofcDistributionBasicInfoService.save(ofcDistributionBasicInfo);
 
             //添加该订单的货品信息
+            int i = 1;
             for(OfcGoodsDetailsInfo ofcGoodsDetails : ofcGoodsDetailsInfos){
                 ofcGoodsDetails.setOrderCode( ofcFundamentalInformation.getOrderCode());
                 ofcGoodsDetails.setCreationTime(ofcFundamentalInformation.getCreationTime());
                 ofcGoodsDetails.setCreator(ofcFundamentalInformation.getCreator());
                 ofcGoodsDetails.setOperator(ofcFundamentalInformation.getOperator());
                 ofcGoodsDetails.setOperTime(ofcFundamentalInformation.getOperTime());
-                ofcGoodsDetails.setPaasLineNo(codeGenUtils.getPaasLineNo(PAAS_LINE_NO));
+                ofcGoodsDetails.setPaasLineNo(new Long((long)i++));
                 ofcGoodsDetailsInfoService.fillGoodType(ofcGoodsDetails);
                 ofcGoodsDetailsInfoService.save(ofcGoodsDetails);
                 goodsDetailsList.add(ofcGoodsDetails);
