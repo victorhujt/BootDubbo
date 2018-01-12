@@ -362,7 +362,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                             if (queryOrderStatus != null && !StringUtils.equals(queryOrderStatus.getOrderStatus(), PENDING_AUDIT)) {
                                 logger.error("订单已经审核，跳过创单操作！custOrderCode:{},custCode:{}", custOrderCode, custCode);
                                 if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
-                                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), "订单已经审核，跳过创单操作", true);
+                                    this.orderCreateResult(custCode, orderCode, custOrderCode,createOrderEntity.getWarehouseCode(), orderType,createOrderEntity.getBusinessType(), "订单已经审核，跳过创单操作", true);
                                 }
                                 return new ResultModel(ResultModel.ResultEnum.CODE_1001);
                             }
@@ -374,12 +374,12 @@ public class CreateOrderServiceImpl implements CreateOrderService {
                         if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
                             logger.error("执行创单操作失败：custOrderCode,{},custCode:{},resson:{}", custOrderCode, custCode, resultModel.getDesc());
                             if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
-                                this.orderCreateResult(custCode, orderCode, custOrderCode,orderType, createOrderEntity.getBusinessType(), "订单创建失败:" + resultModel.getDesc(), false);
+                                this.orderCreateResult(custCode, orderCode, custOrderCode,createOrderEntity.getWarehouseCode(),orderType, createOrderEntity.getBusinessType(), "订单创建失败:" + resultModel.getDesc(), false);
                             }
                         } else {
                             logger.info("校验数据成功，执行创单操作成功；custOrderCode,{},custCode:{},orderCode:{}", custOrderCode, custCode, orderCode);
                             if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
-                                this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), "订单创建成功！", true);
+                                this.orderCreateResult(custCode, orderCode, custOrderCode,createOrderEntity.getWarehouseCode(), orderType,createOrderEntity.getBusinessType(), "订单创建成功！", true);
                             }
                         }
                     } else {
@@ -393,13 +393,13 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             } catch (BusinessException ex) {
                 logger.error("订单中心创建订单接口发生异常:{},{}", ex.getMessage(), ex);
                 if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
-                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                    this.orderCreateResult(custCode, orderCode, custOrderCode,createOrderEntity.getWarehouseCode(), orderType,createOrderEntity.getBusinessType(), ResultModel.ResultEnum.CODE_9999.getDesc(), false);
                 }
                 throw ex;
             } catch (Exception ex) {
                 logger.error("订单中心创建订单接口发生未知异常: {}, {}", ex, ex.getMessage());
                 if (CreateOrderApiConstant.XEBEST_CUST_CODE_TEST.equals(platformType) || CreateOrderApiConstant.DACHEN_CUST_CODE.equals(custCode)) {
-                    this.orderCreateResult(custCode, orderCode, custOrderCode, orderType,createOrderEntity.getBusinessType(), ResultModel.ResultEnum.CODE_9999.getDesc(), false);
+                    this.orderCreateResult(custCode, orderCode, custOrderCode,createOrderEntity.getWarehouseCode(), orderType,createOrderEntity.getBusinessType(), ResultModel.ResultEnum.CODE_9999.getDesc(), false);
                 }
                 throw ex;
             } finally {
@@ -426,7 +426,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
      * @param isSuccess
      * @throws Exception
      */
-    private void orderCreateResult(String custCode, String orderCode, String custOrderCode, String orderType,String businessType, String result, boolean isSuccess) throws Exception {
+    private void orderCreateResult(String custCode, String orderCode, String custOrderCode,String warehouse, String orderType,String businessType, String result, boolean isSuccess) throws Exception {
         String jsonMsg;
         String tag;
         // 大成
@@ -445,6 +445,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
             resultDto.setOrderType(orderType);
             resultDto.setBusinessType(businessType);
             resultDto.setPaasOrderNo(orderCode);
+            resultDto.setWarehouseCode(warehouse);
             /**锁定**/
             resultDto.setState("L");
             jsonMsg = JacksonUtil.toJson(resultDto);
