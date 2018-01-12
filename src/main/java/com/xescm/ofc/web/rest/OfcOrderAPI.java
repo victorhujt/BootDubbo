@@ -46,7 +46,7 @@ public class OfcOrderAPI {
         }
     }
 
-    @RequestMapping(value = "dealCancelOrder/{orderCode}", method = {RequestMethod.POST})
+    @RequestMapping(value = "dealCancelOrder/{orderCode}", method = {RequestMethod.GET})
     @ResponseBody
     public Wrapper<?> dealCancelOrder(@ApiParam(name = "orderCode", value = "订单号") @PathVariable String orderCode) {
         try {

@@ -1,10 +1,17 @@
 package com.xescm.ofc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Table(name = "ofc_cancel_repeat")
+@Data
 public class OfcCancelRepeat {
     /**
      * 订单号
@@ -26,56 +33,22 @@ public class OfcCancelRepeat {
     private String orderData;
 
     /**
-     * 获取订单号
-     *
-     * @return order_code - 订单号
+     * 创建时间
      */
-    public String getOrderCode() {
-        return orderCode;
-    }
+    @ApiModelProperty(value = "创建时间")
+    @Column(name = "created_time")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createdTime;
 
     /**
-     * 设置订单号
-     *
-     * @param orderCode 订单号
+     * 更新时间
      */
-    public void setOrderCode(String orderCode) {
-        this.orderCode = orderCode;
-    }
+    @ApiModelProperty(value = "更新时间")
+    @Column(name = "update_time")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updateTime;
 
-    /**
-     * 获取是否已经发送  1:是 0：否
-     *
-     * @return is_send - 是否已经发送  1:是 0：否
-     */
-    public String getIsSend() {
-        return isSend;
-    }
 
-    /**
-     * 设置是否已经发送  1:是 0：否
-     *
-     * @param isSend 是否已经发送  1:是 0：否
-     */
-    public void setIsSend(String isSend) {
-        this.isSend = isSend;
-    }
-
-    /**
-     * 获取订单的信息的json数据
-     *
-     * @return order_data - 订单的信息的json数据
-     */
-    public String getOrderData() {
-        return orderData;
-    }
-
-    /**
-     * 设置订单的信息的json数据
-     *
-     * @param orderData 订单的信息的json数据
-     */
-    public void setOrderData(String orderData) {
-        this.orderData = orderData;
-    }
 }

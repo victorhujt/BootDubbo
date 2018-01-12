@@ -27,10 +27,10 @@ public class DefaultMqProducer {
     @Resource
     Producer producer;
 
-    public boolean toSendTfcTransPlanMQ(String jsonStr,String code) {
+    public boolean toSendTfcTransPlanMQ(String jsonStr,String tag,String code) {
         boolean isSend = false;
         logger.info(mqConfig.getOfc2TfcOrderTopic()+"开始生产");
-        Message message = new Message(mqConfig.getOfc2TfcOrderTopic(), null,jsonStr.getBytes());
+        Message message = new Message(mqConfig.getOfc2TfcOrderTopic(), tag,jsonStr.getBytes());
         message.setKey(code);
 
         SendResult sendResult = producer.send(message);

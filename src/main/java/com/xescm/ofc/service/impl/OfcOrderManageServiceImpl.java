@@ -493,18 +493,22 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     type="RK";
                 }
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-                    try {
-                        long tfcStart = System.currentTimeMillis();
-                        response= orderCancelToTfc(orderCode);
-                        logger.info("=============> TFC取消耗时：" + (System.currentTimeMillis() - tfcStart)/1000);
-                        logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
-                        if (response != null && response.getCode()==Wrapper.SUCCESS_CODE) {
-                            whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
-                            logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
+                    if (isCanCancel(orderCode)) {
+                        try {
+                            long tfcStart = System.currentTimeMillis();
+                            response= orderCancelToTfc(orderCode);
+                            logger.info("=============> TFC取消耗时：" + (System.currentTimeMillis() - tfcStart)/1000);
+                            logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
+                            if (response != null && response.getCode()==Wrapper.SUCCESS_CODE) {
+                                whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
+                                logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
+                            }
+                        } catch (Exception e) {
+                            logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
+                            throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                         }
-                    } catch (Exception e) {
-                        logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
-                        throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
+                    } else {
+                        throw new BusinessException("运输订单不可取消");
                     }
                 }else{
                     try {
@@ -534,6 +538,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (whcresponse!=null&&whcresponse.getCode()==Wrapper.SUCCESS_CODE) {
                     logger.info("仓储订单提供运输时{}取消成功!",orderCode);
                 }else{
+                    saveCancelOrderRepeat(orderCode);
                     throw new BusinessException("仓储订单取消失败");
                 }
             }else{
@@ -546,7 +551,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
     }
 
-    /**
+    /*
      * 取消调度中心订单
      * @param orderCode 订单号
      */
@@ -577,6 +582,23 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 throw new BusinessException("取消订单推送调度中心失败");
             }
         }
+    }
+
+    private boolean isCanCancel(String orderCode) {
+        logger.info("询问运输中心订单是否可以取消，订单号为:{}",orderCode);
+        boolean isCanCancel= false;
+        try{
+            Wrapper<String> isCanCancelResp = cancelOrderEdasService.returnOrderStatus(orderCode);
+            String status = isCanCancelResp.getResult();
+            if (isCanCancelResp.getCode() == Wrapper.SUCCESS_CODE && !PubUtils.isSEmptyOrNull(status)) {
+                if ("0".equals(status) || "10".equals(status)) {
+                    isCanCancel = true;
+                }
+            }
+        }catch (Exception e) {
+            logger.error("询问运输中心订单是否可以取消发生异常：{}", e);
+        }
+        return isCanCancel;
     }
 
     private void saveCancelOrderRepeat(String orderCode) {
@@ -1907,6 +1929,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             }
 
             Iterator iter = goodInfo.entrySet().iterator();
+            int i = 1;
             while (iter.hasNext()) {
                 Map.Entry<String, OfcGoodsDetailsInfo> entry = (Map.Entry<String, OfcGoodsDetailsInfo>) iter.next();
                 OfcGoodsDetailsInfo ofcGoodsDetails = entry.getValue();
@@ -2173,7 +2196,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("订单信息推送运输中心异常!");
         }
         logger.info("###################推送TFC的最终JSON为{}", json);
-        defaultMqProducer.toSendTfcTransPlanMQ(json, tfcTransport.getOrderCode());
+        defaultMqProducer.toSendTfcTransPlanMQ(json,"create_transportOrder", tfcTransport.getOrderCode());
 
     }
 
