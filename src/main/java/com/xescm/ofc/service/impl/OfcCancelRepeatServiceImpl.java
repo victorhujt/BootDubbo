@@ -38,7 +38,7 @@ public class OfcCancelRepeatServiceImpl extends BaseService<OfcCancelRepeat> imp
 
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean sendTotfc(String orderCode) {
         boolean isSend;
         OfcCancelRepeat cancelRepeat = selectByKey(orderCode);
@@ -58,7 +58,7 @@ public class OfcCancelRepeatServiceImpl extends BaseService<OfcCancelRepeat> imp
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
     public void saveCancelOrderRepeat(String orderCode) {
         OfcCancelRepeat r = selectByKey(orderCode);
         if (r != null) {
