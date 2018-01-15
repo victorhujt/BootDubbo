@@ -444,7 +444,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
          */
         if ("EDI".equals(ofcFundamentalInformation.getOrderSource())) {
             Date creationTime = ofcFundamentalInformation.getCreationTime();
-           if (DateUtils.addMinuteToDate(creationTime,10).before(new Date()))  {
+           if (DateUtils.addMinuteToDate(creationTime,10).after(new Date()))  {
                logger.error("接口订单十分钟之内不可以取消,订单号为:{}",orderCode);
                throw new BusinessException("接口订单十分钟之内不可以取消!");
            }
@@ -500,15 +500,20 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                             logger.info("=============> TFC取消耗时：" + (System.currentTimeMillis() - tfcStart)/1000);
                             logger.info("取消订单，调用TFC取消接口返回结果:{},订单号为:{}",response.getCode(),orderCode);
                             if (response != null && response.getCode()==Wrapper.SUCCESS_CODE) {
-                                whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
-                                logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
+                                try{
+                                    whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
+                                    logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
+                                }catch (BusinessException e1) {
+                                    saveCancelOrderRepeat(orderCode);
+                                    throw e1;
+                                }
                             }
                         } catch (Exception e) {
                             logger.info("取消订单，调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                             throw new BusinessException("调用TFC取消接口发生异常,返回结果：{}", e.getMessage(), e);
                         }
                     } else {
-                        throw new BusinessException("运输订单不可取消");
+                        throw new BusinessException("订单的运输订单已经发运不可取消");
                     }
                 }else{
                     try {
@@ -602,6 +607,11 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     }
 
     private void saveCancelOrderRepeat(String orderCode) {
+        OfcCancelRepeat r = ofcCancelRepeatService.selectByKey(orderCode);
+        if (r != null) {
+            logger.info("不一致订单的信息已经存在，订单号为：{}",orderCode);
+            return;
+        }
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
         OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
@@ -613,9 +623,9 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             OfcCancelRepeat repeat = new OfcCancelRepeat();
             repeat.setOrderCode(orderCode);
             repeat.setOrderData(orderData);
-
+            ofcCancelRepeatService.save(repeat);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("转化为json数据发生异常：{}", e);
         }
 
     }
