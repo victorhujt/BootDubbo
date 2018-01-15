@@ -12,6 +12,7 @@ import com.xescm.ofc.edas.model.dto.ofc.ModifyAbwKbOrderDTO;
 import com.xescm.ofc.model.dto.ofc.OfcGoodsDetailsInfoDTO;
 import com.xescm.ofc.model.dto.ofc.OfcSaveStorageDTO;
 import com.xescm.ofc.model.dto.ofc.OfcStorageImportDTO;
+import com.xescm.ofc.model.dto.tfc.TfcTransport;
 import com.xescm.rmc.edas.domain.qo.RmcCompanyLineQO;
 import com.xescm.rmc.edas.domain.vo.RmcCompanyLineVo;
 import com.xescm.rmc.edas.domain.vo.RmcServiceCoverageForOrderVo;
@@ -97,6 +98,10 @@ public interface OfcOrderManageService {
      boolean validateCustomerIsHaveContract(CscContractProEdasDto dto);
 
      void validateCustomerIsLocked(OfcFundamentalInformation ofcFundamentalInformation);
+
+
+    TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation,OfcWarehouseInformation ofcWarehouseInformation,OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
+
 
 
 

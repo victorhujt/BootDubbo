@@ -504,7 +504,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                                     whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
                                     logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
                                 }catch (BusinessException e1) {
-                                    saveCancelOrderRepeat(orderCode);
+                                    ofcCancelRepeatService.saveCancelOrderRepeat(orderCode);
                                     throw e1;
                                 }
                             }
@@ -543,7 +543,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (whcresponse!=null&&whcresponse.getCode()==Wrapper.SUCCESS_CODE) {
                     logger.info("仓储订单提供运输时{}取消成功!",orderCode);
                 }else{
-                    saveCancelOrderRepeat(orderCode);
+                    ofcCancelRepeatService.saveCancelOrderRepeat(orderCode);
                     throw new BusinessException("仓储订单取消失败");
                 }
             }else{
@@ -604,30 +604,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             logger.error("询问运输中心订单是否可以取消发生异常：{}", e);
         }
         return isCanCancel;
-    }
-
-    private void saveCancelOrderRepeat(String orderCode) {
-        OfcCancelRepeat r = ofcCancelRepeatService.selectByKey(orderCode);
-        if (r != null) {
-            logger.info("不一致订单的信息已经存在，订单号为：{}",orderCode);
-            return;
-        }
-        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
-        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
-        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
-        OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
-        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
-        TfcTransport tfcTransport = convertOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
-        try {
-            String orderData = JacksonUtil.toJson(tfcTransport);
-            OfcCancelRepeat repeat = new OfcCancelRepeat();
-            repeat.setOrderCode(orderCode);
-            repeat.setOrderData(orderData);
-            ofcCancelRepeatService.save(repeat);
-        } catch (Exception e) {
-            logger.error("转化为json数据发生异常：{}", e);
-        }
-
     }
 
     /**
@@ -2315,7 +2291,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcGoodsDetailsInfos      货品信息
      * @return 运输中心接口DTO
      */
-    private TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation
+    public TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation
             , OfcFinanceInformation ofcFinanceInformation,OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         logger.info("====>ofcFundamentalInformation{}", ofcFundamentalInformation);
         logger.info("====>ofcFinanceInformation{}", ofcFinanceInformation);

@@ -8,4 +8,8 @@ import com.xescm.ofc.domain.OfcCancelRepeat;
 public interface OfcCancelRepeatService extends IService<OfcCancelRepeat> {
 
     boolean sendTotfc(String orderCode);
+
+    void saveCancelOrderRepeat(String orderCode);
+
+
 }
