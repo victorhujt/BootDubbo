@@ -1,6 +1,5 @@
 package com.xescm.ofc.service.impl;
 
-import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.ofc.domain.*;
 import com.xescm.ofc.model.dto.tfc.TfcTransport;
@@ -39,21 +38,9 @@ public class OfcCancelRepeatServiceImpl extends BaseService<OfcCancelRepeat> imp
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean sendTotfc(String orderCode) {
+    public boolean sendTotfc(String dataJson,String orderCode) {
         boolean isSend;
-        OfcCancelRepeat cancelRepeat = selectByKey(orderCode);
-        if (cancelRepeat == null) {
-            throw new BusinessException("该订单不存在取消状态不一致的问题");
-        }
-        if ("1".equals(cancelRepeat.getIsSend())) {
-            throw new BusinessException("该订单已经处理");
-        }
-        isSend = defaultMqProducer.toSendTfcTransPlanMQ(cancelRepeat.getOrderData(),"cancel_repeat", orderCode);
-        if (isSend) {
-            cancelRepeat.setIsSend("1");
-            cancelRepeat.setUpdateTime(new Date());
-            update(cancelRepeat);
-        }
+        isSend = defaultMqProducer.toSendTfcTransPlanMQ(dataJson,"cancel_repeat", orderCode);
         return isSend;
     }
 

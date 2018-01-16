@@ -37,6 +37,9 @@ import com.xescm.dpc.edas.dto.DpcOrderGroupInfoDto;
 import com.xescm.dpc.edas.service.DpcTransportDocEdasService;
 import com.xescm.ofc.config.MqConfig;
 import com.xescm.ofc.domain.*;
+import com.xescm.ofc.edas.enums.LogBusinessTypeEnum;
+import com.xescm.ofc.edas.enums.LogInterfaceTypeEnum;
+import com.xescm.ofc.edas.enums.LogSourceSysEnum;
 import com.xescm.ofc.edas.model.dto.ofc.ModifyAbwKbOrderDTO;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderCancelDto;
 import com.xescm.ofc.enums.OrderStatusEnum;
@@ -184,6 +187,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private DpcTransportDocEdasService dpcTransportDocEdasService;
     @Resource
     private CscContractEdasService cscContractEdasService;
+    @Resource
+    private OfcInterfaceReceiveLogService receiveLogService;
 
     @Override
     public Map orderStorageDetails(String orderCode) {
@@ -504,7 +509,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                                     whcresponse= orderCancelToWhc(orderCode, type, custOrderCode, warehouseCode, custCode, businessType, userName);
                                     logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}",whcresponse.getCode(),orderCode);
                                 }catch (BusinessException e1) {
-                                    ofcCancelRepeatService.saveCancelOrderRepeat(orderCode);
+                                    insertCancelOrderLog(orderCode);
                                     throw e1;
                                 }
                             }
@@ -543,7 +548,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                 if (whcresponse!=null&&whcresponse.getCode()==Wrapper.SUCCESS_CODE) {
                     logger.info("仓储订单提供运输时{}取消成功!",orderCode);
                 }else{
-                    ofcCancelRepeatService.saveCancelOrderRepeat(orderCode);
+                    insertCancelOrderLog(orderCode);
                     throw new BusinessException("仓储订单取消失败");
                 }
             }else{
@@ -556,10 +561,61 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
     }
 
+    private void insertCancelOrderLog(String orderCode) {
+        try {
+            String tfcTransportJsonStr = getTfcTransport(orderCode);
+            if (tfcTransportJsonStr != null) {
+                OfcInterfaceReceiveLog receiveLog = new OfcInterfaceReceiveLog();
+                receiveLog.setLogBusinessType(LogBusinessTypeEnum.ORDER_STATE_INCONFORMITY.getCode());
+                receiveLog.setLogFromSys(LogSourceSysEnum.OFC.getCode());
+                receiveLog.setRefNo(orderCode);
+                receiveLog.setLogType(LogInterfaceTypeEnum.EDAS.getCode());
+                receiveLog.setLogData(tfcTransportJsonStr);
+                receiveLogService.insertCancelOrderTask(receiveLog);
+            } else {
+                logger.info("获取的tfcTransportJsonStr为空，订单号为:{}",orderCode);
+            }
+        }catch (Exception e) {
+            logger.error("取消订单状态不一致订单信息插入失败：{}", e);
+        }
+    }
+
     /*
      * 取消调度中心订单
      * @param orderCode 订单号
      */
+
+    /**
+     *
+     * @param orderCode 订单号
+     * @return  推送到TFC的实体对象
+     */
+    private String  getTfcTransport(String orderCode) throws Exception {
+        String json = null;
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
+        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(orderCode);
+        OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(orderCode);
+        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos = ofcGoodsDetailsInfoService.queryByOrderCode(orderCode);
+        try {
+            TfcTransport tfcTransport = convertOrderToTfc(ofcFundamentalInformation, ofcFinanceInformation,ofcWarehouseInformation, ofcDistributionBasicInfo, ofcGoodsDetailsInfos);
+            if (tfcTransport != null) {
+                json =  JacksonUtil.toJson(tfcTransport);
+            }
+        }catch (Exception e){
+                throw e;
+        }
+       return json;
+    }
+
+
+
+
+
+
+
+
+
     private void cancelDpcOrder(String orderCode, String cancelUserId, String cancelUserName) {
         OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(orderCode);
         OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(orderCode);
@@ -2291,6 +2347,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
      * @param ofcGoodsDetailsInfos      货品信息
      * @return 运输中心接口DTO
      */
+    @Override
     public TfcTransport convertOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation
             , OfcFinanceInformation ofcFinanceInformation,OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos) {
         logger.info("====>ofcFundamentalInformation{}", ofcFundamentalInformation);
