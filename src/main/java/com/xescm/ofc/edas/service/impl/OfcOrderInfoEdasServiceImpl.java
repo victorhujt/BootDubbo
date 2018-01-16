@@ -1,9 +1,15 @@
 package com.xescm.ofc.edas.service.impl;
 
+import com.xescm.ac.domain.AcDistributionBasicInfo;
+import com.xescm.ac.domain.AcFinanceInformation;
+import com.xescm.ac.domain.AcFundamentalInformation;
+import com.xescm.ac.domain.AcGoodsDetailsInfo;
+import com.xescm.ac.model.dto.AcOrderDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
+import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
-import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
+import com.xescm.ofc.domain.*;
 import com.xescm.ofc.edas.model.dto.dpc.resp.OfcOrderGoodsTempDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailInfoDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailTypeDto;
@@ -12,8 +18,10 @@ import com.xescm.ofc.edas.service.OfcOrderInfoEdasService;
 import com.xescm.ofc.exception.BusinessException;
 import com.xescm.ofc.mapper.OfcGoodsDetailsInfoMapper;
 import com.xescm.ofc.mapper.OfcOrderOperMapper;
+import com.xescm.ofc.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,6 +47,24 @@ public class OfcOrderInfoEdasServiceImpl implements OfcOrderInfoEdasService {
     private OfcOrderOperMapper ofcOrderOperMapper;
     @Resource
     private OfcGoodsDetailsInfoMapper ofcGoodsDetailsInfoMapper;
+    @Resource
+    private OfcGoodsDetailsInfoService ofcGoodsDetailsInfoService;
+
+    @Resource
+    private OfcFundamentalInformationService ofcFundamentalInformationService;
+
+    @Resource
+    private OfcDistributionBasicInfoService ofcDistributionBasicInfoService;
+
+    @Resource
+    private OfcWarehouseInformationService ofcWarehouseInformationService;
+
+    @Resource
+    private OfcFinanceInformationService ofcFinanceInformationService;
+
+
+
+
 
     /**
      * <p>Title:      getOrderInfoByOrderCode. </p>
@@ -127,5 +153,56 @@ public class OfcOrderInfoEdasServiceImpl implements OfcOrderInfoEdasService {
     @Override
     public Wrapper<List<OfcOrderGoodsTempDto>> getOrderGoodsTempByOrderCode(List<String> list) {
         return null;
+    }
+
+    /**
+     * 给AC提供数据使用
+     * @param s
+     * @return
+     */
+    public Wrapper<String> getOrderDetailData(String s) {
+        String orderInfo = null;
+        OfcFundamentalInformation ofcFundamentalInformation = ofcFundamentalInformationService.selectByKey(s);
+        OfcFinanceInformation ofcFinanceInformation = ofcFinanceInformationService.selectByKey(s);
+        OfcDistributionBasicInfo ofcDistributionBasicInfo = ofcDistributionBasicInfoService.selectByKey(s);
+        OfcWarehouseInformation ofcWarehouseInformation = ofcWarehouseInformationService.queryByOrderCode(s);
+        List<OfcGoodsDetailsInfo> goodsinfo = ofcGoodsDetailsInfoService.queryByOrderCode(s);
+        AcOrderDto acOrderDto = new AcOrderDto();
+        try {
+            // 转换Ac实体
+            AcFundamentalInformation acFundamentalInformation = new AcFundamentalInformation();
+            BeanUtils.copyProperties( ofcFundamentalInformation, acFundamentalInformation);
+            AcFinanceInformation acFinanceInformation = new AcFinanceInformation();
+            BeanUtils.copyProperties( ofcFinanceInformation, acFinanceInformation);
+            AcDistributionBasicInfo acDistributionBasicInfo = new AcDistributionBasicInfo();
+            BeanUtils.copyProperties( ofcDistributionBasicInfo, acDistributionBasicInfo);
+            List<AcGoodsDetailsInfo> acGoodsDetailsInfoList = new ArrayList<>();
+            for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsinfo) {
+                AcGoodsDetailsInfo acGoodsDetailsInfo = new AcGoodsDetailsInfo();
+                BeanUtils.copyProperties(ofcGoodsDetailsInfo, acGoodsDetailsInfo);
+                acGoodsDetailsInfoList.add(acGoodsDetailsInfo);
+            }
+            if (acGoodsDetailsInfoList.size() < 1) {
+                throw new BusinessException("订单货品明细不能为空!");
+            }
+            acOrderDto.setAcFundamentalInformation(acFundamentalInformation);
+            acOrderDto.setAcFinanceInformation(acFinanceInformation);
+            acOrderDto.setAcDistributionBasicInfo(acDistributionBasicInfo);
+            acOrderDto.setAcGoodsDetailsInfoList(acGoodsDetailsInfoList);
+            if (null != ofcWarehouseInformation && null != ofcWarehouseInformation.getProvideTransport()) {
+                acOrderDto.setProvideTransport(ofcWarehouseInformation.getProvideTransport().toString());
+            }
+            try {
+                 orderInfo = JacksonUtil.toJson(acOrderDto);
+            } catch (Exception e) {
+                LOGGER.error("订单中心推送结算订单转换发生错误, 异常： {}", e);
+                throw new BusinessException("订单中心推送结算订单转换发生错误!");
+            }
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            LOGGER.error("订单信息推送结算中心 转换异常, {}", e);
+        }
+        return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderInfo);
     }
 }

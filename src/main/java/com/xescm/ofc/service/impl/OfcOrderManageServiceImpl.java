@@ -175,8 +175,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
     private MqConfig mqConfig;
     @Resource
     private OfcEnumerationService ofcEnumerationService;
-    @Resource
-    private OfcCancelRepeatService ofcCancelRepeatService;
 
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -673,7 +671,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         Wrapper response = null;
         try {
             OfcCancelOrderDTO cancelOrderDTO = new OfcCancelOrderDTO();
-            cancelOrderDTO.setOrderCode(orderCode);
+          //  cancelOrderDTO.setOrderCode(orderCode);
             cancelOrderDTO.setBillType(type);
             cancelOrderDTO.setWarehouseID(warehouseCode);
             cancelOrderDTO.setOrderType(orderType);
