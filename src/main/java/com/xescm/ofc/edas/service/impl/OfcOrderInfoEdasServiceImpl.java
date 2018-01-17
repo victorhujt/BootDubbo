@@ -205,4 +205,9 @@ public class OfcOrderInfoEdasServiceImpl implements OfcOrderInfoEdasService {
         }
         return WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, orderInfo);
     }
+
+//    @Override
+//    public Wrapper<String> getOrderDetailData(String s) {
+//        return null;
+//    }
 }
