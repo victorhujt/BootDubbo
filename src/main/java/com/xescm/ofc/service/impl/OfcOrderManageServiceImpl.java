@@ -672,13 +672,13 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         Wrapper response = null;
         try {
             OfcCancelOrderDTO cancelOrderDTO = new OfcCancelOrderDTO();
-           // cancelOrderDTO.setOrderCode(orderCode);
+           cancelOrderDTO.setOrderCode(orderCode);
             cancelOrderDTO.setBillType(type);
             cancelOrderDTO.setWarehouseID(warehouseCode);
             cancelOrderDTO.setOrderType(orderType);
             cancelOrderDTO.setCustomerID(customerCode);
             cancelOrderDTO.setCustomerOrderNo(custOrderCode );
-            //cancelOrderDTO.setOperationName(userName);
+            cancelOrderDTO.setOperationName(userName);
             response = whcOrderCancelEdasService.cancelOrder(cancelOrderDTO);
             logger.info("取消订单，调用WHC取消接口返回结果:{},订单号为:{}", response.getCode(), orderCode);
         } catch (Exception e) {
