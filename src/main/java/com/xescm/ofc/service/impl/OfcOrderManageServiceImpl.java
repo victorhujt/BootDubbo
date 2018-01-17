@@ -648,6 +648,7 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         boolean isCanCancel= false;
         try{
             Wrapper<String> isCanCancelResp = cancelOrderEdasService.returnOrderStatus(orderCode);
+            logger.info("询问运输中心订单是否可以取消响应结果为:{}",isCanCancelResp);
             String status = isCanCancelResp.getResult();
             if (isCanCancelResp.getCode() == Wrapper.SUCCESS_CODE && !PubUtils.isSEmptyOrNull(status)) {
                 if ("0".equals(status) || "10".equals(status)) {
