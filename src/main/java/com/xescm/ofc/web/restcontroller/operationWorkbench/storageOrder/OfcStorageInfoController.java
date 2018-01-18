@@ -6,7 +6,6 @@ import com.github.pagehelper.PageInfo;
 import com.xescm.base.model.dto.auth.AuthResDto;
 import com.xescm.base.model.wrap.WrapMapper;
 import com.xescm.base.model.wrap.Wrapper;
-import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.core.utils.PublicUtil;
 import com.xescm.csc.model.dto.CscSupplierInfoDto;
@@ -323,8 +322,7 @@ public class OfcStorageInfoController extends BaseController {
             //供应商信息
             CscSupplierInfoDto supplier = ofcSaveStorageDTO.getSupplier();
             AuthResDto authResDtoByToken = getAuthResDtoByToken();
-            logger.info("==>仓储开单或编辑实体 OfcSaveStorageDTO={}", JacksonUtil.toJson(ofcSaveStorageDTO));
-            // logger.info("==>仓储开单或编辑标志位 tag={}", tag);
+            logger.info("==>仓储开单或编辑实体 OfcSaveStorageDTO={}", ofcSaveStorageDTO);
             if (ofcWarehouseInformationDTO.getProvideTransport() == 1) {
                 if (trimAndNullAsEmpty(OfcFundamentalInformationDTO.getBusinessType()).substring(0, 2).equals("61")) {
                     if (consignee == null) {

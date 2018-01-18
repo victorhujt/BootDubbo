@@ -27,18 +27,21 @@ public interface OfcOrderManageService {
     Map orderStorageDetails(String orderCode);
 
 
-    String auditStorageOrder(String orderCode,String reviewTag, AuthResDto authResDtoByToken);
+    String auditStorageOrder(String orderCode, String reviewTag, AuthResDto authResDtoByToken);
 
-    String orderDelete(String orderCode,String orderStatus, AuthResDto authResDtoByToken);
+    String orderDelete(String orderCode, String orderStatus, AuthResDto authResDtoByToken);
 
     String orderDelete(String orderCode);
 
-    String orderCancel(String orderCode,AuthResDto authResDtoByToken);
+    String orderCancel(String orderCode, AuthResDto authResDtoByToken);
 
     CscContantAndCompanyResponseDto getContactMessage(String contactCompanyName, String contactName, String purpose, String custId, AuthResDto authResDtoByToken);
+
     CscSupplierInfoDto getSupportMessage(String suppulierName, String suppulierContactName, String custId, AuthResDto authResDtoByToken);
+
     Wrapper<List<RmcCompanyLineVo>> companySelByApi(RmcCompanyLineQO rmcCompanyLineQO);
-	void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation,
+
+    void pushOrderToAc(OfcFundamentalInformation ofcFundamentalInformation,
                        OfcFinanceInformation ofcFinanceInformation,
                        OfcDistributionBasicInfo ofcDistributionBasicInfo,
                        List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos,
@@ -51,53 +54,53 @@ public interface OfcOrderManageService {
     RmcServiceCoverageForOrderVo copyDestinationPlace(String departurePlaceCode, RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo);
 
     void pushOrderToTfc(OfcFundamentalInformation ofcFundamentalInformation, OfcFinanceInformation ofcFinanceInformation
-            ,OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
+            , OfcWarehouseInformation ofcWarehouseInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfos);
 
     void pushOrderToWhc(OfcFundamentalInformation ofcFundamentalInformation
             , List<OfcGoodsDetailsInfo> goodsDetailsList, OfcWarehouseInformation ofcWarehouseInformation
-            , OfcFinanceInformation ofcFinanceInformation,OfcDistributionBasicInfo dinfo);
+            , OfcFinanceInformation ofcFinanceInformation, OfcDistributionBasicInfo dinfo);
 
     RmcServiceCoverageForOrderVo rmcServiceCoverageAPI(RmcServiceCoverageForOrderVo rmcServiceCoverageForOrderVo, String pickup);
 
     Wrapper<?> saveStorageOrder(OfcSaveStorageDTO ofcSaveStorageDTO, List<OfcGoodsDetailsInfoDTO> goodsDetailsList, String reviewTag, CscContantAndCompanyDto cscContantAndCompanyDtoConsignor, CscContantAndCompanyDto cscContantAndCompanyDtoConsignee, CscSupplierInfoDto cscSupplierInfoDto,
                                 AuthResDto authResDtoByToken);
 
-    String copyOrder(String orderCode,AuthResDto authResDtoByToken);
+    String copyOrder(String orderCode, AuthResDto authResDtoByToken);
 
     void pullOfcOrderStatus(OfcOrderStatus ofcOrderStatus);
 
 
-     Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList, String custCode, String warehouseCode);
+    Wrapper<?> validateStockCount(List<OfcGoodsDetailsInfo> goodsDetailsList, String custCode, String warehouseCode);
 
 
     void fixAddressWhenEdit(String orderTagStockEdit, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
-     String orderAutoAuditForTran(String orderCode,String reviewTag, AuthResDto authResDtoByToken);
+    String orderAutoAuditForTran(String orderCode, String reviewTag, AuthResDto authResDtoByToken);
 
     /**
      * 更新大区、基地
+     *
      * @param ofcFundamentalInformation
      * @param ofcDistributionBasicInfo
      */
-     void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo);
+    void updateOrderAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
     Wrapper storageOrderConfirm(OfcStorageImportDTO ofcStorageImportDTO, AuthResDto authResDto);
 
 
     boolean consigneeAdressIsCoverBase(OfcDistributionBasicInfo ofcDistributionBasicInfo);
 
-    boolean  fillAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation);
+    boolean fillAreaAndBase(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation);
 
-    boolean  updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto);
+    boolean updateOrderDetail(WhcModifWmsCodeReqDto whcModifWmsCodeReqDto);
 
     Wrapper<DpcOrderGroupInfoDto> queryOrderGroupInfoByOrderCode(String orderCode);
 
-     boolean pushOrderToTfcAndDpc(ModifyAbwKbOrderDTO dto);
+    boolean pushOrderToTfcAndDpc(ModifyAbwKbOrderDTO dto);
 
-     boolean validateCustomerIsHaveContract(CscContractProEdasDto dto);
+    boolean validateCustomerIsHaveContract(CscContractProEdasDto dto);
 
-     void validateCustomerIsLocked(OfcFundamentalInformation ofcFundamentalInformation);
+    void validateCustomerIsLocked(OfcFundamentalInformation ofcFundamentalInformation);
 
-
-
+    void matchWarehouse(OfcFundamentalInformation ofcFundamentalInformation, OfcDistributionBasicInfo ofcDistributionBasicInfo, OfcWarehouseInformation ofcWarehouseInformation, List<OfcGoodsDetailsInfo> goodsDetailsInfos);
 }

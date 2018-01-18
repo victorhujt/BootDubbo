@@ -3,6 +3,8 @@ package com.xescm.ofc.service;
 import com.xescm.ofc.domain.OfcWarehouseInformation;
 import com.xescm.ofc.model.dto.ofc.ModifyWarehouseDTO;
 import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
+import com.xescm.whc.edas.dto.WareHouseDTO;
+import com.xescm.whc.edas.dto.WhcDeliveryDTO;
 
 import java.util.List;
 
@@ -21,6 +23,8 @@ public interface OfcWarehouseInformationService extends IService<OfcWarehouseInf
     List<RmcWarehouseRespDto> queryWarehouseByCustomerCode(String custCode);
 
     List<RmcWarehouseRespDto> queryWarehouseByBaseCode(ModifyWarehouseDTO modifyWarehouseDTO);
+
+     WareHouseDTO matchWareHouse(WhcDeliveryDTO deliveryDTO);
 
 
 }
