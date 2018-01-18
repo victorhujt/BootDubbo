@@ -245,6 +245,7 @@
     WHERE ofi.cust_order_code = #{custOrderCode}
     AND ofi.cust_code = #{custCode}
     AND (ofi.abolish_mark is null OR ofi.abolish_mark  = 0)
+    ORDER BY ofi.oper_time DESC LIMIT 1
   </select>
   <select id="checkCustOrderCodeRepeat" resultType="java.lang.Integer">
     SELECT
