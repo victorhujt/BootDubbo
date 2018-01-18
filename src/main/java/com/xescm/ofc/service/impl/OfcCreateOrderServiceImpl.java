@@ -58,6 +58,7 @@ import static com.xescm.ofc.constant.OrderConstConstant.*;
 import static com.xescm.ofc.constant.OrderConstant.TRANSPORT_ORDER;
 import static com.xescm.ofc.constant.OrderConstant.WAREHOUSE_DIST_ORDER;
 import static com.xescm.ofc.constant.OrderPlaceTagConstant.REVIEW;
+import static com.xescm.ofc.constant.ResultModel.ResultEnum.CODE_NO_MATCH_WAREHOUSE;
 
 @Service
 public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
@@ -192,16 +193,18 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 return resultModel;
             }
 
-            //仓库编码
-            String warehouseCode = createOrderEntity.getWarehouseCode();
-            QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
-            cscWarehouse.setCustomerCode(custCode);
-            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
-            resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
-            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
-                logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
-                return resultModel;
-            }
+
+
+//            //仓库编码
+//            String warehouseCode = createOrderEntity.getWarehouseCode();
+//            QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
+//            cscWarehouse.setCustomerCode(custCode);
+//            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+//            resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, warehouseCode, orderType);
+//            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+//                logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
+//                return resultModel;
+//            }
 
             //供应商
             //checkSupport(createOrderEntity, custCode);
@@ -225,8 +228,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             OfcFinanceInformation ofcFinanceInformation = createOrderTrans.getOfcFinanceInformation();
             OfcWarehouseInformation ofcWarehouseInformation = createOrderTrans.getOfcWarehouseInformation();
             OfcOrderStatus ofcOrderStatus = createOrderTrans.getOfcOrderStatus();
-            validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             List<OfcGoodsDetailsInfo> ofcGoodsDetailsInfoList = createOrderTrans.getOfcGoodsDetailsInfoList();
+            /**
+             * 出库业务没有仓库时匹配仓储中心推荐的仓库 需求号  1322
+             */
+            logger.info("ofcFundamentalInformation======>{}",ofcFundamentalInformation);
+            logger.info("ofcWarehouseInformation======>{}",ofcWarehouseInformation);
+            if (ofcFundamentalInformation.getBusinessType().contains("61") && WAREHOUSE_DIST_ORDER.equals(ofcFundamentalInformation.getOrderType()) && PubUtils.isSEmptyOrNull(ofcWarehouseInformation.getWarehouseCode())) {
+                logger.info("接口的仓储订单没有仓库开始匹配仓储中心推荐的仓库，订单号为:{}",ofcFundamentalInformation.getOrderCode());
+                try{
+                    ofcOrderManageService.matchWarehouse(ofcFundamentalInformation,ofcDistributionBasicInfo,ofcWarehouseInformation,ofcGoodsDetailsInfoList);
+                    createOrderEntity.setWarehouseCode(ofcWarehouseInformation.getWarehouseCode());
+                    createOrderEntity.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
+                }catch (Exception e) {
+                    logger.error("仓储订单匹配推荐仓库失败：{}", CODE_NO_MATCH_WAREHOUSE.getDesc());
+                    new ResultModel(CODE_NO_MATCH_WAREHOUSE.getCode(), CODE_NO_MATCH_WAREHOUSE.getDesc());
+                }
+            }
+            QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
+            cscWarehouse.setCustomerCode(custCode);
+            Wrapper<List<CscWarehouseDto>> cscWarehouseByCustomerId = cscWarehouseEdasService.getCscWarehouseByCustomerId(cscWarehouse);
+             resultModel = CheckUtils.checkWarehouseCode(cscWarehouseByCustomerId, ofcWarehouseInformation.getWarehouseCode(), ofcFundamentalInformation.getOrderType());
+            if (!StringUtils.equals(resultModel.getCode(), ResultModel.ResultEnum.CODE_0000.getCode())) {
+                logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
+                return resultModel;
+            }
+
+            validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             // 数据特殊处理方法
             this.specialOrderData(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             //调用创建订单方法
@@ -315,14 +343,14 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     cscGoods.setPNum(1);
                     cscGoods.setPSize(10);
                     try{
-                        logger.info("匹配包装的参数为:{}", JacksonUtil.toJson(cscGoods));
-                        logger.info("createOrderEntity:{}",JacksonUtil.toJson(createOrderEntity));
+                        logger.info("匹配包装的参数为:{}",cscGoods);
+                        logger.info("createOrderEntity:{}",createOrderEntity);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     Wrapper<PageInfo<CscGoodsApiVo>> goodsRest = ofcGoodsDetailsInfoService.validateGoodsByCode(cscGoods);
                     try{
-                        logger.info("匹配包装的响应结果为:{}",JacksonUtil.toJson(goodsRest));
+                        logger.info("匹配包装的响应结果为:{}",goodsRest);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -632,6 +660,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         //插入或更新订单中心基本信息
         String custOrderCode = ofcFundamentalInformation.getCustOrderCode();
         String custCode = ofcFundamentalInformation.getCustCode();
+
         //根据客户订单编号与货主代码查询是否已经存在订单
         OfcFundamentalInformation information = ofcFundamentalInformationService.queryOfcFundInfoByCustOrderCodeAndCustCode(custOrderCode, custCode);
         boolean sEmptyOrNull = this.checkAddressPass(ofcDistributionBasicInfo);
@@ -1254,4 +1283,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         }
         return new ResultModel(ResultModel.ResultEnum.CODE_0000);
     }
+
+//    private void matchWarehouse(OfcCreateOrderDTO createOrderEntity,String orderCode){
+//        logger.info("接口订单没有仓库时开始匹配仓储中心推荐的仓库，订单号为:{}",orderCode);
+//        WhcDeliveryDTO dto = new WhcDeliveryDTO();
+//        dto.setCustomerCode(createOrderEntity.getCustCode());
+//        dto.setCustomerName(createOrderEntity.getCustName());
+//        dto.setCProvince(ofcDistributionBasicInfo.getDestinationProvince());
+//        dto.setCCity(ofcDistributionBasicInfo.getDestinationCity());
+//        dto.setCDistrict(ofcDistributionBasicInfo.getDestinationDistrict());
+//        dto.setCStreet(ofcDistributionBasicInfo.getDestinationTowns());
+//        dto.setOrderCode(ofcFundamentalInformation.getOrderCode());
+//        List<WhcDeliveryDetailsDTO> goodDetail = new ArrayList<>();
+//        for (OfcCreateOrderGoodsInfoDTO good :createOrderEntity.getCreateOrderGoodsInfos()) {
+//            WhcDeliveryDetailsDTO dd = new WhcDeliveryDetailsDTO();
+//            dd.setItemCode(good.getGoodsCode());
+//            dd.setItemName(good.getGoodsName());
+//            dd.setPrimaryQuantity(good.getPrimaryQuantity());
+//            goodDetail.add(dd);
+//        }
+//        dto.setDetailsList(goodDetail);
+//        WareHouseDTO warehouse = ofcWarehouseInformationService.matchWareHouse(dto);
+//        if (warehouse != null) {
+//            createOrderEntity.setWarehouseName(warehouse.getWareHouseName());
+//            createOrderEntity.setWarehouseCode(warehouse.getWareHouseCode());
+//        }
+//
+//    }
+
+
 }

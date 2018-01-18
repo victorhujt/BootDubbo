@@ -60,8 +60,7 @@ import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.tfc.edas.model.dto.CancelOrderDTO;
 import com.xescm.tfc.edas.service.CancelOrderEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
-import com.xescm.whc.edas.dto.InventoryDTO;
-import com.xescm.whc.edas.dto.OfcCancelOrderDTO;
+import com.xescm.whc.edas.dto.*;
 import com.xescm.whc.edas.dto.req.WhcModifWmsCodeReqDto;
 import com.xescm.whc.edas.service.WhcModifWmsCodeEdasService;
 import com.xescm.whc.edas.service.WhcOrderCancelEdasService;
@@ -1278,6 +1277,18 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             org.springframework.beans.BeanUtils.copyProperties(dto,ofcGoodsDetailsInfo);
             goodsDetailsList.add(ofcGoodsDetailsInfo);
         }
+        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
+            ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
+        }
+        /**
+         * 出库业务没有仓库时匹配仓储中心推荐的仓库 需求号  1322
+         */
+        if (ofcFundamentalInformation.getBusinessType().contains("62")) {
+            if(PublicUtil.isEmpty(ofcWarehouseInformation.getWarehouseCode())){
+                matchWarehouse(ofcFundamentalInformation,ofcDistributionBasicInfo,ofcWarehouseInformation,goodsDetailsList);
+            }
+        }
+
         OfcMerchandiser ofcMerchandiser = new OfcMerchandiser();
         ofcMerchandiser.setMerchandiser(ofcOrderDTO.getMerchandiser());
         if(PublicUtil.isEmpty(ofcWarehouseInformation.getWarehouseCode())){
@@ -1314,10 +1325,6 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         }
 
         StringBuilder notes = new StringBuilder();
-        if (trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_SAVE) || trimAndNullAsEmpty(reviewTag).equals(ORDER_TAG_STOCK_IMPORT) || StringUtils.equals(ORDER_TAG_STOCK_CUST_SAVE, reviewTag)) {
-            ofcFundamentalInformation.setOrderCode(codeGenUtils.getNewWaterCode(ORDER_PRE, 6));
-        }
-
         if (ofcWarehouseInformation.getProvideTransport().equals(YES)) {
             ofcFundamentalInformation.setTransportType("10");//10 零担 20整车
             // 带运输仓储单默认签收回单，费用为0
@@ -1820,6 +1827,51 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
             throw new BusinessException("该客户没有对应的合同，辛苦联系营销中心同事");
         }
     }
+
+    /**
+     * 没有仓库匹配仓库
+     * @param ofcFundamentalInformation
+     * @param ofcWarehouseInformation
+     * @param goodsDetailsInfos
+     */
+    @Override
+    public void matchWarehouse(OfcFundamentalInformation ofcFundamentalInformation,OfcDistributionBasicInfo ofcDistributionBasicInfo,OfcWarehouseInformation ofcWarehouseInformation,List<OfcGoodsDetailsInfo> goodsDetailsInfos){
+        logger.info("没有仓库时开始匹配仓储中心推荐的仓库，订单号为:{}",ofcFundamentalInformation.getOrderCode());
+        WhcDeliveryDTO dto = new WhcDeliveryDTO();
+        String[] destinationCodeArr = ofcDistributionBasicInfo.getDestinationCode().split(",");
+        dto.setCustomerCode(ofcFundamentalInformation.getCustCode());
+        dto.setCustomerName(ofcFundamentalInformation.getCustName());
+        dto.setCProvince(destinationCodeArr[0]);
+        dto.setCCity(destinationCodeArr[1]);
+        if (destinationCodeArr.length >= 3 ) {
+            dto.setCDistrict(destinationCodeArr[2]);
+        }
+        if (destinationCodeArr.length >= 4) {
+            dto.setCStreet(destinationCodeArr[3]);
+        }
+        dto.setOrderCode(ofcFundamentalInformation.getOrderCode());
+        List<WhcDeliveryDetailsDTO> goodDetail = new ArrayList<>();
+        for (OfcGoodsDetailsInfo good :goodsDetailsInfos) {
+            WhcDeliveryDetailsDTO dd = new WhcDeliveryDetailsDTO();
+            dd.setItemCode(good.getGoodsCode());
+            dd.setItemName(good.getGoodsName());
+            dd.setQty(good.getQuantity());
+            dd.setPackageType(good.getUnit());
+            goodDetail.add(dd);
+        }
+        dto.setDetailsList(goodDetail);
+        WareHouseDTO warehouse = null;
+        try {
+             warehouse = ofcWarehouseInformationService.matchWareHouse(dto);
+        }catch (Exception e) {
+            throw e;
+        }
+        if (warehouse != null) {
+            ofcWarehouseInformation.setWarehouseName(warehouse.getWareHouseName());
+            ofcWarehouseInformation.setWarehouseCode(warehouse.getWareHouseCode());
+        }
+    }
+
 
 
     /**

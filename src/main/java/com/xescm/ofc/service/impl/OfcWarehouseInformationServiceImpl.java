@@ -16,6 +16,9 @@ import com.xescm.rmc.edas.domain.vo.RmcWarehouseRespDto;
 import com.xescm.rmc.edas.service.RmcWarehouseEdasService;
 import com.xescm.uam.model.dto.group.UamGroupDto;
 import com.xescm.uam.provider.UamGroupEdasService;
+import com.xescm.whc.edas.dto.WareHouseDTO;
+import com.xescm.whc.edas.dto.WhcDeliveryDTO;
+import com.xescm.whc.edas.service.WhcOutOrderWareHouseMatchService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +42,9 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
     private RmcWarehouseEdasService rmcWarehouseEdasService;
 
     @Resource
-
     private UamGroupEdasService uamGroupEdasService;
+    @Resource
+    private WhcOutOrderWareHouseMatchService whcOutOrderWareHouseMatchService;
 
     @Override
     public int deleteByOrderCode(Object key) {
@@ -189,5 +193,25 @@ public class OfcWarehouseInformationServiceImpl extends BaseService<OfcWarehouse
                 }
             }
             return rws;
+    }
+
+    /**
+     * 仓储单没有仓库进行仓库匹配
+     */
+    @Override
+    public WareHouseDTO matchWareHouse(WhcDeliveryDTO deliveryDTO) {
+        String orderCode = deliveryDTO.getOrderCode();
+        logger.info("订单号{}开始匹配仓库:{}",orderCode);
+        logger.info("匹配仓库的参数为:{}",deliveryDTO);
+        try {
+            Wrapper<WareHouseDTO> wareHouseResp = whcOutOrderWareHouseMatchService.matchWareHouse(deliveryDTO);
+            logger.info("匹配仓库的响应为:{}",wareHouseResp);
+            if (wareHouseResp.getCode() == Wrapper.SUCCESS_CODE && wareHouseResp.getResult() != null ) {
+                return wareHouseResp.getResult();
+            }
+        }catch (Exception e) {
+            throw e;
+        }
+        return null;
     }
 }

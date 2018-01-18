@@ -10,8 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Date;
-
 @Data
 @Configuration
 @ConfigurationProperties(prefix = SchedulerXConfig.JOB_PREFIX)
