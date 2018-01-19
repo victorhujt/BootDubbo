@@ -252,6 +252,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
 
             validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
+            ofcGoodsDetailsInfoList  = new CreateOrderTrans(createOrderEntity, orderCode).getOfcGoodsDetailsInfoList();
             // 数据特殊处理方法
             this.specialOrderData(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             //调用创建订单方法
