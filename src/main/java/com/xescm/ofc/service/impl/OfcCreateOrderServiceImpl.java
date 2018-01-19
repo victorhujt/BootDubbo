@@ -252,6 +252,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
 
             validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
+            ofcGoodsDetailsInfoList  = new CreateOrderTrans(createOrderEntity, orderCode).getOfcGoodsDetailsInfoList();
             // 数据特殊处理方法
             this.specialOrderData(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             //调用创建订单方法
@@ -361,7 +362,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                         List<GoodsPackingDto>  packages = cscGoodsApiVo.getGoodsPackingDtoList();
                         List<GoodsPackingDto>  dcPackages = goodsInfo.getSkuPackageList();
                         if (!CollectionUtils.isEmpty(packages)) {
-                            if (createOrderEntity.getBusinessType().contains("62") && !"000001".equals(createOrderEntity.getWarehouseCode())) {
+                            if (createOrderEntity.getBusinessType().contains("62")) {
                                 boolean isExistPackage = false;
                                 if (!CollectionUtils.isEmpty(dcPackages)) {
                                     logger.info("orderCode is {}",orderCode);
@@ -433,7 +434,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                 noPackageGoodsCodes.add(goodsCode);
                             }
                             //csc没有包装 但是大成接口过来的有包装
-                            if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList()) && !"000001".equals(createOrderEntity.getWarehouseCode())) {
+                            if (!CollectionUtils.isEmpty(goodsInfo.getSkuPackageList())) {
                                 goodsInfo.setRemark("货品编码没有查询到包装信息");
                                 goodsInfo.setPackageName(unit);
                                 goodsInfo.setCustName(createOrderEntity.getCustName());
