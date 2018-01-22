@@ -400,15 +400,16 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
                                     logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
                                     logger.info("packingDto is {}",packingDto);
-                                    if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
+                                    if (goodsInfo.getUnit().trim().equals(packingDto.getLevelDescription().trim())) {
+                                        goodsInfo.setPackageName(packingDto.getLevelDescription());
+                                        goodsInfo.setPackageType(packingDto.getLevel());
+                                        logger.info(" 开始设置换算率包装类型包装名称{}",packingDto.getLevelSpecification());
                                         BigDecimal ls = packingDto.getLevelSpecification();
                                         if (ls == null || ls.compareTo(new BigDecimal(0)) == 0) {
                                             break;
                                         }
                                         logger.info("orderCode is {},开始设置换算率包装类型包装名称",orderCode);
                                         goodsInfo.setConversionRate(ls);
-                                        goodsInfo.setPackageName(packingDto.getLevelDescription());
-                                        goodsInfo.setPackageType(packingDto.getLevel());
                                         BigDecimal quantity = new BigDecimal(goodsInfo.getQuantity());
                                         BigDecimal pquantity = quantity.divide(packingDto.getLevelSpecification(),3,BigDecimal.ROUND_HALF_DOWN);//保留三位小数
                                         goodsInfo.setPrimaryQuantity(pquantity);
@@ -518,8 +519,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
         }
     }
-
-
 
 
     /**
