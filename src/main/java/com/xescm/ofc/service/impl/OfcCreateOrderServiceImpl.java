@@ -250,7 +250,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
                 return resultModel;
             }
-
+            logger.info("订单号为:{},包装处理前的货品明细信息:{}",orderCode,createOrderEntity);
             validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             ofcGoodsDetailsInfoList  = new CreateOrderTrans(createOrderEntity, orderCode).getOfcGoodsDetailsInfoList();
             logger.info("订单号为:{},包装处理后的货品明细信息:{}",orderCode,ofcGoodsDetailsInfoList);
@@ -399,11 +399,13 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     logger.info("orderCode is {}",orderCode);
                                     logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
                                     logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
+                                    logger.info("packingDto is {}",packingDto);
                                     if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
                                         BigDecimal ls = packingDto.getLevelSpecification();
                                         if (ls == null || ls.compareTo(new BigDecimal(0)) == 0) {
                                             break;
                                         }
+                                        logger.info("orderCode is {},开始设置换算率包装类型包装名称",orderCode);
                                         goodsInfo.setConversionRate(ls);
                                         goodsInfo.setPackageName(packingDto.getLevelDescription());
                                         goodsInfo.setPackageType(packingDto.getLevel());
