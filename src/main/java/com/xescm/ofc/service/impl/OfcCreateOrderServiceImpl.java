@@ -239,7 +239,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     createOrderEntity.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
                 }catch (Exception e) {
                     logger.error("仓储订单匹配推荐仓库失败：{}", CODE_NO_MATCH_WAREHOUSE.getDesc());
-                    new ResultModel(CODE_NO_MATCH_WAREHOUSE.getCode(), CODE_NO_MATCH_WAREHOUSE.getDesc());
+                    return new ResultModel(CODE_NO_MATCH_WAREHOUSE.getCode(), CODE_NO_MATCH_WAREHOUSE.getDesc());
                 }
             }
             QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
@@ -253,6 +253,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
 
             validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             ofcGoodsDetailsInfoList  = new CreateOrderTrans(createOrderEntity, orderCode).getOfcGoodsDetailsInfoList();
+            logger.info("订单号为:{},包装处理后的货品明细信息:{}",orderCode,ofcGoodsDetailsInfoList);
             // 数据特殊处理方法
             this.specialOrderData(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             //调用创建订单方法
