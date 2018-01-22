@@ -239,7 +239,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                     createOrderEntity.setWarehouseName(ofcWarehouseInformation.getWarehouseName());
                 }catch (Exception e) {
                     logger.error("仓储订单匹配推荐仓库失败：{}", CODE_NO_MATCH_WAREHOUSE.getDesc());
-                    new ResultModel(CODE_NO_MATCH_WAREHOUSE.getCode(), CODE_NO_MATCH_WAREHOUSE.getDesc());
+                    return new ResultModel(CODE_NO_MATCH_WAREHOUSE.getCode(), CODE_NO_MATCH_WAREHOUSE.getDesc());
                 }
             }
             QueryWarehouseDto cscWarehouse = new QueryWarehouseDto();
@@ -250,9 +250,10 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 logger.error("校验数据{}失败：{}, 获取仓库编码接口返回:{}", "仓库编码", resultModel.getCode(), ToStringBuilder.reflectionToString(cscWarehouseByCustomerId));
                 return resultModel;
             }
-
+            logger.info("订单号为:{},包装处理前的货品明细信息:{}",orderCode,createOrderEntity);
             validateGoodsPackage(createOrderEntity,ofcFundamentalInformation);
             ofcGoodsDetailsInfoList  = new CreateOrderTrans(createOrderEntity, orderCode).getOfcGoodsDetailsInfoList();
+            logger.info("订单号为:{},包装处理后的货品明细信息:{}",orderCode,ofcGoodsDetailsInfoList);
             // 数据特殊处理方法
             this.specialOrderData(ofcFundamentalInformation, ofcDistributionBasicInfo, ofcFinanceInformation, ofcWarehouseInformation, ofcGoodsDetailsInfoList, ofcOrderStatus);
             //调用创建订单方法
@@ -398,14 +399,17 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                                     logger.info("orderCode is {}",orderCode);
                                     logger.info("goodsInfo.getUnit() is {}",goodsInfo.getUnit());
                                     logger.info("packingDto.getLevelDescription() is {}",packingDto.getLevelDescription());
-                                    if (StringUtils.equals(goodsInfo.getUnit(),packingDto.getLevelDescription())) {
+                                    logger.info("packingDto is {}",packingDto);
+                                    if (goodsInfo.getUnit().trim().equals(packingDto.getLevelDescription().trim())) {
+                                        goodsInfo.setPackageName(packingDto.getLevelDescription());
+                                        goodsInfo.setPackageType(packingDto.getLevel());
+                                        logger.info(" 开始设置换算率包装类型包装名称{}",packingDto.getLevelSpecification());
                                         BigDecimal ls = packingDto.getLevelSpecification();
                                         if (ls == null || ls.compareTo(new BigDecimal(0)) == 0) {
                                             break;
                                         }
+                                        logger.info("orderCode is {},开始设置换算率包装类型包装名称",orderCode);
                                         goodsInfo.setConversionRate(ls);
-                                        goodsInfo.setPackageName(packingDto.getLevelDescription());
-                                        goodsInfo.setPackageType(packingDto.getLevel());
                                         BigDecimal quantity = new BigDecimal(goodsInfo.getQuantity());
                                         BigDecimal pquantity = quantity.divide(packingDto.getLevelSpecification(),3,BigDecimal.ROUND_HALF_DOWN);//保留三位小数
                                         goodsInfo.setPrimaryQuantity(pquantity);
@@ -515,8 +519,6 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
             }
         }
     }
-
-
 
 
     /**
