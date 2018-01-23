@@ -48,8 +48,6 @@ public class OrderPlaceTagConstant {
     //审核标志位
     public static final String REVIEW = "review";
 
-    //反审核标志位
-    public static final String RE_REVIEW = "rereview";
 
 
 

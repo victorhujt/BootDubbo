@@ -16,10 +16,6 @@ public final class OrderConstConstant {
     public static final String TWO_DISTRIBUTION = "1";
     /**待审核**/
     public static final String PENDING_AUDIT = "10";
-    /**已审核**/
-    public static final String ALREADY_EXAMINE = "20";
-    /**执行中**/
-    public static final String IMPLEMENTATION_IN = "30";
     /**已完成**/
     public static final String HASBEEN_COMPLETED = "40";
     /**已取消**/

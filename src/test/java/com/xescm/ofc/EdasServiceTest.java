@@ -22,7 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class EdasServiceTest extends HsfBaseTest {
 
     // 这里设置Pandora地址，参数是sar包所在目录，如这里我的sar包地址是/Users/Jason/Work/AliSoft/PandoraSar/DevSar/taobao-hsf.sar，则只取前面的地址即可
-    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("//Users//Jim//Software//EDAS//xescm-uam-edas//deploy//");
+    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("H://ofcTomcat//taobao-tomcat-7.0.59//deploy//");
+   // H:\ofcTomcat\taobao-tomcat-7.0.59\deploy\taobao-hsf.sar
 
     @Test
     public void testLock() throws Exception {
@@ -65,4 +66,20 @@ public class EdasServiceTest extends HsfBaseTest {
         Wrapper<List<OfcOrderInfoDto>> res = ofcOrderInfoEdasService.getOrderInfoByOrderCode(orderList);
         System.out.println(JacksonUtil.toJson(res));
     }
+
+//    @Test
+//    public void getOrderDetailData() throws Exception {
+//
+//        // 进行服务消费
+//        factory.consumer("ofcOrderInfoEdasService")// 参数是一个标识，初始化后，下次只需调用consumer("helloConsumer")即可直接拿出对应服务
+//                .service("com.xescm.ofc.edas.service.OfcOrderInfoEdasService")// 接口全类名
+//                .version("1.0")// 版本号
+//                .group("xescm-ofc-dev")// 组别
+//                .subscribe();
+//        factory.consumer("ofcOrderInfoEdasService").sync();
+//        OfcOrderInfoEdasService ofcOrderInfoEdasService = (OfcOrderInfoEdasService) factory.consumer("ofcOrderInfoEdasService").subscribe();
+//        String orderCode = "SO180109000014";
+//        Wrapper<String> res = ofcOrderInfoEdasService.getOrderDetailData(orderCode);
+//        System.out.println(JacksonUtil.toJson(res));
+//    }
 }

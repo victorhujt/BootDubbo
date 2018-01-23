@@ -13,6 +13,7 @@ import com.xescm.ofc.service.OfcTaskInterfaceLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -101,6 +102,12 @@ public class OfcInterfaceReceiveLogServiceImpl extends BaseService<OfcInterfaceR
             throw e;
         }
         return result;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
+    public Integer insertCancelOrderTask(OfcInterfaceReceiveLog receiveLog) {
+       return insertOfcInterfaceReceiveLogWithTask(receiveLog);
     }
 
 }

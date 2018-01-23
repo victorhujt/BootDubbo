@@ -85,7 +85,10 @@ public class OfcMobileOrderEdasServiceImpl implements OfcMobileOrderEdasService 
             condition.setMobileOrderCode(dto.getMobileOrderCode());
             result  = ofcMobileOrderService.selectOneOfcMobileOrder(condition);
             BeanUtils.copyProperties(result,resultVo);
-        } catch (Exception e) {
+        }catch (BusinessException ex) {
+            return WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        }
+        catch (Exception e) {
             logger.error("订单号查询出错：orderCode{},{}",dto.getMobileOrderCode(), e.getMessage());
             return WrapMapper.wrap(Wrapper.ERROR_CODE, e.getMessage());
         }
