@@ -16,7 +16,9 @@ import java.util.List;
  * Created by victor on 2017/6/6.
  */
 public class QueryTraceOrderEdasServiceTest extends HsfBaseTest{
-    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("/Users/Jim/Software/EDAS/xescm-uam-edas/deploy/");
+   // private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("/Users/Jim/Software/EDAS/xescm-uam-edas/deploy/");
+    private static ServiceFactory factory = ServiceFactory.getInstanceWithPath("H://ofcTomcat//taobao-tomcat-7.0.59//deploy//");
+
 
     @Test
     public void testQueryOrderEdas() throws Exception {
@@ -78,5 +80,10 @@ public class QueryTraceOrderEdasServiceTest extends HsfBaseTest{
             }
         }
     }
+
+
+
+
+
 
 }

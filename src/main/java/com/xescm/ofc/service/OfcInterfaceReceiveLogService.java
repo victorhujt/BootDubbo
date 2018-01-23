@@ -35,4 +35,14 @@ public interface OfcInterfaceReceiveLogService extends IService<OfcInterfaceRece
      * @return
      */
     List<OfcInterfaceReceiveLogVo> queryInterfaceReceiveLog(OfcInterfaceReceiveLogVo logParam);
+
+    /**
+     * 新增仓储订单取消造成数据状态不一致的问题订单信息
+      * @param receiveLog
+     * @return
+     */
+
+    Integer insertCancelOrderTask(OfcInterfaceReceiveLog receiveLog);
+
+
 }
