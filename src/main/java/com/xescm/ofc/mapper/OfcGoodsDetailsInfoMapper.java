@@ -33,4 +33,11 @@ public interface OfcGoodsDetailsInfoMapper extends MyMapper<OfcGoodsDetailsInfo>
      * @return
      */
     List<OfcGoodsDetailsInfo> getOrderGoodsTypeByOrderCode(@Param("list") List<String> codeList);
+
+    /**
+     * 根据订单批量查询订单货品
+     * @param orderCodeList 订单号
+     * @return
+     */
+    List<OfcGoodsDetailsInfo> queryOrderGoodsByOrderCode(@Param("list") List<String> orderCodeList);
 }
