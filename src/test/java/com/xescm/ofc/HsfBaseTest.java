@@ -16,7 +16,7 @@ public class HsfBaseTest {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     private String projectName = "ofc";
 
-    private String defaultSarPath = "/Users/Jim/Software/EDAS/xescm-uam-edas/deploy/";
+    private String defaultSarPath = "D:\\XE-WORK-TOMCAT\\xescm-ofc\\deploy\\";
 
     private ServiceFactory factory ;
 
@@ -45,12 +45,12 @@ public class HsfBaseTest {
             wholeClassName = "com.xescm." + projectName + ".edas.service." + serviceName;
         }
 
-        if(version == null){
+        if(version == null  ){
             version = "1.0";
         }
 
         if(group == null){
-            group = "xescm-" + projectName;
+            group = "xescm-" + projectName + "-dev";
         }
 
         // 进行服务消费

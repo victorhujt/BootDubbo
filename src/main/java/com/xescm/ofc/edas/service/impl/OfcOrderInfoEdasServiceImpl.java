@@ -10,6 +10,9 @@ import com.xescm.base.model.wrap.Wrapper;
 import com.xescm.core.utils.JacksonUtil;
 import com.xescm.core.utils.PubUtils;
 import com.xescm.ofc.domain.*;
+import com.xescm.csc.model.dto.goodstype.CscGoodsTypeDto;
+import com.xescm.csc.provider.CscGoodsTypeEdasService;
+import com.xescm.ofc.domain.OfcGoodsDetailsInfo;
 import com.xescm.ofc.edas.model.dto.dpc.resp.OfcOrderGoodsTempDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailInfoDto;
 import com.xescm.ofc.edas.model.dto.ofc.OfcOrderDetailTypeDto;
@@ -62,9 +65,8 @@ public class OfcOrderInfoEdasServiceImpl implements OfcOrderInfoEdasService {
     @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
 
-
-
-
+    @Resource
+    private CscGoodsTypeEdasService cscGoodsTypeEdasService;
 
     /**
      * <p>Title:      getOrderInfoByOrderCode. </p>
@@ -150,9 +152,57 @@ public class OfcOrderInfoEdasServiceImpl implements OfcOrderInfoEdasService {
         return result;
     }
 
+    /**
+     * <p>Title: OfcOrderInfoEdasService. </p>
+     * <p>Description 提供调度中心，批量，通过订单号，返回货品温度信息 </p>
+     * <p>Company: http://www.hnxianyi.com </p>
+     *
+     * @Author 袁宝龙
+     * @CreateDate 2017/12/13 16:40
+     */
     @Override
-    public Wrapper<List<OfcOrderGoodsTempDto>> getOrderGoodsTempByOrderCode(List<String> list) {
-        return null;
+    public Wrapper<List<OfcOrderGoodsTempDto>> getOrderGoodsTempByOrderCode(List<String> orderCodeList) {
+        long start = System.currentTimeMillis();
+        Wrapper<List<OfcOrderGoodsTempDto>> result;
+        try {
+            List<OfcOrderGoodsTempDto> list = new ArrayList<>();
+            // 获取订单
+            List<OfcGoodsDetailsInfo> goodsDetailsInfos = ofcGoodsDetailsInfoMapper.queryOrderGoodsByOrderCode(orderCodeList);
+            for (OfcGoodsDetailsInfo ofcGoodsDetailsInfo : goodsDetailsInfos) {
+                // 货品小类编码
+                String goodsCategoryCode = ofcGoodsDetailsInfo.getGoodsCategoryCode();
+                // goodsCode
+                String goodsCode = ofcGoodsDetailsInfo.getGoodsCode();
+                // orderCode
+                String orderCode = ofcGoodsDetailsInfo.getOrderCode();
+                if (!PubUtils.isSEmptyOrNull(goodsCategoryCode)) {
+                    CscGoodsTypeDto cscGoodsTypeDto = new CscGoodsTypeDto();
+                    cscGoodsTypeDto.setId(goodsCategoryCode);
+                    // 通过货品小类查询货品类别信息
+                    Wrapper<CscGoodsTypeDto> cscGoodsTypeDtoWrapper = cscGoodsTypeEdasService.queryCscGoodsInfoByGoodeCode(cscGoodsTypeDto);
+                    CscGoodsTypeDto goodsTypeDto = cscGoodsTypeDtoWrapper.getResult();
+                    if (!PubUtils.isOEmptyOrNull(goodsTypeDto)) {
+                        // 赋值
+                        OfcOrderGoodsTempDto ofcOrderGoodsTempDto = new OfcOrderGoodsTempDto();
+                        ofcOrderGoodsTempDto.setKeeptemperate(goodsTypeDto.getKeeptemperate());
+                        ofcOrderGoodsTempDto.setTemperatureLow(goodsTypeDto.getTemperatureLow());
+                        ofcOrderGoodsTempDto.setTemperatureHigh(goodsTypeDto.getTemperatureHigh());
+                        ofcOrderGoodsTempDto.setGoodsCode(goodsCode);
+                        ofcOrderGoodsTempDto.setOrderCode(orderCode);
+                        list.add(ofcOrderGoodsTempDto);
+                    }
+                }
+            }
+            result = WrapMapper.wrap(Wrapper.SUCCESS_CODE, Wrapper.SUCCESS_MESSAGE, list);
+        } catch (BusinessException ex) {
+            LOGGER.error("提供调度中心，批量，通过订单号，返回货品温度信息发生异常：异常详情 => {}", ex.getMessage());
+            result = WrapMapper.wrap(Wrapper.ERROR_CODE, ex.getMessage());
+        } catch (Exception ex) {
+            LOGGER.error("提供调度中心，批量，通过订单号，返回货品温度信息发生未知异常：异常详情 => {}", ex.getMessage());
+            result = WrapMapper.error();
+        }
+        LOGGER.info("--------> [getOrderGoodsTempByOrderCode] 查询耗时: {} 毫秒", (System.currentTimeMillis() - start));
+        return result;
     }
 
     /**

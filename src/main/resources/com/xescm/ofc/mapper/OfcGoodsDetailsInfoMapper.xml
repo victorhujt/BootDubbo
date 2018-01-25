@@ -256,4 +256,20 @@
     group by order_code, goods_type
     order by order_code
   </select>
+
+  <!-- 根据订单批量查询订单货品 -->
+  <select id="queryOrderGoodsByOrderCode" resultType="com.xescm.ofc.domain.OfcGoodsDetailsInfo">
+    SELECT
+      order_code,
+      goods_code,
+      goods_category_code
+    FROM
+      ofc_goods_details_info gdi
+    WHERE
+      1 = 1
+    AND gdi.order_code IN
+    <foreach collection="list" item="orderCode" index="index" open="(" separator="," close=")">
+      #{orderCode}
+    </foreach>
+  </select>
 </mapper>
