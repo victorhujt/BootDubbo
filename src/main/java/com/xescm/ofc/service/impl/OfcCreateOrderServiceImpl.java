@@ -1127,7 +1127,7 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         // 收货方编码
         String consigneeCode = createOrderEntity.getConsigneeCode();
         String custCode = createOrderEntity.getCustCode();
-        if (!(WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType()) && WAREHOUSE_NO_TRANS.equals(createOrderEntity.getProvideTransport()) && createOrderEntity.getBusinessType().contains("61"))) {
+        if (!(WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType()) && "0".equals(createOrderEntity.getProvideTransport()) && createOrderEntity.getBusinessType().contains("61"))) {
             if (!PubUtils.isOEmptyOrNull(consigneeCode)) {
                 //大成客户只传客收货方编码和名称 补全收货方信息
 //            if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
