@@ -1127,8 +1127,9 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
         // 收货方编码
         String consigneeCode = createOrderEntity.getConsigneeCode();
         String custCode = createOrderEntity.getCustCode();
-        if (!PubUtils.isOEmptyOrNull(consigneeCode)) {
-            //大成客户只传客收货方编码和名称 补全收货方信息
+        if (!(WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType()) && "0".equals(createOrderEntity.getProvideTransport()) && createOrderEntity.getBusinessType().contains("61"))) {
+            if (!PubUtils.isOEmptyOrNull(consigneeCode)) {
+                //大成客户只传客收货方编码和名称 补全收货方信息
 //            if (WAREHOUSE_DIST_ORDER.equals(createOrderEntity.getOrderType())) {
 //                CscContantAndCompanyDto  cscContantAndCompanyDto = new CscContantAndCompanyDto();
 //                CscContactCompanyDto cscContactCompanyDto = new CscContactCompanyDto();
@@ -1172,32 +1173,33 @@ public class OfcCreateOrderServiceImpl implements OfcCreateOrderService {
                 } else {
                     return resultModel;
                 }
-            //}
+                //}
 
-        } else {
-            boolean isNeedValidateConSignee = false;
-            String orderType = createOrderEntity.getOrderType();
-            String consigneeName = createOrderEntity.getConsigneeName();
-            String consigneeContact = createOrderEntity.getConsigneeContact();
-            String consigneePhone = createOrderEntity.getConsigneePhone();
-            String consigneeAddress = createOrderEntity.getConsigneeAddress();
-            if (TRANSPORT_ORDER.equals(orderType) || WAREHOUSE_DIST_ORDER.equals(orderType)) {
-                if (WAREHOUSE_DIST_ORDER.equals(orderType)) {
-                    if ( createOrderEntity.getBusinessType().contains("61")) {
+            } else {
+                boolean isNeedValidateConSignee = false;
+                String orderType = createOrderEntity.getOrderType();
+                String consigneeName = createOrderEntity.getConsigneeName();
+                String consigneeContact = createOrderEntity.getConsigneeContact();
+                String consigneePhone = createOrderEntity.getConsigneePhone();
+                String consigneeAddress = createOrderEntity.getConsigneeAddress();
+                if (TRANSPORT_ORDER.equals(orderType) || WAREHOUSE_DIST_ORDER.equals(orderType)) {
+                    if (WAREHOUSE_DIST_ORDER.equals(orderType)) {
+                        if ( createOrderEntity.getBusinessType().contains("61")) {
+                            isNeedValidateConSignee = true;
+                        }
+                    }else {
                         isNeedValidateConSignee = true;
                     }
-                }else {
-                    isNeedValidateConSignee = true;
-                }
-                if (isNeedValidateConSignee) {
-                    if (StringUtils.isBlank(consigneeName)) {
-                        return new ResultModel("1000", "收货方名称信息不能为空");
-                    } else if (StringUtils.isBlank(consigneeContact)) {
-                        return new ResultModel("1000", "收货方联系人信息不能为空");
-                    } else if (StringUtils.isBlank(consigneePhone)) {
-                        return new ResultModel("1000", "收货方联系电话信息不能为空");
-                    } else if (StringUtils.isBlank(consigneeAddress)) {
-                        return new ResultModel("1000", "收货方地址信息不能为空");
+                    if (isNeedValidateConSignee) {
+                        if (StringUtils.isBlank(consigneeName)) {
+                            return new ResultModel("1000", "收货方名称信息不能为空");
+                        } else if (StringUtils.isBlank(consigneeContact)) {
+                            return new ResultModel("1000", "收货方联系人信息不能为空");
+                        } else if (StringUtils.isBlank(consigneePhone)) {
+                            return new ResultModel("1000", "收货方联系电话信息不能为空");
+                        } else if (StringUtils.isBlank(consigneeAddress)) {
+                            return new ResultModel("1000", "收货方地址信息不能为空");
+                        }
                     }
                 }
             }
