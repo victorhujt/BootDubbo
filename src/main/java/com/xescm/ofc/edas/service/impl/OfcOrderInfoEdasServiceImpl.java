@@ -64,6 +64,7 @@ public class OfcOrderInfoEdasServiceImpl implements OfcOrderInfoEdasService {
 
     @Resource
     private OfcFinanceInformationService ofcFinanceInformationService;
+
     @Resource
     private CscGoodsTypeEdasService cscGoodsTypeEdasService;
 

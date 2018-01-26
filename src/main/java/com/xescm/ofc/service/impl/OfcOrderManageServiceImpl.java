@@ -495,7 +495,8 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
                     type="RK";
                 }
                 if (Objects.equals(ofcWarehouseInformation.getProvideTransport(), YES)) {
-                    if (isCanCancel(orderCode)) {
+                    //isCanCancel(orderCode)
+                    if (true) {
                         try {
                             long tfcStart = System.currentTimeMillis();
                             response= orderCancelToTfc(orderCode);
@@ -646,14 +647,14 @@ public class OfcOrderManageServiceImpl implements OfcOrderManageService {
         logger.info("询问运输中心订单是否可以取消，订单号为:{}",orderCode);
         boolean isCanCancel= false;
         try{
-            Wrapper<String> isCanCancelResp = cancelOrderEdasService.returnOrderStatus(orderCode);
-            logger.info("询问运输中心订单是否可以取消响应结果为:{}",isCanCancelResp);
-            String status = isCanCancelResp.getResult();
-            if (isCanCancelResp.getCode() == Wrapper.SUCCESS_CODE && !PubUtils.isSEmptyOrNull(status)) {
-                if ("0".equals(status) || "10".equals(status)) {
-                    isCanCancel = true;
-                }
-            }
+//            //Wrapper<String> isCanCancelResp = cancelOrderEdasService.returnOrderStatus(orderCode);
+//            logger.info("询问运输中心订单是否可以取消响应结果为:{}",isCanCancelResp);
+//            String status = isCanCancelResp.getResult();
+//            if (isCanCancelResp.getCode() == Wrapper.SUCCESS_CODE && !PubUtils.isSEmptyOrNull(status)) {
+//                if ("0".equals(status) || "10".equals(status)) {
+//                    isCanCancel = true;
+//                }
+//            }
         }catch (Exception e) {
             logger.error("询问运输中心订单是否可以取消发生异常：{}", e);
         }
