@@ -24,15 +24,12 @@
 
 package com.xescm.ofc.config;
 
-import com.xescm.ofc.web.interceptor.VueViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import javax.annotation.Resource;
 
 /**
  * @author liuzh_3nofxnp
@@ -42,8 +39,6 @@ import javax.annotation.Resource;
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
-    @Resource
-    private VueViewInterceptor vueViewInterceptor;
 
 	@Value("${env}")
 	private String env;
@@ -59,8 +54,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // addPathPatterns 用于添加拦截规则
         // excludePathPatterns 用户排除拦截
     	super.addInterceptors(registry);
-        vueViewInterceptor.setEnv(env);
-        registry.addInterceptor(vueViewInterceptor).addPathPatterns("/ofc/**","/page/ofc/**").excludePathPatterns("/ofc/searchOverallOrder").excludePathPatterns("/ordermanage/queryUamGroupByType/area");
     }
 
 }

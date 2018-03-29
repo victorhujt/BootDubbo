@@ -1,21 +1,24 @@
 package com.xescm.ofc;
 
 import com.xescm.core.xss.XSSFilter;
-import com.xescm.ofc.web.interceptor.AuthViewInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.servlet.MultipartConfigElement;
 
-@ImportResource(locations={"classpath:edas-hsf-config.xml"})
+@ImportResource(locations={"classpath:dubbo-config.xml"})
 @EnableTransactionManagement // 开启注解事务管理，等同于xml配置文件中的 <tx:annotation-driven />
 @SpringBootApplication
+@Configuration
+@PropertySource("classpath:dubbo.properties")
 public class XescmOfcApplication {
 
 	@Value("${env}")
@@ -29,11 +32,6 @@ public class XescmOfcApplication {
 		//设置总上传数据总大小
 		factory.setMaxRequestSize(20*1024*1024);
 		return factory.createMultipartConfig();
-	}
-
-	@Bean
-	public AuthViewInterceptor authViewInterceptor(){
-		return new AuthViewInterceptor();
 	}
 
 	@Bean
