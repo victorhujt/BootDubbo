@@ -41,7 +41,7 @@ public class KafkaProducerConfig {
     }
 
     public ProducerFactory<String, String> producerFactory() {
-        System.out.println("第一次提交代码");
+        System.out.println("第二次提交代码");
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
