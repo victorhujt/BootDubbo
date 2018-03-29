@@ -14,13 +14,9 @@ import com.xescm.core.constant.UamConstant;
 import com.xescm.core.exception.BusinessException;
 import com.xescm.core.utils.PublicUtil;
 import com.xescm.core.utils.ThreadLocalMap;
-import com.xescm.ofc.config.RestConfig;
-import com.xescm.ofc.constant.OrderConstConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
-
-import javax.annotation.Resource;
 
 /**
  * <p>Title:	  BaseController <br/> </p>
@@ -32,16 +28,8 @@ import javax.annotation.Resource;
 
 public class BaseController {
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
-	@Resource
-	RestConfig restConfig;
 
 	public void setDefaultModel(Model model){
-		model.addAttribute(OrderConstConstant.CROSS_DOMAIN_URL, restConfig.getUamUrl());
-		model.addAttribute(OrderConstConstant.OFC_URL, restConfig.getOfcUrl());
-		model.addAttribute(OrderConstConstant.CSC_URL, restConfig.getCscWebUrl());
-		model.addAttribute(OrderConstConstant.CSC_URL_LOCAL, restConfig.getCscUrl());
-		model.addAttribute(OrderConstConstant.OFC_WEB_URL, restConfig.getOfcWebUrl());
-		model.addAttribute(OrderConstConstant.REPORT, restConfig.getReport());
 	}
 	protected AuthResDto getAuthResDtoByToken(){
 		AuthResDto authResDto = (AuthResDto) ThreadLocalMap.get(UamConstant.TOKEN_AUTH_DTO);

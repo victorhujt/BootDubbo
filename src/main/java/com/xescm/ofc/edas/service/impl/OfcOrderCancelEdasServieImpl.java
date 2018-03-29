@@ -6,15 +6,11 @@ import com.xescm.ofc.edas.model.dto.epc.CancelOrderDto;
 import com.xescm.ofc.edas.model.vo.epc.CannelOrderVo;
 import com.xescm.ofc.edas.service.OfcOrderCancelEdasServie;
 import com.xescm.ofc.exception.BusinessException;
-import com.xescm.ofc.service.CreateOrderService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  *
@@ -23,8 +19,6 @@ import javax.annotation.Resource;
 @Service
 public class OfcOrderCancelEdasServieImpl implements OfcOrderCancelEdasServie{
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Resource
-    private CreateOrderService createOrderService;
 
     /**
      * 鲜易网取消接口
@@ -45,7 +39,7 @@ public class OfcOrderCancelEdasServieImpl implements OfcOrderCancelEdasServie{
             if (StringUtils.isBlank(cancelOrderDto.getCustCode())) {
                 throw new IllegalArgumentException("货主编码不能为空");
             }
-            Wrapper<CannelOrderVo> wrapper = createOrderService.cancelOrderStateByOrderCode(cancelOrderDto);
+            Wrapper<CannelOrderVo> wrapper = null;
             return wrapper;
         } catch (IllegalArgumentException ex) {
             logger.error("取消订单接口处理失败：错误原因：{}", ex.getMessage(), ex);
